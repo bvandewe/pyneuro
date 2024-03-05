@@ -4,6 +4,9 @@ import pytest
 from neuroglia.data.infrastructure.abstractions import QueryableRepository, Repository
 from neuroglia.data.infrastructure.mongo.mongo_repository import MongoRepository, MongoRepositoryOptions
 from neuroglia.dependency_injection.service_provider import ServiceCollection, ServiceProvider
+from neuroglia.serialization.json import JsonSerializer
+from neuroglia.serialization.abstractions import Serializer, TextSerializer
+
 from tests.data import UserDto
 
 
@@ -133,9 +136,13 @@ class TestMongoRepository:
         self._mongo_client = self._service_provider.get_required_service(MongoClient)
         self._repository = self._service_provider.get_required_service(QueryableRepository[UserDto, str])
 
+    @staticmethod
     def _build_services() -> ServiceProvider:
-        connection_string = 'mongodb://localhost:27017'
+        connection_string = 'mongodb://localhost:27099'
         services = ServiceCollection()
+        services.add_singleton(JsonSerializer)
+        services.add_singleton(Serializer, implementation_factory=lambda provider: provider.get_required_service(JsonSerializer))
+        services.add_singleton(TextSerializer, implementation_factory=lambda provider: provider.get_required_service(JsonSerializer))
         services.add_singleton(MongoRepositoryOptions[UserDto, str], singleton=MongoRepositoryOptions[UserDto, str](TestMongoRepository._mongo_database_name))
         services.add_singleton(MongoClient, singleton=MongoClient(connection_string))
         services.add_singleton(Repository[UserDto, str], MongoRepository[UserDto, str])
