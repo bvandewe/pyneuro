@@ -12,7 +12,7 @@
       
       
       <link rel="icon" href="assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.46">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.9">
     
     
       
@@ -20,7 +20,7 @@
       
     
     
-      <link rel="stylesheet" href="assets/stylesheets/main.6f8fc17f.min.css">
+      <link rel="stylesheet" href="assets/stylesheets/main.4af4bdda.min.css">
       
       
 
@@ -196,78 +196,16 @@
         
       
       
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  <span class="md-ellipsis">
-    Home
-  </span>
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
       <a href="." class="md-nav__link md-nav__link--active">
         
   
   <span class="md-ellipsis">
     Home
+    
   </span>
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#todo" class="md-nav__link">
-    <span class="md-ellipsis">
-      TODO
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="TODO">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#1" class="md-nav__link">
-    <span class="md-ellipsis">
-      1
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#2" class="md-nav__link">
-    <span class="md-ellipsis">
-      2
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-    </ul>
-  
-</nav>
       
     </li>
   
@@ -293,47 +231,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#todo" class="md-nav__link">
-    <span class="md-ellipsis">
-      TODO
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="TODO">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#1" class="md-nav__link">
-    <span class="md-ellipsis">
-      1
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#2" class="md-nav__link">
-    <span class="md-ellipsis">
-      2
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -347,11 +244,34 @@
                   
 
 
+
 <h1 id="neuroglia-python-framework">Neuroglia Python Framework</h1>
-<p>A framework of libraries used to build modern Python V3 applications</p>
-<h2 id="todo">TODO</h2>
-<h3 id="1">1</h3>
-<h3 id="2">2</h3>
+<p>The framework is a very thin software layer built on top of <a href="https://fastapi.tiangolo.com/">FastAPI</a> that provides developers with a set of coding features and tools that may be useful for any microservice (regardless of its role and domain/bounded context), such as:</p>
+<ul>
+<li>Implements all guidelines from https://12factor.net</li>
+<li>MVC Web App builder with fundamental abstractions</li>
+<li>Simple Dependency Injection mechanism, including automatic class discovery and instantiation</li>
+<li>Class-based API controller with automatic module discovery</li>
+<li>Modular Command/Query responsibility segregation</li>
+<li>Optional Event-sourcing for event-driven Domain modeling</li>
+<li>Clean layered Code https://levelup.gitconnected.com/clean-architecture-86c4f03e4771</li>
+<li>Pure Domain models, independent of persistence</li>
+<li>Application handlers (Command, Queries, Events, Tasks)</li>
+<li>Repository pattern</li>
+<li>Independent API controllers, endpoints and models (DTO's) vs Domain models and logic</li>
+<li>Native async Events ingestion, handling, emission (JSON <a href="https://github.com/cloudevents/spec/blob/v1.0.2/cloudevents/formats/json-format.md">CloudEvent</a>) using <a href="https://medium.com/@willAmaral/asynchronous-programming-and-rx-anything-479d9cb8daee">ReactiveX programming</a> with <a href="https://rxpy.readthedocs.io/en/latest/">RxPy</a></li>
+<li>Data models mapping between Domain and Integration</li>
+<li>Easy extension for background task scheduling with <a href="https://apscheduler.readthedocs.io/en/3.x/">apscheduler</a></li>
+<li>etc...</li>
+</ul>
+<p>The code typically includes comments that help understand it.</p>
+<p>The <code>src/main.py</code> file is the entry point that defines all dependencies, including the sub-folders where to dynamically load the API, Application, Persistence and Domain layers.</p>
+<p>In turn, when booting, the web app dynamically discovers, identifies and instantiate dependencies then loads:</p>
+<ul>
+<li>API controllers and define the mapping between each endpoint and its corresponding Application handler</li>
+<li>Application handlers (incl. Commands, Queries, Events, Tasks) and services (any business logic)</li>
+<li>Integration dependencies (any API client service, persistence-layer clients, ) and models (API' DTO for requests and responses)</li>
+</ul>
 
 
 
@@ -398,10 +318,10 @@
     </div>
     
     
-    <script id="__config" type="application/json">{"base": ".", "features": [], "search": "assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    <script id="__config" type="application/json">{"base": ".", "features": [], "search": "assets/javascripts/workers/search.f8cc74c7.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
-      <script src="assets/javascripts/bundle.83f73b43.min.js"></script>
+      <script src="assets/javascripts/bundle.c8b220af.min.js"></script>
       
     
   </body>
