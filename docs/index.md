@@ -27,3 +27,5 @@ In turn, when booting, the web app dynamically discovers, identifies and instant
 - API controllers and define the mapping between each endpoint and its corresponding Application handler
 - Application handlers (incl. Commands, Queries, Events, Tasks) and services (any business logic)
 - Integration dependencies (any API client service, persistence-layer clients, ) and models (API' DTO for requests and responses)
+
+-
