@@ -246,33 +246,32 @@
 
 
 <h1 id="neuroglia-python-framework">Neuroglia Python Framework</h1>
-<p>The framework is a very thin software layer built on top of <a href="https://fastapi.tiangolo.com/">FastAPI</a> that provides developers with a set of coding features and tools that may be useful for any microservice (regardless of its role and domain/bounded context), such as:</p>
+<p>This Python framework is a lightweight layer built on top of <a href="https://fastapi.tiangolo.com/">FastAPI</a>. It offers developers a set of useful tools and features that can be applied to any microservice, no matter its specific purpose or domain. These features include:</p>
 <ul>
-<li>Implements all guidelines from https://12factor.net</li>
-<li>MVC Web App builder with fundamental abstractions</li>
-<li>Simple Dependency Injection mechanism, including automatic class discovery and instantiation</li>
-<li>Class-based API controller with automatic module discovery</li>
-<li>Modular Command/Query responsibility segregation</li>
-<li>Optional Event-sourcing for event-driven Domain modeling</li>
-<li>Clean layered Code https://levelup.gitconnected.com/clean-architecture-86c4f03e4771</li>
-<li>Pure Domain models, independent of persistence</li>
-<li>Application handlers (Command, Queries, Events, Tasks)</li>
-<li>Repository pattern</li>
-<li>Independent API controllers, endpoints and models (DTO's) vs Domain models and logic</li>
-<li>Native async Events ingestion, handling, emission (JSON <a href="https://github.com/cloudevents/spec/blob/v1.0.2/cloudevents/formats/json-format.md">CloudEvent</a>) using <a href="https://medium.com/@willAmaral/asynchronous-programming-and-rx-anything-479d9cb8daee">ReactiveX programming</a> with <a href="https://rxpy.readthedocs.io/en/latest/">RxPy</a></li>
-<li>Data models mapping between Domain and Integration</li>
-<li>Easy extension for background task scheduling with <a href="https://apscheduler.readthedocs.io/en/3.x/">apscheduler</a></li>
-<li>etc...</li>
+<li>Adherence to 12-Factor App principles: We've built the framework to follow the best practices outlined in the 12-factor methodology.</li>
+<li>Built-in MVC Web App structure: It provides a foundation for building web applications using the Model-View-Controller pattern, with essential abstractions.</li>
+<li>Simplified Dependency Injection: A straightforward mechanism for managing dependencies, including automatic discovery and instantiation of classes.</li>
+<li>Class-based API Controllers with Automatic Loading: Easily define API controllers using classes, with the framework automatically finding and loading them.</li>
+<li>Modular Command/Query Separation (CQRS): Supports a clear separation of commands (actions that change data) and queries (actions that retrieve data).</li>
+<li>Optional Event-Sourcing: Provides the option to implement event-sourcing for building event-driven domain models.</li>
+<li>Clean, Layered Code: Encourages a clean architecture approach, similar to the principles outlined in [link to clean architecture article].</li>
+<li>Pure Domain Models: Allows you to define domain models that are independent of any specific persistence mechanism.</li>
+<li>Application Handlers: Provides a structure for handling commands, queries, events, and background tasks within your application logic.</li>
+<li>Repository Pattern Implementation: Includes support for the Repository pattern for abstracting data access.</li>
+<li>Separation of API and Domain: Keeps API controllers, endpoints, and data transfer objects (DTOs) separate from your core domain models and business logic.</li>
+<li>Native Asynchronous Event Handling with RxPy: Offers built-in support for handling, emitting, and ingesting asynchronous events (in JSON CloudEvent format) using the ReactiveX programming paradigm with RxPy.</li>
+<li>Data Model Mapping: Provides tools for easily mapping data between your domain models and integration layers.</li>
+<li>Easy Background Task Scheduling: Integrates seamlessly with apscheduler for scheduling background tasks.</li>
+<li>And more...</li>
 </ul>
-<p>The code typically includes comments that help understand it.</p>
-<p>The <code>src/main.py</code> file is the entry point that defines all dependencies, including the sub-folders where to dynamically load the API, Application, Persistence and Domain layers.</p>
-<p>In turn, when booting, the web app dynamically discovers, identifies and instantiate dependencies then loads:</p>
+<p>The codebase is generally well-commented to help you understand its functionality.</p>
+<p>The main entry point of your application is typically the <code>src/main.py</code> file. This file is where you define all the necessary dependencies and specify the sub-folders where the framework should dynamically load your API, Application, Persistence, and Domain layers.</p>
+<p>When the web application starts, it automatically discovers, identifies, and instantiates the necessary dependencies. It then loads:</p>
 <ul>
-<li>API controllers and define the mapping between each endpoint and its corresponding Application handler</li>
-<li>Application handlers (incl. Commands, Queries, Events, Tasks) and services (any business logic)</li>
-<li>Integration dependencies (any API client service, persistence-layer clients, ) and models (API' DTO for requests and responses)</li>
+<li>API Controllers: Defines the routes and maps each endpoint to its corresponding Application handler.</li>
+<li>Application Handlers and Services: Loads the logic for handling commands, queries, events, tasks, and any other business logic services.</li>
+<li>Integration Dependencies: Loads any external API client services, persistence layer clients, and their associated data models (API DTOs for requests and responses).</li>
 </ul>
-<p>-</p>
 
 
 
