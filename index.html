@@ -272,6 +272,51 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#-loads-the-logic-for-handling-commands-queries-events-tasks-and-any-other-business-logic-services" class="md-nav__link">
+    <span class="md-ellipsis">
+      - Loads the logic for handling commands, queries, events, tasks, and any other business logic services.
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#samples" class="md-nav__link">
+    <span class="md-ellipsis">
+      Samples
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#openbank" class="md-nav__link">
+    <span class="md-ellipsis">
+      OpenBank
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#desktop-controller" class="md-nav__link">
+    <span class="md-ellipsis">
+      Desktop Controller
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#api-gateway" class="md-nav__link">
+    <span class="md-ellipsis">
+      API Gateway
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -339,6 +384,51 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#-loads-the-logic-for-handling-commands-queries-events-tasks-and-any-other-business-logic-services" class="md-nav__link">
+    <span class="md-ellipsis">
+      - Loads the logic for handling commands, queries, events, tasks, and any other business logic services.
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#samples" class="md-nav__link">
+    <span class="md-ellipsis">
+      Samples
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#openbank" class="md-nav__link">
+    <span class="md-ellipsis">
+      OpenBank
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#desktop-controller" class="md-nav__link">
+    <span class="md-ellipsis">
+      Desktop Controller
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#api-gateway" class="md-nav__link">
+    <span class="md-ellipsis">
+      API Gateway
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -364,12 +454,14 @@
 <li><strong>Class-based API Controllers with Automatic Loading</strong>: Easily define API controllers using classes, with the framework automatically finding and loading them.</li>
 <li><strong>Modular Command/Query Separation (CQRS)</strong>: Supports a clear separation of commands (actions that change data) and queries (actions that retrieve data).</li>
 <li><strong>Optional Event-Sourcing</strong>: Provides the option to implement event-sourcing for building event-driven domain models.</li>
-<li><strong>Clean, Layered Code</strong>: Encourages a clean architecture approach, similar to the principles outlined in [link to clean architecture article].</li>
+<li>
+<p><strong>Clean, Layered Code</strong>: Encourages a clean architecture approach, similar to the principles outlined in [link to clean architecture article].</p>
+<ul>
 <li>Pure Domain Models: Allows you to define domain models that are independent of any specific persistence mechanism.</li>
 <li>Application Handlers: Provides a structure for handling commands, queries, events, and background tasks within your application logic.</li>
 <li>Repository Pattern Implementation: Includes support for the Repository pattern for abstracting data access.</li>
-<li>
-<p>Separation of API and Domain: Keeps API controllers, endpoints, and data transfer objects (DTOs) separate from your core domain models and business logic.</p>
+<li>Separation of API and Domain: Keeps API controllers, endpoints, and data transfer objects (DTOs) separate from your core domain models and business logic.</li>
+</ul>
 </li>
 <li>
 <p><strong>Native Asynchronous Event Handling</strong> with RxPy: Offers built-in support for handling, emitting, and ingesting asynchronous events (in JSON CloudEvent format) using the ReactiveX programming paradigm with RxPy.</p>
@@ -386,22 +478,36 @@ This file is where you define all the necessary dependencies and specify the sub
 <p>The <code>src</code> folder contains four distinct Layers:</p>
 <p><img alt="src" src="img/src-Code_Structure.png" /></p>
 <ul>
-<li><strong>API Layer</strong> (Controllers): <code>uses the Application Layer</code></li>
+<li>
+<p><strong>API Layer</strong> (Controllers): <code>uses the Application Layer</code></p>
+<ul>
 <li>Defines the endpoints available to external clients (incl. OpenAPI specs)</li>
 <li>Maps each endpoint to its corresponding Application handler.</li>
-<li>
-<p>Maps external data (DTO's) models (API Requests and Responses schemas) to internal Domain layer</p>
+<li>Maps external data (DTO's) models (API Requests and Responses schemas) to internal Domain layer</li>
+</ul>
 </li>
 <li>
 <p><strong>Application Layer</strong> (Handlers and Services): <code>executes the main biz logic, uses the Domain and Integration Layers</code></p>
+<h2 id="-loads-the-logic-for-handling-commands-queries-events-tasks-and-any-other-business-logic-services">- Loads the logic for handling commands, queries, events, tasks, and any other business logic services.</h2>
 </li>
-<li>Loads the logic for handling commands, queries, events, tasks, and any other business logic services.</li>
-<li></li>
 <li>
 <p><strong>Integration Layer</strong> (Dependencies): <code>provides reusable independent logic (persistence Layer, API clients, external logic)</code></p>
-</li>
+<ul>
 <li>Loads any external API client services, persistence layer clients, and their associated data models (API DTOs for requests and responses).</li>
 </ul>
+</li>
+</ul>
+<h2 id="samples">Samples</h2>
+<h2 id="openbank">OpenBank</h2>
+<p>Implements a simplified Bank that manages Accounts, Users and Transactions with full <a href="https://microservices.io/patterns/data/event-sourcing.html">Event Sourcing</a>, <a href="https://microservices.io/patterns/data/cqrs.html">CQRS</a></p>
+<p><a href="samples/open_bank/">Explore OpenBank</a></p>
+<h2 id="desktop-controller">Desktop Controller</h2>
+<p>Remotely and securely control custom files or commands on a Desktop running the app as a Docker container...</p>
+<p><a href="samples/desktop_controller/">Explore Desktop Controller</a></p>
+<h2 id="api-gateway">API Gateway</h2>
+<p>Expose single entry point for 3rd party clients into an internal layer, like a GenAI stack...
+Models a Prompt entity, enforces a business logic (e.g. Prompt' state-machine), handles scheduled background task (with persistence), exposes API with multiple Security schemes, ...</p>
+<p><a href="samples/api_gateway/">Explore API Gateway</a></p>
 
 
 
