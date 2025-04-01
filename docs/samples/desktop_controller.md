@@ -1,13 +1,13 @@
 # Desktop Controller
 
-REST API to remotely control a Candidate Desktop (incl. VDI and BYOD virtual desktops).
+REST API to remotely control a Desktop (i.e. the Docker Host running the controller) over HTTP.
 
 The Controller must:
 
 1. Register itself periodically (via CloudEvent) to the Desktops Registry (providing its IP address as the identifier to the Registry)
 2. Securely expose a set of `Commands` and `Queries` via a REST API (with OpenAPI 3.x specs) that enable remote control for the Desktop's `HostInfo` and `UserInfo` (wrapping Linux Shell commands as HTTP Requests)
 3. Maintain various local files (e.g. `/data/hostinfo.json`, `/data/userinfo.json`) that other apps (on the Desktop VM) may rely upon (Screen Logger).
-4. Trigger remote execution of arbitrary custom Shell scripts to be run on the Desktop VM (not the controller's container!)
+4. Trigger remote execution of custom Shell scripts to be run on the Desktop VM (not the controller's container!)
 
 [[_TOC_]]
 
@@ -25,22 +25,6 @@ The Controller must:
 
 ![Design](img/design.png)
   
-## Use Case
-
-### Proctor requests to lock a candidate Desktop
-
-![Proctor Lock Desktop](img/use-case_proctor_lock_desktop.png)
-
-## Desktop Auto Discovery
-
-TODO / DRAFT:
-
-- `DesktopController` boots-up > `com.cisco.mozart.desktop-controller.registration-requested.v1`
-- `DesktopsRegistry` registers and ack > `com.cisco.mozart.desktop-registry.desktop-registered.v1`
-- `DesktopsAdapter` handles `com.cisco.mozart.desktop-registry.desktop-registered.v1` and calls `DesktopController`:`POST:/api/v1/mark_registered`
-- `DesktopController` handles `MarkRegisteredCommand` > set state = `REGISTERED` and emits `com.cisco.mozart.desktop-controller.desktop-registered.v1`
-- `DesktopController` recurrently emits `com.cisco.mozart.desktop-controller.desktop-registered.v1` as keepalive
-
 ## Development
 
 ### Setup
@@ -56,12 +40,10 @@ TODO / DRAFT:
 # 
 #    - Start Docker Desktop locally
 #
-#    - Connect to CCIE DMZ (needs access to ccie-gitlab) 
-
 # 1. Clone the repository
 cd ~/
 
-git clone git@ccie-gitlab.ccie.cisco.com:mozart/microservices/desktop-controller.git
+git clone git@....
 
 cd desktop-controller
 
@@ -80,7 +62,7 @@ make up
 
 # 4. Open the SwaggerUI at http://localhost:9781/api/docs
 
-# 5. Add a Breakpoint in api.controllers.userinfo_controller.py:29...
+# 5. Add a Breakpoint, e.g. in api.controllers.userinfo_controller.py:29...
 
 # 6. Send a test request :)
 
@@ -98,9 +80,9 @@ make up
 ### Release Process
 
 1. Refer to [Semantic Versioning](https://semver.org/)
-2. Create new Tag in Gitlab > Repository > Tags > [New Tag](https://ccie-gitlab.ccie.cisco.com/mozart/microservices/desktop-controller/-/tags/new)
+2. Create new Tag in Gitlab > Repository > Tags > [New Tag]()
 3. This will trigger Gitlab CI to publish a new container image based on the latest commit in the `main` branch and will be named as per the new Tag.
-4. Test the image locally: `docker run -p 8080:80 ccie-gitlab.ccie.cisco.com:4567/mozart/microservices/desktop-controller/desktop-controller:latest` then browse to http://localhost:8080/api/docs
+4. Test the image locally: `docker run -p 8080:80 desktop-controller:latest` then browse to http://localhost:8080/api/docs
 
 ### Settings
 
@@ -261,13 +243,13 @@ Login at http://localhost:9780 using `admin`:`admin`
 
 ```yml
     environment:
-      APP_TITLE: Cisco Certs Desktop Controller
+      APP_TITLE: Remote Desktop Controller
       LOCAL_DEV: true
       LOG_LEVEL: DEBUG
       
       CLOUD_EVENT_SINK: http://event-player97/events/pub
-      CLOUD_EVENT_SOURCE: https://desktop-controller.ccie.cisco.com
-      CLOUD_EVENT_TYPE_PREFIX: com.cisco.mozart.desktop-controller
+      CLOUD_EVENT_SOURCE: https://desktop-controller.domain.com
+      CLOUD_EVENT_TYPE_PREFIX: com.domain.desktop-controller
       
       OAUTH2_SCHEME: client_credentials  # authorization_code or client_credentials
       JWT_AUTHORITY: http://keycloak97/auth/realms/mozart
