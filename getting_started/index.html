@@ -1,0 +1,986 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.11">
+    
+    
+      
+        <title>Desktop Controller - Neuroglia Python Framework</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.4af4bdda.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#desktop-controller" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Neuroglia Python Framework" class="md-header__button md-logo" aria-label="Neuroglia Python Framework" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Neuroglia Python Framework
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Desktop Controller
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Neuroglia Python Framework" class="md-nav__button md-logo" aria-label="Neuroglia Python Framework" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Neuroglia Python Framework
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      Overview
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Overview">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#controllers-interactions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Controller's Interactions
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#controllers-context" class="md-nav__link">
+    <span class="md-ellipsis">
+      Controller's Context
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#design" class="md-nav__link">
+    <span class="md-ellipsis">
+      Design
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#use-case" class="md-nav__link">
+    <span class="md-ellipsis">
+      Use Case
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Use Case">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#proctor-requests-to-lock-a-candidate-desktop" class="md-nav__link">
+    <span class="md-ellipsis">
+      Proctor requests to lock a candidate Desktop
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#desktop-auto-discovery" class="md-nav__link">
+    <span class="md-ellipsis">
+      Desktop Auto Discovery
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#development" class="md-nav__link">
+    <span class="md-ellipsis">
+      Development
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Development">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      Setup
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#code-contribution" class="md-nav__link">
+    <span class="md-ellipsis">
+      Code Contribution
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#release-process" class="md-nav__link">
+    <span class="md-ellipsis">
+      Release Process
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#settings" class="md-nav__link">
+    <span class="md-ellipsis">
+      Settings
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#testing" class="md-nav__link">
+    <span class="md-ellipsis">
+      Testing
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Testing">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#test_shell_script_on_hostsh" class="md-nav__link">
+    <span class="md-ellipsis">
+      test_shell_script_on_host.sh
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#call-test-endpoint" class="md-nav__link">
+    <span class="md-ellipsis">
+      Call Test Endpoint
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#api-authentication" class="md-nav__link">
+    <span class="md-ellipsis">
+      API Authentication
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#source-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      Source Code
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Source Code">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#context" class="md-nav__link">
+    <span class="md-ellipsis">
+      Context
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#containers" class="md-nav__link">
+    <span class="md-ellipsis">
+      Containers
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#components" class="md-nav__link">
+    <span class="md-ellipsis">
+      Components
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#code" class="md-nav__link">
+    <span class="md-ellipsis">
+      Code
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Code">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#app-settings" class="md-nav__link">
+    <span class="md-ellipsis">
+      App Settings
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#app-bootup" class="md-nav__link">
+    <span class="md-ellipsis">
+      App Bootup
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dependency-injection" class="md-nav__link">
+    <span class="md-ellipsis">
+      Dependency Injection
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#api-controllers" class="md-nav__link">
+    <span class="md-ellipsis">
+      API Controllers
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="desktop-controller">Desktop Controller</h1>
+<p>REST API to remotely control a Candidate Desktop (incl. VDI and BYOD virtual desktops).</p>
+<p>The Controller must:</p>
+<ol>
+<li>Register itself periodically (via CloudEvent) to the Desktops Registry (providing its IP address as the identifier to the Registry)</li>
+<li>Securely expose a set of <code>Commands</code> and <code>Queries</code> via a REST API (with OpenAPI 3.x specs) that enable remote control for the Desktop's <code>HostInfo</code> and <code>UserInfo</code> (wrapping Linux Shell commands as HTTP Requests)</li>
+<li>Maintain various local files (e.g. <code>/data/hostinfo.json</code>, <code>/data/userinfo.json</code>) that other apps (on the Desktop VM) may rely upon (Screen Logger).</li>
+<li>Trigger remote execution of arbitrary custom Shell scripts to be run on the Desktop VM (not the controller's container!)</li>
+</ol>
+<p>[[<em>TOC</em>]]</p>
+<h2 id="overview">Overview</h2>
+<h3 id="controllers-interactions">Controller's Interactions</h3>
+<p><img alt="Desktop Controller Interactions" src="../img/DesktopController_Interactions.png" /></p>
+<h3 id="controllers-context">Controller's Context</h3>
+<p><img alt="Desktop Controller" src="../img/DesktopController.png" /></p>
+<h2 id="design">Design</h2>
+<p><img alt="Design" src="../img/design.png" /></p>
+<h2 id="use-case">Use Case</h2>
+<h3 id="proctor-requests-to-lock-a-candidate-desktop">Proctor requests to lock a candidate Desktop</h3>
+<p><img alt="Proctor Lock Desktop" src="../img/use-case_proctor_lock_desktop.png" /></p>
+<h2 id="desktop-auto-discovery">Desktop Auto Discovery</h2>
+<p>TODO / DRAFT:</p>
+<ul>
+<li><code>DesktopController</code> boots-up &gt; <code>com.cisco.mozart.desktop-controller.registration-requested.v1</code></li>
+<li><code>DesktopsRegistry</code> registers and ack &gt; <code>com.cisco.mozart.desktop-registry.desktop-registered.v1</code></li>
+<li><code>DesktopsAdapter</code> handles <code>com.cisco.mozart.desktop-registry.desktop-registered.v1</code> and calls <code>DesktopController</code>:<code>POST:/api/v1/mark_registered</code></li>
+<li><code>DesktopController</code> handles <code>MarkRegisteredCommand</code> &gt; set state = <code>REGISTERED</code> and emits <code>com.cisco.mozart.desktop-controller.desktop-registered.v1</code></li>
+<li><code>DesktopController</code> recurrently emits <code>com.cisco.mozart.desktop-controller.desktop-registered.v1</code> as keepalive</li>
+</ul>
+<h2 id="development">Development</h2>
+<h3 id="setup">Setup</h3>
+<pre><code class="language-sh">
+# 0. Prerequisites:
+#    Have Python 3.12 installed
+# 
+#    - Create/Activate a local python environment (e.g. with pyenv)
+#      pyenv virtualenv 3.12.2 desktop-controller
+#      pyenv activate desktop-controller
+# 
+#    - Start Docker Desktop locally
+#
+#    - Connect to CCIE DMZ (needs access to ccie-gitlab) 
+
+# 1. Clone the repository
+cd ~/
+
+git clone git@ccie-gitlab.ccie.cisco.com:mozart/microservices/desktop-controller.git
+
+cd desktop-controller
+
+# pip install pre-commit
+pre-commit install
+
+# pip install poetry
+poetry lock &amp;&amp; poetry install 
+
+# 2. Start the docker-compose stack
+# sudo apt-get install make
+make up
+
+# 3. Connect the vscode debugger to the running container
+# From vscode: hit F5 (ensure that the &quot;Run and Debug&quot; launcher is set to &quot;Python: Remote Attach&quot;)
+
+# 4. Open the SwaggerUI at http://localhost:9781/api/docs
+
+# 5. Add a Breakpoint in api.controllers.userinfo_controller.py:29...
+
+# 6. Send a test request :)
+
+# 7. Enjoy live debugging on your local development
+</code></pre>
+<h3 id="code-contribution">Code Contribution</h3>
+<ol>
+<li>Clone <code>main</code> branch</li>
+<li>Create new branch, e.g. <code>feat-cmd-userinfo</code> or <code>fix-linux-cmd</code></li>
+<li>Push the new branch to Gitlab and create a Merge Request into <code>main</code></li>
+<li>Document the review</li>
+<li>Approve and merge (may discard the branch if needed)</li>
+</ol>
+<h3 id="release-process">Release Process</h3>
+<ol>
+<li>Refer to <a href="https://semver.org/">Semantic Versioning</a></li>
+<li>Create new Tag in Gitlab &gt; Repository &gt; Tags &gt; <a href="https://ccie-gitlab.ccie.cisco.com/mozart/microservices/desktop-controller/-/tags/new">New Tag</a></li>
+<li>This will trigger Gitlab CI to publish a new container image based on the latest commit in the <code>main</code> branch and will be named as per the new Tag.</li>
+<li>Test the image locally: <code>docker run -p 8080:80 ccie-gitlab.ccie.cisco.com:4567/mozart/microservices/desktop-controller/desktop-controller:latest</code> then browse to http://localhost:8080/api/docs</li>
+</ol>
+<h3 id="settings">Settings</h3>
+<p>Required configuration:</p>
+<ul>
+<li>create new SSH key pair</li>
+<li>install the private key into the container and the public key into the DockerHost/SSH server</li>
+<li>mount the SSH private key to <code>:/app/id_rsa</code> when starting the container</li>
+<li>add the pub key to the DockerHost's <code>~/.ssh/authorized_keys</code></li>
+<li>add env var <code>DOCKER_HOST_USER_NAME</code> with the sys-admin' username on the DockerHost!</li>
+</ul>
+<p>See <a href="#app-settings">App Settings</a>.</p>
+<h2 id="testing">Testing</h2>
+<p>The API has a sample <code>Command</code> that ultimately resolves to remotely run <code>~/test_shell_script_on_host.sh -i {user_input}</code> on the DockerHost. </p>
+<p>See <a href="sample_bin/test_shell_script_on_host.sh">sample_bin/test_shell_script_on_host.sh</a>.</p>
+<p>E.g.: Install with</p>
+<pre><code class="language-sh"># copy the sample shell script on the Docker Host' user' home folder
+cp sample_bin/test_shell_script_on_host.sh ~/test_shell_script_on_host.sh
+
+# set permissions to execute
+chmod a+x ~/test_shell_script_on_host.sh
+
+# set ownership
+chown $USERNAME:staff ~/test_shell_script_on_host.sh
+
+# test run as user:
+~/test_shell_script_on_host.sh -i &quot;my input value&quot;
+
+Adding a new line my input value to /tmp/test.txt...
+
+# verify local file on Docker Host: 
+cat /tmp/test.txt
+
+UserInput: my input value
+
+</code></pre>
+<h3 id="test_shell_script_on_hostsh">test_shell_script_on_host.sh</h3>
+<p>See <a href="sample_bin/test_shell_script_on_host.sh">sample_bin/test_shell_script_on_host.sh</a>.</p>
+<p>This test script just adds a line to a file <code>/tmp/test.txt</code>.</p>
+<pre><code class="language-sh">#!/bin/bash
+
+# test_shell_script_on_host.sh
+
+if [ $# -lt 2 ]; then
+  echo &quot;Error: Please provide an argument after the -i flag.&quot;
+  exit 1
+fi
+
+if [ &quot;$1&quot; != &quot;-i&quot; ]; then
+  echo &quot;Error: Please use the -i flag followed by your argument.&quot;
+  exit 1
+fi
+
+argument=&quot;$2&quot;
+
+echo &quot;Adding a new line $argument to /tmp/test.txt...&quot;
+
+echo &quot;UserInput: $argument&quot; &gt;&gt; /tmp/test.txt
+
+</code></pre>
+<h3 id="call-test-endpoint">Call Test Endpoint</h3>
+<p>The HTTP <code>Command</code> runs a SSH client that simply connects to the DockerHost at <code>host.docker.internal</code> (with preconfigured username and SSH keys) and runs a custom command_line.</p>
+<p>From <a href="http://localhost:9781/api/docs#/Custom/run_test_write_file_on_host_api_v1_custom_test_shell_script_on_host_sh_post">SwaggerUI</a></p>
+<p><code>http://localhost:9781/api/docs#/Custom/run_test_write_file_on_host_api_v1_custom_test_shell_script_on_host_sh_post</code></p>
+<p>From Curl: (will need <code>Authorization</code> header with JWT, see <a href="#api-authentication">API Auth</a>)</p>
+<pre><code class="language-curl">curl -X 'POST' \
+  'http://localhost:9781/api/v1/custom/test/shell_script_on_host.sh' \
+  -H 'accept: application/json' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  &quot;user_input&quot;: &quot;my input value&quot;
+}'
+</code></pre>
+<pre><code class="language-json"># 201   Response body
+{
+  &quot;command_line&quot;: &quot;~/test_shell_script_on_host.sh -i my_input_value&quot;,
+  &quot;stdout&quot;: [
+    &quot;Adding a new line my_input_value to /tmp/test.txt...&quot;
+  ],
+  &quot;stderr&quot;: [],
+  &quot;aggregate_id&quot;: &quot;4c660c0572d8449598ee5fde58e04423&quot;,
+  &quot;success&quot;: true
+}
+</code></pre>
+<h3 id="api-authentication">API Authentication</h3>
+<p>We're using Keycloak as the IDP. See <code>deployment/keycloak/realm-config.json</code> for sample keycloak config.</p>
+<p>The intent is that "whoever" wants to remotely control a desktop first needs to get a valid token from the common Keycloak instance (which is the one that the VDI/BYOD Desktops - ie. DockerHosts have access to!).</p>
+<p>Local testings can be done with a local/dev Keycloak instance. Just include it in <code>docker-compose.yml</code>!</p>
+<pre><code class="language-yml">version: &quot;3.4&quot;
+
+name: mozart-dev
+services:
+  # http://localhost:9780
+  keycloak97:
+    image: jboss/keycloak
+    environment:
+      - KEYCLOAK_USER=admin
+      - KEYCLOAK_PASSWORD=admin
+      - KEYCLOAK_IMPORT=/tmp/realm-export.json
+    volumes:
+      - ./deployment/keycloak/realm-config.json:/tmp/realm-export.json
+    ports:
+      - 9780:8080
+    networks:
+      - desktopcontrollernet
+</code></pre>
+<p>Login at http://localhost:9780 using <code>admin</code>:<code>admin</code></p>
+<h2 id="source-code">Source Code</h2>
+<p><img alt="Structure" src="../img/src-Code_Structure.png" /></p>
+<h3 id="context">Context</h3>
+<p><img alt="Context" src="../img/src-Context.png" /></p>
+<h3 id="containers">Containers</h3>
+<p><img alt="Container" src="../img/src-Container.png" /></p>
+<h3 id="components">Components</h3>
+<p><img alt="Components" src="../img/src-Components.png" /></p>
+<h3 id="code">Code</h3>
+<p><img alt="Code" src="../img/src-Code.png" /></p>
+<h4 id="app-settings">App Settings</h4>
+<pre><code class="language-yml">    environment:
+      APP_TITLE: Cisco Certs Desktop Controller
+      LOCAL_DEV: true
+      LOG_LEVEL: DEBUG
+
+      CLOUD_EVENT_SINK: http://event-player97/events/pub
+      CLOUD_EVENT_SOURCE: https://desktop-controller.ccie.cisco.com
+      CLOUD_EVENT_TYPE_PREFIX: com.cisco.mozart.desktop-controller
+
+      OAUTH2_SCHEME: client_credentials  # authorization_code or client_credentials
+      JWT_AUTHORITY: http://keycloak97/auth/realms/mozart
+      JWT_SIGNING_KEY: MIIBIj...copy_from_keycloak...elJ3dvQIDAQAB
+      JWT_AUDIENCE: desktops
+      REQUIRED_SCOPE: api
+
+      SWAGGER_UI_JWT_AUTHORITY: http://localhost:9780/auth/realms/mozart
+      SWAGGER_UI_CLIENT_ID: desktop-controller
+      SWAGGER_UI_CLIENT_SECRET: 6Wbr0V1TtgEUPUCRSqHh1T0vYuVyG0aa
+
+      USER_INFO_FILE_NAME: '/tmp/userinfo.json'
+      HOST_INFO_FILE_NAME: '/tmp/hostinfo.json'
+      DOCKER_HOST_USER_NAME: bvandewe  # UPDATE TO YOUR LOCAL USERNAME!
+      DOCKER_HOST_HOST_NAME: host.docker.internal
+
+</code></pre>
+<p>Set corresponding <code>ENV VARS</code> in <code>docker-compose.yml</code>.</p>
+<p><a href="https://docs.pydantic.dev/latest/concepts/pydantic_settings/">Pydantic settings</a> automatically parses environment variables, see <a href="./src/api/settings.py">./src/api/settings.py</a>.</p>
+<pre><code class="language-python"># ./src/api/settings.py
+
+from neuroglia.hosting.abstractions import ApplicationSettings
+from pydantic import ConfigDict
+
+
+class DesktopControllerSettings(ApplicationSettings):
+    model_config = ConfigDict(extra=&quot;allow&quot;)
+
+    required_scopes: str
+    jwt_authority: str
+    jwt_signing_key: str
+    jwt_audience: str = &quot;desktops&quot;
+    docker_host_user_name: str = &quot;sys-admin&quot;
+    userinfo_filename: str = &quot;/app/data/userinfo.json&quot;
+    ...
+
+app_settings = DesktopControllerSettings(_env_file=&quot;.env&quot;)
+
+</code></pre>
+<h4 id="app-bootup">App Bootup</h4>
+<p>The <code>main.py</code> file pre-loads all required services using the Dependency Injection mechanism from the neuroglia framework.</p>
+<p>API Controllers and Application Handlers may then declare any dependencies in their constructor (<code>def __init__(self, my_dependency: RegisteredDependency)</code>) and the framework will provide the instance!</p>
+<p>See <a href="#dependency-injection">Dependency Injection</a>.</p>
+<pre><code class="language-python"># ./src/main.py
+...
+builder = WebApplicationBuilder()
+
+# required shared resources
+Mapper.configure(builder, application_modules)
+Mediator.configure(builder, application_modules)
+JsonSerializer.configure(builder)
+CloudEventIngestor.configure(builder, application_modules)
+CloudEventPublisher.configure(builder)
+
+# custom shared resources
+# 
+# ADD ANY REQUIRED RESOURCE
+builder.services.add_scoped(paramiko.SSHClient, paramiko.SSHClient)
+builder.services.add_scoped(SecuredDockerHost, SecuredDockerHost)
+builder.services.add_singleton(DockerHostSshClientSettings, singleton=DockerHostSshClientSettings(username=builder.settings.docker_host_user_name))
+builder.services.add_scoped(DockerHostCommandRunner, DockerHostCommandRunner)
+
+# app
+app = builder.build()
+...
+app.run()
+</code></pre>
+<h4 id="dependency-injection">Dependency Injection</h4>
+<ol>
+<li>Add a Custom Service source code file (likely in any of the <code>application_modules</code> folder in <code>./src/api/controllers</code> or <code>./src/application/commands</code> or <code>./src/application/queries</code> or <code>./src/application/events</code>) that requires a <code>Dependency</code>:</li>
+</ol>
+<p>```python
+  # ./src/application/services/docker_host_command_runner.py
+  ...
+  class DockerHostCommandRunner:
+      def <strong>init</strong>(self, secured_docker_host: SecuredDockerHost):  # Declare Dependencies!
+          self.secured_docker_host = secured_docker_host</p>
+<pre><code>  secured_docker_host: SecuredDockerHost  # Injected when handling a Command!
+
+  async def run(self, command: HostCommand) -&gt; dict[str, Any]:
+      data = {}
+      await self.secured_docker_host.connect()
+      stdout, stderr = await self.secured_docker_host.execute_command(command)
+      await self.secured_docker_host.close()
+      stdout_lines = [line.strip() for line in stdout.splitlines() if line.strip()]
+      data = {"command_line": command.line, "stdout": stdout_lines, "stderr": stderr.splitlines() if stderr else []}
+      return data
+</code></pre>
+<p>...
+  ```</p>
+<ol>
+<li>Add the source code for the dependency itself (likely in <code>./src/integration/services</code>!). It may also include other dependencies! (e.g. <code>DockerHostSshClientSettings</code>!!)</li>
+</ol>
+<p>```python
+  # ./src/integration/services/secured_docker_host.py
+  ...</p>
+<p>class DockerHostSshClientSettings(BaseModel):
+      username: str
+      hostname: str = "host.docker.internal"
+      port: int = 22
+      private_key_filename: str = "/app/id_rsa"
+  ...
+  class SecuredDockerHost:
+      """Service that Securely provides access to the Docker Host's Shell via SSH."""</p>
+<pre><code>  def __init__(self, ssh_client: paramiko.SSHClient, ssh_client_settings: DockerHostSshClientSettings):
+      self.hostname: str = ssh_client_settings.hostname
+      self.port: int = ssh_client_settings.port
+      self.username: str = ssh_client_settings.username
+      self.private_key_filename: str = ssh_client_settings.private_key_filename
+      self.ssh_client: paramiko.SSHClient = ssh_client
+      self.ssh_client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+
+  async def connect(self):
+      ...
+
+  async def execute_command(self, command: HostCommand):
+      async def run_command(command_line: str):
+          ...
+
+      stdout, stderr = await run_command(command.line)
+      return stdout.decode(), stderr.decode()
+
+  async def close(self):
+      ...
+</code></pre>
+<p>```</p>
+<ol>
+<li>Register its service_type (<code>singleton</code>, <code>scoped</code>, <code>transient</code>) in the <code>main.py</code> bootup script</li>
+</ol>
+<p><code>python
+  # ./src/main.py
+  ...
+  builder.services.add_scoped(paramiko.SSHClient, paramiko.SSHClient)
+  builder.services.add_scoped(SecuredDockerHost, SecuredDockerHost)
+  builder.services.add_singleton(DockerHostSshClientSettings, singleton=DockerHostSshClientSettings(username=builder.settings.docker_host_user_name))
+  builder.services.add_scoped(DockerHostCommandRunner, DockerHostCommandRunner)
+  ...</code></p>
+<ol>
+<li>Declare it as a dependency in a consumer Service, e.g. Application's <code>CommandHandler</code>: </li>
+</ol>
+<blockquote>
+<p>Note how the <code>DockerHostCommandRunner</code> is just declared as a dependency in the constructor function <code>__init__</code>!
+This is the same for the other dependencies (<code>CloudEventBus</code>, <code>CloudEventPublishingOptions</code>)</p>
+</blockquote>
+<p>```python</p>
+<p>@map_from(TestHostScriptCommandDto)
+  @map_to(TestHostScriptCommandDto)
+  @dataclass
+  class TestHostScriptCommand(Command):
+      user_input: str</p>
+<p>class TestHostScriptCommandsHandler(CommandHandler[TestHostScriptCommand, OperationResult[Any]]):
+      """Represents the service used to handle UserInfo-related Commands"""</p>
+<pre><code>  cloud_event_bus: CloudEventBus
+  """ Gets the service used to observe the cloud events consumed and produced by the application """
+
+  cloud_event_publishing_options: CloudEventPublishingOptions
+  """ Gets the options used to configure how the application should publish cloud events """
+
+  docker_host_command_runner: DockerHostCommandRunner
+
+  def __init__(self, cloud_event_bus: CloudEventBus, cloud_event_publishing_options: CloudEventPublishingOptions, docker_host_command_runner: DockerHostCommandRunner):
+      self.cloud_event_bus = cloud_event_bus
+      self.cloud_event_publishing_options = cloud_event_publishing_options
+      self.docker_host_command_runner = docker_host_command_runner
+
+  async def handle_async(self, command: TestHostScriptCommand) -&gt; OperationResult[Any]:
+      command_id = str(uuid.uuid4()).replace("-", "")
+      command_line = HostCommand()
+      data = {}
+      try:
+          line = f"~/test_shell_script_on_host.sh -i {command.user_input.replace(' ', '_')}"
+          log.debug(f"TestHostScriptCommand Line: {line}")
+          await self.publish_cloud_event_async(DesktopHostCommandReceivedIntegrationEventV1(aggregate_id=command_id, command_line=line))
+
+          command_line.line = line
+          data = await self.docker_host_command_runner.run(command_line)
+          data.update({"aggregate_id": command_id})
+          log.debug(f"TestHostScriptCommand: {data}")
+
+          await self.publish_cloud_event_async(DesktopHostCommandExecutedIntegrationEventV1(**data))
+          data.update({"success": True}) if len(data["stderr"]) == 0 else data.update({"success": False})
+          return self.created(data)
+
+      except Exception as ex:
+          return self.bad_request(f"Exception when trying to run a shell script on the host: {command_line.line}: {data}: {ex}")
+</code></pre>
+<p>```</p>
+<h4 id="api-controllers">API Controllers</h4>
+<ul>
+<li>inherits ControllerBase</li>
+</ul>
+<pre><code class="language-python"># ./src/api/controllers/host_controller.py
+
+class HostController(ControllerBase):
+    def __init__(self, service_provider: ServiceProviderBase, mapper: Mapper, mediator: Mediator):
+        ControllerBase.__init__(self, service_provider, mapper, mediator)
+
+    @post(&quot;/info&quot;, response_model=Any, status_code=201, responses=ControllerBase.error_responses)
+    async def set_host_info(self, command_dto: SetHostInfoCommandDto, token: str = Depends(validate_token)) -&gt; Any:
+        &quot;&quot;&quot;Sets data of the hostinfo.json file.&quot;&quot;&quot;
+        log.debug(f&quot;set_host_info: command_dto:{command_dto}, token={token}&quot;)
+        return self.process(await self.mediator.execute_async(self.mapper.map(command_dto, SetHostInfoCommand)))
+
+    @get(&quot;/info&quot;, response_model=Any, status_code=201, responses=ControllerBase.error_responses)
+    async def get_host_info(self):
+        query = ReadHostInfoQuery()
+        log.debug(f&quot;get_host_info: query:{query}&quot;)
+        return self.process(await self.mediator.execute_async(query))
+
+</code></pre>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.f8cc74c7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.c8b220af.min.js"></script>
+      
+    
+  </body>
+</html>
