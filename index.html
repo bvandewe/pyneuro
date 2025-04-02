@@ -308,6 +308,15 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#cisco-remote-output-collector" class="md-nav__link">
+    <span class="md-ellipsis">
+      Cisco Remote Output Collector
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -411,6 +420,15 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#cisco-remote-output-collector" class="md-nav__link">
+    <span class="md-ellipsis">
+      Cisco Remote Output Collector
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -492,6 +510,17 @@ This file is where you define all the necessary dependencies and specify the sub
 <p>Expose single entry point for 3rd party clients into an internal layer, like a GenAI stack...
 Models a Prompt entity, enforces a business logic (e.g. Prompt' state-machine), handles scheduled background task (with persistence), exposes API with multiple Security schemes, ...</p>
 <p><a href="https://github.com/bvandewe/pyneuro/tree/main/samples/api-gateway">Explore API Gateway</a></p>
+<h2 id="cisco-remote-output-collector">Cisco Remote Output Collector</h2>
+<p>Statefull microservice that handles complex and custom HTTP Commands which in turn each encapsulates arbitrary interactions with given Cisco Device(s) via Telnet, such as <code>FindPrompt</code>, <code>CollectCommandLineOutput</code>, <code>AddConfiguration</code>, <code>SaveConfiguration</code>, <code>Ping</code>, <code>Traceroute</code>, <code>ClearNatTranslation</code>, <code>CheckReachability</code>, <code>BounceInterface</code>, <code>RunViaTelnetTo</code>, <code>FindSpanningTreeRoot</code>, ... etc.</p>
+<p><a href="https://github.com/bvandewe/ios-roc/tree/main/">Explore IOS ROC</a></p>
+<p><strong>Current state</strong>: functional but simple implemention, 100% stateless collection of multiple CLI to a single device via Telnet.</p>
+<p><strong>TODO</strong>:</p>
+<ul>
+<li>[ ] Add Session management (defines a Pod for subsequent scenarios) with persistence</li>
+<li>[ ] Add DeviceConnection and ConnectionManager</li>
+<li>[ ] Add DeviceDrivers and PromptPatterns libraries</li>
+<li>[ ] ...</li>
+</ul>
 
 
 
