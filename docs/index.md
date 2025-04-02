@@ -64,3 +64,18 @@ Expose single entry point for 3rd party clients into an internal layer, like a G
 Models a Prompt entity, enforces a business logic (e.g. Prompt' state-machine), handles scheduled background task (with persistence), exposes API with multiple Security schemes, ...
 
 [Explore API Gateway](https://github.com/bvandewe/pyneuro/tree/main/samples/api-gateway)
+
+## Cisco Remote Output Collector
+
+Statefull microservice that handles complex and custom HTTP Commands which in turn each encapsulates arbitrary interactions with given Cisco Device(s) via Telnet, such as `FindPrompt`, `CollectCommandLineOutput`, `AddConfiguration`, `SaveConfiguration`, `Ping`, `Traceroute`, `ClearNatTranslation`, `CheckReachability`, `BounceInterface`, `RunViaTelnetTo`, `FindSpanningTreeRoot`, ... etc.
+
+[Explore IOS ROC](https://github.com/bvandewe/ios-roc/tree/main/)
+
+**Current state**: functional but simple implemention, 100% stateless collection of multiple CLI to a single device via Telnet.
+
+**TODO**:
+
+- [ ] Add Session management (defines a Pod for subsequent scenarios) with persistence
+- [ ] Add DeviceConnection and ConnectionManager
+- [ ] Add DeviceDrivers and PromptPatterns libraries
+- [ ] ...
