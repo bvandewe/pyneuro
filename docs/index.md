@@ -40,7 +40,6 @@ The `src` folder contains four distinct Layers:
 
 - **Application Layer** (Handlers and Services): `executes the main biz logic, uses the Domain and Integration Layers`
     - Loads the logic for handling commands, queries, events, tasks, and any other business logic services.
-    - 
 
 - **Integration Layer** (Dependencies): `provides reusable independent logic (persistence Layer, API clients, external logic)`
     - Loads any external API client services, persistence layer clients, and their associated data models (API DTOs for requests and responses).
@@ -51,17 +50,17 @@ The `src` folder contains four distinct Layers:
 
 Implements a simplified Bank that manages Accounts, Users and Transactions with full [Event Sourcing](https://microservices.io/patterns/data/event-sourcing.html), [CQRS](https://microservices.io/patterns/data/cqrs.html)
 
-[Explore OpenBank](samples/open_bank.md)
+[Explore OpenBank](https://github.com/bvandewe/pyneuro/tree/main/samples/openbank)
 
 ## Desktop Controller
 
 Remotely and securely control custom files or commands on a Desktop running the app as a Docker container...
 
-[Explore Desktop Controller](samples/desktop_controller.md)
+[Explore Desktop Controller](https://github.com/bvandewe/pyneuro/tree/main/samples/desktop-controller)
 
 ## API Gateway
 
 Expose single entry point for 3rd party clients into an internal layer, like a GenAI stack...
 Models a Prompt entity, enforces a business logic (e.g. Prompt' state-machine), handles scheduled background task (with persistence), exposes API with multiple Security schemes, ...
 
-[Explore API Gateway](samples/api_gateway.md)
+[Explore API Gateway](https://github.com/bvandewe/pyneuro/tree/main/samples/api-gateway)

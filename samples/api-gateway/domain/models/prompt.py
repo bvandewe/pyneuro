@@ -149,12 +149,9 @@ class PromptRequest:
     """The date and time the data was responded."""
 
     def has_valid_data_url(self) -> str | None:
-        
-        
         if self.data_url not in [None, "None"]:
             return self.data_url
         return None
-
 
 @map_to(PromptDto)
 @dataclass
