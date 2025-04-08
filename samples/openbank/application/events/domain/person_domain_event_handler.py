@@ -11,7 +11,8 @@ from samples.openbank.domain.models.person import Person, PersonRegisteredDomain
 from samples.openbank.integration.models.person import PersonDto
 
 
-class PersonDomainEventHandler(DomainEventHandlerBase[Person, PersonDto, str], DomainEventHandler[PersonRegisteredDomainEventV1]):
+class PersonDomainEventHandler(DomainEventHandlerBase[Person, PersonDto, str],
+                               DomainEventHandler[PersonRegisteredDomainEventV1]):
 
     def __init__(self, mediator: Mediator, mapper: Mapper, write_models: Repository[Person, str], read_models: Repository[PersonDto, str], cloud_event_bus: CloudEventBus, cloud_event_publishing_options: CloudEventPublishingOptions):
         super().__init__(mediator, mapper, write_models, read_models, cloud_event_bus, cloud_event_publishing_options)
