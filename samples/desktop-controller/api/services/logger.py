@@ -68,7 +68,7 @@ def _configure_file_based_logging(root_logger, log_level, formatter, filename):
 
     # Check if the file exists, if not, create it
     if not os.path.isfile(filename):
-        with open(filename, 'w'):  # This will create the file if it does not exist
+        with open(filename, "w"):  # This will create the file if it does not exist
             pass
 
     file_handler = logging.FileHandler(filename)
@@ -76,9 +76,7 @@ def _configure_file_based_logging(root_logger, log_level, formatter, filename):
     root_logger.addHandler(handler)
 
 
-def _configure_handler(
-    handler: logging.StreamHandler, log_level, formatter
-) -> logging.StreamHandler:
+def _configure_handler(handler: logging.StreamHandler, log_level, formatter) -> logging.StreamHandler:
     handler.setLevel(log_level)
     handler.setFormatter(formatter)
     return handler
