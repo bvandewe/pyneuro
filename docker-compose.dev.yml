@@ -1,5 +1,3 @@
-version: '3.4'
-
 name: pyneuro
 services:
   # http://localhost:8899/api/docs
@@ -8,9 +6,9 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    command: ["sh", "-c", "pip install debugpy -t /tmp && python /tmp/debugpy --wait-for-client --listen 0.0.0.0:5678 -m uvicorn samples.openbank.api.main:app --host 0.0.0.0 --port 8899 --reload"]
+    command: ["sh", "-c", "pip install debugpy -t /tmp && python /tmp/debugpy --wait-for-client --listen 0.0.0.0:5678 -m uvicorn samples.openbank.api.main:app --host 0.0.0.0 --port 8080 --reload"]
     ports:
-      - 8899:8899
+      - 8899:8080
       - 5699:5678
     environment:
       LOG_LEVEL: DEBUG
@@ -26,8 +24,9 @@ services:
     networks:
       - openbankdevnet
 
+  # http://localhost:2113
   eventstoredb:
-    image: eventstore/eventstore:latest
+    image: eventstore/eventstore:24.10.4 #latest
     ports:
       - "2113:2113" # HTTP port
       - "1113:1113" # WebSocket port
@@ -40,21 +39,21 @@ services:
       EVENTSTORE_RUN_PROJECTIONS: All
       EVENTSTORE_CLUSTER_SIZE: 1
       EVENTSTORE_START_STANDARD_PROJECTIONS: true
-      EVENTSTORE_EXT_TCP_PORT: 1113
+      # EVENTSTORE_EXT_TCP_PORT: 1113
       EVENTSTORE_HTTP_PORT: 2113     
-      EVENTSTORE_ENABLE_EXTERNAL_TCP: true
+      # EVENTSTORE_ENABLE_EXTERNAL_TCP: true
       EVENTSTORE_ENABLE_ATOM_PUB_OVER_HTTP: true
     networks:
       - openbankdevnet
 
   mongodb:
-    image: mongo:latest
+    image: mongo:6.0.21 #latest
     restart: always
     # environment:
       # MONGO_INITDB_ROOT_USERNAME: root
       # MONGO_INITDB_ROOT_PASSWORD_FILE: /run/secrets/db_root_password
     # command: mongod --auth --bind_ip_all --keyFile /etc/mongo-keyfile/keyfile
-    command: mongod --bind_ip_all
+    command: mongod #--bind_ip_all
     ports:
       - 27099:27017
     volumes:
@@ -65,23 +64,24 @@ services:
     networks:
       - openbankdevnet
 
-  mongo-express:
-    image: mongo-express:latest
-    restart: always
-    ports:
-      - 8111:8081
-    environment:
-      ME_CONFIG_MONGODB_SERVER: mongodb
-      # ME_CONFIG_MONGODB_ADMINUSERNAME: root
-      # ME_CONFIG_MONGODB_ADMINPASSWORD_FILE: /run/secrets/db_root_password
-      ME_CONFIG_MONGODB_ENABLE_ADMIN: true
-    # secrets:
-    #   - db_root_password
-    networks:
-      - openbankdevnet
+  # mongo-express:
+  #   image: mongo-express:latest
+  #   restart: always
+  #   ports:
+  #     - 8111:8081
+  #   environment:
+  #     ME_CONFIG_MONGODB_SERVER: mongodb
+  #     # ME_CONFIG_MONGODB_ADMINUSERNAME: root
+  #     # ME_CONFIG_MONGODB_ADMINPASSWORD_FILE: /run/secrets/db_root_password
+  #     ME_CONFIG_MONGODB_ENABLE_ADMIN: true
+  #   # secrets:
+  #   #   - db_root_password
+  #   networks:
+  #     - openbankdevnet
 
+  # http://localhost:8885
   event-player:
-    image: ccie-gitlab.ccie.cisco.com:4567/mozart/infrastructure/eventing/cloudevent-player:latest
+    image: ghcr.io/bvandewe/events-player:latest
     ports:
       - 8885:80
     environment:
