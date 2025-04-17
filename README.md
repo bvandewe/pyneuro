@@ -39,11 +39,15 @@ This project was the opportunity for me (cdavernas) to learn Python while portin
 ## Packaging
 
 ```sh
+# Set `package-mode = true` in pyproject.toml
 # Set the version tag in pyproject.toml
 # Commit changes
-
+# Create API Token in pypi.org...
+# Configure credentials for pypi registry:
+poetry config pypi-token.pypi  {pypi-....mytoken}
+# Build package locally
 poetry build
-
-poetry publish --repository gitlab -u <token-username> -p <token-password>
+# Publish package to pypi.org:
+poetry publish
 
 ```
