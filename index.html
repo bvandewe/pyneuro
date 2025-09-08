@@ -1637,22 +1637,22 @@ python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;<
 <h2 id="architecture-overview">🎯 Architecture Overview<a class="headerlink" href="#architecture-overview" title="Permanent link">&para;</a></h2>
 <p>Neuroglia promotes a clean, layered architecture:</p>
 <div class="highlight"><pre><span></span><code>┌─────────────────────────────────────────────────┐
-│                 🌐 API Layer                     │  ← Controllers, DTOs, Routes
-│            (FastAPI Integration)                 │
+│                  API Layer                      │  ← Controllers, DTOs, Routes
+│            (FastAPI Integration)                │
 └─────────────────────┬───────────────────────────┘
                       │ Commands &amp; Queries
 ┌─────────────────────▼───────────────────────────┐
-│              💼 Application Layer                │  ← Handlers, Services, Workflows
+│              Application Layer                  │  ← Handlers, Services, Workflows
 │         (CQRS, Mediation, Use Cases)            │
 └─────────────────────┬───────────────────────────┘
                       │ Domain Operations
 ┌─────────────────────▼───────────────────────────┐
-│               🏛️ Domain Layer                    │  ← Business Logic, Entities, Rules
+│               Domain Layer                      │  ← Business Logic, Entities, Rules
 │         (Pure Business Logic)                   │
 └─────────────────────▲───────────────────────────┘
                       │ Interface Implementation
 ┌─────────────────────┴───────────────────────────┐
-│            🔌 Integration Layer                  │  ← Databases, APIs, Infrastructure
+│            Integration Layer                    │  ← Databases, APIs, Infrastructure
 │      (Repositories, External Services)          │
 └─────────────────────────────────────────────────┘
 </code></pre></div>
