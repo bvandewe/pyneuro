@@ -1,7 +1,69 @@
 site_name: Neuroglia Python Framework
 docs_dir: docs
 site_dir: site
+
 nav:
   - Home: index.md
+  - Getting Started: getting-started.md
+  - Architecture: architecture.md
+  - Features:
+    - Dependency Injection: features/dependency-injection.md
+    - CQRS & Mediation: features/cqrs-mediation.md
+    - MVC Controllers: features/mvc-controllers.md
+    - Data Access: features/data-access.md
+    - Event Handling: features/event-handling.md
+    - Object Mapping: features/object-mapping.md
+    - Configuration: features/configuration.md
+    - Hosting: features/hosting.md
+    - Core: features/core.md
+    - Serialization: features/serialization.md
+  - Sample Applications:
+    - OpenBank: samples/openbank.md
+    - API Gateway: samples/api_gateway.md
+    - Desktop Controller: samples/desktop_controller.md
+
 theme:
   name: material
+  features:
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - search.highlight
+    - search.share
+  palette:
+    - scheme: default
+      primary: blue
+      accent: blue
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      primary: blue
+      accent: blue
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+
+markdown_extensions:
+  - admonition
+  - codehilite:
+      guess_lang: false
+  - toc:
+      permalink: true
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+
+plugins:
+  - search
+  - mkdocs-simple-hooks:
+      hooks:
+        on_pre_build: "hooks:copy_changelog"
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/bvandewe/pyneuro
