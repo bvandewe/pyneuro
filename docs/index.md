@@ -1,369 +1,258 @@
-# Neuroglia Python Framework
+# 🚀 Neuroglia Python Framework
 
-This Python framework is a lightweight layer built on top of [FastAPI](https://fastapi.tiangolo.com/). It offers developers a set of useful tools and features that can be applied to any microservice, no matter its specific purpose or domain. These features include:
+Neuroglia is a lightweight, opinionated framework built on top of [FastAPI](https://fastapi.tiangolo.com/) that provides a comprehensive set of tools and patterns for building clean, maintainable, and scalable microservices. It enforces architectural best practices and provides out-of-the-box implementations of common patterns.
 
-- Adherence to [12-Factor](https://12factor.net/) App principles.
-- **Built-in MVC Web App structure**: It provides a foundation for building web applications using the Model-View-Controller pattern, with essential abstractions.
-- **Simplified Dependency Injection**: A straightforward mechanism for managing dependencies, including automatic discovery and instantiation of classes.
-- **Class-based API Controllers with Automatic Loading**: Easily define API controllers using classes, with the framework automatically finding and loading them.
-- **Modular Command/Query Separation (CQRS)**: Supports a clear separation of commands (actions that change data) and queries (actions that retrieve data).
-- **Optional Event-Sourcing**: Provides the option to implement event-sourcing for building event-driven domain models.
-- **Clean, Layered Code**: Encourages a clean architecture approach, similar to the principles outlined in [link to clean architecture article].
+## ✨ What Makes Neuroglia Special?
 
-    - Pure Domain Models: Allows you to define domain models that are independent of any specific persistence mechanism.
-    - Application Handlers: Provides a structure for handling commands, queries, events, and background tasks within your application logic.
-    - Repository Pattern Implementation: Includes support for the Repository pattern for abstracting data access.
-    - Separation of API and Domain: Keeps API controllers, endpoints, and data transfer objects (DTOs) separate from your core domain models and business logic.
+- **🏗️ Clean Architecture Enforced**: Clear separation between API, Application, Domain, and Integration layers
+- **💉 Powerful Dependency Injection**: Lightweight container with automatic service discovery
+- **🎯 CQRS & Mediation Built-in**: Command Query Responsibility Segregation with mediator pattern
+- **📡 Event-Driven by Design**: Native CloudEvents, event sourcing, and reactive programming
+- **🔌 MVC Done Right**: Class-based controllers with automatic discovery and OpenAPI generation
+- **🗄️ Flexible Data Access**: Repository pattern with MongoDB, Event Store, and in-memory support
+- **📊 Smart Object Mapping**: Bidirectional mapping between domain models and DTOs
+- **⚡ Reactive Programming**: Built-in RxPy support for asynchronous event handling
 
-- **Native Asynchronous Event Handling** with RxPy: Offers built-in support for handling, emitting, and ingesting asynchronous events (in JSON CloudEvent format) using the ReactiveX programming paradigm with RxPy.
-- **Data Model Mapping**: Provides tools for easily mapping data between your domain models and integration layers.
-- Easy Background Task Scheduling: Integrates seamlessly with apscheduler for scheduling background tasks.
-- And more...
+## 🚀 Quick Start
 
-## Code Structure
+Get up and running in minutes:
 
-### Entry Point
+```bash
+# Install Neuroglia
+pip install neuroglia
 
-The main entry point of your application is typically the `src/main.py` file (or `src/api/main.py`).
-This file is where you define all the necessary dependencies and specify the sub-folders where the framework should dynamically load your **API**, **Application**, **Integration**, and **Domain** Layers.
-
-### Framework Conventions
-
-The `src` folder contains four distinct Layers:
-
-![src](img/src-Code_Structure.png)
-
-- **API Layer** (Controllers): `uses the Application Layer`
-    - Defines the endpoints available to external clients (incl. OpenAPI specs)
-    - Maps each endpoint to its corresponding Application handler.
-    - Maps external data (DTO's) models (API Requests and Responses schemas) to internal Domain layer
-
-- **Application Layer** (Handlers and Services): `executes the main biz logic, uses the Domain and Integration Layers`
-    - Loads the logic for handling commands, queries, events, tasks, and any other business logic services.
-
-- **Integration Layer** (Dependencies): `provides reusable independent logic (persistence Layer, API clients, external logic)`
-    - Loads any external API client services, persistence layer clients, and their associated data models (API DTOs for requests and responses).
-
-- **Domain Layer** (Models): `contains the core business domain models and rules`
-    - Defines the core entities, value objects, and business rules of your application.
-    - These models should be persistence-agnostic and represent your business domain.
-
-## Developer Guide
-
-### WIP - DISCLAIMER
-
-This section was generated by AI and contains many errors - this is still in-progress!!
-Please refer to the samples code for accurate information.
-
-### Core Framework Components
-
-The Neuroglia framework is composed of multiple modular components that work together to provide a comprehensive development experience:
-
-#### 1. Core Module (`neuroglia.core`)
-
-The core module provides foundational utilities and classes:
-
-- **TypeFinder**: Discovers classes and types within specified modules
-- **ModuleLoader**: Handles dynamic loading of modules
-- **ProblemDetails**: Standardized error response format
-- **OperationResult**: Wrapper for operation results with success/failure status
-
-#### 2. Dependency Injection (`neuroglia.dependency_injection`)
-
-A lightweight dependency injection system:
-
-- **ServiceProvider**: Central container for registering and resolving services
-- **ServiceCollection**: Registry for service definitions
-- **Automatic Discovery**: Services can be automatically discovered and registered
-
-```python
-# Example of dependency registration
-from neuroglia.dependency_injection.service_provider import ServiceCollection
-
-services = ServiceCollection()
-services.add_singleton(MyService)
-services.add_scoped(ScopedService)
-services.add_transient(TransientService)
-
-provider = services.build_service_provider()
-my_service = provider.get_required_service(MyService)
-```
-
-#### 3. Web Hosting (`neuroglia.hosting`)
-
-Web application hosting abstractions:
-
-- **WebApplicationBuilder**: Factory for building and configuring web applications
-- **WebHost**: Base host for web applications, integrating with FastAPI
-- **Middleware Support**: Exception handling, CloudEvents, etc.
-
-```python
-# Example of application setup
+# Create your first app
+python -c "
 from neuroglia.hosting.web import WebApplicationBuilder
 
 builder = WebApplicationBuilder()
-# Configure services
+builder.add_controllers(['api.controllers'])
+
 app = builder.build()
+app.use_controllers()
+app.run()
+"
 ```
 
-#### 4. MVC Pattern (`neuroglia.mvc`)
+**[👉 Get Started Now](getting-started.md)**
 
-Support for Model-View-Controller pattern:
+## 🎯 Architecture Overview
 
-- **ControllerBase**: Base class for creating API controllers
-- **Automatic Controller Discovery**: Controllers are automatically found and registered
+Neuroglia promotes a clean, layered architecture:
+
+```text
+┌─────────────────────────────────────────────────┐
+│                 🌐 API Layer                     │  ← Controllers, DTOs, Routes
+│            (FastAPI Integration)                 │
+└─────────────────────┬───────────────────────────┘
+                      │ Commands & Queries
+┌─────────────────────▼───────────────────────────┐
+│              💼 Application Layer                │  ← Handlers, Services, Workflows
+│         (CQRS, Mediation, Use Cases)            │
+└─────────────────────┬───────────────────────────┘
+                      │ Domain Operations
+┌─────────────────────▼───────────────────────────┐
+│               🏛️ Domain Layer                    │  ← Business Logic, Entities, Rules
+│         (Pure Business Logic)                   │
+└─────────────────────▲───────────────────────────┘
+                      │ Interface Implementation
+┌─────────────────────┴───────────────────────────┐
+│            🔌 Integration Layer                  │  ← Databases, APIs, Infrastructure
+│      (Repositories, External Services)          │
+└─────────────────────────────────────────────────┘
+```
+
+**[📖 Learn the Architecture](architecture.md)**
+
+## 🎪 Core Features
+
+### 💉 Dependency Injection
+
+Powerful, lightweight DI container with automatic service discovery:
 
 ```python
-# Example controller
-from fastapi import APIRouter
-from neuroglia.mvc.controller_base import ControllerBase
+# Automatic registration
+services.add_scoped(UserService)
+services.add_singleton(CacheService)
 
+# Constructor injection
+class UserController(ControllerBase):
+    def __init__(self, user_service: UserService):
+        self.user_service = user_service
+```
+
+**[📖 Dependency Injection Guide](features/dependency-injection.md)**
+
+### 🎯 CQRS & Mediation
+
+Clean separation of commands and queries with built-in mediation:
+
+```python
+# Command
+@dataclass
+class CreateUserCommand(Command[OperationResult[UserDto]]):
+    email: str
+    first_name: str
+
+# Handler
+class CreateUserHandler(CommandHandler[CreateUserCommand, OperationResult[UserDto]]):
+    async def handle_async(self, command: CreateUserCommand) -> OperationResult[UserDto]:
+        # Business logic here
+        return self.created(user_dto)
+
+# Usage in controller
+result = await self.mediator.execute_async(command)
+```
+
+**[📖 CQRS & Mediation Guide](features/cqrs-mediation.md)**
+
+### 🔌 MVC Controllers
+
+Class-based controllers with automatic discovery and full FastAPI integration:
+
+```python
 class UsersController(ControllerBase):
-    def __init__(self):
-        super().__init__()
-        self.router = APIRouter(tags=["users"])
-        
-        @self.router.get("/users")
-        async def get_users():
-            # Implementation
-            return []
+    @post("/", response_model=UserDto, status_code=201)
+    async def create_user(self, user_dto: CreateUserDto) -> UserDto:
+        command = self.mapper.map(user_dto, CreateUserCommand)
+        result = await self.mediator.execute_async(command)
+        return self.process(result)
 ```
 
-#### 5. CQRS and Mediation (`neuroglia.mediation`)
+**[📖 MVC Controllers Guide](features/mvc-controllers.md)**
 
-Support for Command Query Responsibility Segregation:
+### 📡 Event-Driven Architecture
 
-- **Mediator**: Central hub for handling commands and queries
-- **RequestHandler**: Base class for command and query handlers
+Native support for CloudEvents and reactive programming:
 
 ```python
-# Command example
-from neuroglia.mediation.mediator import RequestHandler
+# Domain events
+class UserCreatedEvent(DomainEvent):
+    user_id: str
+    email: str
 
-class CreateUserCommand:
-    def __init__(self, name: str, email: str):
-        self.name = name
-        self.email = email
-
-class CreateUserCommandHandler(RequestHandler[CreateUserCommand, str]):
-    async def handle(self, request: CreateUserCommand) -> str:
-        # Implementation
-        return "user_id"
-
-# Usage
-result = await mediator.send(CreateUserCommand("John", "john@example.com"))
+# Event handlers
+class WelcomeEmailHandler(EventHandler[UserCreatedEvent]):
+    async def handle_async(self, event: UserCreatedEvent):
+        await self.email_service.send_welcome(event.email)
 ```
 
-#### 6. Data Access (`neuroglia.data`)
+**[📖 Event Handling Guide](features/event-handling.md)**
 
-Database access abstractions:
+### 🗄️ Data Access
 
-- **Repository Pattern**: Generic repositories for data access
-- **MongoDB Integration**: Ready-to-use MongoDB repositories
-- **Event Sourcing**: Support for event sourcing pattern
-- **Queryable**: Fluent query interface
+Flexible repository pattern with multiple storage backends:
 
 ```python
-# Repository example
-from neuroglia.data.infrastructure.mongo.mongo_repository import MongoRepository
+# Repository interface
+class IUserRepository(Repository[User, str]):
+    async def get_by_email(self, email: str) -> User:
+        pass
 
-class UserRepository(MongoRepository[User, str]):
-    def __init__(self, connection_string: str):
-        super().__init__(connection_string, "users", "users")
+# MongoDB implementation
+class MongoUserRepository(IUserRepository):
+    # Implementation
+
+# Event sourcing implementation  
+class EventSourcedUserRepository(IUserRepository):
+    # Implementation
 ```
 
-#### 7. Event Handling (`neuroglia.eventing`)
+**[📖 Data Access Guide](features/data-access.md)**
 
-Event-based communication support:
+## 🎓 Sample Applications
 
-- **CloudEvents**: Support for CloudEvents standard
-- **Event Publishing**: Mechanisms to publish events
-- **Event Ingestion**: Capabilities to consume events
+Learn by example with complete, production-ready sample applications:
 
-```python
-# Event publishing example
-from neuroglia.eventing.cloud_events.infrastructure.cloud_event_publisher import CloudEventPublisher
+### 🏦 OpenBank - Event-Sourced Banking System
 
-publisher = CloudEventPublisher("source")
-await publisher.publish("user.created", {"id": "123", "name": "John"})
-```
+A comprehensive banking domain showcasing:
 
-#### 8. Object Mapping (`neuroglia.mapping`)
+- ✅ Event sourcing with EventStoreDB
+- ✅ CQRS with separate read/write models  
+- ✅ Domain-driven design patterns
+- ✅ Event-driven architecture
+- ✅ Clean architecture layers
 
-Mapping between different object representations:
+**[👉 Explore OpenBank](samples/openbank.md)**
 
-- **Mapper**: Bidirectional object mapping
-- **Profile Configuration**: Define mapping profiles for different object types
+### 🚪 API Gateway - Microservice Gateway
 
-```python
-# Mapping example
-from neuroglia.mapping.mapper import Mapper
+An intelligent API gateway featuring:
 
-# Configure mapping
-Mapper.create_map(UserDTO, User)
-Mapper.create_map(User, UserDTO)
+- ✅ Request routing and load balancing
+- ✅ Authentication and authorization
+- ✅ Rate limiting and caching
+- ✅ Monitoring and observability
 
-# Map objects
-user_dto = Mapper.map(User("123", "John", "john@example.com"), UserDTO)
-```
+**[👉 Explore API Gateway](samples/api_gateway.md)**
 
-#### 9. Serialization (`neuroglia.serialization`)
+### 🖥️ Desktop Controller - Remote Management
 
-Serialization utilities:
+A desktop management API demonstrating:
 
-- **JsonSerializer**: JSON serialization with enhanced features
-- Customizable serialization options
+- ✅ Background services and scheduling
+- ✅ Real-time communication
+- ✅ System integration patterns
+- ✅ Docker containerization
 
-#### 10. Reactive Programming (`neuroglia.reactive`)
+**[👉 Explore Desktop Controller](samples/desktop_controller.md)**
 
-Support for reactive programming:
+## 📚 Documentation
 
-- **RxPy Integration**: Reactive Extensions for Python
-- **RxAsync**: Asynchronous reactive programming utilities
+### 🚀 Getting Started
 
-### Creating a New Application
+- **[Quick Start Guide](getting-started.md)** - Build your first app in 10 minutes
+- **[Architecture Overview](architecture.md)** - Understand the framework's design
+- **[Project Structure](getting-started.md#project-structure)** - Organize your code properly
 
-Follow these steps to create a new Neuroglia application:
+### 🎪 Feature Guides
 
-1. **Set up project structure**:
-   ```
-   my_project/
-   ├── api/
-   │   ├── main.py              # Entry point
-   │   └── controllers/         # API controllers
-   ├── application/
-   │   ├── commands/            # Command handlers
-   │   ├── queries/             # Query handlers
-   │   ├── events/              # Event handlers
-   │   └── services/            # Application services
-   ├── domain/
-   │   └── models/              # Domain models
-   └── integration/
-       ├── models/              # External data models
-       └── services/            # External services
-   ```
+| Feature | Description | Documentation |
+|---------|-------------|---------------|
+| **Dependency Injection** | Service container and automatic registration | [📖 Guide](features/dependency-injection.md) |
+| **CQRS & Mediation** | Command/Query separation with mediator | [📖 Guide](features/cqrs-mediation.md) |
+| **MVC Controllers** | Class-based API controllers | [📖 Guide](features/mvc-controllers.md) |
+| **Data Access** | Repository pattern and persistence | [📖 Guide](features/data-access.md) |
+| **Event Handling** | Events, messaging, and reactive programming | [📖 Guide](features/event-handling.md) |
+| **Object Mapping** | Automatic object-to-object mapping | [📖 Guide](features/object-mapping.md) |
+| **Configuration** | Settings and environment management | [📖 Guide](features/configuration.md) |
+| **Hosting** | Web application hosting and lifecycle | [📖 Guide](features/hosting.md) |
 
-2. **Create the entry point** (`api/main.py`):
-   ```python
-   import logging
-   from neuroglia.hosting.web import WebApplicationBuilder
-   from neuroglia.mapping.mapper import Mapper
-   from neuroglia.mediation.mediator import Mediator
+### 📋 Requirements
 
-   # Configure logging
-   logging.basicConfig(level=logging.INFO)
-   log = logging.getLogger(__name__)
+- **Python 3.11+**
+- **FastAPI** (automatic)
+- **Pydantic** (automatic)
+- **Optional**: MongoDB, EventStoreDB, Redis (based on features used)
 
-   # Create application builder
-   builder = WebApplicationBuilder()
+## 🤝 Contributing
 
-   # Configure services
-   Mapper.configure(builder, ["myproject.application"])
-   builder.services.add_singleton(Mediator)
-   
-   # Build and run the application
-   app = builder.build()
-   ```
+We welcome contributions! Here's how you can help:
 
-3. **Create domain models** (`domain/models/user.py`):
-   ```python
-   from dataclasses import dataclass
-   from neuroglia.data.abstractions import AggregateRoot
-   
-   @dataclass
-   class User(AggregateRoot[str]):
-       name: str
-       email: str
-   ```
+- 🐛 **Report bugs** - Found an issue? Let us know!
+- 💡 **Suggest features** - Have an idea? We'd love to hear it!
+- 📝 **Improve docs** - Help make our documentation better
+- 🔧 **Submit PRs** - Code contributions are always welcome
 
-4. **Create commands and queries**:
-   ```python
-   # application/commands/create_user.py
-   from dataclasses import dataclass
-   from neuroglia.mediation.mediator import RequestHandler
-   
-   @dataclass
-   class CreateUserCommand:
-       name: str
-       email: str
-   
-   class CreateUserCommandHandler(RequestHandler[CreateUserCommand, str]):
-       async def handle(self, request: CreateUserCommand) -> str:
-           # Implementation
-           return "user_id"
-   ```
+**[👉 Contributing Guide](CONTRIBUTING.md)**
 
-5. **Create controllers** (`api/controllers/users_controller.py`):
-   ```python
-   from fastapi import APIRouter, Depends
-   from neuroglia.mvc.controller_base import ControllerBase
-   from neuroglia.mediation.mediator import Mediator
-   from application.commands.create_user import CreateUserCommand
-   
-   class UsersController(ControllerBase):
-       def __init__(self, mediator: Mediator):
-           super().__init__()
-           self.mediator = mediator
-           self.router = APIRouter(tags=["users"])
-           
-           @self.router.post("/users")
-           async def create_user(name: str, email: str):
-               return await self.mediator.send(CreateUserCommand(name, email))
-   ```
+## 📄 License
 
-### Using Event Sourcing
+This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
 
-Event Sourcing is a powerful pattern that Neuroglia supports out of the box:
+## 🌟 Why Choose Neuroglia?
 
-1. **Define domain events**:
-   ```python
-   from dataclasses import dataclass
-   from neuroglia.data.abstractions import DomainEvent
-   
-   @dataclass
-   class UserCreatedEvent(DomainEvent):
-       name: str
-       email: str
-   ```
+✅ **Production Ready**: Battle-tested patterns and practices  
+✅ **Developer Friendly**: Intuitive APIs and excellent documentation  
+✅ **Highly Testable**: Built with testing in mind from day one  
+✅ **Scalable**: Patterns that grow with your application  
+✅ **Modern**: Leverages the latest Python and FastAPI features  
+✅ **Flexible**: Use only what you need, when you need it  
 
-2. **Create event-sourced aggregate**:
-   ```python
-   from neuroglia.data.abstractions import AggregateRoot
-   
-   class User(AggregateRoot[str]):
-       _name: str = None
-       _email: str = None
-       
-       @property
-       def name(self) -> str:
-           return self._name
-           
-       @property
-       def email(self) -> str:
-           return self._email
-       
-       @staticmethod
-       def create(id: str, name: str, email: str) -> "User":
-           user = User(id)
-           user.apply_change(UserCreatedEvent(id, name, email))
-           return user
-       
-       def _on_user_created(self, event: UserCreatedEvent):
-           self._name = event.name
-           self._email = event.email
-   ```
+---
 
-3. **Configure event store**:
-   ```python
-   from neuroglia.data.infrastructure.event_sourcing.event_store.event_store import ESEventStore
-   from neuroglia.data.infrastructure.event_sourcing.event_sourcing_repository import EventSourcingRepository
-   
-   # Setup event store
-   event_store = ESEventStore("connection_string", "stream_prefix")
-   
-   # Create repository
-   user_repository = EventSourcingRepository[User, str](event_store)
-   ```
+**Ready to build something amazing?** [Get Started Now](getting-started.md) 🚀
 
 ### Running Background Tasks
 
