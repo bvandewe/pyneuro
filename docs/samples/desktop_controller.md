@@ -196,7 +196,6 @@ The intent is that "whoever" wants to remotely control a desktop first needs to 
 
 Local testings can be done with a local/dev Keycloak instance. Just include it in `docker-compose.yml`!
 
-
 ```yml
 version: "3.4"
 
@@ -277,7 +276,6 @@ Set corresponding `ENV VARS` in `docker-compose.yml`.
 
 from neuroglia.hosting.abstractions import ApplicationSettings
 from pydantic import ConfigDict
-
 
 class DesktopControllerSettings(ApplicationSettings):
     model_config = ConfigDict(extra="allow")
@@ -413,7 +411,6 @@ app.run()
   @dataclass
   class TestHostScriptCommand(Command):
       user_input: str
-
 
   class TestHostScriptCommandsHandler(CommandHandler[TestHostScriptCommand, OperationResult[Any]]):
       """Represents the service used to handle UserInfo-related Commands"""
