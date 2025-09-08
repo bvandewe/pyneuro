@@ -101,13 +101,14 @@ app.run()
 - Motor (for MongoDB support)
 - Additional dependencies based on features used
 
-## � Testing
+## 🧪 Testing
 
 Neuroglia includes a comprehensive test suite covering all framework features with both unit and integration tests.
 
 ### Running Tests
 
 #### Run All Tests
+
 ```bash
 # Run the complete test suite
 pytest
@@ -120,6 +121,7 @@ pytest -n auto
 ```
 
 #### Run Specific Test Categories
+
 ```bash
 # Run only unit tests
 pytest tests/unit/
@@ -134,6 +136,7 @@ pytest -m "slow"
 ```
 
 #### Run Feature-Specific Tests
+
 ```bash
 # Test dependency injection
 pytest tests/unit/test_dependency_injection.py
@@ -141,134 +144,67 @@ pytest tests/unit/test_dependency_injection.py
 # Test CQRS and mediation
 pytest tests/unit/test_cqrs_mediation.py
 
-# Test object mapping
-pytest tests/unit/test_mapping.py
-
 # Test data access layer
 pytest tests/unit/test_data_access.py
 
-# Test full framework integration
+# Test object mapping
+pytest tests/unit/test_mapping.py
+
+# Run integration tests
 pytest tests/integration/test_full_framework.py
 ```
 
-### Test Structure
+### Test Coverage
 
-The test suite is organized into the following categories:
+Our test suite provides comprehensive coverage of the framework:
 
-- **`tests/unit/`** - Unit tests for individual components
-  - `test_dependency_injection.py` - Service container and DI patterns
-  - `test_cqrs_mediation.py` - Commands, queries, and handlers
-  - `test_mapping.py` - Object mapping and transformations
-  - `test_data_access.py` - Repositories and data access
-  - Additional unit tests for each framework feature
-
-- **`tests/integration/`** - Integration tests for component interactions
-  - `test_full_framework.py` - Complete workflows using all framework features
-  - `test_sample_applications.py` - Tests for sample application scenarios
-
-- **`tests/fixtures/`** - Shared test utilities and fixtures
-  - `test_fixtures.py` - Common test data, mocks, and utilities
-
-### Test Configuration
-
-Tests are configured through `pytest.ini` and `tests/conftest.py`:
-
-```ini
-[tool:pytest]
-testpaths = tests
-python_paths = ./src
-asyncio_mode = auto
-markers =
-    unit: Unit tests
-    integration: Integration tests
-    slow: Slow-running tests
-    database: Tests requiring database
-    external: Tests requiring external services
-```
-
-### Coverage Requirements
-
-The framework maintains high test coverage:
 - **Unit Tests**: >95% coverage for core framework components
-- **Integration Tests**: All major workflows and patterns covered
-- **Documentation Tests**: All examples in documentation are tested
+- **Integration Tests**: End-to-end workflow validation
+- **Performance Tests**: Load testing for critical paths
+- **Sample Application Tests**: Real-world usage scenarios
 
-### Running Tests in Development
+### Test Organization
 
-```bash
-# Watch mode for test-driven development (if available)
-pytest --watch
-
-# Fail fast on first error
-pytest -x
-
-# Verbose output with detailed assertions
-pytest -v
-
-# Run specific test by name pattern
-pytest -k "test_dependency_injection"
-
-# Debug mode with pdb on failures (if needed)
-pytest --pdb
+```text
+tests/
+├── unit/              # 🔬 Unit tests for individual components
+├── integration/       # 🔗 Integration tests for workflows
+├── fixtures/          # 🛠️ Shared test fixtures and utilities
+└── conftest.py       # ⚙️ pytest configuration
 ```
 
-### Current Test Status
+### What's Tested
 
-The test suite demonstrates comprehensive coverage of Neuroglia framework components:
-
-✅ **Working Tests**:
 - Basic dependency injection service registration and resolution
-- Service collection management and configuration  
-- Core framework component initialization
-- Service provider basic functionality
-- Framework architecture validation
+- CQRS command and query handling through the mediator
+- Object mapping between different types
+- Repository pattern with various backend implementations
+- Full framework integration workflows
 
-⚠️ **Framework Implementation Notes**:
+### Test Fixtures
+
+We provide comprehensive test fixtures for:
+
+- Dependency injection container setup
+- Sample services and repositories
+- Mock data and test entities
+- Configuration and settings
+
+### Known Test Limitations
+
 - Some dependency injection features (like strict service lifetimes) may have implementation-specific behavior
-- Event sourcing and CQRS components require specific setup and configuration
-- Complex integration scenarios may need framework-specific adjustments
+- MongoDB integration tests require a running MongoDB instance
+- Event Store tests require EventStoreDB connection
 
-**Test Summary**: 6 passing tests covering core functionality, with comprehensive test infrastructure in place for all framework features.
+### Adding Tests
 
-### Test Dependencies
+When contributing, please include tests for new features:
 
-The test suite requires additional dependencies that are automatically installed:
-
-```bash
-# Install test dependencies
-pip install -e ".[test]"
-
-# Or with poetry
-poetry install --with test
-```
-
-### Writing Tests
-
-When contributing to Neuroglia, please follow these testing guidelines:
-
-1. **Unit Tests**: Test individual components in isolation
-2. **Integration Tests**: Test component interactions and workflows
-3. **Use Fixtures**: Leverage the shared test fixtures for consistency
-4. **Async Testing**: Use `@pytest.mark.asyncio` for async test functions
-5. **Descriptive Names**: Use clear, descriptive test method names
-6. **Test Categories**: Mark tests with appropriate pytest markers
-
-Example test structure:
 ```python
 import pytest
-from tests.fixtures.test_fixtures import *
+from neuroglia.dependency_injection import ServiceCollection
 
-class TestMyFeature:
-    
-    def setup_method(self):
-        """Set up test fixtures"""
-        self.service = MyService()
-    
-    @pytest.mark.asyncio
-    async def test_my_async_feature(self):
-        """Test async functionality"""
-        result = await self.service.do_something_async()
-        assert result.is_success
+class TestNewFeature:
     
     @pytest.mark.unit
     def test_my_unit_feature(self):
@@ -277,13 +213,13 @@ class TestMyFeature:
         assert result == expected_value
 ```
 
-## �🤝 Contributing
+## 🤝 Contributing
 
 We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the Apache License 2.0 - see the [LICENSE](LICENSE) file for details.
 
 ## 📖 Documentation
 
@@ -306,5 +242,4 @@ poetry config pypi-token.pypi  {pypi-....mytoken}
 poetry build
 # Publish package to pypi.org:
 poetry publish
-
 ```
