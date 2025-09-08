@@ -72,7 +72,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#api-gateway" class="md-skip">
+        <a href="#api-gateway-sample-application" class="md-skip">
           Skip to content
         </a>
       
@@ -548,6 +548,29 @@
   
   
     <li class="md-nav__item">
+      <a href="../../features/event-sourcing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Event Sourcing
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../features/event-handling.md" class="md-nav__link">
         
   
@@ -773,6 +796,19 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    API Gateway
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -784,6 +820,595 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#what-youll-learn" class="md-nav__link">
+    <span class="md-ellipsis">
+      🎯 What You'll Learn
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#architecture-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      🏗️ Architecture Overview
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-features-demonstrated" class="md-nav__link">
+    <span class="md-ellipsis">
+      🚀 Key Features Demonstrated
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🚀 Key Features Demonstrated">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-oauth2-authentication-security" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. OAuth2 Authentication &amp; Security
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-multi-service-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Multi-Service Integration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-advanced-domain-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Advanced Domain Model
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-background-task-processing" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Background Task Processing
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-cloud-events-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      5. Cloud Events Integration
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuration-settings" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔧 Configuration &amp; Settings
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🔧 Configuration &amp; Settings">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#application-settings" class="md-nav__link">
+    <span class="md-ellipsis">
+      Application Settings
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#service-registration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Service Registration
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#testing-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      🧪 Testing Strategy
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🧪 Testing Strategy">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#unit-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      Unit Tests
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#integration-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      Integration Tests
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#implementation-details" class="md-nav__link">
+    <span class="md-ellipsis">
+      📚 Implementation Details
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📚 Implementation Details">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-controller-layer-apicontrollers" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Controller Layer (api/controllers/)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-application-layer-application" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Application Layer (application/)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-domain-layer-domain" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Domain Layer (domain/)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-integration-layer-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Integration Layer (integration/)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#background-processing" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔄 Background Processing
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#external-service-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      🌐 External Service Integration
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🌐 External Service Integration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#minio-object-storage" class="md-nav__link">
+    <span class="md-ellipsis">
+      MinIO Object Storage
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#redis-caching" class="md-nav__link">
+    <span class="md-ellipsis">
+      Redis Caching
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#external-api-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      External API Integration
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#getting-started" class="md-nav__link">
+    <span class="md-ellipsis">
+      🚀 Getting Started
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🚀 Getting Started">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Prerequisites
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Configuration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-run-the-application" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Run the Application
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-test-the-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Test the API
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related-documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔗 Related Documentation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#comparison-with-openbank-sample" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔍 Comparison with OpenBank Sample
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🔍 Comparison with OpenBank Sample">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#architecture-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      Architecture Patterns
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#domain-complexity" class="md-nav__link">
+    <span class="md-ellipsis">
+      Domain Complexity
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Domain Complexity">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#api-gateway-integration-focused" class="md-nav__link">
+    <span class="md-ellipsis">
+      API Gateway - Integration-Focused
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#openbank-rich-domain-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      OpenBank - Rich Domain Model
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#data-persistence-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      Data Persistence Strategy
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Data Persistence Strategy">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#api-gateway-multi-store-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      API Gateway - Multi-Store Architecture
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#openbank-event-sourcing" class="md-nav__link">
+    <span class="md-ellipsis">
+      OpenBank - Event Sourcing
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#authentication-security" class="md-nav__link">
+    <span class="md-ellipsis">
+      Authentication &amp; Security
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Authentication &amp; Security">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#api-gateway-oauth2-api-keys" class="md-nav__link">
+    <span class="md-ellipsis">
+      API Gateway - OAuth2 + API Keys
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#openbank-domain-focused-security" class="md-nav__link">
+    <span class="md-ellipsis">
+      OpenBank - Domain-Focused Security
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#external-service-integration_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      External Service Integration
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="External Service Integration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#api-gateway-extensive-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      API Gateway - Extensive Integration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#openbank-minimal-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      OpenBank - Minimal Integration
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#background-processing_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Background Processing
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Background Processing">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#api-gateway-task-queue-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      API Gateway - Task Queue Pattern
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#openbank-event-driven-projections" class="md-nav__link">
+    <span class="md-ellipsis">
+      OpenBank - Event-Driven Projections
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#testing-strategies" class="md-nav__link">
+    <span class="md-ellipsis">
+      Testing Strategies
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Testing Strategies">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#api-gateway-integration-heavy-testing" class="md-nav__link">
+    <span class="md-ellipsis">
+      API Gateway - Integration-Heavy Testing
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#openbank-domain-focused-testing" class="md-nav__link">
+    <span class="md-ellipsis">
+      OpenBank - Domain-Focused Testing
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#use-case-recommendations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Use Case Recommendations
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Use Case Recommendations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#choose-api-gateway-pattern-when" class="md-nav__link">
+    <span class="md-ellipsis">
+      Choose API Gateway Pattern when
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#choose-event-sourcing-pattern-when" class="md-nav__link">
+    <span class="md-ellipsis">
+      Choose Event Sourcing Pattern when
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#framework-features-utilized" class="md-nav__link">
+    <span class="md-ellipsis">
+      Framework Features Utilized
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -840,6 +1465,584 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#what-youll-learn" class="md-nav__link">
+    <span class="md-ellipsis">
+      🎯 What You'll Learn
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#architecture-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      🏗️ Architecture Overview
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-features-demonstrated" class="md-nav__link">
+    <span class="md-ellipsis">
+      🚀 Key Features Demonstrated
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🚀 Key Features Demonstrated">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-oauth2-authentication-security" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. OAuth2 Authentication &amp; Security
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-multi-service-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Multi-Service Integration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-advanced-domain-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Advanced Domain Model
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-background-task-processing" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Background Task Processing
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-cloud-events-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      5. Cloud Events Integration
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuration-settings" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔧 Configuration &amp; Settings
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🔧 Configuration &amp; Settings">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#application-settings" class="md-nav__link">
+    <span class="md-ellipsis">
+      Application Settings
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#service-registration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Service Registration
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#testing-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      🧪 Testing Strategy
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🧪 Testing Strategy">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#unit-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      Unit Tests
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#integration-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      Integration Tests
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#implementation-details" class="md-nav__link">
+    <span class="md-ellipsis">
+      📚 Implementation Details
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📚 Implementation Details">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-controller-layer-apicontrollers" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Controller Layer (api/controllers/)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-application-layer-application" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Application Layer (application/)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-domain-layer-domain" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Domain Layer (domain/)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-integration-layer-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Integration Layer (integration/)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#background-processing" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔄 Background Processing
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#external-service-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      🌐 External Service Integration
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🌐 External Service Integration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#minio-object-storage" class="md-nav__link">
+    <span class="md-ellipsis">
+      MinIO Object Storage
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#redis-caching" class="md-nav__link">
+    <span class="md-ellipsis">
+      Redis Caching
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#external-api-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      External API Integration
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#getting-started" class="md-nav__link">
+    <span class="md-ellipsis">
+      🚀 Getting Started
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🚀 Getting Started">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Prerequisites
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Configuration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-run-the-application" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Run the Application
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-test-the-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Test the API
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related-documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔗 Related Documentation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#comparison-with-openbank-sample" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔍 Comparison with OpenBank Sample
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🔍 Comparison with OpenBank Sample">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#architecture-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      Architecture Patterns
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#domain-complexity" class="md-nav__link">
+    <span class="md-ellipsis">
+      Domain Complexity
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Domain Complexity">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#api-gateway-integration-focused" class="md-nav__link">
+    <span class="md-ellipsis">
+      API Gateway - Integration-Focused
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#openbank-rich-domain-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      OpenBank - Rich Domain Model
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#data-persistence-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      Data Persistence Strategy
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Data Persistence Strategy">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#api-gateway-multi-store-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      API Gateway - Multi-Store Architecture
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#openbank-event-sourcing" class="md-nav__link">
+    <span class="md-ellipsis">
+      OpenBank - Event Sourcing
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#authentication-security" class="md-nav__link">
+    <span class="md-ellipsis">
+      Authentication &amp; Security
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Authentication &amp; Security">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#api-gateway-oauth2-api-keys" class="md-nav__link">
+    <span class="md-ellipsis">
+      API Gateway - OAuth2 + API Keys
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#openbank-domain-focused-security" class="md-nav__link">
+    <span class="md-ellipsis">
+      OpenBank - Domain-Focused Security
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#external-service-integration_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      External Service Integration
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="External Service Integration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#api-gateway-extensive-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      API Gateway - Extensive Integration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#openbank-minimal-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      OpenBank - Minimal Integration
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#background-processing_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Background Processing
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Background Processing">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#api-gateway-task-queue-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      API Gateway - Task Queue Pattern
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#openbank-event-driven-projections" class="md-nav__link">
+    <span class="md-ellipsis">
+      OpenBank - Event-Driven Projections
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#testing-strategies" class="md-nav__link">
+    <span class="md-ellipsis">
+      Testing Strategies
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Testing Strategies">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#api-gateway-integration-heavy-testing" class="md-nav__link">
+    <span class="md-ellipsis">
+      API Gateway - Integration-Heavy Testing
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#openbank-domain-focused-testing" class="md-nav__link">
+    <span class="md-ellipsis">
+      OpenBank - Domain-Focused Testing
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#use-case-recommendations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Use Case Recommendations
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Use Case Recommendations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#choose-api-gateway-pattern-when" class="md-nav__link">
+    <span class="md-ellipsis">
+      Choose API Gateway Pattern when
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#choose-event-sourcing-pattern-when" class="md-nav__link">
+    <span class="md-ellipsis">
+      Choose Event Sourcing Pattern when
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#framework-features-utilized" class="md-nav__link">
+    <span class="md-ellipsis">
+      Framework Features Utilized
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -854,8 +2057,528 @@
 
 
 
-<h1 id="api-gateway">API Gateway<a class="headerlink" href="#api-gateway" title="Permanent link">&para;</a></h1>
-<p>TODO</p>
+<h1 id="api-gateway-sample-application">🚀 API Gateway Sample Application<a class="headerlink" href="#api-gateway-sample-application" title="Permanent link">&para;</a></h1>
+<p>The API Gateway sample demonstrates how to build a modern microservice gateway using the Neuroglia framework. This application showcases advanced patterns including OAuth2 authentication, external service integration, background task processing, and cloud event handling.</p>
+<h2 id="what-youll-learn">🎯 What You'll Learn<a class="headerlink" href="#what-youll-learn" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Microservice Gateway Patterns</strong>: How to build a centralized API gateway for service orchestration</li>
+<li><strong>OAuth2 Authentication &amp; Authorization</strong>: Implementing JWT-based security with Keycloak integration</li>
+<li><strong>External Service Integration</strong>: Connecting to multiple external APIs with proper abstraction</li>
+<li><strong>Background Task Processing</strong>: Asynchronous task execution with Redis-backed job scheduling</li>
+<li><strong>Object Storage Integration</strong>: File management with MinIO S3-compatible storage</li>
+<li><strong>Cloud Events</strong>: Event-driven communication between microservices</li>
+<li><strong>Advanced Dependency Injection</strong>: Complex service configuration and lifetime management</li>
+</ul>
+<h2 id="architecture-overview">🏗️ Architecture Overview<a class="headerlink" href="#architecture-overview" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>graph TB
+    subgraph &quot;API Gateway Service&quot;
+        A[PromptController] --&gt; B[Mediator]
+        B --&gt; C[Command/Query Handlers]
+        C --&gt; D[Domain Models]
+        C --&gt; E[Integration Services]
+
+        F[OAuth2 Middleware] --&gt; A
+        G[Cloud Event Middleware] --&gt; A
+        H[Exception Handling] --&gt; A
+    end
+
+    subgraph &quot;External Dependencies&quot;
+        I[Keycloak OAuth2]
+        J[Redis Cache]
+        K[MinIO Storage]
+        L[External APIs]
+        M[Background Tasks]
+    end
+
+    E --&gt; I
+    E --&gt; J
+    E --&gt; K
+    E --&gt; L
+    C --&gt; M
+</code></pre></div>
+<p>The API Gateway follows a <strong>distributed microservice pattern</strong> where:</p>
+<ul>
+<li><strong>Gateway Layer</strong>: Centralized entry point for multiple downstream services</li>
+<li><strong>Authentication Layer</strong>: OAuth2/JWT-based security with external identity provider</li>
+<li><strong>Integration Layer</strong>: Multiple external service clients with proper abstraction</li>
+<li><strong>DTOs</strong>: Data transfer objects for external communication</li>
+</ul>
+<h2 id="key-features-demonstrated">🚀 Key Features Demonstrated<a class="headerlink" href="#key-features-demonstrated" title="Permanent link">&para;</a></h2>
+<h3 id="1-oauth2-authentication-security">1. <strong>OAuth2 Authentication &amp; Security</strong><a class="headerlink" href="#1-oauth2-authentication-security" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># JWT token validation with Keycloak</span>
+<span class="nd">@post</span><span class="p">(</span><span class="s2">&quot;/item&quot;</span><span class="p">,</span> <span class="n">response_model</span><span class="o">=</span><span class="n">ItemPromptCommandResponseDto</span><span class="p">)</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">create_new_item_prompt</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span> 
+    <span class="n">command_dto</span><span class="p">:</span> <span class="n">CreateNewItemPromptCommandDto</span><span class="p">,</span> 
+    <span class="n">key</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Depends</span><span class="p">(</span><span class="n">validate_mosaic_authentication</span><span class="p">)</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+    <span class="c1"># Protected endpoint with API key validation</span>
+</code></pre></div>
+<h3 id="2-multi-service-integration">2. <strong>Multi-Service Integration</strong><a class="headerlink" href="#2-multi-service-integration" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># External service clients</span>
+<span class="n">MinioStorageManager</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">)</span>          <span class="c1"># Object storage</span>
+<span class="n">MosaicApiClient</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">)</span>              <span class="c1"># External API</span>
+<span class="n">AsyncStringCacheRepository</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">)</span>   <span class="c1"># Redis caching</span>
+<span class="n">BackgroundTaskScheduler</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">)</span>      <span class="c1"># Async processing</span>
+</code></pre></div>
+<h3 id="3-advanced-domain-model">3. <strong>Advanced Domain Model</strong><a class="headerlink" href="#3-advanced-domain-model" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="nd">@map_to</span><span class="p">(</span><span class="n">PromptResponseDto</span><span class="p">)</span>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">PromptResponse</span><span class="p">:</span>
+    <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">prompt_id</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">content</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">status</span><span class="p">:</span> <span class="n">PromptStatus</span>
+    <span class="n">metadata</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>
+    <span class="n">created_at</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span>
+</code></pre></div>
+<h3 id="4-background-task-processing">4. <strong>Background Task Processing</strong><a class="headerlink" href="#4-background-task-processing" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Asynchronous task execution</span>
+<span class="n">BackgroundTaskScheduler</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;application.tasks&quot;</span><span class="p">])</span>
+
+<span class="c1"># Redis-backed job queue</span>
+<span class="n">background_job_store</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;redis_host&quot;</span><span class="p">:</span> <span class="s2">&quot;redis47&quot;</span><span class="p">,</span> 
+    <span class="s2">&quot;redis_port&quot;</span><span class="p">:</span> <span class="mi">6379</span><span class="p">,</span> 
+    <span class="s2">&quot;redis_db&quot;</span><span class="p">:</span> <span class="mi">0</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="5-cloud-events-integration">5. <strong>Cloud Events Integration</strong><a class="headerlink" href="#5-cloud-events-integration" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Event publishing and consumption</span>
+<span class="n">CloudEventIngestor</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;application.events.integration&quot;</span><span class="p">])</span>
+<span class="n">CloudEventPublisher</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">)</span>
+<span class="n">app</span><span class="o">.</span><span class="n">add_middleware</span><span class="p">(</span><span class="n">CloudEventMiddleware</span><span class="p">,</span> <span class="n">service_provider</span><span class="o">=</span><span class="n">app</span><span class="o">.</span><span class="n">services</span><span class="p">)</span>
+</code></pre></div>
+<h2 id="configuration-settings">🔧 Configuration &amp; Settings<a class="headerlink" href="#configuration-settings" title="Permanent link">&para;</a></h2>
+<h3 id="application-settings">Application Settings<a class="headerlink" href="#application-settings" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">AiGatewaySettings</span><span class="p">(</span><span class="n">ApplicationSettings</span><span class="p">):</span>
+    <span class="c1"># OAuth2 Configuration</span>
+    <span class="n">jwt_authority</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;http://keycloak47/realms/mozart&quot;</span>
+    <span class="n">jwt_audience</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;ai-gateways&quot;</span>
+    <span class="n">required_scope</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;api&quot;</span>
+
+    <span class="c1"># External Service Settings</span>
+    <span class="n">s3_endpoint</span><span class="p">:</span> <span class="nb">str</span>                    <span class="c1"># MinIO storage</span>
+    <span class="n">connection_strings</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span>  <span class="c1"># Redis, databases</span>
+    <span class="n">mosaic_api_keys</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>         <span class="c1"># API authentication</span>
+
+    <span class="c1"># Background Processing</span>
+    <span class="n">background_job_store</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">int</span><span class="p">]</span>
+    <span class="n">redis_max_connections</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span>
+</code></pre></div>
+<h3 id="service-registration">Service Registration<a class="headerlink" href="#service-registration" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Core framework services</span>
+<span class="n">Mapper</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="n">application_modules</span><span class="p">)</span>
+<span class="n">Mediator</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="n">application_modules</span><span class="p">)</span>
+<span class="n">JsonSerializer</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">)</span>
+
+<span class="c1"># Custom application services</span>
+<span class="n">AsyncStringCacheRepository</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="n">Prompt</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
+<span class="n">BackgroundTaskScheduler</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;application.tasks&quot;</span><span class="p">])</span>
+<span class="n">MinioStorageManager</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">)</span>
+<span class="n">LocalFileSystemManager</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">)</span>
+
+<span class="c1"># External integrations</span>
+<span class="n">builder</span><span class="o">.</span><span class="n">services</span><span class="o">.</span><span class="n">add_singleton</span><span class="p">(</span><span class="n">AiGatewaySettings</span><span class="p">,</span> <span class="n">singleton</span><span class="o">=</span><span class="n">app_settings</span><span class="p">)</span>
+</code></pre></div>
+<h2 id="testing-strategy">🧪 Testing Strategy<a class="headerlink" href="#testing-strategy" title="Permanent link">&para;</a></h2>
+<h3 id="unit-tests">Unit Tests<a class="headerlink" href="#unit-tests" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">TestPromptController</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setup_method</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mock_mediator</span> <span class="o">=</span> <span class="n">Mock</span><span class="p">(</span><span class="n">spec</span><span class="o">=</span><span class="n">Mediator</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mock_mapper</span> <span class="o">=</span> <span class="n">Mock</span><span class="p">(</span><span class="n">spec</span><span class="o">=</span><span class="n">Mapper</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">controller</span> <span class="o">=</span> <span class="n">PromptController</span><span class="p">(</span>
+            <span class="n">service_provider</span><span class="o">=</span><span class="n">Mock</span><span class="p">(),</span>
+            <span class="n">mapper</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mock_mapper</span><span class="p">,</span>
+            <span class="n">mediator</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mock_mediator</span>
+        <span class="p">)</span>
+
+    <span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">asyncio</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">test_create_prompt_success</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Test successful prompt creation</span>
+        <span class="n">command_dto</span> <span class="o">=</span> <span class="n">CreateNewItemPromptCommandDto</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="s2">&quot;test&quot;</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">controller</span><span class="o">.</span><span class="n">create_new_item_prompt</span><span class="p">(</span><span class="n">command_dto</span><span class="p">,</span> <span class="s2">&quot;valid-key&quot;</span><span class="p">)</span>
+
+        <span class="k">assert</span> <span class="n">result</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="s2">&quot;created&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mock_mediator</span><span class="o">.</span><span class="n">execute_async</span><span class="o">.</span><span class="n">assert_called_once</span><span class="p">()</span>
+</code></pre></div>
+<h3 id="integration-tests">Integration Tests<a class="headerlink" href="#integration-tests" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">integration</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">TestApiGatewayIntegration</span><span class="p">:</span>
+    <span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">asyncio</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">test_full_prompt_workflow</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_client</span><span class="p">):</span>
+        <span class="c1"># Test complete workflow from API to external services</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="n">test_client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
+            <span class="s2">&quot;/api/prompts/item&quot;</span><span class="p">,</span>
+            <span class="n">json</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;test prompt&quot;</span><span class="p">},</span>
+            <span class="n">headers</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;Authorization&quot;</span><span class="p">:</span> <span class="s2">&quot;Bearer valid-token&quot;</span><span class="p">}</span>
+        <span class="p">)</span>
+
+        <span class="k">assert</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">201</span>
+        <span class="k">assert</span> <span class="s2">&quot;id&quot;</span> <span class="ow">in</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+</code></pre></div>
+<h2 id="implementation-details">📚 Implementation Details<a class="headerlink" href="#implementation-details" title="Permanent link">&para;</a></h2>
+<h3 id="1-controller-layer-apicontrollers">1. <strong>Controller Layer</strong> (<code>api/controllers/</code>)<a class="headerlink" href="#1-controller-layer-apicontrollers" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>PromptController</strong>: Main API endpoints for prompt management</li>
+<li><strong>AppController</strong>: Application health and metadata endpoints</li>
+<li><strong>InternalController</strong>: Internal service endpoints</li>
+<li><strong>Authentication Schemes</strong>: OAuth2 and API key validation</li>
+</ul>
+<h3 id="2-application-layer-application">2. <strong>Application Layer</strong> (<code>application/</code>)<a class="headerlink" href="#2-application-layer-application" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Commands</strong>: Write operations (CreateNewPromptCommand)</li>
+<li><strong>Queries</strong>: Read operations (GetPromptByIdQuery)</li>
+<li><strong>Services</strong>: Business logic orchestration</li>
+<li><strong>Tasks</strong>: Background job definitions</li>
+<li><strong>Events</strong>: Integration event handlers</li>
+</ul>
+<h3 id="3-domain-layer-domain">3. <strong>Domain Layer</strong> (<code>domain/</code>)<a class="headerlink" href="#3-domain-layer-domain" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Prompt</strong>: Core domain entity with business rules</li>
+<li><strong>PromptResponse</strong>: Value object for API responses</li>
+<li><strong>Domain Events</strong>: Business event definitions</li>
+<li><strong>Validation</strong>: Domain-specific validation logic</li>
+</ul>
+<h3 id="4-integration-layer-integration">4. <strong>Integration Layer</strong> (<code>integration/</code>)<a class="headerlink" href="#4-integration-layer-integration" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>External API Clients</strong>: Mosaic, GenAI, Mozart APIs</li>
+<li><strong>Storage Services</strong>: MinIO object storage, Redis caching</li>
+<li><strong>Background Services</strong>: Task scheduling and execution</li>
+<li><strong>DTOs</strong>: Data transfer objects for external communication</li>
+</ul>
+<h2 id="background-processing">🔄 Background Processing<a class="headerlink" href="#background-processing" title="Permanent link">&para;</a></h2>
+<p>The API Gateway demonstrates advanced background processing patterns:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Task scheduling configuration</span>
+<span class="n">BackgroundTaskScheduler</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;application.tasks&quot;</span><span class="p">])</span>
+
+<span class="c1"># Redis-backed job store</span>
+<span class="n">builder</span><span class="o">.</span><span class="n">services</span><span class="o">.</span><span class="n">add_singleton</span><span class="p">(</span><span class="n">AiGatewaySettings</span><span class="p">,</span> <span class="n">singleton</span><span class="o">=</span><span class="n">app_settings</span><span class="p">)</span>
+
+<span class="c1"># Asynchronous task execution</span>
+<span class="nd">@task_handler</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ProcessPromptTask</span><span class="p">:</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">execute_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prompt_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="c1"># Long-running prompt processing</span>
+        <span class="n">prompt</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">prompt_service</span><span class="o">.</span><span class="n">get_by_id</span><span class="p">(</span><span class="n">prompt_id</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">genai_client</span><span class="o">.</span><span class="n">process_prompt</span><span class="p">(</span><span class="n">prompt</span><span class="p">)</span>
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">storage_service</span><span class="o">.</span><span class="n">store_result</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+</code></pre></div>
+<h2 id="external-service-integration">🌐 External Service Integration<a class="headerlink" href="#external-service-integration" title="Permanent link">&para;</a></h2>
+<h3 id="minio-object-storage">MinIO Object Storage<a class="headerlink" href="#minio-object-storage" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">MinioStorageManager</span><span class="p">:</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">upload_file_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bucket</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="c1"># S3-compatible object storage</span>
+        <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">put_object</span><span class="p">(</span><span class="n">bucket</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="redis-caching">Redis Caching<a class="headerlink" href="#redis-caching" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">AsyncStringCacheRepository</span><span class="p">:</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">redis_client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">set_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">ttl</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">redis_client</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">ex</span><span class="o">=</span><span class="n">ttl</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="external-api-integration">External API Integration<a class="headerlink" href="#external-api-integration" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">MosaicApiClient</span><span class="p">:</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">submit_prompt_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prompt</span><span class="p">:</span> <span class="n">PromptDto</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PromptResponseDto</span><span class="p">:</span>
+        <span class="c1"># OAuth2 authenticated API calls</span>
+        <span class="n">token</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_access_token</span><span class="p">()</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">http_client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
+            <span class="s2">&quot;/api/prompts&quot;</span><span class="p">,</span>
+            <span class="n">json</span><span class="o">=</span><span class="n">prompt</span><span class="o">.</span><span class="n">dict</span><span class="p">(),</span>
+            <span class="n">headers</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;Authorization&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;Bearer </span><span class="si">{</span><span class="n">token</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">}</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">PromptResponseDto</span><span class="o">.</span><span class="n">parse_obj</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">())</span>
+</code></pre></div>
+<h2 id="getting-started">🚀 Getting Started<a class="headerlink" href="#getting-started" title="Permanent link">&para;</a></h2>
+<h3 id="1-prerequisites">1. <strong>Prerequisites</strong><a class="headerlink" href="#1-prerequisites" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Install dependencies</span>
+pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
+
+<span class="c1"># Configure external services</span>
+docker-compose<span class="w"> </span>up<span class="w"> </span>-d<span class="w"> </span>redis<span class="w"> </span>keycloak<span class="w"> </span>minio
+</code></pre></div>
+<h3 id="2-configuration">2. <strong>Configuration</strong><a class="headerlink" href="#2-configuration" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Set environment variables</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">JWT_AUTHORITY</span><span class="o">=</span><span class="s2">&quot;http://localhost:8080/realms/mozart&quot;</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">S3_ENDPOINT</span><span class="o">=</span><span class="s2">&quot;http://localhost:9000&quot;</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">REDIS_URL</span><span class="o">=</span><span class="s2">&quot;redis://localhost:6379&quot;</span>
+</code></pre></div>
+<h3 id="3-run-the-application">3. <strong>Run the Application</strong><a class="headerlink" href="#3-run-the-application" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Start the API Gateway</span>
+python<span class="w"> </span>samples/api-gateway/main.py
+
+<span class="c1"># Access Swagger UI</span>
+open<span class="w"> </span>http://localhost:8000/docs
+</code></pre></div>
+<h3 id="4-test-the-api">4. <strong>Test the API</strong><a class="headerlink" href="#4-test-the-api" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Get access token from Keycloak</span>
+curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://localhost:8080/realms/mozart/protocol/openid-connect/token<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/x-www-form-urlencoded&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;grant_type=client_credentials&amp;client_id=ai-gateway&amp;client_secret=secret&quot;</span>
+
+<span class="c1"># Call protected endpoint</span>
+curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://localhost:8000/api/prompts/item<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;content&quot;: &quot;Generate a sample prompt&quot;}&#39;</span>
+</code></pre></div>
+<h2 id="related-documentation">🔗 Related Documentation<a class="headerlink" href="#related-documentation" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="../../features/cqrs-mediation/">CQRS &amp; Mediation</a> - Command/Query patterns</li>
+<li><a href="../../features/dependency-injection/">Dependency Injection</a> - Service configuration</li>
+<li><a href="../../features/data-access/">Data Access</a> - Repository patterns</li>
+<li><a href="../openbank/">OpenBank Sample</a> - Event sourcing comparison</li>
+<li><a href="../desktop_controller/">Desktop Controller Sample</a> - Background services</li>
+</ul>
+<h2 id="comparison-with-openbank-sample">🔍 Comparison with OpenBank Sample<a class="headerlink" href="#comparison-with-openbank-sample" title="Permanent link">&para;</a></h2>
+<p>The API Gateway and OpenBank samples demonstrate different architectural patterns within the Neuroglia framework. Here's a detailed comparison:</p>
+<h3 id="architecture-patterns">Architecture Patterns<a class="headerlink" href="#architecture-patterns" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Aspect</th>
+<th>API Gateway</th>
+<th>OpenBank</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Primary Pattern</strong></td>
+<td>Microservice Gateway</td>
+<td>Event Sourcing + DDD</td>
+</tr>
+<tr>
+<td><strong>Data Persistence</strong></td>
+<td>Multi-store (Redis, MinIO, MongoDB)</td>
+<td>Event Store + Read Models</td>
+</tr>
+<tr>
+<td><strong>State Management</strong></td>
+<td>Stateless with caching</td>
+<td>Event-sourced aggregates</td>
+</tr>
+<tr>
+<td><strong>External Integration</strong></td>
+<td>Multiple external APIs</td>
+<td>Focused domain model</td>
+</tr>
+<tr>
+<td><strong>Background Processing</strong></td>
+<td>Async task queues</td>
+<td>Event-driven projections</td>
+</tr>
+</tbody>
+</table>
+<h3 id="domain-complexity">Domain Complexity<a class="headerlink" href="#domain-complexity" title="Permanent link">&para;</a></h3>
+<h4 id="api-gateway-integration-focused">API Gateway - <strong>Integration-Focused</strong><a class="headerlink" href="#api-gateway-integration-focused" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><span class="c1"># Simple domain model focused on orchestration</span>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">PromptResponse</span><span class="p">:</span>
+    <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">prompt_id</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">content</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">status</span><span class="p">:</span> <span class="n">PromptStatus</span>
+    <span class="n">metadata</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>
+</code></pre></div>
+<h4 id="openbank-rich-domain-model">OpenBank - <strong>Rich Domain Model</strong><a class="headerlink" href="#openbank-rich-domain-model" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><span class="c1"># Complex aggregate with business rules</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">BankAccountV1</span><span class="p">(</span><span class="n">AggregateRoot</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">record_transaction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">amount</span><span class="p">:</span> <span class="n">Decimal</span><span class="p">,</span> <span class="n">transaction_type</span><span class="p">:</span> <span class="n">BankTransactionTypeV1</span><span class="p">):</span>
+        <span class="c1"># Complex business logic and invariants</span>
+        <span class="k">if</span> <span class="n">transaction_type</span> <span class="o">==</span> <span class="n">BankTransactionTypeV1</span><span class="o">.</span><span class="n">DEBIT</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">balance</span> <span class="o">+</span> <span class="n">amount</span> <span class="o">&lt;</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">overdraft_limit</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">InsufficientFundsException</span><span class="p">()</span>
+
+        <span class="c1"># Event sourcing</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">raise_event</span><span class="p">(</span><span class="n">BankAccountTransactionRecordedDomainEventV1</span><span class="p">(</span><span class="o">...</span><span class="p">))</span>
+</code></pre></div>
+<h3 id="data-persistence-strategy">Data Persistence Strategy<a class="headerlink" href="#data-persistence-strategy" title="Permanent link">&para;</a></h3>
+<h4 id="api-gateway-multi-store-architecture">API Gateway - <strong>Multi-Store Architecture</strong><a class="headerlink" href="#api-gateway-multi-store-architecture" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><span class="c1"># Multiple specialized storage systems</span>
+<span class="n">AsyncStringCacheRepository</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="n">Prompt</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>  <span class="c1"># Redis caching</span>
+<span class="n">MinioStorageManager</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">)</span>                      <span class="c1"># Object storage</span>
+<span class="n">BackgroundTaskScheduler</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">)</span>                 <span class="c1"># Job queue</span>
+
+<span class="c1"># Standard CRUD operations</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">save_prompt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prompt</span><span class="p">:</span> <span class="n">Prompt</span><span class="p">):</span>
+    <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">cache_repository</span><span class="o">.</span><span class="n">set_async</span><span class="p">(</span><span class="n">prompt</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">prompt</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+    <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">storage_manager</span><span class="o">.</span><span class="n">upload_async</span><span class="p">(</span><span class="n">prompt</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">prompt</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+</code></pre></div>
+<h4 id="openbank-event-sourcing">OpenBank - <strong>Event Sourcing</strong><a class="headerlink" href="#openbank-event-sourcing" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><span class="c1"># Event-driven persistence</span>
+<span class="n">ESEventStore</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="n">EventStoreOptions</span><span class="p">(</span><span class="n">database_name</span><span class="p">,</span> <span class="n">consumer_group</span><span class="p">))</span>
+
+<span class="c1"># Write model: Event sourcing</span>
+<span class="n">DataAccessLayer</span><span class="o">.</span><span class="n">WriteModel</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span>
+    <span class="n">builder</span><span class="p">,</span> 
+    <span class="p">[</span><span class="s2">&quot;samples.openbank.domain.models&quot;</span><span class="p">],</span> 
+    <span class="k">lambda</span> <span class="n">builder_</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">,</span> <span class="n">key_type</span><span class="p">:</span> <span class="n">EventSourcingRepository</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+<span class="p">)</span>
+
+<span class="c1"># Read model: Projections</span>
+<span class="n">DataAccessLayer</span><span class="o">.</span><span class="n">ReadModel</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span>
+    <span class="n">builder</span><span class="p">,</span>
+    <span class="p">[</span><span class="s2">&quot;samples.openbank.integration.models&quot;</span><span class="p">],</span> 
+    <span class="k">lambda</span> <span class="n">builder_</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">,</span> <span class="n">key_type</span><span class="p">:</span> <span class="n">MongoRepository</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+<span class="p">)</span>
+</code></pre></div>
+<h3 id="authentication-security">Authentication &amp; Security<a class="headerlink" href="#authentication-security" title="Permanent link">&para;</a></h3>
+<h4 id="api-gateway-oauth2-api-keys">API Gateway - <strong>OAuth2 + API Keys</strong><a class="headerlink" href="#api-gateway-oauth2-api-keys" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><span class="c1"># Multiple authentication schemes</span>
+<span class="nd">@post</span><span class="p">(</span><span class="s2">&quot;/item&quot;</span><span class="p">,</span> <span class="n">dependencies</span><span class="o">=</span><span class="p">[</span><span class="n">Depends</span><span class="p">(</span><span class="n">validate_mosaic_authentication</span><span class="p">)])</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">create_item_prompt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command_dto</span><span class="p">:</span> <span class="n">CreateNewItemPromptCommandDto</span><span class="p">):</span>
+    <span class="c1"># API key validation for external services</span>
+
+<span class="nd">@get</span><span class="p">(</span><span class="s2">&quot;/status&quot;</span><span class="p">,</span> <span class="n">dependencies</span><span class="o">=</span><span class="p">[</span><span class="n">Depends</span><span class="p">(</span><span class="n">validate_token</span><span class="p">)])</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_status</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="c1"># JWT token validation for internal services</span>
+</code></pre></div>
+<h4 id="openbank-domain-focused-security">OpenBank - <strong>Domain-Focused Security</strong><a class="headerlink" href="#openbank-domain-focused-security" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><span class="c1"># Business rule enforcement</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">BankAccountV1</span><span class="p">(</span><span class="n">AggregateRoot</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">record_transaction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">amount</span><span class="p">:</span> <span class="n">Decimal</span><span class="p">,</span> <span class="n">transaction_type</span><span class="p">:</span> <span class="n">BankTransactionTypeV1</span><span class="p">):</span>
+        <span class="c1"># Domain-level authorization</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_authorized_for_transaction</span><span class="p">(</span><span class="n">amount</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">UnauthorizedTransactionException</span><span class="p">()</span>
+</code></pre></div>
+<h3 id="external-service-integration_1">External Service Integration<a class="headerlink" href="#external-service-integration_1" title="Permanent link">&para;</a></h3>
+<h4 id="api-gateway-extensive-integration">API Gateway - <strong>Extensive Integration</strong><a class="headerlink" href="#api-gateway-extensive-integration" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><span class="c1"># Multiple external service clients</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">MosaicApiClient</span><span class="p">:</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">submit_prompt_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prompt</span><span class="p">:</span> <span class="n">PromptDto</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PromptResponseDto</span><span class="p">:</span>
+        <span class="n">token</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">oauth_client</span><span class="o">.</span><span class="n">get_token_async</span><span class="p">()</span>
+        <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">http_client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">&quot;/api/prompts&quot;</span><span class="p">,</span> <span class="n">prompt</span><span class="p">,</span> <span class="n">token</span><span class="p">)</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">GenAiClient</span><span class="p">:</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">process_prompt_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prompt</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">ai_service</span><span class="o">.</span><span class="n">generate_response</span><span class="p">(</span><span class="n">prompt</span><span class="p">)</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">MinioStorageManager</span><span class="p">:</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">store_file_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bucket</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">):</span>
+        <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">s3_client</span><span class="o">.</span><span class="n">put_object</span><span class="p">(</span><span class="n">bucket</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+</code></pre></div>
+<h4 id="openbank-minimal-integration">OpenBank - <strong>Minimal Integration</strong><a class="headerlink" href="#openbank-minimal-integration" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><span class="c1"># Focused on domain logic, minimal external dependencies</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">CreateBankAccountCommandHandler</span><span class="p">:</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">handle_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command</span><span class="p">:</span> <span class="n">CreateBankAccountCommand</span><span class="p">):</span>
+        <span class="c1"># Pure domain logic without external service calls</span>
+        <span class="n">owner</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">person_repository</span><span class="o">.</span><span class="n">get_by_id_async</span><span class="p">(</span><span class="n">command</span><span class="o">.</span><span class="n">owner_id</span><span class="p">)</span>
+        <span class="n">account</span> <span class="o">=</span> <span class="n">BankAccountV1</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">()),</span> <span class="n">owner</span><span class="p">,</span> <span class="n">command</span><span class="o">.</span><span class="n">initial_balance</span><span class="p">)</span>
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">account_repository</span><span class="o">.</span><span class="n">save_async</span><span class="p">(</span><span class="n">account</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="background-processing_1">Background Processing<a class="headerlink" href="#background-processing_1" title="Permanent link">&para;</a></h3>
+<h4 id="api-gateway-task-queue-pattern">API Gateway - <strong>Task Queue Pattern</strong><a class="headerlink" href="#api-gateway-task-queue-pattern" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><span class="c1"># Redis-backed job queues</span>
+<span class="n">BackgroundTaskScheduler</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;application.tasks&quot;</span><span class="p">])</span>
+
+<span class="nd">@task_handler</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ProcessPromptTask</span><span class="p">:</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">execute_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prompt_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">prompt</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">prompt_service</span><span class="o">.</span><span class="n">get_by_id</span><span class="p">(</span><span class="n">prompt_id</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">genai_client</span><span class="o">.</span><span class="n">process_prompt</span><span class="p">(</span><span class="n">prompt</span><span class="p">)</span>
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">storage_service</span><span class="o">.</span><span class="n">store_result</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+</code></pre></div>
+<h4 id="openbank-event-driven-projections">OpenBank - <strong>Event-Driven Projections</strong><a class="headerlink" href="#openbank-event-driven-projections" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><span class="c1"># Event handlers for read model updates</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">BankAccountEventHandler</span><span class="p">:</span>
+    <span class="nd">@event_handler</span><span class="p">(</span><span class="n">BankAccountCreatedDomainEventV1</span><span class="p">)</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">handle_account_created</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">BankAccountCreatedDomainEventV1</span><span class="p">):</span>
+        <span class="n">projection</span> <span class="o">=</span> <span class="n">BankAccountProjection</span><span class="o">.</span><span class="n">from_event</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_model_repository</span><span class="o">.</span><span class="n">save_async</span><span class="p">(</span><span class="n">projection</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="testing-strategies">Testing Strategies<a class="headerlink" href="#testing-strategies" title="Permanent link">&para;</a></h3>
+<h4 id="api-gateway-integration-heavy-testing">API Gateway - <strong>Integration-Heavy Testing</strong><a class="headerlink" href="#api-gateway-integration-heavy-testing" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">integration</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">TestApiGatewayIntegration</span><span class="p">:</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">test_full_prompt_workflow</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_client</span><span class="p">,</span> <span class="n">mock_external_services</span><span class="p">):</span>
+        <span class="c1"># Test complete workflow including external services</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="n">test_client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">&quot;/api/prompts/item&quot;</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">prompt_data</span><span class="p">)</span>
+
+        <span class="c1"># Verify external service calls</span>
+        <span class="n">mock_external_services</span><span class="o">.</span><span class="n">genai_client</span><span class="o">.</span><span class="n">process_prompt</span><span class="o">.</span><span class="n">assert_called_once</span><span class="p">()</span>
+        <span class="n">mock_external_services</span><span class="o">.</span><span class="n">storage_manager</span><span class="o">.</span><span class="n">upload</span><span class="o">.</span><span class="n">assert_called_once</span><span class="p">()</span>
+</code></pre></div>
+<h4 id="openbank-domain-focused-testing">OpenBank - <strong>Domain-Focused Testing</strong><a class="headerlink" href="#openbank-domain-focused-testing" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">TestBankAccountAggregate</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_transaction_recording</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Pure domain logic testing</span>
+        <span class="n">account</span> <span class="o">=</span> <span class="n">BankAccountV1</span><span class="p">(</span><span class="s2">&quot;123&quot;</span><span class="p">,</span> <span class="n">owner</span><span class="p">,</span> <span class="n">Decimal</span><span class="p">(</span><span class="s2">&quot;1000&quot;</span><span class="p">))</span>
+        <span class="n">account</span><span class="o">.</span><span class="n">record_transaction</span><span class="p">(</span><span class="n">Decimal</span><span class="p">(</span><span class="s2">&quot;-100&quot;</span><span class="p">),</span> <span class="n">BankTransactionTypeV1</span><span class="o">.</span><span class="n">DEBIT</span><span class="p">)</span>
+
+        <span class="c1"># Verify business rules and events</span>
+        <span class="k">assert</span> <span class="n">account</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">balance</span> <span class="o">==</span> <span class="n">Decimal</span><span class="p">(</span><span class="s2">&quot;900&quot;</span><span class="p">)</span>
+        <span class="n">events</span> <span class="o">=</span> <span class="n">account</span><span class="o">.</span><span class="n">get_uncommitted_events</span><span class="p">()</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">events</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">BankAccountTransactionRecordedDomainEventV1</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="use-case-recommendations">Use Case Recommendations<a class="headerlink" href="#use-case-recommendations" title="Permanent link">&para;</a></h3>
+<h4 id="choose-api-gateway-pattern-when">Choose <strong>API Gateway Pattern</strong> when<a class="headerlink" href="#choose-api-gateway-pattern-when" title="Permanent link">&para;</a></h4>
+<ul>
+<li>✅ Building microservice orchestration layers</li>
+<li>✅ Integrating multiple external services</li>
+<li>✅ Need background job processing</li>
+<li>✅ Require complex authentication schemes</li>
+<li>✅ Working with heterogeneous data stores</li>
+<li>✅ Building service mesh entry points</li>
+</ul>
+<h4 id="choose-event-sourcing-pattern-when">Choose <strong>Event Sourcing Pattern</strong> when<a class="headerlink" href="#choose-event-sourcing-pattern-when" title="Permanent link">&para;</a></h4>
+<ul>
+<li>✅ Need complete audit trails</li>
+<li>✅ Complex business logic and invariants</li>
+<li>✅ Temporal queries are important</li>
+<li>✅ Regulatory compliance requirements</li>
+<li>✅ High consistency requirements</li>
+<li>✅ Rich domain models with behavior</li>
+</ul>
+<h3 id="framework-features-utilized">Framework Features Utilized<a class="headerlink" href="#framework-features-utilized" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>API Gateway Usage</th>
+<th>OpenBank Usage</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>CQRS/Mediation</strong></td>
+<td>Service orchestration</td>
+<td>Domain command/query separation</td>
+</tr>
+<tr>
+<td><strong>Dependency Injection</strong></td>
+<td>External service clients</td>
+<td>Repository abstractions</td>
+</tr>
+<tr>
+<td><strong>Event Handling</strong></td>
+<td>Integration events</td>
+<td>Domain events + projections</td>
+</tr>
+<tr>
+<td><strong>Data Access</strong></td>
+<td>Multi-repository pattern</td>
+<td>Event sourcing + read models</td>
+</tr>
+<tr>
+<td><strong>Background Processing</strong></td>
+<td>Async task queues</td>
+<td>Event-driven handlers</td>
+</tr>
+<tr>
+<td><strong>Mapping</strong></td>
+<td>DTO transformations</td>
+<td>Domain-to-DTO mapping</td>
+</tr>
+<tr>
+<td><strong>Validation</strong></td>
+<td>API contract validation</td>
+<td>Business rule enforcement</td>
+</tr>
+</tbody>
+</table>
+<p>Both samples showcase different strengths of the Neuroglia framework, demonstrating its flexibility in supporting various architectural patterns while maintaining clean architecture principles.</p>
 
 
 

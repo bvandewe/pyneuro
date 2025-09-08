@@ -1,0 +1,2454 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../data-access/">
+      
+      
+        <link rel="next" href="../../samples/openbank/">
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.19">
+    
+    
+      
+        <title>Event Sourcing - Neuroglia Python Framework</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.7e37652d.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="blue">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#event-sourcing" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Neuroglia Python Framework" class="md-header__button md-logo" aria-label="Neuroglia Python Framework" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Neuroglia Python Framework
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Event Sourcing
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="blue"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="blue" data-md-color-accent="blue"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Share" aria-label="Share" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../getting-started/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Getting Started
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../architecture/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Architecture
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../dependency-injection/" class="md-tabs__link">
+          
+  
+  
+  Features
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../samples/openbank/" class="md-tabs__link">
+          
+  
+  
+  Sample Applications
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Neuroglia Python Framework" class="md-nav__button md-logo" aria-label="Neuroglia Python Framework" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Neuroglia Python Framework
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Getting Started
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Architecture
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    Features
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Features
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dependency-injection/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Dependency Injection
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cqrs-mediation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    CQRS & Mediation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mvc-controllers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    MVC Controllers
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../data-access/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Data Access
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Event Sourcing
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    Event Sourcing
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      🎯 Overview
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#core-concepts" class="md-nav__link">
+    <span class="md-ellipsis">
+      🏗️ Core Concepts
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🏗️ Core Concepts">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#events-as-source-of-truth" class="md-nav__link">
+    <span class="md-ellipsis">
+      Events as Source of Truth
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#state-reconstruction-from-events" class="md-nav__link">
+    <span class="md-ellipsis">
+      State Reconstruction from Events
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#aggregate-root-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      🚀 Aggregate Root Pattern
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🚀 Aggregate Root Pattern">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#defining-aggregates" class="md-nav__link">
+    <span class="md-ellipsis">
+      Defining Aggregates
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aggregate-state-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      Aggregate State Management
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#event-store-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      🏪 Event Store Configuration
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🏪 Event Store Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#eventstoredb-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      EventStoreDB Setup
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#repository-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Repository Configuration
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#event-driven-projections" class="md-nav__link">
+    <span class="md-ellipsis">
+      📊 Event-Driven Projections
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📊 Event-Driven Projections">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#creating-read-model-projections" class="md-nav__link">
+    <span class="md-ellipsis">
+      Creating Read Model Projections
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#read-model-optimization" class="md-nav__link">
+    <span class="md-ellipsis">
+      Read Model Optimization
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#temporal-queries" class="md-nav__link">
+    <span class="md-ellipsis">
+      🕰️ Temporal Queries
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🕰️ Temporal Queries">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#point-in-time-state-reconstruction" class="md-nav__link">
+    <span class="md-ellipsis">
+      Point-in-Time State Reconstruction
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#business-intelligence-queries" class="md-nav__link">
+    <span class="md-ellipsis">
+      Business Intelligence Queries
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#testing-event-sourced-systems" class="md-nav__link">
+    <span class="md-ellipsis">
+      🧪 Testing Event-Sourced Systems
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🧪 Testing Event-Sourced Systems">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#unit-testing-aggregates" class="md-nav__link">
+    <span class="md-ellipsis">
+      Unit Testing Aggregates
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#integration-testing-with-event-store" class="md-nav__link">
+    <span class="md-ellipsis">
+      Integration Testing with Event Store
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#advanced-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔧 Advanced Patterns
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🔧 Advanced Patterns">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#event-versioning" class="md-nav__link">
+    <span class="md-ellipsis">
+      Event Versioning
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#snapshots-for-performance" class="md-nav__link">
+    <span class="md-ellipsis">
+      Snapshots for Performance
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#saga-pattern-for-distributed-transactions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Saga Pattern for Distributed Transactions
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#monitoring-and-observability" class="md-nav__link">
+    <span class="md-ellipsis">
+      📊 Monitoring and Observability
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📊 Monitoring and Observability">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#event-stream-health-monitoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      Event Stream Health Monitoring
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related-documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔗 Related Documentation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      🎯 Best Practices
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🎯 Best Practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dos" class="md-nav__link">
+    <span class="md-ellipsis">
+      Do's ✅
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#donts" class="md-nav__link">
+    <span class="md-ellipsis">
+      Don'ts ❌
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../event-handling.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Event Handling
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../object-mapping.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Object Mapping
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../configuration.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Configuration
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hosting.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Hosting
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../core.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Core
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../serialization.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Serialization
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Sample Applications
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Sample Applications
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../samples/openbank/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    OpenBank
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../samples/api_gateway/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    API Gateway
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../samples/desktop_controller/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Desktop Controller
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      🎯 Overview
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#core-concepts" class="md-nav__link">
+    <span class="md-ellipsis">
+      🏗️ Core Concepts
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🏗️ Core Concepts">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#events-as-source-of-truth" class="md-nav__link">
+    <span class="md-ellipsis">
+      Events as Source of Truth
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#state-reconstruction-from-events" class="md-nav__link">
+    <span class="md-ellipsis">
+      State Reconstruction from Events
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#aggregate-root-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      🚀 Aggregate Root Pattern
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🚀 Aggregate Root Pattern">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#defining-aggregates" class="md-nav__link">
+    <span class="md-ellipsis">
+      Defining Aggregates
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aggregate-state-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      Aggregate State Management
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#event-store-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      🏪 Event Store Configuration
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🏪 Event Store Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#eventstoredb-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      EventStoreDB Setup
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#repository-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Repository Configuration
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#event-driven-projections" class="md-nav__link">
+    <span class="md-ellipsis">
+      📊 Event-Driven Projections
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📊 Event-Driven Projections">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#creating-read-model-projections" class="md-nav__link">
+    <span class="md-ellipsis">
+      Creating Read Model Projections
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#read-model-optimization" class="md-nav__link">
+    <span class="md-ellipsis">
+      Read Model Optimization
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#temporal-queries" class="md-nav__link">
+    <span class="md-ellipsis">
+      🕰️ Temporal Queries
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🕰️ Temporal Queries">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#point-in-time-state-reconstruction" class="md-nav__link">
+    <span class="md-ellipsis">
+      Point-in-Time State Reconstruction
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#business-intelligence-queries" class="md-nav__link">
+    <span class="md-ellipsis">
+      Business Intelligence Queries
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#testing-event-sourced-systems" class="md-nav__link">
+    <span class="md-ellipsis">
+      🧪 Testing Event-Sourced Systems
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🧪 Testing Event-Sourced Systems">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#unit-testing-aggregates" class="md-nav__link">
+    <span class="md-ellipsis">
+      Unit Testing Aggregates
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#integration-testing-with-event-store" class="md-nav__link">
+    <span class="md-ellipsis">
+      Integration Testing with Event Store
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#advanced-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔧 Advanced Patterns
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🔧 Advanced Patterns">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#event-versioning" class="md-nav__link">
+    <span class="md-ellipsis">
+      Event Versioning
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#snapshots-for-performance" class="md-nav__link">
+    <span class="md-ellipsis">
+      Snapshots for Performance
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#saga-pattern-for-distributed-transactions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Saga Pattern for Distributed Transactions
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#monitoring-and-observability" class="md-nav__link">
+    <span class="md-ellipsis">
+      📊 Monitoring and Observability
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📊 Monitoring and Observability">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#event-stream-health-monitoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      Event Stream Health Monitoring
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related-documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔗 Related Documentation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      🎯 Best Practices
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🎯 Best Practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dos" class="md-nav__link">
+    <span class="md-ellipsis">
+      Do's ✅
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#donts" class="md-nav__link">
+    <span class="md-ellipsis">
+      Don'ts ❌
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="event-sourcing">🎯 Event Sourcing<a class="headerlink" href="#event-sourcing" title="Permanent link">&para;</a></h1>
+<p>Event Sourcing is a data storage pattern where state changes are stored as a sequence of immutable events rather than updating data in place. Neuroglia provides comprehensive event sourcing support with EventStoreDB integration, aggregate root patterns, and event-driven projections.</p>
+<h2 id="overview">🎯 Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>Event Sourcing offers several key benefits:</p>
+<ul>
+<li><strong>Complete Audit Trail</strong>: Every state change is captured as an immutable event</li>
+<li><strong>Temporal Queries</strong>: Query system state at any point in time</li>
+<li><strong>Event Replay</strong>: Reconstruct current state by replaying events</li>
+<li><strong>Business Intelligence</strong>: Analyze patterns and trends from event streams</li>
+<li><strong>Debugging</strong>: Full visibility into how state changes occurred</li>
+<li><strong>Scalability</strong>: Events can be replayed to create optimized read models</li>
+</ul>
+<h2 id="core-concepts">🏗️ Core Concepts<a class="headerlink" href="#core-concepts" title="Permanent link">&para;</a></h2>
+<h3 id="events-as-source-of-truth">Events as Source of Truth<a class="headerlink" href="#events-as-source-of-truth" title="Permanent link">&para;</a></h3>
+<p>In traditional systems, current state is stored directly:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Traditional approach - current state only</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">BankAccount</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">balance</span><span class="p">:</span> <span class="n">Decimal</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="nb">id</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">balance</span> <span class="o">=</span> <span class="n">balance</span>  <span class="c1"># Current state stored directly</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">withdraw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">amount</span><span class="p">:</span> <span class="n">Decimal</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">balance</span> <span class="o">-=</span> <span class="n">amount</span>  <span class="c1"># State updated in place</span>
+</code></pre></div>
+<p>With Event Sourcing, we store the events that led to the current state:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Event Sourcing approach - events as source of truth</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">BankAccountCreatedEvent</span><span class="p">(</span><span class="n">DomainEvent</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">account_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">initial_balance</span><span class="p">:</span> <span class="n">Decimal</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">account_id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">initial_balance</span> <span class="o">=</span> <span class="n">initial_balance</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">MoneyWithdrawnEvent</span><span class="p">(</span><span class="n">DomainEvent</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">account_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">amount</span><span class="p">:</span> <span class="n">Decimal</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">account_id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">amount</span> <span class="o">=</span> <span class="n">amount</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">BankAccount</span><span class="p">(</span><span class="n">AggregateRoot</span><span class="p">[</span><span class="n">BankAccountState</span><span class="p">,</span> <span class="nb">str</span><span class="p">]):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">initial_balance</span><span class="p">:</span> <span class="n">Decimal</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">on</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">register_event</span><span class="p">(</span><span class="n">BankAccountCreatedEvent</span><span class="p">(</span><span class="nb">id</span><span class="p">,</span> <span class="n">initial_balance</span><span class="p">)))</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">withdraw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">amount</span><span class="p">:</span> <span class="n">Decimal</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">balance</span> <span class="o">&lt;</span> <span class="n">amount</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">InsufficientFundsException</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">on</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">register_event</span><span class="p">(</span><span class="n">MoneyWithdrawnEvent</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">amount</span><span class="p">)))</span>
+</code></pre></div>
+<h3 id="state-reconstruction-from-events">State Reconstruction from Events<a class="headerlink" href="#state-reconstruction-from-events" title="Permanent link">&para;</a></h3>
+<p>Current state is derived by applying events in sequence using the <code>@dispatch</code> decorator:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.data.abstractions</span><span class="w"> </span><span class="kn">import</span> <span class="n">AggregateRoot</span><span class="p">,</span> <span class="n">DomainEvent</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.mapping.mapper</span><span class="w"> </span><span class="kn">import</span> <span class="n">map_to</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">decimal</span><span class="w"> </span><span class="kn">import</span> <span class="n">Decimal</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">multipledispatch</span><span class="w"> </span><span class="kn">import</span> <span class="n">dispatch</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">BankAccountCreatedDomainEventV1</span><span class="p">(</span><span class="n">DomainEvent</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">aggregate_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">owner_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">overdraft_limit</span><span class="p">:</span> <span class="n">Decimal</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">aggregate_id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">owner_id</span> <span class="o">=</span> <span class="n">owner_id</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">overdraft_limit</span> <span class="o">=</span> <span class="n">overdraft_limit</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">BankAccountTransactionRecordedDomainEventV1</span><span class="p">(</span><span class="n">DomainEvent</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">aggregate_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">transaction_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">amount</span><span class="p">:</span> <span class="n">Decimal</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">aggregate_id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">transaction_id</span> <span class="o">=</span> <span class="n">transaction_id</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">amount</span> <span class="o">=</span> <span class="n">amount</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">BankAccountV1</span><span class="p">(</span><span class="n">AggregateRoot</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">account_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">account_id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_balance</span> <span class="o">=</span> <span class="n">Decimal</span><span class="p">(</span><span class="s1">&#39;0.00&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_owner_id</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_overdraft_limit</span> <span class="o">=</span> <span class="n">Decimal</span><span class="p">(</span><span class="s1">&#39;0.00&#39;</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">balance</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Decimal</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_balance</span>
+
+    <span class="nd">@dispatch</span><span class="p">(</span><span class="n">BankAccountCreatedDomainEventV1</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">state_manager</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">BankAccountCreatedDomainEventV1</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Handle account creation for state reconstruction&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_owner_id</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">owner_id</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_overdraft_limit</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">overdraft_limit</span>
+
+    <span class="nd">@dispatch</span><span class="p">(</span><span class="n">BankAccountTransactionRecordedDomainEventV1</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">state_manager</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">BankAccountTransactionRecordedDomainEventV1</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Handle transaction recording for state reconstruction&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_balance</span> <span class="o">+=</span> <span class="n">event</span><span class="o">.</span><span class="n">amount</span>
+</code></pre></div>
+<h2 id="aggregate-root-pattern">🚀 Aggregate Root Pattern<a class="headerlink" href="#aggregate-root-pattern" title="Permanent link">&para;</a></h2>
+<h3 id="defining-aggregates">Defining Aggregates<a class="headerlink" href="#defining-aggregates" title="Permanent link">&para;</a></h3>
+<p>Aggregates are domain objects that encapsulate business logic and raise domain events:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.data.abstractions</span><span class="w"> </span><span class="kn">import</span> <span class="n">AggregateRoot</span><span class="p">,</span> <span class="n">AggregateState</span><span class="p">,</span> <span class="n">DomainEvent</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">decimal</span><span class="w"> </span><span class="kn">import</span> <span class="n">Decimal</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">uuid</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">BankAccountV1</span><span class="p">(</span><span class="n">AggregateRoot</span><span class="p">[</span><span class="n">BankAccountState</span><span class="p">,</span> <span class="nb">str</span><span class="p">]):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Bank Account aggregate with event sourcing&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">owner</span><span class="p">:</span> <span class="n">Person</span><span class="p">,</span> <span class="n">initial_balance</span><span class="p">:</span> <span class="n">Decimal</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+
+        <span class="c1"># Validate business rules</span>
+        <span class="k">if</span> <span class="n">initial_balance</span> <span class="o">&lt;</span> <span class="n">Decimal</span><span class="p">(</span><span class="s1">&#39;0.00&#39;</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">InvalidInitialBalanceException</span><span class="p">(</span><span class="s2">&quot;Initial balance cannot be negative&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Register creation event and apply to state</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">on</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">register_event</span><span class="p">(</span><span class="n">BankAccountCreatedDomainEventV1</span><span class="p">(</span>
+            <span class="n">aggregate_id</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">())</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span>
+            <span class="n">owner_id</span><span class="o">=</span><span class="n">owner</span><span class="o">.</span><span class="n">id</span><span class="p">(),</span>
+            <span class="n">initial_balance</span><span class="o">=</span><span class="n">initial_balance</span><span class="p">,</span>
+            <span class="n">created_at</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span>
+        <span class="p">)))</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_available_balance</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Decimal</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the available balance including overdraft&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">Decimal</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">balance</span><span class="p">)</span> <span class="o">+</span> <span class="n">Decimal</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">overdraft_limit</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">try_add_transaction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction</span><span class="p">:</span> <span class="n">BankTransactionV1</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Record a financial transaction&quot;&quot;&quot;</span>
+
+        <span class="c1"># Business rule validation  </span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">transaction</span><span class="o">.</span><span class="n">type</span> <span class="o">!=</span> <span class="n">BankTransactionTypeV1</span><span class="o">.</span><span class="n">DEPOSIT</span> <span class="ow">and</span> 
+            <span class="n">transaction</span><span class="o">.</span><span class="n">type</span> <span class="o">!=</span> <span class="n">BankTransactionTypeV1</span><span class="o">.</span><span class="n">INTEREST</span> <span class="ow">and</span> 
+            <span class="ow">not</span> <span class="p">(</span><span class="n">transaction</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">BankTransactionTypeV1</span><span class="o">.</span><span class="n">TRANSFER</span> <span class="ow">and</span> <span class="n">transaction</span><span class="o">.</span><span class="n">to_account_id</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">())</span> <span class="ow">and</span> 
+            <span class="n">transaction</span><span class="o">.</span><span class="n">amount</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_available_balance</span><span class="p">()):</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="c1"># Register transaction event and apply to state</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">on</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">register_event</span><span class="p">(</span><span class="n">BankAccountTransactionRecordedDomainEventV1</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">(),</span> <span class="n">transaction</span>
+        <span class="p">)))</span>
+        <span class="k">return</span> <span class="kc">True</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_overdraft_limit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">limit</span><span class="p">:</span> <span class="n">Decimal</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the overdraft limit for the account&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">limit</span> <span class="o">&lt;</span> <span class="n">Decimal</span><span class="p">(</span><span class="s1">&#39;0.00&#39;</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">InvalidOverdraftLimitException</span><span class="p">(</span><span class="s2">&quot;Overdraft limit cannot be negative&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">on</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">register_event</span><span class="p">(</span><span class="n">OverdraftLimitChangedDomainEventV1</span><span class="p">(</span>
+            <span class="n">aggregate_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+            <span class="n">old_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">overdraft_limit</span><span class="p">,</span>
+            <span class="n">new_limit</span><span class="o">=</span><span class="n">limit</span>
+        <span class="p">)))</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">close_account</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reason</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Close the bank account&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">balance</span> <span class="o">!=</span> <span class="n">Decimal</span><span class="p">(</span><span class="s1">&#39;0.00&#39;</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">AccountHasBalanceException</span><span class="p">(</span><span class="s2">&quot;Cannot close account with non-zero balance&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">on</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">register_event</span><span class="p">(</span><span class="n">BankAccountClosedDomainEventV1</span><span class="p">(</span>
+            <span class="n">aggregate_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+            <span class="n">reason</span><span class="o">=</span><span class="n">reason</span><span class="p">,</span>
+            <span class="n">final_balance</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">balance</span>
+        <span class="p">)))</span>
+</code></pre></div>
+<h3 id="aggregate-state-management">Aggregate State Management<a class="headerlink" href="#aggregate-state-management" title="Permanent link">&para;</a></h3>
+<p>The aggregate manages its internal state through event application:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">multipledispatch</span><span class="w"> </span><span class="kn">import</span> <span class="n">dispatch</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">decimal</span><span class="w"> </span><span class="kn">import</span> <span class="n">Decimal</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">BankAccountV1</span><span class="p">(</span><span class="n">AggregateRoot</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Bank Account aggregate with event sourcing&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">account_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">account_id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_balance</span> <span class="o">=</span> <span class="n">Decimal</span><span class="p">(</span><span class="s1">&#39;0.00&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_overdraft_limit</span> <span class="o">=</span> <span class="n">Decimal</span><span class="p">(</span><span class="s1">&#39;0.00&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_owner_id</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_is_closed</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_transactions</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">balance</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Decimal</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_balance</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">owner_id</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_owner_id</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">overdraft_limit</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Decimal</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_overdraft_limit</span>
+
+    <span class="nd">@dispatch</span><span class="p">(</span><span class="n">BankAccountCreatedDomainEventV1</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">state_manager</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">BankAccountCreatedDomainEventV1</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Handle account creation&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_owner_id</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">owner_id</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_overdraft_limit</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">overdraft_limit</span>
+
+    <span class="nd">@dispatch</span><span class="p">(</span><span class="n">BankAccountTransactionRecordedDomainEventV1</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">state_manager</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">BankAccountTransactionRecordedDomainEventV1</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Handle transaction recording&quot;&quot;&quot;</span>
+        <span class="c1"># Update balance based on transaction amount</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_balance</span> <span class="o">+=</span> <span class="n">event</span><span class="o">.</span><span class="n">amount</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">last_modified</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">timestamp</span>
+
+    <span class="nd">@dispatch</span><span class="p">(</span><span class="n">OverdraftLimitChangedDomainEventV1</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">on</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">OverdraftLimitChangedDomainEventV1</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Handle overdraft limit changes&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">overdraft_limit</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">new_limit</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">last_modified</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">timestamp</span>
+
+    <span class="nd">@dispatch</span><span class="p">(</span><span class="n">BankAccountClosedDomainEventV1</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">on</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">BankAccountClosedDomainEventV1</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Handle account closure&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">is_closed</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">last_modified</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">timestamp</span>
+</code></pre></div>
+<h2 id="event-store-configuration">🏪 Event Store Configuration<a class="headerlink" href="#event-store-configuration" title="Permanent link">&para;</a></h2>
+<h3 id="eventstoredb-setup">EventStoreDB Setup<a class="headerlink" href="#eventstoredb-setup" title="Permanent link">&para;</a></h3>
+<p>Configure EventStoreDB as the event storage backend:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.data.infrastructure.event_sourcing.event_store</span><span class="w"> </span><span class="kn">import</span> <span class="n">ESEventStore</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.data.infrastructure.event_sourcing.abstractions</span><span class="w"> </span><span class="kn">import</span> <span class="n">EventStoreOptions</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.hosting.web</span><span class="w"> </span><span class="kn">import</span> <span class="n">WebApplicationBuilder</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">configure_event_store</span><span class="p">(</span><span class="n">builder</span><span class="p">:</span> <span class="n">WebApplicationBuilder</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Configure EventStoreDB for event sourcing&quot;&quot;&quot;</span>
+
+    <span class="c1"># Event store configuration</span>
+    <span class="n">database_name</span> <span class="o">=</span> <span class="s2">&quot;bankingsystem&quot;</span>
+    <span class="n">consumer_group</span> <span class="o">=</span> <span class="s2">&quot;banking-api-v1&quot;</span>
+
+    <span class="n">ESEventStore</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span>
+        <span class="n">builder</span><span class="p">,</span> 
+        <span class="n">EventStoreOptions</span><span class="p">(</span>
+            <span class="n">database_name</span><span class="o">=</span><span class="n">database_name</span><span class="p">,</span>
+            <span class="n">consumer_group</span><span class="o">=</span><span class="n">consumer_group</span><span class="p">,</span>
+            <span class="n">connection_string</span><span class="o">=</span><span class="s2">&quot;esdb://localhost:2113?tls=false&quot;</span><span class="p">,</span>
+            <span class="n">credentials</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;username&quot;</span><span class="p">:</span> <span class="s2">&quot;admin&quot;</span><span class="p">,</span> <span class="s2">&quot;password&quot;</span><span class="p">:</span> <span class="s2">&quot;changeit&quot;</span><span class="p">}</span>
+        <span class="p">)</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Configure event sourcing repository for write model</span>
+    <span class="n">EventSourcingRepository</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="n">BankAccountV1</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">builder</span>
+</code></pre></div>
+<h3 id="repository-configuration">Repository Configuration<a class="headerlink" href="#repository-configuration" title="Permanent link">&para;</a></h3>
+<p>Set up separate repositories for write and read models:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.hosting.configuration.data_access_layer</span><span class="w"> </span><span class="kn">import</span> <span class="n">DataAccessLayer</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.data.infrastructure.event_sourcing.event_sourcing_repository</span><span class="w"> </span><span class="kn">import</span> <span class="n">EventSourcingRepository</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.data.infrastructure.mongo.mongo_repository</span><span class="w"> </span><span class="kn">import</span> <span class="n">MongoRepository</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">configure_data_access</span><span class="p">(</span><span class="n">builder</span><span class="p">:</span> <span class="n">WebApplicationBuilder</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Configure write and read model repositories&quot;&quot;&quot;</span>
+
+    <span class="c1"># Write Model: Event-sourced aggregates</span>
+    <span class="n">DataAccessLayer</span><span class="o">.</span><span class="n">WriteModel</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span>
+        <span class="n">builder</span><span class="p">,</span>
+        <span class="p">[</span><span class="s2">&quot;samples.banking.domain.models&quot;</span><span class="p">],</span>  <span class="c1"># Domain aggregate modules</span>
+        <span class="k">lambda</span> <span class="n">builder_</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">,</span> <span class="n">key_type</span><span class="p">:</span> <span class="n">EventSourcingRepository</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span>
+            <span class="n">builder_</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">,</span> <span class="n">key_type</span>
+        <span class="p">)</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Read Model: MongoDB projections</span>
+    <span class="n">DataAccessLayer</span><span class="o">.</span><span class="n">ReadModel</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span>
+        <span class="n">builder</span><span class="p">,</span>
+        <span class="p">[</span><span class="s2">&quot;samples.banking.integration.models&quot;</span><span class="p">],</span>  <span class="c1"># Read model modules</span>
+        <span class="k">lambda</span> <span class="n">builder_</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">,</span> <span class="n">key_type</span><span class="p">:</span> <span class="n">MongoRepository</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span>
+            <span class="n">builder_</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">,</span> <span class="n">key_type</span><span class="p">,</span> <span class="n">database_name</span><span class="o">=</span><span class="s2">&quot;banking_read_models&quot;</span>
+        <span class="p">)</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">builder</span>
+</code></pre></div>
+<h2 id="event-driven-projections">📊 Event-Driven Projections<a class="headerlink" href="#event-driven-projections" title="Permanent link">&para;</a></h2>
+<h3 id="creating-read-model-projections">Creating Read Model Projections<a class="headerlink" href="#creating-read-model-projections" title="Permanent link">&para;</a></h3>
+<p>Transform domain events into optimized read models:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.eventing</span><span class="w"> </span><span class="kn">import</span> <span class="n">event_handler</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">BankAccountProjectionHandler</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Handles domain events to update read model projections&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">read_repository</span><span class="p">:</span> <span class="n">Repository</span><span class="p">[</span><span class="n">BankAccountProjection</span><span class="p">,</span> <span class="nb">str</span><span class="p">]):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">read_repository</span> <span class="o">=</span> <span class="n">read_repository</span>
+
+    <span class="nd">@event_handler</span><span class="p">(</span><span class="n">BankAccountCreatedDomainEventV1</span><span class="p">)</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">handle_account_created</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">BankAccountCreatedDomainEventV1</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create read model projection when account is created&quot;&quot;&quot;</span>
+
+        <span class="n">projection</span> <span class="o">=</span> <span class="n">BankAccountProjection</span><span class="p">(</span>
+            <span class="nb">id</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">aggregate_id</span><span class="p">,</span>
+            <span class="n">owner_id</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">owner_id</span><span class="p">,</span>
+            <span class="n">balance</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">initial_balance</span><span class="p">,</span>
+            <span class="n">overdraft_limit</span><span class="o">=</span><span class="n">Decimal</span><span class="p">(</span><span class="s1">&#39;0.00&#39;</span><span class="p">),</span>
+            <span class="n">status</span><span class="o">=</span><span class="s2">&quot;ACTIVE&quot;</span><span class="p">,</span>
+            <span class="n">created_at</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">created_at</span><span class="p">,</span>
+            <span class="n">last_modified</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">created_at</span><span class="p">,</span>
+            <span class="n">transaction_count</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">last_transaction_at</span><span class="o">=</span><span class="kc">None</span>
+        <span class="p">)</span>
+
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_repository</span><span class="o">.</span><span class="n">add_async</span><span class="p">(</span><span class="n">projection</span><span class="p">)</span>
+
+    <span class="nd">@event_handler</span><span class="p">(</span><span class="n">BankAccountTransactionRecordedDomainEventV1</span><span class="p">)</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">handle_transaction_recorded</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">BankAccountTransactionRecordedDomainEventV1</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update projection when transaction is recorded&quot;&quot;&quot;</span>
+
+        <span class="n">projection</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_repository</span><span class="o">.</span><span class="n">get_by_id_async</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">aggregate_id</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">projection</span><span class="p">:</span>
+            <span class="n">projection</span><span class="o">.</span><span class="n">balance</span> <span class="o">+=</span> <span class="n">event</span><span class="o">.</span><span class="n">amount</span>
+            <span class="n">projection</span><span class="o">.</span><span class="n">transaction_count</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">projection</span><span class="o">.</span><span class="n">last_transaction_at</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">timestamp</span>
+            <span class="n">projection</span><span class="o">.</span><span class="n">last_modified</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">timestamp</span>
+
+            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_repository</span><span class="o">.</span><span class="n">update_async</span><span class="p">(</span><span class="n">projection</span><span class="p">)</span>
+
+    <span class="nd">@event_handler</span><span class="p">(</span><span class="n">BankAccountClosedDomainEventV1</span><span class="p">)</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">handle_account_closed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">BankAccountClosedDomainEventV1</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update projection when account is closed&quot;&quot;&quot;</span>
+
+        <span class="n">projection</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_repository</span><span class="o">.</span><span class="n">get_by_id_async</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">aggregate_id</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">projection</span><span class="p">:</span>
+            <span class="n">projection</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="s2">&quot;CLOSED&quot;</span>
+            <span class="n">projection</span><span class="o">.</span><span class="n">last_modified</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">timestamp</span>
+
+            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_repository</span><span class="o">.</span><span class="n">update_async</span><span class="p">(</span><span class="n">projection</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="read-model-optimization">Read Model Optimization<a class="headerlink" href="#read-model-optimization" title="Permanent link">&para;</a></h3>
+<p>Design read models for specific query patterns:</p>
+<div class="highlight"><pre><span></span><code><span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">BankAccountProjection</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Optimized read model for bank account queries&quot;&quot;&quot;</span>
+
+    <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">owner_id</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">balance</span><span class="p">:</span> <span class="n">Decimal</span>
+    <span class="n">overdraft_limit</span><span class="p">:</span> <span class="n">Decimal</span>
+    <span class="n">status</span><span class="p">:</span> <span class="nb">str</span>  <span class="c1"># ACTIVE, CLOSED, SUSPENDED</span>
+    <span class="n">created_at</span><span class="p">:</span> <span class="n">datetime</span>
+    <span class="n">last_modified</span><span class="p">:</span> <span class="n">datetime</span>
+    <span class="n">transaction_count</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">last_transaction_at</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">datetime</span><span class="p">]</span>
+
+    <span class="c1"># Denormalized owner information for efficient queries</span>
+    <span class="n">owner_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">owner_email</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="c1"># Aggregated transaction data</span>
+    <span class="n">total_debits</span><span class="p">:</span> <span class="n">Decimal</span> <span class="o">=</span> <span class="n">Decimal</span><span class="p">(</span><span class="s1">&#39;0.00&#39;</span><span class="p">)</span>
+    <span class="n">total_credits</span><span class="p">:</span> <span class="n">Decimal</span> <span class="o">=</span> <span class="n">Decimal</span><span class="p">(</span><span class="s1">&#39;0.00&#39;</span><span class="p">)</span>
+    <span class="n">largest_transaction</span><span class="p">:</span> <span class="n">Decimal</span> <span class="o">=</span> <span class="n">Decimal</span><span class="p">(</span><span class="s1">&#39;0.00&#39;</span><span class="p">)</span>
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">AccountSummaryProjection</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Summary projection for dashboard queries&quot;&quot;&quot;</span>
+
+    <span class="n">owner_id</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">total_accounts</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">total_balance</span><span class="p">:</span> <span class="n">Decimal</span>
+    <span class="n">active_accounts</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">closed_accounts</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">last_activity</span><span class="p">:</span> <span class="n">datetime</span>
+</code></pre></div>
+<h2 id="temporal-queries">🕰️ Temporal Queries<a class="headerlink" href="#temporal-queries" title="Permanent link">&para;</a></h2>
+<h3 id="point-in-time-state-reconstruction">Point-in-Time State Reconstruction<a class="headerlink" href="#point-in-time-state-reconstruction" title="Permanent link">&para;</a></h3>
+<p>Query aggregate state at any specific point in time:</p>
+<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">TemporalQueryService</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Service for temporal queries on event-sourced aggregates&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event_store</span><span class="p">:</span> <span class="n">EventStore</span><span class="p">,</span> <span class="n">aggregator</span><span class="p">:</span> <span class="n">Aggregator</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">event_store</span> <span class="o">=</span> <span class="n">event_store</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">aggregator</span> <span class="o">=</span> <span class="n">aggregator</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_account_balance_at_date</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">account_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">as_of_date</span><span class="p">:</span> <span class="n">datetime</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Decimal</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get account balance as it was at a specific date&quot;&quot;&quot;</span>
+
+        <span class="n">stream_id</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;BankAccount-</span><span class="si">{</span><span class="n">account_id</span><span class="si">}</span><span class="s2">&quot;</span>
+
+        <span class="c1"># Read events up to the specified date</span>
+        <span class="n">events</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">event_store</span><span class="o">.</span><span class="n">read_async</span><span class="p">(</span>
+            <span class="n">stream_id</span><span class="p">,</span>
+            <span class="n">direction</span><span class="o">=</span><span class="n">StreamReadDirection</span><span class="o">.</span><span class="n">FORWARDS</span><span class="p">,</span>
+            <span class="n">from_position</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">to_date</span><span class="o">=</span><span class="n">as_of_date</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Reconstruct state at that point in time</span>
+        <span class="n">account</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">aggregator</span><span class="o">.</span><span class="n">aggregate</span><span class="p">(</span><span class="n">events</span><span class="p">,</span> <span class="n">BankAccountV1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">account</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">balance</span> <span class="k">if</span> <span class="n">account</span> <span class="k">else</span> <span class="n">Decimal</span><span class="p">(</span><span class="s1">&#39;0.00&#39;</span><span class="p">)</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_transaction_history_between_dates</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> 
+        <span class="n">account_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> 
+        <span class="n">from_date</span><span class="p">:</span> <span class="n">datetime</span><span class="p">,</span> 
+        <span class="n">to_date</span><span class="p">:</span> <span class="n">datetime</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">BankTransactionV1</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get all transactions within a date range&quot;&quot;&quot;</span>
+
+        <span class="n">stream_id</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;BankAccount-</span><span class="si">{</span><span class="n">account_id</span><span class="si">}</span><span class="s2">&quot;</span>
+
+        <span class="n">events</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">event_store</span><span class="o">.</span><span class="n">read_async</span><span class="p">(</span>
+            <span class="n">stream_id</span><span class="p">,</span>
+            <span class="n">direction</span><span class="o">=</span><span class="n">StreamReadDirection</span><span class="o">.</span><span class="n">FORWARDS</span><span class="p">,</span>
+            <span class="n">from_date</span><span class="o">=</span><span class="n">from_date</span><span class="p">,</span>
+            <span class="n">to_date</span><span class="o">=</span><span class="n">to_date</span>
+        <span class="p">)</span>
+
+        <span class="n">transactions</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">event_record</span> <span class="ow">in</span> <span class="n">events</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">event_record</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">BankAccountTransactionRecordedDomainEventV1</span><span class="p">):</span>
+                <span class="n">transaction</span> <span class="o">=</span> <span class="n">BankTransactionV1</span><span class="p">(</span>
+                    <span class="nb">id</span><span class="o">=</span><span class="n">event_record</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">transaction_id</span><span class="p">,</span>
+                    <span class="n">amount</span><span class="o">=</span><span class="n">event_record</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">amount</span><span class="p">,</span>
+                    <span class="nb">type</span><span class="o">=</span><span class="n">event_record</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">transaction_type</span><span class="p">,</span>
+                    <span class="n">recorded_at</span><span class="o">=</span><span class="n">event_record</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">timestamp</span>
+                <span class="p">)</span>
+                <span class="n">transactions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">transactions</span>
+</code></pre></div>
+<h3 id="business-intelligence-queries">Business Intelligence Queries<a class="headerlink" href="#business-intelligence-queries" title="Permanent link">&para;</a></h3>
+<p>Analyze historical data patterns:</p>
+<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">BusinessIntelligenceService</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Service for analyzing business patterns from events&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event_store</span><span class="p">:</span> <span class="n">EventStore</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">event_store</span> <span class="o">=</span> <span class="n">event_store</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_transaction_analytics</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> 
+        <span class="n">from_date</span><span class="p">:</span> <span class="n">datetime</span><span class="p">,</span> 
+        <span class="n">to_date</span><span class="p">:</span> <span class="n">datetime</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Analyze transaction patterns over time&quot;&quot;&quot;</span>
+
+        <span class="c1"># Query all transaction events in date range</span>
+        <span class="n">events</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">event_store</span><span class="o">.</span><span class="n">get_events_by_type_async</span><span class="p">(</span>
+            <span class="n">BankAccountTransactionRecordedDomainEventV1</span><span class="p">,</span>
+            <span class="n">from_date</span><span class="o">=</span><span class="n">from_date</span><span class="p">,</span>
+            <span class="n">to_date</span><span class="o">=</span><span class="n">to_date</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">events</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;No transactions found in date range&quot;</span><span class="p">}</span>
+
+        <span class="c1"># Calculate analytics</span>
+        <span class="n">total_transactions</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">events</span><span class="p">)</span>
+        <span class="n">total_amount</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">amount</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">events</span><span class="p">)</span>
+        <span class="n">debit_transactions</span> <span class="o">=</span> <span class="p">[</span><span class="n">e</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">events</span> <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">amount</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">]</span>
+        <span class="n">credit_transactions</span> <span class="o">=</span> <span class="p">[</span><span class="n">e</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">events</span> <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">amount</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;period&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;from&quot;</span><span class="p">:</span> <span class="n">from_date</span><span class="o">.</span><span class="n">isoformat</span><span class="p">(),</span> <span class="s2">&quot;to&quot;</span><span class="p">:</span> <span class="n">to_date</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()},</span>
+            <span class="s2">&quot;total_transactions&quot;</span><span class="p">:</span> <span class="n">total_transactions</span><span class="p">,</span>
+            <span class="s2">&quot;total_amount&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">total_amount</span><span class="p">),</span>
+            <span class="s2">&quot;average_transaction&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">total_amount</span> <span class="o">/</span> <span class="n">total_transactions</span><span class="p">),</span>
+            <span class="s2">&quot;debit_count&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">debit_transactions</span><span class="p">),</span>
+            <span class="s2">&quot;credit_count&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">credit_transactions</span><span class="p">),</span>
+            <span class="s2">&quot;largest_debit&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">amount</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">debit_transactions</span><span class="p">))</span> <span class="k">if</span> <span class="n">debit_transactions</span> <span class="k">else</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="s2">&quot;largest_credit&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">amount</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">credit_transactions</span><span class="p">))</span> <span class="k">if</span> <span class="n">credit_transactions</span> <span class="k">else</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="s2">&quot;daily_breakdown&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_calculate_daily_breakdown</span><span class="p">(</span><span class="n">events</span><span class="p">,</span> <span class="n">from_date</span><span class="p">,</span> <span class="n">to_date</span><span class="p">)</span>
+        <span class="p">}</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_calculate_daily_breakdown</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">events</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">BankAccountTransactionRecordedDomainEventV1</span><span class="p">],</span> <span class="n">from_date</span><span class="p">:</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">to_date</span><span class="p">:</span> <span class="n">datetime</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate daily transaction breakdown&quot;&quot;&quot;</span>
+        <span class="n">daily_data</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">events</span><span class="p">:</span>
+            <span class="n">day_key</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">timestamp</span><span class="o">.</span><span class="n">date</span><span class="p">()</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">day_key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">daily_data</span><span class="p">:</span>
+                <span class="n">daily_data</span><span class="p">[</span><span class="n">day_key</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;count&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;amount&quot;</span><span class="p">:</span> <span class="n">Decimal</span><span class="p">(</span><span class="s1">&#39;0.00&#39;</span><span class="p">)}</span>
+
+            <span class="n">daily_data</span><span class="p">[</span><span class="n">day_key</span><span class="p">][</span><span class="s2">&quot;count&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">daily_data</span><span class="p">[</span><span class="n">day_key</span><span class="p">][</span><span class="s2">&quot;amount&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="n">event</span><span class="o">.</span><span class="n">amount</span>
+
+        <span class="k">return</span> <span class="p">[</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;date&quot;</span><span class="p">:</span> <span class="n">date</span><span class="p">,</span>
+                <span class="s2">&quot;transaction_count&quot;</span><span class="p">:</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;count&quot;</span><span class="p">],</span>
+                <span class="s2">&quot;total_amount&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;amount&quot;</span><span class="p">])</span>
+            <span class="p">}</span>
+            <span class="k">for</span> <span class="n">date</span><span class="p">,</span> <span class="n">data</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">daily_data</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
+        <span class="p">]</span>
+</code></pre></div>
+<h2 id="testing-event-sourced-systems">🧪 Testing Event-Sourced Systems<a class="headerlink" href="#testing-event-sourced-systems" title="Permanent link">&para;</a></h2>
+<h3 id="unit-testing-aggregates">Unit Testing Aggregates<a class="headerlink" href="#unit-testing-aggregates" title="Permanent link">&para;</a></h3>
+<p>Test business logic by verifying events are raised correctly:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">decimal</span><span class="w"> </span><span class="kn">import</span> <span class="n">Decimal</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">TestBankAccountAggregate</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Unit tests for BankAccount aggregate&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_account_creation_raises_creation_event</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Test that creating an account raises the correct event&quot;&quot;&quot;</span>
+        <span class="n">account</span> <span class="o">=</span> <span class="n">BankAccountV1</span><span class="p">()</span>
+        <span class="n">owner_id</span> <span class="o">=</span> <span class="s2">&quot;john-doe-123&quot;</span>
+        <span class="n">overdraft_limit</span> <span class="o">=</span> <span class="n">Decimal</span><span class="p">(</span><span class="s2">&quot;1000.00&quot;</span><span class="p">)</span>
+
+        <span class="n">account</span><span class="o">.</span><span class="n">create_account</span><span class="p">(</span><span class="n">owner_id</span><span class="p">,</span> <span class="n">overdraft_limit</span><span class="p">)</span>
+
+        <span class="n">events</span> <span class="o">=</span> <span class="n">account</span><span class="o">.</span><span class="n">_pending_events</span>
+
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">events</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">events</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">BankAccountCreatedDomainEventV1</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="n">events</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">owner_id</span> <span class="o">==</span> <span class="n">owner_id</span>
+        <span class="k">assert</span> <span class="n">events</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">overdraft_limit</span> <span class="o">==</span> <span class="n">overdraft_limit</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_transaction_recording_updates_balance_and_raises_event</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Test that recording a transaction updates balance and raises event&quot;&quot;&quot;</span>
+        <span class="n">account</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_test_account</span><span class="p">()</span>
+
+        <span class="c1"># Create a transaction using the actual method signature</span>
+        <span class="n">transaction_id</span> <span class="o">=</span> <span class="s2">&quot;trans-123&quot;</span>
+        <span class="n">amount</span> <span class="o">=</span> <span class="n">Decimal</span><span class="p">(</span><span class="s2">&quot;100.00&quot;</span><span class="p">)</span>
+
+        <span class="n">result</span> <span class="o">=</span> <span class="n">account</span><span class="o">.</span><span class="n">try_add_transaction</span><span class="p">(</span><span class="n">transaction_id</span><span class="p">,</span> <span class="n">amount</span><span class="p">)</span>
+
+        <span class="c1"># Verify transaction was accepted</span>
+        <span class="k">assert</span> <span class="n">result</span> <span class="o">==</span> <span class="kc">True</span>
+
+        <span class="c1"># Verify event was registered</span>
+        <span class="n">events</span> <span class="o">=</span> <span class="n">account</span><span class="o">.</span><span class="n">_pending_events</span>
+        <span class="n">transaction_events</span> <span class="o">=</span> <span class="p">[</span><span class="n">e</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">events</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">BankAccountTransactionRecordedDomainEventV1</span><span class="p">)]</span>
+
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">transaction_events</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_insufficient_funds_raises_exception</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Test that insufficient funds rejects transaction&quot;&quot;&quot;</span>
+        <span class="n">account</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_test_account</span><span class="p">()</span>
+
+        <span class="c1"># Create transaction that exceeds available balance</span>
+        <span class="n">large_transaction</span> <span class="o">=</span> <span class="n">BankTransactionV1</span><span class="p">(</span>
+            <span class="nb">type</span><span class="o">=</span><span class="n">BankTransactionTypeV1</span><span class="o">.</span><span class="n">WITHDRAWAL</span><span class="p">,</span>
+            <span class="n">amount</span><span class="o">=</span><span class="n">Decimal</span><span class="p">(</span><span class="s2">&quot;2000.00&quot;</span><span class="p">),</span>  <span class="c1"># More than available balance</span>
+            <span class="n">from_account_id</span><span class="o">=</span><span class="n">account</span><span class="o">.</span><span class="n">id</span><span class="p">(),</span>
+            <span class="n">to_account_id</span><span class="o">=</span><span class="kc">None</span>
+        <span class="p">)</span>
+
+        <span class="n">result</span> <span class="o">=</span> <span class="n">account</span><span class="o">.</span><span class="n">try_add_transaction</span><span class="p">(</span><span class="n">large_transaction</span><span class="p">)</span>
+
+        <span class="c1"># Verify transaction was rejected</span>
+        <span class="k">assert</span> <span class="n">result</span> <span class="o">==</span> <span class="kc">False</span>
+
+        <span class="c1"># Verify no event was registered</span>
+        <span class="n">events</span> <span class="o">=</span> <span class="n">account</span><span class="o">.</span><span class="n">_pending_events</span>
+        <span class="n">transaction_events</span> <span class="o">=</span> <span class="p">[</span><span class="n">e</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">events</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">BankAccountTransactionRecordedDomainEventV1</span><span class="p">)]</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">transaction_events</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_state_reconstruction_from_events</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Test that aggregate state can be reconstructed from events&quot;&quot;&quot;</span>
+
+        <span class="c1"># Create aggregate</span>
+        <span class="n">account</span> <span class="o">=</span> <span class="n">BankAccountV1</span><span class="p">()</span>
+
+        <span class="c1"># Create and apply events directly to simulate repository loading</span>
+        <span class="n">creation_event</span> <span class="o">=</span> <span class="n">BankAccountCreatedDomainEventV1</span><span class="p">(</span>
+            <span class="n">aggregate_id</span><span class="o">=</span><span class="n">account</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+            <span class="n">owner_id</span><span class="o">=</span><span class="s2">&quot;owner-123&quot;</span><span class="p">,</span>
+            <span class="n">overdraft_limit</span><span class="o">=</span><span class="n">Decimal</span><span class="p">(</span><span class="s2">&quot;500.00&quot;</span><span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="n">transaction_event</span> <span class="o">=</span> <span class="n">BankAccountTransactionRecordedDomainEventV1</span><span class="p">(</span>
+            <span class="n">aggregate_id</span><span class="o">=</span><span class="n">account</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+            <span class="n">transaction_id</span><span class="o">=</span><span class="s2">&quot;trans-123&quot;</span><span class="p">,</span>
+            <span class="n">amount</span><span class="o">=</span><span class="n">Decimal</span><span class="p">(</span><span class="s2">&quot;100.00&quot;</span><span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Apply events to reconstruct state</span>
+        <span class="n">account</span><span class="o">.</span><span class="n">state_manager</span><span class="p">(</span><span class="n">creation_event</span><span class="p">)</span>
+        <span class="n">account</span><span class="o">.</span><span class="n">state_manager</span><span class="p">(</span><span class="n">transaction_event</span><span class="p">)</span>
+
+        <span class="c1"># Verify state reconstruction</span>
+        <span class="k">assert</span> <span class="n">account</span><span class="o">.</span><span class="n">owner_id</span> <span class="o">==</span> <span class="s2">&quot;owner-123&quot;</span>
+        <span class="k">assert</span> <span class="n">account</span><span class="o">.</span><span class="n">overdraft_limit</span> <span class="o">==</span> <span class="n">Decimal</span><span class="p">(</span><span class="s2">&quot;500.00&quot;</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="n">account</span><span class="o">.</span><span class="n">balance</span> <span class="o">==</span> <span class="n">Decimal</span><span class="p">(</span><span class="s2">&quot;100.00&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_create_test_account</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BankAccountV1</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Helper method to create a test account&quot;&quot;&quot;</span>
+        <span class="n">account</span> <span class="o">=</span> <span class="n">BankAccountV1</span><span class="p">()</span>
+        <span class="n">account</span><span class="o">.</span><span class="n">create_account</span><span class="p">(</span><span class="s2">&quot;test-owner&quot;</span><span class="p">,</span> <span class="n">Decimal</span><span class="p">(</span><span class="s2">&quot;1000.00&quot;</span><span class="p">))</span>
+        <span class="c1"># Clear pending events for clean testing</span>
+        <span class="n">account</span><span class="o">.</span><span class="n">_pending_events</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">account</span>
+</code></pre></div>
+<h3 id="integration-testing-with-event-store">Integration Testing with Event Store<a class="headerlink" href="#integration-testing-with-event-store" title="Permanent link">&para;</a></h3>
+<p>Test the complete event sourcing workflow:</p>
+<div class="highlight"><pre><span></span><code><span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">integration</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">TestEventSourcingIntegration</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Integration tests for event sourcing workflow&quot;&quot;&quot;</span>
+
+    <span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">event_store</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create test event store&quot;&quot;&quot;</span>
+        <span class="n">options</span> <span class="o">=</span> <span class="n">EventStoreOptions</span><span class="p">(</span>
+            <span class="n">database_name</span><span class="o">=</span><span class="s2">&quot;test_banking&quot;</span><span class="p">,</span>
+            <span class="n">consumer_group</span><span class="o">=</span><span class="s2">&quot;test_group&quot;</span><span class="p">,</span>
+            <span class="n">connection_string</span><span class="o">=</span><span class="s2">&quot;esdb://localhost:2113?tls=false&quot;</span>
+        <span class="p">)</span>
+        <span class="c1"># Return configured event store for testing</span>
+        <span class="k">pass</span>
+
+    <span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">repository</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event_store</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create test repository&quot;&quot;&quot;</span>
+        <span class="n">aggregator</span> <span class="o">=</span> <span class="n">Aggregator</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">EventSourcingRepository</span><span class="p">(</span><span class="n">event_store</span><span class="p">,</span> <span class="n">aggregator</span><span class="p">)</span>
+
+    <span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">asyncio</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">test_complete_aggregate_lifecycle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">repository</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Test complete aggregate lifecycle with persistence&quot;&quot;&quot;</span>
+
+        <span class="c1"># Create aggregate</span>
+        <span class="n">owner</span> <span class="o">=</span> <span class="n">Person</span><span class="p">(</span><span class="s2">&quot;integration@test.com&quot;</span><span class="p">,</span> <span class="s2">&quot;Integration&quot;</span><span class="p">,</span> <span class="s2">&quot;Test&quot;</span><span class="p">)</span>
+        <span class="n">account</span> <span class="o">=</span> <span class="n">BankAccountV1</span><span class="p">(</span><span class="n">owner</span><span class="p">,</span> <span class="n">Decimal</span><span class="p">(</span><span class="s2">&quot;1000.00&quot;</span><span class="p">))</span>
+
+        <span class="c1"># Save to event store</span>
+        <span class="n">saved_account</span> <span class="o">=</span> <span class="k">await</span> <span class="n">repository</span><span class="o">.</span><span class="n">add_async</span><span class="p">(</span><span class="n">account</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="n">saved_account</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">state_version</span> <span class="o">&gt;</span> <span class="mi">0</span>
+
+        <span class="c1"># Load from event store</span>
+        <span class="n">loaded_account</span> <span class="o">=</span> <span class="k">await</span> <span class="n">repository</span><span class="o">.</span><span class="n">get_async</span><span class="p">(</span><span class="n">saved_account</span><span class="o">.</span><span class="n">id</span><span class="p">())</span>
+        <span class="k">assert</span> <span class="n">loaded_account</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="k">assert</span> <span class="n">loaded_account</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">balance</span> <span class="o">==</span> <span class="n">Decimal</span><span class="p">(</span><span class="s2">&quot;1000.00&quot;</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="n">loaded_account</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">owner_id</span> <span class="o">==</span> <span class="n">owner</span><span class="o">.</span><span class="n">id</span><span class="p">()</span>
+
+        <span class="c1"># Modify and save again</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="n">BankTransactionV1</span><span class="p">(</span>
+            <span class="nb">type</span><span class="o">=</span><span class="n">BankTransactionTypeV1</span><span class="o">.</span><span class="n">WITHDRAWAL</span><span class="p">,</span>
+            <span class="n">amount</span><span class="o">=</span><span class="n">Decimal</span><span class="p">(</span><span class="s2">&quot;200.00&quot;</span><span class="p">),</span>
+            <span class="n">from_account_id</span><span class="o">=</span><span class="n">loaded_account</span><span class="o">.</span><span class="n">id</span><span class="p">(),</span>
+            <span class="n">to_account_id</span><span class="o">=</span><span class="kc">None</span>
+        <span class="p">)</span>
+        <span class="n">loaded_account</span><span class="o">.</span><span class="n">try_add_transaction</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span>
+        <span class="n">updated_account</span> <span class="o">=</span> <span class="k">await</span> <span class="n">repository</span><span class="o">.</span><span class="n">update_async</span><span class="p">(</span><span class="n">loaded_account</span><span class="p">)</span>
+
+        <span class="c1"># Verify persistence</span>
+        <span class="n">final_account</span> <span class="o">=</span> <span class="k">await</span> <span class="n">repository</span><span class="o">.</span><span class="n">get_async</span><span class="p">(</span><span class="n">updated_account</span><span class="o">.</span><span class="n">id</span><span class="p">())</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">final_account</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">transactions</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
+
+    <span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">asyncio</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">test_concurrent_modifications_throw_concurrency_exception</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">repository</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Test that concurrent modifications are detected&quot;&quot;&quot;</span>
+
+        <span class="c1"># Create and save account</span>
+        <span class="n">owner</span> <span class="o">=</span> <span class="n">Person</span><span class="p">(</span><span class="s2">&quot;concurrent@test.com&quot;</span><span class="p">,</span> <span class="s2">&quot;Concurrent&quot;</span><span class="p">,</span> <span class="s2">&quot;Test&quot;</span><span class="p">)</span>
+        <span class="n">account</span> <span class="o">=</span> <span class="n">BankAccountV1</span><span class="p">(</span><span class="n">owner</span><span class="p">,</span> <span class="n">Decimal</span><span class="p">(</span><span class="s2">&quot;1000.00&quot;</span><span class="p">))</span>
+        <span class="n">saved_account</span> <span class="o">=</span> <span class="k">await</span> <span class="n">repository</span><span class="o">.</span><span class="n">add_async</span><span class="p">(</span><span class="n">account</span><span class="p">)</span>
+        <span class="n">account_id</span> <span class="o">=</span> <span class="n">saved_account</span><span class="o">.</span><span class="n">id</span><span class="p">()</span>
+
+        <span class="c1"># Load same account in two instances</span>
+        <span class="n">account1</span> <span class="o">=</span> <span class="k">await</span> <span class="n">repository</span><span class="o">.</span><span class="n">get_async</span><span class="p">(</span><span class="n">account_id</span><span class="p">)</span>
+        <span class="n">account2</span> <span class="o">=</span> <span class="k">await</span> <span class="n">repository</span><span class="o">.</span><span class="n">get_async</span><span class="p">(</span><span class="n">account_id</span><span class="p">)</span>
+
+        <span class="c1"># Modify both</span>
+        <span class="n">transaction1</span> <span class="o">=</span> <span class="n">BankTransactionV1</span><span class="p">(</span><span class="n">BankTransactionTypeV1</span><span class="o">.</span><span class="n">WITHDRAWAL</span><span class="p">,</span> <span class="n">Decimal</span><span class="p">(</span><span class="s2">&quot;100.00&quot;</span><span class="p">),</span> <span class="n">account_id</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">transaction2</span> <span class="o">=</span> <span class="n">BankTransactionV1</span><span class="p">(</span><span class="n">BankTransactionTypeV1</span><span class="o">.</span><span class="n">WITHDRAWAL</span><span class="p">,</span> <span class="n">Decimal</span><span class="p">(</span><span class="s2">&quot;200.00&quot;</span><span class="p">),</span> <span class="n">account_id</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+        <span class="n">account1</span><span class="o">.</span><span class="n">try_add_transaction</span><span class="p">(</span><span class="n">transaction1</span><span class="p">)</span>
+        <span class="n">account2</span><span class="o">.</span><span class="n">try_add_transaction</span><span class="p">(</span><span class="n">transaction2</span><span class="p">)</span>
+
+        <span class="c1"># Save first modification</span>
+        <span class="k">await</span> <span class="n">repository</span><span class="o">.</span><span class="n">update_async</span><span class="p">(</span><span class="n">account1</span><span class="p">)</span>
+
+        <span class="c1"># Second modification should fail due to concurrency</span>
+        <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="n">ConcurrencyException</span><span class="p">):</span>
+            <span class="k">await</span> <span class="n">repository</span><span class="o">.</span><span class="n">update_async</span><span class="p">(</span><span class="n">account2</span><span class="p">)</span>
+</code></pre></div>
+<h2 id="advanced-patterns">🔧 Advanced Patterns<a class="headerlink" href="#advanced-patterns" title="Permanent link">&para;</a></h2>
+<h3 id="event-versioning">Event Versioning<a class="headerlink" href="#event-versioning" title="Permanent link">&para;</a></h3>
+<p>Handle evolving event schemas over time:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># V1 Event</span>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">BankAccountCreatedDomainEventV1</span><span class="p">(</span><span class="n">DomainEvent</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
+    <span class="n">owner_id</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">initial_balance</span><span class="p">:</span> <span class="n">Decimal</span>
+
+<span class="c1"># V2 Event - Added account type</span>
+<span class="nd">@dataclass</span>  
+<span class="k">class</span><span class="w"> </span><span class="nc">BankAccountCreatedDomainEventV2</span><span class="p">(</span><span class="n">DomainEvent</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
+    <span class="n">owner_id</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">initial_balance</span><span class="p">:</span> <span class="n">Decimal</span>
+    <span class="n">account_type</span><span class="p">:</span> <span class="nb">str</span>  <span class="c1"># New field</span>
+
+<span class="c1"># Event upcasting for backward compatibility</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">EventUpcaster</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">upcast</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event_data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">event_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">event_type</span> <span class="o">==</span> <span class="s2">&quot;BankAccountCreatedDomainEventV1&quot;</span><span class="p">:</span>
+            <span class="c1"># Upcast V1 to V2 by adding default account type</span>
+            <span class="n">event_data</span><span class="p">[</span><span class="s2">&quot;account_type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;CHECKING&quot;</span>
+            <span class="k">return</span> <span class="n">event_data</span>
+        <span class="k">return</span> <span class="n">event_data</span>
+</code></pre></div>
+<h3 id="snapshots-for-performance">Snapshots for Performance<a class="headerlink" href="#snapshots-for-performance" title="Permanent link">&para;</a></h3>
+<p>Optimize performance for long event streams:</p>
+<div class="highlight"><pre><span></span><code><span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">BankAccountSnapshot</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Snapshot of bank account state for performance optimization&quot;&quot;&quot;</span>
+
+    <span class="n">aggregate_id</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">version</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">balance</span><span class="p">:</span> <span class="n">Decimal</span>
+    <span class="n">overdraft_limit</span><span class="p">:</span> <span class="n">Decimal</span>
+    <span class="n">transaction_count</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">created_at</span><span class="p">:</span> <span class="n">datetime</span>
+    <span class="n">snapshot_at</span><span class="p">:</span> <span class="n">datetime</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">SnapshotRepository</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Repository for managing aggregate snapshots&quot;&quot;&quot;</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">save_snapshot_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">aggregate</span><span class="p">:</span> <span class="n">BankAccountV1</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Save a snapshot of the current aggregate state&quot;&quot;&quot;</span>
+        <span class="n">snapshot</span> <span class="o">=</span> <span class="n">BankAccountSnapshot</span><span class="p">(</span>
+            <span class="n">aggregate_id</span><span class="o">=</span><span class="n">aggregate</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+            <span class="n">version</span><span class="o">=</span><span class="n">aggregate</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">state_version</span><span class="p">,</span>
+            <span class="n">balance</span><span class="o">=</span><span class="n">aggregate</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">balance</span><span class="p">,</span>
+            <span class="n">overdraft_limit</span><span class="o">=</span><span class="n">aggregate</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">overdraft_limit</span><span class="p">,</span>
+            <span class="n">transaction_count</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">aggregate</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">transactions</span><span class="p">),</span>
+            <span class="n">created_at</span><span class="o">=</span><span class="n">aggregate</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">created_at</span><span class="p">,</span>
+            <span class="n">snapshot_at</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span>
+        <span class="p">)</span>
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">repository</span><span class="o">.</span><span class="n">add_async</span><span class="p">(</span><span class="n">snapshot</span><span class="p">)</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">load_from_snapshot_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">aggregate_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">BankAccountV1</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Load aggregate from latest snapshot plus subsequent events&quot;&quot;&quot;</span>
+        <span class="n">snapshot</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_latest_snapshot_async</span><span class="p">(</span><span class="n">aggregate_id</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">snapshot</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="c1"># Load events since snapshot</span>
+        <span class="n">events</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">event_store</span><span class="o">.</span><span class="n">read_async</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;BankAccount-</span><span class="si">{</span><span class="n">aggregate_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="n">from_version</span><span class="o">=</span><span class="n">snapshot</span><span class="o">.</span><span class="n">version</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Reconstruct aggregate from snapshot + events</span>
+        <span class="n">aggregate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_from_snapshot</span><span class="p">(</span><span class="n">snapshot</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_apply_events</span><span class="p">(</span><span class="n">aggregate</span><span class="p">,</span> <span class="n">events</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">aggregate</span>
+</code></pre></div>
+<h3 id="saga-pattern-for-distributed-transactions">Saga Pattern for Distributed Transactions<a class="headerlink" href="#saga-pattern-for-distributed-transactions" title="Permanent link">&para;</a></h3>
+<p>Coordinate long-running business processes:</p>
+<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">MoneyTransferSaga</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Saga for coordinating money transfers between accounts&quot;&quot;&quot;</span>
+
+    <span class="nd">@saga_step</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">debit_source_account</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transfer_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">source_account_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">amount</span><span class="p">:</span> <span class="n">Decimal</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Step 1: Debit the source account&quot;&quot;&quot;</span>
+        <span class="n">command</span> <span class="o">=</span> <span class="n">DebitAccountCommand</span><span class="p">(</span><span class="n">source_account_id</span><span class="p">,</span> <span class="n">amount</span><span class="p">,</span> <span class="n">transfer_id</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">mediator</span><span class="o">.</span><span class="n">execute_async</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">is_success</span><span class="p">:</span>
+            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">complete_step</span><span class="p">(</span><span class="s2">&quot;debit_source&quot;</span><span class="p">,</span> <span class="n">transfer_id</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">compensate_transfer</span><span class="p">(</span><span class="n">transfer_id</span><span class="p">,</span> <span class="s2">&quot;Failed to debit source account&quot;</span><span class="p">)</span>
+
+    <span class="nd">@saga_step</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">credit_target_account</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transfer_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">target_account_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">amount</span><span class="p">:</span> <span class="n">Decimal</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Step 2: Credit the target account&quot;&quot;&quot;</span>
+        <span class="n">command</span> <span class="o">=</span> <span class="n">CreditAccountCommand</span><span class="p">(</span><span class="n">target_account_id</span><span class="p">,</span> <span class="n">amount</span><span class="p">,</span> <span class="n">transfer_id</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">mediator</span><span class="o">.</span><span class="n">execute_async</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">is_success</span><span class="p">:</span>
+            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">complete_saga</span><span class="p">(</span><span class="n">transfer_id</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">compensate_debit</span><span class="p">(</span><span class="n">transfer_id</span><span class="p">,</span> <span class="n">source_account_id</span><span class="p">,</span> <span class="n">amount</span><span class="p">)</span>
+
+    <span class="nd">@compensating_action</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">compensate_debit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transfer_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">account_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">amount</span><span class="p">:</span> <span class="n">Decimal</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compensate by crediting back the debited amount&quot;&quot;&quot;</span>
+        <span class="n">compensation_command</span> <span class="o">=</span> <span class="n">CreditAccountCommand</span><span class="p">(</span><span class="n">account_id</span><span class="p">,</span> <span class="n">amount</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;compensation-</span><span class="si">{</span><span class="n">transfer_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">mediator</span><span class="o">.</span><span class="n">execute_async</span><span class="p">(</span><span class="n">compensation_command</span><span class="p">)</span>
+</code></pre></div>
+<h2 id="monitoring-and-observability">📊 Monitoring and Observability<a class="headerlink" href="#monitoring-and-observability" title="Permanent link">&para;</a></h2>
+<h3 id="event-stream-health-monitoring">Event Stream Health Monitoring<a class="headerlink" href="#event-stream-health-monitoring" title="Permanent link">&para;</a></h3>
+<p>Monitor the health of your event streams:</p>
+<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">EventStoreHealthService</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Service for monitoring event store health&quot;&quot;&quot;</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_stream_statistics</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get statistics for a specific event stream&quot;&quot;&quot;</span>
+        <span class="n">descriptor</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">event_store</span><span class="o">.</span><span class="n">get_stream_descriptor_async</span><span class="p">(</span><span class="n">stream_id</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;stream_id&quot;</span><span class="p">:</span> <span class="n">stream_id</span><span class="p">,</span>
+            <span class="s2">&quot;event_count&quot;</span><span class="p">:</span> <span class="n">descriptor</span><span class="o">.</span><span class="n">length</span><span class="p">,</span>
+            <span class="s2">&quot;first_event_at&quot;</span><span class="p">:</span> <span class="n">descriptor</span><span class="o">.</span><span class="n">first_event_at</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span> <span class="k">if</span> <span class="n">descriptor</span><span class="o">.</span><span class="n">first_event_at</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="s2">&quot;last_event_at&quot;</span><span class="p">:</span> <span class="n">descriptor</span><span class="o">.</span><span class="n">last_event_at</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span> <span class="k">if</span> <span class="n">descriptor</span><span class="o">.</span><span class="n">last_event_at</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="s2">&quot;stream_age_days&quot;</span><span class="p">:</span> <span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span> <span class="o">-</span> <span class="n">descriptor</span><span class="o">.</span><span class="n">first_event_at</span><span class="p">)</span><span class="o">.</span><span class="n">days</span> <span class="k">if</span> <span class="n">descriptor</span><span class="o">.</span><span class="n">first_event_at</span> <span class="k">else</span> <span class="mi">0</span>
+        <span class="p">}</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">detect_problematic_streams</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">max_age_days</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">30</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Detect streams that haven&#39;t had events for a long time&quot;&quot;&quot;</span>
+        <span class="n">all_streams</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">event_store</span><span class="o">.</span><span class="n">list_streams_async</span><span class="p">()</span>
+        <span class="n">problematic_streams</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">stream_id</span> <span class="ow">in</span> <span class="n">all_streams</span><span class="p">:</span>
+            <span class="n">descriptor</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">event_store</span><span class="o">.</span><span class="n">get_stream_descriptor_async</span><span class="p">(</span><span class="n">stream_id</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">descriptor</span><span class="o">.</span><span class="n">last_event_at</span><span class="p">:</span>
+                <span class="n">age</span> <span class="o">=</span> <span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span> <span class="o">-</span> <span class="n">descriptor</span><span class="o">.</span><span class="n">last_event_at</span><span class="p">)</span><span class="o">.</span><span class="n">days</span>
+                <span class="k">if</span> <span class="n">age</span> <span class="o">&gt;</span> <span class="n">max_age_days</span><span class="p">:</span>
+                    <span class="n">problematic_streams</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">stream_id</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">problematic_streams</span>
+</code></pre></div>
+<h2 id="related-documentation">🔗 Related Documentation<a class="headerlink" href="#related-documentation" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="../data-access/">Data Access</a> - Repository patterns and data persistence</li>
+<li><a href="../cqrs-mediation/">CQRS &amp; Mediation</a> - Command/Query separation patterns  </li>
+<li><a href="../concepts/domain-events.md">Domain Events</a> - Domain event modeling</li>
+<li><a href="../../samples/openbank/">OpenBank Sample</a> - Complete event sourcing implementation</li>
+<li><a href="../concepts/testing.md">Testing Strategies</a> - Testing event-sourced systems</li>
+</ul>
+<h2 id="best-practices">🎯 Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">&para;</a></h2>
+<h3 id="dos">Do's ✅<a class="headerlink" href="#dos" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Design events as immutable facts</strong> - Events represent what happened, not what should happen</li>
+<li><strong>Use meaningful event names</strong> - Events should clearly describe business occurrences</li>
+<li><strong>Keep events focused</strong> - Each event should represent a single business fact</li>
+<li><strong>Version your events</strong> - Plan for schema evolution from the beginning</li>
+<li><strong>Test event handlers thoroughly</strong> - Ensure state transitions work correctly</li>
+<li><strong>Monitor stream health</strong> - Track stream growth and performance metrics</li>
+</ul>
+<h3 id="donts">Don'ts ❌<a class="headerlink" href="#donts" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Don't modify events</strong> - Events are immutable historical facts</li>
+<li><strong>Don't make events too granular</strong> - Avoid events for every minor state change</li>
+<li><strong>Don't ignore concurrency</strong> - Handle concurrent modifications appropriately</li>
+<li><strong>Don't skip snapshots</strong> - Use snapshots for performance with long streams</li>
+<li><strong>Don't forget about eventual consistency</strong> - Read models may lag behind write models</li>
+<li><strong>Don't ignore event ordering</strong> - Event sequence matters for state reconstruction</li>
+</ul>
+<p>Event Sourcing provides powerful capabilities for building auditable, scalable, and maintainable systems. The Neuroglia framework makes it straightforward to implement event sourcing patterns while maintaining clean architecture principles.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/bvandewe/pyneuro" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path fill="currentColor" d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.expand", "navigation.top", "search.highlight", "search.share"], "search": "../../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.92b07e13.min.js"></script>
+      
+    
+  </body>
+</html>

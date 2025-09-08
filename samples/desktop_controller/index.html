@@ -546,6 +546,29 @@
   
   
     <li class="md-nav__item">
+      <a href="../../features/event-sourcing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Event Sourcing
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../features/event-handling.md" class="md-nav__link">
         
   
@@ -1564,7 +1587,6 @@ services:
 <span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.hosting.abstractions</span><span class="w"> </span><span class="kn">import</span> <span class="n">ApplicationSettings</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">ConfigDict</span>
 
-
 <span class="k">class</span><span class="w"> </span><span class="nc">DesktopControllerSettings</span><span class="p">(</span><span class="n">ApplicationSettings</span><span class="p">):</span>
     <span class="n">model_config</span> <span class="o">=</span> <span class="n">ConfigDict</span><span class="p">(</span><span class="n">extra</span><span class="o">=</span><span class="s2">&quot;allow&quot;</span><span class="p">)</span>
 
@@ -1687,7 +1709,6 @@ This is the same for the other dependencies (<code>CloudEventBus</code>, <code>C
 <span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">TestHostScriptCommand</span><span class="p">(</span><span class="n">Command</span><span class="p">):</span>
     <span class="n">user_input</span><span class="p">:</span> <span class="nb">str</span>
-
 
 <span class="k">class</span><span class="w"> </span><span class="nc">TestHostScriptCommandsHandler</span><span class="p">(</span><span class="n">CommandHandler</span><span class="p">[</span><span class="n">TestHostScriptCommand</span><span class="p">,</span> <span class="n">OperationResult</span><span class="p">[</span><span class="n">Any</span><span class="p">]]):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Represents the service used to handle UserInfo-related Commands&quot;&quot;&quot;</span>

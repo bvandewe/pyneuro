@@ -16,7 +16,7 @@
     
     
       
-        <title>OpenBank - Neuroglia Python Framework</title>
+        <title>🏦 OpenBank Sample Application - Neuroglia Python Framework</title>
       
     
     
@@ -68,7 +68,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#openbank" class="md-skip">
+        <a href="#openbank-sample-application" class="md-skip">
           Skip to content
         </a>
       
@@ -104,7 +104,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              OpenBank
+              🏦 OpenBank Sample Application
             
           </span>
         </div>
@@ -542,6 +542,29 @@
   
   
     <li class="md-nav__item">
+      <a href="../../features/event-sourcing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Event Sourcing
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../features/event-handling.md" class="md-nav__link">
         
   
@@ -821,6 +844,269 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#what-youll-learn" class="md-nav__link">
+    <span class="md-ellipsis">
+      🎯 What You'll Learn
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#architecture-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      🏗️ Architecture Overview
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-features-demonstrated" class="md-nav__link">
+    <span class="md-ellipsis">
+      🚀 Key Features Demonstrated
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🚀 Key Features Demonstrated">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-event-sourced-aggregates" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Event-Sourced Aggregates
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-event-store-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Event Store Configuration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-aggregate-state-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Aggregate State Management
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-domain-event-handlers" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Domain Event Handlers
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-command-and-query-separation" class="md-nav__link">
+    <span class="md-ellipsis">
+      5. Command and Query Separation
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#testing-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      🧪 Testing Strategy
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🧪 Testing Strategy">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#event-sourcing-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      Event Sourcing Tests
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#integration-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      Integration Tests
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#implementation-details" class="md-nav__link">
+    <span class="md-ellipsis">
+      📚 Implementation Details
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📚 Implementation Details">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-domain-layer-domainmodels" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Domain Layer (domain/models/)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-application-layer-application" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Application Layer (application/)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-integration-layer-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Integration Layer (integration/)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-api-layer-apicontrollers" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. API Layer (api/controllers/)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#event-sourcing-benefits" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔄 Event Sourcing Benefits
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🔄 Event Sourcing Benefits">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#complete-audit-trail" class="md-nav__link">
+    <span class="md-ellipsis">
+      Complete Audit Trail
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#temporal-queries" class="md-nav__link">
+    <span class="md-ellipsis">
+      Temporal Queries
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#business-intelligence" class="md-nav__link">
+    <span class="md-ellipsis">
+      Business Intelligence
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#getting-started" class="md-nav__link">
+    <span class="md-ellipsis">
+      🚀 Getting Started
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🚀 Getting Started">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Prerequisites
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-run-the-application" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Run the Application
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-test-the-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Test the API
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related-documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔗 Related Documentation
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -835,8 +1121,330 @@
 
 
 
-<h1 id="openbank">OpenBank<a class="headerlink" href="#openbank" title="Permanent link">&para;</a></h1>
-<p>See <a href="../samples/openbank">samples/openbank</a>...</p>
+<h1 id="openbank-sample-application">🏦 OpenBank Sample Application<a class="headerlink" href="#openbank-sample-application" title="Permanent link">&para;</a></h1>
+<p>The OpenBank sample demonstrates <strong>event sourcing</strong> and <strong>domain-driven design</strong> patterns using the Neuroglia framework. This application showcases how to build a banking system with complete audit trails, event-driven architecture, and CQRS implementation.</p>
+<h2 id="what-youll-learn">🎯 What You'll Learn<a class="headerlink" href="#what-youll-learn" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Event Sourcing</strong>: Complete audit trail with event-driven state reconstruction</li>
+<li><strong>Domain-Driven Design</strong>: Rich domain models with business logic and invariants</li>
+<li><strong>CQRS Implementation</strong>: Separate read and write models for optimal performance</li>
+<li><strong>Aggregate Root Pattern</strong>: Domain entity lifecycle management and consistency</li>
+<li><strong>Event Store Integration</strong>: Persistent event streams with EventStoreDB</li>
+<li><strong>Domain Events</strong>: Business event modeling and handling</li>
+<li><strong>Clean Architecture</strong>: Strict layer separation and dependency inversion</li>
+</ul>
+<h2 id="architecture-overview">🏗️ Architecture Overview<a class="headerlink" href="#architecture-overview" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>graph TB
+    subgraph &quot;OpenBank Service&quot;
+        A[Controllers] --&gt; B[Mediator]
+        B --&gt; C[Command Handlers]
+        B --&gt; D[Query Handlers]
+        C --&gt; E[Domain Aggregates]
+        D --&gt; F[Read Models]
+
+        E --&gt; G[Domain Events]
+        G --&gt; H[Event Handlers]
+        H --&gt; I[Read Model Updates]
+    end
+
+    subgraph &quot;Persistence Layer&quot;
+        J[EventStore - Write Model]
+        K[MongoDB - Read Model]
+    end
+
+    C --&gt; J
+    D --&gt; K
+    H --&gt; K
+</code></pre></div>
+<p>The OpenBank follows an <strong>event-sourced domain model</strong> where:</p>
+<ul>
+<li><strong>Write Model</strong>: Event-sourced aggregates stored in EventStoreDB</li>
+<li><strong>Read Model</strong>: Denormalized projections stored in MongoDB  </li>
+<li><strong>Event Handlers</strong>: Update read models based on domain events</li>
+<li><strong>Complete Audit Trail</strong>: Every state change is captured as an immutable event</li>
+</ul>
+<h2 id="key-features-demonstrated">🚀 Key Features Demonstrated<a class="headerlink" href="#key-features-demonstrated" title="Permanent link">&para;</a></h2>
+<h3 id="1-event-sourced-aggregates">1. <strong>Event-Sourced Aggregates</strong><a class="headerlink" href="#1-event-sourced-aggregates" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">BankAccountV1</span><span class="p">(</span><span class="n">AggregateRoot</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">owner</span><span class="p">:</span> <span class="n">Person</span><span class="p">,</span> <span class="n">initial_balance</span><span class="p">:</span> <span class="n">Decimal</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span>
+
+        <span class="c1"># Raise domain event</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">raise_event</span><span class="p">(</span><span class="n">BankAccountCreatedDomainEventV1</span><span class="p">(</span>
+            <span class="n">aggregate_id</span><span class="o">=</span><span class="nb">id</span><span class="p">,</span>
+            <span class="n">owner_id</span><span class="o">=</span><span class="n">owner</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+            <span class="n">initial_balance</span><span class="o">=</span><span class="n">initial_balance</span><span class="p">,</span>
+            <span class="n">created_at</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span>
+        <span class="p">))</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">record_transaction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">amount</span><span class="p">:</span> <span class="n">Decimal</span><span class="p">,</span> <span class="n">transaction_type</span><span class="p">:</span> <span class="n">BankTransactionTypeV1</span><span class="p">):</span>
+        <span class="c1"># Business rule validation</span>
+        <span class="k">if</span> <span class="n">transaction_type</span> <span class="o">==</span> <span class="n">BankTransactionTypeV1</span><span class="o">.</span><span class="n">DEBIT</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">balance</span> <span class="o">+</span> <span class="n">amount</span> <span class="o">&lt;</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">overdraft_limit</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">InsufficientFundsException</span><span class="p">()</span>
+
+        <span class="c1"># Record the transaction event</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">raise_event</span><span class="p">(</span><span class="n">BankAccountTransactionRecordedDomainEventV1</span><span class="p">(</span>
+            <span class="n">aggregate_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+            <span class="n">transaction_id</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">()),</span>
+            <span class="n">amount</span><span class="o">=</span><span class="n">amount</span><span class="p">,</span>
+            <span class="n">transaction_type</span><span class="o">=</span><span class="n">transaction_type</span>
+        <span class="p">))</span>
+</code></pre></div>
+<h3 id="2-event-store-configuration">2. <strong>Event Store Configuration</strong><a class="headerlink" href="#2-event-store-configuration" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Event sourcing repository setup</span>
+<span class="n">ESEventStore</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="n">EventStoreOptions</span><span class="p">(</span><span class="n">database_name</span><span class="p">,</span> <span class="n">consumer_group</span><span class="p">))</span>
+
+<span class="c1"># Write model with event sourcing</span>
+<span class="n">DataAccessLayer</span><span class="o">.</span><span class="n">WriteModel</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span>
+    <span class="n">builder</span><span class="p">,</span> 
+    <span class="p">[</span><span class="s2">&quot;samples.openbank.domain.models&quot;</span><span class="p">],</span> 
+    <span class="k">lambda</span> <span class="n">builder_</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">,</span> <span class="n">key_type</span><span class="p">:</span> <span class="n">EventSourcingRepository</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span>
+        <span class="n">builder_</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">,</span> <span class="n">key_type</span>
+    <span class="p">)</span>
+<span class="p">)</span>
+
+<span class="c1"># Read model with MongoDB</span>
+<span class="n">DataAccessLayer</span><span class="o">.</span><span class="n">ReadModel</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span>
+    <span class="n">builder</span><span class="p">,</span>
+    <span class="p">[</span><span class="s2">&quot;samples.openbank.integration.models&quot;</span><span class="p">,</span> <span class="s2">&quot;samples.openbank.application.events&quot;</span><span class="p">],</span>
+    <span class="k">lambda</span> <span class="n">builder_</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">,</span> <span class="n">key_type</span><span class="p">:</span> <span class="n">MongoRepository</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span>
+        <span class="n">builder_</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">,</span> <span class="n">key_type</span><span class="p">,</span> <span class="n">database_name</span>
+    <span class="p">)</span>
+<span class="p">)</span>
+</code></pre></div>
+<h3 id="3-aggregate-state-management">3. <strong>Aggregate State Management</strong><a class="headerlink" href="#3-aggregate-state-management" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="nd">@map_to</span><span class="p">(</span><span class="n">BankAccountDto</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">BankAccountStateV1</span><span class="p">(</span><span class="n">AggregateState</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
+    <span class="n">owner_id</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">transactions</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">BankTransactionV1</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">balance</span><span class="p">:</span> <span class="n">Decimal</span>
+    <span class="n">overdraft_limit</span><span class="p">:</span> <span class="n">Decimal</span>
+
+    <span class="nd">@dispatch</span><span class="p">(</span><span class="n">BankAccountCreatedDomainEventV1</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">on</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span> <span class="n">BankAccountCreatedDomainEventV1</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">e</span><span class="o">.</span><span class="n">aggregate_id</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">owner_id</span> <span class="o">=</span> <span class="n">e</span><span class="o">.</span><span class="n">owner_id</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">balance</span> <span class="o">=</span> <span class="n">e</span><span class="o">.</span><span class="n">initial_balance</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">overdraft_limit</span> <span class="o">=</span> <span class="n">Decimal</span><span class="p">(</span><span class="s2">&quot;0.00&quot;</span><span class="p">)</span>
+
+    <span class="nd">@dispatch</span><span class="p">(</span><span class="n">BankAccountTransactionRecordedDomainEventV1</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">on</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span> <span class="n">BankAccountTransactionRecordedDomainEventV1</span><span class="p">):</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="n">BankTransactionV1</span><span class="p">(</span>
+            <span class="nb">id</span><span class="o">=</span><span class="n">e</span><span class="o">.</span><span class="n">transaction_id</span><span class="p">,</span>
+            <span class="n">amount</span><span class="o">=</span><span class="n">e</span><span class="o">.</span><span class="n">amount</span><span class="p">,</span>
+            <span class="nb">type</span><span class="o">=</span><span class="n">e</span><span class="o">.</span><span class="n">transaction_type</span><span class="p">,</span>
+            <span class="n">recorded_at</span><span class="o">=</span><span class="n">e</span><span class="o">.</span><span class="n">occurred_at</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">transactions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">balance</span> <span class="o">+=</span> <span class="n">e</span><span class="o">.</span><span class="n">amount</span>
+</code></pre></div>
+<h3 id="4-domain-event-handlers">4. <strong>Domain Event Handlers</strong><a class="headerlink" href="#4-domain-event-handlers" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">BankAccountEventHandler</span><span class="p">:</span>
+    <span class="nd">@event_handler</span><span class="p">(</span><span class="n">BankAccountCreatedDomainEventV1</span><span class="p">)</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">handle_account_created</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">BankAccountCreatedDomainEventV1</span><span class="p">):</span>
+        <span class="c1"># Update read model projections</span>
+        <span class="n">account_projection</span> <span class="o">=</span> <span class="n">BankAccountProjection</span><span class="p">(</span>
+            <span class="nb">id</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">aggregate_id</span><span class="p">,</span>
+            <span class="n">owner_id</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">owner_id</span><span class="p">,</span>
+            <span class="n">balance</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">initial_balance</span><span class="p">,</span>
+            <span class="n">created_at</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">occurred_at</span>
+        <span class="p">)</span>
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_model_repository</span><span class="o">.</span><span class="n">save_async</span><span class="p">(</span><span class="n">account_projection</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="5-command-and-query-separation">5. <strong>Command and Query Separation</strong><a class="headerlink" href="#5-command-and-query-separation" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Command for state changes</span>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">CreateBankAccountCommand</span><span class="p">(</span><span class="n">Command</span><span class="p">[</span><span class="n">OperationResult</span><span class="p">[</span><span class="n">BankAccountDto</span><span class="p">]]):</span>
+    <span class="n">owner_id</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">initial_balance</span><span class="p">:</span> <span class="n">Decimal</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">CreateBankAccountCommandHandler</span><span class="p">(</span><span class="n">CommandHandler</span><span class="p">[</span><span class="n">CreateBankAccountCommand</span><span class="p">,</span> <span class="n">OperationResult</span><span class="p">[</span><span class="n">BankAccountDto</span><span class="p">]]):</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">handle_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command</span><span class="p">:</span> <span class="n">CreateBankAccountCommand</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">OperationResult</span><span class="p">[</span><span class="n">BankAccountDto</span><span class="p">]:</span>
+        <span class="n">owner</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">person_repository</span><span class="o">.</span><span class="n">get_by_id_async</span><span class="p">(</span><span class="n">command</span><span class="o">.</span><span class="n">owner_id</span><span class="p">)</span>
+
+        <span class="n">account</span> <span class="o">=</span> <span class="n">BankAccountV1</span><span class="p">(</span>
+            <span class="nb">id</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">()),</span>
+            <span class="n">owner</span><span class="o">=</span><span class="n">owner</span><span class="p">,</span>
+            <span class="n">initial_balance</span><span class="o">=</span><span class="n">command</span><span class="o">.</span><span class="n">initial_balance</span>
+        <span class="p">)</span>
+
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">write_repository</span><span class="o">.</span><span class="n">save_async</span><span class="p">(</span><span class="n">account</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">created</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mapper</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">account</span><span class="o">.</span><span class="n">state</span><span class="p">,</span> <span class="n">BankAccountDto</span><span class="p">))</span>
+
+<span class="c1"># Query for data retrieval</span>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">AccountsByOwnerQuery</span><span class="p">(</span><span class="n">Query</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">BankAccountDto</span><span class="p">]]):</span>
+    <span class="n">owner_id</span><span class="p">:</span> <span class="nb">str</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">AccountsByOwnerQueryHandler</span><span class="p">(</span><span class="n">QueryHandler</span><span class="p">[</span><span class="n">AccountsByOwnerQuery</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">BankAccountDto</span><span class="p">]]):</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">handle_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">:</span> <span class="n">AccountsByOwnerQuery</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">BankAccountDto</span><span class="p">]:</span>
+        <span class="n">accounts</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_repository</span><span class="o">.</span><span class="n">find_async</span><span class="p">(</span>
+            <span class="p">{</span><span class="s2">&quot;owner_id&quot;</span><span class="p">:</span> <span class="n">query</span><span class="o">.</span><span class="n">owner_id</span><span class="p">}</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">mapper</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">acc</span><span class="p">,</span> <span class="n">BankAccountDto</span><span class="p">)</span> <span class="k">for</span> <span class="n">acc</span> <span class="ow">in</span> <span class="n">accounts</span><span class="p">]</span>
+</code></pre></div>
+<h2 id="testing-strategy">🧪 Testing Strategy<a class="headerlink" href="#testing-strategy" title="Permanent link">&para;</a></h2>
+<h3 id="event-sourcing-tests">Event Sourcing Tests<a class="headerlink" href="#event-sourcing-tests" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">TestBankAccountAggregate</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_account_creation_raises_event</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">owner</span> <span class="o">=</span> <span class="n">Person</span><span class="p">(</span><span class="s2">&quot;john.doe@example.com&quot;</span><span class="p">,</span> <span class="s2">&quot;John&quot;</span><span class="p">,</span> <span class="s2">&quot;Doe&quot;</span><span class="p">)</span>
+        <span class="n">account</span> <span class="o">=</span> <span class="n">BankAccountV1</span><span class="p">(</span><span class="s2">&quot;acc-123&quot;</span><span class="p">,</span> <span class="n">owner</span><span class="p">,</span> <span class="n">Decimal</span><span class="p">(</span><span class="s2">&quot;1000.00&quot;</span><span class="p">))</span>
+
+        <span class="n">events</span> <span class="o">=</span> <span class="n">account</span><span class="o">.</span><span class="n">get_uncommitted_events</span><span class="p">()</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">events</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">events</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">BankAccountCreatedDomainEventV1</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="n">events</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">initial_balance</span> <span class="o">==</span> <span class="n">Decimal</span><span class="p">(</span><span class="s2">&quot;1000.00&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_transaction_recording_updates_balance</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">account</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_test_account</span><span class="p">()</span>
+
+        <span class="n">account</span><span class="o">.</span><span class="n">record_transaction</span><span class="p">(</span><span class="n">Decimal</span><span class="p">(</span><span class="s2">&quot;-100.00&quot;</span><span class="p">),</span> <span class="n">BankTransactionTypeV1</span><span class="o">.</span><span class="n">DEBIT</span><span class="p">)</span>
+
+        <span class="k">assert</span> <span class="n">account</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">balance</span> <span class="o">==</span> <span class="n">Decimal</span><span class="p">(</span><span class="s2">&quot;900.00&quot;</span><span class="p">)</span>
+        <span class="n">events</span> <span class="o">=</span> <span class="n">account</span><span class="o">.</span><span class="n">get_uncommitted_events</span><span class="p">()</span>
+        <span class="k">assert</span> <span class="nb">any</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">BankAccountTransactionRecordedDomainEventV1</span><span class="p">)</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">events</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_insufficient_funds_raises_exception</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">account</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_test_account</span><span class="p">()</span>
+
+        <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="n">InsufficientFundsException</span><span class="p">):</span>
+            <span class="n">account</span><span class="o">.</span><span class="n">record_transaction</span><span class="p">(</span><span class="n">Decimal</span><span class="p">(</span><span class="s2">&quot;-2000.00&quot;</span><span class="p">),</span> <span class="n">BankTransactionTypeV1</span><span class="o">.</span><span class="n">DEBIT</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="integration-tests">Integration Tests<a class="headerlink" href="#integration-tests" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">integration</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">TestBankingWorkflow</span><span class="p">:</span>
+    <span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">asyncio</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">test_complete_banking_workflow</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_client</span><span class="p">):</span>
+        <span class="c1"># Create person</span>
+        <span class="n">person_response</span> <span class="o">=</span> <span class="k">await</span> <span class="n">test_client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">&quot;/api/persons&quot;</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="p">{</span>
+            <span class="s2">&quot;email&quot;</span><span class="p">:</span> <span class="s2">&quot;john@example.com&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;firstName&quot;</span><span class="p">:</span> <span class="s2">&quot;John&quot;</span><span class="p">,</span> 
+            <span class="s2">&quot;lastName&quot;</span><span class="p">:</span> <span class="s2">&quot;Doe&quot;</span>
+        <span class="p">})</span>
+        <span class="n">person_id</span> <span class="o">=</span> <span class="n">person_response</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s2">&quot;id&quot;</span><span class="p">]</span>
+
+        <span class="c1"># Create bank account</span>
+        <span class="n">account_response</span> <span class="o">=</span> <span class="k">await</span> <span class="n">test_client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">&quot;/api/accounts/create&quot;</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="p">{</span>
+            <span class="s2">&quot;ownerId&quot;</span><span class="p">:</span> <span class="n">person_id</span><span class="p">,</span>
+            <span class="s2">&quot;initialBalance&quot;</span><span class="p">:</span> <span class="s2">&quot;1000.00&quot;</span>
+        <span class="p">})</span>
+        <span class="n">account_id</span> <span class="o">=</span> <span class="n">account_response</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s2">&quot;id&quot;</span><span class="p">]</span>
+
+        <span class="c1"># Record transaction</span>
+        <span class="n">transaction_response</span> <span class="o">=</span> <span class="k">await</span> <span class="n">test_client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">&quot;/api/transactions/record&quot;</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="p">{</span>
+            <span class="s2">&quot;accountId&quot;</span><span class="p">:</span> <span class="n">account_id</span><span class="p">,</span>
+            <span class="s2">&quot;amount&quot;</span><span class="p">:</span> <span class="s2">&quot;-100.00&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;DEBIT&quot;</span>
+        <span class="p">})</span>
+
+        <span class="c1"># Verify final state</span>
+        <span class="n">account_response</span> <span class="o">=</span> <span class="k">await</span> <span class="n">test_client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;/api/accounts/</span><span class="si">{</span><span class="n">account_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="n">account_response</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s2">&quot;balance&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;900.00&quot;</span>
+</code></pre></div>
+<h2 id="implementation-details">📚 Implementation Details<a class="headerlink" href="#implementation-details" title="Permanent link">&para;</a></h2>
+<h3 id="1-domain-layer-domainmodels">1. <strong>Domain Layer</strong> (<code>domain/models/</code>)<a class="headerlink" href="#1-domain-layer-domainmodels" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>BankAccount</strong>: Event-sourced aggregate root with business logic</li>
+<li><strong>Person</strong>: Value object for account ownership</li>
+<li><strong>BankTransaction</strong>: Value object for financial operations</li>
+<li><strong>Address</strong>: Supporting value object for person details</li>
+</ul>
+<h3 id="2-application-layer-application">2. <strong>Application Layer</strong> (<code>application/</code>)<a class="headerlink" href="#2-application-layer-application" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Commands</strong>: Account creation, transaction recording</li>
+<li><strong>Queries</strong>: Account lookup, transaction history</li>
+<li><strong>Event Handlers</strong>: Read model projection updates</li>
+<li><strong>Mapping</strong>: Object-to-object transformations</li>
+</ul>
+<h3 id="3-integration-layer-integration">3. <strong>Integration Layer</strong> (<code>integration/</code>)<a class="headerlink" href="#3-integration-layer-integration" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Read Models</strong>: Denormalized projections for queries</li>
+<li><strong>DTOs</strong>: API data transfer objects</li>
+<li><strong>Commands</strong>: External command contracts</li>
+</ul>
+<h3 id="4-api-layer-apicontrollers">4. <strong>API Layer</strong> (<code>api/controllers/</code>)<a class="headerlink" href="#4-api-layer-apicontrollers" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>AccountsController</strong>: Account management endpoints</li>
+<li><strong>PersonsController</strong>: Person management endpoints  </li>
+<li><strong>TransactionsController</strong>: Transaction operations</li>
+</ul>
+<h2 id="event-sourcing-benefits">🔄 Event Sourcing Benefits<a class="headerlink" href="#event-sourcing-benefits" title="Permanent link">&para;</a></h2>
+<h3 id="complete-audit-trail">Complete Audit Trail<a class="headerlink" href="#complete-audit-trail" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Every state change is captured as an immutable event</span>
+<span class="n">events</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">BankAccountCreatedDomainEventV1</span><span class="p">(</span><span class="n">account_id</span><span class="o">=</span><span class="s2">&quot;123&quot;</span><span class="p">,</span> <span class="n">initial_balance</span><span class="o">=</span><span class="mf">1000.00</span><span class="p">),</span>
+    <span class="n">BankAccountTransactionRecordedDomainEventV1</span><span class="p">(</span><span class="n">account_id</span><span class="o">=</span><span class="s2">&quot;123&quot;</span><span class="p">,</span> <span class="n">amount</span><span class="o">=-</span><span class="mf">100.00</span><span class="p">),</span>
+    <span class="n">BankAccountTransactionRecordedDomainEventV1</span><span class="p">(</span><span class="n">account_id</span><span class="o">=</span><span class="s2">&quot;123&quot;</span><span class="p">,</span> <span class="n">amount</span><span class="o">=</span><span class="mf">50.00</span><span class="p">),</span>
+<span class="p">]</span>
+
+<span class="c1"># State can be reconstructed from events</span>
+<span class="n">current_balance</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">amount</span> <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">events</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="s1">&#39;amount&#39;</span><span class="p">))</span>
+</code></pre></div>
+<h3 id="temporal-queries">Temporal Queries<a class="headerlink" href="#temporal-queries" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Query account state at any point in time</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_account_balance_at_date</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">account_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">date</span><span class="p">:</span> <span class="n">datetime</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Decimal</span><span class="p">:</span>
+    <span class="n">events</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">event_store</span><span class="o">.</span><span class="n">get_events_async</span><span class="p">(</span>
+        <span class="n">account_id</span><span class="p">,</span> 
+        <span class="n">to_date</span><span class="o">=</span><span class="n">date</span>
+    <span class="p">)</span>
+
+    <span class="n">account</span> <span class="o">=</span> <span class="n">BankAccountV1</span><span class="o">.</span><span class="n">from_events</span><span class="p">(</span><span class="n">events</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">account</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">balance</span>
+</code></pre></div>
+<h3 id="business-intelligence">Business Intelligence<a class="headerlink" href="#business-intelligence" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Analyze transaction patterns</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_transaction_analytics</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">from_date</span><span class="p">:</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">to_date</span><span class="p">:</span> <span class="n">datetime</span><span class="p">):</span>
+    <span class="n">events</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">event_store</span><span class="o">.</span><span class="n">get_events_by_type_async</span><span class="p">(</span>
+        <span class="n">BankAccountTransactionRecordedDomainEventV1</span><span class="p">,</span>
+        <span class="n">from_date</span><span class="o">=</span><span class="n">from_date</span><span class="p">,</span>
+        <span class="n">to_date</span><span class="o">=</span><span class="n">to_date</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">&quot;total_transactions&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">events</span><span class="p">),</span>
+        <span class="s2">&quot;total_amount&quot;</span><span class="p">:</span> <span class="nb">sum</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">amount</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">events</span><span class="p">),</span>
+        <span class="s2">&quot;avg_transaction&quot;</span><span class="p">:</span> <span class="nb">sum</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">amount</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">events</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">events</span><span class="p">)</span>
+    <span class="p">}</span>
+</code></pre></div>
+<h2 id="getting-started">🚀 Getting Started<a class="headerlink" href="#getting-started" title="Permanent link">&para;</a></h2>
+<h3 id="1-prerequisites">1. <strong>Prerequisites</strong><a class="headerlink" href="#1-prerequisites" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Install dependencies</span>
+pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
+
+<span class="c1"># Start infrastructure</span>
+docker-compose<span class="w"> </span>up<span class="w"> </span>-d<span class="w"> </span>eventstore<span class="w"> </span>mongodb
+</code></pre></div>
+<h3 id="2-run-the-application">2. <strong>Run the Application</strong><a class="headerlink" href="#2-run-the-application" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Start OpenBank API</span>
+python<span class="w"> </span>samples/openbank/api/main.py
+
+<span class="c1"># Access Swagger UI</span>
+open<span class="w"> </span>http://localhost:8000/docs
+</code></pre></div>
+<h3 id="3-test-the-api">3. <strong>Test the API</strong><a class="headerlink" href="#3-test-the-api" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Create a person</span>
+curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://localhost:8000/api/persons<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;email&quot;: &quot;john@example.com&quot;, &quot;firstName&quot;: &quot;John&quot;, &quot;lastName&quot;: &quot;Doe&quot;}&#39;</span>
+
+<span class="c1"># Create a bank account</span>
+curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://localhost:8000/api/accounts/create<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;ownerId&quot;: &quot;person-id&quot;, &quot;initialBalance&quot;: &quot;1000.00&quot;}&#39;</span>
+
+<span class="c1"># Record a transaction</span>
+curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://localhost:8000/api/transactions/record<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;accountId&quot;: &quot;account-id&quot;, &quot;amount&quot;: &quot;-100.00&quot;, &quot;type&quot;: &quot;DEBIT&quot;}&#39;</span>
+</code></pre></div>
+<h2 id="related-documentation">🔗 Related Documentation<a class="headerlink" href="#related-documentation" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="../../features/event-sourcing/">Event Sourcing</a> - Event sourcing patterns</li>
+<li><a href="../../features/cqrs-mediation/">CQRS &amp; Mediation</a> - Command/Query separation</li>
+<li><a href="../../features/data-access/">Data Access</a> - Repository patterns</li>
+<li><a href="../api_gateway/">API Gateway Sample</a> - Microservice gateway comparison</li>
+</ul>
 
 
 
