@@ -1,29 +1,698 @@
-# Desktop Controller
+# 🖥️ Desktop Controller Sample Application
 
-REST API to remotely control a Desktop (i.e. the Docker Host running the controller) over HTTP.
+The Desktop Controller sample demonstrates how to build a remote desktop management system using the Neuroglia framework. This application showcases system integration patterns including SSH-based remote control, background service registration, cloud event publishing, and OAuth2 security for enterprise desktop management.
 
-The Controller must:
+## 🎯 What You'll Learn
 
-1. Register itself periodically (via CloudEvent) to the Desktops Registry (providing its IP address as the identifier to the Registry)
-2. Securely expose a set of `Commands` and `Queries` via a REST API (with OpenAPI 3.x specs) that enable remote control for the Desktop's `HostInfo` and `UserInfo` (wrapping Linux Shell commands as HTTP Requests)
-3. Maintain various local files (e.g. `/data/hostinfo.json`, `/data/userinfo.json`) that other apps (on the Desktop VM) may rely upon (Screen Logger).
-4. Trigger remote execution of custom Shell scripts to be run on the Desktop VM (not the controller's container!)
+- **Remote System Control**: SSH-based command execution on host systems
+- **Background Service Patterns**: Periodic self-registration and heartbeat services  
+- **Cloud Event Publishing**: Automated service discovery and registration events
+- **System Integration**: Host system information gathering and state management
+- **OAuth2 Security**: Enterprise authentication with secure SSH key management
+- **File System Integration**: Remote file management and data persistence
+- **Docker Host Communication**: Container-to-host communication patterns
 
-[[_TOC_]]
+## 🏗️ Architecture Overview
+
+```mermaid
+graph TB
+    subgraph "Desktop Controller Service"
+        A[HostController] --> B[Mediator]
+        B --> C[Command/Query Handlers]
+        C --> D[Domain Models]
+        C --> E[SSH Integration Services]
+        
+        F[OAuth2 Middleware] --> A
+        G[Background Registrator] --> H[Cloud Event Bus]
+        I[SSH Client] --> J[Docker Host]
+        
+        C --> K[File System Repository]
+        K --> I
+    end
+    
+    subgraph "External Dependencies"
+        L[Keycloak OAuth2]
+        M[Desktop Registry]
+        N[Docker Host/VM]
+        O[Remote File System]
+    end
+    
+    F --> L
+    H --> M
+    I --> N
+    K --> O
+    
+    style A fill:#e1f5fe
+    style G fill:#f3e5f5
+    style I fill:#fff3e0
+```
+
+This architecture enables secure remote control of desktop systems through containerized services that communicate with their host environments via SSH while maintaining enterprise security standards.
+
+## 🚀 Key Features Demonstrated
+
+### 1. **SSH-Based Remote Control**
+
+```python
+# Secure command execution on host systems
+class SecuredHost:
+    async def run_command_async(self, command: HostCommand) -> HostCommandResult:
+        stdin, stdout, stderr = await asyncio.to_thread(
+            self.ssh_client.exec_command, command.line
+        )
+        
+        exit_status = stdout.channel.recv_exit_status()
+        return HostCommandResult(
+            command=command.line,
+            exit_status=exit_status,
+            stdout=stdout.read().decode(),
+            stderr=stderr.read().decode()
+        )
+```
+
+### 2. **Background Service Registration**
+
+```python
+# Periodic self-registration with cloud events
+class DesktopRegistrator(HostedService):
+    async def start_async(self):
+        while not self.cancellation_token.is_cancelled:
+            await self._register_desktop()
+            await asyncio.sleep(self.registration_interval_seconds)
+    
+    async def _register_desktop(self):
+        event = DesktopHostRegistrationRequestedIntegrationEventV1(
+            desktop_id=self.desktop_id,
+            host_ip_address=self.host_ip,
+            registration_timestamp=datetime.utcnow()
+        )
+        await self.cloud_event_publisher.publish_async(event)
+```
+
+### 3. **Host System Information Management**
+
+```python
+# Domain model for host information
+@dataclass
+class HostInfo(Entity[str]):
+    desktop_id: str
+    host_ip_address: str
+    host_state: HostState
+    last_seen: datetime
+    is_locked: bool
+    system_info: dict[str, Any]
+    
+    def update_system_state(self, new_state: HostState):
+        self.host_state = new_state
+        self.last_seen = datetime.utcnow()
+```
+
+### 4. **Command/Query Pattern for Remote Operations**
+
+```python
+# Remote command execution
+@dataclass
+class SetHostLockCommand(Command):
+    script_name: str = "/usr/local/bin/lock.sh"
+
+class HostLockCommandsHandler(CommandHandler[SetHostLockCommand, OperationResult[Any]]):
+    async def handle_async(self, command: SetHostLockCommand) -> OperationResult[Any]:
+        host_command = HostCommand(line=command.script_name)
+        result = await self.docker_host_command_runner.run_async(host_command)
+        
+        if result.exit_status == 0:
+            return self.success("Host locked successfully")
+        return self.bad_request(f"Lock command failed: {result.stderr}")
+```
+
+### 5. **OAuth2 with SSH Security**
+
+```python
+# Dual security: OAuth2 for API + SSH for host access
+@get("/info", dependencies=[Depends(validate_token)])
+async def get_host_info(self):
+    query = ReadHostInfoQuery()
+    result = await self.mediator.execute_async(query)
+    return self.process(result)
+```
+
+## 🔧 Configuration & Settings
+
+### Application Settings
+
+```python
+class DesktopControllerSettings(ApplicationSettings):
+    # OAuth2 Configuration
+    jwt_authority: str = "http://keycloak47/realms/mozart"
+    jwt_audience: str = "desktops"
+    required_scope: str = "api"
+    
+    # SSH Configuration
+    docker_host_user_name: str = "sys-admin"
+    docker_host_host_name: str = "host.docker.internal"
+    
+    # File System Configuration
+    remotefs_base_folder: str = "/tmp"
+    hostinfo_filename: str = "hostinfo.json"
+    userinfo_filename: str = "userinfo.json"
+    
+    # Registration Configuration
+    desktop_registration_interval: int = 30  # seconds
+```
+
+### SSH Client Configuration
+
+```python
+class SshClientSettings(BaseModel):
+    username: str
+    hostname: str
+    port: int = 22
+    private_key_filename: str = "/app/id_rsa"
+
+# SSH key setup required:
+# 1. Generate SSH key pair
+# 2. Mount private key to container at /app/id_rsa
+# 3. Add public key to host's ~/.ssh/authorized_keys
+```
+
+## 🧪 Testing Strategy
+
+### Unit Tests
+
+```python
+class TestHostController:
+    def test_host_lock_command_success(self):
+        # Test successful host locking
+        command = SetHostLockCommand(script_name="/usr/local/bin/lock.sh")
+        
+        # Mock SSH client response
+        mock_result = HostCommandResult(
+            command="/usr/local/bin/lock.sh",
+            exit_status=0,
+            stdout="Host locked",
+            stderr=""
+        )
+        
+        result = await handler.handle_async(command)
+        assert result.is_success
+        assert "locked successfully" in result.data
+```
+
+### Integration Tests
+
+```python
+class TestDesktopControllerIntegration:
+    @pytest.mark.integration
+    async def test_ssh_host_communication(self):
+        # Test actual SSH communication with test host
+        ssh_client = SecuredHost(test_ssh_settings)
+        command = HostCommand(line="echo 'test'")
+        
+        result = await ssh_client.run_command_async(command)
+        
+        assert result.exit_status == 0
+        assert "test" in result.stdout
+```
+
+## 📚 Implementation Details
+
+### 1. **Controller Layer** (`api/controllers/`)
+
+- **HostController**: Host system management and information endpoints
+- **UserController**: User session and information management
+- **HostScriptController**: Custom script execution on host systems
+- **OAuth2Scheme**: Authentication and authorization middleware
+
+### 2. **Application Layer** (`application/`)
+
+- **Commands**: System control operations (lock, unlock, script execution)
+- **Queries**: System information retrieval (host info, user info, lock status)
+- **Services**: Background registration, SSH command execution
+- **Events**: Integration events for desktop registration
+
+### 3. **Domain Layer** (`domain/`)
+
+- **HostInfo**: Desktop system information and state
+- **UserInfo**: User session and authentication state
+- **HostIsLocked**: Lock state management for security
+- **Domain Events**: System state change notifications
+
+### 4. **Integration Layer** (`integration/`)
+
+- **SSH Services**: Secure host communication via SSH
+- **File System Repository**: Remote file management
+- **Cloud Event Models**: External service communication
+- **Enums**: System state and configuration enumerations
+
+## 🌐 External Service Integration
+
+### SSH Host Communication
+
+```python
+class SecuredDockerHost:
+    """SSH-based secure communication with Docker host system"""
+    
+    async def execute_system_command(self, command: str) -> CommandResult:
+        ssh_command = HostCommand(line=command)
+        return await self.secured_host.run_command_async(ssh_command)
+```
+
+### Cloud Event Publishing
+
+```python
+class DesktopRegistrationEvent:
+    """Periodic registration with external desktop registry"""
+    
+    event_type = "com.cisco.mozart.desktop.registered.v1"
+    
+    async def publish_registration(self):
+        cloud_event = CloudEvent(
+            type=self.event_type,
+            source=f"desktop-controller/{self.desktop_id}",
+            data=DesktopHostRegistrationRequestedIntegrationEventV1(
+                desktop_id=self.desktop_id,
+                host_ip_address=self.get_host_ip(),
+                capabilities=self.get_host_capabilities()
+            )
+        )
+        await self.cloud_event_bus.publish_async(cloud_event)
+```
+
+### Remote File System Access
+
+```python
+class RemoteFileSystemRepository:
+    """File-based data persistence on host system"""
+    
+    async def save_host_info(self, host_info: HostInfo):
+        json_data = self.json_serializer.serialize(host_info)
+        await self.write_file_async("hostinfo.json", json_data)
+    
+    async def write_file_async(self, filename: str, content: str):
+        # Use SSH to write files to host filesystem
+        command = f"echo '{content}' > {self.base_path}/{filename}"
+        await self.ssh_client.run_command_async(HostCommand(line=command))
+```
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+```bash
+# 1. Docker and Docker Desktop installed
+# 2. SSH key pair generated
+ssh-keygen -t rsa -b 4096 -f ~/.ssh/desktop_controller_key
+
+# 3. Copy public key to target host
+ssh-copy-id -i ~/.ssh/desktop_controller_key.pub user@target-host
+```
+
+### Running the Application
+
+```bash
+# 1. Clone and setup
+git clone <repository>
+cd samples/desktop-controller
+
+# 2. Configure environment
+cp .env.example .env
+# Edit .env with your settings
+
+# 3. Mount SSH private key and run
+docker run -d 
+  -p 8080:80 
+  -v ~/.ssh/desktop_controller_key:/app/id_rsa:ro 
+  -e DOCKER_HOST_USER_NAME=sys-admin 
+  -e JWT_AUTHORITY=http://your-keycloak/realms/mozart 
+  desktop-controller:latest
+
+# 4. Test the API
+curl -H "Authorization: Bearer <token>" 
+     http://localhost:8080/api/host/info
+```
+
+### Development Setup
+
+```bash
+# 1. Install dependencies
+poetry install
+
+# 2. Configure SSH access
+sudo cp ~/.ssh/desktop_controller_key ./id_rsa
+sudo chmod 600 ./id_rsa
+
+# 3. Start development server
+poetry run python main.py
+
+# 4. Access Swagger UI
+open http://localhost:8080/docs
+```
+
+## 🔗 Related Documentation
+
+- [OAuth2 Security](../features/oauth2-security.md) - Authentication patterns
+- [Background Services](../features/background-services.md) - Hosted service patterns
+- [Cloud Events](../features/cloud-events.md) - Event publishing and consumption
+- [System Integration](../features/system-integration.md) - External system communication
+- [API Gateway Sample](api_gateway.md) - Service gateway patterns
+- [OpenBank Sample](openbank.md) - Event sourcing and CQRS patterns
+
+## 🔍 Comparison with Other Samples
+
+### Architecture Patterns
+
+#### Desktop Controller - **System Integration Focused**
+
+```python
+# SSH-based system control
+class HostController(ControllerBase):
+    @post("/lock")
+    async def lock_host(self):
+        command = SetHostLockCommand()
+        result = await self.mediator.execute_async(command)
+        return self.process(result)
+
+# Background service registration
+class DesktopRegistrator(HostedService):
+    async def start_async(self):
+        while not self.stopping:
+            await self.register_desktop()
+            await asyncio.sleep(30)
+```
+
+#### API Gateway - **Service Orchestration**
+
+```python
+# External API orchestration
+class PromptController(ControllerBase):
+    @post("/prompts")
+    async def create_prompt(self, dto: CreatePromptDto):
+        command = self.mapper.map(dto, CreatePromptCommand)
+        result = await self.mediator.execute_async(command)
+        return self.process(result)
+```
+
+#### OpenBank - **Rich Domain Model**
+
+```python
+# Event-sourced business logic
+class BankAccount(AggregateRoot[str]):
+    def try_add_transaction(self, transaction: BankTransaction) -> bool:
+        if self.can_process_transaction(transaction):
+            self.state.on(self.register_event(TransactionRecorded(transaction)))
+            return True
+        return False
+```
+
+### Domain Complexity
+
+#### Desktop Controller - **System State Management**
+
+- **Focus**: Host system control and monitoring
+- **Entities**: HostInfo, UserInfo, SystemState
+- **Operations**: Lock/unlock, script execution, information gathering
+- **State**: Current system state with periodic updates
+
+#### API Gateway - **Service Integration**
+
+- **Focus**: Request routing and external service coordination
+- **Entities**: Prompt, PromptResponse, ServiceConfiguration
+- **Operations**: Create, process, route requests
+- **State**: Request/response transformation and routing
+
+#### OpenBank - **Business Domain Model**
+
+- **Focus**: Financial business rules and transactions
+- **Entities**: BankAccount, Person, Transaction
+- **Operations**: Account creation, money transfer, balance inquiry
+- **State**: Event-sourced business state with full history
+
+### Data Persistence Strategy
+
+#### Desktop Controller - **File-Based + Remote Storage**
+
+```python
+# File-based persistence on remote host
+class RemoteFileSystemRepository:
+    async def save_host_info(self, host_info: HostInfo):
+        json_content = self.serializer.serialize(host_info)
+        await self.write_remote_file("hostinfo.json", json_content)
+```
+
+#### API Gateway - **Multi-Store Architecture**
+
+```python
+# Multiple storage backends
+services.add_scoped(MinioStorageManager)      # Object storage
+services.add_scoped(RedisCache)               # Caching
+services.add_scoped(MongoRepository)          # Document storage
+```
+
+#### OpenBank - **Event Sourcing**
+
+```python
+# Event store with projections
+class EventStoreRepository:
+    async def save_async(self, aggregate: AggregateRoot):
+        events = aggregate._pending_events
+        await self.event_store.append_events_async(aggregate.id, events)
+```
+
+### Authentication & Security
+
+#### Desktop Controller - **OAuth2 + SSH Keys**
+
+```python
+# Dual security model
+@get("/info", dependencies=[Depends(validate_token)])
+async def get_host_info(self):
+    # OAuth2 for API access + SSH for host communication
+    pass
+
+# SSH key management
+class SshClientSettings:
+    private_key_filename: str = "/app/id_rsa"
+```
+
+#### API Gateway - **OAuth2 + API Keys**
+
+```python
+# Multiple authentication schemes
+@post("/item", dependencies=[Depends(validate_oauth2_token)])
+async def create_item_oauth(self, item_data: ItemDto):
+    pass
+
+@get("/health", dependencies=[Depends(validate_api_key)])
+async def health_check(self):
+    pass
+```
+
+#### OpenBank - **Domain-Focused Security**
+
+```python
+# Business rule-based security
+class BankAccount:
+    def withdraw(self, amount: Decimal, user: Person):
+        if not self.is_owner(user):
+            raise UnauthorizedOperationException()
+        if not self.has_sufficient_funds(amount):
+            raise InsufficientFundsException()
+```
+
+### External Service Integration
+
+#### Desktop Controller - **System Integration**
+
+```python
+# Direct system integration via SSH
+class DockerHostCommandRunner:
+    async def run_async(self, command: HostCommand) -> HostCommandResult:
+        return await self.ssh_client.execute_command(command)
+
+# Cloud event publishing for registration
+class DesktopRegistrator:
+    async def register_desktop(self):
+        event = DesktopRegistrationEvent(self.host_info)
+        await self.cloud_event_bus.publish_async(event)
+```
+
+#### API Gateway - **Extensive Integration**
+
+```python
+# Multiple external service clients
+services.add_scoped(MosaicApiClient)
+services.add_scoped(MinioStorageManager)
+services.add_scoped(RedisCache)
+services.add_scoped(GenAiApiClient)
+```
+
+#### OpenBank - **Minimal Integration**
+
+```python
+# Domain-focused with minimal external dependencies
+services.add_singleton(EventStoreClient)
+services.add_scoped(MongoRepository)  # For read models
+```
+
+### Background Processing
+
+#### Desktop Controller - **Periodic Registration**
+
+```python
+# Background service for system registration
+class DesktopRegistrator(HostedService):
+    async def start_async(self):
+        self.registration_task = asyncio.create_task(self.registration_loop())
+    
+    async def registration_loop(self):
+        while not self.stopping:
+            await self.register_with_registry()
+            await asyncio.sleep(self.interval)
+```
+
+#### API Gateway - **Task Queue Pattern**
+
+```python
+# Redis-backed background task processing
+@dataclass
+class ProcessPromptTask(BackgroundTask):
+    prompt_id: str
+    user_id: str
+
+class PromptProcessingService:
+    async def queue_processing_task(self, prompt: Prompt):
+        task = ProcessPromptTask(prompt.id, prompt.user_id)
+        await self.task_scheduler.schedule_async(task)
+```
+
+#### OpenBank - **Event-Driven Projections**
+
+```python
+# Domain event-driven read model updates
+class BankAccountProjectionHandler:
+    @dispatch(BankAccountCreatedDomainEventV1)
+    async def handle_async(self, event: BankAccountCreatedDomainEventV1):
+        projection = BankAccountProjection.from_event(event)
+        await self.projection_repository.save_async(projection)
+```
+
+### Testing Strategies
+
+#### Desktop Controller - **System Integration Testing**
+
+```python
+# SSH integration tests
+@pytest.mark.integration
+class TestSSHIntegration:
+    async def test_host_command_execution(self):
+        ssh_client = SecuredHost(test_settings)
+        result = await ssh_client.run_command_async(HostCommand("echo test"))
+        assert result.exit_status == 0
+        assert "test" in result.stdout
+
+# Background service testing
+class TestDesktopRegistrator:
+    async def test_periodic_registration(self):
+        registrator = DesktopRegistrator(mock_cloud_event_bus)
+        await registrator.start_async()
+        # Verify registration events are published
+```
+
+#### API Gateway - **Integration-Heavy Testing**
+
+```python
+# External service integration tests
+@pytest.mark.integration
+class TestExternalServices:
+    async def test_mosaic_api_integration(self):
+        client = MosaicApiClient(test_settings)
+        response = await client.get_data_async("test-id")
+        assert response.status_code == 200
+
+# Background task testing
+class TestTaskProcessing:
+    async def test_prompt_processing_workflow(self):
+        task = ProcessPromptTask("prompt-123", "user-456")
+        result = await self.task_processor.process_async(task)
+        assert result.is_success
+```
+
+#### OpenBank - **Domain-Focused Testing**
+
+```python
+# Rich domain behavior testing
+class TestBankAccount:
+    def test_account_creation_raises_creation_event(self):
+        account = BankAccount()
+        account.create_account("owner-123", Decimal("1000.00"))
+        
+        events = account._pending_events
+        assert len(events) == 1
+        assert isinstance(events[0], BankAccountCreatedDomainEventV1)
+
+# Event sourcing testing
+class TestEventStore:
+    async def test_aggregate_reconstruction_from_events(self):
+        events = [creation_event, transaction_event]
+        account = await self.repository.load_from_events(events)
+        assert account.balance == expected_balance
+```
+
+### Use Case Recommendations
+
+#### Choose **Desktop Controller Pattern** when
+
+- ✅ Building system administration and control applications
+- ✅ Managing remote desktop or VM environments
+- ✅ Implementing SSH-based automation and control
+- ✅ Creating enterprise desktop management solutions
+- ✅ Needing periodic service registration and discovery
+- ✅ Integrating containerized apps with host systems
+- ✅ Building secure remote command execution systems
+
+#### Choose **API Gateway Pattern** when
+
+- ✅ Building microservice entry points and orchestration
+- ✅ Implementing complex external service integration
+- ✅ Creating service mesh control planes
+- ✅ Needing advanced authentication and authorization
+- ✅ Building background task processing systems
+- ✅ Implementing file storage and caching solutions
+
+#### Choose **Event Sourcing Pattern** when
+
+- ✅ Rich domain models with behavior
+- ✅ Complete audit trails and temporal queries
+- ✅ Event-driven architecture with projections
+- ✅ Financial or business-critical applications
+- ✅ CQRS with separate read/write models
+
+### Framework Features Utilized
+
+The Desktop Controller sample demonstrates unique aspects of the Neuroglia framework:
+
+- **Background Services**: `HostedService` for long-running registration tasks
+- **SSH Integration**: Custom integration services for secure system communication
+- **Cloud Event Publishing**: External service registration and discovery
+- **File-Based Repositories**: Remote filesystem data persistence
+- **OAuth2 Security**: Enterprise authentication with secure key management
+- **System Integration Patterns**: Container-to-host communication strategies
+
+Both samples showcase different strengths of the Neuroglia framework, demonstrating its flexibility in supporting various architectural patterns while maintaining clean architecture principles.
 
 ## Overview
 
 ### Controller's Interactions
 
-![Desktop Controller Interactions](img/DesktopController_Interactions.png)
+TODO
 
 ### Controller's Context
 
-![Desktop Controller](img/DesktopController.png)
+TODO
 
 ## Design
 
-![Design](img/design.png)
+TODO
   
 ## Development
 
@@ -57,420 +726,38 @@ poetry lock && poetry install
 # sudo apt-get install make
 make up
 
-# 3. Connect the vscode debugger to the running container
-# From vscode: hit F5 (ensure that the "Run and Debug" launcher is set to "Python: Remote Attach")
-
-# 4. Open the SwaggerUI at http://localhost:9781/api/docs
-
-# 5. Add a Breakpoint, e.g. in api.controllers.userinfo_controller.py:29...
-
-# 6. Send a test request :)
-
-# 7. Enjoy live debugging on your local development
+# Access Swagger UI
+open http://localhost:8080/docs
 ```
 
-### Code Contribution
+## 💡 Key Implementation Highlights
 
-1. Clone `main` branch
-2. Create new branch, e.g. `feat-cmd-userinfo` or `fix-linux-cmd`
-3. Push the new branch to Gitlab and create a Merge Request into `main`
-4. Document the review
-5. Approve and merge (may discard the branch if needed)
+The Desktop Controller sample uniquely demonstrates:
 
-### Release Process
+### **1. Dual Security Architecture**
 
-1. Refer to [Semantic Versioning](https://semver.org/)
-2. Create new Tag in Gitlab > Repository > Tags > [New Tag]()
-3. This will trigger Gitlab CI to publish a new container image based on the latest commit in the `main` branch and will be named as per the new Tag.
-4. Test the image locally: `docker run -p 8080:80 desktop-controller:latest` then browse to http://localhost:8080/api/docs
+- **API Security**: OAuth2/JWT for REST API access
+- **System Security**: SSH key-based authentication for host communication
+- **Separation of Concerns**: Different security models for different access layers
 
-### Settings
+### **2. Container-to-Host Communication**
 
-Required configuration:
+- **SSH Bridge**: Secure communication between containerized service and host system
+- **Command Execution**: Remote shell command execution with result capture
+- **File System Access**: Remote file management on host filesystem
 
-- create new SSH key pair
-- install the private key into the container and the public key into the DockerHost/SSH server
-  - mount the SSH private key to `:/app/id_rsa` when starting the container
-  - add the pub key to the DockerHost's `~/.ssh/authorized_keys`
-- add env var `DOCKER_HOST_USER_NAME` with the sys-admin' username on the DockerHost!
+### **3. Background Service Registration**
 
-See [App Settings](#app-settings).
+- **Self-Discovery**: Periodic registration with external service registry
+- **Cloud Events**: Standards-based event publishing for service discovery
+- **Heartbeat Pattern**: Continuous availability signaling
 
-## Testing
+### **4. System Integration Patterns**
 
-The API has a sample `Command` that ultimately resolves to remotely run `~/test_shell_script_on_host.sh -i {user_input}` on the DockerHost. 
+- **Host Information Gathering**: Real-time system state collection
+- **Remote Control Operations**: Secure desktop management capabilities
+- **State Persistence**: File-based data storage for inter-application communication
 
-See [sample_bin/test_shell_script_on_host.sh](sample_bin/test_shell_script_on_host.sh).
+This sample showcases how the Neuroglia framework can effectively bridge containerized microservices with host system management, providing enterprise-grade security and reliability for remote desktop control scenarios.
 
-E.g.: Install with
-
-```sh
-# copy the sample shell script on the Docker Host' user' home folder
-cp sample_bin/test_shell_script_on_host.sh ~/test_shell_script_on_host.sh
-
-# set permissions to execute
-chmod a+x ~/test_shell_script_on_host.sh
-
-# set ownership
-chown $USERNAME:staff ~/test_shell_script_on_host.sh
-
-# test run as user:
-~/test_shell_script_on_host.sh -i "my input value"
-
-Adding a new line my input value to /tmp/test.txt...
-
-# verify local file on Docker Host: 
-cat /tmp/test.txt
-
-UserInput: my input value
-
-```
-
-### test_shell_script_on_host.sh
-
-See [sample_bin/test_shell_script_on_host.sh](sample_bin/test_shell_script_on_host.sh).
-
-This test script just adds a line to a file `/tmp/test.txt`.
-
-```sh
-#!/bin/bash
-
-# test_shell_script_on_host.sh
-
-if [ $# -lt 2 ]; then
-  echo "Error: Please provide an argument after the -i flag."
-  exit 1
-fi
-
-if [ "$1" != "-i" ]; then
-  echo "Error: Please use the -i flag followed by your argument."
-  exit 1
-fi
-
-argument="$2"
-
-echo "Adding a new line $argument to /tmp/test.txt..."
-
-echo "UserInput: $argument" >> /tmp/test.txt
-
-```
-
-### Call Test Endpoint
-
-The HTTP `Command` runs a SSH client that simply connects to the DockerHost at `host.docker.internal` (with preconfigured username and SSH keys) and runs a custom command_line.
-
-From [SwaggerUI](http://localhost:9781/api/docs#/Custom/run_test_write_file_on_host_api_v1_custom_test_shell_script_on_host_sh_post)
-
-`http://localhost:9781/api/docs#/Custom/run_test_write_file_on_host_api_v1_custom_test_shell_script_on_host_sh_post`
-
-From Curl: (will need `Authorization` header with JWT, see [API Auth](#api-authentication))
-
-```curl
-curl -X 'POST' \
-  'http://localhost:9781/api/v1/custom/test/shell_script_on_host.sh' \
-  -H 'accept: application/json' \
-  -H 'Content-Type: application/json' \
-  -d '{
-  "user_input": "my input value"
-}'
-```
-
-```json
-# 201	Response body
-{
-  "command_line": "~/test_shell_script_on_host.sh -i my_input_value",
-  "stdout": [
-    "Adding a new line my_input_value to /tmp/test.txt..."
-  ],
-  "stderr": [],
-  "aggregate_id": "4c660c0572d8449598ee5fde58e04423",
-  "success": true
-}
-```
-
-### API Authentication
-
-We're using Keycloak as the IDP. See `deployment/keycloak/realm-config.json` for sample keycloak config.
-
-The intent is that "whoever" wants to remotely control a desktop first needs to get a valid token from the common Keycloak instance (which is the one that the VDI/BYOD Desktops - ie. DockerHosts have access to!).
-
-Local testings can be done with a local/dev Keycloak instance. Just include it in `docker-compose.yml`!
-
-```yml
-version: "3.4"
-
-name: mozart-dev
-services:
-  # http://localhost:9780
-  keycloak97:
-    image: jboss/keycloak
-    environment:
-      - KEYCLOAK_USER=admin
-      - KEYCLOAK_PASSWORD=admin
-      - KEYCLOAK_IMPORT=/tmp/realm-export.json
-    volumes:
-      - ./deployment/keycloak/realm-config.json:/tmp/realm-export.json
-    ports:
-      - 9780:8080
-    networks:
-      - desktopcontrollernet
-```
-
-Login at http://localhost:9780 using `admin`:`admin`
-
-## Source Code
-
-![Structure](img/src-Code_Structure.png)
-
-### Context
-
-![Context](img/src-Context.png)
-
-### Containers
-
-![Container](img/src-Container.png)
-
-### Components
-
-![Components](img/src-Components.png)
-
-### Code
-
-![Code](img/src-Code.png)
-
-#### App Settings
-
-```yml
-    environment:
-      APP_TITLE: Remote Desktop Controller
-      LOCAL_DEV: true
-      LOG_LEVEL: DEBUG
-      
-      CLOUD_EVENT_SINK: http://event-player97/events/pub
-      CLOUD_EVENT_SOURCE: https://desktop-controller.domain.com
-      CLOUD_EVENT_TYPE_PREFIX: com.domain.desktop-controller
-      
-      OAUTH2_SCHEME: client_credentials  # authorization_code or client_credentials
-      JWT_AUTHORITY: http://keycloak97/auth/realms/mozart
-      JWT_SIGNING_KEY: MIIBIj...copy_from_keycloak...elJ3dvQIDAQAB
-      JWT_AUDIENCE: desktops
-      REQUIRED_SCOPE: api
-      
-      SWAGGER_UI_JWT_AUTHORITY: http://localhost:9780/auth/realms/mozart
-      SWAGGER_UI_CLIENT_ID: desktop-controller
-      SWAGGER_UI_CLIENT_SECRET: 6Wbr0V1TtgEUPUCRSqHh1T0vYuVyG0aa
-      
-      USER_INFO_FILE_NAME: '/tmp/userinfo.json'
-      HOST_INFO_FILE_NAME: '/tmp/hostinfo.json'
-      DOCKER_HOST_USER_NAME: bvandewe  # UPDATE TO YOUR LOCAL USERNAME!
-      DOCKER_HOST_HOST_NAME: host.docker.internal
-
-```
-
-Set corresponding `ENV VARS` in `docker-compose.yml`.
-
-[Pydantic settings](https://docs.pydantic.dev/latest/concepts/pydantic_settings/) automatically parses environment variables, see [./src/api/settings.py](./src/api/settings.py).
-
-```python
-# ./src/api/settings.py
-
-from neuroglia.hosting.abstractions import ApplicationSettings
-from pydantic import ConfigDict
-
-class DesktopControllerSettings(ApplicationSettings):
-    model_config = ConfigDict(extra="allow")
-
-    required_scopes: str
-    jwt_authority: str
-    jwt_signing_key: str
-    jwt_audience: str = "desktops"
-    docker_host_user_name: str = "sys-admin"
-    userinfo_filename: str = "/app/data/userinfo.json"
-    ...
-
-app_settings = DesktopControllerSettings(_env_file=".env")
-
-```
-
-#### App Bootup
-
-The `main.py` file pre-loads all required services using the Dependency Injection mechanism from the neuroglia framework.
-
-API Controllers and Application Handlers may then declare any dependencies in their constructor (`def __init__(self, my_dependency: RegisteredDependency)`) and the framework will provide the instance!
-
-See [Dependency Injection](#dependency-injection).
-
-```python
-# ./src/main.py
-...
-builder = WebApplicationBuilder()
-
-# required shared resources
-Mapper.configure(builder, application_modules)
-Mediator.configure(builder, application_modules)
-JsonSerializer.configure(builder)
-CloudEventIngestor.configure(builder, application_modules)
-CloudEventPublisher.configure(builder)
-
-# custom shared resources
-# 
-# ADD ANY REQUIRED RESOURCE
-builder.services.add_scoped(paramiko.SSHClient, paramiko.SSHClient)
-builder.services.add_scoped(SecuredDockerHost, SecuredDockerHost)
-builder.services.add_singleton(DockerHostSshClientSettings, singleton=DockerHostSshClientSettings(username=builder.settings.docker_host_user_name))
-builder.services.add_scoped(DockerHostCommandRunner, DockerHostCommandRunner)
-
-# app
-app = builder.build()
-...
-app.run()
-```
-
-#### Dependency Injection
-
-1. Add a Custom Service source code file (likely in any of the `application_modules` folder in `./src/api/controllers` or `./src/application/commands` or `./src/application/queries` or `./src/application/events`) that requires a `Dependency`:
-
-  ```python
-  # ./src/application/services/docker_host_command_runner.py
-  ...
-  class DockerHostCommandRunner:
-      def __init__(self, secured_docker_host: SecuredDockerHost):  # Declare Dependencies!
-          self.secured_docker_host = secured_docker_host
- 
-      secured_docker_host: SecuredDockerHost  # Injected when handling a Command!
-
-      async def run(self, command: HostCommand) -> dict[str, Any]:
-          data = {}
-          await self.secured_docker_host.connect()
-          stdout, stderr = await self.secured_docker_host.execute_command(command)
-          await self.secured_docker_host.close()
-          stdout_lines = [line.strip() for line in stdout.splitlines() if line.strip()]
-          data = {"command_line": command.line, "stdout": stdout_lines, "stderr": stderr.splitlines() if stderr else []}
-          return data
-  ...
-  ```
-
-2. Add the source code for the dependency itself (likely in `./src/integration/services`!). It may also include other dependencies! (e.g. `DockerHostSshClientSettings`!!)
-  
-  ```python
-  # ./src/integration/services/secured_docker_host.py
-  ...
-
-  class DockerHostSshClientSettings(BaseModel):
-      username: str
-      hostname: str = "host.docker.internal"
-      port: int = 22
-      private_key_filename: str = "/app/id_rsa"
-  ...
-  class SecuredDockerHost:
-      """Service that Securely provides access to the Docker Host's Shell via SSH."""
-
-      def __init__(self, ssh_client: paramiko.SSHClient, ssh_client_settings: DockerHostSshClientSettings):
-          self.hostname: str = ssh_client_settings.hostname
-          self.port: int = ssh_client_settings.port
-          self.username: str = ssh_client_settings.username
-          self.private_key_filename: str = ssh_client_settings.private_key_filename
-          self.ssh_client: paramiko.SSHClient = ssh_client
-          self.ssh_client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-
-      async def connect(self):
-          ...
-
-      async def execute_command(self, command: HostCommand):
-          async def run_command(command_line: str):
-              ...
-
-          stdout, stderr = await run_command(command.line)
-          return stdout.decode(), stderr.decode()
-
-      async def close(self):
-          ...
-  ```
-
-3. Register its service_type (`singleton`, `scoped`, `transient`) in the `main.py` bootup script
-
-  ```python
-  # ./src/main.py
-  ...
-  builder.services.add_scoped(paramiko.SSHClient, paramiko.SSHClient)
-  builder.services.add_scoped(SecuredDockerHost, SecuredDockerHost)
-  builder.services.add_singleton(DockerHostSshClientSettings, singleton=DockerHostSshClientSettings(username=builder.settings.docker_host_user_name))
-  builder.services.add_scoped(DockerHostCommandRunner, DockerHostCommandRunner)
-  ...
-  ```
-
-4. Declare it as a dependency in a consumer Service, e.g. Application's `CommandHandler`: 
-
-  > Note how the `DockerHostCommandRunner` is just declared as a dependency in the constructor function `__init__`!
-  > This is the same for the other dependencies (`CloudEventBus`, `CloudEventPublishingOptions`)
-
-  ```python
-
-  @map_from(TestHostScriptCommandDto)
-  @map_to(TestHostScriptCommandDto)
-  @dataclass
-  class TestHostScriptCommand(Command):
-      user_input: str
-
-  class TestHostScriptCommandsHandler(CommandHandler[TestHostScriptCommand, OperationResult[Any]]):
-      """Represents the service used to handle UserInfo-related Commands"""
-
-      cloud_event_bus: CloudEventBus
-      """ Gets the service used to observe the cloud events consumed and produced by the application """
-
-      cloud_event_publishing_options: CloudEventPublishingOptions
-      """ Gets the options used to configure how the application should publish cloud events """
-
-      docker_host_command_runner: DockerHostCommandRunner
-
-      def __init__(self, cloud_event_bus: CloudEventBus, cloud_event_publishing_options: CloudEventPublishingOptions, docker_host_command_runner: DockerHostCommandRunner):
-          self.cloud_event_bus = cloud_event_bus
-          self.cloud_event_publishing_options = cloud_event_publishing_options
-          self.docker_host_command_runner = docker_host_command_runner
-
-      async def handle_async(self, command: TestHostScriptCommand) -> OperationResult[Any]:
-          command_id = str(uuid.uuid4()).replace("-", "")
-          command_line = HostCommand()
-          data = {}
-          try:
-              line = f"~/test_shell_script_on_host.sh -i {command.user_input.replace(' ', '_')}"
-              log.debug(f"TestHostScriptCommand Line: {line}")
-              await self.publish_cloud_event_async(DesktopHostCommandReceivedIntegrationEventV1(aggregate_id=command_id, command_line=line))
-
-              command_line.line = line
-              data = await self.docker_host_command_runner.run(command_line)
-              data.update({"aggregate_id": command_id})
-              log.debug(f"TestHostScriptCommand: {data}")
-
-              await self.publish_cloud_event_async(DesktopHostCommandExecutedIntegrationEventV1(**data))
-              data.update({"success": True}) if len(data["stderr"]) == 0 else data.update({"success": False})
-              return self.created(data)
-
-          except Exception as ex:
-              return self.bad_request(f"Exception when trying to run a shell script on the host: {command_line.line}: {data}: {ex}")
-  ```
-
-#### API Controllers
-
-- inherits ControllerBase
-
-```python
-# ./src/api/controllers/host_controller.py
-
-class HostController(ControllerBase):
-    def __init__(self, service_provider: ServiceProviderBase, mapper: Mapper, mediator: Mediator):
-        ControllerBase.__init__(self, service_provider, mapper, mediator)
-
-    @post("/info", response_model=Any, status_code=201, responses=ControllerBase.error_responses)
-    async def set_host_info(self, command_dto: SetHostInfoCommandDto, token: str = Depends(validate_token)) -> Any:
-        """Sets data of the hostinfo.json file."""
-        log.debug(f"set_host_info: command_dto:{command_dto}, token={token}")
-        return self.process(await self.mediator.execute_async(self.mapper.map(command_dto, SetHostInfoCommand)))
-
-    @get("/info", response_model=Any, status_code=201, responses=ControllerBase.error_responses)
-    async def get_host_info(self):
-        query = ReadHostInfoQuery()
-        log.debug(f"get_host_info: query:{query}")
-        return self.process(await self.mediator.execute_async(query))
-
-```
+Both the Desktop Controller and other samples demonstrate the framework's versatility in handling diverse architectural patterns - from event-sourced business applications to system integration and service orchestration solutions.
