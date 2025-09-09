@@ -8,6 +8,7 @@ Neuroglia is a lightweight, opinionated framework built on top of [FastAPI](http
 - **💉 Powerful Dependency Injection**: Lightweight container with automatic service discovery
 - **🎯 CQRS & Mediation Built-in**: Command Query Responsibility Segregation with mediator pattern
 - **📡 Event-Driven by Design**: Native CloudEvents, event sourcing, and reactive programming
+- **🎯 Resource Oriented Architecture**: Declarative resource management with watchers and reconciliation loops
 - **🔌 MVC Done Right**: Class-based controllers with automatic discovery and OpenAPI generation
 - **🗄️ Flexible Data Access**: Repository pattern with MongoDB, Event Store, and in-memory support
 - **📊 Smart Object Mapping**: Bidirectional mapping between domain models and DTOs
@@ -139,6 +140,41 @@ class WelcomeEmailHandler(EventHandler[UserCreatedEvent]):
 
 **[📖 Event Handling Guide](features/event-handling.md)**
 
+### 🎯 Resource Oriented Architecture
+
+Declarative resource management with watchers, controllers, and reconciliation loops:
+
+```python
+# Resource definition
+@dataclass
+class LabInstanceResource:
+    spec: Dict[str, Any]      # Desired state
+    status: Dict[str, Any]    # Current state
+
+# Watcher detects changes
+class LabInstanceWatcher:
+    async def start_watching(self):
+        while self.is_running:
+            changes = self.storage.list_resources(since_version=self.last_version)
+            for resource in changes:
+                await self._handle_resource_change(resource)
+
+# Controller responds with business logic  
+class LabInstanceController:
+    async def handle_resource_event(self, resource):
+        if resource.status.get('state') == 'pending':
+            await self._start_provisioning(resource)
+
+# Reconciler ensures consistency
+class LabInstanceScheduler:
+    async def start_reconciliation(self):
+        while self.is_running:
+            await self._reconcile_all_resources()
+            await asyncio.sleep(self.reconcile_interval)
+```
+
+**[📖 Resource Oriented Architecture Guide](features/resource-oriented-architecture.md)**
+
 ### 🗄️ Data Access
 
 Flexible repository pattern with multiple storage backends:
@@ -175,6 +211,19 @@ A comprehensive banking domain showcasing:
 - ✅ Clean architecture layers
 
 **[👉 Explore OpenBank](samples/openbank.md)**
+
+### 🧪 Lab Resource Manager - Resource Oriented Architecture
+
+A comprehensive ROA implementation featuring:
+
+- ✅ Declarative resource management patterns
+- ✅ Watcher pattern for change detection
+- ✅ Controller pattern for business logic responses
+- ✅ Reconciliation loops for consistency enforcement
+- ✅ State machine implementation with lifecycle management
+- ✅ Asynchronous component coordination
+
+**[👉 Explore Lab Resource Manager](samples/lab-resource-manager.md)**
 
 ### 🚪 API Gateway - Microservice Gateway
 
