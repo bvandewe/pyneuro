@@ -17,14 +17,14 @@ The OpenBank sample showcases:
 
 ```text
 ┌─────────────────────────────────────────────────────────────────┐
-│                    API Layer                                     │
+│                    API Layer                                    │
 │  ┌─────────────────┐  ┌─────────────────┐  ┌────────────────┐   │
-│  │  PersonsController │  │ AccountsController │  │  Other APIs    │   │
+│  │  PersonsController │  │ AccountsController │  │  Other APIs  │   │
 │  └─────────────────┘  └─────────────────┘  └────────────────┘   │
 └─────────────────────────────┬───────────────────────────────────┘
                               │
 ┌─────────────────────────────▼───────────────────────────────────┐
-│                    Application Layer                             │
+│                    Application Layer                            │
 │  ┌─────────────────┐  ┌─────────────────┐  ┌────────────────┐   │
 │  │    Commands     │  │     Queries     │  │     Events     │   │
 │  │   Handlers      │  │    Handlers     │  │   Handlers     │   │
@@ -32,7 +32,7 @@ The OpenBank sample showcases:
 └─────────────────────────────┬───────────────────────────────────┘
                               │
 ┌─────────────────────────────▼───────────────────────────────────┐
-│                    Domain Layer                                  │
+│                    Domain Layer                                 │
 │  ┌─────────────────┐  ┌─────────────────┐  ┌────────────────┐   │
 │  │     Person      │  │     Account     │  │    Address     │   │
 │  │   Aggregate     │  │   Aggregate     │  │ Value Object   │   │
@@ -40,7 +40,7 @@ The OpenBank sample showcases:
 └─────────────────────────────┬───────────────────────────────────┘
                               │
 ┌─────────────────────────────▼───────────────────────────────────┐
-│                  Integration Layer                               │
+│                  Integration Layer                              │
 │  ┌─────────────────┐  ┌─────────────────┐  ┌────────────────┐   │
 │  │ Event Store     │  │   MongoDB       │  │  API Clients   │   │
 │  │ Repository      │  │  Repository     │  │                │   │
