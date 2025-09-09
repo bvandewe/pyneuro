@@ -8,6 +8,7 @@ Neuroglia is a lightweight, opinionated framework built on top of [FastAPI](http
 - **💉 Dependency Injection**: Lightweight container with automatic service discovery and registration
 - **🎯 CQRS & Mediation**: Command Query Responsibility Segregation with built-in mediator pattern
 - **📡 Event-Driven Architecture**: Native support for CloudEvents, event sourcing, and reactive programming
+- **🎯 Resource Oriented Architecture**: Declarative resource management with watchers, controllers, and reconciliation loops
 - **🔌 MVC Controllers**: Class-based API controllers with automatic discovery and OpenAPI generation
 - **🗄️ Repository Pattern**: Flexible data access layer with support for MongoDB, Event Store, and in-memory repositories
 - **📊 Object Mapping**: Bidirectional mapping between domain models and DTOs
@@ -37,6 +38,7 @@ src/
 - **[🏗️ Architecture Guide](docs/architecture.md)** - Understanding the framework's architecture
 - **[💉 Dependency Injection](docs/features/dependency-injection.md)** - Service container and DI patterns
 - **[🎯 CQRS & Mediation](docs/features/cqrs-mediation.md)** - Command and Query handling
+- **[🎯 Resource Oriented Architecture](docs/features/resource-oriented-architecture.md)** - Declarative resource management patterns
 - **[🔌 MVC Controllers](docs/features/mvc-controllers.md)** - Building REST APIs
 - **[🗄️ Data Access](docs/features/data-access.md)** - Repository pattern and data persistence
 - **[📡 Event Handling](docs/features/event-handling.md)** - CloudEvents and reactive programming
@@ -48,6 +50,7 @@ src/
 Learn by example with complete sample applications:
 
 - **[🏦 OpenBank](docs/samples/openbank.md)** - Event-sourced banking domain with CQRS
+- **[🧪 Lab Resource Manager](docs/samples/lab-resource-manager.md)** - Resource Oriented Architecture with watchers and reconciliation
 - **🖥️ Desktop Controller** - Remote desktop management API
 - **🚪 API Gateway** - Microservice gateway with authentication
 
@@ -87,6 +90,7 @@ app.run()
 | **Hosting** | Web application hosting and lifecycle | [📖 Hosting](docs/features/hosting.md) |
 | **MVC** | Controllers and routing | [📖 MVC](docs/features/mvc-controllers.md) |
 | **Mediation** | CQRS, commands, queries, events | [📖 Mediation](docs/features/cqrs-mediation.md) |
+| **Resource Oriented Architecture** | Watchers, controllers, reconciliation | [📖 ROA](docs/features/resource-oriented-architecture.md) |
 | **Data** | Repository pattern, event sourcing | [📖 Data](docs/features/data-access.md) |
 | **Eventing** | CloudEvents, pub/sub, reactive | [📖 Events](docs/features/event-handling.md) |
 | **Mapping** | Object-to-object mapping | [📖 Mapping](docs/features/object-mapping.md) |
