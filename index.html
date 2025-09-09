@@ -466,6 +466,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#resource-oriented-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      🎯 Resource Oriented Architecture
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#data-access" class="md-nav__link">
     <span class="md-ellipsis">
       🗄️ Data Access
@@ -493,6 +502,15 @@
   <a href="#openbank-event-sourced-banking-system" class="md-nav__link">
     <span class="md-ellipsis">
       🏦 OpenBank - Event-Sourced Banking System
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lab-resource-manager-resource-oriented-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      🧪 Lab Resource Manager - Resource Oriented Architecture
     </span>
   </a>
   
@@ -899,6 +917,75 @@
   
   
     <li class="md-nav__item">
+      <a href="features/resource-oriented-architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Resource Oriented Architecture
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="features/watcher-reconciliation-patterns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Watcher & Reconciliation Patterns
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="features/watcher-reconciliation-execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Watcher & Reconciliation Execution
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="features/mvc-controllers/" class="md-nav__link">
         
   
@@ -1181,6 +1268,29 @@
   
   
     <li class="md-nav__item">
+      <a href="samples/lab-resource-manager/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Lab Resource Manager
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="samples/api_gateway/" class="md-nav__link">
         
   
@@ -1327,6 +1437,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#resource-oriented-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      🎯 Resource Oriented Architecture
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#data-access" class="md-nav__link">
     <span class="md-ellipsis">
       🗄️ Data Access
@@ -1354,6 +1473,15 @@
   <a href="#openbank-event-sourced-banking-system" class="md-nav__link">
     <span class="md-ellipsis">
       🏦 OpenBank - Event-Sourced Banking System
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lab-resource-manager-resource-oriented-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      🧪 Lab Resource Manager - Resource Oriented Architecture
     </span>
   </a>
   
@@ -1634,6 +1762,7 @@
 <li><strong>💉 Powerful Dependency Injection</strong>: Lightweight container with automatic service discovery</li>
 <li><strong>🎯 CQRS &amp; Mediation Built-in</strong>: Command Query Responsibility Segregation with mediator pattern</li>
 <li><strong>📡 Event-Driven by Design</strong>: Native CloudEvents, event sourcing, and reactive programming</li>
+<li><strong>🎯 Resource Oriented Architecture</strong>: Declarative resource management with watchers and reconciliation loops</li>
 <li><strong>🔌 MVC Done Right</strong>: Class-based controllers with automatic discovery and OpenAPI generation</li>
 <li><strong>🗄️ Flexible Data Access</strong>: Repository pattern with MongoDB, Event Store, and in-memory support</li>
 <li><strong>📊 Smart Object Mapping</strong>: Bidirectional mapping between domain models and DTOs</li>
@@ -1734,6 +1863,36 @@ python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;<
         <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">email_service</span><span class="o">.</span><span class="n">send_welcome</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">email</span><span class="p">)</span>
 </code></pre></div>
 <p><strong><a href="features/event-handling.md">📖 Event Handling Guide</a></strong></p>
+<h3 id="resource-oriented-architecture">🎯 Resource Oriented Architecture<a class="headerlink" href="#resource-oriented-architecture" title="Permanent link">&para;</a></h3>
+<p>Declarative resource management with watchers, controllers, and reconciliation loops:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Resource definition</span>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">LabInstanceResource</span><span class="p">:</span>
+    <span class="n">spec</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>      <span class="c1"># Desired state</span>
+    <span class="n">status</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>    <span class="c1"># Current state</span>
+
+<span class="c1"># Watcher detects changes</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">LabInstanceWatcher</span><span class="p">:</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">start_watching</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_running</span><span class="p">:</span>
+            <span class="n">changes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">storage</span><span class="o">.</span><span class="n">list_resources</span><span class="p">(</span><span class="n">since_version</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">last_version</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">resource</span> <span class="ow">in</span> <span class="n">changes</span><span class="p">:</span>
+                <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_handle_resource_change</span><span class="p">(</span><span class="n">resource</span><span class="p">)</span>
+
+<span class="c1"># Controller responds with business logic  </span>
+<span class="k">class</span><span class="w"> </span><span class="nc">LabInstanceController</span><span class="p">:</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">handle_resource_event</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resource</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">resource</span><span class="o">.</span><span class="n">status</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;state&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;pending&#39;</span><span class="p">:</span>
+            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_start_provisioning</span><span class="p">(</span><span class="n">resource</span><span class="p">)</span>
+
+<span class="c1"># Reconciler ensures consistency</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">LabInstanceScheduler</span><span class="p">:</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">start_reconciliation</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_running</span><span class="p">:</span>
+            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reconcile_all_resources</span><span class="p">()</span>
+            <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">reconcile_interval</span><span class="p">)</span>
+</code></pre></div>
+<p><strong><a href="features/resource-oriented-architecture/">📖 Resource Oriented Architecture Guide</a></strong></p>
 <h3 id="data-access">🗄️ Data Access<a class="headerlink" href="#data-access" title="Permanent link">&para;</a></h3>
 <p>Flexible repository pattern with multiple storage backends:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Repository interface</span>
@@ -1762,6 +1921,17 @@ python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;<
 <li>✅ Clean architecture layers</li>
 </ul>
 <p><strong><a href="samples/openbank/">👉 Explore OpenBank</a></strong></p>
+<h3 id="lab-resource-manager-resource-oriented-architecture">🧪 Lab Resource Manager - Resource Oriented Architecture<a class="headerlink" href="#lab-resource-manager-resource-oriented-architecture" title="Permanent link">&para;</a></h3>
+<p>A comprehensive ROA implementation featuring:</p>
+<ul>
+<li>✅ Declarative resource management patterns</li>
+<li>✅ Watcher pattern for change detection</li>
+<li>✅ Controller pattern for business logic responses</li>
+<li>✅ Reconciliation loops for consistency enforcement</li>
+<li>✅ State machine implementation with lifecycle management</li>
+<li>✅ Asynchronous component coordination</li>
+</ul>
+<p><strong><a href="samples/lab-resource-manager/">👉 Explore Lab Resource Manager</a></strong></p>
 <h3 id="api-gateway-microservice-gateway">🚪 API Gateway - Microservice Gateway<a class="headerlink" href="#api-gateway-microservice-gateway" title="Permanent link">&para;</a></h3>
 <p>An intelligent API gateway featuring:</p>
 <ul>
