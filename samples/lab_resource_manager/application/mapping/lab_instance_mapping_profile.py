@@ -3,7 +3,7 @@
 Configures AutoMapper mappings between DTOs, Commands, Queries, and Resources.
 """
 
-from neuroglia.mapping.abstractions import MappingProfile
+from neuroglia.mapping.mapper import MappingProfile
 
 from samples.lab_resource_manager.integration.models.lab_instance_dto import (
     CreateLabInstanceDto,

@@ -7,7 +7,7 @@ Resource Oriented Architecture patterns with CQRS.
 from dataclasses import dataclass
 from typing import Optional
 
-from neuroglia.mediation.abstractions import Query
+from neuroglia.mediation.mediator import Query
 
 from samples.lab_resource_manager.integration.models.lab_instance_dto import LabInstanceDto
 

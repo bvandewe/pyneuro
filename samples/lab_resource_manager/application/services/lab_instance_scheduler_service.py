@@ -9,8 +9,8 @@ import logging
 from datetime import datetime
 from typing import List, Dict, Optional
 
-from neuroglia.dependency_injection.abstractions import ServiceProviderBase
-from neuroglia.eventing.abstractions import EventBus
+from neuroglia.dependency_injection.service_provider import ServiceProviderBase
+from neuroglia.eventing import EventBus
 from neuroglia.hosting.abstractions import HostedService
 
 from samples.lab_resource_manager.domain.resources.lab_instance_request import (

@@ -9,7 +9,7 @@ from typing import Optional
 
 from neuroglia.dependency_injection import ServiceProviderBase
 from neuroglia.mapping.mapper import Mapper
-from neuroglia.mediation.abstractions import QueryHandler
+from neuroglia.mediation.mediator import QueryHandler
 
 from samples.lab_resource_manager.application.queries.get_lab_instance_query import GetLabInstanceQuery
 from samples.lab_resource_manager.integration.models.lab_instance_dto import LabInstanceDto

@@ -173,7 +173,7 @@ class LabInstanceScheduler:
 1. API creates LabInstance resource (state: PENDING)
 2. Storage backend assigns resource version and timestamps
 3. Watcher detects new resource on next poll cycle (≤2s)
-4. Controller receives event and starts provisioning
+4. Controller receives sevent and starts provisioning
 5. Resource state transitions to PROVISIONING
 ```
 
