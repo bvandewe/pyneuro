@@ -1,212 +1,107 @@
 
-<!doctype html>
-<html lang="en" class="no-js">
-  <head>
-    
-      <meta charset="utf-8">
-      <meta name="viewport" content="width=device-width,initial-scale=1">
-      
-      
-      
-      
-        <link rel="prev" href="../lab-resource-manager/">
-      
-      
-        <link rel="next" href="../desktop_controller/">
-      
-      
-      <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.19">
-    
-    
-      
-        <title>API Gateway - Neuroglia Python Framework</title>
-      
-    
-    
-      <link rel="stylesheet" href="../../assets/stylesheets/main.7e37652d.min.css">
-      
-        
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
-      
-      
+<!DOCTYPE html>
 
-
-    
-    
-      
-    
-    
-      
-        
-        
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
-        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
-      
-    
-    
-    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
-    
-      
-
-    
-    
-    
-  </head>
-  
-  
-    
-    
-      
-    
-    
-    
-    
-    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="blue">
-  
-    
-    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
-    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
-    <label class="md-overlay" for="__drawer"></label>
-    <div data-md-component="skip">
-      
-        
-        <a href="#api-gateway-sample-application" class="md-skip">
+<html class="no-js" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<link href="../lab-resource-manager/" rel="prev"/>
+<link href="../desktop_controller/" rel="next"/>
+<link href="../../assets/images/favicon.png" rel="icon"/>
+<meta content="mkdocs-1.6.1, mkdocs-material-9.6.20" name="generator"/>
+<title>API Gateway - Neuroglia Python Framework</title>
+<link href="../../assets/stylesheets/main.e53b48f4.min.css" rel="stylesheet"/>
+<link href="../../assets/stylesheets/palette.06af60db.min.css" rel="stylesheet"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback" rel="stylesheet"/>
+<style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+<script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+</head>
+<body data-md-color-accent="blue" data-md-color-primary="blue" data-md-color-scheme="default" dir="ltr">
+<input autocomplete="off" class="md-toggle" data-md-toggle="drawer" id="__drawer" type="checkbox"/>
+<input autocomplete="off" class="md-toggle" data-md-toggle="search" id="__search" type="checkbox"/>
+<label class="md-overlay" for="__drawer"></label>
+<div data-md-component="skip">
+<a class="md-skip" href="#api-gateway-sample-application">
           Skip to content
         </a>
-      
-    </div>
-    <div data-md-component="announce">
-      
-    </div>
-    
-    
-      
-
-  
-
+</div>
+<div data-md-component="announce">
+</div>
 <header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
-  <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../.." title="Neuroglia Python Framework" class="md-header__button md-logo" aria-label="Neuroglia Python Framework" data-md-component="logo">
-      
-  
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
-
-    </a>
-    <label class="md-header__button md-icon" for="__drawer">
-      
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
-    </label>
-    <div class="md-header__title" data-md-component="header-title">
-      <div class="md-header__ellipsis">
-        <div class="md-header__topic">
-          <span class="md-ellipsis">
+<nav aria-label="Header" class="md-header__inner md-grid">
+<a aria-label="Neuroglia Python Framework" class="md-header__button md-logo" data-md-component="logo" href="../.." title="Neuroglia Python Framework">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+</a>
+<label class="md-header__button md-icon" for="__drawer">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+</label>
+<div class="md-header__title" data-md-component="header-title">
+<div class="md-header__ellipsis">
+<div class="md-header__topic">
+<span class="md-ellipsis">
             Neuroglia Python Framework
           </span>
-        </div>
-        <div class="md-header__topic" data-md-component="header-topic">
-          <span class="md-ellipsis">
+</div>
+<div class="md-header__topic" data-md-component="header-topic">
+<span class="md-ellipsis">
             
               API Gateway
             
           </span>
-        </div>
-      </div>
-    </div>
-    
-      
-        <form class="md-header__option" data-md-component="palette">
-  
-    
-    
-    
-    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="blue"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
-    
-      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
-      </label>
-    
-  
-    
-    
-    
-    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="blue" data-md-color-accent="blue"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
-    
-      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
-      </label>
-    
-  
+</div>
+</div>
+</div>
+<form class="md-header__option" data-md-component="palette">
+<input aria-label="Switch to dark mode" class="md-option" data-md-color-accent="blue" data-md-color-media="" data-md-color-primary="blue" data-md-color-scheme="default" id="__palette_0" name="__palette" type="radio"/>
+<label class="md-header__button md-icon" for="__palette_1" hidden="" title="Switch to dark mode">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+</label>
+<input aria-label="Switch to light mode" class="md-option" data-md-color-accent="blue" data-md-color-media="" data-md-color-primary="blue" data-md-color-scheme="slate" id="__palette_1" name="__palette" type="radio"/>
+<label class="md-header__button md-icon" for="__palette_0" hidden="" title="Switch to light mode">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+</label>
 </form>
-      
-    
-    
-      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
-    
-    
-    
-      
-      
-        <label class="md-header__button md-icon" for="__search">
-          
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
-        </label>
-        <div class="md-search" data-md-component="search" role="dialog">
-  <label class="md-search__overlay" for="__search"></label>
-  <div class="md-search__inner" role="search">
-    <form class="md-search__form" name="search">
-      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
-      <label class="md-search__icon md-icon" for="__search">
-        
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
-        
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
-      </label>
-      <nav class="md-search__options" aria-label="Search">
-        
-          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Share" aria-label="Share" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
-            
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
-          </a>
-        
-        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
-          
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
-        </button>
-      </nav>
-      
-    </form>
-    <div class="md-search__output">
-      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
-        <div class="md-search-result" data-md-component="search-result">
-          <div class="md-search-result__meta">
+<script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+<label class="md-header__button md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+</label>
+<div class="md-search" data-md-component="search" role="dialog">
+<label class="md-search__overlay" for="__search"></label>
+<div class="md-search__inner" role="search">
+<form class="md-search__form" name="search">
+<input aria-label="Search" autocapitalize="off" autocomplete="off" autocorrect="off" class="md-search__input" data-md-component="search-query" name="query" placeholder="Search" required="" spellcheck="false" type="text"/>
+<label class="md-search__icon md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+</label>
+<nav aria-label="Search" class="md-search__options">
+<a aria-label="Share" class="md-search__icon md-icon" data-clipboard="" data-clipboard-text="" data-md-component="search-share" href="javascript:void(0)" tabindex="-1" title="Share">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"></path></svg>
+</a>
+<button aria-label="Clear" class="md-search__icon md-icon" tabindex="-1" title="Clear" type="reset">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+</button>
+</nav>
+</form>
+<div class="md-search__output">
+<div class="md-search__scrollwrap" data-md-scrollfix="" tabindex="0">
+<div class="md-search-result" data-md-component="search-result">
+<div class="md-search-result__meta">
             Initializing search
           </div>
-          <ol class="md-search-result__list" role="presentation"></ol>
-        </div>
-      </div>
-    </div>
-  </div>
+<ol class="md-search-result__list" role="presentation"></ol>
 </div>
-      
-    
-    
-  </nav>
-  
-    
-      
-<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
-  <div class="md-grid">
-    <ul class="md-tabs__list">
-      
-        
-  
-  
-  
-  
-    <li class="md-tabs__item">
-      <a href="../.." class="md-tabs__link">
+</div>
+</div>
+</div>
+</div>
+</nav>
+<nav aria-label="Tabs" class="md-tabs" data-md-component="tabs">
+<div class="md-grid">
+<ul class="md-tabs__list">
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../..">
         
   
   
@@ -215,17 +110,9 @@
   Home
 
       </a>
-    </li>
-  
-
-      
-        
-  
-  
-  
-  
-    <li class="md-tabs__item">
-      <a href="../../getting-started/" class="md-tabs__link">
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../getting-started/">
         
   
   
@@ -234,17 +121,9 @@
   Getting Started
 
       </a>
-    </li>
-  
-
-      
-        
-  
-  
-  
-  
-    <li class="md-tabs__item">
-      <a href="../../architecture/" class="md-tabs__link">
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../architecture/">
         
   
   
@@ -253,1905 +132,1163 @@
   Architecture
 
       </a>
-    </li>
-  
-
-      
-        
-  
-  
-  
-  
-    
-    
-      <li class="md-tabs__item">
-        <a href="../../features/dependency-injection/" class="md-tabs__link">
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../features/dependency-injection/">
           
   
   
   Features
 
         </a>
-      </li>
-    
-  
-
-      
-        
-  
-  
-  
-    
-  
-  
-    
-    
-      <li class="md-tabs__item md-tabs__item--active">
-        <a href="../openbank/" class="md-tabs__link">
+</li>
+<li class="md-tabs__item md-tabs__item--active">
+<a class="md-tabs__link" href="../openbank/">
           
   
   
   Sample Applications
 
         </a>
-      </li>
-    
-  
-
-      
-    </ul>
-  </div>
+</li>
+</ul>
+</div>
 </nav>
-    
-  
 </header>
-    
-    <div class="md-container" data-md-component="container">
-      
-      
-        
-      
-      <main class="md-main" data-md-component="main">
-        <div class="md-main__inner md-grid">
-          
-            
-              
-              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
-                <div class="md-sidebar__scrollwrap">
-                  <div class="md-sidebar__inner">
-                    
-
-
-  
-
-
-<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
-  <label class="md-nav__title" for="__drawer">
-    <a href="../.." title="Neuroglia Python Framework" class="md-nav__button md-logo" aria-label="Neuroglia Python Framework" data-md-component="logo">
-      
-  
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
-
-    </a>
+<div class="md-container" data-md-component="container">
+<main class="md-main" data-md-component="main">
+<div class="md-main__inner md-grid">
+<div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="Navigation" class="md-nav md-nav--primary md-nav--lifted" data-md-level="0">
+<label class="md-nav__title" for="__drawer">
+<a aria-label="Neuroglia Python Framework" class="md-nav__button md-logo" data-md-component="logo" href="../.." title="Neuroglia Python Framework">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+</a>
     Neuroglia Python Framework
   </label>
-  
-  <ul class="md-nav__list" data-md-scrollfix>
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../.." class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../..">
+<span class="md-ellipsis">
     Home
     
   </span>
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../getting-started/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../getting-started/">
+<span class="md-ellipsis">
     Getting Started
     
   </span>
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../architecture/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../architecture/">
+<span class="md-ellipsis">
     Architecture
     
   </span>
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    
-    
-    
-    
-      
-      
-        
-      
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
-        
-          
-          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
+</a>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_4" type="checkbox"/>
+<label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+<span class="md-ellipsis">
     Features
     
   </span>
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_4">
-            <span class="md-nav__icon md-icon"></span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_4_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_4">
+<span class="md-nav__icon md-icon"></span>
             Features
           </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../features/dependency-injection/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/dependency-injection/">
+<span class="md-ellipsis">
     Dependency Injection
     
   </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../features/cqrs-mediation/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    CQRS & Mediation
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/cqrs-mediation/">
+<span class="md-ellipsis">
+    CQRS &amp; Mediation
     
   </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../features/resource-oriented-architecture/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/resource-oriented-architecture/">
+<span class="md-ellipsis">
     Resource Oriented Architecture
     
   </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../features/watcher-reconciliation-patterns/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Watcher & Reconciliation Patterns
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/watcher-reconciliation-patterns/">
+<span class="md-ellipsis">
+    Watcher &amp; Reconciliation Patterns
     
   </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../features/watcher-reconciliation-execution/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Watcher & Reconciliation Execution
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/watcher-reconciliation-execution/">
+<span class="md-ellipsis">
+    Watcher &amp; Reconciliation Execution
     
   </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../features/mvc-controllers/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/mvc-controllers/">
+<span class="md-ellipsis">
     MVC Controllers
     
   </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../features/data-access/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/data-access/">
+<span class="md-ellipsis">
     Data Access
     
   </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../features/event-sourcing/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/event-sourcing/">
+<span class="md-ellipsis">
     Event Sourcing
     
   </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../features/event-handling.md" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/mermaid-diagrams/">
+<span class="md-ellipsis">
+    Mermaid Diagrams
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/event-handling.md">
+<span class="md-ellipsis">
     Event Handling
     
   </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../features/object-mapping.md" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/object-mapping.md">
+<span class="md-ellipsis">
     Object Mapping
     
   </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../features/configuration.md" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/configuration.md">
+<span class="md-ellipsis">
     Configuration
     
   </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../features/hosting.md" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/hosting.md">
+<span class="md-ellipsis">
     Hosting
     
   </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../features/core.md" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/core.md">
+<span class="md-ellipsis">
     Core
     
   </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../features/serialization.md" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/serialization.md">
+<span class="md-ellipsis">
     Serialization
     
   </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-    
-      
-      
-  
-  
-    
-  
-  
-  
-    
-    
-    
-    
-      
-        
-        
-      
-      
-        
-      
-    
-    
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
-        
-          
-          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
-            
-  
-  
-  <span class="md-ellipsis">
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+<input checked="" class="md-nav__toggle md-toggle" id="__nav_5" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+<span class="md-ellipsis">
     Sample Applications
     
   </span>
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_5">
-            <span class="md-nav__icon md-icon"></span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="true" aria-labelledby="__nav_5_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_5">
+<span class="md-nav__icon md-icon"></span>
             Sample Applications
           </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../openbank/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../openbank/">
+<span class="md-ellipsis">
     OpenBank
     
   </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../lab-resource-manager/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../lab-resource-manager/">
+<span class="md-ellipsis">
     Lab Resource Manager
     
   </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-    
-  
-  
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
+</a>
+</li>
+<li class="md-nav__item md-nav__item--active">
+<input class="md-nav__toggle md-toggle" id="__toc" type="checkbox"/>
+<label class="md-nav__link md-nav__link--active" for="__toc">
+<span class="md-ellipsis">
     API Gateway
     
   </span>
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
-        
-  
-  
-  <span class="md-ellipsis">
+<span class="md-nav__icon md-icon"></span>
+</label>
+<a class="md-nav__link md-nav__link--active" href="./">
+<span class="md-ellipsis">
     API Gateway
     
   </span>
-  
-
-      </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
+</a>
+<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
       Table of contents
     </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#what-youll-learn" class="md-nav__link">
-    <span class="md-ellipsis">
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#what-youll-learn">
+<span class="md-ellipsis">
       🎯 What You'll Learn
     </span>
-  </a>
-  
+</a>
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#architecture-overview" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#architecture-overview">
+<span class="md-ellipsis">
       🏗️ Architecture Overview
     </span>
-  </a>
-  
+</a>
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#key-features-demonstrated" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#key-features-demonstrated">
+<span class="md-ellipsis">
       🚀 Key Features Demonstrated
     </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="🚀 Key Features Demonstrated">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#1-oauth2-authentication-security" class="md-nav__link">
-    <span class="md-ellipsis">
+</a>
+<nav aria-label="🚀 Key Features Demonstrated" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#1-oauth2-authentication-security">
+<span class="md-ellipsis">
       1. OAuth2 Authentication &amp; Security
     </span>
-  </a>
-  
+</a>
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#2-multi-service-integration" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#2-multi-service-integration">
+<span class="md-ellipsis">
       2. Multi-Service Integration
     </span>
-  </a>
-  
+</a>
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#3-advanced-domain-model" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#3-advanced-domain-model">
+<span class="md-ellipsis">
       3. Advanced Domain Model
     </span>
-  </a>
-  
+</a>
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#4-background-task-processing" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#4-background-task-processing">
+<span class="md-ellipsis">
       4. Background Task Processing
     </span>
-  </a>
-  
+</a>
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#5-cloud-events-integration" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#5-cloud-events-integration">
+<span class="md-ellipsis">
       5. Cloud Events Integration
     </span>
-  </a>
-  
+</a>
 </li>
-        
-      </ul>
-    </nav>
-  
+</ul>
+</nav>
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#configuration-settings" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#configuration-settings">
+<span class="md-ellipsis">
       🔧 Configuration &amp; Settings
     </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="🔧 Configuration &amp; Settings">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#application-settings" class="md-nav__link">
-    <span class="md-ellipsis">
+</a>
+<nav aria-label="🔧 Configuration &amp; Settings" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#application-settings">
+<span class="md-ellipsis">
       Application Settings
     </span>
-  </a>
-  
+</a>
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#service-registration" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#service-registration">
+<span class="md-ellipsis">
       Service Registration
     </span>
-  </a>
-  
+</a>
 </li>
-        
-      </ul>
-    </nav>
-  
+</ul>
+</nav>
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#testing-strategy" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#testing-strategy">
+<span class="md-ellipsis">
       🧪 Testing Strategy
     </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="🧪 Testing Strategy">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#unit-tests" class="md-nav__link">
-    <span class="md-ellipsis">
+</a>
+<nav aria-label="🧪 Testing Strategy" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#unit-tests">
+<span class="md-ellipsis">
       Unit Tests
     </span>
-  </a>
-  
+</a>
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#integration-tests" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#integration-tests">
+<span class="md-ellipsis">
       Integration Tests
     </span>
-  </a>
-  
+</a>
 </li>
-        
-      </ul>
-    </nav>
-  
+</ul>
+</nav>
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#implementation-details" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#implementation-details">
+<span class="md-ellipsis">
       📚 Implementation Details
     </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="📚 Implementation Details">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#1-controller-layer-apicontrollers" class="md-nav__link">
-    <span class="md-ellipsis">
+</a>
+<nav aria-label="📚 Implementation Details" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#1-controller-layer-apicontrollers">
+<span class="md-ellipsis">
       1. Controller Layer (api/controllers/)
     </span>
-  </a>
-  
+</a>
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#2-application-layer-application" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#2-application-layer-application">
+<span class="md-ellipsis">
       2. Application Layer (application/)
     </span>
-  </a>
-  
+</a>
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#3-domain-layer-domain" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#3-domain-layer-domain">
+<span class="md-ellipsis">
       3. Domain Layer (domain/)
     </span>
-  </a>
-  
+</a>
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#4-integration-layer-integration" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#4-integration-layer-integration">
+<span class="md-ellipsis">
       4. Integration Layer (integration/)
     </span>
-  </a>
-  
+</a>
 </li>
-        
-      </ul>
-    </nav>
-  
+</ul>
+</nav>
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#background-processing" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#background-processing">
+<span class="md-ellipsis">
       🔄 Background Processing
     </span>
-  </a>
-  
+</a>
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#external-service-integration" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#external-service-integration">
+<span class="md-ellipsis">
       🌐 External Service Integration
     </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="🌐 External Service Integration">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#minio-object-storage" class="md-nav__link">
-    <span class="md-ellipsis">
+</a>
+<nav aria-label="🌐 External Service Integration" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#minio-object-storage">
+<span class="md-ellipsis">
       MinIO Object Storage
     </span>
-  </a>
-  
+</a>
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#redis-caching" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#redis-caching">
+<span class="md-ellipsis">
       Redis Caching
     </span>
-  </a>
-  
+</a>
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#external-api-integration" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#external-api-integration">
+<span class="md-ellipsis">
       External API Integration
     </span>
-  </a>
-  
+</a>
 </li>
-        
-      </ul>
-    </nav>
-  
+</ul>
+</nav>
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#getting-started" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#getting-started">
+<span class="md-ellipsis">
       🚀 Getting Started
     </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="🚀 Getting Started">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#1-prerequisites" class="md-nav__link">
-    <span class="md-ellipsis">
+</a>
+<nav aria-label="🚀 Getting Started" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#1-prerequisites">
+<span class="md-ellipsis">
       1. Prerequisites
     </span>
-  </a>
-  
+</a>
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#2-configuration" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#2-configuration">
+<span class="md-ellipsis">
       2. Configuration
     </span>
-  </a>
-  
+</a>
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#3-run-the-application" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#3-run-the-application">
+<span class="md-ellipsis">
       3. Run the Application
     </span>
-  </a>
-  
+</a>
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#4-test-the-api" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#4-test-the-api">
+<span class="md-ellipsis">
       4. Test the API
     </span>
-  </a>
-  
+</a>
 </li>
-        
-      </ul>
-    </nav>
-  
+</ul>
+</nav>
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#related-documentation" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#related-documentation">
+<span class="md-ellipsis">
       🔗 Related Documentation
     </span>
-  </a>
-  
+</a>
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#comparison-with-openbank-sample" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#comparison-with-openbank-sample">
+<span class="md-ellipsis">
       🔍 Comparison with OpenBank Sample
     </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="🔍 Comparison with OpenBank Sample">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#architecture-patterns" class="md-nav__link">
-    <span class="md-ellipsis">
+</a>
+<nav aria-label="🔍 Comparison with OpenBank Sample" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#architecture-patterns">
+<span class="md-ellipsis">
       Architecture Patterns
     </span>
-  </a>
-  
+</a>
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#domain-complexity" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#domain-complexity">
+<span class="md-ellipsis">
       Domain Complexity
     </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Domain Complexity">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#api-gateway-integration-focused" class="md-nav__link">
-    <span class="md-ellipsis">
+</a>
+<nav aria-label="Domain Complexity" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#api-gateway-integration-focused">
+<span class="md-ellipsis">
       API Gateway - Integration-Focused
     </span>
-  </a>
-  
+</a>
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#openbank-rich-domain-model" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#openbank-rich-domain-model">
+<span class="md-ellipsis">
       OpenBank - Rich Domain Model
     </span>
-  </a>
-  
+</a>
 </li>
-        
-      </ul>
-    </nav>
-  
+</ul>
+</nav>
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#data-persistence-strategy" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#data-persistence-strategy">
+<span class="md-ellipsis">
       Data Persistence Strategy
     </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Data Persistence Strategy">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#api-gateway-multi-store-architecture" class="md-nav__link">
-    <span class="md-ellipsis">
+</a>
+<nav aria-label="Data Persistence Strategy" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#api-gateway-multi-store-architecture">
+<span class="md-ellipsis">
       API Gateway - Multi-Store Architecture
     </span>
-  </a>
-  
+</a>
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#openbank-event-sourcing" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#openbank-event-sourcing">
+<span class="md-ellipsis">
       OpenBank - Event Sourcing
     </span>
-  </a>
-  
+</a>
 </li>
-        
-      </ul>
-    </nav>
-  
+</ul>
+</nav>
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#authentication-security" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#authentication-security">
+<span class="md-ellipsis">
       Authentication &amp; Security
     </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Authentication &amp; Security">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#api-gateway-oauth2-api-keys" class="md-nav__link">
-    <span class="md-ellipsis">
+</a>
+<nav aria-label="Authentication &amp; Security" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#api-gateway-oauth2-api-keys">
+<span class="md-ellipsis">
       API Gateway - OAuth2 + API Keys
     </span>
-  </a>
-  
+</a>
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#openbank-domain-focused-security" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#openbank-domain-focused-security">
+<span class="md-ellipsis">
       OpenBank - Domain-Focused Security
     </span>
-  </a>
-  
+</a>
 </li>
-        
-      </ul>
-    </nav>
-  
+</ul>
+</nav>
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#external-service-integration_1" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#external-service-integration_1">
+<span class="md-ellipsis">
       External Service Integration
     </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="External Service Integration">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#api-gateway-extensive-integration" class="md-nav__link">
-    <span class="md-ellipsis">
+</a>
+<nav aria-label="External Service Integration" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#api-gateway-extensive-integration">
+<span class="md-ellipsis">
       API Gateway - Extensive Integration
     </span>
-  </a>
-  
+</a>
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#openbank-minimal-integration" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#openbank-minimal-integration">
+<span class="md-ellipsis">
       OpenBank - Minimal Integration
     </span>
-  </a>
-  
+</a>
 </li>
-        
-      </ul>
-    </nav>
-  
+</ul>
+</nav>
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#background-processing_1" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#background-processing_1">
+<span class="md-ellipsis">
       Background Processing
     </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Background Processing">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#api-gateway-task-queue-pattern" class="md-nav__link">
-    <span class="md-ellipsis">
+</a>
+<nav aria-label="Background Processing" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#api-gateway-task-queue-pattern">
+<span class="md-ellipsis">
       API Gateway - Task Queue Pattern
     </span>
-  </a>
-  
+</a>
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#openbank-event-driven-projections" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#openbank-event-driven-projections">
+<span class="md-ellipsis">
       OpenBank - Event-Driven Projections
     </span>
-  </a>
-  
+</a>
 </li>
-        
-      </ul>
-    </nav>
-  
+</ul>
+</nav>
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#testing-strategies" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#testing-strategies">
+<span class="md-ellipsis">
       Testing Strategies
     </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Testing Strategies">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#api-gateway-integration-heavy-testing" class="md-nav__link">
-    <span class="md-ellipsis">
+</a>
+<nav aria-label="Testing Strategies" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#api-gateway-integration-heavy-testing">
+<span class="md-ellipsis">
       API Gateway - Integration-Heavy Testing
     </span>
-  </a>
-  
+</a>
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#openbank-domain-focused-testing" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#openbank-domain-focused-testing">
+<span class="md-ellipsis">
       OpenBank - Domain-Focused Testing
     </span>
-  </a>
-  
+</a>
 </li>
-        
-      </ul>
-    </nav>
-  
+</ul>
+</nav>
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#use-case-recommendations" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#use-case-recommendations">
+<span class="md-ellipsis">
       Use Case Recommendations
     </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Use Case Recommendations">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#choose-api-gateway-pattern-when" class="md-nav__link">
-    <span class="md-ellipsis">
+</a>
+<nav aria-label="Use Case Recommendations" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#choose-api-gateway-pattern-when">
+<span class="md-ellipsis">
       Choose API Gateway Pattern when
     </span>
-  </a>
-  
+</a>
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#choose-event-sourcing-pattern-when" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#choose-event-sourcing-pattern-when">
+<span class="md-ellipsis">
       Choose Event Sourcing Pattern when
     </span>
-  </a>
-  
+</a>
 </li>
-        
-      </ul>
-    </nav>
-  
+</ul>
+</nav>
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#framework-features-utilized" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#framework-features-utilized">
+<span class="md-ellipsis">
       Framework Features Utilized
     </span>
-  </a>
-  
+</a>
 </li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-    </ul>
-  
+</ul>
 </nav>
-      
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../desktop_controller/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../desktop_controller/">
+<span class="md-ellipsis">
     Desktop Controller
     
   </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-    
-  </ul>
+</a>
+</li>
+</ul>
 </nav>
-                  </div>
-                </div>
-              </div>
-            
-            
-              
-              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
-                <div class="md-sidebar__scrollwrap">
-                  <div class="md-sidebar__inner">
-                    
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
       Table of contents
     </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#what-youll-learn" class="md-nav__link">
-    <span class="md-ellipsis">
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#what-youll-learn">
+<span class="md-ellipsis">
       🎯 What You'll Learn
     </span>
-  </a>
-  
+</a>
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#architecture-overview" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#architecture-overview">
+<span class="md-ellipsis">
       🏗️ Architecture Overview
     </span>
-  </a>
-  
+</a>
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#key-features-demonstrated" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#key-features-demonstrated">
+<span class="md-ellipsis">
       🚀 Key Features Demonstrated
     </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="🚀 Key Features Demonstrated">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#1-oauth2-authentication-security" class="md-nav__link">
-    <span class="md-ellipsis">
+</a>
+<nav aria-label="🚀 Key Features Demonstrated" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#1-oauth2-authentication-security">
+<span class="md-ellipsis">
       1. OAuth2 Authentication &amp; Security
     </span>
-  </a>
-  
+</a>
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#2-multi-service-integration" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#2-multi-service-integration">
+<span class="md-ellipsis">
       2. Multi-Service Integration
     </span>
-  </a>
-  
+</a>
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#3-advanced-domain-model" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#3-advanced-domain-model">
+<span class="md-ellipsis">
       3. Advanced Domain Model
     </span>
-  </a>
-  
+</a>
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#4-background-task-processing" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#4-background-task-processing">
+<span class="md-ellipsis">
       4. Background Task Processing
     </span>
-  </a>
-  
+</a>
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#5-cloud-events-integration" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#5-cloud-events-integration">
+<span class="md-ellipsis">
       5. Cloud Events Integration
     </span>
-  </a>
-  
+</a>
 </li>
-        
-      </ul>
-    </nav>
-  
+</ul>
+</nav>
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#configuration-settings" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#configuration-settings">
+<span class="md-ellipsis">
       🔧 Configuration &amp; Settings
     </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="🔧 Configuration &amp; Settings">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#application-settings" class="md-nav__link">
-    <span class="md-ellipsis">
+</a>
+<nav aria-label="🔧 Configuration &amp; Settings" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#application-settings">
+<span class="md-ellipsis">
       Application Settings
     </span>
-  </a>
-  
+</a>
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#service-registration" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#service-registration">
+<span class="md-ellipsis">
       Service Registration
     </span>
-  </a>
-  
+</a>
 </li>
-        
-      </ul>
-    </nav>
-  
+</ul>
+</nav>
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#testing-strategy" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#testing-strategy">
+<span class="md-ellipsis">
       🧪 Testing Strategy
     </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="🧪 Testing Strategy">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#unit-tests" class="md-nav__link">
-    <span class="md-ellipsis">
+</a>
+<nav aria-label="🧪 Testing Strategy" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#unit-tests">
+<span class="md-ellipsis">
       Unit Tests
     </span>
-  </a>
-  
+</a>
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#integration-tests" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#integration-tests">
+<span class="md-ellipsis">
       Integration Tests
     </span>
-  </a>
-  
+</a>
 </li>
-        
-      </ul>
-    </nav>
-  
+</ul>
+</nav>
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#implementation-details" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#implementation-details">
+<span class="md-ellipsis">
       📚 Implementation Details
     </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="📚 Implementation Details">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#1-controller-layer-apicontrollers" class="md-nav__link">
-    <span class="md-ellipsis">
+</a>
+<nav aria-label="📚 Implementation Details" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#1-controller-layer-apicontrollers">
+<span class="md-ellipsis">
       1. Controller Layer (api/controllers/)
     </span>
-  </a>
-  
+</a>
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#2-application-layer-application" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#2-application-layer-application">
+<span class="md-ellipsis">
       2. Application Layer (application/)
     </span>
-  </a>
-  
+</a>
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#3-domain-layer-domain" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#3-domain-layer-domain">
+<span class="md-ellipsis">
       3. Domain Layer (domain/)
     </span>
-  </a>
-  
+</a>
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#4-integration-layer-integration" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#4-integration-layer-integration">
+<span class="md-ellipsis">
       4. Integration Layer (integration/)
     </span>
-  </a>
-  
+</a>
 </li>
-        
-      </ul>
-    </nav>
-  
+</ul>
+</nav>
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#background-processing" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#background-processing">
+<span class="md-ellipsis">
       🔄 Background Processing
     </span>
-  </a>
-  
+</a>
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#external-service-integration" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#external-service-integration">
+<span class="md-ellipsis">
       🌐 External Service Integration
     </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="🌐 External Service Integration">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#minio-object-storage" class="md-nav__link">
-    <span class="md-ellipsis">
+</a>
+<nav aria-label="🌐 External Service Integration" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#minio-object-storage">
+<span class="md-ellipsis">
       MinIO Object Storage
     </span>
-  </a>
-  
+</a>
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#redis-caching" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#redis-caching">
+<span class="md-ellipsis">
       Redis Caching
     </span>
-  </a>
-  
+</a>
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#external-api-integration" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#external-api-integration">
+<span class="md-ellipsis">
       External API Integration
     </span>
-  </a>
-  
+</a>
 </li>
-        
-      </ul>
-    </nav>
-  
+</ul>
+</nav>
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#getting-started" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#getting-started">
+<span class="md-ellipsis">
       🚀 Getting Started
     </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="🚀 Getting Started">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#1-prerequisites" class="md-nav__link">
-    <span class="md-ellipsis">
+</a>
+<nav aria-label="🚀 Getting Started" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#1-prerequisites">
+<span class="md-ellipsis">
       1. Prerequisites
     </span>
-  </a>
-  
+</a>
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#2-configuration" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#2-configuration">
+<span class="md-ellipsis">
       2. Configuration
     </span>
-  </a>
-  
+</a>
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#3-run-the-application" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#3-run-the-application">
+<span class="md-ellipsis">
       3. Run the Application
     </span>
-  </a>
-  
+</a>
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#4-test-the-api" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#4-test-the-api">
+<span class="md-ellipsis">
       4. Test the API
     </span>
-  </a>
-  
+</a>
 </li>
-        
-      </ul>
-    </nav>
-  
+</ul>
+</nav>
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#related-documentation" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#related-documentation">
+<span class="md-ellipsis">
       🔗 Related Documentation
     </span>
-  </a>
-  
+</a>
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#comparison-with-openbank-sample" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#comparison-with-openbank-sample">
+<span class="md-ellipsis">
       🔍 Comparison with OpenBank Sample
     </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="🔍 Comparison with OpenBank Sample">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#architecture-patterns" class="md-nav__link">
-    <span class="md-ellipsis">
+</a>
+<nav aria-label="🔍 Comparison with OpenBank Sample" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#architecture-patterns">
+<span class="md-ellipsis">
       Architecture Patterns
     </span>
-  </a>
-  
+</a>
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#domain-complexity" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#domain-complexity">
+<span class="md-ellipsis">
       Domain Complexity
     </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Domain Complexity">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#api-gateway-integration-focused" class="md-nav__link">
-    <span class="md-ellipsis">
+</a>
+<nav aria-label="Domain Complexity" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#api-gateway-integration-focused">
+<span class="md-ellipsis">
       API Gateway - Integration-Focused
     </span>
-  </a>
-  
+</a>
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#openbank-rich-domain-model" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#openbank-rich-domain-model">
+<span class="md-ellipsis">
       OpenBank - Rich Domain Model
     </span>
-  </a>
-  
+</a>
 </li>
-        
-      </ul>
-    </nav>
-  
+</ul>
+</nav>
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#data-persistence-strategy" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#data-persistence-strategy">
+<span class="md-ellipsis">
       Data Persistence Strategy
     </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Data Persistence Strategy">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#api-gateway-multi-store-architecture" class="md-nav__link">
-    <span class="md-ellipsis">
+</a>
+<nav aria-label="Data Persistence Strategy" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#api-gateway-multi-store-architecture">
+<span class="md-ellipsis">
       API Gateway - Multi-Store Architecture
     </span>
-  </a>
-  
+</a>
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#openbank-event-sourcing" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#openbank-event-sourcing">
+<span class="md-ellipsis">
       OpenBank - Event Sourcing
     </span>
-  </a>
-  
+</a>
 </li>
-        
-      </ul>
-    </nav>
-  
+</ul>
+</nav>
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#authentication-security" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#authentication-security">
+<span class="md-ellipsis">
       Authentication &amp; Security
     </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Authentication &amp; Security">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#api-gateway-oauth2-api-keys" class="md-nav__link">
-    <span class="md-ellipsis">
+</a>
+<nav aria-label="Authentication &amp; Security" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#api-gateway-oauth2-api-keys">
+<span class="md-ellipsis">
       API Gateway - OAuth2 + API Keys
     </span>
-  </a>
-  
+</a>
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#openbank-domain-focused-security" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#openbank-domain-focused-security">
+<span class="md-ellipsis">
       OpenBank - Domain-Focused Security
     </span>
-  </a>
-  
+</a>
 </li>
-        
-      </ul>
-    </nav>
-  
+</ul>
+</nav>
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#external-service-integration_1" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#external-service-integration_1">
+<span class="md-ellipsis">
       External Service Integration
     </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="External Service Integration">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#api-gateway-extensive-integration" class="md-nav__link">
-    <span class="md-ellipsis">
+</a>
+<nav aria-label="External Service Integration" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#api-gateway-extensive-integration">
+<span class="md-ellipsis">
       API Gateway - Extensive Integration
     </span>
-  </a>
-  
+</a>
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#openbank-minimal-integration" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#openbank-minimal-integration">
+<span class="md-ellipsis">
       OpenBank - Minimal Integration
     </span>
-  </a>
-  
+</a>
 </li>
-        
-      </ul>
-    </nav>
-  
+</ul>
+</nav>
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#background-processing_1" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#background-processing_1">
+<span class="md-ellipsis">
       Background Processing
     </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Background Processing">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#api-gateway-task-queue-pattern" class="md-nav__link">
-    <span class="md-ellipsis">
+</a>
+<nav aria-label="Background Processing" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#api-gateway-task-queue-pattern">
+<span class="md-ellipsis">
       API Gateway - Task Queue Pattern
     </span>
-  </a>
-  
+</a>
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#openbank-event-driven-projections" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#openbank-event-driven-projections">
+<span class="md-ellipsis">
       OpenBank - Event-Driven Projections
     </span>
-  </a>
-  
+</a>
 </li>
-        
-      </ul>
-    </nav>
-  
+</ul>
+</nav>
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#testing-strategies" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#testing-strategies">
+<span class="md-ellipsis">
       Testing Strategies
     </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Testing Strategies">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#api-gateway-integration-heavy-testing" class="md-nav__link">
-    <span class="md-ellipsis">
+</a>
+<nav aria-label="Testing Strategies" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#api-gateway-integration-heavy-testing">
+<span class="md-ellipsis">
       API Gateway - Integration-Heavy Testing
     </span>
-  </a>
-  
+</a>
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#openbank-domain-focused-testing" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#openbank-domain-focused-testing">
+<span class="md-ellipsis">
       OpenBank - Domain-Focused Testing
     </span>
-  </a>
-  
+</a>
 </li>
-        
-      </ul>
-    </nav>
-  
+</ul>
+</nav>
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#use-case-recommendations" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#use-case-recommendations">
+<span class="md-ellipsis">
       Use Case Recommendations
     </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Use Case Recommendations">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#choose-api-gateway-pattern-when" class="md-nav__link">
-    <span class="md-ellipsis">
+</a>
+<nav aria-label="Use Case Recommendations" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#choose-api-gateway-pattern-when">
+<span class="md-ellipsis">
       Choose API Gateway Pattern when
     </span>
-  </a>
-  
+</a>
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#choose-event-sourcing-pattern-when" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#choose-event-sourcing-pattern-when">
+<span class="md-ellipsis">
       Choose Event Sourcing Pattern when
     </span>
-  </a>
-  
+</a>
 </li>
-        
-      </ul>
-    </nav>
-  
+</ul>
+</nav>
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#framework-features-utilized" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#framework-features-utilized">
+<span class="md-ellipsis">
       Framework Features Utilized
     </span>
-  </a>
-  
+</a>
 </li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-    </ul>
-  
+</ul>
 </nav>
-                  </div>
-                </div>
-              </div>
-            
-          
-          
-            <div class="md-content" data-md-component="content">
-              <article class="md-content__inner md-typeset">
-                
-                  
-
-
-
-<h1 id="api-gateway-sample-application">🚀 API Gateway Sample Application<a class="headerlink" href="#api-gateway-sample-application" title="Permanent link">&para;</a></h1>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div class="md-content" data-md-component="content">
+<article class="md-content__inner md-typeset">
+<h1 id="api-gateway-sample-application">🚀 API Gateway Sample Application<a class="headerlink" href="#api-gateway-sample-application" title="Permanent link">¶</a></h1>
 <p>The API Gateway sample demonstrates how to build a modern microservice gateway using the Neuroglia framework. This application showcases advanced patterns including OAuth2 authentication, external service integration, background task processing, and cloud event handling.</p>
-<h2 id="what-youll-learn">🎯 What You'll Learn<a class="headerlink" href="#what-youll-learn" title="Permanent link">&para;</a></h2>
+<h2 id="what-youll-learn">🎯 What You'll Learn<a class="headerlink" href="#what-youll-learn" title="Permanent link">¶</a></h2>
 <ul>
 <li><strong>Microservice Gateway Patterns</strong>: How to build a centralized API gateway for service orchestration</li>
 <li><strong>OAuth2 Authentication &amp; Authorization</strong>: Implementing JWT-based security with Keycloak integration</li>
@@ -2161,9 +1298,9 @@
 <li><strong>Cloud Events</strong>: Event-driven communication between microservices</li>
 <li><strong>Advanced Dependency Injection</strong>: Complex service configuration and lifetime management</li>
 </ul>
-<h2 id="architecture-overview">🏗️ Architecture Overview<a class="headerlink" href="#architecture-overview" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code>graph TB
-    subgraph &quot;API Gateway Service&quot;
+<h2 id="architecture-overview">🏗️ Architecture Overview<a class="headerlink" href="#architecture-overview" title="Permanent link">¶</a></h2>
+<pre class="mermaid"><code>graph TB
+    subgraph "API Gateway Service"
         A[PromptController] --&gt; B[Mediator]
         B --&gt; C[Command/Query Handlers]
         C --&gt; D[Domain Models]
@@ -2174,7 +1311,7 @@
         H[Exception Handling] --&gt; A
     end
 
-    subgraph &quot;External Dependencies&quot;
+    subgraph "External Dependencies"
         I[Keycloak OAuth2]
         J[Redis Cache]
         K[MinIO Storage]
@@ -2186,8 +1323,7 @@
     E --&gt; J
     E --&gt; K
     E --&gt; L
-    C --&gt; M
-</code></pre></div>
+    C --&gt; M</code></pre>
 <p>The API Gateway follows a <strong>distributed microservice pattern</strong> where:</p>
 <ul>
 <li><strong>Gateway Layer</strong>: Centralized entry point for multiple downstream services</li>
@@ -2195,10 +1331,10 @@
 <li><strong>Integration Layer</strong>: Multiple external service clients with proper abstraction</li>
 <li><strong>DTOs</strong>: Data transfer objects for external communication</li>
 </ul>
-<h2 id="key-features-demonstrated">🚀 Key Features Demonstrated<a class="headerlink" href="#key-features-demonstrated" title="Permanent link">&para;</a></h2>
-<h3 id="1-oauth2-authentication-security">1. <strong>OAuth2 Authentication &amp; Security</strong><a class="headerlink" href="#1-oauth2-authentication-security" title="Permanent link">&para;</a></h3>
+<h2 id="key-features-demonstrated">🚀 Key Features Demonstrated<a class="headerlink" href="#key-features-demonstrated" title="Permanent link">¶</a></h2>
+<h3 id="1-oauth2-authentication-security">1. <strong>OAuth2 Authentication &amp; Security</strong><a class="headerlink" href="#1-oauth2-authentication-security" title="Permanent link">¶</a></h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># JWT token validation with Keycloak</span>
-<span class="nd">@post</span><span class="p">(</span><span class="s2">&quot;/item&quot;</span><span class="p">,</span> <span class="n">response_model</span><span class="o">=</span><span class="n">ItemPromptCommandResponseDto</span><span class="p">)</span>
+<span class="nd">@post</span><span class="p">(</span><span class="s2">"/item"</span><span class="p">,</span> <span class="n">response_model</span><span class="o">=</span><span class="n">ItemPromptCommandResponseDto</span><span class="p">)</span>
 <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">create_new_item_prompt</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span> 
     <span class="n">command_dto</span><span class="p">:</span> <span class="n">CreateNewItemPromptCommandDto</span><span class="p">,</span> 
@@ -2206,14 +1342,14 @@
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
     <span class="c1"># Protected endpoint with API key validation</span>
 </code></pre></div>
-<h3 id="2-multi-service-integration">2. <strong>Multi-Service Integration</strong><a class="headerlink" href="#2-multi-service-integration" title="Permanent link">&para;</a></h3>
+<h3 id="2-multi-service-integration">2. <strong>Multi-Service Integration</strong><a class="headerlink" href="#2-multi-service-integration" title="Permanent link">¶</a></h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># External service clients</span>
 <span class="n">MinioStorageManager</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">)</span>          <span class="c1"># Object storage</span>
 <span class="n">MosaicApiClient</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">)</span>              <span class="c1"># External API</span>
 <span class="n">AsyncStringCacheRepository</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">)</span>   <span class="c1"># Redis caching</span>
 <span class="n">BackgroundTaskScheduler</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">)</span>      <span class="c1"># Async processing</span>
 </code></pre></div>
-<h3 id="3-advanced-domain-model">3. <strong>Advanced Domain Model</strong><a class="headerlink" href="#3-advanced-domain-model" title="Permanent link">&para;</a></h3>
+<h3 id="3-advanced-domain-model">3. <strong>Advanced Domain Model</strong><a class="headerlink" href="#3-advanced-domain-model" title="Permanent link">¶</a></h3>
 <div class="highlight"><pre><span></span><code><span class="nd">@map_to</span><span class="p">(</span><span class="n">PromptResponseDto</span><span class="p">)</span>
 <span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">PromptResponse</span><span class="p">:</span>
@@ -2224,30 +1360,30 @@
     <span class="n">metadata</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>
     <span class="n">created_at</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span>
 </code></pre></div>
-<h3 id="4-background-task-processing">4. <strong>Background Task Processing</strong><a class="headerlink" href="#4-background-task-processing" title="Permanent link">&para;</a></h3>
+<h3 id="4-background-task-processing">4. <strong>Background Task Processing</strong><a class="headerlink" href="#4-background-task-processing" title="Permanent link">¶</a></h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Asynchronous task execution</span>
-<span class="n">BackgroundTaskScheduler</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;application.tasks&quot;</span><span class="p">])</span>
+<span class="n">BackgroundTaskScheduler</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="p">[</span><span class="s2">"application.tasks"</span><span class="p">])</span>
 
 <span class="c1"># Redis-backed job queue</span>
 <span class="n">background_job_store</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;redis_host&quot;</span><span class="p">:</span> <span class="s2">&quot;redis47&quot;</span><span class="p">,</span> 
-    <span class="s2">&quot;redis_port&quot;</span><span class="p">:</span> <span class="mi">6379</span><span class="p">,</span> 
-    <span class="s2">&quot;redis_db&quot;</span><span class="p">:</span> <span class="mi">0</span>
+    <span class="s2">"redis_host"</span><span class="p">:</span> <span class="s2">"redis47"</span><span class="p">,</span> 
+    <span class="s2">"redis_port"</span><span class="p">:</span> <span class="mi">6379</span><span class="p">,</span> 
+    <span class="s2">"redis_db"</span><span class="p">:</span> <span class="mi">0</span>
 <span class="p">}</span>
 </code></pre></div>
-<h3 id="5-cloud-events-integration">5. <strong>Cloud Events Integration</strong><a class="headerlink" href="#5-cloud-events-integration" title="Permanent link">&para;</a></h3>
+<h3 id="5-cloud-events-integration">5. <strong>Cloud Events Integration</strong><a class="headerlink" href="#5-cloud-events-integration" title="Permanent link">¶</a></h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Event publishing and consumption</span>
-<span class="n">CloudEventIngestor</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;application.events.integration&quot;</span><span class="p">])</span>
+<span class="n">CloudEventIngestor</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="p">[</span><span class="s2">"application.events.integration"</span><span class="p">])</span>
 <span class="n">CloudEventPublisher</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">)</span>
 <span class="n">app</span><span class="o">.</span><span class="n">add_middleware</span><span class="p">(</span><span class="n">CloudEventMiddleware</span><span class="p">,</span> <span class="n">service_provider</span><span class="o">=</span><span class="n">app</span><span class="o">.</span><span class="n">services</span><span class="p">)</span>
 </code></pre></div>
-<h2 id="configuration-settings">🔧 Configuration &amp; Settings<a class="headerlink" href="#configuration-settings" title="Permanent link">&para;</a></h2>
-<h3 id="application-settings">Application Settings<a class="headerlink" href="#application-settings" title="Permanent link">&para;</a></h3>
+<h2 id="configuration-settings">🔧 Configuration &amp; Settings<a class="headerlink" href="#configuration-settings" title="Permanent link">¶</a></h2>
+<h3 id="application-settings">Application Settings<a class="headerlink" href="#application-settings" title="Permanent link">¶</a></h3>
 <div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">AiGatewaySettings</span><span class="p">(</span><span class="n">ApplicationSettings</span><span class="p">):</span>
     <span class="c1"># OAuth2 Configuration</span>
-    <span class="n">jwt_authority</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;http://keycloak47/realms/mozart&quot;</span>
-    <span class="n">jwt_audience</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;ai-gateways&quot;</span>
-    <span class="n">required_scope</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;api&quot;</span>
+    <span class="n">jwt_authority</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"http://keycloak47/realms/mozart"</span>
+    <span class="n">jwt_audience</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"ai-gateways"</span>
+    <span class="n">required_scope</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"api"</span>
 
     <span class="c1"># External Service Settings</span>
     <span class="n">s3_endpoint</span><span class="p">:</span> <span class="nb">str</span>                    <span class="c1"># MinIO storage</span>
@@ -2258,7 +1394,7 @@
     <span class="n">background_job_store</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">int</span><span class="p">]</span>
     <span class="n">redis_max_connections</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span>
 </code></pre></div>
-<h3 id="service-registration">Service Registration<a class="headerlink" href="#service-registration" title="Permanent link">&para;</a></h3>
+<h3 id="service-registration">Service Registration<a class="headerlink" href="#service-registration" title="Permanent link">¶</a></h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Core framework services</span>
 <span class="n">Mapper</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="n">application_modules</span><span class="p">)</span>
 <span class="n">Mediator</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="n">application_modules</span><span class="p">)</span>
@@ -2266,15 +1402,15 @@
 
 <span class="c1"># Custom application services</span>
 <span class="n">AsyncStringCacheRepository</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="n">Prompt</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
-<span class="n">BackgroundTaskScheduler</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;application.tasks&quot;</span><span class="p">])</span>
+<span class="n">BackgroundTaskScheduler</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="p">[</span><span class="s2">"application.tasks"</span><span class="p">])</span>
 <span class="n">MinioStorageManager</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">)</span>
 <span class="n">LocalFileSystemManager</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">)</span>
 
 <span class="c1"># External integrations</span>
 <span class="n">builder</span><span class="o">.</span><span class="n">services</span><span class="o">.</span><span class="n">add_singleton</span><span class="p">(</span><span class="n">AiGatewaySettings</span><span class="p">,</span> <span class="n">singleton</span><span class="o">=</span><span class="n">app_settings</span><span class="p">)</span>
 </code></pre></div>
-<h2 id="testing-strategy">🧪 Testing Strategy<a class="headerlink" href="#testing-strategy" title="Permanent link">&para;</a></h2>
-<h3 id="unit-tests">Unit Tests<a class="headerlink" href="#unit-tests" title="Permanent link">&para;</a></h3>
+<h2 id="testing-strategy">🧪 Testing Strategy<a class="headerlink" href="#testing-strategy" title="Permanent link">¶</a></h2>
+<h3 id="unit-tests">Unit Tests<a class="headerlink" href="#unit-tests" title="Permanent link">¶</a></h3>
 <div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">TestPromptController</span><span class="p">:</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">setup_method</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mock_mediator</span> <span class="o">=</span> <span class="n">Mock</span><span class="p">(</span><span class="n">spec</span><span class="o">=</span><span class="n">Mediator</span><span class="p">)</span>
@@ -2288,36 +1424,36 @@
     <span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">asyncio</span>
     <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">test_create_prompt_success</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># Test successful prompt creation</span>
-        <span class="n">command_dto</span> <span class="o">=</span> <span class="n">CreateNewItemPromptCommandDto</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="s2">&quot;test&quot;</span><span class="p">)</span>
-        <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">controller</span><span class="o">.</span><span class="n">create_new_item_prompt</span><span class="p">(</span><span class="n">command_dto</span><span class="p">,</span> <span class="s2">&quot;valid-key&quot;</span><span class="p">)</span>
+        <span class="n">command_dto</span> <span class="o">=</span> <span class="n">CreateNewItemPromptCommandDto</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="s2">"test"</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">controller</span><span class="o">.</span><span class="n">create_new_item_prompt</span><span class="p">(</span><span class="n">command_dto</span><span class="p">,</span> <span class="s2">"valid-key"</span><span class="p">)</span>
 
-        <span class="k">assert</span> <span class="n">result</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="s2">&quot;created&quot;</span>
+        <span class="k">assert</span> <span class="n">result</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="s2">"created"</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mock_mediator</span><span class="o">.</span><span class="n">execute_async</span><span class="o">.</span><span class="n">assert_called_once</span><span class="p">()</span>
 </code></pre></div>
-<h3 id="integration-tests">Integration Tests<a class="headerlink" href="#integration-tests" title="Permanent link">&para;</a></h3>
+<h3 id="integration-tests">Integration Tests<a class="headerlink" href="#integration-tests" title="Permanent link">¶</a></h3>
 <div class="highlight"><pre><span></span><code><span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">integration</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">TestApiGatewayIntegration</span><span class="p">:</span>
     <span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">asyncio</span>
     <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">test_full_prompt_workflow</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_client</span><span class="p">):</span>
         <span class="c1"># Test complete workflow from API to external services</span>
         <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="n">test_client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
-            <span class="s2">&quot;/api/prompts/item&quot;</span><span class="p">,</span>
-            <span class="n">json</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;test prompt&quot;</span><span class="p">},</span>
-            <span class="n">headers</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;Authorization&quot;</span><span class="p">:</span> <span class="s2">&quot;Bearer valid-token&quot;</span><span class="p">}</span>
+            <span class="s2">"/api/prompts/item"</span><span class="p">,</span>
+            <span class="n">json</span><span class="o">=</span><span class="p">{</span><span class="s2">"content"</span><span class="p">:</span> <span class="s2">"test prompt"</span><span class="p">},</span>
+            <span class="n">headers</span><span class="o">=</span><span class="p">{</span><span class="s2">"Authorization"</span><span class="p">:</span> <span class="s2">"Bearer valid-token"</span><span class="p">}</span>
         <span class="p">)</span>
 
         <span class="k">assert</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">201</span>
-        <span class="k">assert</span> <span class="s2">&quot;id&quot;</span> <span class="ow">in</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+        <span class="k">assert</span> <span class="s2">"id"</span> <span class="ow">in</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
 </code></pre></div>
-<h2 id="implementation-details">📚 Implementation Details<a class="headerlink" href="#implementation-details" title="Permanent link">&para;</a></h2>
-<h3 id="1-controller-layer-apicontrollers">1. <strong>Controller Layer</strong> (<code>api/controllers/</code>)<a class="headerlink" href="#1-controller-layer-apicontrollers" title="Permanent link">&para;</a></h3>
+<h2 id="implementation-details">📚 Implementation Details<a class="headerlink" href="#implementation-details" title="Permanent link">¶</a></h2>
+<h3 id="1-controller-layer-apicontrollers">1. <strong>Controller Layer</strong> (<code>api/controllers/</code>)<a class="headerlink" href="#1-controller-layer-apicontrollers" title="Permanent link">¶</a></h3>
 <ul>
 <li><strong>PromptController</strong>: Main API endpoints for prompt management</li>
 <li><strong>AppController</strong>: Application health and metadata endpoints</li>
 <li><strong>InternalController</strong>: Internal service endpoints</li>
 <li><strong>Authentication Schemes</strong>: OAuth2 and API key validation</li>
 </ul>
-<h3 id="2-application-layer-application">2. <strong>Application Layer</strong> (<code>application/</code>)<a class="headerlink" href="#2-application-layer-application" title="Permanent link">&para;</a></h3>
+<h3 id="2-application-layer-application">2. <strong>Application Layer</strong> (<code>application/</code>)<a class="headerlink" href="#2-application-layer-application" title="Permanent link">¶</a></h3>
 <ul>
 <li><strong>Commands</strong>: Write operations (CreateNewPromptCommand)</li>
 <li><strong>Queries</strong>: Read operations (GetPromptByIdQuery)</li>
@@ -2325,24 +1461,24 @@
 <li><strong>Tasks</strong>: Background job definitions</li>
 <li><strong>Events</strong>: Integration event handlers</li>
 </ul>
-<h3 id="3-domain-layer-domain">3. <strong>Domain Layer</strong> (<code>domain/</code>)<a class="headerlink" href="#3-domain-layer-domain" title="Permanent link">&para;</a></h3>
+<h3 id="3-domain-layer-domain">3. <strong>Domain Layer</strong> (<code>domain/</code>)<a class="headerlink" href="#3-domain-layer-domain" title="Permanent link">¶</a></h3>
 <ul>
 <li><strong>Prompt</strong>: Core domain entity with business rules</li>
 <li><strong>PromptResponse</strong>: Value object for API responses</li>
 <li><strong>Domain Events</strong>: Business event definitions</li>
 <li><strong>Validation</strong>: Domain-specific validation logic</li>
 </ul>
-<h3 id="4-integration-layer-integration">4. <strong>Integration Layer</strong> (<code>integration/</code>)<a class="headerlink" href="#4-integration-layer-integration" title="Permanent link">&para;</a></h3>
+<h3 id="4-integration-layer-integration">4. <strong>Integration Layer</strong> (<code>integration/</code>)<a class="headerlink" href="#4-integration-layer-integration" title="Permanent link">¶</a></h3>
 <ul>
 <li><strong>External API Clients</strong>: Mosaic, GenAI, Mozart APIs</li>
 <li><strong>Storage Services</strong>: MinIO object storage, Redis caching</li>
 <li><strong>Background Services</strong>: Task scheduling and execution</li>
 <li><strong>DTOs</strong>: Data transfer objects for external communication</li>
 </ul>
-<h2 id="background-processing">🔄 Background Processing<a class="headerlink" href="#background-processing" title="Permanent link">&para;</a></h2>
+<h2 id="background-processing">🔄 Background Processing<a class="headerlink" href="#background-processing" title="Permanent link">¶</a></h2>
 <p>The API Gateway demonstrates advanced background processing patterns:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Task scheduling configuration</span>
-<span class="n">BackgroundTaskScheduler</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;application.tasks&quot;</span><span class="p">])</span>
+<span class="n">BackgroundTaskScheduler</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="p">[</span><span class="s2">"application.tasks"</span><span class="p">])</span>
 
 <span class="c1"># Redis-backed job store</span>
 <span class="n">builder</span><span class="o">.</span><span class="n">services</span><span class="o">.</span><span class="n">add_singleton</span><span class="p">(</span><span class="n">AiGatewaySettings</span><span class="p">,</span> <span class="n">singleton</span><span class="o">=</span><span class="n">app_settings</span><span class="p">)</span>
@@ -2356,14 +1492,14 @@
         <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">genai_client</span><span class="o">.</span><span class="n">process_prompt</span><span class="p">(</span><span class="n">prompt</span><span class="p">)</span>
         <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">storage_service</span><span class="o">.</span><span class="n">store_result</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
 </code></pre></div>
-<h2 id="external-service-integration">🌐 External Service Integration<a class="headerlink" href="#external-service-integration" title="Permanent link">&para;</a></h2>
-<h3 id="minio-object-storage">MinIO Object Storage<a class="headerlink" href="#minio-object-storage" title="Permanent link">&para;</a></h3>
+<h2 id="external-service-integration">🌐 External Service Integration<a class="headerlink" href="#external-service-integration" title="Permanent link">¶</a></h2>
+<h3 id="minio-object-storage">MinIO Object Storage<a class="headerlink" href="#minio-object-storage" title="Permanent link">¶</a></h3>
 <div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">MinioStorageManager</span><span class="p">:</span>
     <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">upload_file_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bucket</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="c1"># S3-compatible object storage</span>
         <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">put_object</span><span class="p">(</span><span class="n">bucket</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
 </code></pre></div>
-<h3 id="redis-caching">Redis Caching<a class="headerlink" href="#redis-caching" title="Permanent link">&para;</a></h3>
+<h3 id="redis-caching">Redis Caching<a class="headerlink" href="#redis-caching" title="Permanent link">¶</a></h3>
 <div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">AsyncStringCacheRepository</span><span class="p">:</span>
     <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
         <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">redis_client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
@@ -2371,52 +1507,52 @@
     <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">set_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">ttl</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
         <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">redis_client</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">ex</span><span class="o">=</span><span class="n">ttl</span><span class="p">)</span>
 </code></pre></div>
-<h3 id="external-api-integration">External API Integration<a class="headerlink" href="#external-api-integration" title="Permanent link">&para;</a></h3>
+<h3 id="external-api-integration">External API Integration<a class="headerlink" href="#external-api-integration" title="Permanent link">¶</a></h3>
 <div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">MosaicApiClient</span><span class="p">:</span>
     <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">submit_prompt_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prompt</span><span class="p">:</span> <span class="n">PromptDto</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PromptResponseDto</span><span class="p">:</span>
         <span class="c1"># OAuth2 authenticated API calls</span>
         <span class="n">token</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_access_token</span><span class="p">()</span>
         <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">http_client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
-            <span class="s2">&quot;/api/prompts&quot;</span><span class="p">,</span>
+            <span class="s2">"/api/prompts"</span><span class="p">,</span>
             <span class="n">json</span><span class="o">=</span><span class="n">prompt</span><span class="o">.</span><span class="n">dict</span><span class="p">(),</span>
-            <span class="n">headers</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;Authorization&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;Bearer </span><span class="si">{</span><span class="n">token</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">}</span>
+            <span class="n">headers</span><span class="o">=</span><span class="p">{</span><span class="s2">"Authorization"</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"Bearer </span><span class="si">{</span><span class="n">token</span><span class="si">}</span><span class="s2">"</span><span class="p">}</span>
         <span class="p">)</span>
         <span class="k">return</span> <span class="n">PromptResponseDto</span><span class="o">.</span><span class="n">parse_obj</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">())</span>
 </code></pre></div>
-<h2 id="getting-started">🚀 Getting Started<a class="headerlink" href="#getting-started" title="Permanent link">&para;</a></h2>
-<h3 id="1-prerequisites">1. <strong>Prerequisites</strong><a class="headerlink" href="#1-prerequisites" title="Permanent link">&para;</a></h3>
+<h2 id="getting-started">🚀 Getting Started<a class="headerlink" href="#getting-started" title="Permanent link">¶</a></h2>
+<h3 id="1-prerequisites">1. <strong>Prerequisites</strong><a class="headerlink" href="#1-prerequisites" title="Permanent link">¶</a></h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Install dependencies</span>
 pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
 
 <span class="c1"># Configure external services</span>
 docker-compose<span class="w"> </span>up<span class="w"> </span>-d<span class="w"> </span>redis<span class="w"> </span>keycloak<span class="w"> </span>minio
 </code></pre></div>
-<h3 id="2-configuration">2. <strong>Configuration</strong><a class="headerlink" href="#2-configuration" title="Permanent link">&para;</a></h3>
+<h3 id="2-configuration">2. <strong>Configuration</strong><a class="headerlink" href="#2-configuration" title="Permanent link">¶</a></h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Set environment variables</span>
-<span class="nb">export</span><span class="w"> </span><span class="nv">JWT_AUTHORITY</span><span class="o">=</span><span class="s2">&quot;http://localhost:8080/realms/mozart&quot;</span>
-<span class="nb">export</span><span class="w"> </span><span class="nv">S3_ENDPOINT</span><span class="o">=</span><span class="s2">&quot;http://localhost:9000&quot;</span>
-<span class="nb">export</span><span class="w"> </span><span class="nv">REDIS_URL</span><span class="o">=</span><span class="s2">&quot;redis://localhost:6379&quot;</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">JWT_AUTHORITY</span><span class="o">=</span><span class="s2">"http://localhost:8080/realms/mozart"</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">S3_ENDPOINT</span><span class="o">=</span><span class="s2">"http://localhost:9000"</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">REDIS_URL</span><span class="o">=</span><span class="s2">"redis://localhost:6379"</span>
 </code></pre></div>
-<h3 id="3-run-the-application">3. <strong>Run the Application</strong><a class="headerlink" href="#3-run-the-application" title="Permanent link">&para;</a></h3>
+<h3 id="3-run-the-application">3. <strong>Run the Application</strong><a class="headerlink" href="#3-run-the-application" title="Permanent link">¶</a></h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Start the API Gateway</span>
 python<span class="w"> </span>samples/api-gateway/main.py
 
 <span class="c1"># Access Swagger UI</span>
 open<span class="w"> </span>http://localhost:8000/docs
 </code></pre></div>
-<h3 id="4-test-the-api">4. <strong>Test the API</strong><a class="headerlink" href="#4-test-the-api" title="Permanent link">&para;</a></h3>
+<h3 id="4-test-the-api">4. <strong>Test the API</strong><a class="headerlink" href="#4-test-the-api" title="Permanent link">¶</a></h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Get access token from Keycloak</span>
 curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://localhost:8080/realms/mozart/protocol/openid-connect/token<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/x-www-form-urlencoded&quot;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;grant_type=client_credentials&amp;client_id=ai-gateway&amp;client_secret=secret&quot;</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/x-www-form-urlencoded"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-d<span class="w"> </span><span class="s2">"grant_type=client_credentials&amp;client_id=ai-gateway&amp;client_secret=secret"</span>
 
 <span class="c1"># Call protected endpoint</span>
 curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://localhost:8000/api/prompts/item<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;content&quot;: &quot;Generate a sample prompt&quot;}&#39;</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s2">"Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/json"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-d<span class="w"> </span><span class="s1">'{"content": "Generate a sample prompt"}'</span>
 </code></pre></div>
-<h2 id="related-documentation">🔗 Related Documentation<a class="headerlink" href="#related-documentation" title="Permanent link">&para;</a></h2>
+<h2 id="related-documentation">🔗 Related Documentation<a class="headerlink" href="#related-documentation" title="Permanent link">¶</a></h2>
 <ul>
 <li><a href="../../features/cqrs-mediation/">CQRS &amp; Mediation</a> - Command/Query patterns</li>
 <li><a href="../../features/dependency-injection/">Dependency Injection</a> - Service configuration</li>
@@ -2424,9 +1560,9 @@ curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </spa
 <li><a href="../openbank/">OpenBank Sample</a> - Event sourcing comparison</li>
 <li><a href="../desktop_controller/">Desktop Controller Sample</a> - Background services</li>
 </ul>
-<h2 id="comparison-with-openbank-sample">🔍 Comparison with OpenBank Sample<a class="headerlink" href="#comparison-with-openbank-sample" title="Permanent link">&para;</a></h2>
+<h2 id="comparison-with-openbank-sample">🔍 Comparison with OpenBank Sample<a class="headerlink" href="#comparison-with-openbank-sample" title="Permanent link">¶</a></h2>
 <p>The API Gateway and OpenBank samples demonstrate different architectural patterns within the Neuroglia framework. Here's a detailed comparison:</p>
-<h3 id="architecture-patterns">Architecture Patterns<a class="headerlink" href="#architecture-patterns" title="Permanent link">&para;</a></h3>
+<h3 id="architecture-patterns">Architecture Patterns<a class="headerlink" href="#architecture-patterns" title="Permanent link">¶</a></h3>
 <table>
 <thead>
 <tr>
@@ -2463,8 +1599,8 @@ curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </spa
 </tr>
 </tbody>
 </table>
-<h3 id="domain-complexity">Domain Complexity<a class="headerlink" href="#domain-complexity" title="Permanent link">&para;</a></h3>
-<h4 id="api-gateway-integration-focused">API Gateway - <strong>Integration-Focused</strong><a class="headerlink" href="#api-gateway-integration-focused" title="Permanent link">&para;</a></h4>
+<h3 id="domain-complexity">Domain Complexity<a class="headerlink" href="#domain-complexity" title="Permanent link">¶</a></h3>
+<h4 id="api-gateway-integration-focused">API Gateway - <strong>Integration-Focused</strong><a class="headerlink" href="#api-gateway-integration-focused" title="Permanent link">¶</a></h4>
 <div class="highlight"><pre><span></span><code><span class="c1"># Simple domain model focused on orchestration</span>
 <span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">PromptResponse</span><span class="p">:</span>
@@ -2474,7 +1610,7 @@ curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </spa
     <span class="n">status</span><span class="p">:</span> <span class="n">PromptStatus</span>
     <span class="n">metadata</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>
 </code></pre></div>
-<h4 id="openbank-rich-domain-model">OpenBank - <strong>Rich Domain Model</strong><a class="headerlink" href="#openbank-rich-domain-model" title="Permanent link">&para;</a></h4>
+<h4 id="openbank-rich-domain-model">OpenBank - <strong>Rich Domain Model</strong><a class="headerlink" href="#openbank-rich-domain-model" title="Permanent link">¶</a></h4>
 <div class="highlight"><pre><span></span><code><span class="c1"># Complex aggregate with business rules</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">BankAccountV1</span><span class="p">(</span><span class="n">AggregateRoot</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">record_transaction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">amount</span><span class="p">:</span> <span class="n">Decimal</span><span class="p">,</span> <span class="n">transaction_type</span><span class="p">:</span> <span class="n">BankTransactionTypeV1</span><span class="p">):</span>
@@ -2486,8 +1622,8 @@ curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </spa
         <span class="c1"># Event sourcing</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">raise_event</span><span class="p">(</span><span class="n">BankAccountTransactionRecordedDomainEventV1</span><span class="p">(</span><span class="o">...</span><span class="p">))</span>
 </code></pre></div>
-<h3 id="data-persistence-strategy">Data Persistence Strategy<a class="headerlink" href="#data-persistence-strategy" title="Permanent link">&para;</a></h3>
-<h4 id="api-gateway-multi-store-architecture">API Gateway - <strong>Multi-Store Architecture</strong><a class="headerlink" href="#api-gateway-multi-store-architecture" title="Permanent link">&para;</a></h4>
+<h3 id="data-persistence-strategy">Data Persistence Strategy<a class="headerlink" href="#data-persistence-strategy" title="Permanent link">¶</a></h3>
+<h4 id="api-gateway-multi-store-architecture">API Gateway - <strong>Multi-Store Architecture</strong><a class="headerlink" href="#api-gateway-multi-store-architecture" title="Permanent link">¶</a></h4>
 <div class="highlight"><pre><span></span><code><span class="c1"># Multiple specialized storage systems</span>
 <span class="n">AsyncStringCacheRepository</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="n">Prompt</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>  <span class="c1"># Redis caching</span>
 <span class="n">MinioStorageManager</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">)</span>                      <span class="c1"># Object storage</span>
@@ -2498,36 +1634,36 @@ curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </spa
     <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">cache_repository</span><span class="o">.</span><span class="n">set_async</span><span class="p">(</span><span class="n">prompt</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">prompt</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
     <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">storage_manager</span><span class="o">.</span><span class="n">upload_async</span><span class="p">(</span><span class="n">prompt</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">prompt</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
 </code></pre></div>
-<h4 id="openbank-event-sourcing">OpenBank - <strong>Event Sourcing</strong><a class="headerlink" href="#openbank-event-sourcing" title="Permanent link">&para;</a></h4>
+<h4 id="openbank-event-sourcing">OpenBank - <strong>Event Sourcing</strong><a class="headerlink" href="#openbank-event-sourcing" title="Permanent link">¶</a></h4>
 <div class="highlight"><pre><span></span><code><span class="c1"># Event-driven persistence</span>
 <span class="n">ESEventStore</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="n">EventStoreOptions</span><span class="p">(</span><span class="n">database_name</span><span class="p">,</span> <span class="n">consumer_group</span><span class="p">))</span>
 
 <span class="c1"># Write model: Event sourcing</span>
 <span class="n">DataAccessLayer</span><span class="o">.</span><span class="n">WriteModel</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span>
     <span class="n">builder</span><span class="p">,</span> 
-    <span class="p">[</span><span class="s2">&quot;samples.openbank.domain.models&quot;</span><span class="p">],</span> 
+    <span class="p">[</span><span class="s2">"samples.openbank.domain.models"</span><span class="p">],</span> 
     <span class="k">lambda</span> <span class="n">builder_</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">,</span> <span class="n">key_type</span><span class="p">:</span> <span class="n">EventSourcingRepository</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
 <span class="p">)</span>
 
 <span class="c1"># Read model: Projections</span>
 <span class="n">DataAccessLayer</span><span class="o">.</span><span class="n">ReadModel</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span>
     <span class="n">builder</span><span class="p">,</span>
-    <span class="p">[</span><span class="s2">&quot;samples.openbank.integration.models&quot;</span><span class="p">],</span> 
+    <span class="p">[</span><span class="s2">"samples.openbank.integration.models"</span><span class="p">],</span> 
     <span class="k">lambda</span> <span class="n">builder_</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">,</span> <span class="n">key_type</span><span class="p">:</span> <span class="n">MongoRepository</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
 <span class="p">)</span>
 </code></pre></div>
-<h3 id="authentication-security">Authentication &amp; Security<a class="headerlink" href="#authentication-security" title="Permanent link">&para;</a></h3>
-<h4 id="api-gateway-oauth2-api-keys">API Gateway - <strong>OAuth2 + API Keys</strong><a class="headerlink" href="#api-gateway-oauth2-api-keys" title="Permanent link">&para;</a></h4>
+<h3 id="authentication-security">Authentication &amp; Security<a class="headerlink" href="#authentication-security" title="Permanent link">¶</a></h3>
+<h4 id="api-gateway-oauth2-api-keys">API Gateway - <strong>OAuth2 + API Keys</strong><a class="headerlink" href="#api-gateway-oauth2-api-keys" title="Permanent link">¶</a></h4>
 <div class="highlight"><pre><span></span><code><span class="c1"># Multiple authentication schemes</span>
-<span class="nd">@post</span><span class="p">(</span><span class="s2">&quot;/item&quot;</span><span class="p">,</span> <span class="n">dependencies</span><span class="o">=</span><span class="p">[</span><span class="n">Depends</span><span class="p">(</span><span class="n">validate_mosaic_authentication</span><span class="p">)])</span>
+<span class="nd">@post</span><span class="p">(</span><span class="s2">"/item"</span><span class="p">,</span> <span class="n">dependencies</span><span class="o">=</span><span class="p">[</span><span class="n">Depends</span><span class="p">(</span><span class="n">validate_mosaic_authentication</span><span class="p">)])</span>
 <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">create_item_prompt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command_dto</span><span class="p">:</span> <span class="n">CreateNewItemPromptCommandDto</span><span class="p">):</span>
     <span class="c1"># API key validation for external services</span>
 
-<span class="nd">@get</span><span class="p">(</span><span class="s2">&quot;/status&quot;</span><span class="p">,</span> <span class="n">dependencies</span><span class="o">=</span><span class="p">[</span><span class="n">Depends</span><span class="p">(</span><span class="n">validate_token</span><span class="p">)])</span>
+<span class="nd">@get</span><span class="p">(</span><span class="s2">"/status"</span><span class="p">,</span> <span class="n">dependencies</span><span class="o">=</span><span class="p">[</span><span class="n">Depends</span><span class="p">(</span><span class="n">validate_token</span><span class="p">)])</span>
 <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_status</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="c1"># JWT token validation for internal services</span>
 </code></pre></div>
-<h4 id="openbank-domain-focused-security">OpenBank - <strong>Domain-Focused Security</strong><a class="headerlink" href="#openbank-domain-focused-security" title="Permanent link">&para;</a></h4>
+<h4 id="openbank-domain-focused-security">OpenBank - <strong>Domain-Focused Security</strong><a class="headerlink" href="#openbank-domain-focused-security" title="Permanent link">¶</a></h4>
 <div class="highlight"><pre><span></span><code><span class="c1"># Business rule enforcement</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">BankAccountV1</span><span class="p">(</span><span class="n">AggregateRoot</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">record_transaction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">amount</span><span class="p">:</span> <span class="n">Decimal</span><span class="p">,</span> <span class="n">transaction_type</span><span class="p">:</span> <span class="n">BankTransactionTypeV1</span><span class="p">):</span>
@@ -2535,13 +1671,13 @@ curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </spa
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_authorized_for_transaction</span><span class="p">(</span><span class="n">amount</span><span class="p">):</span>
             <span class="k">raise</span> <span class="n">UnauthorizedTransactionException</span><span class="p">()</span>
 </code></pre></div>
-<h3 id="external-service-integration_1">External Service Integration<a class="headerlink" href="#external-service-integration_1" title="Permanent link">&para;</a></h3>
-<h4 id="api-gateway-extensive-integration">API Gateway - <strong>Extensive Integration</strong><a class="headerlink" href="#api-gateway-extensive-integration" title="Permanent link">&para;</a></h4>
+<h3 id="external-service-integration_1">External Service Integration<a class="headerlink" href="#external-service-integration_1" title="Permanent link">¶</a></h3>
+<h4 id="api-gateway-extensive-integration">API Gateway - <strong>Extensive Integration</strong><a class="headerlink" href="#api-gateway-extensive-integration" title="Permanent link">¶</a></h4>
 <div class="highlight"><pre><span></span><code><span class="c1"># Multiple external service clients</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">MosaicApiClient</span><span class="p">:</span>
     <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">submit_prompt_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prompt</span><span class="p">:</span> <span class="n">PromptDto</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PromptResponseDto</span><span class="p">:</span>
         <span class="n">token</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">oauth_client</span><span class="o">.</span><span class="n">get_token_async</span><span class="p">()</span>
-        <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">http_client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">&quot;/api/prompts&quot;</span><span class="p">,</span> <span class="n">prompt</span><span class="p">,</span> <span class="n">token</span><span class="p">)</span>
+        <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">http_client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">"/api/prompts"</span><span class="p">,</span> <span class="n">prompt</span><span class="p">,</span> <span class="n">token</span><span class="p">)</span>
 
 <span class="k">class</span><span class="w"> </span><span class="nc">GenAiClient</span><span class="p">:</span>
     <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">process_prompt_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prompt</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
@@ -2551,7 +1687,7 @@ curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </spa
     <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">store_file_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bucket</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">):</span>
         <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">s3_client</span><span class="o">.</span><span class="n">put_object</span><span class="p">(</span><span class="n">bucket</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
 </code></pre></div>
-<h4 id="openbank-minimal-integration">OpenBank - <strong>Minimal Integration</strong><a class="headerlink" href="#openbank-minimal-integration" title="Permanent link">&para;</a></h4>
+<h4 id="openbank-minimal-integration">OpenBank - <strong>Minimal Integration</strong><a class="headerlink" href="#openbank-minimal-integration" title="Permanent link">¶</a></h4>
 <div class="highlight"><pre><span></span><code><span class="c1"># Focused on domain logic, minimal external dependencies</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">CreateBankAccountCommandHandler</span><span class="p">:</span>
     <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">handle_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command</span><span class="p">:</span> <span class="n">CreateBankAccountCommand</span><span class="p">):</span>
@@ -2560,10 +1696,10 @@ curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </spa
         <span class="n">account</span> <span class="o">=</span> <span class="n">BankAccountV1</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">()),</span> <span class="n">owner</span><span class="p">,</span> <span class="n">command</span><span class="o">.</span><span class="n">initial_balance</span><span class="p">)</span>
         <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">account_repository</span><span class="o">.</span><span class="n">save_async</span><span class="p">(</span><span class="n">account</span><span class="p">)</span>
 </code></pre></div>
-<h3 id="background-processing_1">Background Processing<a class="headerlink" href="#background-processing_1" title="Permanent link">&para;</a></h3>
-<h4 id="api-gateway-task-queue-pattern">API Gateway - <strong>Task Queue Pattern</strong><a class="headerlink" href="#api-gateway-task-queue-pattern" title="Permanent link">&para;</a></h4>
+<h3 id="background-processing_1">Background Processing<a class="headerlink" href="#background-processing_1" title="Permanent link">¶</a></h3>
+<h4 id="api-gateway-task-queue-pattern">API Gateway - <strong>Task Queue Pattern</strong><a class="headerlink" href="#api-gateway-task-queue-pattern" title="Permanent link">¶</a></h4>
 <div class="highlight"><pre><span></span><code><span class="c1"># Redis-backed job queues</span>
-<span class="n">BackgroundTaskScheduler</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;application.tasks&quot;</span><span class="p">])</span>
+<span class="n">BackgroundTaskScheduler</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="p">[</span><span class="s2">"application.tasks"</span><span class="p">])</span>
 
 <span class="nd">@task_handler</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">ProcessPromptTask</span><span class="p">:</span>
@@ -2572,7 +1708,7 @@ curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </spa
         <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">genai_client</span><span class="o">.</span><span class="n">process_prompt</span><span class="p">(</span><span class="n">prompt</span><span class="p">)</span>
         <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">storage_service</span><span class="o">.</span><span class="n">store_result</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
 </code></pre></div>
-<h4 id="openbank-event-driven-projections">OpenBank - <strong>Event-Driven Projections</strong><a class="headerlink" href="#openbank-event-driven-projections" title="Permanent link">&para;</a></h4>
+<h4 id="openbank-event-driven-projections">OpenBank - <strong>Event-Driven Projections</strong><a class="headerlink" href="#openbank-event-driven-projections" title="Permanent link">¶</a></h4>
 <div class="highlight"><pre><span></span><code><span class="c1"># Event handlers for read model updates</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">BankAccountEventHandler</span><span class="p">:</span>
     <span class="nd">@event_handler</span><span class="p">(</span><span class="n">BankAccountCreatedDomainEventV1</span><span class="p">)</span>
@@ -2580,32 +1716,32 @@ curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </spa
         <span class="n">projection</span> <span class="o">=</span> <span class="n">BankAccountProjection</span><span class="o">.</span><span class="n">from_event</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
         <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_model_repository</span><span class="o">.</span><span class="n">save_async</span><span class="p">(</span><span class="n">projection</span><span class="p">)</span>
 </code></pre></div>
-<h3 id="testing-strategies">Testing Strategies<a class="headerlink" href="#testing-strategies" title="Permanent link">&para;</a></h3>
-<h4 id="api-gateway-integration-heavy-testing">API Gateway - <strong>Integration-Heavy Testing</strong><a class="headerlink" href="#api-gateway-integration-heavy-testing" title="Permanent link">&para;</a></h4>
+<h3 id="testing-strategies">Testing Strategies<a class="headerlink" href="#testing-strategies" title="Permanent link">¶</a></h3>
+<h4 id="api-gateway-integration-heavy-testing">API Gateway - <strong>Integration-Heavy Testing</strong><a class="headerlink" href="#api-gateway-integration-heavy-testing" title="Permanent link">¶</a></h4>
 <div class="highlight"><pre><span></span><code><span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">integration</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">TestApiGatewayIntegration</span><span class="p">:</span>
     <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">test_full_prompt_workflow</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_client</span><span class="p">,</span> <span class="n">mock_external_services</span><span class="p">):</span>
         <span class="c1"># Test complete workflow including external services</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="n">test_client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">&quot;/api/prompts/item&quot;</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">prompt_data</span><span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="n">test_client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">"/api/prompts/item"</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">prompt_data</span><span class="p">)</span>
 
         <span class="c1"># Verify external service calls</span>
         <span class="n">mock_external_services</span><span class="o">.</span><span class="n">genai_client</span><span class="o">.</span><span class="n">process_prompt</span><span class="o">.</span><span class="n">assert_called_once</span><span class="p">()</span>
         <span class="n">mock_external_services</span><span class="o">.</span><span class="n">storage_manager</span><span class="o">.</span><span class="n">upload</span><span class="o">.</span><span class="n">assert_called_once</span><span class="p">()</span>
 </code></pre></div>
-<h4 id="openbank-domain-focused-testing">OpenBank - <strong>Domain-Focused Testing</strong><a class="headerlink" href="#openbank-domain-focused-testing" title="Permanent link">&para;</a></h4>
+<h4 id="openbank-domain-focused-testing">OpenBank - <strong>Domain-Focused Testing</strong><a class="headerlink" href="#openbank-domain-focused-testing" title="Permanent link">¶</a></h4>
 <div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">TestBankAccountAggregate</span><span class="p">:</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">test_transaction_recording</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># Pure domain logic testing</span>
-        <span class="n">account</span> <span class="o">=</span> <span class="n">BankAccountV1</span><span class="p">(</span><span class="s2">&quot;123&quot;</span><span class="p">,</span> <span class="n">owner</span><span class="p">,</span> <span class="n">Decimal</span><span class="p">(</span><span class="s2">&quot;1000&quot;</span><span class="p">))</span>
-        <span class="n">account</span><span class="o">.</span><span class="n">record_transaction</span><span class="p">(</span><span class="n">Decimal</span><span class="p">(</span><span class="s2">&quot;-100&quot;</span><span class="p">),</span> <span class="n">BankTransactionTypeV1</span><span class="o">.</span><span class="n">DEBIT</span><span class="p">)</span>
+        <span class="n">account</span> <span class="o">=</span> <span class="n">BankAccountV1</span><span class="p">(</span><span class="s2">"123"</span><span class="p">,</span> <span class="n">owner</span><span class="p">,</span> <span class="n">Decimal</span><span class="p">(</span><span class="s2">"1000"</span><span class="p">))</span>
+        <span class="n">account</span><span class="o">.</span><span class="n">record_transaction</span><span class="p">(</span><span class="n">Decimal</span><span class="p">(</span><span class="s2">"-100"</span><span class="p">),</span> <span class="n">BankTransactionTypeV1</span><span class="o">.</span><span class="n">DEBIT</span><span class="p">)</span>
 
         <span class="c1"># Verify business rules and events</span>
-        <span class="k">assert</span> <span class="n">account</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">balance</span> <span class="o">==</span> <span class="n">Decimal</span><span class="p">(</span><span class="s2">&quot;900&quot;</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="n">account</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">balance</span> <span class="o">==</span> <span class="n">Decimal</span><span class="p">(</span><span class="s2">"900"</span><span class="p">)</span>
         <span class="n">events</span> <span class="o">=</span> <span class="n">account</span><span class="o">.</span><span class="n">get_uncommitted_events</span><span class="p">()</span>
         <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">events</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">BankAccountTransactionRecordedDomainEventV1</span><span class="p">)</span>
 </code></pre></div>
-<h3 id="use-case-recommendations">Use Case Recommendations<a class="headerlink" href="#use-case-recommendations" title="Permanent link">&para;</a></h3>
-<h4 id="choose-api-gateway-pattern-when">Choose <strong>API Gateway Pattern</strong> when<a class="headerlink" href="#choose-api-gateway-pattern-when" title="Permanent link">&para;</a></h4>
+<h3 id="use-case-recommendations">Use Case Recommendations<a class="headerlink" href="#use-case-recommendations" title="Permanent link">¶</a></h3>
+<h4 id="choose-api-gateway-pattern-when">Choose <strong>API Gateway Pattern</strong> when<a class="headerlink" href="#choose-api-gateway-pattern-when" title="Permanent link">¶</a></h4>
 <ul>
 <li>✅ Building microservice orchestration layers</li>
 <li>✅ Integrating multiple external services</li>
@@ -2614,7 +1750,7 @@ curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </spa
 <li>✅ Working with heterogeneous data stores</li>
 <li>✅ Building service mesh entry points</li>
 </ul>
-<h4 id="choose-event-sourcing-pattern-when">Choose <strong>Event Sourcing Pattern</strong> when<a class="headerlink" href="#choose-event-sourcing-pattern-when" title="Permanent link">&para;</a></h4>
+<h4 id="choose-event-sourcing-pattern-when">Choose <strong>Event Sourcing Pattern</strong> when<a class="headerlink" href="#choose-event-sourcing-pattern-when" title="Permanent link">¶</a></h4>
 <ul>
 <li>✅ Need complete audit trails</li>
 <li>✅ Complex business logic and invariants</li>
@@ -2623,7 +1759,7 @@ curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </spa
 <li>✅ High consistency requirements</li>
 <li>✅ Rich domain models with behavior</li>
 </ul>
-<h3 id="framework-features-utilized">Framework Features Utilized<a class="headerlink" href="#framework-features-utilized" title="Permanent link">&para;</a></h3>
+<h3 id="framework-features-utilized">Framework Features Utilized<a class="headerlink" href="#framework-features-utilized" title="Permanent link">¶</a></h3>
 <table>
 <thead>
 <tr>
@@ -2671,81 +1807,39 @@ curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </spa
 </tbody>
 </table>
 <p>Both samples showcase different strengths of the Neuroglia framework, demonstrating its flexibility in supporting various architectural patterns while maintaining clean architecture principles.</p>
-
-
-
-
-
-
-
-
-
-
-
-
-                
-              </article>
-            </div>
-          
-          
+</article>
+</div>
 <script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
-        </div>
-        
-          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
-  
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+</div>
+<button class="md-top md-icon" data-md-component="top" hidden="" type="button">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"></path></svg>
   Back to top
 </button>
-        
-      </main>
-      
-        <footer class="md-footer">
-  
-  <div class="md-footer-meta md-typeset">
-    <div class="md-footer-meta__inner md-grid">
-      <div class="md-copyright">
+</main>
+<footer class="md-footer">
+<div class="md-footer-meta md-typeset">
+<div class="md-footer-meta__inner md-grid">
+<div class="md-copyright">
   
   
     Made with
-    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+    <a href="https://squidfunk.github.io/mkdocs-material/" rel="noopener" target="_blank">
       Material for MkDocs
     </a>
-  
 </div>
-      
-        
 <div class="md-social">
-  
-    
-    
-    
-    
-      
-      
-    
-    <a href="https://github.com/bvandewe/pyneuro" target="_blank" rel="noopener" title="github.com" class="md-social__link">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path fill="currentColor" d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
-    </a>
-  
+<a class="md-social__link" href="https://github.com/bvandewe/pyneuro" rel="noopener" target="_blank" title="github.com">
+<svg viewbox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><!--! Font Awesome Free 7.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"></path></svg>
+</a>
 </div>
-      
-    </div>
-  </div>
+</div>
+</div>
 </footer>
-      
-    </div>
-    <div class="md-dialog" data-md-component="dialog">
-      <div class="md-dialog__inner md-typeset"></div>
-    </div>
-    
-    
-    
-      
-      <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.expand", "navigation.top", "search.highlight", "search.share"], "search": "../../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
-    
-    
-      <script src="../../assets/javascripts/bundle.92b07e13.min.js"></script>
-      
-    
-  </body>
+</div>
+<div class="md-dialog" data-md-component="dialog">
+<div class="md-dialog__inner md-typeset"></div>
+</div>
+<script id="__config" type="application/json">{"base": "../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.expand", "navigation.top", "search.highlight", "search.share"], "search": "../../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+<script src="../../assets/javascripts/bundle.f55a23d4.min.js"></script>
+</body>
 </html>

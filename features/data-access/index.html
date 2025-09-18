@@ -1,212 +1,107 @@
 
-<!doctype html>
-<html lang="en" class="no-js">
-  <head>
-    
-      <meta charset="utf-8">
-      <meta name="viewport" content="width=device-width,initial-scale=1">
-      
-      
-      
-      
-        <link rel="prev" href="../mvc-controllers/">
-      
-      
-        <link rel="next" href="../event-sourcing/">
-      
-      
-      <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.19">
-    
-    
-      
-        <title>Data Access - Neuroglia Python Framework</title>
-      
-    
-    
-      <link rel="stylesheet" href="../../assets/stylesheets/main.7e37652d.min.css">
-      
-        
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
-      
-      
+<!DOCTYPE html>
 
-
-    
-    
-      
-    
-    
-      
-        
-        
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
-        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
-      
-    
-    
-    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
-    
-      
-
-    
-    
-    
-  </head>
-  
-  
-    
-    
-      
-    
-    
-    
-    
-    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="blue">
-  
-    
-    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
-    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
-    <label class="md-overlay" for="__drawer"></label>
-    <div data-md-component="skip">
-      
-        
-        <a href="#data-access" class="md-skip">
+<html class="no-js" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<link href="../mvc-controllers/" rel="prev"/>
+<link href="../event-sourcing/" rel="next"/>
+<link href="../../assets/images/favicon.png" rel="icon"/>
+<meta content="mkdocs-1.6.1, mkdocs-material-9.6.20" name="generator"/>
+<title>Data Access - Neuroglia Python Framework</title>
+<link href="../../assets/stylesheets/main.e53b48f4.min.css" rel="stylesheet"/>
+<link href="../../assets/stylesheets/palette.06af60db.min.css" rel="stylesheet"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback" rel="stylesheet"/>
+<style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+<script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+</head>
+<body data-md-color-accent="blue" data-md-color-primary="blue" data-md-color-scheme="default" dir="ltr">
+<input autocomplete="off" class="md-toggle" data-md-toggle="drawer" id="__drawer" type="checkbox"/>
+<input autocomplete="off" class="md-toggle" data-md-toggle="search" id="__search" type="checkbox"/>
+<label class="md-overlay" for="__drawer"></label>
+<div data-md-component="skip">
+<a class="md-skip" href="#data-access">
           Skip to content
         </a>
-      
-    </div>
-    <div data-md-component="announce">
-      
-    </div>
-    
-    
-      
-
-  
-
+</div>
+<div data-md-component="announce">
+</div>
 <header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
-  <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../.." title="Neuroglia Python Framework" class="md-header__button md-logo" aria-label="Neuroglia Python Framework" data-md-component="logo">
-      
-  
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
-
-    </a>
-    <label class="md-header__button md-icon" for="__drawer">
-      
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
-    </label>
-    <div class="md-header__title" data-md-component="header-title">
-      <div class="md-header__ellipsis">
-        <div class="md-header__topic">
-          <span class="md-ellipsis">
+<nav aria-label="Header" class="md-header__inner md-grid">
+<a aria-label="Neuroglia Python Framework" class="md-header__button md-logo" data-md-component="logo" href="../.." title="Neuroglia Python Framework">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+</a>
+<label class="md-header__button md-icon" for="__drawer">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+</label>
+<div class="md-header__title" data-md-component="header-title">
+<div class="md-header__ellipsis">
+<div class="md-header__topic">
+<span class="md-ellipsis">
             Neuroglia Python Framework
           </span>
-        </div>
-        <div class="md-header__topic" data-md-component="header-topic">
-          <span class="md-ellipsis">
+</div>
+<div class="md-header__topic" data-md-component="header-topic">
+<span class="md-ellipsis">
             
               Data Access
             
           </span>
-        </div>
-      </div>
-    </div>
-    
-      
-        <form class="md-header__option" data-md-component="palette">
-  
-    
-    
-    
-    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="blue"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
-    
-      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
-      </label>
-    
-  
-    
-    
-    
-    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="blue" data-md-color-accent="blue"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
-    
-      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
-      </label>
-    
-  
+</div>
+</div>
+</div>
+<form class="md-header__option" data-md-component="palette">
+<input aria-label="Switch to dark mode" class="md-option" data-md-color-accent="blue" data-md-color-media="" data-md-color-primary="blue" data-md-color-scheme="default" id="__palette_0" name="__palette" type="radio"/>
+<label class="md-header__button md-icon" for="__palette_1" hidden="" title="Switch to dark mode">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+</label>
+<input aria-label="Switch to light mode" class="md-option" data-md-color-accent="blue" data-md-color-media="" data-md-color-primary="blue" data-md-color-scheme="slate" id="__palette_1" name="__palette" type="radio"/>
+<label class="md-header__button md-icon" for="__palette_0" hidden="" title="Switch to light mode">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+</label>
 </form>
-      
-    
-    
-      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
-    
-    
-    
-      
-      
-        <label class="md-header__button md-icon" for="__search">
-          
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
-        </label>
-        <div class="md-search" data-md-component="search" role="dialog">
-  <label class="md-search__overlay" for="__search"></label>
-  <div class="md-search__inner" role="search">
-    <form class="md-search__form" name="search">
-      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
-      <label class="md-search__icon md-icon" for="__search">
-        
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
-        
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
-      </label>
-      <nav class="md-search__options" aria-label="Search">
-        
-          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Share" aria-label="Share" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
-            
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
-          </a>
-        
-        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
-          
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
-        </button>
-      </nav>
-      
-    </form>
-    <div class="md-search__output">
-      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
-        <div class="md-search-result" data-md-component="search-result">
-          <div class="md-search-result__meta">
+<script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+<label class="md-header__button md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+</label>
+<div class="md-search" data-md-component="search" role="dialog">
+<label class="md-search__overlay" for="__search"></label>
+<div class="md-search__inner" role="search">
+<form class="md-search__form" name="search">
+<input aria-label="Search" autocapitalize="off" autocomplete="off" autocorrect="off" class="md-search__input" data-md-component="search-query" name="query" placeholder="Search" required="" spellcheck="false" type="text"/>
+<label class="md-search__icon md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+</label>
+<nav aria-label="Search" class="md-search__options">
+<a aria-label="Share" class="md-search__icon md-icon" data-clipboard="" data-clipboard-text="" data-md-component="search-share" href="javascript:void(0)" tabindex="-1" title="Share">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"></path></svg>
+</a>
+<button aria-label="Clear" class="md-search__icon md-icon" tabindex="-1" title="Clear" type="reset">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+</button>
+</nav>
+</form>
+<div class="md-search__output">
+<div class="md-search__scrollwrap" data-md-scrollfix="" tabindex="0">
+<div class="md-search-result" data-md-component="search-result">
+<div class="md-search-result__meta">
             Initializing search
           </div>
-          <ol class="md-search-result__list" role="presentation"></ol>
-        </div>
-      </div>
-    </div>
-  </div>
+<ol class="md-search-result__list" role="presentation"></ol>
 </div>
-      
-    
-    
-  </nav>
-  
-    
-      
-<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
-  <div class="md-grid">
-    <ul class="md-tabs__list">
-      
-        
-  
-  
-  
-  
-    <li class="md-tabs__item">
-      <a href="../.." class="md-tabs__link">
+</div>
+</div>
+</div>
+</div>
+</nav>
+<nav aria-label="Tabs" class="md-tabs" data-md-component="tabs">
+<div class="md-grid">
+<ul class="md-tabs__list">
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../..">
         
   
   
@@ -215,17 +110,9 @@
   Home
 
       </a>
-    </li>
-  
-
-      
-        
-  
-  
-  
-  
-    <li class="md-tabs__item">
-      <a href="../../getting-started/" class="md-tabs__link">
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../getting-started/">
         
   
   
@@ -234,17 +121,9 @@
   Getting Started
 
       </a>
-    </li>
-  
-
-      
-        
-  
-  
-  
-  
-    <li class="md-tabs__item">
-      <a href="../../architecture/" class="md-tabs__link">
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../architecture/">
         
   
   
@@ -253,1335 +132,729 @@
   Architecture
 
       </a>
-    </li>
-  
-
-      
-        
-  
-  
-  
-    
-  
-  
-    
-    
-      <li class="md-tabs__item md-tabs__item--active">
-        <a href="../dependency-injection/" class="md-tabs__link">
+</li>
+<li class="md-tabs__item md-tabs__item--active">
+<a class="md-tabs__link" href="../dependency-injection/">
           
   
   
   Features
 
         </a>
-      </li>
-    
-  
-
-      
-        
-  
-  
-  
-  
-    
-    
-      <li class="md-tabs__item">
-        <a href="../../samples/openbank/" class="md-tabs__link">
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../samples/openbank/">
           
   
   
   Sample Applications
 
         </a>
-      </li>
-    
-  
-
-      
-    </ul>
-  </div>
+</li>
+</ul>
+</div>
 </nav>
-    
-  
 </header>
-    
-    <div class="md-container" data-md-component="container">
-      
-      
-        
-      
-      <main class="md-main" data-md-component="main">
-        <div class="md-main__inner md-grid">
-          
-            
-              
-              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
-                <div class="md-sidebar__scrollwrap">
-                  <div class="md-sidebar__inner">
-                    
-
-
-  
-
-
-<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
-  <label class="md-nav__title" for="__drawer">
-    <a href="../.." title="Neuroglia Python Framework" class="md-nav__button md-logo" aria-label="Neuroglia Python Framework" data-md-component="logo">
-      
-  
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
-
-    </a>
+<div class="md-container" data-md-component="container">
+<main class="md-main" data-md-component="main">
+<div class="md-main__inner md-grid">
+<div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="Navigation" class="md-nav md-nav--primary md-nav--lifted" data-md-level="0">
+<label class="md-nav__title" for="__drawer">
+<a aria-label="Neuroglia Python Framework" class="md-nav__button md-logo" data-md-component="logo" href="../.." title="Neuroglia Python Framework">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+</a>
     Neuroglia Python Framework
   </label>
-  
-  <ul class="md-nav__list" data-md-scrollfix>
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../.." class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../..">
+<span class="md-ellipsis">
     Home
     
   </span>
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../getting-started/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../getting-started/">
+<span class="md-ellipsis">
     Getting Started
     
   </span>
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../architecture/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../architecture/">
+<span class="md-ellipsis">
     Architecture
     
   </span>
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-    
-  
-  
-  
-    
-    
-    
-    
-      
-        
-        
-      
-      
-        
-      
-    
-    
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
-        
-          
-          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
-            
-  
-  
-  <span class="md-ellipsis">
+</a>
+</li>
+<li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+<input checked="" class="md-nav__toggle md-toggle" id="__nav_4" type="checkbox"/>
+<label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+<span class="md-ellipsis">
     Features
     
   </span>
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_4">
-            <span class="md-nav__icon md-icon"></span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="true" aria-labelledby="__nav_4_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_4">
+<span class="md-nav__icon md-icon"></span>
             Features
           </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../dependency-injection/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../dependency-injection/">
+<span class="md-ellipsis">
     Dependency Injection
     
   </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../cqrs-mediation/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    CQRS & Mediation
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../cqrs-mediation/">
+<span class="md-ellipsis">
+    CQRS &amp; Mediation
     
   </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../resource-oriented-architecture/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../resource-oriented-architecture/">
+<span class="md-ellipsis">
     Resource Oriented Architecture
     
   </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../watcher-reconciliation-patterns/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Watcher & Reconciliation Patterns
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../watcher-reconciliation-patterns/">
+<span class="md-ellipsis">
+    Watcher &amp; Reconciliation Patterns
     
   </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../watcher-reconciliation-execution/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Watcher & Reconciliation Execution
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../watcher-reconciliation-execution/">
+<span class="md-ellipsis">
+    Watcher &amp; Reconciliation Execution
     
   </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../mvc-controllers/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../mvc-controllers/">
+<span class="md-ellipsis">
     MVC Controllers
     
   </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-    
-  
-  
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
+</a>
+</li>
+<li class="md-nav__item md-nav__item--active">
+<input class="md-nav__toggle md-toggle" id="__toc" type="checkbox"/>
+<label class="md-nav__link md-nav__link--active" for="__toc">
+<span class="md-ellipsis">
     Data Access
     
   </span>
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
-        
-  
-  
-  <span class="md-ellipsis">
+<span class="md-nav__icon md-icon"></span>
+</label>
+<a class="md-nav__link md-nav__link--active" href="./">
+<span class="md-ellipsis">
     Data Access
     
   </span>
-  
-
-      </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
+</a>
+<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
       Table of contents
     </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
-    <span class="md-ellipsis">
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#overview">
+<span class="md-ellipsis">
       🎯 Overview
     </span>
-  </a>
-  
+</a>
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#core-abstractions" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#core-abstractions">
+<span class="md-ellipsis">
       🏗️ Core Abstractions
     </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="🏗️ Core Abstractions">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#repository-interface" class="md-nav__link">
-    <span class="md-ellipsis">
+</a>
+<nav aria-label="🏗️ Core Abstractions" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#repository-interface">
+<span class="md-ellipsis">
       Repository Interface
     </span>
-  </a>
-  
+</a>
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#queryable-interface" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#queryable-interface">
+<span class="md-ellipsis">
       Queryable Interface
     </span>
-  </a>
-  
+</a>
 </li>
-        
-      </ul>
-    </nav>
-  
+</ul>
+</nav>
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#mongodb-integration" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#mongodb-integration">
+<span class="md-ellipsis">
       🗃️ MongoDB Integration
     </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="🗃️ MongoDB Integration">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#mongodb-repository" class="md-nav__link">
-    <span class="md-ellipsis">
+</a>
+<nav aria-label="🗃️ MongoDB Integration" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#mongodb-repository">
+<span class="md-ellipsis">
       MongoDB Repository
     </span>
-  </a>
-  
+</a>
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#configuration" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#configuration">
+<span class="md-ellipsis">
       Configuration
     </span>
-  </a>
-  
+</a>
 </li>
-        
-      </ul>
-    </nav>
-  
+</ul>
+</nav>
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#event-sourcing" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#event-sourcing">
+<span class="md-ellipsis">
       📅 Event Sourcing
     </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="📅 Event Sourcing">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#event-store-repository" class="md-nav__link">
-    <span class="md-ellipsis">
+</a>
+<nav aria-label="📅 Event Sourcing" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#event-store-repository">
+<span class="md-ellipsis">
       Event Store Repository
     </span>
-  </a>
-  
+</a>
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#event-store-configuration" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#event-store-configuration">
+<span class="md-ellipsis">
       Event Store Configuration
     </span>
-  </a>
-  
+</a>
 </li>
-        
-      </ul>
-    </nav>
-  
+</ul>
+</nav>
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#in-memory-repository" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#in-memory-repository">
+<span class="md-ellipsis">
       💾 In-Memory Repository
     </span>
-  </a>
-  
+</a>
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#cqrs-with-separate-models" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#cqrs-with-separate-models">
+<span class="md-ellipsis">
       🔄 CQRS with Separate Models
     </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="🔄 CQRS with Separate Models">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#write-model-commands" class="md-nav__link">
-    <span class="md-ellipsis">
+</a>
+<nav aria-label="🔄 CQRS with Separate Models" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#write-model-commands">
+<span class="md-ellipsis">
       Write Model (Commands)
     </span>
-  </a>
-  
+</a>
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#read-model-queries" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#read-model-queries">
+<span class="md-ellipsis">
       Read Model (Queries)
     </span>
-  </a>
-  
+</a>
 </li>
-        
-      </ul>
-    </nav>
-  
+</ul>
+</nav>
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#custom-repository-implementation" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#custom-repository-implementation">
+<span class="md-ellipsis">
       🏭 Custom Repository Implementation
     </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="🏭 Custom Repository Implementation">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#creating-custom-repository" class="md-nav__link">
-    <span class="md-ellipsis">
+</a>
+<nav aria-label="🏭 Custom Repository Implementation" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#creating-custom-repository">
+<span class="md-ellipsis">
       Creating Custom Repository
     </span>
-  </a>
-  
+</a>
 </li>
-        
-      </ul>
-    </nav>
-  
+</ul>
+</nav>
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#unit-of-work-pattern" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#unit-of-work-pattern">
+<span class="md-ellipsis">
       🔄 Unit of Work Pattern
     </span>
-  </a>
-  
+</a>
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#testing-with-repositories" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#testing-with-repositories">
+<span class="md-ellipsis">
       🧪 Testing with Repositories
     </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="🧪 Testing with Repositories">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#test-doubles" class="md-nav__link">
-    <span class="md-ellipsis">
+</a>
+<nav aria-label="🧪 Testing with Repositories" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#test-doubles">
+<span class="md-ellipsis">
       Test Doubles
     </span>
-  </a>
-  
+</a>
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#integration-testing" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#integration-testing">
+<span class="md-ellipsis">
       Integration Testing
     </span>
-  </a>
-  
+</a>
 </li>
-        
-      </ul>
-    </nav>
-  
+</ul>
+</nav>
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#best-practices" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#best-practices">
+<span class="md-ellipsis">
       🚀 Best Practices
     </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="🚀 Best Practices">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#1-use-interface-segregation" class="md-nav__link">
-    <span class="md-ellipsis">
+</a>
+<nav aria-label="🚀 Best Practices" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#1-use-interface-segregation">
+<span class="md-ellipsis">
       1. Use Interface Segregation
     </span>
-  </a>
-  
+</a>
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#2-separate-read-and-write-models" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#2-separate-read-and-write-models">
+<span class="md-ellipsis">
       2. Separate Read and Write Models
     </span>
-  </a>
-  
+</a>
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#3-handle-concurrency" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#3-handle-concurrency">
+<span class="md-ellipsis">
       3. Handle Concurrency
     </span>
-  </a>
-  
+</a>
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#4-use-specifications-pattern" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#4-use-specifications-pattern">
+<span class="md-ellipsis">
       4. Use Specifications Pattern
     </span>
-  </a>
-  
+</a>
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#5-repository-registration" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#5-repository-registration">
+<span class="md-ellipsis">
       5. Repository Registration
     </span>
-  </a>
-  
+</a>
 </li>
-        
-      </ul>
-    </nav>
-  
+</ul>
+</nav>
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#related-documentation" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#related-documentation">
+<span class="md-ellipsis">
       🔗 Related Documentation
     </span>
-  </a>
-  
+</a>
 </li>
-      
-    </ul>
-  
+</ul>
 </nav>
-      
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../event-sourcing/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../event-sourcing/">
+<span class="md-ellipsis">
     Event Sourcing
     
   </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../event-handling.md" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../mermaid-diagrams/">
+<span class="md-ellipsis">
+    Mermaid Diagrams
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../event-handling.md">
+<span class="md-ellipsis">
     Event Handling
     
   </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../object-mapping.md" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../object-mapping.md">
+<span class="md-ellipsis">
     Object Mapping
     
   </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../configuration.md" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../configuration.md">
+<span class="md-ellipsis">
     Configuration
     
   </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../hosting.md" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../hosting.md">
+<span class="md-ellipsis">
     Hosting
     
   </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../core.md" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../core.md">
+<span class="md-ellipsis">
     Core
     
   </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../serialization.md" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../serialization.md">
+<span class="md-ellipsis">
     Serialization
     
   </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    
-    
-    
-    
-      
-      
-        
-      
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
-        
-          
-          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_5" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+<span class="md-ellipsis">
     Sample Applications
     
   </span>
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_5">
-            <span class="md-nav__icon md-icon"></span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_5_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_5">
+<span class="md-nav__icon md-icon"></span>
             Sample Applications
           </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../samples/openbank/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../samples/openbank/">
+<span class="md-ellipsis">
     OpenBank
     
   </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../samples/lab-resource-manager/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../samples/lab-resource-manager/">
+<span class="md-ellipsis">
     Lab Resource Manager
     
   </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../samples/api_gateway/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../samples/api_gateway/">
+<span class="md-ellipsis">
     API Gateway
     
   </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../samples/desktop_controller/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../samples/desktop_controller/">
+<span class="md-ellipsis">
     Desktop Controller
     
   </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-    
-  </ul>
+</a>
+</li>
+</ul>
 </nav>
-                  </div>
-                </div>
-              </div>
-            
-            
-              
-              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
-                <div class="md-sidebar__scrollwrap">
-                  <div class="md-sidebar__inner">
-                    
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
       Table of contents
     </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
-    <span class="md-ellipsis">
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#overview">
+<span class="md-ellipsis">
       🎯 Overview
     </span>
-  </a>
-  
+</a>
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#core-abstractions" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#core-abstractions">
+<span class="md-ellipsis">
       🏗️ Core Abstractions
     </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="🏗️ Core Abstractions">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#repository-interface" class="md-nav__link">
-    <span class="md-ellipsis">
+</a>
+<nav aria-label="🏗️ Core Abstractions" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#repository-interface">
+<span class="md-ellipsis">
       Repository Interface
     </span>
-  </a>
-  
+</a>
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#queryable-interface" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#queryable-interface">
+<span class="md-ellipsis">
       Queryable Interface
     </span>
-  </a>
-  
+</a>
 </li>
-        
-      </ul>
-    </nav>
-  
+</ul>
+</nav>
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#mongodb-integration" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#mongodb-integration">
+<span class="md-ellipsis">
       🗃️ MongoDB Integration
     </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="🗃️ MongoDB Integration">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#mongodb-repository" class="md-nav__link">
-    <span class="md-ellipsis">
+</a>
+<nav aria-label="🗃️ MongoDB Integration" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#mongodb-repository">
+<span class="md-ellipsis">
       MongoDB Repository
     </span>
-  </a>
-  
+</a>
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#configuration" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#configuration">
+<span class="md-ellipsis">
       Configuration
     </span>
-  </a>
-  
+</a>
 </li>
-        
-      </ul>
-    </nav>
-  
+</ul>
+</nav>
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#event-sourcing" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#event-sourcing">
+<span class="md-ellipsis">
       📅 Event Sourcing
     </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="📅 Event Sourcing">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#event-store-repository" class="md-nav__link">
-    <span class="md-ellipsis">
+</a>
+<nav aria-label="📅 Event Sourcing" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#event-store-repository">
+<span class="md-ellipsis">
       Event Store Repository
     </span>
-  </a>
-  
+</a>
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#event-store-configuration" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#event-store-configuration">
+<span class="md-ellipsis">
       Event Store Configuration
     </span>
-  </a>
-  
+</a>
 </li>
-        
-      </ul>
-    </nav>
-  
+</ul>
+</nav>
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#in-memory-repository" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#in-memory-repository">
+<span class="md-ellipsis">
       💾 In-Memory Repository
     </span>
-  </a>
-  
+</a>
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#cqrs-with-separate-models" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#cqrs-with-separate-models">
+<span class="md-ellipsis">
       🔄 CQRS with Separate Models
     </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="🔄 CQRS with Separate Models">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#write-model-commands" class="md-nav__link">
-    <span class="md-ellipsis">
+</a>
+<nav aria-label="🔄 CQRS with Separate Models" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#write-model-commands">
+<span class="md-ellipsis">
       Write Model (Commands)
     </span>
-  </a>
-  
+</a>
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#read-model-queries" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#read-model-queries">
+<span class="md-ellipsis">
       Read Model (Queries)
     </span>
-  </a>
-  
+</a>
 </li>
-        
-      </ul>
-    </nav>
-  
+</ul>
+</nav>
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#custom-repository-implementation" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#custom-repository-implementation">
+<span class="md-ellipsis">
       🏭 Custom Repository Implementation
     </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="🏭 Custom Repository Implementation">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#creating-custom-repository" class="md-nav__link">
-    <span class="md-ellipsis">
+</a>
+<nav aria-label="🏭 Custom Repository Implementation" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#creating-custom-repository">
+<span class="md-ellipsis">
       Creating Custom Repository
     </span>
-  </a>
-  
+</a>
 </li>
-        
-      </ul>
-    </nav>
-  
+</ul>
+</nav>
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#unit-of-work-pattern" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#unit-of-work-pattern">
+<span class="md-ellipsis">
       🔄 Unit of Work Pattern
     </span>
-  </a>
-  
+</a>
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#testing-with-repositories" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#testing-with-repositories">
+<span class="md-ellipsis">
       🧪 Testing with Repositories
     </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="🧪 Testing with Repositories">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#test-doubles" class="md-nav__link">
-    <span class="md-ellipsis">
+</a>
+<nav aria-label="🧪 Testing with Repositories" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#test-doubles">
+<span class="md-ellipsis">
       Test Doubles
     </span>
-  </a>
-  
+</a>
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#integration-testing" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#integration-testing">
+<span class="md-ellipsis">
       Integration Testing
     </span>
-  </a>
-  
+</a>
 </li>
-        
-      </ul>
-    </nav>
-  
+</ul>
+</nav>
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#best-practices" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#best-practices">
+<span class="md-ellipsis">
       🚀 Best Practices
     </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="🚀 Best Practices">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#1-use-interface-segregation" class="md-nav__link">
-    <span class="md-ellipsis">
+</a>
+<nav aria-label="🚀 Best Practices" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#1-use-interface-segregation">
+<span class="md-ellipsis">
       1. Use Interface Segregation
     </span>
-  </a>
-  
+</a>
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#2-separate-read-and-write-models" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#2-separate-read-and-write-models">
+<span class="md-ellipsis">
       2. Separate Read and Write Models
     </span>
-  </a>
-  
+</a>
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#3-handle-concurrency" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#3-handle-concurrency">
+<span class="md-ellipsis">
       3. Handle Concurrency
     </span>
-  </a>
-  
+</a>
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#4-use-specifications-pattern" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#4-use-specifications-pattern">
+<span class="md-ellipsis">
       4. Use Specifications Pattern
     </span>
-  </a>
-  
+</a>
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#5-repository-registration" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#5-repository-registration">
+<span class="md-ellipsis">
       5. Repository Registration
     </span>
-  </a>
-  
+</a>
 </li>
-        
-      </ul>
-    </nav>
-  
+</ul>
+</nav>
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#related-documentation" class="md-nav__link">
-    <span class="md-ellipsis">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#related-documentation">
+<span class="md-ellipsis">
       🔗 Related Documentation
     </span>
-  </a>
-  
+</a>
 </li>
-      
-    </ul>
-  
+</ul>
 </nav>
-                  </div>
-                </div>
-              </div>
-            
-          
-          
-            <div class="md-content" data-md-component="content">
-              <article class="md-content__inner md-typeset">
-                
-                  
-
-
-
-<h1 id="data-access">🗄️ Data Access<a class="headerlink" href="#data-access" title="Permanent link">&para;</a></h1>
+</div>
+</div>
+</div>
+<div class="md-content" data-md-component="content">
+<article class="md-content__inner md-typeset">
+<h1 id="data-access">🗄️ Data Access<a class="headerlink" href="#data-access" title="Permanent link">¶</a></h1>
 <p>Neuroglia provides a flexible data access layer that supports multiple storage backends through a unified repository pattern. It includes built-in support for MongoDB, Event Store, and in-memory repositories, with extensibility for other data stores.</p>
-<h2 id="overview">🎯 Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<h2 id="overview">🎯 Overview<a class="headerlink" href="#overview" title="Permanent link">¶</a></h2>
 <p>The data access system provides:</p>
 <ul>
 <li><strong>Repository Pattern</strong>: Unified interface for data operations</li>
@@ -1591,77 +864,77 @@
 <li><strong>Query Abstractions</strong>: Flexible querying capabilities</li>
 <li><strong>Unit of Work</strong>: Transaction management across repositories</li>
 </ul>
-<h2 id="core-abstractions">🏗️ Core Abstractions<a class="headerlink" href="#core-abstractions" title="Permanent link">&para;</a></h2>
-<h3 id="repository-interface">Repository Interface<a class="headerlink" href="#repository-interface" title="Permanent link">&para;</a></h3>
+<h2 id="core-abstractions">🏗️ Core Abstractions<a class="headerlink" href="#core-abstractions" title="Permanent link">¶</a></h2>
+<h3 id="repository-interface">Repository Interface<a class="headerlink" href="#repository-interface" title="Permanent link">¶</a></h3>
 <p>The base repository interface defines standard CRUD operations:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Generic</span><span class="p">,</span> <span class="n">TypeVar</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
 
-<span class="n">TEntity</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s1">&#39;TEntity&#39;</span><span class="p">)</span>
-<span class="n">TKey</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s1">&#39;TKey&#39;</span><span class="p">)</span>
+<span class="n">TEntity</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s1">'TEntity'</span><span class="p">)</span>
+<span class="n">TKey</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s1">'TKey'</span><span class="p">)</span>
 
 <span class="k">class</span><span class="w"> </span><span class="nc">Repository</span><span class="p">(</span><span class="n">Generic</span><span class="p">[</span><span class="n">TEntity</span><span class="p">,</span> <span class="n">TKey</span><span class="p">],</span> <span class="n">ABC</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Base repository interface&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Base repository interface"""</span>
 
     <span class="nd">@abstractmethod</span>
     <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_by_id_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span> <span class="n">TKey</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">TEntity</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get entity by ID&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Get entity by ID"""</span>
         <span class="k">pass</span>
 
     <span class="nd">@abstractmethod</span>
     <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">add_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity</span><span class="p">:</span> <span class="n">TEntity</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TEntity</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add new entity&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Add new entity"""</span>
         <span class="k">pass</span>
 
     <span class="nd">@abstractmethod</span>
     <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">update_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity</span><span class="p">:</span> <span class="n">TEntity</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TEntity</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update existing entity&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Update existing entity"""</span>
         <span class="k">pass</span>
 
     <span class="nd">@abstractmethod</span>
     <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">remove_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity</span><span class="p">:</span> <span class="n">TEntity</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Remove entity&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Remove entity"""</span>
         <span class="k">pass</span>
 
     <span class="nd">@abstractmethod</span>
     <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">find_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">predicate</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">TEntity</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Find entities matching predicate&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Find entities matching predicate"""</span>
         <span class="k">pass</span>
 </code></pre></div>
-<h3 id="queryable-interface">Queryable Interface<a class="headerlink" href="#queryable-interface" title="Permanent link">&para;</a></h3>
+<h3 id="queryable-interface">Queryable Interface<a class="headerlink" href="#queryable-interface" title="Permanent link">¶</a></h3>
 <p>For advanced querying capabilities:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.data.abstractions</span><span class="w"> </span><span class="kn">import</span> <span class="n">Queryable</span>
 
 <span class="k">class</span><span class="w"> </span><span class="nc">ExtendedRepository</span><span class="p">(</span><span class="n">Repository</span><span class="p">[</span><span class="n">TEntity</span><span class="p">,</span> <span class="n">TKey</span><span class="p">],</span> <span class="n">Queryable</span><span class="p">[</span><span class="n">TEntity</span><span class="p">]):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Repository with advanced querying&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Repository with advanced querying"""</span>
 
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">where</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">predicate</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;ExtendedRepository[TEntity, TKey]&#39;</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Filter entities&quot;&quot;&quot;</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">where</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">predicate</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">'ExtendedRepository[TEntity, TKey]'</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Filter entities"""</span>
         <span class="k">pass</span>
 
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">order_by</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">selector</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;ExtendedRepository[TEntity, TKey]&#39;</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Order entities&quot;&quot;&quot;</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">order_by</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">selector</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">'ExtendedRepository[TEntity, TKey]'</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Order entities"""</span>
         <span class="k">pass</span>
 
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">take</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">count</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;ExtendedRepository[TEntity, TKey]&#39;</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Take specified number of entities&quot;&quot;&quot;</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">take</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">count</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">'ExtendedRepository[TEntity, TKey]'</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Take specified number of entities"""</span>
         <span class="k">pass</span>
 </code></pre></div>
-<h2 id="mongodb-integration">🗃️ MongoDB Integration<a class="headerlink" href="#mongodb-integration" title="Permanent link">&para;</a></h2>
-<h3 id="mongodb-repository">MongoDB Repository<a class="headerlink" href="#mongodb-repository" title="Permanent link">&para;</a></h3>
+<h2 id="mongodb-integration">🗃️ MongoDB Integration<a class="headerlink" href="#mongodb-integration" title="Permanent link">¶</a></h2>
+<h3 id="mongodb-repository">MongoDB Repository<a class="headerlink" href="#mongodb-repository" title="Permanent link">¶</a></h3>
 <p>Built-in MongoDB repository implementation:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.data.infrastructure.mongo</span><span class="w"> </span><span class="kn">import</span> <span class="n">MongoRepository</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">motor.motor_asyncio</span><span class="w"> </span><span class="kn">import</span> <span class="n">AsyncIOMotorClient</span>
 
 <span class="k">class</span><span class="w"> </span><span class="nc">UserRepository</span><span class="p">(</span><span class="n">MongoRepository</span><span class="p">[</span><span class="n">User</span><span class="p">,</span> <span class="nb">str</span><span class="p">]):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;MongoDB repository for users&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""MongoDB repository for users"""</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">connection_string</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">database_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">connection_string</span><span class="p">,</span> <span class="n">database_name</span><span class="p">,</span> <span class="s2">&quot;users&quot;</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">connection_string</span><span class="p">,</span> <span class="n">database_name</span><span class="p">,</span> <span class="s2">"users"</span><span class="p">)</span>
 
     <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_by_email_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">email</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">User</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Custom method to find user by email&quot;&quot;&quot;</span>
-        <span class="n">filter_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;email&quot;</span><span class="p">:</span> <span class="n">email</span><span class="p">}</span>
+<span class="w">        </span><span class="sd">"""Custom method to find user by email"""</span>
+        <span class="n">filter_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"email"</span><span class="p">:</span> <span class="n">email</span><span class="p">}</span>
         <span class="n">document</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">collection</span><span class="o">.</span><span class="n">find_one</span><span class="p">(</span><span class="n">filter_dict</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">document</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -1670,8 +943,8 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_map_document_to_entity</span><span class="p">(</span><span class="n">document</span><span class="p">)</span>
 
     <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">find_by_department_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">department</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">User</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Find users by department&quot;&quot;&quot;</span>
-        <span class="n">filter_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;department&quot;</span><span class="p">:</span> <span class="n">department</span><span class="p">}</span>
+<span class="w">        </span><span class="sd">"""Find users by department"""</span>
+        <span class="n">filter_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"department"</span><span class="p">:</span> <span class="n">department</span><span class="p">}</span>
         <span class="n">cursor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">collection</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">filter_dict</span><span class="p">)</span>
 
         <span class="n">users</span> <span class="o">=</span> <span class="p">[]</span>
@@ -1680,7 +953,7 @@
 
         <span class="k">return</span> <span class="n">users</span>
 </code></pre></div>
-<h3 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h3>
+<h3 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">¶</a></h3>
 <p>Configure MongoDB repositories in your application:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.hosting.web</span><span class="w"> </span><span class="kn">import</span> <span class="n">WebApplicationBuilder</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.hosting.configuration.data_access_layer</span><span class="w"> </span><span class="kn">import</span> <span class="n">DataAccessLayer</span>
@@ -1690,29 +963,29 @@
 <span class="c1"># Configure MongoDB repositories for read models</span>
 <span class="n">DataAccessLayer</span><span class="o">.</span><span class="n">ReadModel</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span>
     <span class="n">builder</span><span class="p">,</span>
-    <span class="p">[</span><span class="s2">&quot;integration.models&quot;</span><span class="p">],</span>  <span class="c1"># Modules containing DTOs</span>
+    <span class="p">[</span><span class="s2">"integration.models"</span><span class="p">],</span>  <span class="c1"># Modules containing DTOs</span>
     <span class="k">lambda</span> <span class="n">builder_</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">,</span> <span class="n">key_type</span><span class="p">:</span> <span class="n">MongoRepository</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span>
-        <span class="n">builder_</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">,</span> <span class="n">key_type</span><span class="p">,</span> <span class="s2">&quot;myapp_db&quot;</span>
+        <span class="n">builder_</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">,</span> <span class="n">key_type</span><span class="p">,</span> <span class="s2">"myapp_db"</span>
     <span class="p">)</span>
 <span class="p">)</span>
 
 <span class="n">app</span> <span class="o">=</span> <span class="n">builder</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
 </code></pre></div>
-<h2 id="event-sourcing">📅 Event Sourcing<a class="headerlink" href="#event-sourcing" title="Permanent link">&para;</a></h2>
-<h3 id="event-store-repository">Event Store Repository<a class="headerlink" href="#event-store-repository" title="Permanent link">&para;</a></h3>
+<h2 id="event-sourcing">📅 Event Sourcing<a class="headerlink" href="#event-sourcing" title="Permanent link">¶</a></h2>
+<h3 id="event-store-repository">Event Store Repository<a class="headerlink" href="#event-store-repository" title="Permanent link">¶</a></h3>
 <p>For event-sourced aggregates:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.data.infrastructure.event_sourcing</span><span class="w"> </span><span class="kn">import</span> <span class="n">EventSourcingRepository</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.data.abstractions</span><span class="w"> </span><span class="kn">import</span> <span class="n">AggregateRoot</span>
 
 <span class="k">class</span><span class="w"> </span><span class="nc">Person</span><span class="p">(</span><span class="n">AggregateRoot</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Event-sourced person aggregate&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Event-sourced person aggregate"""</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="n">PersonState</span><span class="p">()</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">register</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">first_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">last_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">email</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Register a new person&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Register a new person"""</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">PersonRegisteredEvent</span><span class="p">(</span>
             <span class="n">person_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
             <span class="n">first_name</span><span class="o">=</span><span class="n">first_name</span><span class="p">,</span>
@@ -1721,7 +994,7 @@
         <span class="p">))</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">change_email</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_email</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Change person&#39;s email&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Change person's email"""</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">PersonEmailChangedEvent</span><span class="p">(</span>
             <span class="n">person_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
             <span class="n">old_email</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">email</span><span class="p">,</span>
@@ -1738,7 +1011,7 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">on_person_email_changed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">PersonEmailChangedEvent</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">email</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">new_email</span>
 </code></pre></div>
-<h3 id="event-store-configuration">Event Store Configuration<a class="headerlink" href="#event-store-configuration" title="Permanent link">&para;</a></h3>
+<h3 id="event-store-configuration">Event Store Configuration<a class="headerlink" href="#event-store-configuration" title="Permanent link">¶</a></h3>
 <p>Configure EventStoreDB integration:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.data.infrastructure.event_sourcing.event_store</span><span class="w"> </span><span class="kn">import</span> <span class="n">ESEventStore</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.data.infrastructure.event_sourcing.abstractions</span><span class="w"> </span><span class="kn">import</span> <span class="n">EventStoreOptions</span>
@@ -1749,52 +1022,52 @@
 <span class="n">ESEventStore</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span>
     <span class="n">builder</span><span class="p">,</span>
     <span class="n">EventStoreOptions</span><span class="p">(</span>
-        <span class="n">database_name</span><span class="o">=</span><span class="s2">&quot;myapp&quot;</span><span class="p">,</span>
-        <span class="n">consumer_group</span><span class="o">=</span><span class="s2">&quot;myapp_consumers&quot;</span>
+        <span class="n">database_name</span><span class="o">=</span><span class="s2">"myapp"</span><span class="p">,</span>
+        <span class="n">consumer_group</span><span class="o">=</span><span class="s2">"myapp_consumers"</span>
     <span class="p">)</span>
 <span class="p">)</span>
 
 <span class="c1"># Configure event sourcing repositories for write models</span>
 <span class="n">DataAccessLayer</span><span class="o">.</span><span class="n">WriteModel</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span>
     <span class="n">builder</span><span class="p">,</span>
-    <span class="p">[</span><span class="s2">&quot;domain.models&quot;</span><span class="p">],</span>  <span class="c1"># Modules containing aggregates</span>
+    <span class="p">[</span><span class="s2">"domain.models"</span><span class="p">],</span>  <span class="c1"># Modules containing aggregates</span>
     <span class="k">lambda</span> <span class="n">builder_</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">,</span> <span class="n">key_type</span><span class="p">:</span> <span class="n">EventSourcingRepository</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span>
         <span class="n">builder_</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">,</span> <span class="n">key_type</span>
     <span class="p">)</span>
 <span class="p">)</span>
 </code></pre></div>
-<h2 id="in-memory-repository">💾 In-Memory Repository<a class="headerlink" href="#in-memory-repository" title="Permanent link">&para;</a></h2>
+<h2 id="in-memory-repository">💾 In-Memory Repository<a class="headerlink" href="#in-memory-repository" title="Permanent link">¶</a></h2>
 <p>For testing and development:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.data.infrastructure.memory</span><span class="w"> </span><span class="kn">import</span> <span class="n">MemoryRepository</span>
 
 <span class="k">class</span><span class="w"> </span><span class="nc">InMemoryUserRepository</span><span class="p">(</span><span class="n">MemoryRepository</span><span class="p">[</span><span class="n">User</span><span class="p">,</span> <span class="nb">str</span><span class="p">]):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;In-memory repository for testing&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""In-memory repository for testing"""</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_users_by_email</span> <span class="o">=</span> <span class="p">{}</span>
 
     <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">add_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">:</span> <span class="n">User</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">User</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add user and index by email&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Add user and index by email"""</span>
         <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">add_async</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_users_by_email</span><span class="p">[</span><span class="n">user</span><span class="o">.</span><span class="n">email</span><span class="p">]</span> <span class="o">=</span> <span class="n">user</span>
         <span class="k">return</span> <span class="n">result</span>
 
     <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_by_email_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">email</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">User</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get user by email&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Get user by email"""</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_users_by_email</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">email</span><span class="p">)</span>
 
     <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">remove_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">:</span> <span class="n">User</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Remove user and clean up email index&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Remove user and clean up email index"""</span>
         <span class="k">await</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">remove_async</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">user</span><span class="o">.</span><span class="n">email</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_users_by_email</span><span class="p">:</span>
             <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">_users_by_email</span><span class="p">[</span><span class="n">user</span><span class="o">.</span><span class="n">email</span><span class="p">]</span>
 </code></pre></div>
-<h2 id="cqrs-with-separate-models">🔄 CQRS with Separate Models<a class="headerlink" href="#cqrs-with-separate-models" title="Permanent link">&para;</a></h2>
-<h3 id="write-model-commands">Write Model (Commands)<a class="headerlink" href="#write-model-commands" title="Permanent link">&para;</a></h3>
+<h2 id="cqrs-with-separate-models">🔄 CQRS with Separate Models<a class="headerlink" href="#cqrs-with-separate-models" title="Permanent link">¶</a></h2>
+<h3 id="write-model-commands">Write Model (Commands)<a class="headerlink" href="#write-model-commands" title="Permanent link">¶</a></h3>
 <p>Use event-sourced aggregates for write operations:</p>
 <div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">CreateUserCommandHandler</span><span class="p">(</span><span class="n">CommandHandler</span><span class="p">[</span><span class="n">CreateUserCommand</span><span class="p">,</span> <span class="n">OperationResult</span><span class="p">[</span><span class="n">UserDto</span><span class="p">]]):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Handles user creation commands&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Handles user creation commands"""</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
                  <span class="n">user_repository</span><span class="p">:</span> <span class="n">Repository</span><span class="p">[</span><span class="n">User</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span>  <span class="c1"># Event-sourced repository</span>
@@ -1814,11 +1087,11 @@
         <span class="n">user_dto</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mapper</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">saved_user</span><span class="o">.</span><span class="n">state</span><span class="p">,</span> <span class="n">UserDto</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">created</span><span class="p">(</span><span class="n">user_dto</span><span class="p">)</span>
 </code></pre></div>
-<h3 id="read-model-queries">Read Model (Queries)<a class="headerlink" href="#read-model-queries" title="Permanent link">&para;</a></h3>
+<h3 id="read-model-queries">Read Model (Queries)<a class="headerlink" href="#read-model-queries" title="Permanent link">¶</a></h3>
 <p>Use optimized read models for queries:</p>
 <div class="highlight"><pre><span></span><code><span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">UserReadModel</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Optimized read model for user queries&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Optimized read model for user queries"""</span>
     <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">first_name</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">last_name</span><span class="p">:</span> <span class="nb">str</span>
@@ -1829,7 +1102,7 @@
     <span class="n">is_active</span><span class="p">:</span> <span class="nb">bool</span>
 
 <span class="k">class</span><span class="w"> </span><span class="nc">GetUsersQueryHandler</span><span class="p">(</span><span class="n">QueryHandler</span><span class="p">[</span><span class="n">GetUsersQuery</span><span class="p">,</span> <span class="n">OperationResult</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">UserDto</span><span class="p">]]]):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Handles user queries using read model&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Handles user queries using read model"""</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
                  <span class="n">read_model_repository</span><span class="p">:</span> <span class="n">Repository</span><span class="p">[</span><span class="n">UserReadModel</span><span class="p">,</span> <span class="nb">str</span><span class="p">]):</span>
@@ -1845,29 +1118,29 @@
         <span class="n">user_dtos</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_map_to_dto</span><span class="p">(</span><span class="n">user</span><span class="p">)</span> <span class="k">for</span> <span class="n">user</span> <span class="ow">in</span> <span class="n">users</span><span class="p">]</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">ok</span><span class="p">(</span><span class="n">user_dtos</span><span class="p">)</span>
 </code></pre></div>
-<h2 id="custom-repository-implementation">🏭 Custom Repository Implementation<a class="headerlink" href="#custom-repository-implementation" title="Permanent link">&para;</a></h2>
-<h3 id="creating-custom-repository">Creating Custom Repository<a class="headerlink" href="#creating-custom-repository" title="Permanent link">&para;</a></h3>
+<h2 id="custom-repository-implementation">🏭 Custom Repository Implementation<a class="headerlink" href="#custom-repository-implementation" title="Permanent link">¶</a></h2>
+<h3 id="creating-custom-repository">Creating Custom Repository<a class="headerlink" href="#creating-custom-repository" title="Permanent link">¶</a></h3>
 <p>Implement the repository interface for custom data stores:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">aioredis</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">List</span>
 
 <span class="k">class</span><span class="w"> </span><span class="nc">RedisUserRepository</span><span class="p">(</span><span class="n">Repository</span><span class="p">[</span><span class="n">User</span><span class="p">,</span> <span class="nb">str</span><span class="p">]):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Redis-based user repository&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Redis-based user repository"""</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">redis_url</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">redis_url</span> <span class="o">=</span> <span class="n">redis_url</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_redis</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_get_redis</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get Redis connection&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Get Redis connection"""</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_redis</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_redis</span> <span class="o">=</span> <span class="k">await</span> <span class="n">aioredis</span><span class="o">.</span><span class="n">from_url</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">redis_url</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_redis</span>
 
     <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_by_id_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">User</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get user from Redis&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Get user from Redis"""</span>
         <span class="n">redis</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_redis</span><span class="p">()</span>
-        <span class="n">data</span> <span class="o">=</span> <span class="k">await</span> <span class="n">redis</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;user:</span><span class="si">{</span><span class="n">user_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="k">await</span> <span class="n">redis</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="sa">f</span><span class="s2">"user:</span><span class="si">{</span><span class="n">user_id</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">None</span>
@@ -1875,34 +1148,34 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_deserialize_user</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 
     <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">add_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">:</span> <span class="n">User</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">User</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add user to Redis&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Add user to Redis"""</span>
         <span class="n">redis</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_redis</span><span class="p">()</span>
         <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_serialize_user</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
-        <span class="k">await</span> <span class="n">redis</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;user:</span><span class="si">{</span><span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+        <span class="k">await</span> <span class="n">redis</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="sa">f</span><span class="s2">"user:</span><span class="si">{</span><span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
 
         <span class="c1"># Add to email index</span>
-        <span class="k">await</span> <span class="n">redis</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;user:email:</span><span class="si">{</span><span class="n">user</span><span class="o">.</span><span class="n">email</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+        <span class="k">await</span> <span class="n">redis</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="sa">f</span><span class="s2">"user:email:</span><span class="si">{</span><span class="n">user</span><span class="o">.</span><span class="n">email</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">user</span>
 
     <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">update_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">:</span> <span class="n">User</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">User</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update user in Redis&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Update user in Redis"""</span>
         <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_async</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>  <span class="c1"># Redis is key-value, so update = set</span>
 
     <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">remove_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">:</span> <span class="n">User</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Remove user from Redis&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Remove user from Redis"""</span>
         <span class="n">redis</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_redis</span><span class="p">()</span>
-        <span class="k">await</span> <span class="n">redis</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;user:</span><span class="si">{</span><span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="k">await</span> <span class="n">redis</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;user:email:</span><span class="si">{</span><span class="n">user</span><span class="o">.</span><span class="n">email</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">await</span> <span class="n">redis</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="sa">f</span><span class="s2">"user:</span><span class="si">{</span><span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="k">await</span> <span class="n">redis</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="sa">f</span><span class="s2">"user:email:</span><span class="si">{</span><span class="n">user</span><span class="o">.</span><span class="n">email</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
     <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">find_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">predicate</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">User</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Find users (basic implementation)&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Find users (basic implementation)"""</span>
         <span class="n">redis</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_redis</span><span class="p">()</span>
-        <span class="n">keys</span> <span class="o">=</span> <span class="k">await</span> <span class="n">redis</span><span class="o">.</span><span class="n">keys</span><span class="p">(</span><span class="s2">&quot;user:*&quot;</span><span class="p">)</span>
+        <span class="n">keys</span> <span class="o">=</span> <span class="k">await</span> <span class="n">redis</span><span class="o">.</span><span class="n">keys</span><span class="p">(</span><span class="s2">"user:*"</span><span class="p">)</span>
 
         <span class="n">users</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">:</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">key</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;user:email:&quot;</span><span class="p">):</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">key</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"user:email:"</span><span class="p">):</span>
                 <span class="n">data</span> <span class="o">=</span> <span class="k">await</span> <span class="n">redis</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
                 <span class="n">user</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_deserialize_user</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">predicate</span><span class="p">(</span><span class="n">user</span><span class="p">):</span>
@@ -1911,33 +1184,33 @@
         <span class="k">return</span> <span class="n">users</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_serialize_user</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">:</span> <span class="n">User</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Serialize user to JSON&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Serialize user to JSON"""</span>
         <span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
         <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">({</span>
-            <span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
-            <span class="s1">&#39;first_name&#39;</span><span class="p">:</span> <span class="n">user</span><span class="o">.</span><span class="n">first_name</span><span class="p">,</span>
-            <span class="s1">&#39;last_name&#39;</span><span class="p">:</span> <span class="n">user</span><span class="o">.</span><span class="n">last_name</span><span class="p">,</span>
-            <span class="s1">&#39;email&#39;</span><span class="p">:</span> <span class="n">user</span><span class="o">.</span><span class="n">email</span>
+            <span class="s1">'id'</span><span class="p">:</span> <span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+            <span class="s1">'first_name'</span><span class="p">:</span> <span class="n">user</span><span class="o">.</span><span class="n">first_name</span><span class="p">,</span>
+            <span class="s1">'last_name'</span><span class="p">:</span> <span class="n">user</span><span class="o">.</span><span class="n">last_name</span><span class="p">,</span>
+            <span class="s1">'email'</span><span class="p">:</span> <span class="n">user</span><span class="o">.</span><span class="n">email</span>
         <span class="p">})</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_deserialize_user</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">User</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Deserialize user from JSON&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Deserialize user from JSON"""</span>
         <span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
         <span class="n">user_data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">User</span><span class="p">(</span>
-            <span class="nb">id</span><span class="o">=</span><span class="n">user_data</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">],</span>
-            <span class="n">first_name</span><span class="o">=</span><span class="n">user_data</span><span class="p">[</span><span class="s1">&#39;first_name&#39;</span><span class="p">],</span>
-            <span class="n">last_name</span><span class="o">=</span><span class="n">user_data</span><span class="p">[</span><span class="s1">&#39;last_name&#39;</span><span class="p">],</span>
-            <span class="n">email</span><span class="o">=</span><span class="n">user_data</span><span class="p">[</span><span class="s1">&#39;email&#39;</span><span class="p">]</span>
+            <span class="nb">id</span><span class="o">=</span><span class="n">user_data</span><span class="p">[</span><span class="s1">'id'</span><span class="p">],</span>
+            <span class="n">first_name</span><span class="o">=</span><span class="n">user_data</span><span class="p">[</span><span class="s1">'first_name'</span><span class="p">],</span>
+            <span class="n">last_name</span><span class="o">=</span><span class="n">user_data</span><span class="p">[</span><span class="s1">'last_name'</span><span class="p">],</span>
+            <span class="n">email</span><span class="o">=</span><span class="n">user_data</span><span class="p">[</span><span class="s1">'email'</span><span class="p">]</span>
         <span class="p">)</span>
 </code></pre></div>
-<h2 id="unit-of-work-pattern">🔄 Unit of Work Pattern<a class="headerlink" href="#unit-of-work-pattern" title="Permanent link">&para;</a></h2>
+<h2 id="unit-of-work-pattern">🔄 Unit of Work Pattern<a class="headerlink" href="#unit-of-work-pattern" title="Permanent link">¶</a></h2>
 <p>For transaction management across multiple repositories:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">contextlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">asynccontextmanager</span>
 
 <span class="k">class</span><span class="w"> </span><span class="nc">IUnitOfWork</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Unit of work interface&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Unit of work interface"""</span>
 
     <span class="nd">@property</span>
     <span class="nd">@abstractmethod</span>
@@ -1951,17 +1224,17 @@
 
     <span class="nd">@abstractmethod</span>
     <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">commit_async</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Commit all changes&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Commit all changes"""</span>
         <span class="k">pass</span>
 
     <span class="nd">@abstractmethod</span>
     <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">rollback_async</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Rollback all changes&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Rollback all changes"""</span>
         <span class="k">pass</span>
 
     <span class="nd">@asynccontextmanager</span>
     <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">transaction</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Context manager for transactions&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Context manager for transactions"""</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="k">yield</span> <span class="bp">self</span>
             <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">commit_async</span><span class="p">()</span>
@@ -1970,7 +1243,7 @@
             <span class="k">raise</span>
 
 <span class="k">class</span><span class="w"> </span><span class="nc">MongoUnitOfWork</span><span class="p">(</span><span class="n">IUnitOfWork</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;MongoDB implementation of unit of work&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""MongoDB implementation of unit of work"""</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">:</span> <span class="n">AsyncIOMotorClient</span><span class="p">,</span> <span class="n">database_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">client</span> <span class="o">=</span> <span class="n">client</span>
@@ -1992,18 +1265,18 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_orders</span>
 
     <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">commit_async</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Commit transaction&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Commit transaction"""</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="p">:</span>
             <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit_transaction</span><span class="p">()</span>
 
     <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">rollback_async</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Rollback transaction&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Rollback transaction"""</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="p">:</span>
             <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">abort_transaction</span><span class="p">()</span>
 
     <span class="nd">@asynccontextmanager</span>
     <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">transaction</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Start a MongoDB transaction&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Start a MongoDB transaction"""</span>
         <span class="k">async</span> <span class="k">with</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">start_session</span><span class="p">()</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">session</span> <span class="o">=</span> <span class="n">session</span>
             <span class="k">async</span> <span class="k">with</span> <span class="n">session</span><span class="o">.</span><span class="n">start_transaction</span><span class="p">():</span>
@@ -2026,7 +1299,7 @@
             <span class="c1"># Get user</span>
             <span class="n">user</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">unit_of_work</span><span class="o">.</span><span class="n">users</span><span class="o">.</span><span class="n">get_by_id_async</span><span class="p">(</span><span class="n">command</span><span class="o">.</span><span class="n">user_id</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">user</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">not_found</span><span class="p">(</span><span class="s2">&quot;User not found&quot;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">not_found</span><span class="p">(</span><span class="s2">"User not found"</span><span class="p">)</span>
 
             <span class="c1"># Create order</span>
             <span class="n">order</span> <span class="o">=</span> <span class="n">Order</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">command</span><span class="o">.</span><span class="n">items</span><span class="p">,</span> <span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
@@ -2039,15 +1312,15 @@
             <span class="c1"># Transaction commits automatically</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">ok</span><span class="p">()</span>
 </code></pre></div>
-<h2 id="testing-with-repositories">🧪 Testing with Repositories<a class="headerlink" href="#testing-with-repositories" title="Permanent link">&para;</a></h2>
-<h3 id="test-doubles">Test Doubles<a class="headerlink" href="#test-doubles" title="Permanent link">&para;</a></h3>
+<h2 id="testing-with-repositories">🧪 Testing with Repositories<a class="headerlink" href="#testing-with-repositories" title="Permanent link">¶</a></h2>
+<h3 id="test-doubles">Test Doubles<a class="headerlink" href="#test-doubles" title="Permanent link">¶</a></h3>
 <p>Use in-memory repositories for testing:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">unittest.mock</span><span class="w"> </span><span class="kn">import</span> <span class="n">Mock</span>
 
 <span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">user_repository</span><span class="p">():</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;In-memory user repository for testing&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""In-memory user repository for testing"""</span>
     <span class="k">return</span> <span class="n">InMemoryUserRepository</span><span class="p">()</span>
 
 <span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">asyncio</span>
@@ -2057,7 +1330,7 @@
     <span class="n">mapper</span><span class="o">.</span><span class="n">map</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="n">test_user_dto</span>
 
     <span class="n">handler</span> <span class="o">=</span> <span class="n">CreateUserCommandHandler</span><span class="p">(</span><span class="n">user_repository</span><span class="p">,</span> <span class="n">mapper</span><span class="p">)</span>
-    <span class="n">command</span> <span class="o">=</span> <span class="n">CreateUserCommand</span><span class="p">(</span><span class="s2">&quot;John&quot;</span><span class="p">,</span> <span class="s2">&quot;Doe&quot;</span><span class="p">,</span> <span class="s2">&quot;john@example.com&quot;</span><span class="p">)</span>
+    <span class="n">command</span> <span class="o">=</span> <span class="n">CreateUserCommand</span><span class="p">(</span><span class="s2">"John"</span><span class="p">,</span> <span class="s2">"Doe"</span><span class="p">,</span> <span class="s2">"john@example.com"</span><span class="p">)</span>
 
     <span class="c1"># Act</span>
     <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">handler</span><span class="o">.</span><span class="n">handle_async</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
@@ -2068,30 +1341,30 @@
     <span class="c1"># Verify user was saved</span>
     <span class="n">saved_user</span> <span class="o">=</span> <span class="k">await</span> <span class="n">user_repository</span><span class="o">.</span><span class="n">get_by_id_async</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
     <span class="k">assert</span> <span class="n">saved_user</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
-    <span class="k">assert</span> <span class="n">saved_user</span><span class="o">.</span><span class="n">email</span> <span class="o">==</span> <span class="s2">&quot;john@example.com&quot;</span>
+    <span class="k">assert</span> <span class="n">saved_user</span><span class="o">.</span><span class="n">email</span> <span class="o">==</span> <span class="s2">"john@example.com"</span>
 </code></pre></div>
-<h3 id="integration-testing">Integration Testing<a class="headerlink" href="#integration-testing" title="Permanent link">&para;</a></h3>
+<h3 id="integration-testing">Integration Testing<a class="headerlink" href="#integration-testing" title="Permanent link">¶</a></h3>
 <p>Test with real databases:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">motor.motor_asyncio</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">testcontainers.mongodb</span><span class="w"> </span><span class="kn">import</span> <span class="n">MongoDbContainer</span>
 
-<span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span><span class="p">(</span><span class="n">scope</span><span class="o">=</span><span class="s2">&quot;session&quot;</span><span class="p">)</span>
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span><span class="p">(</span><span class="n">scope</span><span class="o">=</span><span class="s2">"session"</span><span class="p">)</span>
 <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">mongodb_container</span><span class="p">():</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Start MongoDB container for testing&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Start MongoDB container for testing"""</span>
     <span class="k">with</span> <span class="n">MongoDbContainer</span><span class="p">()</span> <span class="k">as</span> <span class="n">container</span><span class="p">:</span>
         <span class="k">yield</span> <span class="n">container</span>
 
 <span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
 <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">mongo_repository</span><span class="p">(</span><span class="n">mongodb_container</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;MongoDB repository for integration testing&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""MongoDB repository for integration testing"""</span>
     <span class="n">connection_string</span> <span class="o">=</span> <span class="n">mongodb_container</span><span class="o">.</span><span class="n">get_connection_url</span><span class="p">()</span>
-    <span class="k">return</span> <span class="n">MongoUserRepository</span><span class="p">(</span><span class="n">connection_string</span><span class="p">,</span> <span class="s2">&quot;test_db&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">MongoUserRepository</span><span class="p">(</span><span class="n">connection_string</span><span class="p">,</span> <span class="s2">"test_db"</span><span class="p">)</span>
 
 <span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">asyncio</span>
 <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">test_user_repository_integration</span><span class="p">(</span><span class="n">mongo_repository</span><span class="p">):</span>
     <span class="c1"># Arrange</span>
-    <span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="p">(</span><span class="s2">&quot;test-id&quot;</span><span class="p">,</span> <span class="s2">&quot;John&quot;</span><span class="p">,</span> <span class="s2">&quot;Doe&quot;</span><span class="p">,</span> <span class="s2">&quot;john@test.com&quot;</span><span class="p">)</span>
+    <span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="p">(</span><span class="s2">"test-id"</span><span class="p">,</span> <span class="s2">"John"</span><span class="p">,</span> <span class="s2">"Doe"</span><span class="p">,</span> <span class="s2">"john@test.com"</span><span class="p">)</span>
 
     <span class="c1"># Act</span>
     <span class="n">saved_user</span> <span class="o">=</span> <span class="k">await</span> <span class="n">mongo_repository</span><span class="o">.</span><span class="n">add_async</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
@@ -2102,8 +1375,8 @@
     <span class="k">assert</span> <span class="n">retrieved_user</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
     <span class="k">assert</span> <span class="n">retrieved_user</span><span class="o">.</span><span class="n">email</span> <span class="o">==</span> <span class="n">user</span><span class="o">.</span><span class="n">email</span>
 </code></pre></div>
-<h2 id="best-practices">🚀 Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">&para;</a></h2>
-<h3 id="1-use-interface-segregation">1. Use Interface Segregation<a class="headerlink" href="#1-use-interface-segregation" title="Permanent link">&para;</a></h3>
+<h2 id="best-practices">🚀 Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">¶</a></h2>
+<h3 id="1-use-interface-segregation">1. Use Interface Segregation<a class="headerlink" href="#1-use-interface-segregation" title="Permanent link">¶</a></h3>
 <p>Define specific repository interfaces for different use cases:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Good - Specific interfaces</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">IUserReadRepository</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
@@ -2125,7 +1398,7 @@
     <span class="c1"># Too broad, mixes read and write concerns</span>
     <span class="k">pass</span>
 </code></pre></div>
-<h3 id="2-separate-read-and-write-models">2. Separate Read and Write Models<a class="headerlink" href="#2-separate-read-and-write-models" title="Permanent link">&para;</a></h3>
+<h3 id="2-separate-read-and-write-models">2. Separate Read and Write Models<a class="headerlink" href="#2-separate-read-and-write-models" title="Permanent link">¶</a></h3>
 <p>Use different models for commands and queries:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Write model (domain entity)</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">User</span><span class="p">(</span><span class="n">AggregateRoot</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
@@ -2144,7 +1417,7 @@
     <span class="n">last_login</span><span class="p">:</span> <span class="n">datetime</span>
     <span class="n">status</span><span class="p">:</span> <span class="nb">str</span>
 </code></pre></div>
-<h3 id="3-handle-concurrency">3. Handle Concurrency<a class="headerlink" href="#3-handle-concurrency" title="Permanent link">&para;</a></h3>
+<h3 id="3-handle-concurrency">3. Handle Concurrency<a class="headerlink" href="#3-handle-concurrency" title="Permanent link">¶</a></h3>
 <p>Implement optimistic concurrency for event-sourced aggregates:</p>
 <div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">User</span><span class="p">(</span><span class="n">AggregateRoot</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
@@ -2160,13 +1433,13 @@
         <span class="c1"># Check for concurrent modifications</span>
         <span class="n">current_version</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_version</span><span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">current_version</span> <span class="o">!=</span> <span class="n">user</span><span class="o">.</span><span class="n">original_version</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">ConcurrencyException</span><span class="p">(</span><span class="s2">&quot;Entity was modified by another process&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">ConcurrencyException</span><span class="p">(</span><span class="s2">"Entity was modified by another process"</span><span class="p">)</span>
 
         <span class="c1"># Save events</span>
         <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">save_events</span><span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">uncommitted_events</span><span class="p">,</span> <span class="n">user</span><span class="o">.</span><span class="n">version</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">user</span>
 </code></pre></div>
-<h3 id="4-use-specifications-pattern">4. Use Specifications Pattern<a class="headerlink" href="#4-use-specifications-pattern" title="Permanent link">&para;</a></h3>
+<h3 id="4-use-specifications-pattern">4. Use Specifications Pattern<a class="headerlink" href="#4-use-specifications-pattern" title="Permanent link">¶</a></h3>
 <p>For complex queries:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
 
@@ -2175,10 +1448,10 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">is_satisfied_by</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="k">pass</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">and_</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="s1">&#39;Specification&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;Specification&#39;</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">and_</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="s1">'Specification'</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">'Specification'</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">AndSpecification</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">or_</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="s1">&#39;Specification&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;Specification&#39;</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">or_</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="s1">'Specification'</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">'Specification'</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">OrSpecification</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
 
 <span class="k">class</span><span class="w"> </span><span class="nc">ActiveUserSpecification</span><span class="p">(</span><span class="n">Specification</span><span class="p">):</span>
@@ -2194,12 +1467,12 @@
 
 <span class="c1"># Usage</span>
 <span class="n">active_engineering_users</span> <span class="o">=</span> <span class="n">ActiveUserSpecification</span><span class="p">()</span><span class="o">.</span><span class="n">and_</span><span class="p">(</span>
-    <span class="n">UserInDepartmentSpecification</span><span class="p">(</span><span class="s2">&quot;Engineering&quot;</span><span class="p">)</span>
+    <span class="n">UserInDepartmentSpecification</span><span class="p">(</span><span class="s2">"Engineering"</span><span class="p">)</span>
 <span class="p">)</span>
 
 <span class="n">users</span> <span class="o">=</span> <span class="k">await</span> <span class="n">repository</span><span class="o">.</span><span class="n">find_async</span><span class="p">(</span><span class="n">active_engineering_users</span><span class="o">.</span><span class="n">is_satisfied_by</span><span class="p">)</span>
 </code></pre></div>
-<h3 id="5-repository-registration">5. Repository Registration<a class="headerlink" href="#5-repository-registration" title="Permanent link">&para;</a></h3>
+<h3 id="5-repository-registration">5. Repository Registration<a class="headerlink" href="#5-repository-registration" title="Permanent link">¶</a></h3>
 <p>Register repositories properly in DI container:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># In application startup</span>
 <span class="n">builder</span> <span class="o">=</span> <span class="n">WebApplicationBuilder</span><span class="p">()</span>
@@ -2218,7 +1491,7 @@
 
 <span class="n">builder</span><span class="o">.</span><span class="n">services</span><span class="o">.</span><span class="n">add_scoped</span><span class="p">(</span><span class="n">IUserRepository</span><span class="p">,</span> <span class="n">factory</span><span class="o">=</span><span class="n">create_user_repository</span><span class="p">)</span>
 </code></pre></div>
-<h2 id="related-documentation">🔗 Related Documentation<a class="headerlink" href="#related-documentation" title="Permanent link">&para;</a></h2>
+<h2 id="related-documentation">🔗 Related Documentation<a class="headerlink" href="#related-documentation" title="Permanent link">¶</a></h2>
 <ul>
 <li><a href="../../getting-started/">Getting Started</a> - Basic repository usage</li>
 <li><a href="../../architecture/">Architecture Guide</a> - How repositories fit in the architecture</li>
@@ -2226,81 +1499,39 @@
 <li><a href="../event-sourcing/">Event Sourcing</a> - Event sourcing with repositories</li>
 <li><a href="../dependency-injection/">Dependency Injection</a> - DI with repositories</li>
 </ul>
-
-
-
-
-
-
-
-
-
-
-
-
-                
-              </article>
-            </div>
-          
-          
+</article>
+</div>
 <script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
-        </div>
-        
-          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
-  
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+</div>
+<button class="md-top md-icon" data-md-component="top" hidden="" type="button">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"></path></svg>
   Back to top
 </button>
-        
-      </main>
-      
-        <footer class="md-footer">
-  
-  <div class="md-footer-meta md-typeset">
-    <div class="md-footer-meta__inner md-grid">
-      <div class="md-copyright">
+</main>
+<footer class="md-footer">
+<div class="md-footer-meta md-typeset">
+<div class="md-footer-meta__inner md-grid">
+<div class="md-copyright">
   
   
     Made with
-    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+    <a href="https://squidfunk.github.io/mkdocs-material/" rel="noopener" target="_blank">
       Material for MkDocs
     </a>
-  
 </div>
-      
-        
 <div class="md-social">
-  
-    
-    
-    
-    
-      
-      
-    
-    <a href="https://github.com/bvandewe/pyneuro" target="_blank" rel="noopener" title="github.com" class="md-social__link">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path fill="currentColor" d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
-    </a>
-  
+<a class="md-social__link" href="https://github.com/bvandewe/pyneuro" rel="noopener" target="_blank" title="github.com">
+<svg viewbox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><!--! Font Awesome Free 7.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"></path></svg>
+</a>
 </div>
-      
-    </div>
-  </div>
+</div>
+</div>
 </footer>
-      
-    </div>
-    <div class="md-dialog" data-md-component="dialog">
-      <div class="md-dialog__inner md-typeset"></div>
-    </div>
-    
-    
-    
-      
-      <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.expand", "navigation.top", "search.highlight", "search.share"], "search": "../../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
-    
-    
-      <script src="../../assets/javascripts/bundle.92b07e13.min.js"></script>
-      
-    
-  </body>
+</div>
+<div class="md-dialog" data-md-component="dialog">
+<div class="md-dialog__inner md-typeset"></div>
+</div>
+<script id="__config" type="application/json">{"base": "../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.expand", "navigation.top", "search.highlight", "search.share"], "search": "../../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+<script src="../../assets/javascripts/bundle.f55a23d4.min.js"></script>
+</body>
 </html>
