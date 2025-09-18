@@ -15,6 +15,7 @@ nav:
     - MVC Controllers: features/mvc-controllers.md
     - Data Access: features/data-access.md
     - Event Sourcing: features/event-sourcing.md
+    - Mermaid Diagrams: features/mermaid-diagrams.md
     - Event Handling: features/event-handling.md
     - Object Mapping: features/object-mapping.md
     - Configuration: features/configuration.md
@@ -58,12 +59,26 @@ markdown_extensions:
   - toc:
       permalink: true
   - pymdownx.details
-  - pymdownx.superfences
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
   - pymdownx.tabbed:
       alternate_style: true
 
 plugins:
   - search
+  - mermaid2:
+      arguments:
+        theme: auto
+        themeVariables:
+          primaryColor: '#1976d2'
+          primaryTextColor: '#ffffff'
+          primaryBorderColor: '#1976d2'
+          lineColor: '#1976d2'
+          secondaryColor: '#f5f5f5'
+          tertiaryColor: '#ffffff'
 
 extra:
   social:

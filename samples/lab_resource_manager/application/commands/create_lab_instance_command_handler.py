@@ -9,7 +9,7 @@ from datetime import datetime
 
 from neuroglia.dependency_injection import ServiceProviderBase
 from neuroglia.mapping.mapper import Mapper
-from neuroglia.mediation.abstractions import CommandHandler
+from neuroglia.mediation.mediator import CommandHandler
 from neuroglia.mvc.controller.operation_result import OperationResult
 
 from samples.lab_resource_manager.application.commands.create_lab_instance_command import CreateLabInstanceCommand

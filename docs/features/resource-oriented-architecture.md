@@ -12,6 +12,54 @@ ROA provides:
 - **🔄 Reconciliation**: Periodic loops that ensure system consistency and handle drift detection
 - **🛡️ Safety Mechanisms**: Timeout handling, error recovery, and corrective actions
 
+## 🏗️ Architecture Overview
+
+```mermaid
+graph TB
+    subgraph "📊 Resource Layer"
+        A[Resource Definition]
+        B[Resource Storage]
+        C[Resource Events]
+    end
+    
+    subgraph "👀 Observation Layer"
+        D[Watcher] --> E[Event Stream]
+        F[Poller] --> G[Change Detection]
+    end
+    
+    subgraph "🎮 Control Layer"
+        H[Controller] --> I[Business Logic]
+        I --> J[State Transitions]
+        I --> K[Action Execution]
+    end
+    
+    subgraph "🔄 Reconciliation Layer"
+        L[Reconciliation Loop] --> M[Drift Detection]
+        M --> N[Corrective Actions]
+        N --> O[State Restoration]
+    end
+    
+    subgraph "🛡️ Safety Layer"
+        P[Error Handling] --> Q[Retry Logic]
+        Q --> R[Circuit Breaker]
+        R --> S[Timeout Management]
+    end
+    
+    A --> B
+    B --> C
+    C --> D
+    C --> F
+    E --> H
+    G --> H
+    H --> L
+    L --> P
+    
+    style A fill:#e3f2fd
+    style H fill:#f3e5f5
+    style L fill:#e8f5e8
+    style P fill:#fff3e0
+```
+
 ## 🏗️ Core Components
 
 ### Resource Definition
