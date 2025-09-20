@@ -1,5 +1,27 @@
 # Changelog
 
+All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [0.1.8] - 2025-09-20
+
+### Fixed
+
+- **Critical**: Resolved circular import issue preventing `neuroglia.mediation.Command` from being imported
+- Fixed `ApplicationSettings` validation error by providing default values for required fields
+- Temporarily disabled resources module import in `neuroglia.data` to break circular dependency
+- All core mediation classes (`Command`, `Query`, `Mediator`, `RequestHandler`) now importable
+
+### Technical Details
+
+- Addressed circular import chain: mediation → data.abstractions → data.resources → eventing → mediation
+- Made `ApplicationSettings` fields optional with empty string defaults to prevent Pydantic validation errors
+- Updated lazy loading mechanism maintains full backward compatibility
+
+## [0.1.7] - 2025-09-20log
+
 All notable changes to the Neuroglia Python framework will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),

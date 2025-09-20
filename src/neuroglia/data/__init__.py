@@ -23,8 +23,8 @@ from .infrastructure.abstractions import (
     FlexibleRepository
 )
 
-# Import resource-oriented architecture components
-from . import resources
+# Import resource-oriented architecture components (deferred to avoid circular imports)
+# from . import resources
 
 __all__ = [
     # Queryable data access
@@ -44,6 +44,6 @@ __all__ = [
     "QueryableRepository", 
     "FlexibleRepository",
     
-    # Resource-oriented architecture
-    "resources"
+    # Resource-oriented architecture (commented out to avoid circular imports)
+    # "resources"
 ]
