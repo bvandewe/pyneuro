@@ -1,5 +1,5 @@
 from typing import Generic, Optional, TypeVar
-from neuroglia.core.problem_details import ProblemDetails
+from .problem_details import ProblemDetails
 
 TData = TypeVar('TData')
 
