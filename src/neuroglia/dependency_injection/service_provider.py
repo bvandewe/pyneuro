@@ -4,7 +4,7 @@ from enum import Enum
 import inspect
 from typing import Any, Callable, ForwardRef, List, Optional, Type, Dict, TypeVar
 
-from neuroglia.core.type_extensions import TypeExtensions
+from ..core.type_extensions import TypeExtensions
 
 
 class ServiceLifetime(Enum):
