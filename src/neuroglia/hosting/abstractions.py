@@ -94,15 +94,15 @@ class Host(HostBase):
 
 class ApplicationSettings(BaseSettings):
 
-    consumer_group: str
+    consumer_group: str = ""
 
     connection_strings: dict[str, str] = dict[str, str]()
 
-    cloud_event_sink: str
+    cloud_event_sink: str = ""
 
-    cloud_event_source: str
+    cloud_event_source: str = ""
 
-    cloud_event_type_prefix: str
+    cloud_event_type_prefix: str = ""
 
     cloud_event_retry_attempts: int = 5
 
