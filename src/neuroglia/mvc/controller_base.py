@@ -1,6 +1,6 @@
 import uuid
 
-from typing import Dict, Any
+from typing import Dict, Any, TYPE_CHECKING
 from classy_fastapi import Routable
 from fastapi import Response
 from fastapi.routing import APIRoute
@@ -9,7 +9,9 @@ from neuroglia.core.problem_details import ProblemDetails
 from neuroglia.dependency_injection.service_provider import ServiceProviderBase
 from neuroglia.mapping.mapper import Mapper
 from neuroglia.mediation.mediator import Mediator
-from neuroglia.serialization.json import JsonSerializer
+
+if TYPE_CHECKING:
+    from neuroglia.serialization.json import JsonSerializer
 
 
 def generate_unique_id_function(route: APIRoute) -> str | APIRoute:
@@ -31,6 +33,9 @@ class ControllerBase(Routable):
 
     def __init__(self, service_provider: ServiceProviderBase, mapper: Mapper, mediator: Mediator):
         """Initializes a new ControllerBase"""
+        # Late import to avoid circular dependency
+        from neuroglia.serialization.json import JsonSerializer
+        
         self.service_provider = service_provider
         self.mapper = mapper
         self.mediator = mediator
@@ -51,7 +56,7 @@ class ControllerBase(Routable):
     mediator: Mediator
     """ Gets the service used to mediate calls """
 
-    json_serializer: JsonSerializer
+    json_serializer: "JsonSerializer"
 
     name: str
     """ Gets/sets the name of the controller, which is used to configure the controller's router. Defaults to the lowercased name of the implementing controller class, excluding the term 'Controller' """

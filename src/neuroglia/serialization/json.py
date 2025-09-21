@@ -2,10 +2,13 @@ import json
 from datetime import datetime
 from enum import Enum
 import typing
-from neuroglia.hosting.abstractions import ApplicationBuilderBase
-from neuroglia.serialization.abstractions import Serializer, TextSerializer
-from typing import Any, Dict, Optional, Type, Union, get_args, get_origin
+from typing import Any, Optional, Type, Union, get_args, get_origin, TYPE_CHECKING
 from dataclasses import is_dataclass, fields
+
+from neuroglia.serialization.abstractions import Serializer, TextSerializer
+
+if TYPE_CHECKING:
+    from neuroglia.hosting.abstractions import ApplicationBuilderBase
 
 
 class JsonEncoder(json.JSONEncoder):
@@ -176,25 +179,23 @@ class JsonSerializer(TextSerializer):
         elif isinstance(value, str) and expected_type == datetime:
             return datetime.fromisoformat(value)
 
-        elif (
-            hasattr(expected_type, "__bases__")
-            and expected_type.__bases__
-            and issubclass(expected_type, Enum)
-        ):
+        elif (hasattr(expected_type, "__bases__")
+              and expected_type.__bases__
+              and issubclass(expected_type, Enum)):
             # Handle Enum deserialization
             for enum_member in expected_type:
                 if enum_member.value == value:
                     return enum_member
             raise ValueError(
-                f"Invalid enum value for {
-                             expected_type.__name__}: {value}"
+                f"Invalid enum value for {expected_type.__name__}: {value}"
             )
 
         else:
             # Return the value as is for types that do not require deserialization
             return value
 
-    def configure(builder: ApplicationBuilderBase) -> ApplicationBuilderBase:
+    @staticmethod
+    def configure(builder: "ApplicationBuilderBase") -> "ApplicationBuilderBase":
         """Configures the specified application builder to use the JsonSerializer"""
         builder.services.add_singleton(JsonSerializer)
         builder.services.add_singleton(

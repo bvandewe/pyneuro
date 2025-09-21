@@ -2,12 +2,9 @@ from abc import ABC, abstractmethod
 from contextlib import contextmanager
 from enum import Enum
 import inspect
-from typing import Any, Callable, List, Optional, Type, Dict, TypeVar, TYPE_CHECKING
+from typing import Any, Callable, List, Optional, Type, Dict, TypeVar
 
 from ..core.type_extensions import TypeExtensions
-
-if TYPE_CHECKING:
-    from typing import ForwardRef
 
 
 class ServiceLifetime(Enum):
@@ -23,11 +20,7 @@ class ServiceLifetime(Enum):
     '''Singleton services are created only once and reused for the entire application lifetime.'''
 
 
-ServiceDescriptor = ForwardRef("ServiceDescriptor")
-
-ServiceProvider = ForwardRef("ServiceProvider")
-
-ServiceScopeBase = ForwardRef("IServiceScope")
+# Forward references - these will be defined later in this file
 
 
 class ServiceProviderBase(ABC):
@@ -45,7 +38,7 @@ class ServiceProviderBase(ABC):
         ''' Gets all services of the specified type '''
         raise NotImplementedError()
 
-    def create_scope(self) -> ServiceScopeBase:
+    def create_scope(self) -> "ServiceScopeBase":
         ''' Creates a new service scope '''
         raise NotImplementedError()
 
@@ -301,7 +294,7 @@ class ServiceDescriptor:
         return type(self.singleton) if self.singleton is not None else inspect.signature(self.implementation_factory).return_annotation
 
 
-ServiceCollection = ForwardRef("ServiceCollection")
+# ServiceCollection will be defined at the end of this file
 
 
 class ServiceCollection(List[ServiceDescriptor]):

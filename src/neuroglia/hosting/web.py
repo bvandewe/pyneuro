@@ -1,14 +1,16 @@
 from abc import abstractmethod
 import inspect
-from typing import List
+from typing import List, Optional, TYPE_CHECKING
 from fastapi import FastAPI, Request, Response
 from starlette.middleware.base import BaseHTTPMiddleware
 from neuroglia.core.problem_details import ProblemDetails
 from neuroglia.core import ModuleLoader, TypeFinder
 from neuroglia.dependency_injection.service_provider import ServiceCollection, ServiceProviderBase
 from neuroglia.hosting.abstractions import ApplicationBuilderBase, Host, HostApplicationLifetime, HostBase
-from neuroglia.mvc.controller_base import ControllerBase
-from neuroglia.serialization.json import JsonSerializer
+
+if TYPE_CHECKING:
+    from neuroglia.mvc.controller_base import ControllerBase
+    from neuroglia.serialization.json import JsonSerializer
 
 
 class WebHostBase(HostBase, FastAPI):
@@ -18,11 +20,31 @@ class WebHostBase(HostBase, FastAPI):
         application_lifetime: HostApplicationLifetime = self.services.get_required_service(HostApplicationLifetime)
         FastAPI.__init__(self, lifespan=application_lifetime._run_async, docs_url="/api/docs")
 
-    def use_controllers(self):
-        ''' Configures FastAPI routes for registered controller services '''
-        controller: ControllerBase
-        for controller in self.services.get_services(ControllerBase):
-            self.include_router(controller.router, prefix="/api/v1")
+    def use_controllers(self, module_names: Optional[List[str]] = None):
+        """Register and configure all controllers"""
+        # Late import to avoid circular dependency
+        from neuroglia.mvc.controller_base import ControllerBase
+        
+        controller_types = []
+        if module_names:
+            for module_name in module_names:
+                module = ModuleLoader.load(module_name)
+                controller_types.extend(TypeFinder.get_types(module, lambda t: inspect.isclass(t) and issubclass(t, ControllerBase) and t != ControllerBase, include_sub_packages=True))
+        else:
+            # Auto-discover controllers in api.controllers package
+            try:
+                api_controllers_module = ModuleLoader.load("api.controllers")
+                controller_types.extend(TypeFinder.get_types(api_controllers_module, lambda t: inspect.isclass(t) and issubclass(t, ControllerBase) and t != ControllerBase, include_sub_packages=True))
+            except ImportError:
+                # No controllers found, continue
+                pass
+        
+        for controller_type in controller_types:
+            # Register controller and mount its routes
+            controller_instance = controller_type()
+            self.mount(f"/api/{controller_instance.get_route_prefix()}", controller_instance, name=controller_type.__name__)
+        
+        return self
 
 
 class WebHost(WebHostBase, Host):
@@ -41,6 +63,9 @@ class WebApplicationBuilderBase(ApplicationBuilderBase):
 
     def add_controllers(self, modules: List[str]) -> ServiceCollection:
         ''' Registers all API controller types, which enables automatic configuration and implicit Dependency Injection of the application's controllers (specialized router class in FastAPI) '''
+        # Late import to avoid circular dependency
+        from neuroglia.mvc.controller_base import ControllerBase
+        
         controller_types = []
         for module in [ModuleLoader.load(module_name) for module_name in modules]:
             controller_types.extend(TypeFinder.get_types(module, lambda t: inspect.isclass(t) and issubclass(t, ControllerBase) and t != ControllerBase, include_sub_packages=True))
@@ -69,13 +94,16 @@ class ExceptionHandlingMiddleware(BaseHTTPMiddleware):
 
     def __init__(self, app, service_provider: ServiceProviderBase):
         super().__init__(app)
+        # Late import to avoid circular dependency
+        from neuroglia.serialization.json import JsonSerializer
+        
         self.service_provider = service_provider
         self.serializer = self.service_provider.get_required_service(JsonSerializer)
 
     service_provider: ServiceProviderBase
     ''' Gets the current service provider '''
 
-    serializer: JsonSerializer
+    serializer: "JsonSerializer"
     ''' Gets the service used to serialize/deserialize values to/from JSON '''
 
     async def dispatch(self, request: Request, call_next):
