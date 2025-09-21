@@ -18,6 +18,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Framework modules (JsonSerializer, ControllerBase, WebApplicationBuilder) can now be imported without errors
   - Critical infrastructure issue that prevented proper module loading has been resolved
 
+- **Eventing Module**: Added missing DomainEvent export
+  - Re-exported DomainEvent from data.abstractions in eventing module for convenient access
+  - Both `neuroglia.data` and `neuroglia.eventing` import paths now work for DomainEvent
+  - Maintains backward compatibility with existing data module imports
+  - Eventing module now provides complete event functionality (CloudEvent + DomainEvent)
+  - Converted direct imports to quoted type annotations for forward references
+  - Fixed TypeFinder.get_types method with proper @staticmethod decorator
+  - Framework modules (JsonSerializer, ControllerBase, WebApplicationBuilder) can now be imported without errors
+  - Critical infrastructure issue that prevented proper module loading has been resolved
+
 ## [0.1.9] - 2025-09-21
 
 ### Enhanced
