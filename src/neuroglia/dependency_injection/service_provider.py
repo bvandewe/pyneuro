@@ -1,3 +1,4 @@
+from __future__ import annotations
 from abc import ABC, abstractmethod
 from contextlib import contextmanager
 from enum import Enum
@@ -46,12 +47,12 @@ class ServiceProviderBase(ABC):
 class ServiceScopeBase(ABC):
     ''' Defines the fundamentals of a a limited context within which services are resolved and managed by a service provider, allowing for scoped instances and controlled lifetimes of dependencies. '''
 
-    @abstractclassmethod
+    @abstractmethod
     def get_service_provider(self) -> ServiceProviderBase:
         ''' Gets the scoped service provider '''
         raise NotImplementedError()
 
-    @abstractclassmethod
+    @abstractmethod
     def dispose(self):
         ''' Disposes of the service scope '''
         raise NotImplementedError()
