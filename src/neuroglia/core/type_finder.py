@@ -8,6 +8,7 @@ from typing import Callable, List, Type
 class TypeFinder:
     ''' Represents an utility class that exposes methods to find and filter types '''
 
+    @staticmethod
     def get_types(module: ModuleType, predicate: Callable[[Type], bool] = lambda t: True, include_sub_modules=True, include_sub_packages=False) -> List[Type]:
         ''' Recursively finds all types contained in the specified module that match the specified predicate, if any '''
         results: List[Type] = list[Type]()
