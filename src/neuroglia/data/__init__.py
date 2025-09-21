@@ -32,7 +32,7 @@ __all__ = [
     "QueryProvider",
     
     # Domain abstractions
-    "Entity", 
+    "Entity",
     "AggregateRoot",
     "DomainEvent",
     "Identifiable",
@@ -41,7 +41,7 @@ __all__ = [
     
     # Repository patterns
     "Repository",
-    "QueryableRepository", 
+    "QueryableRepository",
     "FlexibleRepository",
     
     # Resource-oriented architecture (commented out to avoid circular imports)

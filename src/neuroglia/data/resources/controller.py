@@ -35,7 +35,7 @@ class ReconciliationResult:
     
     status: ReconciliationStatus
     message: Optional[str] = None
-    requeue_after: Optional[timedelta] = None
+    delay: Optional[timedelta] = None
     error: Optional[Exception] = None
     
     @classmethod
@@ -56,7 +56,7 @@ class ReconciliationResult:
     @classmethod
     def requeue_after(cls, delay: timedelta, message: Optional[str] = None) -> 'ReconciliationResult':
         """Create a requeue after delay reconciliation result."""
-        return cls(ReconciliationStatus.REQUEUE_AFTER, message, requeue_after=delay)
+        return cls(ReconciliationStatus.REQUEUE_AFTER, message, delay=delay)
 
 
 class ResourceControllerBase(Generic[TResourceSpec, TResourceStatus],
@@ -158,8 +158,8 @@ class ResourceControllerBase(Generic[TResourceSpec, TResourceStatus],
             
         elif result.status in [ReconciliationStatus.REQUEUE, ReconciliationStatus.REQUEUE_AFTER]:
             requeue_msg = f"Reconciliation requeued for {resource_name}"
-            if result.requeue_after:
-                requeue_msg += f" after {result.requeue_after}"
+            if result.delay:
+                requeue_msg += f" after {result.delay}"
             log.info(requeue_msg)
             await self._publish_reconciliation_requeued_event(resource, result)
     
@@ -201,7 +201,7 @@ class ResourceControllerBase(Generic[TResourceSpec, TResourceStatus],
             }
         )
         
-        await self.event_publisher.publish_async(event)
+        await self.event_publisher.on_publish_cloud_event_async(event)
     
     async def _publish_reconciliation_failed_event(self,
                                                   resource: Resource[TResourceSpec, TResourceStatus],
@@ -225,7 +225,7 @@ class ResourceControllerBase(Generic[TResourceSpec, TResourceStatus],
             }
         )
         
-        await self.event_publisher.publish_async(event)
+        await self.event_publisher.on_publish_cloud_event_async(event)
     
     async def _publish_reconciliation_requeued_event(self,
                                                     resource: Resource[TResourceSpec, TResourceStatus],
@@ -244,12 +244,12 @@ class ResourceControllerBase(Generic[TResourceSpec, TResourceStatus],
                 "kind": resource.kind,
                 "namespace": resource.metadata.namespace,
                 "name": resource.metadata.name,
-                "requeueAfter": result.requeue_after.total_seconds() if result.requeue_after else None,
+                "requeueAfter": result.delay.total_seconds() if result.delay else None,
                 "message": result.message
             }
         )
         
-        await self.event_publisher.publish_async(event)
+        await self.event_publisher.on_publish_cloud_event_async(event)
     
     async def _publish_finalized_event(self, resource: Resource[TResourceSpec, TResourceStatus]) -> None:
         """Publish event when resource finalization completes."""
@@ -269,7 +269,7 @@ class ResourceControllerBase(Generic[TResourceSpec, TResourceStatus],
             }
         )
         
-        await self.event_publisher.publish_async(event)
+        await self.event_publisher.on_publish_cloud_event_async(event)
     
     async def _publish_finalization_failed_event(self,
                                                 resource: Resource[TResourceSpec, TResourceStatus],
@@ -292,4 +292,4 @@ class ResourceControllerBase(Generic[TResourceSpec, TResourceStatus],
             }
         )
         
-        await self.event_publisher.publish_async(event)
+        await self.event_publisher.on_publish_cloud_event_async(event)
