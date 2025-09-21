@@ -1,10 +1,13 @@
-from abc import ABC, abstractclassmethod
+from abc import ABC, abstractmethod
 from contextlib import contextmanager
 from enum import Enum
 import inspect
-from typing import Any, Callable, ForwardRef, List, Optional, Type, Dict, TypeVar
+from typing import Any, Callable, List, Optional, Type, Dict, TypeVar, TYPE_CHECKING
 
 from ..core.type_extensions import TypeExtensions
+
+if TYPE_CHECKING:
+    from typing import ForwardRef
 
 
 class ServiceLifetime(Enum):

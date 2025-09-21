@@ -13,7 +13,7 @@ __all__ = [
     # Core dependency injection
     "ServiceCollection",
     "ServiceProvider",
-    "ServiceLifetime", 
+    "ServiceLifetime",
     "ServiceDescriptor",
     
     # CQRS mediation
@@ -22,7 +22,7 @@ __all__ = [
     "Query",
     "Request",
     "CommandHandler",
-    "QueryHandler", 
+    "QueryHandler",
     "RequestHandler",
     
     # Core framework
@@ -39,14 +39,14 @@ __all__ = [
     "EventSourcingRepository",
     "ResourceController",
     "StateMachine",
-    "EventBus", 
+    "EventBus",
     "EventHandler",
     "CloudEvent",
     "WebApplicationBuilder",
     "WebApplication",
     "HostedService",
     "Mapper",
-    "MongoRepository", 
+    "MongoRepository",
     "InMemoryRepository",
     "QueryableRepository",
     "ResourceWatcher",
@@ -62,6 +62,8 @@ __email__ = "team@neuroglia.io"
 __license__ = "Apache"
 
 # Dynamic imports with error handling to avoid circular imports
+
+
 def __getattr__(name: str):
     """Dynamic attribute access for lazy loading of framework components."""
     
@@ -72,7 +74,7 @@ def __getattr__(name: str):
             if name == "ServiceCollection":
                 return ServiceCollection
             elif name == "ServiceProvider":
-                return ServiceProvider  
+                return ServiceProvider 
             elif name == "ServiceLifetime":
                 return ServiceLifetime
             elif name == "ServiceDescriptor":
@@ -88,7 +90,7 @@ def __getattr__(name: str):
                 return Mediator
             elif name == "Command":
                 return Command
-            elif name == "Query": 
+            elif name == "Query":
                 return Query
             elif name == "Request":
                 return Request
@@ -219,7 +221,7 @@ def __getattr__(name: str):
         try:
             from .data.resources import ResourceWatcher, Reconciler
             if name == "ResourceWatcher":
-                return ResourceWatcher  
+                return ResourceWatcher 
             elif name == "Reconciler":
                 return Reconciler
         except ImportError:

@@ -5,6 +5,37 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.9] - 2025-09-21
+
+### Enhanced
+
+- **Documentation**: Comprehensive documentation enhancement for core framework classes
+  - Added extensive docstrings to `OperationResult` class with usage patterns and best practices
+  - Enhanced `ProblemDetails` class documentation with RFC 7807 compliance details
+  - Included practical code examples for CQRS handlers, controllers, and manual construction
+  - Added property documentation for computed properties (`is_success`, `error_message`, `status_code`)
+  - Documented framework integration patterns with RequestHandler, ControllerBase, and Mediator
+  - Provided type safety guidance and TypeScript-like usage examples
+  - Added cross-references to related framework components and standards
+
+### Fixed
+
+- **Code Quality**: Resolved trailing whitespace and formatting issues
+  - Fixed whitespace consistency across core modules
+  - Improved code formatting in `__init__.py` files
+  - Maintained strict linting compliance for better code quality
+
+### Technical Details
+
+- **Developer Experience**: Enhanced IntelliSense and documentation generation
+  - Comprehensive docstrings now provide rich IDE tooltips and autocomplete information
+  - Usage examples demonstrate real-world patterns for command handlers and queries
+  - Best practices section guides proper error handling and type safety
+- **Standards Compliance**: Maintained RFC 7807 adherence while extending for framework needs
+  - ProblemDetails follows HTTP API error reporting standards
+  - OperationResult provides functional error handling patterns
+  - Thread safety and performance considerations documented
+
 ## [0.1.8] - 2025-09-20
 
 ### Fixed
