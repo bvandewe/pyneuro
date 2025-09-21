@@ -18,12 +18,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Provided type safety guidance and TypeScript-like usage examples
   - Added cross-references to related framework components and standards
 
+- **Dependencies**: Optimized dependency organization for better modularity and lighter installs
+  - **Core Dependencies**: Reduced to essential framework requirements only
+    - `fastapi`, `classy-fastapi`, `pydantic-settings`, `python-dotenv`, `typing-extensions`, `annotated-types`
+  - **Optional Dependencies**: Organized into logical groups with extras
+    - `web` extra: `uvicorn`, `httpx` for web hosting and HTTP client features
+    - `mongodb` extra: `pymongo` for MongoDB repository implementations  
+    - `eventstore` extra: `esdbclient`, `rx` for event sourcing capabilities
+    - `grpc` extra: `grpcio` for gRPC communication support
+    - `all` extra: includes all optional dependencies
+  - **Documentation Dependencies**: Moved to optional `docs` group
+    - `mkdocs`, `mkdocs-material`, `mkdocs-mermaid2-plugin` for documentation generation
+  - **Removed Unused**: Eliminated `multipledispatch` (not used in framework)
+
 ### Fixed
 
 - **Code Quality**: Resolved trailing whitespace and formatting issues
   - Fixed whitespace consistency across core modules
   - Improved code formatting in `__init__.py` files
   - Maintained strict linting compliance for better code quality
+
+- **Version Management**: Updated package version to 0.1.9 throughout project files
 
 ### Technical Details
 
@@ -35,6 +50,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - ProblemDetails follows HTTP API error reporting standards
   - OperationResult provides functional error handling patterns
   - Thread safety and performance considerations documented
+- **Dependency Management**: Improved install flexibility and reduced bloat
+  - Default installation ~70% lighter (only core dependencies)
+  - Feature-specific installs via extras: `pip install neuroglia-python[web,mongodb]`
+  - Clear separation between framework core and optional integrations
+  - Streamlined version constraints for better compatibility
 
 ## [0.1.8] - 2025-09-20
 
