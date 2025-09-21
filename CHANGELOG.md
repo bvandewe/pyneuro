@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.10] - 2025-09-21
+
+### Fixed
+
+- **Critical Infrastructure**: Resolved circular import between core framework modules
+  - Fixed circular dependency chain: `serialization.json` → `hosting.web` → `mvc.controller_base` → `serialization.json`
+  - Implemented TYPE_CHECKING import pattern to break dependency cycle while preserving type hints
+  - Added late imports in runtime methods to maintain functionality without circular dependencies
+  - Converted direct imports to quoted type annotations for forward references
+  - Fixed TypeFinder.get_types method with proper @staticmethod decorator
+  - Framework modules (JsonSerializer, ControllerBase, WebApplicationBuilder) can now be imported without errors
+  - Critical infrastructure issue that prevented proper module loading has been resolved
+
 ## [0.1.9] - 2025-09-21
 
 ### Enhanced
