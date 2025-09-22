@@ -1,728 +1,1193 @@
-# 🗄️ Data Access
+# 🍕 Data Access
 
-Neuroglia provides a flexible data access layer that supports multiple storage backends through a unified repository pattern. It includes built-in support for MongoDB, Event Store, and in-memory repositories, with extensibility for other data stores.
+Neuroglia provides a flexible data access layer that supports multiple storage backends through a unified repository pattern for **Mario's Pizzeria**. From storing pizza orders in files to managing kitchen workflows with event sourcing, the framework adapts to your pizzeria's needs.
+
+Let's explore how to store orders, manage inventory, and track kitchen operations using different persistence strategies.
 
 ## 🎯 Overview
 
-The data access system provides:
+The pizzeria data access system provides:
 
-- **Repository Pattern**: Unified interface for data operations
-- **Multiple Storage Backends**: MongoDB, Event Store, in-memory, and custom implementations
-- **Event Sourcing**: Complete event sourcing support with EventStoreDB
-- **CQRS Support**: Separate read and write models
-- **Query Abstractions**: Flexible querying capabilities
-- **Unit of Work**: Transaction management across repositories
+- **Repository Pattern**: Unified interface for orders, pizzas, and customer data
+- **Multiple Storage Backends**: File-based (development), MongoDB (production), Event Store (kitchen events)
+- **Event Sourcing**: Complete order lifecycle tracking with EventStoreDB
+- **CQRS Support**: Separate read models for menus and write models for orders
+- **Query Abstractions**: Find orders by status, customer, or time period
+- **Unit of Work**: Transaction management across order processing
 
 ## 🏗️ Core Abstractions
 
-### Repository Interface
+### Repository Interface for Pizzeria Entities
 
-The base repository interface defines standard CRUD operations:
+The base repository interface defines standard CRUD operations for pizzeria data:
 
 ```python
 from abc import ABC, abstractmethod
 from typing import Generic, TypeVar, List, Optional
+from datetime import datetime, date
 
 TEntity = TypeVar('TEntity')
 TKey = TypeVar('TKey')
 
 class Repository(Generic[TEntity, TKey], ABC):
-    """Base repository interface"""
+    """Base repository interface for pizzeria entities"""
     
     @abstractmethod
     async def get_by_id_async(self, id: TKey) -> Optional[TEntity]:
-        """Get entity by ID"""
+        """Get entity by ID (order, pizza, customer)"""
         pass
     
     @abstractmethod
-    async def add_async(self, entity: TEntity) -> TEntity:
-        """Add new entity"""
+    async def save_async(self, entity: TEntity) -> None:
+        """Save entity (create or update)"""
         pass
     
     @abstractmethod
-    async def update_async(self, entity: TEntity) -> TEntity:
-        """Update existing entity"""
+    async def delete_async(self, id: TKey) -> None:
+        """Delete entity by ID"""
         pass
     
     @abstractmethod
-    async def remove_async(self, entity: TEntity):
-        """Remove entity"""
+    async def get_all_async(self) -> List[TEntity]:
+        """Get all entities"""
         pass
     
     @abstractmethod
     async def find_async(self, predicate) -> List[TEntity]:
         """Find entities matching predicate"""
         pass
+
+# Pizzeria-specific repository interfaces
+class IOrderRepository(Repository[Order, str], ABC):
+    """Order-specific repository operations"""
+    
+    @abstractmethod
+    async def get_by_customer_phone_async(self, phone: str) -> List[Order]:
+        """Get orders by customer phone number"""
+        pass
+    
+    @abstractmethod
+    async def get_by_status_async(self, status: str) -> List[Order]:
+        """Get orders by status (pending, cooking, ready, delivered)"""
+        pass
+    
+    @abstractmethod
+    async def get_by_date_range_async(self, start_date: date, end_date: date) -> List[Order]:
+        """Get orders within date range for reports"""
+        pass
+
+class IPizzaRepository(Repository[Pizza, str], ABC):
+    """Pizza menu repository operations"""
+    
+    @abstractmethod
+    async def get_by_category_async(self, category: str) -> List[Pizza]:
+        """Get pizzas by category (signature, specialty, custom)"""
+        pass
+    
+    @abstractmethod
+    async def get_available_async(self) -> List[Pizza]:
+        """Get only available pizzas (not sold out)"""
+        pass
 ```
-
-### Queryable Interface
-
-For advanced querying capabilities:
 
 ```python
 from neuroglia.data.abstractions import Queryable
+from typing import Callable
+from decimal import Decimal
 
-class ExtendedRepository(Repository[TEntity, TKey], Queryable[TEntity]):
-    """Repository with advanced querying"""
+class QueryablePizzeriaRepository(Repository[TEntity, TKey], Queryable[TEntity]):
+    """Repository with advanced querying for pizzeria analytics"""
     
-    async def where(self, predicate) -> 'ExtendedRepository[TEntity, TKey]':
-        """Filter entities"""
+    async def where(self, predicate: Callable[[TEntity], bool]) -> List[TEntity]:
+        """Filter pizzeria entities by predicate"""
         pass
     
-    async def order_by(self, selector) -> 'ExtendedRepository[TEntity, TKey]':
-        """Order entities"""
+    async def order_by_desc(self, selector: Callable[[TEntity], any]) -> List[TEntity]:
+        """Order entities in descending order"""
         pass
     
-    async def take(self, count: int) -> 'ExtendedRepository[TEntity, TKey]':
-        """Take specified number of entities"""
+    async def group_by(self, selector: Callable[[TEntity], any]) -> dict:
+        """Group entities for analytics"""
         pass
+
+# Example: Advanced order queries
+class ExtendedOrderRepository(IOrderRepository, QueryablePizzeriaRepository[Order, str]):
+    """Order repository with advanced analytics queries"""
+    
+    async def get_top_customers_async(self, limit: int = 10) -> List[dict]:
+        """Get top customers by order count"""
+        orders = await self.get_all_async()
+        customer_counts = {}
+        
+        for order in orders:
+            phone = order.customer_phone
+            customer_counts[phone] = customer_counts.get(phone, 0) + 1
+        
+        # Sort and limit
+        top_customers = sorted(customer_counts.items(), key=lambda x: x[1], reverse=True)[:limit]
+        
+        return [{"phone": phone, "order_count": count} for phone, count in top_customers]
+    
+    async def get_revenue_by_date_async(self, start_date: date, end_date: date) -> List[dict]:
+        """Get daily revenue within date range"""
+        orders = await self.get_by_date_range_async(start_date, end_date)
+        daily_revenue = {}
+        
+        for order in orders:
+            order_date = order.order_time.date()
+            if order_date not in daily_revenue:
+                daily_revenue[order_date] = Decimal('0')
+            daily_revenue[order_date] += order.total_amount
+        
+        return [{"date": date, "revenue": revenue} for date, revenue in sorted(daily_revenue.items())]
 ```
 
-## 🗃️ MongoDB Integration
+## 📁 File-Based Storage for Development
 
-### MongoDB Repository
+### File Repository Implementation
 
-Built-in MongoDB repository implementation:
+Perfect for development and testing of Mario's Pizzeria:
+
+```python
+import json
+import os
+from pathlib import Path
+from typing import List, Optional, Callable
+from datetime import datetime, date
+
+class FileRepository(Repository[TEntity, TKey]):
+    """File-based repository using JSON storage"""
+    
+    def __init__(self, entity_type: type, data_dir: str = "data"):
+        self.entity_type = entity_type
+        self.entity_name = entity_type.__name__.lower()
+        self.data_dir = Path(data_dir)
+        self.entity_dir = self.data_dir / self.entity_name
+        
+        # Ensure directories exist
+        self.entity_dir.mkdir(parents=True, exist_ok=True)
+    
+    async def get_by_id_async(self, id: TKey) -> Optional[TEntity]:
+        """Get entity from JSON file"""
+        file_path = self.entity_dir / f"{id}.json"
+        
+        if not file_path.exists():
+            return None
+        
+        try:
+            with open(file_path, 'r', encoding='utf-8') as f:
+                data = json.load(f)
+                return self._dict_to_entity(data)
+        except Exception as e:
+            raise StorageException(f"Failed to load {self.entity_name} {id}: {e}")
+    
+    async def save_async(self, entity: TEntity) -> None:
+        """Save entity to JSON file"""
+        file_path = self.entity_dir / f"{entity.id}.json"
+        
+        try:
+            data = self._entity_to_dict(entity)
+            with open(file_path, 'w', encoding='utf-8') as f:
+                json.dump(data, f, indent=2, default=self._json_serializer, ensure_ascii=False)
+        except Exception as e:
+            raise StorageException(f"Failed to save {self.entity_name} {entity.id}: {e}")
+    
+    async def delete_async(self, id: TKey) -> None:
+        """Delete entity JSON file"""
+        file_path = self.entity_dir / f"{id}.json"
+        if file_path.exists():
+            file_path.unlink()
+    
+    async def get_all_async(self) -> List[TEntity]:
+        """Get all entities from JSON files"""
+        entities = []
+        
+        for file_path in self.entity_dir.glob("*.json"):
+            try:
+                with open(file_path, 'r', encoding='utf-8') as f:
+                    data = json.load(f)
+                    entity = self._dict_to_entity(data)
+                    entities.append(entity)
+            except Exception as e:
+                print(f"Warning: Failed to load {file_path}: {e}")
+                continue
+        
+        return entities
+    
+    async def find_async(self, predicate: Callable[[TEntity], bool]) -> List[TEntity]:
+        """Find entities matching predicate"""
+        all_entities = await self.get_all_async()
+        return [entity for entity in all_entities if predicate(entity)]
+    
+    def _entity_to_dict(self, entity: TEntity) -> dict:
+        """Convert entity to dictionary for JSON serialization"""
+        if hasattr(entity, '__dict__'):
+            return entity.__dict__.copy()
+        elif hasattr(entity, '_asdict'):
+            return entity._asdict()
+        else:
+            raise ValueError(f"Cannot serialize entity of type {type(entity)}")
+    
+    def _dict_to_entity(self, data: dict) -> TEntity:
+        """Convert dictionary back to entity"""
+        return self.entity_type(**data)
+    
+    def _json_serializer(self, obj):
+        """Handle special types in JSON serialization"""
+        if isinstance(obj, (datetime, date)):
+            return obj.isoformat()
+        elif hasattr(obj, '__dict__'):
+            return obj.__dict__
+        else:
+            return str(obj)
+
+# Pizzeria-specific file repositories
+class FileOrderRepository(FileRepository[Order, str], IOrderRepository):
+    """File-based order repository for development"""
+    
+    def __init__(self, data_dir: str = "data"):
+        super().__init__(Order, data_dir)
+    
+    async def get_by_customer_phone_async(self, phone: str) -> List[Order]:
+        """Get orders by customer phone"""
+        return await self.find_async(lambda order: order.customer_phone == phone)
+    
+    async def get_by_status_async(self, status: str) -> List[Order]:
+        """Get orders by status"""
+        return await self.find_async(lambda order: order.status == status)
+    
+    async def get_by_date_range_async(self, start_date: date, end_date: date) -> List[Order]:
+        """Get orders within date range"""
+        return await self.find_async(lambda order: 
+            start_date <= order.order_time.date() <= end_date)
+
+class FilePizzaRepository(FileRepository[Pizza, str], IPizzaRepository):
+    """File-based pizza repository for menu management"""
+    
+    def __init__(self, data_dir: str = "data"):
+        super().__init__(Pizza, data_dir)
+    
+    async def get_by_category_async(self, category: str) -> List[Pizza]:
+        """Get pizzas by category"""
+        return await self.find_async(lambda pizza: pizza.category == category)
+    
+    async def get_available_async(self) -> List[Pizza]:
+        """Get available pizzas only"""
+        return await self.find_async(lambda pizza: pizza.is_available)
+```
+
+### MongoDB Repository for Pizzeria
+
+Built-in MongoDB repository implementation for production pizzeria:
 
 ```python
 from neuroglia.data.infrastructure.mongo import MongoRepository
-from motor.motor_asyncio import AsyncIOMotorClient
+from motor.motor_asyncio import AsyncIOMotorClient, AsyncIOMotorDatabase
+from bson import ObjectId
+from typing import Optional, List, Dict, Any
 
-class UserRepository(MongoRepository[User, str]):
-    """MongoDB repository for users"""
+class MongoOrderRepository(MongoRepository[Order, str], IOrderRepository):
+    """MongoDB repository for pizza orders"""
     
-    def __init__(self, connection_string: str, database_name: str):
-        super().__init__(connection_string, database_name, "users")
+    def __init__(self, database: AsyncIOMotorDatabase):
+        super().__init__(database, "orders")
     
-    async def get_by_email_async(self, email: str) -> Optional[User]:
-        """Custom method to find user by email"""
-        filter_dict = {"email": email}
-        document = await self.collection.find_one(filter_dict)
-        
-        if document is None:
-            return None
-        
-        return self._map_document_to_entity(document)
+    async def get_by_customer_phone_async(self, phone: str) -> List[Order]:
+        """Get orders by customer phone with index optimization"""
+        cursor = self.collection.find({"customer_phone": phone}).sort("order_time", -1)
+        documents = await cursor.to_list(length=None)
+        return [self._document_to_entity(doc) for doc in documents]
     
-    async def find_by_department_async(self, department: str) -> List[User]:
-        """Find users by department"""
-        filter_dict = {"department": department}
-        cursor = self.collection.find(filter_dict)
+    async def get_by_status_async(self, status: str) -> List[Order]:
+        """Get orders by status for kitchen management"""
+        cursor = self.collection.find({"status": status}).sort("order_time", 1)  # FIFO
+        documents = await cursor.to_list(length=None)
+        return [self._document_to_entity(doc) for doc in documents]
+    
+    async def get_by_date_range_async(self, start_date: date, end_date: date) -> List[Order]:
+        """Get orders within date range for reporting"""
+        start_datetime = datetime.combine(start_date, datetime.min.time())
+        end_datetime = datetime.combine(end_date, datetime.max.time())
         
-        users = []
-        async for document in cursor:
-            users.append(self._map_document_to_entity(document))
+        cursor = self.collection.find({
+            "order_time": {
+                "$gte": start_datetime,
+                "$lte": end_datetime
+            }
+        }).sort("order_time", 1)
         
-        return users
+        documents = await cursor.to_list(length=None)
+        return [self._document_to_entity(doc) for doc in documents]
+    
+    async def get_kitchen_queue_async(self, statuses: List[str]) -> List[Order]:
+        """Get orders in kitchen queue (optimized for kitchen display)"""
+        cursor = self.collection.find(
+            {"status": {"$in": statuses}},
+            {"customer_name": 1, "pizzas": 1, "order_time": 1, "status": 1, "estimated_ready_time": 1}
+        ).sort("order_time", 1)
+        
+        documents = await cursor.to_list(length=None)
+        return [self._document_to_entity(doc) for doc in documents]
+    
+    async def get_daily_revenue_async(self, target_date: date) -> Dict[str, Any]:
+        """Get daily revenue aggregation"""
+        start_datetime = datetime.combine(target_date, datetime.min.time())
+        end_datetime = datetime.combine(target_date, datetime.max.time())
+        
+        pipeline = [
+            {
+                "$match": {
+                    "order_time": {"$gte": start_datetime, "$lte": end_datetime},
+                    "status": {"$in": ["ready", "delivered"]}  # Only completed orders
+                }
+            },
+            {
+                "$group": {
+                    "_id": None,
+                    "total_revenue": {"$sum": "$total_amount"},
+                    "order_count": {"$sum": 1},
+                    "average_order_value": {"$avg": "$total_amount"}
+                }
+            }
+        ]
+        
+        result = await self.collection.aggregate(pipeline).to_list(length=1)
+        return result[0] if result else {"total_revenue": 0, "order_count": 0, "average_order_value": 0}
+    
+    def _entity_to_document(self, order: Order) -> Dict[str, Any]:
+        """Convert order entity to MongoDB document"""
+        doc = {
+            "_id": order.id,
+            "customer_name": order.customer_name,
+            "customer_phone": order.customer_phone,
+            "customer_address": order.customer_address,
+            "pizzas": [self._pizza_to_dict(pizza) for pizza in order.pizzas],
+            "status": order.status,
+            "order_time": order.order_time,
+            "estimated_ready_time": order.estimated_ready_time,
+            "total_amount": float(order.total_amount),  # MongoDB decimal handling
+            "payment_method": order.payment_method
+        }
+        return doc
+    
+    def _document_to_entity(self, doc: Dict[str, Any]) -> Order:
+        """Convert MongoDB document to order entity"""
+        return Order(
+            id=doc["_id"],
+            customer_name=doc["customer_name"],
+            customer_phone=doc["customer_phone"],
+            customer_address=doc["customer_address"],
+            pizzas=[self._dict_to_pizza(pizza_dict) for pizza_dict in doc["pizzas"]],
+            status=doc["status"],
+            order_time=doc["order_time"],
+            estimated_ready_time=doc.get("estimated_ready_time"),
+            total_amount=Decimal(str(doc["total_amount"])),
+            payment_method=doc.get("payment_method", "cash")
+        )
+
+class MongoPizzaRepository(MongoRepository[Pizza, str], IPizzaRepository):
+    """MongoDB repository for pizza menu management"""
+    
+    def __init__(self, database: AsyncIOMotorDatabase):
+        super().__init__(database, "pizzas")
+    
+    async def get_by_category_async(self, category: str) -> List[Pizza]:
+        """Get pizzas by category with caching optimization"""
+        cursor = self.collection.find({"category": category, "is_available": True}).sort("name", 1)
+        documents = await cursor.to_list(length=None)
+        return [self._document_to_entity(doc) for doc in documents]
+    
+    async def get_available_async(self) -> List[Pizza]:
+        """Get all available pizzas for menu display"""
+        cursor = self.collection.find({"is_available": True}).sort([("category", 1), ("name", 1)])
+        documents = await cursor.to_list(length=None)
+        return [self._document_to_entity(doc) for doc in documents]
+    
+    async def update_availability_async(self, pizza_id: str, is_available: bool) -> None:
+        """Update pizza availability (for sold out items)"""
+        await self.collection.update_one(
+            {"_id": pizza_id},
+            {"$set": {"is_available": is_available, "updated_at": datetime.utcnow()}}
+        )
+    
+    def _entity_to_document(self, pizza: Pizza) -> Dict[str, Any]:
+        """Convert pizza entity to MongoDB document"""
+        return {
+            "_id": pizza.id,
+            "name": pizza.name,
+            "description": pizza.description,
+            "category": pizza.category,
+            "base_price": float(pizza.base_price),
+            "available_toppings": pizza.available_toppings,
+            "preparation_time_minutes": pizza.preparation_time_minutes,
+            "is_available": pizza.is_available,
+            "is_seasonal": pizza.is_seasonal,
+            "created_at": pizza.created_at,
+            "updated_at": datetime.utcnow()
+        }
 ```
 
-### Configuration
+### MongoDB Indexes for Performance
 
-Configure MongoDB repositories in your application:
+Create indexes for pizzeria query patterns:
+
+```python
+# Create indexes for optimal pizzeria query performance
+async def create_pizzeria_indexes():
+    """Create MongoDB indexes for pizzeria collections"""
+    
+    # Order collection indexes
+    await orders_collection.create_index("customer_phone")  # Customer lookup
+    await orders_collection.create_index("status")  # Kitchen filtering
+    await orders_collection.create_index("order_time")  # Chronological ordering
+    await orders_collection.create_index([("status", 1), ("order_time", 1)])  # Kitchen queue
+    await orders_collection.create_index([("order_time", -1)])  # Recent orders first
+    await orders_collection.create_index("estimated_ready_time")  # Ready time tracking
+    
+    # Pizza collection indexes  
+    await pizzas_collection.create_index("category")  # Menu category filtering
+    await pizzas_collection.create_index("is_available")  # Available items only
+    await pizzas_collection.create_index([("category", 1), ("name", 1)])  # Sorted menu display
+    await pizzas_collection.create_index("is_seasonal")  # Seasonal items management
+```
+
+### Repository Registration with MongoDB
 
 ```python
 from neuroglia.hosting.web import WebApplicationBuilder
-from neuroglia.hosting.configuration.data_access_layer import DataAccessLayer
 
-builder = WebApplicationBuilder()
-
-# Configure MongoDB repositories for read models
-DataAccessLayer.ReadModel.configure(
-    builder,
-    ["integration.models"],  # Modules containing DTOs
-    lambda builder_, entity_type, key_type: MongoRepository.configure(
-        builder_, entity_type, key_type, "myapp_db"
-    )
-)
-
-app = builder.build()
+def create_pizzeria_app():
+    """Create Mario's Pizzeria application with MongoDB persistence"""
+    builder = WebApplicationBuilder()
+    
+    # MongoDB configuration
+    mongo_client = AsyncIOMotorClient("mongodb://localhost:27017")
+    database = mongo_client.marios_pizzeria
+    
+    # Repository registration
+    builder.services.add_singleton(lambda: database)
+    builder.services.add_scoped(MongoOrderRepository)
+    builder.services.add_scoped(MongoPizzaRepository)
+    
+    # Alias interfaces to implementations
+    builder.services.add_scoped(IOrderRepository, lambda sp: sp.get_service(MongoOrderRepository))
+    builder.services.add_scoped(IPizzaRepository, lambda sp: sp.get_service(MongoPizzaRepository))
+    
+    app = builder.build()
+    return app
 ```
 
-## 📅 Event Sourcing
+## 📊 Event Sourcing for Kitchen Workflow
 
-### Event Store Repository
+### Kitchen Event Store
 
-For event-sourced aggregates:
+Track kitchen workflow with event sourcing patterns:
 
 ```python
-from neuroglia.data.infrastructure.event_sourcing import EventSourcingRepository
-from neuroglia.data.abstractions import AggregateRoot
+from neuroglia.eventing import DomainEvent
+from datetime import datetime, timedelta
+from typing import Dict, Any
+from dataclasses import dataclass
 
-class Person(AggregateRoot[str]):
-    """Event-sourced person aggregate"""
+@dataclass
+class OrderStatusChangedEvent(DomainEvent):
+    """Event for tracking order status changes in kitchen"""
+    order_id: str
+    old_status: str
+    new_status: str
+    changed_by: str
+    change_reason: Optional[str] = None
+    estimated_ready_time: Optional[datetime] = None
+
+@dataclass
+class PizzaStartedEvent(DomainEvent):
+    """Event when pizza preparation begins"""
+    order_id: str
+    pizza_name: str
+    pizza_index: int
+    started_by: str
+    estimated_completion: datetime
+
+@dataclass
+class PizzaCompletedEvent(DomainEvent):
+    """Event when pizza is finished"""
+    order_id: str
+    pizza_name: str
+    pizza_index: int
+    completed_by: str
+    actual_completion_time: datetime
+    preparation_duration_minutes: int
+
+class KitchenWorkflowEventStore:
+    """Event store for kitchen workflow tracking"""
     
-    def __init__(self, id: str = None):
-        super().__init__(id)
-        self.state = PersonState()
+    def __init__(self, event_repository: IEventRepository):
+        self.event_repository = event_repository
     
-    def register(self, first_name: str, last_name: str, email: str):
-        """Register a new person"""
-        self.apply(PersonRegisteredEvent(
-            person_id=self.id,
-            first_name=first_name,
-            last_name=last_name,
-            email=email
-        ))
+    async def record_order_status_change(self, 
+                                         order_id: str, 
+                                         old_status: str, 
+                                         new_status: str,
+                                         changed_by: str,
+                                         change_reason: str = None) -> None:
+        """Record order status changes for kitchen analytics"""
+        event = OrderStatusChangedEvent(
+            order_id=order_id,
+            old_status=old_status,
+            new_status=new_status,
+            changed_by=changed_by,
+            change_reason=change_reason,
+            estimated_ready_time=self._calculate_ready_time(new_status)
+        )
+        
+        await self.event_repository.save_event_async(event)
     
-    def change_email(self, new_email: str):
-        """Change person's email"""
-        self.apply(PersonEmailChangedEvent(
-            person_id=self.id,
-            old_email=self.state.email,
-            new_email=new_email
-        ))
+    async def record_pizza_started(self, 
+                                   order_id: str, 
+                                   pizza_name: str, 
+                                   pizza_index: int,
+                                   started_by: str) -> None:
+        """Record when pizza preparation begins"""
+        estimated_completion = datetime.utcnow() + timedelta(
+            minutes=self._get_pizza_prep_time(pizza_name)
+        )
+        
+        event = PizzaStartedEvent(
+            order_id=order_id,
+            pizza_name=pizza_name,
+            pizza_index=pizza_index,
+            started_by=started_by,
+            estimated_completion=estimated_completion
+        )
+        
+        await self.event_repository.save_event_async(event)
     
-    # Event handlers
-    def on_person_registered(self, event: PersonRegisteredEvent):
-        self.state.id = event.person_id
-        self.state.first_name = event.first_name
-        self.state.last_name = event.last_name
-        self.state.email = event.email
+    async def record_pizza_completed(self, 
+                                     order_id: str, 
+                                     pizza_name: str, 
+                                     pizza_index: int,
+                                     completed_by: str,
+                                     start_time: datetime) -> None:
+        """Record when pizza is completed"""
+        completion_time = datetime.utcnow()
+        duration_minutes = int((completion_time - start_time).total_seconds() / 60)
+        
+        event = PizzaCompletedEvent(
+            order_id=order_id,
+            pizza_name=pizza_name,
+            pizza_index=pizza_index,
+            completed_by=completed_by,
+            actual_completion_time=completion_time,
+            preparation_duration_minutes=duration_minutes
+        )
+        
+        await self.event_repository.save_event_async(event)
     
-    def on_person_email_changed(self, event: PersonEmailChangedEvent):
-        self.state.email = event.new_email
+    async def get_kitchen_performance_metrics(self, date_range: tuple[date, date]) -> Dict[str, Any]:
+        """Get kitchen performance analytics from events"""
+        start_date, end_date = date_range
+        
+        # Query events within date range
+        events = await self.event_repository.get_events_by_date_range_async(start_date, end_date)
+        
+        # Calculate metrics
+        pizza_completion_events = [e for e in events if isinstance(e, PizzaCompletedEvent)]
+        status_change_events = [e for e in events if isinstance(e, OrderStatusChangedEvent)]
+        
+        return {
+            "total_pizzas_completed": len(pizza_completion_events),
+            "average_prep_time_minutes": self._calculate_average_prep_time(pizza_completion_events),
+            "peak_hours": self._calculate_peak_hours(status_change_events),
+            "order_completion_rate": self._calculate_completion_rate(status_change_events),
+            "staff_performance": self._calculate_staff_performance(pizza_completion_events)
+        }
 ```
 
-### Event Store Configuration
-
-Configure EventStoreDB integration:
-
 ```python
-from neuroglia.data.infrastructure.event_sourcing.event_store import ESEventStore
-from neuroglia.data.infrastructure.event_sourcing.abstractions import EventStoreOptions
+from neuroglia.data import Repository
+from typing import List, Dict, Any
+import json
+from pathlib import Path
+from datetime import datetime
 
-# Configure EventStore
-builder = WebApplicationBuilder()
-
-ESEventStore.configure(
-    builder,
-    EventStoreOptions(
-        database_name="myapp",
-        consumer_group="myapp_consumers"
-    )
-)
-
-# Configure event sourcing repositories for write models
-DataAccessLayer.WriteModel.configure(
-    builder,
-    ["domain.models"],  # Modules containing aggregates
-    lambda builder_, entity_type, key_type: EventSourcingRepository.configure(
-        builder_, entity_type, key_type
-    )
-)
-```
-
-## 💾 In-Memory Repository
-
-For testing and development:
-
-```python
-from neuroglia.data.infrastructure.memory import MemoryRepository
-
-class InMemoryUserRepository(MemoryRepository[User, str]):
-    """In-memory repository for testing"""
+class FileEventRepository(Repository[DomainEvent, str]):
+    """File-based event repository for development and testing"""
     
-    def __init__(self):
+    def __init__(self, events_directory: str = "data/events"):
         super().__init__()
-        self._users_by_email = {}
+        self.events_directory = Path(events_directory)
+        self.events_directory.mkdir(parents=True, exist_ok=True)
     
-    async def add_async(self, user: User) -> User:
-        """Add user and index by email"""
-        result = await super().add_async(user)
-        self._users_by_email[user.email] = user
-        return result
-    
-    async def get_by_email_async(self, email: str) -> Optional[User]:
-        """Get user by email"""
-        return self._users_by_email.get(email)
-    
-    async def remove_async(self, user: User):
-        """Remove user and clean up email index"""
-        await super().remove_async(user)
-        if user.email in self._users_by_email:
-            del self._users_by_email[user.email]
-```
-
-## 🔄 CQRS with Separate Models
-
-### Write Model (Commands)
-
-Use event-sourced aggregates for write operations:
-
-```python
-class CreateUserCommandHandler(CommandHandler[CreateUserCommand, OperationResult[UserDto]]):
-    """Handles user creation commands"""
-    
-    def __init__(self, 
-                 user_repository: Repository[User, str],  # Event-sourced repository
-                 mapper: Mapper):
-        self.user_repository = user_repository
-        self.mapper = mapper
-    
-    async def handle_async(self, command: CreateUserCommand) -> OperationResult[UserDto]:
-        # Create aggregate
-        user = User(str(uuid.uuid4()))
-        user.register(command.first_name, command.last_name, command.email)
+    async def save_event_async(self, event: DomainEvent) -> None:
+        """Save event to JSON file organized by date"""
+        event_date = event.occurred_at.date()
+        date_directory = self.events_directory / event_date.strftime("%Y-%m-%d")
+        date_directory.mkdir(exist_ok=True)
         
-        # Save to event store
-        saved_user = await self.user_repository.add_async(user)
+        event_file = date_directory / f"{event.id}.json"
         
-        # Return DTO
-        user_dto = self.mapper.map(saved_user.state, UserDto)
-        return self.created(user_dto)
-```
-
-### Read Model (Queries)
-
-Use optimized read models for queries:
-
-```python
-@dataclass
-class UserReadModel:
-    """Optimized read model for user queries"""
-    id: str
-    first_name: str
-    last_name: str
-    email: str
-    full_name: str
-    department: str
-    created_at: datetime
-    is_active: bool
-
-class GetUsersQueryHandler(QueryHandler[GetUsersQuery, OperationResult[List[UserDto]]]):
-    """Handles user queries using read model"""
-    
-    def __init__(self, 
-                 read_model_repository: Repository[UserReadModel, str]):
-        self.read_model_repository = read_model_repository
-    
-    async def handle_async(self, query: GetUsersQuery) -> OperationResult[List[UserDto]]:
-        # Query optimized read model
-        users = await self.read_model_repository.find_async(
-            lambda u: u.department == query.department if query.department else True
-        )
+        event_data = {
+            "id": event.id,
+            "event_type": event.__class__.__name__,
+            "occurred_at": event.occurred_at.isoformat(),
+            "data": self._serialize_event_data(event)
+        }
         
-        # Map to DTOs
-        user_dtos = [self._map_to_dto(user) for user in users]
-        return self.ok(user_dtos)
-```
-
-## 🏭 Custom Repository Implementation
-
-### Creating Custom Repository
-
-Implement the repository interface for custom data stores:
-
-```python
-import aioredis
-from typing import Optional, List
-
-class RedisUserRepository(Repository[User, str]):
-    """Redis-based user repository"""
+        async with aiofiles.open(event_file, 'w') as f:
+            await f.write(json.dumps(event_data, indent=2))
     
-    def __init__(self, redis_url: str):
-        self.redis_url = redis_url
-        self._redis = None
-    
-    async def _get_redis(self):
-        """Get Redis connection"""
-        if self._redis is None:
-            self._redis = await aioredis.from_url(self.redis_url)
-        return self._redis
-    
-    async def get_by_id_async(self, user_id: str) -> Optional[User]:
-        """Get user from Redis"""
-        redis = await self._get_redis()
-        data = await redis.get(f"user:{user_id}")
+    async def get_events_by_date_range_async(self, 
+                                             start_date: date, 
+                                             end_date: date) -> List[DomainEvent]:
+        """Get events within date range"""
+        events = []
+        current_date = start_date
         
-        if data is None:
-            return None
-        
-        return self._deserialize_user(data)
-    
-    async def add_async(self, user: User) -> User:
-        """Add user to Redis"""
-        redis = await self._get_redis()
-        data = self._serialize_user(user)
-        await redis.set(f"user:{user.id}", data)
-        
-        # Add to email index
-        await redis.set(f"user:email:{user.email}", user.id)
-        
-        return user
-    
-    async def update_async(self, user: User) -> User:
-        """Update user in Redis"""
-        return await self.add_async(user)  # Redis is key-value, so update = set
-    
-    async def remove_async(self, user: User):
-        """Remove user from Redis"""
-        redis = await self._get_redis()
-        await redis.delete(f"user:{user.id}")
-        await redis.delete(f"user:email:{user.email}")
-    
-    async def find_async(self, predicate) -> List[User]:
-        """Find users (basic implementation)"""
-        redis = await self._get_redis()
-        keys = await redis.keys("user:*")
-        
-        users = []
-        for key in keys:
-            if not key.startswith("user:email:"):
-                data = await redis.get(key)
-                user = self._deserialize_user(data)
-                if predicate(user):
-                    users.append(user)
-        
-        return users
-    
-    def _serialize_user(self, user: User) -> str:
-        """Serialize user to JSON"""
-        import json
-        return json.dumps({
-            'id': user.id,
-            'first_name': user.first_name,
-            'last_name': user.last_name,
-            'email': user.email
-        })
-    
-    def _deserialize_user(self, data: str) -> User:
-        """Deserialize user from JSON"""
-        import json
-        user_data = json.loads(data)
-        return User(
-            id=user_data['id'],
-            first_name=user_data['first_name'],
-            last_name=user_data['last_name'],
-            email=user_data['email']
-        )
-```
-
-## 🔄 Unit of Work Pattern
-
-For transaction management across multiple repositories:
-
-```python
-from abc import ABC, abstractmethod
-from contextlib import asynccontextmanager
-
-class IUnitOfWork(ABC):
-    """Unit of work interface"""
-    
-    @property
-    @abstractmethod
-    def users(self) -> Repository[User, str]:
-        pass
-    
-    @property
-    @abstractmethod
-    def orders(self) -> Repository[Order, str]:
-        pass
-    
-    @abstractmethod
-    async def commit_async(self):
-        """Commit all changes"""
-        pass
-    
-    @abstractmethod
-    async def rollback_async(self):
-        """Rollback all changes"""
-        pass
-    
-    @asynccontextmanager
-    async def transaction(self):
-        """Context manager for transactions"""
-        try:
-            yield self
-            await self.commit_async()
-        except Exception:
-            await self.rollback_async()
-            raise
-
-class MongoUnitOfWork(IUnitOfWork):
-    """MongoDB implementation of unit of work"""
-    
-    def __init__(self, client: AsyncIOMotorClient, database_name: str):
-        self.client = client
-        self.database_name = database_name
-        self.session = None
-        self._users = None
-        self._orders = None
-    
-    @property
-    def users(self) -> Repository[User, str]:
-        if self._users is None:
-            self._users = MongoUserRepository(self.client, self.database_name, self.session)
-        return self._users
-    
-    @property
-    def orders(self) -> Repository[Order, str]:
-        if self._orders is None:
-            self._orders = MongoOrderRepository(self.client, self.database_name, self.session)
-        return self._orders
-    
-    async def commit_async(self):
-        """Commit transaction"""
-        if self.session:
-            await self.session.commit_transaction()
-    
-    async def rollback_async(self):
-        """Rollback transaction"""
-        if self.session:
-            await self.session.abort_transaction()
-    
-    @asynccontextmanager
-    async def transaction(self):
-        """Start a MongoDB transaction"""
-        async with await self.client.start_session() as session:
-            self.session = session
-            async with session.start_transaction():
-                try:
-                    yield self
-                    await session.commit_transaction()
-                except Exception:
-                    await session.abort_transaction()
-                    raise
-                finally:
-                    self.session = None
-
-# Usage in command handler
-class ProcessOrderCommandHandler(CommandHandler[ProcessOrderCommand, OperationResult]):
-    def __init__(self, unit_of_work: IUnitOfWork):
-        self.unit_of_work = unit_of_work
-    
-    async def handle_async(self, command: ProcessOrderCommand) -> OperationResult:
-        async with self.unit_of_work.transaction():
-            # Get user
-            user = await self.unit_of_work.users.get_by_id_async(command.user_id)
-            if user is None:
-                return self.not_found("User not found")
+        while current_date <= end_date:
+            date_directory = self.events_directory / current_date.strftime("%Y-%m-%d")
             
-            # Create order
-            order = Order.create(command.items, user.id)
-            await self.unit_of_work.orders.add_async(order)
+            if date_directory.exists():
+                for event_file in date_directory.glob("*.json"):
+                    async with aiofiles.open(event_file, 'r') as f:
+                        event_data = json.loads(await f.read())
+                        event = self._deserialize_event(event_data)
+                        if event:
+                            events.append(event)
             
-            # Update user stats
-            user.increment_order_count()
-            await self.unit_of_work.users.update_async(user)
-            
-            # Transaction commits automatically
-            return self.ok()
+            current_date += timedelta(days=1)
+        
+        return sorted(events, key=lambda e: e.occurred_at)
 ```
 
-## 🧪 Testing with Repositories
+### MongoDB Event Store
 
-### Test Doubles
+Production event store with aggregation capabilities:
 
-Use in-memory repositories for testing:
+```python
+from neuroglia.data.infrastructure.mongo import MongoRepository
+from motor.motor_asyncio import AsyncIOMotorDatabase
+
+class MongoEventRepository(MongoRepository[DomainEvent, str]):
+    """MongoDB event repository for production event sourcing"""
+    
+    def __init__(self, database: AsyncIOMotorDatabase):
+        super().__init__(database, "events")
+    
+    async def save_event_async(self, event: DomainEvent) -> None:
+        """Save event with automatic indexing"""
+        document = {
+            "_id": event.id,
+            "event_type": event.__class__.__name__,
+            "occurred_at": event.occurred_at,
+            "data": self._serialize_event_data(event),
+            "version": 1,
+            "metadata": {
+                "correlation_id": getattr(event, 'correlation_id', None),
+                "causation_id": getattr(event, 'causation_id', None)
+            }
+        }
+        
+        await self.collection.insert_one(document)
+    
+    async def get_kitchen_timeline_events(self, 
+                                          order_id: str,
+                                          limit: int = 100) -> List[DomainEvent]:
+        """Get chronological timeline of kitchen events for an order"""
+        cursor = self.collection.find(
+            {
+                "event_type": {"$in": ["OrderStatusChangedEvent", "PizzaStartedEvent", "PizzaCompletedEvent"]},
+                "data.order_id": order_id
+            }
+        ).sort("occurred_at", 1).limit(limit)
+        
+        documents = await cursor.to_list(length=limit)
+        return [self._deserialize_event(doc) for doc in documents]
+    
+    async def get_performance_aggregation(self, 
+                                          start_date: datetime,
+                                          end_date: datetime) -> Dict[str, Any]:
+        """Get aggregated kitchen performance metrics"""
+        pipeline = [
+            {
+                "$match": {
+                    "occurred_at": {"$gte": start_date, "$lte": end_date},
+                    "event_type": "PizzaCompletedEvent"
+                }
+            },
+            {
+                "$group": {
+                    "_id": "$data.pizza_name",
+                    "total_pizzas": {"$sum": 1},
+                    "avg_prep_time": {"$avg": "$data.preparation_duration_minutes"},
+                    "min_prep_time": {"$min": "$data.preparation_duration_minutes"},
+                    "max_prep_time": {"$max": "$data.preparation_duration_minutes"}
+                }
+            },
+            {
+                "$sort": {"total_pizzas": -1}
+            }
+        ]
+        
+        results = await self.collection.aggregate(pipeline).to_list(length=None)
+        return {
+            "pizza_performance": results,
+            "reporting_period": {
+                "start": start_date.isoformat(),
+                "end": end_date.isoformat()
+            }
+        }
+```
+
+```python
+from neuroglia.data import IQueryableRepository
+from typing import List, Dict, Any, Optional
+from datetime import datetime, date, timedelta
+
+class IAnalyticsRepository(IQueryableRepository[Order, str]):
+    """Enhanced queryable interface for pizzeria analytics"""
+    
+    async def get_revenue_by_period_async(self, 
+                                          period: str,  # 'daily', 'weekly', 'monthly'
+                                          start_date: date,
+                                          end_date: date) -> Dict[str, Any]:
+        """Get revenue metrics grouped by time period"""
+        pass
+    
+    async def get_popular_pizzas_async(self, 
+                                       start_date: date,
+                                       end_date: date,
+                                       limit: int = 10) -> List[Dict[str, Any]]:
+        """Get most popular pizzas by order count"""
+        pass
+    
+    async def get_customer_insights_async(self,
+                                          customer_phone: str) -> Dict[str, Any]:
+        """Get customer ordering patterns and preferences"""
+        pass
+    
+    async def get_peak_hours_analysis_async(self,
+                                            date_range: tuple[date, date]) -> Dict[str, Any]:
+        """Analyze order patterns by hour of day"""
+        pass
+
+class MongoAnalyticsRepository(MongoOrderRepository, IAnalyticsRepository):
+    """MongoDB implementation with advanced analytics capabilities"""
+    
+    async def get_revenue_by_period_async(self, 
+                                          period: str,
+                                          start_date: date,
+                                          end_date: date) -> Dict[str, Any]:
+        """Get revenue metrics with MongoDB aggregation"""
+        start_datetime = datetime.combine(start_date, datetime.min.time())
+        end_datetime = datetime.combine(end_date, datetime.max.time())
+        
+        # Dynamic grouping based on period
+        group_format = {
+            'daily': {"$dateToString": {"format": "%Y-%m-%d", "date": "$order_time"}},
+            'weekly': {"$dateToString": {"format": "%Y-W%U", "date": "$order_time"}},
+            'monthly': {"$dateToString": {"format": "%Y-%m", "date": "$order_time"}}
+        }
+        
+        pipeline = [
+            {
+                "$match": {
+                    "order_time": {"$gte": start_datetime, "$lte": end_datetime},
+                    "status": {"$in": ["ready", "delivered"]}
+                }
+            },
+            {
+                "$group": {
+                    "_id": group_format.get(period, group_format['daily']),
+                    "revenue": {"$sum": "$total_amount"},
+                    "order_count": {"$sum": 1},
+                    "average_order_value": {"$avg": "$total_amount"}
+                }
+            },
+            {
+                "$sort": {"_id": 1}
+            }
+        ]
+        
+        results = await self.collection.aggregate(pipeline).to_list(length=None)
+        
+        return {
+            "period": period,
+            "data": results,
+            "summary": {
+                "total_revenue": sum(r["revenue"] for r in results),
+                "total_orders": sum(r["order_count"] for r in results),
+                "periods_analyzed": len(results)
+            }
+        }
+    
+    async def get_popular_pizzas_async(self, 
+                                       start_date: date,
+                                       end_date: date,
+                                       limit: int = 10) -> List[Dict[str, Any]]:
+        """Get most popular pizzas with detailed analytics"""
+        start_datetime = datetime.combine(start_date, datetime.min.time())
+        end_datetime = datetime.combine(end_date, datetime.max.time())
+        
+        pipeline = [
+            {
+                "$match": {
+                    "order_time": {"$gte": start_datetime, "$lte": end_datetime},
+                    "status": {"$in": ["ready", "delivered"]}
+                }
+            },
+            {
+                "$unwind": "$pizzas"
+            },
+            {
+                "$group": {
+                    "_id": "$pizzas.name",
+                    "order_count": {"$sum": 1},
+                    "total_revenue": {"$sum": "$pizzas.price"},
+                    "avg_price": {"$avg": "$pizzas.price"},
+                    "unique_customers": {"$addToSet": "$customer_phone"}
+                }
+            },
+            {
+                "$project": {
+                    "pizza_name": "$_id",
+                    "order_count": 1,
+                    "total_revenue": 1,
+                    "avg_price": 1,
+                    "unique_customers": {"$size": "$unique_customers"},
+                    "_id": 0
+                }
+            },
+            {
+                "$sort": {"order_count": -1}
+            },
+            {
+                "$limit": limit
+            }
+        ]
+        
+        return await self.collection.aggregate(pipeline).to_list(length=limit)
+    
+    async def get_customer_insights_async(self,
+                                          customer_phone: str) -> Dict[str, Any]:
+        """Comprehensive customer analytics"""
+        pipeline = [
+            {
+                "$match": {"customer_phone": customer_phone}
+            },
+            {
+                "$group": {
+                    "_id": "$customer_phone",
+                    "total_orders": {"$sum": 1},
+                    "total_spent": {"$sum": "$total_amount"},
+                    "avg_order_value": {"$avg": "$total_amount"},
+                    "first_order": {"$min": "$order_time"},
+                    "last_order": {"$max": "$order_time"},
+                    "favorite_pizzas": {"$push": "$pizzas.name"},
+                    "payment_methods": {"$addToSet": "$payment_method"}
+                }
+            },
+            {
+                "$project": {
+                    "customer_phone": "$_id",
+                    "total_orders": 1,
+                    "total_spent": 1,
+                    "avg_order_value": 1,
+                    "first_order": 1,
+                    "last_order": 1,
+                    "customer_lifetime_days": {
+                        "$divide": [
+                            {"$subtract": ["$last_order", "$first_order"]},
+                            86400000  # milliseconds to days
+                        ]
+                    },
+                    "payment_methods": 1,
+                    "_id": 0
+                }
+            }
+        ]
+        
+        results = await self.collection.aggregate(pipeline).to_list(length=1)
+        if not results:
+            return {"error": "Customer not found"}
+        
+        customer_data = results[0]
+        
+        # Calculate favorite pizza (most frequent)
+        # This would need additional aggregation pipeline for pizza frequency
+        
+        return customer_data
+    
+    async def get_peak_hours_analysis_async(self,
+                                            date_range: tuple[date, date]) -> Dict[str, Any]:
+        """Analyze order patterns by hour for staffing optimization"""
+        start_date, end_date = date_range
+        start_datetime = datetime.combine(start_date, datetime.min.time())
+        end_datetime = datetime.combine(end_date, datetime.max.time())
+        
+        pipeline = [
+            {
+                "$match": {
+                    "order_time": {"$gte": start_datetime, "$lte": end_datetime}
+                }
+            },
+            {
+                "$group": {
+                    "_id": {"$hour": "$order_time"},
+                    "order_count": {"$sum": 1},
+                    "total_revenue": {"$sum": "$total_amount"},
+                    "avg_order_value": {"$avg": "$total_amount"}
+                }
+            },
+            {
+                "$project": {
+                    "hour": "$_id",
+                    "order_count": 1,
+                    "total_revenue": 1,
+                    "avg_order_value": 1,
+                    "_id": 0
+                }
+            },
+            {
+                "$sort": {"hour": 1}
+            }
+        ]
+        
+        results = await self.collection.aggregate(pipeline).to_list(length=24)
+        
+        # Fill in missing hours with zero values
+        hourly_data = {r["hour"]: r for r in results}
+        complete_data = []
+        
+        for hour in range(24):
+            hour_data = hourly_data.get(hour, {
+                "hour": hour,
+                "order_count": 0,
+                "total_revenue": 0.0,
+                "avg_order_value": 0.0
+            })
+            complete_data.append(hour_data)
+        
+        # Find peak hours (top 3)
+        sorted_by_orders = sorted(complete_data, key=lambda x: x["order_count"], reverse=True)
+        peak_hours = sorted_by_orders[:3]
+        
+        return {
+            "hourly_breakdown": complete_data,
+            "peak_hours": peak_hours,
+            "analysis_period": {
+                "start_date": start_date.isoformat(),
+                "end_date": end_date.isoformat()
+            }
+        }
+```
 
 ```python
 import pytest
-from unittest.mock import Mock
+from unittest.mock import AsyncMock
+from datetime import datetime, date, timedelta
+from decimal import Decimal
 
-@pytest.fixture
-def user_repository():
-    """In-memory user repository for testing"""
-    return InMemoryUserRepository()
-
-@pytest.mark.asyncio
-async def test_create_user_command(user_repository):
-    # Arrange
-    mapper = Mock()
-    mapper.map.return_value = test_user_dto
+class TestOrderRepository:
+    """Unit tests for order repository implementations"""
     
-    handler = CreateUserCommandHandler(user_repository, mapper)
-    command = CreateUserCommand("John", "Doe", "john@example.com")
+    @pytest.fixture
+    def sample_order(self):
+        """Create sample pizza order for testing"""
+        return Order(
+            id="order_123",
+            customer_name="John Doe",
+            customer_phone="+1234567890",
+            customer_address="123 Main St",
+            pizzas=[
+                Pizza(name="Margherita", price=Decimal("12.99")),
+                Pizza(name="Pepperoni", price=Decimal("14.99"))
+            ],
+            status="preparing",
+            order_time=datetime.utcnow(),
+            total_amount=Decimal("27.98"),
+            payment_method="card"
+        )
     
-    # Act
-    result = await handler.handle_async(command)
+    @pytest.fixture
+    def mock_file_repository(self, tmp_path):
+        """Create file repository with temporary directory"""
+        return FileOrderRepository(str(tmp_path / "orders"))
     
-    # Assert
-    assert result.is_success
-    
-    # Verify user was saved
-    saved_user = await user_repository.get_by_id_async(result.data.id)
-    assert saved_user is not None
-    assert saved_user.email == "john@example.com"
-```
-
-### Integration Testing
-
-Test with real databases:
-
-```python
-import pytest
-import motor.motor_asyncio
-from testcontainers.mongodb import MongoDbContainer
-
-@pytest.fixture(scope="session")
-async def mongodb_container():
-    """Start MongoDB container for testing"""
-    with MongoDbContainer() as container:
-        yield container
-
-@pytest.fixture
-async def mongo_repository(mongodb_container):
-    """MongoDB repository for integration testing"""
-    connection_string = mongodb_container.get_connection_url()
-    return MongoUserRepository(connection_string, "test_db")
-
-@pytest.mark.asyncio
-async def test_user_repository_integration(mongo_repository):
-    # Arrange
-    user = User("test-id", "John", "Doe", "john@test.com")
-    
-    # Act
-    saved_user = await mongo_repository.add_async(user)
-    retrieved_user = await mongo_repository.get_by_id_async(user.id)
-    
-    # Assert
-    assert saved_user.id == user.id
-    assert retrieved_user is not None
-    assert retrieved_user.email == user.email
-```
-
-## 🚀 Best Practices
-
-### 1. Use Interface Segregation
-
-Define specific repository interfaces for different use cases:
-
-```python
-# Good - Specific interfaces
-class IUserReadRepository(ABC):
-    async def get_by_email_async(self, email: str) -> Optional[UserDto]:
-        pass
-    
-    async def search_async(self, criteria: UserSearchCriteria) -> List[UserDto]:
-        pass
-
-class IUserWriteRepository(ABC):
-    async def add_async(self, user: User) -> User:
-        pass
-    
-    async def update_async(self, user: User) -> User:
-        pass
-
-# Avoid - Generic repository for everything
-class IGenericUserRepository(Repository[User, str]):
-    # Too broad, mixes read and write concerns
-    pass
-```
-
-### 2. Separate Read and Write Models
-
-Use different models for commands and queries:
-
-```python
-# Write model (domain entity)
-class User(AggregateRoot[str]):
-    # Rich domain model with behavior
-    def change_email(self, new_email: str):
-        # Business logic and validation
-        pass
-
-# Read model (DTO)
-@dataclass
-class UserListDto:
-    # Optimized for display
-    id: str
-    display_name: str
-    email: str
-    last_login: datetime
-    status: str
-```
-
-### 3. Handle Concurrency
-
-Implement optimistic concurrency for event-sourced aggregates:
-
-```python
-class User(AggregateRoot[str]):
-    def __init__(self, id: str = None):
-        super().__init__(id)
-        self.version = 0  # Concurrency token
-    
-    def apply_event(self, event: DomainEvent):
-        super().apply_event(event)
-        self.version += 1
-
-class EventSourcingRepository(Repository[User, str]):
-    async def update_async(self, user: User) -> User:
-        # Check for concurrent modifications
-        current_version = await self.get_version(user.id)
-        if current_version != user.original_version:
-            raise ConcurrencyException("Entity was modified by another process")
+    @pytest.mark.asyncio
+    async def test_save_order_creates_file(self, mock_file_repository, sample_order):
+        """Test that saving an order creates proper file structure"""
+        await mock_file_repository.save_async(sample_order)
         
-        # Save events
-        await self.save_events(user.uncommitted_events, user.version)
-        return user
-```
-
-### 4. Use Specifications Pattern
-
-For complex queries:
-
-```python
-from abc import ABC, abstractmethod
-
-class Specification(ABC):
-    @abstractmethod
-    def is_satisfied_by(self, entity) -> bool:
-        pass
+        # Verify file was created
+        order_file = Path(mock_file_repository.orders_directory) / f"{sample_order.id}.json"
+        assert order_file.exists()
+        
+        # Verify file content
+        with open(order_file, 'r') as f:
+            order_data = json.load(f)
+            assert order_data["customer_name"] == sample_order.customer_name
+            assert len(order_data["pizzas"]) == 2
     
-    def and_(self, other: 'Specification') -> 'Specification':
-        return AndSpecification(self, other)
+    @pytest.mark.asyncio
+    async def test_get_by_customer_phone(self, mock_file_repository, sample_order):
+        """Test customer phone lookup functionality"""
+        await mock_file_repository.save_async(sample_order)
+        
+        # Create another order for same customer
+        second_order = Order(
+            id="order_456",
+            customer_name="John Doe",
+            customer_phone="+1234567890",
+            customer_address="123 Main St",
+            pizzas=[Pizza(name="Hawaiian", price=Decimal("15.99"))],
+            status="ready",
+            order_time=datetime.utcnow() + timedelta(hours=1)
+        )
+        await mock_file_repository.save_async(second_order)
+        
+        # Test phone lookup
+        customer_orders = await mock_file_repository.get_by_customer_phone_async("+1234567890")
+        
+        assert len(customer_orders) == 2
+        # Should be ordered by time (most recent first)
+        assert customer_orders[0].id == "order_456"
+        assert customer_orders[1].id == "order_123"
     
-    def or_(self, other: 'Specification') -> 'Specification':
-        return OrSpecification(self, other)
+    @pytest.mark.asyncio
+    async def test_kitchen_queue_filtering(self, mock_file_repository):
+        """Test kitchen queue status filtering"""
+        # Create orders with different statuses
+        orders = [
+            Order(id="order_1", status="preparing", customer_name="Customer 1"),
+            Order(id="order_2", status="cooking", customer_name="Customer 2"),
+            Order(id="order_3", status="ready", customer_name="Customer 3"),
+            Order(id="order_4", status="delivered", customer_name="Customer 4")
+        ]
+        
+        for order in orders:
+            await mock_file_repository.save_async(order)
+        
+        # Get kitchen queue (preparing and cooking)
+        kitchen_orders = await mock_file_repository.get_kitchen_queue_async(["preparing", "cooking"])
+        
+        assert len(kitchen_orders) == 2
+        statuses = [order.status for order in kitchen_orders]
+        assert "preparing" in statuses
+        assert "cooking" in statuses
+        assert "ready" not in statuses
 
-class ActiveUserSpecification(Specification):
-    def is_satisfied_by(self, user: User) -> bool:
-        return user.is_active
-
-class UserInDepartmentSpecification(Specification):
-    def __init__(self, department: str):
-        self.department = department
+@pytest.mark.integration
+class TestMongoOrderRepository:
+    """Integration tests for MongoDB repository"""
     
-    def is_satisfied_by(self, user: User) -> bool:
-        return user.department == self.department
+    @pytest.fixture
+    async def mongo_repository(self, mongo_test_client):
+        """Create MongoDB repository for testing"""
+        database = mongo_test_client.test_pizzeria
+        return MongoOrderRepository(database)
+    
+    @pytest.mark.asyncio
+    async def test_revenue_aggregation(self, mongo_repository):
+        """Test MongoDB revenue aggregation pipeline"""
+        # Setup test data
+        test_orders = [
+            Order(
+                id="order_1",
+                total_amount=Decimal("25.99"),
+                status="delivered",
+                order_time=datetime(2024, 1, 15, 12, 0)
+            ),
+            Order(
+                id="order_2", 
+                total_amount=Decimal("18.50"),
+                status="delivered",
+                order_time=datetime(2024, 1, 15, 18, 0)
+            ),
+            Order(
+                id="order_3",
+                total_amount=Decimal("32.00"),
+                status="preparing",  # Should be excluded
+                order_time=datetime(2024, 1, 15, 19, 0)
+            )
+        ]
+        
+        for order in test_orders:
+            await mongo_repository.save_async(order)
+        
+        # Test daily revenue calculation
+        revenue_data = await mongo_repository.get_daily_revenue_async(date(2024, 1, 15))
+        
+        assert revenue_data["total_revenue"] == 44.49  # Only delivered orders
+        assert revenue_data["order_count"] == 2
+        assert revenue_data["average_order_value"] == 22.245
 
-# Usage
-active_engineering_users = ActiveUserSpecification().and_(
-    UserInDepartmentSpecification("Engineering")
-)
+class TestEventRepository:
+    """Test event repository for kitchen workflow tracking"""
+    
+    @pytest.fixture
+    def sample_kitchen_events(self):
+        """Create sample kitchen events for testing"""
+        return [
+            OrderStatusChangedEvent(
+                order_id="order_123",
+                old_status="received",
+                new_status="preparing",
+                changed_by="chef_mario"
+            ),
+            PizzaStartedEvent(
+                order_id="order_123",
+                pizza_name="Margherita",
+                pizza_index=0,
+                started_by="chef_mario",
+                estimated_completion=datetime.utcnow() + timedelta(minutes=12)
+            )
+        ]
+    
+    @pytest.mark.asyncio
+    async def test_event_chronological_ordering(self, file_event_repository, sample_kitchen_events):
+        """Test that events are retrieved in chronological order"""
+        # Save events in random order
+        for event in reversed(sample_kitchen_events):
+            await file_event_repository.save_event_async(event)
+        
+        # Retrieve events
+        today = date.today()
+        retrieved_events = await file_event_repository.get_events_by_date_range_async(today, today)
+        
+        # Should be ordered by occurrence time
+        assert len(retrieved_events) == 2
+        assert retrieved_events[0].occurred_at <= retrieved_events[1].occurred_at
 
-users = await repository.find_async(active_engineering_users.is_satisfied_by)
-```
+# Test fixtures for integration testing
+@pytest.fixture
+async def mongo_test_client():
+    """MongoDB test client with cleanup"""
+    from motor.motor_asyncio import AsyncIOMotorClient
+    
+    client = AsyncIOMotorClient("mongodb://localhost:27017")
+    
+    # Use test database
+    test_db = client.test_pizzeria
+    
+    yield client
+    
+    # Cleanup
+    await client.drop_database("test_pizzeria")
+    client.close()
 
-### 5. Repository Registration
-
-Register repositories properly in DI container:
-
-```python
-# In application startup
-builder = WebApplicationBuilder()
-
-# Register by interface
-builder.services.add_scoped(IUserRepository, MongoUserRepository)
-builder.services.add_scoped(IOrderRepository, EventSourcedOrderRepository)
-
-# Register factory for complex initialization
-def create_user_repository(provider: ServiceProviderBase) -> IUserRepository:
-    config = provider.get_required_service(DatabaseConfig)
-    if config.use_event_sourcing:
-        return EventSourcedUserRepository(config.event_store_connection)
-    else:
-        return MongoUserRepository(config.mongo_connection, config.database_name)
-
-builder.services.add_scoped(IUserRepository, factory=create_user_repository)
+@pytest.fixture
+def file_event_repository(tmp_path):
+    """File event repository with temporary storage"""
+    return FileEventRepository(str(tmp_path / "events"))
 ```
 
 ## 🔗 Related Documentation
 
-- [Getting Started](../getting-started.md) - Basic repository usage
-- [Architecture Guide](../architecture.md) - How repositories fit in the architecture
-- [CQRS & Mediation](cqrs-mediation.md) - Using repositories with CQRS
-- [Event Sourcing](event-sourcing.md) - Event sourcing with repositories
-- [Dependency Injection](dependency-injection.md) - DI with repositories
+- [Getting Started Guide](../getting-started.md) - Complete pizzeria application tutorial
+- [CQRS & Mediation](cqrs-mediation.md) - Commands and queries with pizzeria examples  
+- [Dependency Injection](dependency-injection.md) - Service registration for repositories
+- [MVC Controllers](mvc-controllers.md) - API endpoints using these repositories
+
+---
+
+*This documentation demonstrates data access patterns using Mario's Pizzeria as a consistent example throughout the Neuroglia framework. The patterns shown scale from simple file-based storage for development to MongoDB with advanced analytics for production use.*

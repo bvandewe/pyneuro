@@ -1,6 +1,7 @@
 import asyncio
 import inspect
 import logging
+from pathlib import Path
 
 from abc import ABC, abstractmethod
 from types import UnionType
@@ -162,21 +163,137 @@ class Mediator:
         else:
             return issubclass(handled_notification_type.__origin__, request_type) if hasattr(handled_notification_type, '__origin__') else issubclass(handled_notification_type, request_type)
 
-    def configure(app: ApplicationBuilderBase, modules: List[str] = list[str]()) -> ApplicationBuilderBase:
-        ''' Registers and configures mediation-related services (command/query/notification handlers) to the specified service collection.
+    @staticmethod
+    def _discover_submodules(package_name: str) -> List[str]:
+        """Discover individual modules within a package without importing the package."""
+        submodules = []
+        try:
+            package_path = package_name.replace('.', '/')
+            for search_path in ['src', '.', 'app']:
+                full_package_path = Path(search_path) / package_path
+                if full_package_path.exists() and full_package_path.is_dir():
+                    for py_file in full_package_path.glob('*.py'):
+                        if py_file.name != '__init__.py':
+                            module_name = f"{package_name}.{py_file.stem}"
+                            submodules.append(module_name)
+                            log.debug(f"Discovered submodule: {module_name}")
+                    break
+        except Exception as e:
+            log.debug(f"Error discovering submodules for {package_name}: {e}")
+        return submodules
 
-            Args:
-                services (ServiceCollection): the service collection to configure
-                modules (List[str]): a list containing the names of the modules to scan for mediation services to register
-        '''
-        for module in [ModuleLoader.load(module_name) for module_name in modules]:
+    @staticmethod
+    def _register_handlers_from_module(app: ApplicationBuilderBase, module, module_name: str) -> int:
+        """Register all handlers found in a specific module."""
+        handlers_registered = 0
+        try:
+            # Command handlers
             for command_handler_type in TypeFinder.get_types(module, lambda cls: inspect.isclass(cls) and (not hasattr(cls, "__parameters__") or len(cls.__parameters__) < 1) and issubclass(cls, CommandHandler) and cls != CommandHandler, include_sub_modules=True):
                 app.services.add_transient(RequestHandler, command_handler_type)
+                handlers_registered += 1
+                log.debug(f"Registered CommandHandler: {command_handler_type.__name__} from {module_name}")
+
+            # Query handlers
             for queryhandler_type in TypeFinder.get_types(module, lambda cls: inspect.isclass(cls) and not hasattr(cls, "__parameters__") and issubclass(cls, QueryHandler) and cls != QueryHandler, include_sub_modules=True):
                 app.services.add_transient(RequestHandler, queryhandler_type)
+                handlers_registered += 1
+                log.debug(f"Registered QueryHandler: {queryhandler_type.__name__} from {module_name}")
+
+            # Domain event handlers
             for domain_event_handler_type in TypeFinder.get_types(module, lambda cls: inspect.isclass(cls) and issubclass(cls, DomainEventHandler) and cls != DomainEventHandler, include_sub_modules=True):
                 app.services.add_transient(NotificationHandler, domain_event_handler_type)
+                handlers_registered += 1
+                log.debug(f"Registered DomainEventHandler: {domain_event_handler_type.__name__} from {module_name}")
+
+            # Integration event handlers
             for integration_event_handler_type in TypeFinder.get_types(module, lambda cls: inspect.isclass(cls) and issubclass(cls, IntegrationEventHandler) and cls != IntegrationEventHandler, include_sub_packages=True):
                 app.services.add_transient(NotificationHandler, integration_event_handler_type)
+                handlers_registered += 1
+                log.debug(f"Registered IntegrationEventHandler: {integration_event_handler_type.__name__} from {module_name}")
+
+        except Exception as e:
+            log.warning(f"Error registering handlers from module {module_name}: {e}")
+        return handlers_registered
+
+    @staticmethod
+    def configure(app: ApplicationBuilderBase, modules: List[str] = list[str]()) -> ApplicationBuilderBase:
+        """
+        Registers and configures mediation-related services with resilient handler discovery.
+        
+        This method implements a fallback strategy when package imports fail:
+        1. First attempts to import the entire package (original behavior)
+        2. If that fails, attempts to discover and import individual modules
+        3. Logs all discovery attempts and results for debugging
+        
+        Args:
+            app (ApplicationBuilderBase): The application builder to configure
+            modules (List[str]): Module/package names to scan for handlers
+            
+        Returns:
+            ApplicationBuilderBase: The configured application builder
+        """
+        total_handlers_registered = 0
+        
+        for module_name in modules:
+            module_handlers_registered = 0
+            
+            try:
+                # Strategy 1: Try to import the entire package (original behavior)
+                log.debug(f"Attempting to load package: {module_name}")
+                module = ModuleLoader.load(module_name)
+                module_handlers_registered = Mediator._register_handlers_from_module(app, module, module_name)
+                
+                if module_handlers_registered > 0:
+                    log.info(f"Successfully registered {module_handlers_registered} handlers from package: {module_name}")
+                else:
+                    log.debug(f"No handlers found in package: {module_name}")
+                    
+            except ImportError as package_error:
+                log.warning(f"Package import failed for '{module_name}': {package_error}")
+                log.info(f"Attempting fallback: scanning individual modules in '{module_name}'")
+                
+                # Strategy 2: Fallback to individual module discovery
+                try:
+                    submodules = Mediator._discover_submodules(module_name)
+                    
+                    if not submodules:
+                        log.warning(f"No submodules discovered for package: {module_name}")
+                        continue
+                        
+                    log.debug(f"Found {len(submodules)} potential submodules in {module_name}")
+                    
+                    for submodule_name in submodules:
+                        try:
+                            log.debug(f"Attempting to load submodule: {submodule_name}")
+                            submodule = ModuleLoader.load(submodule_name)
+                            submodule_handlers = Mediator._register_handlers_from_module(app, submodule, submodule_name)
+                            module_handlers_registered += submodule_handlers
+                            
+                            if submodule_handlers > 0:
+                                log.info(f"Successfully registered {submodule_handlers} handlers from submodule: {submodule_name}")
+                                
+                        except ImportError as submodule_error:
+                            log.debug(f"Skipping submodule '{submodule_name}': {submodule_error}")
+                            continue
+                        except Exception as submodule_error:
+                            log.warning(f"Unexpected error loading submodule '{submodule_name}': {submodule_error}")
+                            continue
+                            
+                    if module_handlers_registered > 0:
+                        log.info(f"Fallback succeeded: registered {module_handlers_registered} handlers from individual modules in '{module_name}'")
+                    else:
+                        log.warning(f"Fallback failed: no handlers registered from '{module_name}' (package or individual modules)")
+                        
+                except Exception as discovery_error:
+                    log.error(f"Failed to discover submodules for '{module_name}': {discovery_error}")
+                    
+            except Exception as unexpected_error:
+                log.error(f"Unexpected error processing module '{module_name}': {unexpected_error}")
+                
+            total_handlers_registered += module_handlers_registered
+            
+        log.info(f"Handler discovery completed: {total_handlers_registered} total handlers registered from {len(modules)} module specifications")
+        
+        # Always add the Mediator singleton
         app.services.add_singleton(Mediator)
         return app
