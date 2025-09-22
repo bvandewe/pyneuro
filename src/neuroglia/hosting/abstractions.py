@@ -1,8 +1,9 @@
 import asyncio
 from abc import ABC, abstractmethod
 from contextlib import asynccontextmanager, contextmanager
-from typing import Callable, cast, List
+from typing import Callable, cast, List, Optional, Dict
 from neuroglia.dependency_injection.service_provider import ServiceCollection, ServiceProviderBase, ServiceScopeBase
+from pydantic import Field
 from pydantic_settings import BaseSettings
 
 
@@ -93,20 +94,33 @@ class Host(HostBase):
 
 
 class ApplicationSettings(BaseSettings):
+    """
+    Base application settings with optional cloud events configuration.
+    
+    Cloud events fields are optional and only required when using event-driven features.
+    For simple CQRS applications, these can be left as defaults.
+    """
 
-    consumer_group: str = ""
+    consumer_group: Optional[str] = None
+    """Consumer group name for event processing. Optional - only needed for event-driven apps."""
 
-    connection_strings: dict[str, str] = dict[str, str]()
+    connection_strings: Dict[str, str] = Field(default_factory=dict)
+    """Database and service connection strings. Can be empty for in-memory testing."""
 
-    cloud_event_sink: str = ""
+    cloud_event_sink: Optional[str] = None
+    """Cloud event sink URL. Optional - only needed when publishing events."""
 
-    cloud_event_source: str = ""
+    cloud_event_source: Optional[str] = None
+    """Cloud event source identifier. Optional - only needed when publishing events."""
 
     cloud_event_type_prefix: str = ""
+    """Prefix for cloud event types. Defaults to empty string."""
 
     cloud_event_retry_attempts: int = 5
+    """Number of retry attempts for cloud event publishing."""
 
-    cloud_event_retry_delay: float = 1
+    cloud_event_retry_delay: float = 1.0
+    """Delay between cloud event retry attempts in seconds."""
 
 
 class ApplicationBuilderBase:

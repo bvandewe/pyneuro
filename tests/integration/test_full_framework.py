@@ -2,23 +2,19 @@
 Integration tests for Neuroglia framework components working together.
 """
 import pytest
-from typing import List, Dict, Any, Optional
+from typing import List, Dict, Optional
 from dataclasses import dataclass
 from datetime import datetime
 from uuid import uuid4
 from decimal import Decimal
-import asyncio
 
 from neuroglia.dependency_injection.service_provider import ServiceCollection
-from neuroglia.mediation.mediator import Mediator, Command, Query, CommandHandler, QueryHandler, Event, EventHandler
+from neuroglia.mediation.mediator import Mediator, Command, Query, QueryHandler, DomainEventHandler, RequestHandler, NotificationHandler
 from neuroglia.core.operation_result import OperationResult
-from neuroglia.mapping.mapper import Mapper
-from neuroglia.data.abstractions import Repository, Entity, AggregateRoot, DomainEvent
-
-# Import test fixtures
+from neuroglia.mapping.mapper import Mapper, MapperConfiguration
+from neuroglia.data.abstractions import Entity, AggregateRoot, AggregateState, DomainEvent
+from neuroglia.data.infrastructure.abstractions import Repository
 from tests.fixtures.test_fixtures import (
-    InMemoryTestUserRepository,
-    InMemoryTestUserDtoRepository,
     TestEmailService
 )
 
@@ -73,52 +69,88 @@ class Transaction(Entity[str]):
 # Domain events
 
 @dataclass
-class AccountCreatedEvent(DomainEvent):
+class AccountCreatedEvent(DomainEvent[str]):
     """Account created domain event"""
-    account_id: str
     account_number: str
     owner_name: str
     initial_balance: Decimal
     account_type: str
-    created_at: datetime
+
+    def __init__(self, aggregate_id: str, account_number: str, owner_name: str,
+                 initial_balance: Decimal, account_type: str):
+        super().__init__(aggregate_id)
+        self.account_number = account_number
+        self.owner_name = owner_name
+        self.initial_balance = initial_balance
+        self.account_type = account_type
 
 
 @dataclass
-class MoneyDepositedEvent(DomainEvent):
+class MoneyDepositedEvent(DomainEvent[str]):
     """Money deposited domain event"""
-    account_id: str
     amount: Decimal
     new_balance: Decimal
     transaction_id: str
-    deposited_at: datetime
+
+    def __init__(self, aggregate_id: str, amount: Decimal, new_balance: Decimal, transaction_id: str):
+        super().__init__(aggregate_id)
+        self.amount = amount
+        self.new_balance = new_balance
+        self.transaction_id = transaction_id
 
 
 @dataclass
-class MoneyWithdrawnEvent(DomainEvent):
+class MoneyWithdrawnEvent(DomainEvent[str]):
     """Money withdrawn domain event"""
-    account_id: str
     amount: Decimal
     new_balance: Decimal
     transaction_id: str
-    withdrawn_at: datetime
+
+    def __init__(self, aggregate_id: str, amount: Decimal, new_balance: Decimal, transaction_id: str):
+        super().__init__(aggregate_id)
+        self.amount = amount
+        self.new_balance = new_balance
+        self.transaction_id = transaction_id
 
 
 # Aggregate root
 
-class BankAccountAggregate(AggregateRoot[str]):
-    """Bank account aggregate"""
+class BankAccountState(AggregateState[str]):
+    """Bank account aggregate state"""
+    
+    def __init__(self):
+        super().__init__()
+        self.account_number: Optional[str] = None
+        self.owner_name: Optional[str] = None
+        self.balance: Decimal = Decimal('0.00')
+        self.account_type: Optional[str] = None
+        self.is_active: bool = True
+
+
+class BankAccountAggregate(AggregateRoot[BankAccountState, str]):
+    """Bank account aggregate using framework's native event handling"""
     
     def __init__(self, id: str = None):
-        super().__init__(id or str(uuid4()))
-        self.account_number = None
-        self.owner_name = None
-        self.balance = Decimal('0.00')
-        self.account_type = None
-        self.is_active = True
-        self.created_at = None
+        super().__init__()
+        if id:
+            self.state.id = id
+        else:
+            self.state.id = str(uuid4())
     
-    def create_account(self, account_number: str, owner_name: str, 
-                      initial_balance: Decimal, account_type: str):
+    def load_from_account(self, account: Account):
+        """Load aggregate state from existing account entity"""
+        self.state.id = account.id
+        self.state.account_number = account.account_number
+        self.state.owner_name = account.owner_name
+        self.state.balance = account.balance
+        self.state.account_type = account.account_type
+        self.state.is_active = account.is_active
+        self.state.created_at = account.created_at
+        # Clear any pending events since we're loading existing state
+        self._pending_events.clear()
+    
+    def create_account(self, account_number: str, owner_name: str,
+                       initial_balance: Decimal, account_type: str):
         """Create a new bank account"""
         if not account_number or not account_number.strip():
             raise ValueError("Account number is required")
@@ -132,71 +164,100 @@ class BankAccountAggregate(AggregateRoot[str]):
         if account_type not in ["checking", "savings", "business"]:
             raise ValueError("Invalid account type")
         
+        # Update state
+        self.state.account_number = account_number
+        self.state.owner_name = owner_name
+        self.state.balance = initial_balance
+        self.state.account_type = account_type
+        self.state.is_active = True
+        self.state.created_at = datetime.utcnow()
+        
+        # Register domain event using framework's native method
         event = AccountCreatedEvent(
-            account_id=self.id,
+            aggregate_id=self.state.id,
             account_number=account_number,
             owner_name=owner_name,
             initial_balance=initial_balance,
-            account_type=account_type,
-            created_at=datetime.utcnow()
+            account_type=account_type
         )
-        self.apply(event)
+        self.register_event(event)
     
     def deposit_money(self, amount: Decimal, transaction_id: str):
         """Deposit money to account"""
         if amount <= 0:
             raise ValueError("Deposit amount must be positive")
         
-        if not self.is_active:
+        if not self.state.is_active:
             raise ValueError("Cannot deposit to inactive account")
         
-        new_balance = self.balance + amount
+        # Update state
+        self.state.balance += amount
+        self.state.last_modified = datetime.utcnow()
+        
+        # Register domain event using framework's native method
         event = MoneyDepositedEvent(
-            account_id=self.id,
+            aggregate_id=self.state.id,
             amount=amount,
-            new_balance=new_balance,
-            transaction_id=transaction_id,
-            deposited_at=datetime.utcnow()
+            new_balance=self.state.balance,
+            transaction_id=transaction_id
         )
-        self.apply(event)
+        self.register_event(event)
     
     def withdraw_money(self, amount: Decimal, transaction_id: str):
         """Withdraw money from account"""
         if amount <= 0:
             raise ValueError("Withdrawal amount must be positive")
         
-        if not self.is_active:
+        if not self.state.is_active:
             raise ValueError("Cannot withdraw from inactive account")
         
-        new_balance = self.balance - amount
-        if new_balance < 0:
+        if self.state.balance < amount:
             raise ValueError("Insufficient funds")
         
+        # Update state
+        self.state.balance -= amount
+        self.state.last_modified = datetime.utcnow()
+        
+        # Register domain event using framework's native method
         event = MoneyWithdrawnEvent(
-            account_id=self.id,
+            aggregate_id=self.state.id,
             amount=amount,
-            new_balance=new_balance,
-            transaction_id=transaction_id,
-            withdrawn_at=datetime.utcnow()
+            new_balance=self.state.balance,
+            transaction_id=transaction_id
         )
-        self.apply(event)
+        self.register_event(event)
     
-    # Event handlers
-    def on_account_created(self, event: AccountCreatedEvent):
-        self.account_number = event.account_number
-        self.owner_name = event.owner_name
-        self.balance = event.initial_balance
-        self.account_type = event.account_type
-        self.created_at = event.created_at
+    # Properties for easy access to state
+    @property
+    def id(self) -> str:
+        return self.state.id
     
-    def on_money_deposited(self, event: MoneyDepositedEvent):
-        self.balance = event.new_balance
+    @property
+    def account_number(self) -> str:
+        return self.state.account_number
     
-    def on_money_withdrawn(self, event: MoneyWithdrawnEvent):
-        self.balance = event.new_balance
-
-
+    @property
+    def owner_name(self) -> str:
+        return self.state.owner_name
+    
+    @property
+    def balance(self) -> Decimal:
+        return self.state.balance
+    
+    @property
+    def account_type(self) -> str:
+        return self.state.account_type
+    
+    @property
+    def is_active(self) -> bool:
+        return self.state.is_active
+    
+    @property
+    def created_at(self) -> datetime:
+        return self.state.created_at
+    
 # Commands and Queries
+
 
 @dataclass
 class CreateAccountCommand(Command[OperationResult[AccountDto]]):
@@ -249,8 +310,14 @@ class InMemoryAccountRepository(Repository[Account, str]):
     def __init__(self):
         self._accounts: Dict[str, Account] = {}
     
+    async def contains_async(self, id: str) -> bool:
+        return id in self._accounts
+    
+    async def get_async(self, id: str) -> Optional[Account]:
+        return self._accounts.get(id)
+    
     async def get_by_id_async(self, account_id: str) -> Optional[Account]:
-        return self._accounts.get(account_id)
+        return await self.get_async(account_id)
     
     async def add_async(self, account: Account) -> Account:
         self._accounts[account.id] = account
@@ -262,9 +329,9 @@ class InMemoryAccountRepository(Repository[Account, str]):
         self._accounts[account.id] = account
         return account
     
-    async def remove_async(self, account: Account):
-        if account.id in self._accounts:
-            del self._accounts[account.id]
+    async def remove_async(self, id: str) -> None:
+        if id in self._accounts:
+            del self._accounts[id]
     
     async def find_async(self, predicate) -> List[Account]:
         return [account for account in self._accounts.values() if predicate(account)]
@@ -274,6 +341,10 @@ class InMemoryAccountRepository(Repository[Account, str]):
             if account.account_number == account_number:
                 return account
         return None
+    
+    def clear(self):
+        """Clear all accounts for test isolation"""
+        self._accounts.clear()
 
 
 class InMemoryTransactionRepository(Repository[Transaction, str]):
@@ -282,8 +353,14 @@ class InMemoryTransactionRepository(Repository[Transaction, str]):
     def __init__(self):
         self._transactions: Dict[str, Transaction] = {}
     
+    async def contains_async(self, id: str) -> bool:
+        return id in self._transactions
+    
+    async def get_async(self, id: str) -> Optional[Transaction]:
+        return self._transactions.get(id)
+    
     async def get_by_id_async(self, transaction_id: str) -> Optional[Transaction]:
-        return self._transactions.get(transaction_id)
+        return await self.get_async(transaction_id)
     
     async def add_async(self, transaction: Transaction) -> Transaction:
         self._transactions[transaction.id] = transaction
@@ -295,81 +372,86 @@ class InMemoryTransactionRepository(Repository[Transaction, str]):
         self._transactions[transaction.id] = transaction
         return transaction
     
-    async def remove_async(self, transaction: Transaction):
-        if transaction.id in self._transactions:
-            del self._transactions[transaction.id]
+    async def remove_async(self, id: str) -> None:
+        if id in self._transactions:
+            del self._transactions[id]
     
     async def find_async(self, predicate) -> List[Transaction]:
         return [transaction for transaction in self._transactions.values() if predicate(transaction)]
     
     async def get_by_account_id_async(self, account_id: str) -> List[Transaction]:
-        return [tx for tx in self._transactions.values() if tx.account_id == account_id]
+        transactions = [tx for tx in self._transactions.values() if tx.account_id == account_id]
+        return transactions
+    
+    def clear(self):
+        """Clear all transactions for test isolation"""
+        self._transactions.clear()
 
 
 # Event handlers
 
-class AccountCreatedEventHandler(EventHandler[AccountCreatedEvent]):
+class AccountCreatedEventHandler(DomainEventHandler[AccountCreatedEvent]):
     """Handler for account created events"""
     
     def __init__(self, email_service):
         self.email_service = email_service
         self.handled_events: List[AccountCreatedEvent] = []
     
-    async def handle_async(self, event: AccountCreatedEvent):
-        self.handled_events.append(event)
+    async def handle_async(self, notification: AccountCreatedEvent) -> None:
+        self.handled_events.append(notification)
         
         # Send welcome email
         await self.email_service.send_welcome_email(
-            f"{event.owner_name}@example.com",
-            event.owner_name
+            f"{notification.owner_name}@example.com",
+            notification.owner_name
         )
 
 
-class MoneyDepositedEventHandler(EventHandler[MoneyDepositedEvent]):
+class MoneyDepositedEventHandler(DomainEventHandler[MoneyDepositedEvent]):
     """Handler for money deposited events"""
     
     def __init__(self, transaction_repo: InMemoryTransactionRepository):
         self.transaction_repo = transaction_repo
         self.handled_events: List[MoneyDepositedEvent] = []
     
-    async def handle_async(self, event: MoneyDepositedEvent):
-        self.handled_events.append(event)
+    async def handle_async(self, notification: MoneyDepositedEvent) -> None:
+        self.handled_events.append(notification)
         
         # Create transaction record
         transaction = Transaction(
-            id=event.transaction_id,
-            account_id=event.account_id,
-            amount=event.amount,
+            id=notification.transaction_id,
+            account_id=notification.aggregate_id,  # Updated to use framework's aggregate_id
+            amount=notification.amount,
             transaction_type="deposit",
-            description=f"Deposit of ${event.amount}"
+            description=f"Deposit of ${notification.amount}"
         )
         await self.transaction_repo.add_async(transaction)
 
 
-class MoneyWithdrawnEventHandler(EventHandler[MoneyWithdrawnEvent]):
+class MoneyWithdrawnEventHandler(DomainEventHandler[MoneyWithdrawnEvent]):
     """Handler for money withdrawn events"""
     
     def __init__(self, transaction_repo: InMemoryTransactionRepository):
         self.transaction_repo = transaction_repo
         self.handled_events: List[MoneyWithdrawnEvent] = []
     
-    async def handle_async(self, event: MoneyWithdrawnEvent):
-        self.handled_events.append(event)
+    async def handle_async(self, notification: MoneyWithdrawnEvent) -> None:
+        self.handled_events.append(notification)
         
         # Create transaction record
         transaction = Transaction(
-            id=event.transaction_id,
-            account_id=event.account_id,
-            amount=event.amount,
+            id=notification.transaction_id,
+            account_id=notification.aggregate_id,  # Updated to use framework's aggregate_id
+            amount=notification.amount,
             transaction_type="withdrawal",
-            description=f"Withdrawal of ${event.amount}"
+            description=f"Withdrawal of ${notification.amount}"
         )
         await self.transaction_repo.add_async(transaction)
 
 
 # Command handlers
 
-class CreateAccountCommandHandler(CommandHandler[CreateAccountCommand, OperationResult[AccountDto]]):
+class CreateAccountCommandHandler(RequestHandler[CreateAccountCommand, OperationResult[AccountDto]]):
     """Handler for create account command"""
     
     def __init__(self, account_repo: InMemoryAccountRepository, mapper: Mapper, mediator: Mediator):
@@ -377,20 +459,20 @@ class CreateAccountCommandHandler(CommandHandler[CreateAccountCommand, Operation
         self.mapper = mapper
         self.mediator = mediator
     
-    async def handle_async(self, command: CreateAccountCommand) -> OperationResult[AccountDto]:
+    async def handle_async(self, request: CreateAccountCommand) -> OperationResult[AccountDto]:
         try:
             # Check if account number already exists
-            existing = await self.account_repo.get_by_account_number_async(command.account_number)
+            existing = await self.account_repo.get_by_account_number_async(request.account_number)
             if existing:
-                return self.conflict("Account number already exists")
+                return OperationResult("Conflict", 409, "Account number already exists")
             
             # Create aggregate and apply business logic
             aggregate = BankAccountAggregate()
             aggregate.create_account(
-                command.account_number,
-                command.owner_name,
-                Decimal(str(command.initial_balance)),
-                command.account_type
+                request.account_number,
+                request.owner_name,
+                Decimal(str(request.initial_balance)),
+                request.account_type
             )
             
             # Create entity from aggregate
@@ -406,21 +488,23 @@ class CreateAccountCommandHandler(CommandHandler[CreateAccountCommand, Operation
             # Save to repository
             await self.account_repo.add_async(account)
             
-            # Publish domain events
-            for event in aggregate.get_uncommitted_events():
+            # Publish domain events using framework's native event system
+            for event in aggregate._pending_events:
                 await self.mediator.publish_async(event)
             
             # Map to DTO and return
             account_dto = self.mapper.map(account, AccountDto)
-            return self.created(account_dto)
+            result = OperationResult("Created", 201)
+            result.data = account_dto
+            return result
             
         except ValueError as e:
-            return self.bad_request(str(e))
+            return OperationResult("Bad Request", 400, str(e))
         except Exception as e:
-            return self.internal_error(f"Failed to create account: {e}")
+            return OperationResult("Internal Server Error", 500, f"Failed to create account: {e}")
 
 
-class DepositMoneyCommandHandler(CommandHandler[DepositMoneyCommand, OperationResult[AccountDto]]):
+class DepositMoneyCommandHandler(RequestHandler[DepositMoneyCommand, OperationResult[AccountDto]]):
     """Handler for deposit money command"""
     
     def __init__(self, account_repo: InMemoryAccountRepository, mapper: Mapper, mediator: Mediator):
@@ -428,45 +512,43 @@ class DepositMoneyCommandHandler(CommandHandler[DepositMoneyCommand, OperationRe
         self.mapper = mapper
         self.mediator = mediator
     
-    async def handle_async(self, command: DepositMoneyCommand) -> OperationResult[AccountDto]:
+    async def handle_async(self, request: DepositMoneyCommand) -> OperationResult[AccountDto]:
         try:
             # Get account
-            account = await self.account_repo.get_by_id_async(command.account_id)
+            account = await self.account_repo.get_by_id_async(request.account_id)
             if not account:
-                return self.not_found("Account not found")
+                return OperationResult("Not Found", 404, "Account not found")
             
-            # Create aggregate from current state
+            # Create aggregate from current state using framework's native approach
             aggregate = BankAccountAggregate(account.id)
-            aggregate.account_number = account.account_number
-            aggregate.owner_name = account.owner_name
-            aggregate.balance = account.balance
-            aggregate.account_type = account.account_type
-            aggregate.is_active = account.is_active
-            aggregate.created_at = account.created_at
+            aggregate.load_from_account(account)
             
             # Apply business logic
             transaction_id = str(uuid4())
-            aggregate.deposit_money(Decimal(str(command.amount)), transaction_id)
+            aggregate.deposit_money(Decimal(str(request.amount)), transaction_id)
             
             # Update account
             account.balance = aggregate.balance
             await self.account_repo.update_async(account)
             
-            # Publish domain events
-            for event in aggregate.get_uncommitted_events():
+            # Publish domain events using framework's native event system
+            events = aggregate._pending_events
+            for event in events:
                 await self.mediator.publish_async(event)
             
             # Map to DTO and return
             account_dto = self.mapper.map(account, AccountDto)
-            return self.ok(account_dto)
+            result = OperationResult("OK", 200)
+            result.data = account_dto
+            return result
             
         except ValueError as e:
-            return self.bad_request(str(e))
+            return OperationResult("Bad Request", 400, str(e))
         except Exception as e:
-            return self.internal_error(f"Failed to deposit money: {e}")
+            return OperationResult("Internal Server Error", 500, f"Failed to deposit money: {e}")
 
 
-class WithdrawMoneyCommandHandler(CommandHandler[WithdrawMoneyCommand, OperationResult[AccountDto]]):
+class WithdrawMoneyCommandHandler(RequestHandler[WithdrawMoneyCommand, OperationResult[AccountDto]]):
     """Handler for withdraw money command"""
     
     def __init__(self, account_repo: InMemoryAccountRepository, mapper: Mapper, mediator: Mediator):
@@ -474,61 +556,60 @@ class WithdrawMoneyCommandHandler(CommandHandler[WithdrawMoneyCommand, Operation
         self.mapper = mapper
         self.mediator = mediator
     
-    async def handle_async(self, command: WithdrawMoneyCommand) -> OperationResult[AccountDto]:
+    async def handle_async(self, request: WithdrawMoneyCommand) -> OperationResult[AccountDto]:
         try:
             # Get account
-            account = await self.account_repo.get_by_id_async(command.account_id)
+            account = await self.account_repo.get_by_id_async(request.account_id)
             if not account:
-                return self.not_found("Account not found")
+                return OperationResult("Not Found", 404, "Account not found")
             
-            # Create aggregate from current state
+            # Create aggregate from current state using framework's native approach
             aggregate = BankAccountAggregate(account.id)
-            aggregate.account_number = account.account_number
-            aggregate.owner_name = account.owner_name
-            aggregate.balance = account.balance
-            aggregate.account_type = account.account_type
-            aggregate.is_active = account.is_active
-            aggregate.created_at = account.created_at
+            aggregate.load_from_account(account)
             
             # Apply business logic
             transaction_id = str(uuid4())
-            aggregate.withdraw_money(Decimal(str(command.amount)), transaction_id)
+            aggregate.withdraw_money(Decimal(str(request.amount)), transaction_id)
             
             # Update account
             account.balance = aggregate.balance
             await self.account_repo.update_async(account)
             
-            # Publish domain events
-            for event in aggregate.get_uncommitted_events():
+            # Publish domain events using framework's native event system
+            for event in aggregate._pending_events:
                 await self.mediator.publish_async(event)
             
             # Map to DTO and return
             account_dto = self.mapper.map(account, AccountDto)
-            return self.ok(account_dto)
+            result = OperationResult("OK", 200)
+            result.data = account_dto
+            return result
             
         except ValueError as e:
-            return self.bad_request(str(e))
+            return OperationResult("Bad Request", 400, str(e))
         except Exception as e:
-            return self.internal_error(f"Failed to withdraw money: {e}")
+            return OperationResult("Internal Server Error", 500, f"Failed to withdraw money: {e}")
 
 
 # Query handlers
 
-class GetAccountQueryHandler(QueryHandler[GetAccountQuery, OperationResult[AccountDto]]):
+class GetAccountQueryHandler(RequestHandler[GetAccountQuery, OperationResult[AccountDto]]):
     """Handler for get account query"""
     
     def __init__(self, account_repo: InMemoryAccountRepository, mapper: Mapper):
         self.account_repo = account_repo
         self.mapper = mapper
     
-    async def handle_async(self, query: GetAccountQuery) -> OperationResult[AccountDto]:
-        account = await self.account_repo.get_by_id_async(query.account_id)
+    async def handle_async(self, request: GetAccountQuery) -> OperationResult[AccountDto]:
+        account = await self.account_repo.get_by_id_async(request.account_id)
         
         if not account:
-            return self.not_found("Account not found")
+            return OperationResult("Not Found", 404, "Account not found")
         
         account_dto = self.mapper.map(account, AccountDto)
-        return self.ok(account_dto)
+        result = OperationResult("OK", 200)
+        result.data = account_dto
+        return result
 
 
 class GetAccountsByOwnerQueryHandler(QueryHandler[GetAccountsByOwnerQuery, OperationResult[List[AccountDto]]]):
@@ -538,10 +619,12 @@ class GetAccountsByOwnerQueryHandler(QueryHandler[GetAccountsByOwnerQuery, Opera
         self.account_repo = account_repo
         self.mapper = mapper
     
-    async def handle_async(self, query: GetAccountsByOwnerQuery) -> OperationResult[List[AccountDto]]:
-        accounts = await self.account_repo.find_async(lambda a: a.owner_name == query.owner_name)
-        account_dtos = self.mapper.map_list(accounts, AccountDto)
-        return self.ok(account_dtos)
+    async def handle_async(self, request: GetAccountsByOwnerQuery) -> OperationResult[List[AccountDto]]:
+        accounts = await self.account_repo.find_async(lambda a: a.owner_name == request.owner_name)
+        account_dtos = [self.mapper.map(account, AccountDto) for account in accounts]
+        result = OperationResult("OK", 200)
+        result.data = account_dtos
+        return result
 
 
 class GetAccountBalanceQueryHandler(QueryHandler[GetAccountBalanceQuery, OperationResult[Decimal]]):
@@ -550,13 +633,15 @@ class GetAccountBalanceQueryHandler(QueryHandler[GetAccountBalanceQuery, Operati
     def __init__(self, account_repo: InMemoryAccountRepository):
         self.account_repo = account_repo
     
-    async def handle_async(self, query: GetAccountBalanceQuery) -> OperationResult[Decimal]:
-        account = await self.account_repo.get_by_id_async(query.account_id)
+    async def handle_async(self, request: GetAccountBalanceQuery) -> OperationResult[Decimal]:
+        account = await self.account_repo.get_by_id_async(request.account_id)
         
         if not account:
-            return self.not_found("Account not found")
+            return OperationResult("Not Found", 404, "Account not found")
         
-        return self.ok(account.balance)
+        result = OperationResult("OK", 200)
+        result.data = account.balance
+        return result
 
 
 # Integration tests
@@ -573,22 +658,29 @@ class TestNeurogliaIntegration:
         self.transaction_repo = InMemoryTransactionRepository()
         self.email_service = TestEmailService()
         
+        # Clear all state for test isolation
+        self.account_repo.clear()
+        self.transaction_repo.clear()
+        self.email_service.clear()
+        
         # Create mapper with configuration
-        self.mapper = Mapper()
-        self.mapper.create_map(Account, AccountDto).add_member_mapping(
-            lambda src: float(src.balance), lambda dst: dst.balance
-        ).add_member_mapping(
-            lambda src: f"${src.balance:.2f}", lambda dst: dst.formatted_balance
+        mapper_config = MapperConfiguration()
+        # Configure type mappings as needed
+        mapper_config.create_map(Account, AccountDto).for_member(
+            "balance", lambda ctx: float(ctx.source.balance)
+        ).for_member(
+            "formatted_balance", lambda ctx: f"${ctx.source.balance:.2f}"
         )
+        self.mapper = Mapper(mapper_config)
         
         # Register services
-        self.service_collection.add_singleton(InMemoryAccountRepository, self.account_repo)
-        self.service_collection.add_singleton(InMemoryTransactionRepository, self.transaction_repo)
-        self.service_collection.add_singleton(TestEmailService, self.email_service)
-        self.service_collection.add_singleton(Mapper, self.mapper)
+        self.service_collection.add_singleton(InMemoryAccountRepository, singleton=self.account_repo)
+        self.service_collection.add_singleton(InMemoryTransactionRepository, singleton=self.transaction_repo)
+        self.service_collection.add_singleton(TestEmailService, singleton=self.email_service)
+        self.service_collection.add_singleton(Mapper, singleton=self.mapper)
         
         # Create mediator (will be injected into handlers)
-        self.service_provider = self.service_collection.build_service_provider()
+        self.service_provider = self.service_collection.build()
         self.mediator = Mediator(self.service_provider)
         
         # Register event handlers
@@ -596,9 +688,15 @@ class TestNeurogliaIntegration:
         self.money_deposited_handler = MoneyDepositedEventHandler(self.transaction_repo)
         self.money_withdrawn_handler = MoneyWithdrawnEventHandler(self.transaction_repo)
         
-        self.service_collection.add_singleton(AccountCreatedEventHandler, self.account_created_handler)
-        self.service_collection.add_singleton(MoneyDepositedEventHandler, self.money_deposited_handler)
-        self.service_collection.add_singleton(MoneyWithdrawnEventHandler, self.money_withdrawn_handler)
+        # Register by concrete type for dependency injection
+        self.service_collection.add_singleton(AccountCreatedEventHandler, singleton=self.account_created_handler)
+        self.service_collection.add_singleton(MoneyDepositedEventHandler, singleton=self.money_deposited_handler)
+        self.service_collection.add_singleton(MoneyWithdrawnEventHandler, singleton=self.money_withdrawn_handler)
+        
+        # Also register by base type for mediator discovery
+        self.service_collection.add_singleton(NotificationHandler, singleton=self.account_created_handler)
+        self.service_collection.add_singleton(NotificationHandler, singleton=self.money_deposited_handler)
+        self.service_collection.add_singleton(NotificationHandler, singleton=self.money_withdrawn_handler)
         
         # Register command handlers
         self.create_account_handler = CreateAccountCommandHandler(
@@ -611,21 +709,37 @@ class TestNeurogliaIntegration:
             self.account_repo, self.mapper, self.mediator
         )
         
-        self.service_collection.add_singleton(CreateAccountCommandHandler, self.create_account_handler)
-        self.service_collection.add_singleton(DepositMoneyCommandHandler, self.deposit_money_handler)
-        self.service_collection.add_singleton(WithdrawMoneyCommandHandler, self.withdraw_money_handler)
+        # Register by concrete type for dependency injection
+        self.service_collection.add_singleton(CreateAccountCommandHandler, singleton=self.create_account_handler)
+        self.service_collection.add_singleton(DepositMoneyCommandHandler, singleton=self.deposit_money_handler)
+        self.service_collection.add_singleton(WithdrawMoneyCommandHandler, singleton=self.withdraw_money_handler)
+        
+        # Also register by base type for mediator discovery
+        self.service_collection.add_singleton(RequestHandler, singleton=self.create_account_handler)
+        self.service_collection.add_singleton(RequestHandler, singleton=self.deposit_money_handler)
+        self.service_collection.add_singleton(RequestHandler, singleton=self.withdraw_money_handler)
+        
+        # Rebuild service provider after all registrations
+        self.service_provider = self.service_collection.build()
+        self.mediator = Mediator(self.service_provider)
         
         # Register query handlers
         self.get_account_handler = GetAccountQueryHandler(self.account_repo, self.mapper)
         self.get_accounts_by_owner_handler = GetAccountsByOwnerQueryHandler(self.account_repo, self.mapper)
         self.get_balance_handler = GetAccountBalanceQueryHandler(self.account_repo)
         
-        self.service_collection.add_singleton(GetAccountQueryHandler, self.get_account_handler)
-        self.service_collection.add_singleton(GetAccountsByOwnerQueryHandler, self.get_accounts_by_owner_handler)
-        self.service_collection.add_singleton(GetAccountBalanceQueryHandler, self.get_balance_handler)
+        # Register by concrete type for dependency injection
+        self.service_collection.add_singleton(GetAccountQueryHandler, singleton=self.get_account_handler)
+        self.service_collection.add_singleton(GetAccountsByOwnerQueryHandler, singleton=self.get_accounts_by_owner_handler)
+        self.service_collection.add_singleton(GetAccountBalanceQueryHandler, singleton=self.get_balance_handler)
+        
+        # Also register by base type for mediator discovery
+        self.service_collection.add_singleton(RequestHandler, singleton=self.get_account_handler)
+        self.service_collection.add_singleton(RequestHandler, singleton=self.get_accounts_by_owner_handler)
+        self.service_collection.add_singleton(RequestHandler, singleton=self.get_balance_handler)
         
         # Rebuild service provider with all handlers
-        self.service_provider = self.service_collection.build_service_provider()
+        self.service_provider = self.service_collection.build()
         self.mediator = Mediator(self.service_provider)
     
     @pytest.mark.asyncio
@@ -639,7 +753,7 @@ class TestNeurogliaIntegration:
             account_type="checking"
         )
         
-        create_result = await self.mediator.send_async(create_command)
+        create_result = await self.mediator.execute_async(create_command)
         
         assert create_result.is_success
         assert create_result.data.account_number == "ACC001"
@@ -660,7 +774,7 @@ class TestNeurogliaIntegration:
             description="Salary deposit"
         )
         
-        deposit_result = await self.mediator.send_async(deposit_command)
+        deposit_result = await self.mediator.execute_async(deposit_command)
         
         assert deposit_result.is_success
         assert deposit_result.data.balance == 1500.0
@@ -679,7 +793,7 @@ class TestNeurogliaIntegration:
             description="ATM withdrawal"
         )
         
-        withdraw_result = await self.mediator.send_async(withdraw_command)
+        withdraw_result = await self.mediator.execute_async(withdraw_command)
         
         assert withdraw_result.is_success
         assert withdraw_result.data.balance == 1300.0
@@ -693,14 +807,14 @@ class TestNeurogliaIntegration:
         
         # 4. Query account
         get_query = GetAccountQuery(account_id=account_id)
-        get_result = await self.mediator.send_async(get_query)
+        get_result = await self.mediator.execute_async(get_query)
         
         assert get_result.is_success
         assert get_result.data.balance == 1300.0
         
         # 5. Query balance
         balance_query = GetAccountBalanceQuery(account_id=account_id)
-        balance_result = await self.mediator.send_async(balance_query)
+        balance_result = await self.mediator.execute_async(balance_query)
         
         assert balance_result.is_success
         assert balance_result.data == Decimal("1300.00")
@@ -723,13 +837,13 @@ class TestNeurogliaIntegration:
                 initial_balance=balance,
                 account_type=acc_type
             )
-            result = await self.mediator.send_async(command)
+            result = await self.mediator.execute_async(command)
             assert result.is_success
             account_ids.append(result.data.id)
         
         # Query accounts by owner
         john_query = GetAccountsByOwnerQuery(owner_name="John Doe")
-        john_result = await self.mediator.send_async(john_query)
+        john_result = await self.mediator.execute_async(john_query)
         
         assert john_result.is_success
         assert len(john_result.data) == 2
@@ -752,7 +866,7 @@ class TestNeurogliaIntegration:
             account_type="checking"
         )
         
-        result = await self.mediator.send_async(invalid_command)
+        result = await self.mediator.execute_async(invalid_command)
         assert not result.is_success
         assert result.status_code == 400  # Bad Request
         
@@ -763,7 +877,7 @@ class TestNeurogliaIntegration:
             description="Test withdrawal"
         )
         
-        result = await self.mediator.send_async(withdraw_command)
+        result = await self.mediator.execute_async(withdraw_command)
         assert not result.is_success
         assert result.status_code == 404  # Not Found
         
@@ -775,7 +889,7 @@ class TestNeurogliaIntegration:
             account_type="checking"
         )
         
-        create_result = await self.mediator.send_async(create_command)
+        create_result = await self.mediator.execute_async(create_command)
         assert create_result.is_success
         account_id = create_result.data.id
         
@@ -786,7 +900,7 @@ class TestNeurogliaIntegration:
             description="Overdraw attempt"
         )
         
-        result = await self.mediator.send_async(overdraw_command)
+        result = await self.mediator.execute_async(overdraw_command)
         assert not result.is_success
         assert result.status_code == 400  # Bad Request
         assert "Insufficient funds" in result.error_message
@@ -802,7 +916,7 @@ class TestNeurogliaIntegration:
             account_type="checking"
         )
         
-        create_result = await self.mediator.send_async(create_command)
+        create_result = await self.mediator.execute_async(create_command)
         account_id = create_result.data.id
         
         # Verify account created event was handled
@@ -818,7 +932,7 @@ class TestNeurogliaIntegration:
             description="Deposit"
         )
         
-        await self.mediator.send_async(deposit_command)
+        await self.mediator.execute_async(deposit_command)
         
         # Verify deposit event was handled
         assert len(self.money_deposited_handler.handled_events) == 1
@@ -833,7 +947,7 @@ class TestNeurogliaIntegration:
             description="Withdrawal"
         )
         
-        await self.mediator.send_async(withdraw_command)
+        await self.mediator.execute_async(withdraw_command)
         
         # Verify withdrawal event was handled
         assert len(self.money_withdrawn_handler.handled_events) == 1
@@ -860,8 +974,8 @@ class TestNeurogliaIntegration:
         assert aggregate.owner_name == "John Doe"
         assert aggregate.balance == Decimal("1000.00")
         
-        # Test domain events generation
-        events = aggregate.get_uncommitted_events()
+        # Test domain events generation using framework's native event system
+        events = aggregate._pending_events
         assert len(events) == 1
         assert isinstance(events[0], AccountCreatedEvent)
         
@@ -875,8 +989,8 @@ class TestNeurogliaIntegration:
         
         assert aggregate.balance == Decimal("1200.00")  # 1000 + 500 - 300
         
-        # Verify all events were generated
-        all_events = aggregate.get_uncommitted_events()
+        # Verify all events were generated using framework's native event system
+        all_events = aggregate._pending_events
         assert len(all_events) == 3
         assert isinstance(all_events[0], AccountCreatedEvent)
         assert isinstance(all_events[1], MoneyDepositedEvent)

@@ -1,6 +1,100 @@
 # 🚀 Getting Started with Neuroglia
 
-This guide will help you create your first Neuroglia application from scratch. By the end, you'll have a working REST API with dependency injection, CQRS patterns, and clean architecture.
+This guide will help you create your first Neuroglia application from scratch. Choose your path based on your needs:
+
+- **🎯 [Simple CQRS](#simple-cqrs-quick-start)** - Minimal setup for basic command/query separation (5 minutes)
+- **🏗️ [Full Framework](#full-framework-setup)** - Complete setup with event sourcing and cloud events (15 minutes)
+
+## 🎯 Simple CQRS Quick Start
+
+If you just need clean command/query separation without complex event sourcing, start here:
+
+### 1. Ultra-Minimal Example (3 minutes)
+
+```python
+import asyncio
+import uuid
+from dataclasses import dataclass
+
+from neuroglia.mediation import (
+    Command, Query, CommandHandler, QueryHandler,
+    create_simple_app, InMemoryRepository
+)
+from neuroglia.core.operation_result import OperationResult
+
+# Models
+@dataclass
+class Task:
+    id: str
+    title: str
+    completed: bool = False
+
+@dataclass
+class TaskDto:
+    id: str
+    title: str  
+    completed: bool
+
+# Commands & Queries
+@dataclass
+class CreateTaskCommand(Command[OperationResult[TaskDto]]):
+    title: str
+
+@dataclass
+class GetTaskQuery(Query[OperationResult[TaskDto]]):
+    task_id: str
+
+# Handlers
+class CreateTaskHandler(CommandHandler[CreateTaskCommand, OperationResult[TaskDto]]):
+    def __init__(self, repository: InMemoryRepository[Task]):
+        self.repository = repository
+    
+    async def handle_async(self, request: CreateTaskCommand) -> OperationResult[TaskDto]:
+        task = Task(str(uuid.uuid4()), request.title)
+        await self.repository.save_async(task)
+        dto = TaskDto(task.id, task.title, task.completed)
+        return self.created(dto)
+
+class GetTaskHandler(QueryHandler[GetTaskQuery, OperationResult[TaskDto]]):
+    def __init__(self, repository: InMemoryRepository[Task]):
+        self.repository = repository
+    
+    async def handle_async(self, request: GetTaskQuery) -> OperationResult[TaskDto]:
+        task = await self.repository.get_by_id_async(request.task_id)
+        if not task:
+            return self.not_found(Task, request.task_id)
+        dto = TaskDto(task.id, task.title, task.completed)
+        return self.ok(dto)
+
+# One-line app setup
+async def main():
+    provider = create_simple_app(
+        CreateTaskHandler, GetTaskHandler,
+        repositories=[InMemoryRepository[Task]]
+    )
+    
+    mediator = provider.get_service(Mediator)
+    
+    # Use your app
+    result = await mediator.execute_async(CreateTaskCommand("Learn CQRS"))
+    print(f"Created: {result.data.title}")
+    
+    get_result = await mediator.execute_async(GetTaskQuery(result.data.id))  
+    print(f"Retrieved: {get_result.data.title}")
+
+if __name__ == "__main__":
+    asyncio.run(main())
+```
+
+**That's it! You have a working CQRS application.** 
+
+For more advanced simple CQRS patterns, see our [Simple CQRS Guide](features/simple-cqrs.md).
+
+---
+
+## 🏗️ Full Framework Setup
+
+For applications that need event sourcing, cloud events, and advanced patterns:
 
 ## 📋 Prerequisites
 
