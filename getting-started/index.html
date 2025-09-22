@@ -134,7 +134,7 @@
       </a>
 </li>
 <li class="md-tabs__item">
-<a class="md-tabs__link" href="../features/dependency-injection/">
+<a class="md-tabs__link" href="../features/simple-cqrs/">
           
   
   
@@ -198,6 +198,31 @@
       Table of contents
     </label>
 <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#simple-cqrs-quick-start">
+<span class="md-ellipsis">
+      🎯 Simple CQRS Quick Start
+    </span>
+</a>
+<nav aria-label="🎯 Simple CQRS Quick Start" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#1-ultra-minimal-example-3-minutes">
+<span class="md-ellipsis">
+      1. Ultra-Minimal Example (3 minutes)
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#full-framework-setup">
+<span class="md-ellipsis">
+      🏗️ Full Framework Setup
+    </span>
+</a>
+</li>
 <li class="md-nav__item">
 <a class="md-nav__link" href="#prerequisites">
 <span class="md-ellipsis">
@@ -333,6 +358,14 @@
             Features
           </label>
 <ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../features/simple-cqrs/">
+<span class="md-ellipsis">
+    Simple CQRS
+    
+  </span>
+</a>
+</li>
 <li class="md-nav__item">
 <a class="md-nav__link" href="../features/dependency-injection/">
 <span class="md-ellipsis">
@@ -521,6 +554,31 @@
     </label>
 <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
 <li class="md-nav__item">
+<a class="md-nav__link" href="#simple-cqrs-quick-start">
+<span class="md-ellipsis">
+      🎯 Simple CQRS Quick Start
+    </span>
+</a>
+<nav aria-label="🎯 Simple CQRS Quick Start" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#1-ultra-minimal-example-3-minutes">
+<span class="md-ellipsis">
+      1. Ultra-Minimal Example (3 minutes)
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#full-framework-setup">
+<span class="md-ellipsis">
+      🏗️ Full Framework Setup
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
 <a class="md-nav__link" href="#prerequisites">
 <span class="md-ellipsis">
       📋 Prerequisites
@@ -637,7 +695,92 @@
 <div class="md-content" data-md-component="content">
 <article class="md-content__inner md-typeset">
 <h1 id="getting-started-with-neuroglia">🚀 Getting Started with Neuroglia<a class="headerlink" href="#getting-started-with-neuroglia" title="Permanent link">¶</a></h1>
-<p>This guide will help you create your first Neuroglia application from scratch. By the end, you'll have a working REST API with dependency injection, CQRS patterns, and clean architecture.</p>
+<p>This guide will help you create your first Neuroglia application from scratch. Choose your path based on your needs:</p>
+<ul>
+<li><strong>🎯 <a href="#simple-cqrs-quick-start">Simple CQRS</a></strong> - Minimal setup for basic command/query separation (5 minutes)</li>
+<li><strong>🏗️ <a href="#full-framework-setup">Full Framework</a></strong> - Complete setup with event sourcing and cloud events (15 minutes)</li>
+</ul>
+<h2 id="simple-cqrs-quick-start">🎯 Simple CQRS Quick Start<a class="headerlink" href="#simple-cqrs-quick-start" title="Permanent link">¶</a></h2>
+<p>If you just need clean command/query separation without complex event sourcing, start here:</p>
+<h3 id="1-ultra-minimal-example-3-minutes">1. Ultra-Minimal Example (3 minutes)<a class="headerlink" href="#1-ultra-minimal-example-3-minutes" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">uuid</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.mediation</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">Command</span><span class="p">,</span> <span class="n">Query</span><span class="p">,</span> <span class="n">CommandHandler</span><span class="p">,</span> <span class="n">QueryHandler</span><span class="p">,</span>
+    <span class="n">create_simple_app</span><span class="p">,</span> <span class="n">InMemoryRepository</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.core.operation_result</span><span class="w"> </span><span class="kn">import</span> <span class="n">OperationResult</span>
+
+<span class="c1"># Models</span>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Task</span><span class="p">:</span>
+    <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">title</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">completed</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">TaskDto</span><span class="p">:</span>
+    <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">title</span><span class="p">:</span> <span class="nb">str</span>  
+    <span class="n">completed</span><span class="p">:</span> <span class="nb">bool</span>
+
+<span class="c1"># Commands &amp; Queries</span>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">CreateTaskCommand</span><span class="p">(</span><span class="n">Command</span><span class="p">[</span><span class="n">OperationResult</span><span class="p">[</span><span class="n">TaskDto</span><span class="p">]]):</span>
+    <span class="n">title</span><span class="p">:</span> <span class="nb">str</span>
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">GetTaskQuery</span><span class="p">(</span><span class="n">Query</span><span class="p">[</span><span class="n">OperationResult</span><span class="p">[</span><span class="n">TaskDto</span><span class="p">]]):</span>
+    <span class="n">task_id</span><span class="p">:</span> <span class="nb">str</span>
+
+<span class="c1"># Handlers</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">CreateTaskHandler</span><span class="p">(</span><span class="n">CommandHandler</span><span class="p">[</span><span class="n">CreateTaskCommand</span><span class="p">,</span> <span class="n">OperationResult</span><span class="p">[</span><span class="n">TaskDto</span><span class="p">]]):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">repository</span><span class="p">:</span> <span class="n">InMemoryRepository</span><span class="p">[</span><span class="n">Task</span><span class="p">]):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">repository</span> <span class="o">=</span> <span class="n">repository</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">handle_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">CreateTaskCommand</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">OperationResult</span><span class="p">[</span><span class="n">TaskDto</span><span class="p">]:</span>
+        <span class="n">task</span> <span class="o">=</span> <span class="n">Task</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">()),</span> <span class="n">request</span><span class="o">.</span><span class="n">title</span><span class="p">)</span>
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">repository</span><span class="o">.</span><span class="n">save_async</span><span class="p">(</span><span class="n">task</span><span class="p">)</span>
+        <span class="n">dto</span> <span class="o">=</span> <span class="n">TaskDto</span><span class="p">(</span><span class="n">task</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">task</span><span class="o">.</span><span class="n">title</span><span class="p">,</span> <span class="n">task</span><span class="o">.</span><span class="n">completed</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">created</span><span class="p">(</span><span class="n">dto</span><span class="p">)</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">GetTaskHandler</span><span class="p">(</span><span class="n">QueryHandler</span><span class="p">[</span><span class="n">GetTaskQuery</span><span class="p">,</span> <span class="n">OperationResult</span><span class="p">[</span><span class="n">TaskDto</span><span class="p">]]):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">repository</span><span class="p">:</span> <span class="n">InMemoryRepository</span><span class="p">[</span><span class="n">Task</span><span class="p">]):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">repository</span> <span class="o">=</span> <span class="n">repository</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">handle_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">GetTaskQuery</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">OperationResult</span><span class="p">[</span><span class="n">TaskDto</span><span class="p">]:</span>
+        <span class="n">task</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">repository</span><span class="o">.</span><span class="n">get_by_id_async</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">task_id</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">task</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">not_found</span><span class="p">(</span><span class="n">Task</span><span class="p">,</span> <span class="n">request</span><span class="o">.</span><span class="n">task_id</span><span class="p">)</span>
+        <span class="n">dto</span> <span class="o">=</span> <span class="n">TaskDto</span><span class="p">(</span><span class="n">task</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">task</span><span class="o">.</span><span class="n">title</span><span class="p">,</span> <span class="n">task</span><span class="o">.</span><span class="n">completed</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">ok</span><span class="p">(</span><span class="n">dto</span><span class="p">)</span>
+
+<span class="c1"># One-line app setup</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+    <span class="n">provider</span> <span class="o">=</span> <span class="n">create_simple_app</span><span class="p">(</span>
+        <span class="n">CreateTaskHandler</span><span class="p">,</span> <span class="n">GetTaskHandler</span><span class="p">,</span>
+        <span class="n">repositories</span><span class="o">=</span><span class="p">[</span><span class="n">InMemoryRepository</span><span class="p">[</span><span class="n">Task</span><span class="p">]]</span>
+    <span class="p">)</span>
+
+    <span class="n">mediator</span> <span class="o">=</span> <span class="n">provider</span><span class="o">.</span><span class="n">get_service</span><span class="p">(</span><span class="n">Mediator</span><span class="p">)</span>
+
+    <span class="c1"># Use your app</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">mediator</span><span class="o">.</span><span class="n">execute_async</span><span class="p">(</span><span class="n">CreateTaskCommand</span><span class="p">(</span><span class="s2">"Learn CQRS"</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Created: </span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">title</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+    <span class="n">get_result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">mediator</span><span class="o">.</span><span class="n">execute_async</span><span class="p">(</span><span class="n">GetTaskQuery</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">id</span><span class="p">))</span>  
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Retrieved: </span><span class="si">{</span><span class="n">get_result</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">title</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
+    <span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
+</code></pre></div>
+<p><strong>That's it! You have a working CQRS application.</strong> </p>
+<p>For more advanced simple CQRS patterns, see our <a href="../features/simple-cqrs/">Simple CQRS Guide</a>.</p>
+<hr/>
+<h2 id="full-framework-setup">🏗️ Full Framework Setup<a class="headerlink" href="#full-framework-setup" title="Permanent link">¶</a></h2>
+<p>For applications that need event sourcing, cloud events, and advanced patterns:</p>
 <h2 id="prerequisites">📋 Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">¶</a></h2>
 <ul>
 <li>Python 3.11 or higher</li>

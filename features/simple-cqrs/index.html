@@ -1,0 +1,1189 @@
+
+<!DOCTYPE html>
+
+<html class="no-js" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<link href="../../architecture/" rel="prev"/>
+<link href="../dependency-injection/" rel="next"/>
+<link href="../../assets/images/favicon.png" rel="icon"/>
+<meta content="mkdocs-1.6.1, mkdocs-material-9.6.20" name="generator"/>
+<title>Simple CQRS - Neuroglia Python Framework</title>
+<link href="../../assets/stylesheets/main.e53b48f4.min.css" rel="stylesheet"/>
+<link href="../../assets/stylesheets/palette.06af60db.min.css" rel="stylesheet"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback" rel="stylesheet"/>
+<style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+<script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+</head>
+<body data-md-color-accent="blue" data-md-color-primary="blue" data-md-color-scheme="default" dir="ltr">
+<input autocomplete="off" class="md-toggle" data-md-toggle="drawer" id="__drawer" type="checkbox"/>
+<input autocomplete="off" class="md-toggle" data-md-toggle="search" id="__search" type="checkbox"/>
+<label class="md-overlay" for="__drawer"></label>
+<div data-md-component="skip">
+<a class="md-skip" href="#simple-cqrs-patterns">
+          Skip to content
+        </a>
+</div>
+<div data-md-component="announce">
+</div>
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+<nav aria-label="Header" class="md-header__inner md-grid">
+<a aria-label="Neuroglia Python Framework" class="md-header__button md-logo" data-md-component="logo" href="../.." title="Neuroglia Python Framework">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+</a>
+<label class="md-header__button md-icon" for="__drawer">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+</label>
+<div class="md-header__title" data-md-component="header-title">
+<div class="md-header__ellipsis">
+<div class="md-header__topic">
+<span class="md-ellipsis">
+            Neuroglia Python Framework
+          </span>
+</div>
+<div class="md-header__topic" data-md-component="header-topic">
+<span class="md-ellipsis">
+            
+              Simple CQRS
+            
+          </span>
+</div>
+</div>
+</div>
+<form class="md-header__option" data-md-component="palette">
+<input aria-label="Switch to dark mode" class="md-option" data-md-color-accent="blue" data-md-color-media="" data-md-color-primary="blue" data-md-color-scheme="default" id="__palette_0" name="__palette" type="radio"/>
+<label class="md-header__button md-icon" for="__palette_1" hidden="" title="Switch to dark mode">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+</label>
+<input aria-label="Switch to light mode" class="md-option" data-md-color-accent="blue" data-md-color-media="" data-md-color-primary="blue" data-md-color-scheme="slate" id="__palette_1" name="__palette" type="radio"/>
+<label class="md-header__button md-icon" for="__palette_0" hidden="" title="Switch to light mode">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+</label>
+</form>
+<script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+<label class="md-header__button md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+</label>
+<div class="md-search" data-md-component="search" role="dialog">
+<label class="md-search__overlay" for="__search"></label>
+<div class="md-search__inner" role="search">
+<form class="md-search__form" name="search">
+<input aria-label="Search" autocapitalize="off" autocomplete="off" autocorrect="off" class="md-search__input" data-md-component="search-query" name="query" placeholder="Search" required="" spellcheck="false" type="text"/>
+<label class="md-search__icon md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+</label>
+<nav aria-label="Search" class="md-search__options">
+<a aria-label="Share" class="md-search__icon md-icon" data-clipboard="" data-clipboard-text="" data-md-component="search-share" href="javascript:void(0)" tabindex="-1" title="Share">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"></path></svg>
+</a>
+<button aria-label="Clear" class="md-search__icon md-icon" tabindex="-1" title="Clear" type="reset">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+</button>
+</nav>
+</form>
+<div class="md-search__output">
+<div class="md-search__scrollwrap" data-md-scrollfix="" tabindex="0">
+<div class="md-search-result" data-md-component="search-result">
+<div class="md-search-result__meta">
+            Initializing search
+          </div>
+<ol class="md-search-result__list" role="presentation"></ol>
+</div>
+</div>
+</div>
+</div>
+</div>
+</nav>
+<nav aria-label="Tabs" class="md-tabs" data-md-component="tabs">
+<div class="md-grid">
+<ul class="md-tabs__list">
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../..">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../getting-started/">
+        
+  
+  
+    
+  
+  Getting Started
+
+      </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../architecture/">
+        
+  
+  
+    
+  
+  Architecture
+
+      </a>
+</li>
+<li class="md-tabs__item md-tabs__item--active">
+<a class="md-tabs__link" href="./">
+          
+  
+  
+  Features
+
+        </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../samples/openbank/">
+          
+  
+  
+  Sample Applications
+
+        </a>
+</li>
+</ul>
+</div>
+</nav>
+</header>
+<div class="md-container" data-md-component="container">
+<main class="md-main" data-md-component="main">
+<div class="md-main__inner md-grid">
+<div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="Navigation" class="md-nav md-nav--primary md-nav--lifted" data-md-level="0">
+<label class="md-nav__title" for="__drawer">
+<a aria-label="Neuroglia Python Framework" class="md-nav__button md-logo" data-md-component="logo" href="../.." title="Neuroglia Python Framework">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+</a>
+    Neuroglia Python Framework
+  </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../..">
+<span class="md-ellipsis">
+    Home
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../getting-started/">
+<span class="md-ellipsis">
+    Getting Started
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../architecture/">
+<span class="md-ellipsis">
+    Architecture
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+<input checked="" class="md-nav__toggle md-toggle" id="__nav_4" type="checkbox"/>
+<label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+<span class="md-ellipsis">
+    Features
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="true" aria-labelledby="__nav_4_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_4">
+<span class="md-nav__icon md-icon"></span>
+            Features
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item md-nav__item--active">
+<input class="md-nav__toggle md-toggle" id="__toc" type="checkbox"/>
+<label class="md-nav__link md-nav__link--active" for="__toc">
+<span class="md-ellipsis">
+    Simple CQRS
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<a class="md-nav__link md-nav__link--active" href="./">
+<span class="md-ellipsis">
+    Simple CQRS
+    
+  </span>
+</a>
+<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#when-to-use-simple-cqrs">
+<span class="md-ellipsis">
+      🎯 When to Use Simple CQRS
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#basic-setup">
+<span class="md-ellipsis">
+      🏗️ Basic Setup
+    </span>
+</a>
+<nav aria-label="🏗️ Basic Setup" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#minimal-example-5-lines-of-setup">
+<span class="md-ellipsis">
+      Minimal Example (5 lines of setup)
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#standard-setup">
+<span class="md-ellipsis">
+      Standard Setup
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#complete-working-example">
+<span class="md-ellipsis">
+      🚀 Complete Working Example
+    </span>
+</a>
+<nav aria-label="🚀 Complete Working Example" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#1-define-your-models">
+<span class="md-ellipsis">
+      1. Define Your Models
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#2-define-commands-and-queries">
+<span class="md-ellipsis">
+      2. Define Commands and Queries
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#3-implement-handlers">
+<span class="md-ellipsis">
+      3. Implement Handlers
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#4-create-and-use-your-application">
+<span class="md-ellipsis">
+      4. Create and Use Your Application
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#key-patterns">
+<span class="md-ellipsis">
+      💡 Key Patterns
+    </span>
+</a>
+<nav aria-label="💡 Key Patterns" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#validation-and-error-handling">
+<span class="md-ellipsis">
+      Validation and Error Handling
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#repository-patterns">
+<span class="md-ellipsis">
+      Repository Patterns
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#query-result-patterns">
+<span class="md-ellipsis">
+      Query Result Patterns
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#configuration-options">
+<span class="md-ellipsis">
+      🔧 Configuration Options
+    </span>
+</a>
+<nav aria-label="🔧 Configuration Options" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#simple-application-settings">
+<span class="md-ellipsis">
+      Simple Application Settings
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#environment-integration">
+<span class="md-ellipsis">
+      Environment Integration
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#testing-patterns">
+<span class="md-ellipsis">
+      🧪 Testing Patterns
+    </span>
+</a>
+<nav aria-label="🧪 Testing Patterns" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#unit-testing-handlers">
+<span class="md-ellipsis">
+      Unit Testing Handlers
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#integration-testing">
+<span class="md-ellipsis">
+      Integration Testing
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#when-to-upgrade">
+<span class="md-ellipsis">
+      🚀 When to Upgrade
+    </span>
+</a>
+<nav aria-label="🚀 When to Upgrade" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#event-sourcing">
+<span class="md-ellipsis">
+      Event Sourcing
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#cloud-events">
+<span class="md-ellipsis">
+      Cloud Events
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#domain-events">
+<span class="md-ellipsis">
+      Domain Events
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#related-documentation">
+<span class="md-ellipsis">
+      🔗 Related Documentation
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../dependency-injection/">
+<span class="md-ellipsis">
+    Dependency Injection
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../cqrs-mediation/">
+<span class="md-ellipsis">
+    CQRS &amp; Mediation
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../resource-oriented-architecture/">
+<span class="md-ellipsis">
+    Resource Oriented Architecture
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../watcher-reconciliation-patterns/">
+<span class="md-ellipsis">
+    Watcher &amp; Reconciliation Patterns
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../watcher-reconciliation-execution/">
+<span class="md-ellipsis">
+    Watcher &amp; Reconciliation Execution
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../mvc-controllers/">
+<span class="md-ellipsis">
+    MVC Controllers
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../data-access/">
+<span class="md-ellipsis">
+    Data Access
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../event-sourcing/">
+<span class="md-ellipsis">
+    Event Sourcing
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../mermaid-diagrams/">
+<span class="md-ellipsis">
+    Mermaid Diagrams
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../event-handling.md">
+<span class="md-ellipsis">
+    Event Handling
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../object-mapping.md">
+<span class="md-ellipsis">
+    Object Mapping
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../configuration.md">
+<span class="md-ellipsis">
+    Configuration
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../hosting.md">
+<span class="md-ellipsis">
+    Hosting
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../core.md">
+<span class="md-ellipsis">
+    Core
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../serialization.md">
+<span class="md-ellipsis">
+    Serialization
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_5" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+<span class="md-ellipsis">
+    Sample Applications
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_5_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_5">
+<span class="md-nav__icon md-icon"></span>
+            Sample Applications
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../samples/openbank/">
+<span class="md-ellipsis">
+    OpenBank
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../samples/lab-resource-manager/">
+<span class="md-ellipsis">
+    Lab Resource Manager
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../samples/api_gateway/">
+<span class="md-ellipsis">
+    API Gateway
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../samples/desktop_controller/">
+<span class="md-ellipsis">
+    Desktop Controller
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#when-to-use-simple-cqrs">
+<span class="md-ellipsis">
+      🎯 When to Use Simple CQRS
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#basic-setup">
+<span class="md-ellipsis">
+      🏗️ Basic Setup
+    </span>
+</a>
+<nav aria-label="🏗️ Basic Setup" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#minimal-example-5-lines-of-setup">
+<span class="md-ellipsis">
+      Minimal Example (5 lines of setup)
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#standard-setup">
+<span class="md-ellipsis">
+      Standard Setup
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#complete-working-example">
+<span class="md-ellipsis">
+      🚀 Complete Working Example
+    </span>
+</a>
+<nav aria-label="🚀 Complete Working Example" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#1-define-your-models">
+<span class="md-ellipsis">
+      1. Define Your Models
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#2-define-commands-and-queries">
+<span class="md-ellipsis">
+      2. Define Commands and Queries
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#3-implement-handlers">
+<span class="md-ellipsis">
+      3. Implement Handlers
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#4-create-and-use-your-application">
+<span class="md-ellipsis">
+      4. Create and Use Your Application
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#key-patterns">
+<span class="md-ellipsis">
+      💡 Key Patterns
+    </span>
+</a>
+<nav aria-label="💡 Key Patterns" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#validation-and-error-handling">
+<span class="md-ellipsis">
+      Validation and Error Handling
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#repository-patterns">
+<span class="md-ellipsis">
+      Repository Patterns
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#query-result-patterns">
+<span class="md-ellipsis">
+      Query Result Patterns
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#configuration-options">
+<span class="md-ellipsis">
+      🔧 Configuration Options
+    </span>
+</a>
+<nav aria-label="🔧 Configuration Options" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#simple-application-settings">
+<span class="md-ellipsis">
+      Simple Application Settings
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#environment-integration">
+<span class="md-ellipsis">
+      Environment Integration
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#testing-patterns">
+<span class="md-ellipsis">
+      🧪 Testing Patterns
+    </span>
+</a>
+<nav aria-label="🧪 Testing Patterns" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#unit-testing-handlers">
+<span class="md-ellipsis">
+      Unit Testing Handlers
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#integration-testing">
+<span class="md-ellipsis">
+      Integration Testing
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#when-to-upgrade">
+<span class="md-ellipsis">
+      🚀 When to Upgrade
+    </span>
+</a>
+<nav aria-label="🚀 When to Upgrade" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#event-sourcing">
+<span class="md-ellipsis">
+      Event Sourcing
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#cloud-events">
+<span class="md-ellipsis">
+      Cloud Events
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#domain-events">
+<span class="md-ellipsis">
+      Domain Events
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#related-documentation">
+<span class="md-ellipsis">
+      🔗 Related Documentation
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div class="md-content" data-md-component="content">
+<article class="md-content__inner md-typeset">
+<h1 id="simple-cqrs-patterns">🎯 Simple CQRS Patterns<a class="headerlink" href="#simple-cqrs-patterns" title="Permanent link">¶</a></h1>
+<p>This guide shows how to use Neuroglia's simplified CQRS patterns for applications that need clean command/query separation without complex event sourcing or cloud events infrastructure.</p>
+<h2 id="when-to-use-simple-cqrs">🎯 When to Use Simple CQRS<a class="headerlink" href="#when-to-use-simple-cqrs" title="Permanent link">¶</a></h2>
+<p>Use the simple CQRS patterns when you need:</p>
+<ul>
+<li><strong>Clean separation</strong> of read and write operations</li>
+<li><strong>Basic validation</strong> and business logic handling</li>
+<li><strong>In-memory testing</strong> or simple database operations  </li>
+<li><strong>Minimal setup</strong> without event sourcing complexity</li>
+<li><strong>Rapid prototyping</strong> of business logic</li>
+</ul>
+<p><strong>Don't use simple patterns when you need:</strong>
+- Event sourcing and domain events
+- Cloud events integration
+- Complex workflow orchestration
+- Advanced audit trails</p>
+<h2 id="basic-setup">🏗️ Basic Setup<a class="headerlink" href="#basic-setup" title="Permanent link">¶</a></h2>
+<h3 id="minimal-example-5-lines-of-setup">Minimal Example (5 lines of setup)<a class="headerlink" href="#minimal-example-5-lines-of-setup" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.mediation</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">Command</span><span class="p">,</span> <span class="n">Query</span><span class="p">,</span> <span class="n">CommandHandler</span><span class="p">,</span> <span class="n">QueryHandler</span><span class="p">,</span>
+    <span class="n">create_simple_app</span><span class="p">,</span> <span class="n">InMemoryRepository</span>
+<span class="p">)</span>
+
+<span class="c1"># One-line app creation</span>
+<span class="n">provider</span> <span class="o">=</span> <span class="n">create_simple_app</span><span class="p">(</span><span class="n">CreateTaskHandler</span><span class="p">,</span> <span class="n">GetTaskHandler</span><span class="p">,</span> 
+                           <span class="n">repositories</span><span class="o">=</span><span class="p">[</span><span class="n">InMemoryRepository</span><span class="p">[</span><span class="n">Task</span><span class="p">]])</span>
+<span class="n">mediator</span> <span class="o">=</span> <span class="n">provider</span><span class="o">.</span><span class="n">get_service</span><span class="p">(</span><span class="n">Mediator</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="standard-setup">Standard Setup<a class="headerlink" href="#standard-setup" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.mediation</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">add_simple_mediator</span><span class="p">,</span> <span class="n">register_simple_handlers</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.dependency_injection</span><span class="w"> </span><span class="kn">import</span> <span class="n">ServiceCollection</span>
+
+<span class="c1"># Create service collection</span>
+<span class="n">services</span> <span class="o">=</span> <span class="n">ServiceCollection</span><span class="p">()</span>
+
+<span class="c1"># Add simple mediator (no cloud events)</span>
+<span class="n">add_simple_mediator</span><span class="p">(</span><span class="n">services</span><span class="p">)</span>
+
+<span class="c1"># Add repositories</span>
+<span class="n">services</span><span class="o">.</span><span class="n">add_singleton</span><span class="p">(</span><span class="n">InMemoryRepository</span><span class="p">[</span><span class="n">Task</span><span class="p">])</span>
+
+<span class="c1"># Register handlers</span>
+<span class="n">register_simple_handlers</span><span class="p">(</span><span class="n">services</span><span class="p">,</span> <span class="n">CreateTaskHandler</span><span class="p">,</span> <span class="n">GetTaskHandler</span><span class="p">)</span>
+
+<span class="c1"># Build provider</span>
+<span class="n">provider</span> <span class="o">=</span> <span class="n">services</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
+</code></pre></div>
+<h2 id="complete-working-example">🚀 Complete Working Example<a class="headerlink" href="#complete-working-example" title="Permanent link">¶</a></h2>
+<h3 id="1-define-your-models">1. Define Your Models<a class="headerlink" href="#1-define-your-models" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
+
+<span class="c1"># Domain model</span>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Task</span><span class="p">:</span>
+    <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">title</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">completed</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+
+<span class="c1"># DTO for API responses  </span>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">TaskDto</span><span class="p">:</span>
+    <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">title</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">completed</span><span class="p">:</span> <span class="nb">bool</span>
+</code></pre></div>
+<h3 id="2-define-commands-and-queries">2. Define Commands and Queries<a class="headerlink" href="#2-define-commands-and-queries" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.mediation</span><span class="w"> </span><span class="kn">import</span> <span class="n">Command</span><span class="p">,</span> <span class="n">Query</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.core.operation_result</span><span class="w"> </span><span class="kn">import</span> <span class="n">OperationResult</span>
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">CreateTaskCommand</span><span class="p">(</span><span class="n">Command</span><span class="p">[</span><span class="n">OperationResult</span><span class="p">[</span><span class="n">TaskDto</span><span class="p">]]):</span>
+    <span class="n">title</span><span class="p">:</span> <span class="nb">str</span>
+
+<span class="nd">@dataclass</span>  
+<span class="k">class</span><span class="w"> </span><span class="nc">GetTaskQuery</span><span class="p">(</span><span class="n">Query</span><span class="p">[</span><span class="n">OperationResult</span><span class="p">[</span><span class="n">TaskDto</span><span class="p">]]):</span>
+    <span class="n">task_id</span><span class="p">:</span> <span class="nb">str</span>
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">CompleteTaskCommand</span><span class="p">(</span><span class="n">Command</span><span class="p">[</span><span class="n">OperationResult</span><span class="p">[</span><span class="n">TaskDto</span><span class="p">]]):</span>
+    <span class="n">task_id</span><span class="p">:</span> <span class="nb">str</span>
+</code></pre></div>
+<h3 id="3-implement-handlers">3. Implement Handlers<a class="headerlink" href="#3-implement-handlers" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">uuid</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.mediation</span><span class="w"> </span><span class="kn">import</span> <span class="n">CommandHandler</span><span class="p">,</span> <span class="n">QueryHandler</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">CreateTaskHandler</span><span class="p">(</span><span class="n">CommandHandler</span><span class="p">[</span><span class="n">CreateTaskCommand</span><span class="p">,</span> <span class="n">OperationResult</span><span class="p">[</span><span class="n">TaskDto</span><span class="p">]]):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">repository</span><span class="p">:</span> <span class="n">InMemoryRepository</span><span class="p">[</span><span class="n">Task</span><span class="p">]):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">repository</span> <span class="o">=</span> <span class="n">repository</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">handle_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">CreateTaskCommand</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">OperationResult</span><span class="p">[</span><span class="n">TaskDto</span><span class="p">]:</span>
+        <span class="c1"># Validation</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">request</span><span class="o">.</span><span class="n">title</span><span class="o">.</span><span class="n">strip</span><span class="p">():</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">bad_request</span><span class="p">(</span><span class="s2">"Title cannot be empty"</span><span class="p">)</span>
+
+        <span class="c1"># Business logic</span>
+        <span class="n">task</span> <span class="o">=</span> <span class="n">Task</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">()),</span> <span class="n">request</span><span class="o">.</span><span class="n">title</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">repository</span><span class="o">.</span><span class="n">save_async</span><span class="p">(</span><span class="n">task</span><span class="p">)</span>
+
+        <span class="c1"># Return result</span>
+        <span class="n">dto</span> <span class="o">=</span> <span class="n">TaskDto</span><span class="p">(</span><span class="n">task</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">task</span><span class="o">.</span><span class="n">title</span><span class="p">,</span> <span class="n">task</span><span class="o">.</span><span class="n">completed</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">created</span><span class="p">(</span><span class="n">dto</span><span class="p">)</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">GetTaskHandler</span><span class="p">(</span><span class="n">QueryHandler</span><span class="p">[</span><span class="n">GetTaskQuery</span><span class="p">,</span> <span class="n">OperationResult</span><span class="p">[</span><span class="n">TaskDto</span><span class="p">]]):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">repository</span><span class="p">:</span> <span class="n">InMemoryRepository</span><span class="p">[</span><span class="n">Task</span><span class="p">]):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">repository</span> <span class="o">=</span> <span class="n">repository</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">handle_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">GetTaskQuery</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">OperationResult</span><span class="p">[</span><span class="n">TaskDto</span><span class="p">]:</span>
+        <span class="n">task</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">repository</span><span class="o">.</span><span class="n">get_by_id_async</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">task_id</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">task</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">not_found</span><span class="p">(</span><span class="n">Task</span><span class="p">,</span> <span class="n">request</span><span class="o">.</span><span class="n">task_id</span><span class="p">)</span>
+
+        <span class="n">dto</span> <span class="o">=</span> <span class="n">TaskDto</span><span class="p">(</span><span class="n">task</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">task</span><span class="o">.</span><span class="n">title</span><span class="p">,</span> <span class="n">task</span><span class="o">.</span><span class="n">completed</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">ok</span><span class="p">(</span><span class="n">dto</span><span class="p">)</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">CompleteTaskHandler</span><span class="p">(</span><span class="n">CommandHandler</span><span class="p">[</span><span class="n">CompleteTaskCommand</span><span class="p">,</span> <span class="n">OperationResult</span><span class="p">[</span><span class="n">TaskDto</span><span class="p">]]):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">repository</span><span class="p">:</span> <span class="n">InMemoryRepository</span><span class="p">[</span><span class="n">Task</span><span class="p">]):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">repository</span> <span class="o">=</span> <span class="n">repository</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">handle_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">CompleteTaskCommand</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">OperationResult</span><span class="p">[</span><span class="n">TaskDto</span><span class="p">]:</span>
+        <span class="n">task</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">repository</span><span class="o">.</span><span class="n">get_by_id_async</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">task_id</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">task</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">not_found</span><span class="p">(</span><span class="n">Task</span><span class="p">,</span> <span class="n">request</span><span class="o">.</span><span class="n">task_id</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">task</span><span class="o">.</span><span class="n">completed</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">bad_request</span><span class="p">(</span><span class="s2">"Task is already completed"</span><span class="p">)</span>
+
+        <span class="c1"># Business logic</span>
+        <span class="n">task</span><span class="o">.</span><span class="n">completed</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">repository</span><span class="o">.</span><span class="n">save_async</span><span class="p">(</span><span class="n">task</span><span class="p">)</span>
+
+        <span class="n">dto</span> <span class="o">=</span> <span class="n">TaskDto</span><span class="p">(</span><span class="n">task</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">task</span><span class="o">.</span><span class="n">title</span><span class="p">,</span> <span class="n">task</span><span class="o">.</span><span class="n">completed</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">ok</span><span class="p">(</span><span class="n">dto</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="4-create-and-use-your-application">4. Create and Use Your Application<a class="headerlink" href="#4-create-and-use-your-application" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+    <span class="c1"># Create app with ultra-simple setup</span>
+    <span class="n">provider</span> <span class="o">=</span> <span class="n">create_simple_app</span><span class="p">(</span>
+        <span class="n">CreateTaskHandler</span><span class="p">,</span> 
+        <span class="n">GetTaskHandler</span><span class="p">,</span>
+        <span class="n">CompleteTaskHandler</span><span class="p">,</span>
+        <span class="n">repositories</span><span class="o">=</span><span class="p">[</span><span class="n">InMemoryRepository</span><span class="p">[</span><span class="n">Task</span><span class="p">]]</span>
+    <span class="p">)</span>
+
+    <span class="n">mediator</span> <span class="o">=</span> <span class="n">provider</span><span class="o">.</span><span class="n">get_service</span><span class="p">(</span><span class="n">Mediator</span><span class="p">)</span>
+
+    <span class="c1"># Create a task</span>
+    <span class="n">create_result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">mediator</span><span class="o">.</span><span class="n">execute_async</span><span class="p">(</span>
+        <span class="n">CreateTaskCommand</span><span class="p">(</span><span class="s2">"Learn Neuroglia CQRS"</span><span class="p">)</span>
+    <span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">create_result</span><span class="o">.</span><span class="n">is_success</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"✅ Created: </span><span class="si">{</span><span class="n">create_result</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">title</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="n">task_id</span> <span class="o">=</span> <span class="n">create_result</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">id</span>
+
+        <span class="c1"># Complete the task</span>
+        <span class="n">complete_result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">mediator</span><span class="o">.</span><span class="n">execute_async</span><span class="p">(</span>
+            <span class="n">CompleteTaskCommand</span><span class="p">(</span><span class="n">task_id</span><span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">complete_result</span><span class="o">.</span><span class="n">is_success</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"✅ Completed: </span><span class="si">{</span><span class="n">complete_result</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">title</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+        <span class="c1"># Get the task</span>
+        <span class="n">get_result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">mediator</span><span class="o">.</span><span class="n">execute_async</span><span class="p">(</span><span class="n">GetTaskQuery</span><span class="p">(</span><span class="n">task_id</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="n">get_result</span><span class="o">.</span><span class="n">is_success</span><span class="p">:</span>
+            <span class="n">task</span> <span class="o">=</span> <span class="n">get_result</span><span class="o">.</span><span class="n">data</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"📋 Task: </span><span class="si">{</span><span class="n">task</span><span class="o">.</span><span class="n">title</span><span class="si">}</span><span class="s2"> (completed: </span><span class="si">{</span><span class="n">task</span><span class="o">.</span><span class="n">completed</span><span class="si">}</span><span class="s2">)"</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
+    <span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
+</code></pre></div>
+<h2 id="key-patterns">💡 Key Patterns<a class="headerlink" href="#key-patterns" title="Permanent link">¶</a></h2>
+<h3 id="validation-and-error-handling">Validation and Error Handling<a class="headerlink" href="#validation-and-error-handling" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">handle_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">CreateUserCommand</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">OperationResult</span><span class="p">[</span><span class="n">UserDto</span><span class="p">]:</span>
+    <span class="c1"># Input validation</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">request</span><span class="o">.</span><span class="n">email</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">bad_request</span><span class="p">(</span><span class="s2">"Email is required"</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="s2">"@"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">email</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">bad_request</span><span class="p">(</span><span class="s2">"Invalid email format"</span><span class="p">)</span>
+
+    <span class="c1"># Business validation</span>
+    <span class="n">existing_user</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">repository</span><span class="o">.</span><span class="n">get_by_email_async</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">email</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">existing_user</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">conflict</span><span class="p">(</span><span class="sa">f</span><span class="s2">"User with email </span><span class="si">{</span><span class="n">request</span><span class="o">.</span><span class="n">email</span><span class="si">}</span><span class="s2"> already exists"</span><span class="p">)</span>
+
+    <span class="c1"># Success path</span>
+    <span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">()),</span> <span class="n">request</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">request</span><span class="o">.</span><span class="n">email</span><span class="p">)</span>
+    <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">repository</span><span class="o">.</span><span class="n">save_async</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
+
+    <span class="n">dto</span> <span class="o">=</span> <span class="n">UserDto</span><span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">user</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">user</span><span class="o">.</span><span class="n">email</span><span class="p">)</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">created</span><span class="p">(</span><span class="n">dto</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="repository-patterns">Repository Patterns<a class="headerlink" href="#repository-patterns" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Simple in-memory repository (for testing/prototyping)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.mediation</span><span class="w"> </span><span class="kn">import</span> <span class="n">InMemoryRepository</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">UserRepository</span><span class="p">(</span><span class="n">InMemoryRepository</span><span class="p">[</span><span class="n">User</span><span class="p">]):</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_by_email_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">email</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">User</span><span class="p">]:</span>
+        <span class="k">for</span> <span class="n">user</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_storage</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">user</span><span class="o">.</span><span class="n">email</span> <span class="o">==</span> <span class="n">email</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">user</span>
+        <span class="k">return</span> <span class="kc">None</span>
+</code></pre></div>
+<h3 id="query-result-patterns">Query Result Patterns<a class="headerlink" href="#query-result-patterns" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Single item query</span>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">GetUserQuery</span><span class="p">(</span><span class="n">Query</span><span class="p">[</span><span class="n">OperationResult</span><span class="p">[</span><span class="n">UserDto</span><span class="p">]]):</span>
+    <span class="n">user_id</span><span class="p">:</span> <span class="nb">str</span>
+
+<span class="c1"># List query</span>
+<span class="nd">@dataclass</span>  
+<span class="k">class</span><span class="w"> </span><span class="nc">ListUsersQuery</span><span class="p">(</span><span class="n">Query</span><span class="p">[</span><span class="n">OperationResult</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">UserDto</span><span class="p">]]]):</span>
+    <span class="n">include_inactive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+
+<span class="c1"># Search query</span>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">SearchUsersQuery</span><span class="p">(</span><span class="n">Query</span><span class="p">[</span><span class="n">OperationResult</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">UserDto</span><span class="p">]]]):</span>
+    <span class="n">search_term</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">page</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">page_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span>
+</code></pre></div>
+<h2 id="configuration-options">🔧 Configuration Options<a class="headerlink" href="#configuration-options" title="Permanent link">¶</a></h2>
+<h3 id="simple-application-settings">Simple Application Settings<a class="headerlink" href="#simple-application-settings" title="Permanent link">¶</a></h3>
+<p>Instead of the full <code>ApplicationSettings</code>, use <code>SimpleApplicationSettings</code> for basic apps:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.mediation</span><span class="w"> </span><span class="kn">import</span> <span class="n">SimpleApplicationSettings</span>
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">MyAppSettings</span><span class="p">(</span><span class="n">SimpleApplicationSettings</span><span class="p">):</span>
+    <span class="n">app_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"Task Manager"</span>
+    <span class="n">max_tasks_per_user</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span>
+    <span class="n">enable_notifications</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
+</code></pre></div>
+<h3 id="environment-integration">Environment Integration<a class="headerlink" href="#environment-integration" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+
+<span class="n">settings</span> <span class="o">=</span> <span class="n">SimpleApplicationSettings</span><span class="p">(</span>
+    <span class="n">app_name</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">"APP_NAME"</span><span class="p">,</span> <span class="s2">"My App"</span><span class="p">),</span>
+    <span class="n">debug</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">"DEBUG"</span><span class="p">,</span> <span class="s2">"false"</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">"true"</span><span class="p">,</span>
+    <span class="n">database_url</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">"DATABASE_URL"</span><span class="p">)</span>
+<span class="p">)</span>
+</code></pre></div>
+<h2 id="testing-patterns">🧪 Testing Patterns<a class="headerlink" href="#testing-patterns" title="Permanent link">¶</a></h2>
+<h3 id="unit-testing-handlers">Unit Testing Handlers<a class="headerlink" href="#unit-testing-handlers" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">unittest.mock</span><span class="w"> </span><span class="kn">import</span> <span class="n">AsyncMock</span>
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">asyncio</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">test_create_task_success</span><span class="p">():</span>
+    <span class="c1"># Arrange</span>
+    <span class="n">repository</span> <span class="o">=</span> <span class="n">AsyncMock</span><span class="p">(</span><span class="n">spec</span><span class="o">=</span><span class="n">InMemoryRepository</span><span class="p">[</span><span class="n">Task</span><span class="p">])</span>
+    <span class="n">handler</span> <span class="o">=</span> <span class="n">CreateTaskHandler</span><span class="p">(</span><span class="n">repository</span><span class="p">)</span>
+    <span class="n">command</span> <span class="o">=</span> <span class="n">CreateTaskCommand</span><span class="p">(</span><span class="s2">"Test task"</span><span class="p">)</span>
+
+    <span class="c1"># Act</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">handler</span><span class="o">.</span><span class="n">handle_async</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
+
+    <span class="c1"># Assert</span>
+    <span class="k">assert</span> <span class="n">result</span><span class="o">.</span><span class="n">is_success</span>
+    <span class="k">assert</span> <span class="n">result</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">title</span> <span class="o">==</span> <span class="s2">"Test task"</span>
+    <span class="n">repository</span><span class="o">.</span><span class="n">save_async</span><span class="o">.</span><span class="n">assert_called_once</span><span class="p">()</span>
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">asyncio</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">test_create_task_empty_title</span><span class="p">():</span>
+    <span class="c1"># Arrange</span>
+    <span class="n">repository</span> <span class="o">=</span> <span class="n">AsyncMock</span><span class="p">(</span><span class="n">spec</span><span class="o">=</span><span class="n">InMemoryRepository</span><span class="p">[</span><span class="n">Task</span><span class="p">])</span>
+    <span class="n">handler</span> <span class="o">=</span> <span class="n">CreateTaskHandler</span><span class="p">(</span><span class="n">repository</span><span class="p">)</span>
+    <span class="n">command</span> <span class="o">=</span> <span class="n">CreateTaskCommand</span><span class="p">(</span><span class="s2">""</span><span class="p">)</span>
+
+    <span class="c1"># Act</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">handler</span><span class="o">.</span><span class="n">handle_async</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
+
+    <span class="c1"># Assert</span>
+    <span class="k">assert</span> <span class="ow">not</span> <span class="n">result</span><span class="o">.</span><span class="n">is_success</span>
+    <span class="k">assert</span> <span class="n">result</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">400</span>
+    <span class="k">assert</span> <span class="s2">"empty"</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">error_message</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+</code></pre></div>
+<h3 id="integration-testing">Integration Testing<a class="headerlink" href="#integration-testing" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">asyncio</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">test_complete_workflow</span><span class="p">():</span>
+    <span class="c1"># Create application</span>
+    <span class="n">provider</span> <span class="o">=</span> <span class="n">create_simple_app</span><span class="p">(</span>
+        <span class="n">CreateTaskHandler</span><span class="p">,</span> 
+        <span class="n">GetTaskHandler</span><span class="p">,</span>
+        <span class="n">CompleteTaskHandler</span><span class="p">,</span>
+        <span class="n">repositories</span><span class="o">=</span><span class="p">[</span><span class="n">InMemoryRepository</span><span class="p">[</span><span class="n">Task</span><span class="p">]]</span>
+    <span class="p">)</span>
+
+    <span class="n">mediator</span> <span class="o">=</span> <span class="n">provider</span><span class="o">.</span><span class="n">get_service</span><span class="p">(</span><span class="n">Mediator</span><span class="p">)</span>
+
+    <span class="c1"># Test complete workflow</span>
+    <span class="n">create_result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">mediator</span><span class="o">.</span><span class="n">execute_async</span><span class="p">(</span><span class="n">CreateTaskCommand</span><span class="p">(</span><span class="s2">"Test"</span><span class="p">))</span>
+    <span class="k">assert</span> <span class="n">create_result</span><span class="o">.</span><span class="n">is_success</span>
+
+    <span class="n">task_id</span> <span class="o">=</span> <span class="n">create_result</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">id</span>
+
+    <span class="n">get_result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">mediator</span><span class="o">.</span><span class="n">execute_async</span><span class="p">(</span><span class="n">GetTaskQuery</span><span class="p">(</span><span class="n">task_id</span><span class="p">))</span>
+    <span class="k">assert</span> <span class="n">get_result</span><span class="o">.</span><span class="n">is_success</span>
+    <span class="k">assert</span> <span class="ow">not</span> <span class="n">get_result</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">completed</span>
+
+    <span class="n">complete_result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">mediator</span><span class="o">.</span><span class="n">execute_async</span><span class="p">(</span><span class="n">CompleteTaskCommand</span><span class="p">(</span><span class="n">task_id</span><span class="p">))</span>
+    <span class="k">assert</span> <span class="n">complete_result</span><span class="o">.</span><span class="n">is_success</span>
+    <span class="k">assert</span> <span class="n">complete_result</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">completed</span>
+</code></pre></div>
+<h2 id="when-to-upgrade">🚀 When to Upgrade<a class="headerlink" href="#when-to-upgrade" title="Permanent link">¶</a></h2>
+<p>Consider upgrading to the full Neuroglia framework features when you need:</p>
+<h3 id="event-sourcing">Event Sourcing<a class="headerlink" href="#event-sourcing" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Upgrade to event sourcing when you need:</span>
+<span class="c1"># - Complete audit trails</span>
+<span class="c1"># - Event replay capabilities  </span>
+<span class="c1"># - Complex business workflows</span>
+<span class="c1"># - Temporal queries ("what was the state at time X?")</span>
+</code></pre></div>
+<h3 id="cloud-events">Cloud Events<a class="headerlink" href="#cloud-events" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Upgrade to cloud events when you need:</span>
+<span class="c1"># - Microservice integration</span>
+<span class="c1"># - Event-driven architecture</span>
+<span class="c1"># - Cross-system communication</span>
+<span class="c1"># - Reliable event delivery</span>
+</code></pre></div>
+<h3 id="domain-events">Domain Events<a class="headerlink" href="#domain-events" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Upgrade to domain events when you need:</span>
+<span class="c1"># - Side effects from business operations</span>
+<span class="c1"># - Decoupled business logic</span>
+<span class="c1"># - Complex business rules</span>
+<span class="c1"># - Integration events</span>
+</code></pre></div>
+<h2 id="related-documentation">🔗 Related Documentation<a class="headerlink" href="#related-documentation" title="Permanent link">¶</a></h2>
+<ul>
+<li><a href="../../getting-started/">Getting Started</a> - Framework overview</li>
+<li><a href="../cqrs-mediation/">CQRS &amp; Mediation</a> - Advanced CQRS patterns</li>
+<li><a href="../dependency-injection/">Dependency Injection</a> - Advanced DI patterns</li>
+<li><a href="../data-access/">Data Access</a> - Repository patterns and persistence</li>
+</ul>
+</article>
+</div>
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+</div>
+<button class="md-top md-icon" data-md-component="top" hidden="" type="button">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"></path></svg>
+  Back to top
+</button>
+</main>
+<footer class="md-footer">
+<div class="md-footer-meta md-typeset">
+<div class="md-footer-meta__inner md-grid">
+<div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" rel="noopener" target="_blank">
+      Material for MkDocs
+    </a>
+</div>
+<div class="md-social">
+<a class="md-social__link" href="https://github.com/bvandewe/pyneuro" rel="noopener" target="_blank" title="github.com">
+<svg viewbox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><!--! Font Awesome Free 7.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"></path></svg>
+</a>
+</div>
+</div>
+</div>
+</footer>
+</div>
+<div class="md-dialog" data-md-component="dialog">
+<div class="md-dialog__inner md-typeset"></div>
+</div>
+<script id="__config" type="application/json">{"base": "../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.expand", "navigation.top", "search.highlight", "search.share"], "search": "../../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+<script src="../../assets/javascripts/bundle.f55a23d4.min.js"></script>
+</body>
+</html>
