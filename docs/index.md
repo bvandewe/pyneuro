@@ -1,267 +1,562 @@
-# 🚀 Neuroglia Python Framework
+# 🍕 Neuroglia Python Framework
 
-Neuroglia is a lightweight, opinionated framework built on top of [FastAPI](https://fastapi.tiangolo.com/) that provides a comprehensive set of tools and patterns for building clean, maintainable, and scalable microservices. It enforces architectural best practices and provides out-of-the-box implementations of common patterns.
+Neuroglia is a lightweight, opinionated framework built on [FastAPI](https://fastapi.tiangolo.com/) that enforces clean architecture principles and provides comprehensive tooling for building maintainable microservices. Through practical examples with **Mario's Pizzeria**, we'll show you how to build production-ready applications using CQRS, dependency injection, and event-driven architecture.
+
+## 🎯 What You'll Build: Mario's Pizzeria Management System
+
+Throughout the documentation, we use Mario's Pizzeria as a unified example to demonstrate every framework feature:
+
+- **📋 Order Management**: Place orders, track status, handle payments
+- **🍕 Menu Administration**: Manage pizzas, ingredients, pricing  
+- **👨‍🍳 Kitchen Operations**: Workflow management, status updates, notifications
+- **📊 Analytics**: Order tracking, sales reporting, customer insights
+- **🔐 Authentication**: OAuth-based access control for staff and customers
+
+This real-world example shows how all framework components work together to create a complete business application.
 
 ## ✨ What Makes Neuroglia Special?
 
 - **🏗️ Clean Architecture Enforced**: Clear separation between API, Application, Domain, and Integration layers
-- **💉 Powerful Dependency Injection**: Lightweight container with automatic service discovery
-- **🎯 CQRS & Mediation Built-in**: Command Query Responsibility Segregation with mediator pattern
-- **📡 Event-Driven by Design**: Native CloudEvents, event sourcing, and reactive programming
-- **🎯 Resource Oriented Architecture**: Declarative resource management with watchers and reconciliation loops
+- **💉 Powerful Dependency Injection**: Lightweight container with automatic service discovery and lifetime management
+- **🎯 CQRS & Mediation Built-in**: Command Query Responsibility Segregation with comprehensive mediator pattern
+- **📡 Event-Driven by Design**: Native CloudEvents support, domain events, and reactive programming
 - **🔌 MVC Done Right**: Class-based controllers with automatic discovery and OpenAPI generation
-- **🗄️ Flexible Data Access**: Repository pattern with MongoDB, Event Store, and in-memory support
+- **🗄️ Flexible Data Access**: Repository pattern with file-based, MongoDB, and event sourcing support
 - **📊 Smart Object Mapping**: Bidirectional mapping between domain models and DTOs
-- **⚡ Reactive Programming**: Built-in RxPy support for asynchronous event handling
+- **🧪 Testing First**: Built-in testing utilities and patterns for all architectural layers
 
-## 🚀 Quick Start
+## 🚀 Quick Start: Your First Pizzeria App
 
-Get up and running in minutes:
+Get Mario's Pizzeria running in minutes:
 
 ```bash
 # Install Neuroglia
 pip install neuroglia
 
-# Create your first app
-python -c "
-from neuroglia.hosting.web import WebApplicationBuilder
-
-builder = WebApplicationBuilder()
-builder.add_controllers(['api.controllers'])
-
-app = builder.build()
-app.use_controllers()
-app.run()
-"
+# Create a simple pizzeria API
 ```
 
-**[👉 Get Started Now](getting-started.md)**
+```python
+# main.py
+from dataclasses import dataclass
+from typing import List
+from neuroglia.hosting.web import WebApplicationBuilder
+from neuroglia.mvc import ControllerBase
+from classy_fastapi import get, post
 
-## 🎯 Architecture Overview
+@dataclass
+class PizzaDto:
+    name: str
+    size: str
+    price: float
 
-Neuroglia promotes a clean, layered architecture:
+@dataclass
+class OrderDto:
+    id: str
+    customer_name: str
+    pizzas: List[PizzaDto]
+    total: float
+    status: str
+
+class MenuController(ControllerBase):
+    """Mario's menu management"""
+    
+    @get("/menu/pizzas", response_model=List[PizzaDto])
+    async def get_pizzas(self) -> List[PizzaDto]:
+        return [
+            PizzaDto("Margherita", "large", 15.99),
+            PizzaDto("Pepperoni", "large", 17.99),
+            PizzaDto("Quattro Stagioni", "large", 19.99)
+        ]
+
+class OrdersController(ControllerBase):
+    """Mario's order management"""
+    
+    @post("/orders", response_model=OrderDto)
+    async def place_order(self, customer_name: str, pizza_names: List[str]) -> OrderDto:
+        # Simple order creation
+        pizzas = [PizzaDto(name, "large", 15.99) for name in pizza_names]
+        total = sum(p.price for p in pizzas)
+        
+        return OrderDto(
+            id="order_123",
+            customer_name=customer_name,
+            pizzas=pizzas,
+            total=total,
+            status="received"
+        )
+
+def create_pizzeria_app():
+    """Create Mario's Pizzeria application"""
+    builder = WebApplicationBuilder()
+    
+    # Add controllers
+    builder.services.add_controllers(["__main__"])
+    
+    app = builder.build()
+    app.use_controllers()
+    
+    return app
+
+if __name__ == "__main__":
+    app = create_pizzeria_app()
+    app.run()
+```
+
+```bash
+# Run the pizzeria
+python main.py
+
+# Test the API
+curl http://localhost:8000/menu/pizzas
+curl -X POST "http://localhost:8000/orders?customer_name=Mario" \
+     -H "Content-Type: application/json" \
+     -d '["Margherita", "Pepperoni"]'
+```
+
+**[👉 Complete Tutorial: Build the Full Pizzeria System](getting-started.md)**
+
+## �️ Architecture Overview
+
+Mario's Pizzeria demonstrates clean, layered architecture:
 
 ```text
-┌─────────────────────────────────────────────────┐
-│                  API Layer                      │  ← Controllers, DTOs, Routes
-│            (FastAPI Integration)                │
-└─────────────────────┬───────────────────────────┘
-                      │ Commands & Queries
-┌─────────────────────▼───────────────────────────┐
-│              Application Layer                  │  ← Handlers, Services, Workflows
-│         (CQRS, Mediation, Use Cases)            │
-└─────────────────────┬───────────────────────────┘
-                      │ Domain Operations
-┌─────────────────────▼───────────────────────────┐
-│               Domain Layer                      │  ← Business Logic, Entities, Rules
-│         (Pure Business Logic)                   │
-└─────────────────────▲───────────────────────────┘
-                      │ Interface Implementation
-┌─────────────────────┴───────────────────────────┐
-│            Integration Layer                    │  ← Databases, APIs, Infrastructure
-│      (Repositories, External Services)          │
-└─────────────────────────────────────────────────┘
+    🌐 API Layer (Controllers & DTOs)
+         OrdersController, MenuController, KitchenController
+         ↓ Commands & Queries
+    💼 Application Layer (CQRS Handlers)
+         PlaceOrderHandler, GetMenuHandler, UpdateOrderStatusHandler
+         ↓ Domain Operations  
+    🏛️ Domain Layer (Business Logic)
+         Order, Pizza, Customer entities with business rules
+         ↑ Repository Interfaces
+    🔌 Integration Layer (Data & External Services)
+         FileOrderRepository, MongoOrderRepository, PaymentService
 ```
 
-**[📖 Learn the Architecture](architecture.md)**
+Each layer has specific responsibilities:
+
+- **🌐 API Layer**: HTTP endpoints, request/response handling, authentication
+- **💼 Application Layer**: Business workflows, command/query processing, event coordination
+- **🏛️ Domain Layer**: Core business rules, entity logic, domain events
+- **🔌 Integration Layer**: Data persistence, external APIs, infrastructure services
+
+**[📖 Deep Dive: Clean Architecture with Mario's Pizzeria](architecture.md)**
 
 ## 🎪 Core Features
 
 ### 💉 Dependency Injection
 
-Powerful, lightweight DI container with automatic service discovery:
+Powerful service container demonstrated through Mario's Pizzeria:
 
 ```python
-# Automatic registration
-services.add_scoped(UserService)
-services.add_singleton(CacheService)
+# Service registration for pizzeria
+builder.services.add_scoped(IOrderRepository, FileOrderRepository)
+builder.services.add_scoped(IPaymentService, MockPaymentService) 
+builder.services.add_mediator()
+builder.services.add_controllers(["api.controllers"])
 
-# Constructor injection
-class UserController(ControllerBase):
-    def __init__(self, user_service: UserService):
-        self.user_service = user_service
-```
-
-**[📖 Dependency Injection Guide](features/dependency-injection.md)**
-
-### 🎯 CQRS & Mediation
-
-Clean separation of commands and queries with built-in mediation:
-
-```python
-# Command
-@dataclass
-class CreateUserCommand(Command[OperationResult[UserDto]]):
-    email: str
-    first_name: str
-
-# Handler
-class CreateUserHandler(CommandHandler[CreateUserCommand, OperationResult[UserDto]]):
-    async def handle_async(self, command: CreateUserCommand) -> OperationResult[UserDto]:
-        # Business logic here
-        return self.created(user_dto)
-
-# Usage in controller
-result = await self.mediator.execute_async(command)
-```
-
-**[📖 CQRS & Mediation Guide](features/cqrs-mediation.md)**
-
-### 🔌 MVC Controllers
-
-Class-based controllers with automatic discovery and full FastAPI integration:
-
-```python
-class UsersController(ControllerBase):
-    @post("/", response_model=UserDto, status_code=201)
-    async def create_user(self, user_dto: CreateUserDto) -> UserDto:
-        command = self.mapper.map(user_dto, CreateUserCommand)
+# Constructor injection in controllers
+class OrdersController(ControllerBase):
+    def __init__(self, service_provider: ServiceProviderBase, 
+                 mapper: Mapper, mediator: Mediator):
+        super().__init__(service_provider, mapper, mediator)
+        
+    @post("/orders", response_model=OrderDto)
+    async def place_order(self, request: PlaceOrderDto) -> OrderDto:
+        command = self.mapper.map(request, PlaceOrderCommand)
         result = await self.mediator.execute_async(command)
         return self.process(result)
 ```
 
-**[📖 MVC Controllers Guide](features/mvc-controllers.md)**
+**[📖 Dependency Injection with Mario's Pizzeria](features/dependency-injection.md)**
+
+### 🎯 CQRS & Mediation
+
+Clean command/query separation demonstrated through pizza ordering:
+
+```python
+# Command for placing orders
+@dataclass
+class PlaceOrderCommand(Command[OperationResult[OrderDto]]):
+    customer_name: str
+    customer_phone: str
+    customer_address: str
+    pizzas: List[PizzaOrderDto]
+    payment_method: str
+
+# Handler with business logic
+class PlaceOrderCommandHandler(CommandHandler[PlaceOrderCommand, OperationResult[OrderDto]]):
+    def __init__(self, order_repository: IOrderRepository, 
+                 payment_service: IPaymentService,
+                 mapper: Mapper):
+        self.order_repository = order_repository
+        self.payment_service = payment_service
+        self.mapper = mapper
+        
+    async def handle_async(self, command: PlaceOrderCommand) -> OperationResult[OrderDto]:
+        # 1. Create domain entity with business logic
+        pizzas = [Pizza(p.name, p.size, p.extras) for p in command.pizzas]
+        order = Order.create_new(
+            command.customer_name, 
+            command.customer_phone,
+            command.customer_address,
+            pizzas,
+            command.payment_method
+        )
+        
+        # 2. Process payment
+        payment_result = await self.payment_service.process_payment_async(
+            order.total_amount, command.payment_method
+        )
+        if not payment_result.is_success:
+            return self.bad_request("Payment processing failed")
+            
+        # 3. Save order and return result
+        saved_order = await self.order_repository.save_async(order)
+        order_dto = self.mapper.map(saved_order, OrderDto)
+        return self.created(order_dto)
+
+# Query for retrieving menu
+@dataclass  
+class GetMenuQuery(Query[List[PizzaDto]]):
+    category: Optional[str] = None
+
+class GetMenuQueryHandler(QueryHandler[GetMenuQuery, List[PizzaDto]]):
+    async def handle_async(self, query: GetMenuQuery) -> List[PizzaDto]:
+        # Query logic here
+        pizzas = await self.pizza_repository.get_all_async()
+        if query.category:
+            pizzas = [p for p in pizzas if p.category == query.category]
+        return [self.mapper.map(p, PizzaDto) for p in pizzas]
+
+# Usage in controller
+@post("/orders", response_model=OrderDto)
+async def place_order(self, request: PlaceOrderDto) -> OrderDto:
+    command = self.mapper.map(request, PlaceOrderCommand)
+    result = await self.mediator.execute_async(command)
+    return self.process(result)
+```
+
+**[📖 CQRS & Mediation with Mario's Pizzeria](features/cqrs-mediation.md)**
+
+### 🔌 MVC Controllers
+
+Class-based controllers with automatic discovery demonstrated through pizzeria APIs:
+
+```python
+class OrdersController(ControllerBase):
+    """Mario's order management endpoint"""
+    
+    @post("/orders", response_model=OrderDto, status_code=201)
+    async def place_order(self, request: PlaceOrderDto) -> OrderDto:
+        """Place a new pizza order"""
+        command = self.mapper.map(request, PlaceOrderCommand)
+        result = await self.mediator.execute_async(command)
+        return self.process(result)
+        
+    @get("/orders/{order_id}", response_model=OrderDto)
+    async def get_order(self, order_id: str) -> OrderDto:
+        """Get order details by ID"""
+        query = GetOrderByIdQuery(order_id=order_id)
+        result = await self.mediator.execute_async(query)
+        return self.process(result)
+
+class MenuController(ControllerBase):
+    """Mario's menu management"""
+    
+    @get("/menu/pizzas", response_model=List[PizzaDto])
+    async def get_pizzas(self, category: Optional[str] = None) -> List[PizzaDto]:
+        """Get available pizzas, optionally filtered by category"""
+        query = GetMenuQuery(category=category)
+        result = await self.mediator.execute_async(query)
+        return self.process(result)
+
+# Automatic OpenAPI documentation generation
+# Built-in validation, error handling, and response formatting
+```
+
+**[📖 MVC Controllers with Mario's Pizzeria](features/mvc-controllers.md)**
 
 ### 📡 Event-Driven Architecture
 
-Native support for CloudEvents and reactive programming:
+Native support for domain events and reactive programming demonstrated through pizzeria operations:
 
 ```python
-# Domain events
-class UserCreatedEvent(DomainEvent):
-    user_id: str
-    email: str
-
-# Event handlers
-class WelcomeEmailHandler(EventHandler[UserCreatedEvent]):
-    async def handle_async(self, event: UserCreatedEvent):
-        await self.email_service.send_welcome(event.email)
-```
-
-**[📖 Event Handling Guide](features/event-handling.md)**
-
-### 🎯 Resource Oriented Architecture
-
-Declarative resource management with watchers, controllers, and reconciliation loops:
-
-```python
-# Resource definition
+# Domain events in Mario's Pizzeria
 @dataclass
-class LabInstanceResource:
-    spec: Dict[str, Any]      # Desired state
-    status: Dict[str, Any]    # Current state
+class OrderPlacedEvent(DomainEvent):
+    order_id: str
+    customer_name: str
+    total_amount: Decimal
+    pizzas: List[str]
 
-# Watcher detects changes
-class LabInstanceWatcher:
-    async def start_watching(self):
-        while self.is_running:
-            changes = self.storage.list_resources(since_version=self.last_version)
-            for resource in changes:
-                await self._handle_resource_change(resource)
+@dataclass
+class OrderReadyEvent(DomainEvent):
+    order_id: str
+    customer_phone: str
+    pickup_time: datetime
 
-# Controller responds with business logic  
-class LabInstanceController:
-    async def handle_resource_event(self, resource):
-        if resource.status.get('state') == 'pending':
-            await self._start_provisioning(resource)
+# Event handlers for pizzeria workflow
+class KitchenNotificationHandler(EventHandler[OrderPlacedEvent]):
+    """Notify kitchen when order is placed"""
+    async def handle_async(self, event: OrderPlacedEvent):
+        await self.kitchen_service.add_to_queue(event.order_id, event.pizzas)
+        
+class CustomerNotificationHandler(EventHandler[OrderReadyEvent]):
+    """Notify customer when order is ready"""
+    async def handle_async(self, event: OrderReadyEvent):
+        message = f"Your order {event.order_id} is ready for pickup!"
+        await self.sms_service.send_message(event.customer_phone, message)
 
-# Reconciler ensures consistency
-class LabInstanceScheduler:
-    async def start_reconciliation(self):
-        while self.is_running:
-            await self._reconcile_all_resources()
-            await asyncio.sleep(self.reconcile_interval)
+# Events are automatically published when domain entities change
+class Order(Entity):
+    def update_status(self, new_status: OrderStatus, updated_by: str):
+        self.status = new_status
+        self.last_updated = datetime.utcnow()
+        self.updated_by = updated_by
+        
+        # Raise domain event
+        if new_status == OrderStatus.READY:
+            self.raise_event(OrderReadyEvent(
+                order_id=self.id,
+                customer_phone=self.customer_phone,
+                pickup_time=datetime.utcnow()
+            ))
 ```
 
-**[📖 Resource Oriented Architecture Guide](features/resource-oriented-architecture.md)**
+**[📖 Event-Driven Architecture with Mario's Pizzeria](features/event-sourcing.md)**
 
 ### 🗄️ Data Access
 
-Flexible repository pattern with multiple storage backends:
+Flexible repository pattern with multiple storage backends demonstrated through Mario's Pizzeria:
 
 ```python
-# Repository interface
-class IUserRepository(Repository[User, str]):
-    async def get_by_email(self, email: str) -> User:
+# Repository interface for orders
+class IOrderRepository(Repository[Order, str]):
+    async def get_by_customer_phone_async(self, phone: str) -> List[Order]:
+        pass
+    
+    async def get_orders_by_status_async(self, status: OrderStatus) -> List[Order]:
         pass
 
-# MongoDB implementation
-class MongoUserRepository(IUserRepository):
-    # Implementation
+# File-based implementation (development)
+class FileOrderRepository(IOrderRepository):
+    def __init__(self, data_directory: str):
+        self.data_directory = Path(data_directory)
+        self.data_directory.mkdir(exist_ok=True)
+        
+    async def save_async(self, order: Order) -> Order:
+        order_data = {
+            "id": order.id,
+            "customer_name": order.customer_name,
+            "status": order.status.value,
+            "total_amount": float(order.total_amount),
+            "created_at": order.created_at.isoformat()
+        }
+        
+        file_path = self.data_directory / f"{order.id}.json"
+        with open(file_path, 'w') as f:
+            json.dump(order_data, f, indent=2)
+            
+        return order
 
-# Event sourcing implementation  
-class EventSourcedUserRepository(IUserRepository):
-    # Implementation
+# MongoDB implementation (production)
+class MongoOrderRepository(IOrderRepository):
+    def __init__(self, collection: Collection):
+        self.collection = collection
+        
+    async def save_async(self, order: Order) -> Order:
+        document = self._order_to_document(order)
+        await self.collection.insert_one(document)
+        return order
+        
+    async def get_orders_by_status_async(self, status: OrderStatus) -> List[Order]:
+        cursor = self.collection.find({"status": status.value})
+        documents = await cursor.to_list(length=None)
+        return [self._document_to_order(doc) for doc in documents]
+
+# Event sourcing for complex workflows
+class EventSourcedOrderRepository(IOrderRepository):
+    """Track complete order lifecycle through events"""
+    async def save_async(self, order: Order) -> Order:
+        # Persist domain events instead of just final state
+        events = order.get_uncommitted_events()
+        for event in events:
+            await self.event_store.append_async(order.id, event)
+        return order
 ```
 
-**[📖 Data Access Guide](features/data-access.md)**
+**[📖 Data Access with Mario's Pizzeria](features/data-access.md)**
 
-## 🎓 Sample Applications
+### 📊 Object Mapping
 
-Learn by example with complete, production-ready sample applications:
+Bidirectional mapping between domain entities and DTOs:
 
-### 🏦 OpenBank - Event-Sourced Banking System
+```python
+# Automatic mapping configuration
+builder.services.add_auto_mapper()
 
-A comprehensive banking domain showcasing:
+# Domain entity
+class Order(Entity):
+    customer_name: str
+    pizzas: List[Pizza] 
+    total_amount: Decimal
+    status: OrderStatus
 
-- ✅ Event sourcing with EventStoreDB
-- ✅ CQRS with separate read/write models  
-- ✅ Domain-driven design patterns
-- ✅ Event-driven architecture
-- ✅ Clean architecture layers
+# DTO for API
+@dataclass
+class OrderDto:
+    id: str
+    customer_name: str
+    pizzas: List[PizzaDto]
+    total_amount: float
+    status: str
+    created_at: str
 
-**[👉 Explore OpenBank](samples/openbank.md)**
+# Usage in handlers
+class PlaceOrderCommandHandler(CommandHandler[PlaceOrderCommand, OperationResult[OrderDto]]):
+    async def handle_async(self, command: PlaceOrderCommand) -> OperationResult[OrderDto]:
+        # Create domain entity
+        order = Order.create_new(command.customer_name, ...)
+        
+        # Save entity
+        saved_order = await self.order_repository.save_async(order)
+        
+        # Map to DTO for response
+        order_dto = self.mapper.map(saved_order, OrderDto)
+        return self.created(order_dto)
+```
 
-### 🧪 Lab Resource Manager - Resource Oriented Architecture
+## 🎓 Learn Through Mario's Pizzeria
 
-A comprehensive ROA implementation featuring:
+All documentation uses **Mario's Pizzeria** as a consistent, comprehensive example:
 
-- ✅ Declarative resource management patterns
-- ✅ Watcher pattern for change detection
-- ✅ Controller pattern for business logic responses
-- ✅ Reconciliation loops for consistency enforcement
-- ✅ State machine implementation with lifecycle management
-- ✅ Asynchronous component coordination
+### 🍕 Complete Business Domain
 
-**[👉 Explore Lab Resource Manager](samples/lab-resource-manager.md)**
+- **👥 Customer Management**: Registration, authentication, order history
+- **📋 Order Processing**: Place orders, payment processing, status tracking  
+- **🍕 Menu Management**: Pizzas, ingredients, pricing, categories
+- **👨‍🍳 Kitchen Operations**: Order queue, preparation workflow, notifications
+- **📊 Business Analytics**: Sales reports, popular items, customer insights
+- **🔐 Staff Authentication**: Role-based access for different staff functions
 
-### 🚪 API Gateway - Microservice Gateway
+### 🏗️ Architecture Demonstrated
 
-An intelligent API gateway featuring:
+Each major framework feature is shown through realistic pizzeria scenarios:
 
-- ✅ Request routing and load balancing
-- ✅ Authentication and authorization
-- ✅ Rate limiting and caching
-- ✅ Monitoring and observability
+- **🌐 API Layer**: RESTful endpoints for customers and staff
+- **� Application Layer**: Business workflows like order processing
+- **🏛️ Domain Layer**: Rich business entities with validation and events  
+- **🔌 Integration Layer**: File storage, MongoDB, payment services, SMS notifications
 
-**[👉 Explore API Gateway](samples/api_gateway.md)**
+### 🎯 Progressive Learning Path
 
-### 🖥️ Desktop Controller - Remote Management
-
-A desktop management API demonstrating:
-
-- ✅ Background services and scheduling
-- ✅ Real-time communication
-- ✅ System integration patterns
-- ✅ Docker containerization
-
-**[👉 Explore Desktop Controller](samples/desktop_controller.md)**
+1. **[🚀 Getting Started](getting-started.md)** - Build your first pizzeria app step-by-step
+2. **[🏗️ Architecture](architecture.md)** - Understand clean architecture through pizzeria layers
+3. **[� Dependency Injection](features/dependency-injection.md)** - Configure pizzeria services and repositories
+4. **[🎯 CQRS & Mediation](features/cqrs-mediation.md)** - Implement order processing workflows
+5. **[� MVC Controllers](features/mvc-controllers.md)** - Build pizzeria API endpoints
+6. **[🗄️ Data Access](features/data-access.md)** - Persist orders with file and database storage
 
 ## 📚 Documentation
 
 ### 🚀 Getting Started
 
-- **[Quick Start Guide](getting-started.md)** - Build your first app in 10 minutes
-- **[Architecture Overview](architecture.md)** - Understand the framework's design
-- **[Project Structure](getting-started.md#project-structure)** - Organize your code properly
+- **[Quick Start Guide](getting-started.md)** - Build Mario's Pizzeria in 7 steps
+- **[Architecture Overview](architecture.md)** - Clean architecture through pizzeria example
+- **[Project Structure](getting-started.md#project-structure)** - Organize pizzeria code properly
 
 ### 🎪 Feature Guides
 
-| Feature | Description | Documentation |
-|---------|-------------|---------------|
-| **Dependency Injection** | Service container and automatic registration | [📖 Guide](features/dependency-injection.md) |
-| **CQRS & Mediation** | Command/Query separation with mediator | [📖 Guide](features/cqrs-mediation.md) |
-| **MVC Controllers** | Class-based API controllers | [📖 Guide](features/mvc-controllers.md) |
+| Feature | Mario's Pizzeria Example | Documentation |
+|---------|--------------------------|---------------|
+| **🏗️ Architecture** | Complete pizzeria system layers | [📖 Guide](architecture.md) |
+| **💉 Dependency Injection** | Service registration for pizzeria | [📖 Guide](features/dependency-injection.md) |
+| **🎯 CQRS & Mediation** | Order processing commands & queries | [📖 Guide](features/cqrs-mediation.md) |
+| **🔌 MVC Controllers** | Pizzeria API endpoints | [📖 Guide](features/mvc-controllers.md) |
+| **🗄️ Data Access** | Order & menu repositories | [📖 Guide](features/data-access.md) |
+
+## 🛠️ Installation & Requirements
+
+### Prerequisites
+
+- **Python 3.8+** (Python 3.11+ recommended)
+- **pip** or **poetry** for dependency management
+
+### Installation
+
+```bash
+# Install from PyPI (coming soon)
+pip install neuroglia
+
+# Or install from source for development
+git clone https://github.com/neuroglia-io/python.git
+cd python
+pip install -e .
+```
+
+### Optional Dependencies
+
+```bash
+# MongoDB support
+pip install neuroglia[mongo]
+
+# Event sourcing with EventStoreDB
+pip install neuroglia[eventstore]
+
+# All features
+pip install neuroglia[all]
+```
+
+## 🤝 Community & Support
+
+### Getting Help
+
+- **📖 Documentation**: Comprehensive guides with Mario's Pizzeria examples
+- **💬 GitHub Discussions**: Ask questions and share ideas
+- **🐛 Issues**: Report bugs and request features
+- **📧 Email**: Contact maintainers directly
+
+### Contributing
+
+We welcome contributions from the community:
+
+- 📝 **Documentation** - Help improve pizzeria examples and guides
+- 🐛 **Bug Reports** - Help us identify and fix issues  
+- ✨ **Features** - Propose new framework capabilities
+- 🧪 **Tests** - Improve test coverage and quality
+- 🔧 **Code** - Submit PRs with improvements and fixes
+
+### Roadmap
+
+Upcoming features and improvements:
+
+- **Enhanced Resource Oriented Architecture** - Extended watcher and controller patterns
+- **Advanced Event Sourcing** - More sophisticated event store integrations  
+- **Performance Optimizations** - Faster startup and runtime performance
+- **Additional Storage Backends** - PostgreSQL, Redis, and more
+- **Extended Authentication** - Additional OAuth providers and JWT enhancements
+- **Monitoring & Observability** - Built-in metrics and distributed tracing
+
+## � License
+
+This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
+
+## 🌟 Why Choose Neuroglia?
+
+✅ **Production Ready**: Battle-tested patterns used in real-world applications  
+✅ **Developer Friendly**: Intuitive APIs with consistent Mario's Pizzeria examples  
+✅ **Highly Testable**: Comprehensive testing utilities and patterns built-in  
+✅ **Scalable Architecture**: Clean architecture principles that grow with your needs  
+✅ **Modern Framework**: Leverages latest Python 3.11+ and FastAPI features  
+✅ **Flexible Design**: Use individual components or the complete framework  
+✅ **Excellent Documentation**: Every feature explained through practical examples  
+✅ **Active Development**: Continuously improved with community feedback  
+
+---
+
+**Ready to build Mario's Pizzeria?** [Get Started Now](getting-started.md) 🍕
 | **Data Access** | Repository pattern and persistence | [📖 Guide](features/data-access.md) |
 | **Event Handling** | Events, messaging, and reactive programming | [📖 Guide](features/event-handling.md) |
 | **Object Mapping** | Automatic object-to-object mapping | [📖 Guide](features/object-mapping.md) |
@@ -288,20 +583,6 @@ We welcome contributions! Here's how you can help:
 
 ## 📄 License
 
-This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
-
-## 🌟 Why Choose Neuroglia?
-
-✅ **Production Ready**: Battle-tested patterns and practices  
-✅ **Developer Friendly**: Intuitive APIs and excellent documentation  
-✅ **Highly Testable**: Built with testing in mind from day one  
-✅ **Scalable**: Patterns that grow with your application  
-✅ **Modern**: Leverages the latest Python and FastAPI features  
-✅ **Flexible**: Use only what you need, when you need it  
-
----
-
-**Ready to build something amazing?** [Get Started Now](getting-started.md) 🚀
 
 ### Running Background Tasks
 

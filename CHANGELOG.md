@@ -5,9 +5,90 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.0] - 2025-09-22
+
+### Added
+
+- **Comprehensive Documentation Transformation**: Complete overhaul of all framework documentation using unified Mario's Pizzeria domain model
+  - **Mario's Pizzeria Domain**: Unified business domain used consistently across all documentation sections
+    - Complete pizza ordering system with Orders, Menu, Kitchen, Customer entities
+    - Rich business scenarios: order placement, kitchen workflow, payment processing, status updates
+    - Production-ready patterns demonstrated through realistic restaurant operations
+    - OAuth authentication, file-based persistence, MongoDB integration, event sourcing examples
+  - **Enhanced Getting Started Guide**: Complete rewrite with 7-step pizzeria application tutorial
+    - Step-by-step construction of full pizzeria management system
+    - Enhanced web builder configuration with OAuth authentication
+    - File-based repository implementation with persistent data storage
+    - Complete application lifecycle from startup to production deployment
+  - **Unified Architecture Documentation**: Clean architecture demonstrated through pizzeria layers
+    - API Layer: OrdersController, MenuController, KitchenController with OAuth security
+    - Application Layer: PlaceOrderHandler, GetMenuHandler with complete CQRS workflows
+    - Domain Layer: Order, Pizza, Customer entities with business rule validation
+    - Integration Layer: FileOrderRepository, PaymentService, SMS notifications
+  - **Comprehensive Feature Documentation**: All framework features illustrated through pizzeria examples
+    - **CQRS & Mediation**: Complete pizza ordering workflow with commands, queries, events
+    - **Dependency Injection**: Service registration patterns for pizzeria repositories and services
+    - **Data Access**: File-based persistence, MongoDB integration, event sourcing for kitchen workflow
+    - **MVC Controllers**: RESTful API design with authentication, validation, error handling
+    - **Event Sourcing**: Kitchen workflow tracking with order state transitions and notifications
+  - **Main Documentation Index**: Framework introduction with pizzeria quick start example
+    - Comprehensive framework overview with practical pizzeria API demonstration
+    - Progressive learning path from basic concepts to advanced clean architecture
+    - Feature showcase with pizzeria examples for each major framework component
+    - Installation guide with optional dependencies and development setup instructions
+
+### Enhanced
+
+- **Developer Experience**: Dramatically improved documentation quality and consistency
+  - **Unified Examples**: Single coherent business domain replaces scattered abstract examples
+  - **Practical Learning Path**: Real-world pizzeria scenarios demonstrate production patterns
+  - **Consistent Cross-References**: All documentation sections reference the same domain model
+  - **Maintainable Structure**: Standardized pizzeria examples reduce documentation maintenance burden
+  - **Enhanced Readability**: Business-focused examples are more engaging and understandable
+
+- **Framework Documentation Structure**: Complete reorganization for better developer onboarding
+  - **Pizzeria Domain Model**: Central domain specification used across all documentation
+  - **Progressive Complexity**: Learning path from simple API to complete clean architecture
+  - **Production Examples**: OAuth authentication, data persistence, event handling through pizzeria
+  - **Testing Patterns**: Comprehensive testing strategies demonstrated through business scenarios
+
+### Technical Details
+
+- **Documentation Files Transformed**: Complete rewrite of all major documentation sections
+  - `docs/index.md`: Framework introduction with pizzeria quick start and feature showcase
+  - `docs/getting-started.md`: 7-step pizzeria tutorial with enhanced web builder
+  - `docs/architecture.md`: Clean architecture layers demonstrated through pizzeria workflow
+  - `docs/features/cqrs-mediation.md`: Pizza ordering CQRS patterns with event handling
+  - `docs/features/dependency-injection.md`: Service registration for pizzeria infrastructure
+  - `docs/features/data-access.md`: File repositories, MongoDB, event sourcing for pizzeria data
+  - `docs/features/mvc-controllers.md`: Pizzeria API controllers with OAuth and validation
+  - `docs/_pizzeria_domain.md`: Central domain model specification for consistent examples
+
+- **Quality Improvements**: Professional documentation standards throughout
+  - **Consistent Business Domain**: Mario's Pizzeria used in 100+ examples across all documentation
+  - **Cross-Reference Validation**: All internal links verified and working properly
+  - **Code Example Quality**: Complete, runnable examples with proper error handling
+  - **Progressive Learning**: Documentation structured for step-by-step skill building
+
+- **Navigation and Structure**: Improved documentation organization
+  - Updated `mkdocs.yml` with enhanced navigation structure
+  - Removed outdated sample application documentation
+  - Added Resilient Handler Discovery feature documentation
+  - Streamlined feature organization for better discoverability
+
 ## [0.2.0] - 2025-09-22
 
 ### Added
+
+- **Resilient Handler Discovery**: Enhanced Mediator with fallback discovery for mixed codebases
+  - **Automatic Fallback**: When package imports fail, automatically discovers individual modules
+  - **Legacy Migration Support**: Handles packages with broken dependencies while still discovering valid handlers
+  - **Comprehensive Logging**: Debug, info, and warning levels show what was discovered vs skipped
+  - **Zero Breaking Changes**: 100% backward compatible with existing `Mediator.configure()` calls
+  - **Real-world Scenarios**: Supports incremental CQRS migration, optional dependencies, mixed architectures
+  - **Individual Module Discovery**: Scans package directories for .py files without importing the package
+  - **Graceful Error Handling**: Continues discovery even when some modules fail to import
+  - **Production Ready**: Minimal performance impact, detailed diagnostics, and robust error recovery
 
 - **MongoDB Infrastructure Extensions**: Complete type-safe MongoDB data access layer
   - **TypedMongoQuery**: Type-safe MongoDB querying with automatic dictionary-to-entity conversion
