@@ -5,11 +5,9 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width,initial-scale=1" name="viewport"/>
-<link href="../../features/mermaid-diagrams/" rel="prev"/>
-<link href="../lab-resource-manager/" rel="next"/>
 <link href="../../assets/images/favicon.png" rel="icon"/>
 <meta content="mkdocs-1.6.1, mkdocs-material-9.6.20" name="generator"/>
-<title>OpenBank - Neuroglia Python Framework</title>
+<title>🏦 OpenBank Sample Application - Neuroglia Python Framework</title>
 <link href="../../assets/stylesheets/main.e53b48f4.min.css" rel="stylesheet"/>
 <link href="../../assets/stylesheets/palette.06af60db.min.css" rel="stylesheet"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
@@ -46,7 +44,7 @@
 <div class="md-header__topic" data-md-component="header-topic">
 <span class="md-ellipsis">
             
-              OpenBank
+              🏦 OpenBank Sample Application
             
           </span>
 </div>
@@ -142,15 +140,6 @@
 
         </a>
 </li>
-<li class="md-tabs__item md-tabs__item--active">
-<a class="md-tabs__link" href="./">
-          
-  
-  
-  Sample Applications
-
-        </a>
-</li>
 </ul>
 </div>
 </nav>
@@ -228,6 +217,14 @@
 <a class="md-nav__link" href="../../features/cqrs-mediation/">
 <span class="md-ellipsis">
     CQRS &amp; Mediation
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/resilient-handler-discovery/">
+<span class="md-ellipsis">
+    Resilient Handler Discovery
     
   </span>
 </a>
@@ -332,300 +329,6 @@
 <a class="md-nav__link" href="../../features/serialization.md">
 <span class="md-ellipsis">
     Serialization
-    
-  </span>
-</a>
-</li>
-</ul>
-</nav>
-</li>
-<li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
-<input checked="" class="md-nav__toggle md-toggle" id="__nav_5" type="checkbox"/>
-<label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
-<span class="md-ellipsis">
-    Sample Applications
-    
-  </span>
-<span class="md-nav__icon md-icon"></span>
-</label>
-<nav aria-expanded="true" aria-labelledby="__nav_5_label" class="md-nav" data-md-level="1">
-<label class="md-nav__title" for="__nav_5">
-<span class="md-nav__icon md-icon"></span>
-            Sample Applications
-          </label>
-<ul class="md-nav__list" data-md-scrollfix="">
-<li class="md-nav__item md-nav__item--active">
-<input class="md-nav__toggle md-toggle" id="__toc" type="checkbox"/>
-<label class="md-nav__link md-nav__link--active" for="__toc">
-<span class="md-ellipsis">
-    OpenBank
-    
-  </span>
-<span class="md-nav__icon md-icon"></span>
-</label>
-<a class="md-nav__link md-nav__link--active" href="./">
-<span class="md-ellipsis">
-    OpenBank
-    
-  </span>
-</a>
-<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
-<label class="md-nav__title" for="__toc">
-<span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
-<li class="md-nav__item">
-<a class="md-nav__link" href="#overview">
-<span class="md-ellipsis">
-      🎯 Overview
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#architecture">
-<span class="md-ellipsis">
-      🏗️ Architecture
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#getting-started">
-<span class="md-ellipsis">
-      🚀 Getting Started
-    </span>
-</a>
-<nav aria-label="🚀 Getting Started" class="md-nav">
-<ul class="md-nav__list">
-<li class="md-nav__item">
-<a class="md-nav__link" href="#prerequisites">
-<span class="md-ellipsis">
-      Prerequisites
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#setup">
-<span class="md-ellipsis">
-      Setup
-    </span>
-</a>
-</li>
-</ul>
-</nav>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#project-structure">
-<span class="md-ellipsis">
-      📁 Project Structure
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#domain-models">
-<span class="md-ellipsis">
-      🏛️ Domain Models
-    </span>
-</a>
-<nav aria-label="🏛️ Domain Models" class="md-nav">
-<ul class="md-nav__list">
-<li class="md-nav__item">
-<a class="md-nav__link" href="#person-aggregate">
-<span class="md-ellipsis">
-      Person Aggregate
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#account-aggregate">
-<span class="md-ellipsis">
-      Account Aggregate
-    </span>
-</a>
-</li>
-</ul>
-</nav>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#application-layer">
-<span class="md-ellipsis">
-      💼 Application Layer
-    </span>
-</a>
-<nav aria-label="💼 Application Layer" class="md-nav">
-<ul class="md-nav__list">
-<li class="md-nav__item">
-<a class="md-nav__link" href="#command-handlers">
-<span class="md-ellipsis">
-      Command Handlers
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#query-handlers">
-<span class="md-ellipsis">
-      Query Handlers
-    </span>
-</a>
-</li>
-</ul>
-</nav>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#event-handling">
-<span class="md-ellipsis">
-      📡 Event Handling
-    </span>
-</a>
-<nav aria-label="📡 Event Handling" class="md-nav">
-<ul class="md-nav__list">
-<li class="md-nav__item">
-<a class="md-nav__link" href="#domain-events">
-<span class="md-ellipsis">
-      Domain Events
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#integration-events">
-<span class="md-ellipsis">
-      Integration Events
-    </span>
-</a>
-</li>
-</ul>
-</nav>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#data-access">
-<span class="md-ellipsis">
-      🗄️ Data Access
-    </span>
-</a>
-<nav aria-label="🗄️ Data Access" class="md-nav">
-<ul class="md-nav__list">
-<li class="md-nav__item">
-<a class="md-nav__link" href="#event-sourcing-repository">
-<span class="md-ellipsis">
-      Event Sourcing Repository
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#read-model-repository">
-<span class="md-ellipsis">
-      Read Model Repository
-    </span>
-</a>
-</li>
-</ul>
-</nav>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#api-layer">
-<span class="md-ellipsis">
-      🌐 API Layer
-    </span>
-</a>
-<nav aria-label="🌐 API Layer" class="md-nav">
-<ul class="md-nav__list">
-<li class="md-nav__item">
-<a class="md-nav__link" href="#controllers">
-<span class="md-ellipsis">
-      Controllers
-    </span>
-</a>
-</li>
-</ul>
-</nav>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#testing">
-<span class="md-ellipsis">
-      🧪 Testing
-    </span>
-</a>
-<nav aria-label="🧪 Testing" class="md-nav">
-<ul class="md-nav__list">
-<li class="md-nav__item">
-<a class="md-nav__link" href="#unit-tests">
-<span class="md-ellipsis">
-      Unit Tests
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#integration-tests">
-<span class="md-ellipsis">
-      Integration Tests
-    </span>
-</a>
-</li>
-</ul>
-</nav>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#running-the-sample">
-<span class="md-ellipsis">
-      🚀 Running the Sample
-    </span>
-</a>
-<nav aria-label="🚀 Running the Sample" class="md-nav">
-<ul class="md-nav__list">
-<li class="md-nav__item">
-<a class="md-nav__link" href="#start-the-application">
-<span class="md-ellipsis">
-      Start the Application
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#example-api-calls">
-<span class="md-ellipsis">
-      Example API Calls
-    </span>
-</a>
-</li>
-</ul>
-</nav>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#key-learnings">
-<span class="md-ellipsis">
-      📋 Key Learnings
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#related-documentation">
-<span class="md-ellipsis">
-      🔗 Related Documentation
-    </span>
-</a>
-</li>
-</ul>
-</nav>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../lab-resource-manager/">
-<span class="md-ellipsis">
-    Lab Resource Manager
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../api_gateway/">
-<span class="md-ellipsis">
-    API Gateway
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../desktop_controller/">
-<span class="md-ellipsis">
-    Desktop Controller
     
   </span>
 </a>
