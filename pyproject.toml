@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "neuroglia-python"
-version = "0.1.9"
+version = "0.2.0"
 description = "Port from .NET to Python of the Neuroglia Framework"
 authors = ["Charles d'Avernas <charles.davernas@neuroglia.io>"]
 license = "Apache"
@@ -13,27 +13,25 @@ package-mode = true
 [tool.poetry.dependencies]
 python = "^3.11"
 # Core framework dependencies - always required
-annotated-types = "^0.6.0"
+annotated-types = "^0.7.0"
 classy-fastapi = "^0.6.1"
-fastapi = "^0.104.0"
+fastapi = "^0.116.0"
 pydantic-settings = "^2.0.0"
 python-dotenv = "^1.0.1"
 typing-extensions = "^4.9.0"
 
 # Optional dependencies - install with extras
-uvicorn = { version = "^0.34.0", optional = true }
-httpx = { version = "^0.28.1", optional = true }
+uvicorn = { version = "^0.35.0" }
+httpx = { version = "^0.28.1" }
+rx = { version = "^3.2.0" }
+grpcio = { version = "^1.74.0" }
 pymongo = { version = "^4.6.3", optional = true }
 esdbclient = { version = "^1.0.0", optional = true }
-rx = { version = "^3.2.0", optional = true }
-grpcio = { version = "^1.74.0", optional = true }
 
 [tool.poetry.extras]
-web = ["uvicorn", "httpx"]
 mongodb = ["pymongo"]
 eventstore = ["esdbclient", "rx"]
-grpc = ["grpcio"] 
-all = ["uvicorn", "httpx", "pymongo", "esdbclient", "rx", "grpcio"]
+all = ["pymongo", "esdbclient", "rx"]
 
 [tool.poetry.group.dev.dependencies]
 # Development and testing dependencies

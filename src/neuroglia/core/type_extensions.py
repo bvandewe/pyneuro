@@ -68,6 +68,10 @@ class TypeExtensions:
                 return generic_args.get(type_.__name__, None)
             else:
                 return type_
+        if not hasattr(type_, "__parameters__"):
+            return type_
+        if generic_args is None:
+            return type_
         parameters = [param.__name__ for param in type_.__parameters__]
         type_args = [TypeExtensions._substitute_generic_arguments(generic_arg_value, generic_args) for generic_arg_key, generic_arg_value in generic_args.items() if generic_arg_key in parameters]
         if len(type_args) < 1:

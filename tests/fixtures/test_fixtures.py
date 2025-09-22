@@ -10,8 +10,9 @@ from datetime import datetime
 from uuid import uuid4
 
 from neuroglia.dependency_injection.service_provider import ServiceCollection, ServiceProviderBase
-from neuroglia.data.abstractions import Repository, Entity, AggregateRoot, DomainEvent
-from neuroglia.mediation.mediator import Command, Query, CommandHandler, QueryHandler, EventHandler
+from neuroglia.data.abstractions import Entity, AggregateRoot, DomainEvent, AggregateState
+from neuroglia.data.infrastructure.abstractions import Repository
+from neuroglia.mediation.mediator import Command, Query, CommandHandler, QueryHandler, DomainEventHandler
 from neuroglia.core.operation_result import OperationResult
 from neuroglia.mapping.mapper import Mapper
 from neuroglia.mediation.mediator import Mediator
@@ -90,7 +91,16 @@ class TestUserEmailChangedEvent(DomainEvent):
 
 # Test Aggregate
 
-class TestUserAggregate(AggregateRoot[str]):
+class TestUserState(AggregateState[str]):
+    """Test aggregate state"""
+    
+    def __init__(self):
+        super().__init__()
+        self.email: Optional[str] = None
+        self.first_name: Optional[str] = None
+        self.last_name: Optional[str] = None
+
+class TestUserAggregate(AggregateRoot[TestUserState, str]):
     """Test aggregate for event sourcing tests"""
     
     def __init__(self, id: str = None):
@@ -244,14 +254,14 @@ class ListTestUsersQueryHandler(QueryHandler[ListTestUsersQuery, OperationResult
         return self.ok(users)
 
 
-class TestUserCreatedEventHandler(EventHandler[TestUserCreatedEvent]):
+class TestUserCreatedEventHandler(DomainEventHandler[TestUserCreatedEvent]):
     """Test event handler"""
     
     def __init__(self):
         self.handled_events: List[TestUserCreatedEvent] = []
     
-    async def handle_async(self, event: TestUserCreatedEvent):
-        self.handled_events.append(event)
+    async def handle_async(self, notification: TestUserCreatedEvent) -> None:
+        self.handled_events.append(notification)
 
 
 # Test Repository Implementation
@@ -344,6 +354,10 @@ class TestEmailService:
             'old_email': old_email,
             'sent_at': datetime.utcnow()
         })
+    
+    def clear(self):
+        """Clear all sent emails for test isolation"""
+        self.sent_emails.clear()
 
 
 # Pytest Fixtures

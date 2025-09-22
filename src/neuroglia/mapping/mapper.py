@@ -98,6 +98,7 @@ class TypeMapConfiguration:
         self.source_type = source_type
         self.destination_type = destination_type
         self.type_converter = type_converter
+        self.member_configurations: List[MemberMapConfiguration] = []
 
     source_type: Type
     ''' Gets the type to convert to the specified type '''
@@ -107,9 +108,6 @@ class TypeMapConfiguration:
 
     type_converter: Callable[[TypeMappingContext], Any]
     ''' Gets the callable, if any, used to convert source instances to the configured destination type '''
-
-    member_configurations: List[MemberMapConfiguration] = list[MemberMapConfiguration]()
-    ''' Gets a list containing objects used to configure how to map members of the configured source and destination types '''
 
     def map(self, source: Any):
         ''' Maps the specified value to the configured destination type '''
@@ -171,7 +169,9 @@ class TypeMapExpression:
 
 class MapperConfiguration:
 
-    type_maps: List[TypeMapConfiguration] = list[TypeMapConfiguration]()
+    def __init__(self):
+        """Initialize a new MapperConfiguration with isolated instance state."""
+        self.type_maps: List[TypeMapConfiguration] = []
 
     def create_map(self, source_type: Type, destination_type: Type) -> TypeMapExpression:
         ''' Creates a new expression used to convert how to map instances of the source type to instances of the destination type '''
@@ -185,13 +185,16 @@ class MapperConfiguration:
 class MappingProfile:
     ''' Represents a class used to configure a mapper'''
 
-    _configuration_actions: List[Callable[[MapperConfiguration], None]] = list[Callable[[MapperConfiguration], None]]()
-    ''' Gets the mapper configuration to configure '''
+    def __init__(self):
+        """Initialize a new MappingProfile with isolated instance state."""
+        self._configuration_actions: List[Callable[[MapperConfiguration], None]] = []
 
-    def create_map(self, source_type: Type, destination_type: Type) -> TypeMapExpression:
+    def create_map(self, source_type: Type, destination_type: Type) -> None:
         ''' Creates a new expression used to convert how to map instances of the source type to instances of the destination type '''
-        callable: Callable[[MapperConfiguration], None] = lambda config: config.create_map(source_type, destination_type)
-        self._configuration_actions.append(callable)
+        def configure_map(config: MapperConfiguration) -> None:
+            config.create_map(source_type, destination_type)
+        
+        self._configuration_actions.append(configure_map)
 
     def apply_to(self, configuration: MapperConfiguration) -> MapperConfiguration:
         ''' Applies the mapping profile to the specified mapper configuration '''

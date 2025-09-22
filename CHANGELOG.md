@@ -5,6 +5,100 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.0] - 2025-09-22
+
+### Added
+
+- **MongoDB Infrastructure Extensions**: Complete type-safe MongoDB data access layer
+  - **TypedMongoQuery**: Type-safe MongoDB querying with automatic dictionary-to-entity conversion
+    - Direct MongoDB cursor optimization for improved performance
+    - Complex type handling for enums, dates, and nested objects
+    - Seamless integration with existing MongoQuery decorator patterns
+    - Query chaining methods with automatic type inference
+  - **MongoSerializationHelper**: Production-ready complex type serialization/deserialization
+    - Full Decimal type support with precision preservation for financial applications
+    - Safe enum type checking with proper class validation using `inspect.isclass()`
+    - Comprehensive datetime and date object handling
+    - Nested object serialization with constructor parameter analysis
+    - Value object and entity serialization support with automatic type resolution
+  - **Enhanced module exports**: Clean import paths via updated `__init__.py` files
+    - `from neuroglia.data.infrastructure.mongo import TypedMongoQuery, MongoSerializationHelper`
+
+- **Enhanced MongoDB Repository**: Advanced MongoDB operations for production applications
+  - **Bulk Operations**: High-performance bulk insert, update, and delete operations
+    - `bulk_insert_async()`: Efficient batch document insertion with validation
+    - `update_many_async()`: Bulk document updates with MongoDB native filtering
+    - `delete_many_async()`: Batch deletion operations with query support
+  - **Advanced Querying**: MongoDB aggregation pipelines and native query support
+    - `aggregate_async()`: Full MongoDB aggregation framework integration
+    - `find_async()`: Advanced querying with pagination, sorting, and projections
+    - Native MongoDB filter support alongside repository pattern abstraction
+  - **Upsert Operations**: `upsert_async()` for insert-or-update scenarios
+  - **Production Features**: Comprehensive error handling, logging, and async/await patterns
+  - **Type Safety**: Full integration with MongoSerializationHelper for complex type handling
+
+- **Enhanced Web Application Builder**: Multi-application hosting with advanced controller management
+  - **Multi-FastAPI Application Support**: Host multiple FastAPI applications within single framework instance
+    - Independent application lifecycles and configurations
+    - Shared service provider and dependency injection across applications
+    - Application-specific middleware and routing configurations
+  - **Advanced Controller Registration**: Flexible controller management with prefix support
+    - `add_controllers_with_prefix()`: Register controllers with custom URL prefixes
+    - Controller deduplication tracking to prevent double-registration
+    - Automatic controller discovery from multiple module paths
+  - **Exception Handling Middleware**: Production-ready error handling with RFC 7807 compliance
+    - `ExceptionHandlingMiddleware`: Converts exceptions to Problem Details format
+    - Comprehensive error logging with request context information
+    - HTTP status code mapping for different exception types
+  - **Enhanced Web Host**: `EnhancedWebHost` for multi-application serving
+    - Unified hosting model for complex microservice architectures
+    - Service provider integration across application boundaries
+
+### Enhanced
+
+- **Framework Architecture**: Production-ready infrastructure capabilities
+  - MongoDB data access layer now supports enterprise-grade applications
+  - Type-safe operations throughout the data access stack
+  - Comprehensive error handling and logging across all infrastructure components
+  - Async/await patterns implemented consistently for optimal performance
+
+- **Developer Experience**: Improved tooling and type safety
+  - IntelliSense support for all new infrastructure components
+  - Comprehensive docstrings with usage examples and best practices
+  - Type hints throughout for better IDE integration and compile-time error detection
+  - Clear separation of concerns between data access, serialization, and web hosting layers
+
+### Technical Details
+
+- **Test Coverage**: Comprehensive test suites for all new infrastructure components
+  - **MongoDB Serialization**: 12 comprehensive tests covering complex type scenarios
+    - Decimal serialization/deserialization with precision validation
+    - Enum type safety with proper class validation
+    - Datetime and nested object round-trip serialization integrity
+    - Error handling for invalid type conversions and edge cases
+  - **Enhanced Repository**: 21 comprehensive tests covering all advanced operations
+    - Complete CRUD operation validation with type safety
+    - Bulk operations testing with large datasets and error scenarios
+    - Aggregation pipeline integration and complex query validation
+    - Pagination, sorting, and advanced filtering capabilities
+  - **Enhanced Web Builder**: 16 comprehensive tests for multi-application hosting
+    - Multi-app controller registration and deduplication validation
+    - Exception handling middleware with proper Problem Details formatting
+    - Service provider integration across application boundaries
+    - Build process validation and application lifecycle management
+
+- **Performance Optimizations**: Infrastructure tuned for production workloads
+  - Direct MongoDB cursor integration bypasses unnecessary data transformations
+  - Bulk operations reduce database round-trips for large-scale operations
+  - Type-safe serialization optimized for complex business domain objects
+  - Multi-application hosting with shared resource optimization
+
+- **Standards Compliance**: Enterprise integration ready
+  - RFC 7807 Problem Details implementation for standardized API error responses
+  - MongoDB best practices implemented throughout data access layer
+  - FastAPI integration patterns following framework conventions
+  - Proper async/await implementation for high-concurrency scenarios
+
 ## [0.1.10] - 2025-09-21
 
 ### Fixed
