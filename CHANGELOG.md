@@ -7,7 +7,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **Development Environment Configuration**: Enhanced development tooling and configuration
+  - **VS Code Extensions**: Configured recommended extensions for Python development (`extensions.json`)
+  - **Code Quality Tools**: Integrated Markdown linting (`.markdownlint.json`) and Prettier formatting (`.prettierrc`)
+  - **Development Scripts**: Added comprehensive build and utility scripts in `scripts/` directory
+  - **Makefile**: Standardized build commands and development workflow automation
+
+- **Mario's Pizzeria Enhanced Sample**: Expanded the sample application with additional features
+  - **Complete Sample Implementation**: Full working example in `samples/mario-pizzeria/`
+  - **Comprehensive Test Suite**: Dedicated integration and unit tests in `tests/mario_pizzeria/`
+  - **Test Configuration**: Mario's Pizzeria specific test configuration in `tests/mario_pizzeria_conftest.py`
+
 ### Enhanced
+
+- **Framework Core Improvements**: Enhanced core framework capabilities
+  - **Enhanced Web Application Builder**: Improved `src/neuroglia/hosting/enhanced_web_application_builder.py` with additional features
+  - **Mediator Enhancements**: Updated `src/neuroglia/mediation/mediator.py` with improved functionality
+  - **Dependency Management**: Updated `pyproject.toml` and `poetry.lock` with latest dependencies
+
+- **Development Environment**: Improved developer experience and tooling
+  - **VS Code Configuration**: Enhanced debugging configuration in `.vscode/launch.json`
+  - **Settings Optimization**: Improved development settings in `.vscode/settings.json`
+  - **Git Configuration**: Updated `.gitignore` for better file exclusion patterns
 
 - **Documentation Architecture Reorganization**: Improved conceptual organization and navigation structure
   - **New Feature Documentation**: Added comprehensive documentation for previously undocumented features
@@ -22,6 +45,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     - Clear separation between architectural patterns and framework features
     - Enhanced pattern discovery and learning path guidance
     - Consistent Mario's Pizzeria examples throughout all new documentation
+
+### Removed
+
+- **Deprecated Validation Script**: Removed outdated `validate_mermaid.py` script in favor of improved documentation tooling
 
 ## [0.3.1] - 2025-09-25
 
