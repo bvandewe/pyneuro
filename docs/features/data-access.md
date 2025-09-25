@@ -1187,6 +1187,7 @@ def file_event_repository(tmp_path):
 - [CQRS & Mediation](cqrs-mediation.md) - Commands and queries with pizzeria examples
 - [Dependency Injection](dependency-injection.md) - Service registration for repositories
 - [MVC Controllers](mvc-controllers.md) - API endpoints using these repositories
+- [Source Code Naming Conventions](../references/source_code_naming_convention.md) - Repository, entity, and method naming patterns
 
 ---
 

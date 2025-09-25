@@ -9,6 +9,41 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Reference Documentation**: Comprehensive Python language and framework reference guides
+
+  - **Source Code Naming Conventions**: Complete guide to consistent naming across all architectural layers
+    - **Layer-Specific Patterns**: API controllers, application handlers, domain entities, integration repositories
+    - **Python Convention Adherence**: snake_case, PascalCase, UPPER_CASE usage patterns with framework examples
+    - **Testing Conventions**: Test file, class, and method naming patterns for maintainable test suites
+    - **File Organization**: Directory structure and file naming patterns for clean architecture
+    - **Anti-Pattern Guidance**: Common naming mistakes and how to avoid them
+    - **Mario's Pizzeria Examples**: Complete feature implementation showing all naming conventions
+  - **12-Factor App Compliance**: Detailed guide showing how Neuroglia supports cloud-native architecture principles
+    - **Comprehensive Coverage**: All 12 factors with practical Neuroglia implementation examples
+    - **Codebase Management**: Single codebase, multiple deployment patterns with Docker and Kubernetes
+    - **Dependency Management**: Poetry integration, dependency injection, and environment isolation
+    - **Configuration Management**: Environment-based settings with Pydantic validation
+    - **Backing Services**: Repository pattern abstraction for databases, caches, and external APIs
+    - **Process Architecture**: Stateless design, horizontal scaling, and process type definitions
+    - **Cloud-Native Deployment**: Production deployment patterns with container orchestration
+  - **Python Modular Code**: In-depth guide to organizing Python code into maintainable modules
+    - **Module Organization**: Package structure, import strategies, and dependency management
+    - **Design Patterns**: Factory, plugin architecture, and configuration module patterns
+    - **Testing Organization**: Test structure mirroring module organization with comprehensive fixtures
+    - **Best Practices**: Single responsibility, high cohesion, low coupling principles
+    - **Advanced Patterns**: Lazy loading, dynamic module discovery, and namespace management
+  - **Python Object-Oriented Programming**: Complete OOP reference for framework development
+    - **Core Concepts**: Classes, objects, encapsulation, inheritance, and composition with pizza examples
+    - **Framework Patterns**: Entity base classes, repository inheritance, command/query handlers
+    - **Advanced Patterns**: Abstract factories, strategy pattern, and polymorphism in practice
+    - **Testing OOP**: Mocking inheritance hierarchies, testing composition, and object lifecycle management
+    - **SOLID Principles**: Practical application of object-oriented design principles
+  - **Cross-Reference Integration**: All reference documentation integrated throughout existing framework documentation
+    - **Main Documentation**: Reference section added to index.md with comprehensive links
+    - **Getting Started**: Framework standards section with naming conventions integration
+    - **Feature Documentation**: Contextual links to relevant reference materials
+    - **Sample Applications**: Reference links showing patterns used in OpenBank and Lab Resource Manager
+
 - **Background Task Scheduling**: Comprehensive background job processing with APScheduler integration
 
   - **Scheduled Jobs**: Execute tasks at specific dates and times with `ScheduledBackgroundJob`

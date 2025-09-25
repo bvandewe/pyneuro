@@ -600,6 +600,8 @@ def configure_pizzeria_services(builder: WebApplicationBuilder):
 - [Dependency Injection](features/dependency-injection.md) - Service registration and DI patterns
 - [MVC Controllers](features/mvc-controllers.md) - API layer implementation details
 - [Data Access](features/data-access.md) - Repository patterns and data persistence
+- [Source Code Naming Conventions](references/source_code_naming_convention.md) - Consistent naming across all architectural layers
+- [12-Factor App Compliance](references/12-factor-app.md) - Cloud-native architecture principles with framework implementation
 
 ---
 

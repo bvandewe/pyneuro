@@ -41,7 +41,7 @@ The core resource representing a student lab environment:
 @dataclass
 class LabInstanceResource:
     api_version: str = "lab.neuroglia.com/v1"
-    kind: str = "LabInstance" 
+    kind: str = "LabInstance"
     metadata: Dict[str, Any] = None  # Name, namespace, timestamps, versions
     spec: Dict[str, Any] = None      # Desired state: template, duration, student
     status: Dict[str, Any] = None    # Current state: phase, endpoint, conditions
@@ -99,17 +99,18 @@ class LabInstanceWatcher:
         while self.is_running:
             # Poll for changes since last known version
             changes = self.storage.list_resources(since_version=self.last_resource_version)
-            
+
             for resource in changes:
                 resource_version = int(resource.metadata.get('resourceVersion', '0'))
                 if resource_version > self.last_resource_version:
                     await self._handle_resource_change(resource)
                     self.last_resource_version = max(self.last_resource_version, resource_version)
-            
+
             await asyncio.sleep(self.poll_interval)
 ```
 
 **Key Features:**
+
 - Polls every 2 seconds for near-real-time responsiveness
 - Uses resource versioning to detect changes efficiently
 - Notifies multiple event handlers when changes occur
@@ -123,7 +124,7 @@ Implements business logic for state transitions:
 class LabInstanceController:
     async def handle_resource_event(self, resource: LabInstanceResource):
         current_state = resource.status.get('state')
-        
+
         if current_state == ResourceState.PENDING.value:
             await self._start_provisioning(resource)
         elif current_state == ResourceState.PROVISIONING.value:
@@ -133,12 +134,13 @@ class LabInstanceController:
 ```
 
 **Key Features:**
+
 - Event-driven processing responding immediately to changes
 - State machine implementation with clear transitions
 - Business rule enforcement (timeouts, validation, etc.)
 - Integration with external provisioning systems
 
-### 3. Reconciler: LabInstanceScheduler  
+### 3. Reconciler: LabInstanceScheduler
 
 Provides safety and eventual consistency:
 
@@ -148,18 +150,19 @@ class LabInstanceScheduler:
         while self.is_running:
             await self._reconcile_all_resources()
             await asyncio.sleep(self.reconcile_interval)
-    
+
     async def _reconcile_resource(self, resource):
         # Check for stuck states
         if self._is_stuck_provisioning(resource):
             await self._mark_as_failed(resource, "Provisioning timeout")
-        
+
         # Check for expiration
         if self._is_expired(resource):
             await self._schedule_deletion(resource)
 ```
 
 **Key Features:**
+
 - Runs every 10 seconds scanning all resources
 - Detects stuck states and takes corrective action
 - Enforces business policies (lab expiration, cleanup)
@@ -211,6 +214,7 @@ python run_watcher_demo.py
 ```
 
 This runs the complete demonstration showing:
+
 - Resource creation and state transitions
 - Watcher detecting changes in real-time
 - Controller responding with business logic
@@ -285,7 +289,7 @@ Components run independently:
 async def main():
     watcher_task = asyncio.create_task(watcher.start_watching())
     scheduler_task = asyncio.create_task(scheduler.start_reconciliation())
-    
+
     # Both run concurrently until stopped
     await asyncio.gather(watcher_task, scheduler_task)
 ```
@@ -293,18 +297,23 @@ async def main():
 ## 🎯 Design Patterns Demonstrated
 
 ### 1. **Observer Pattern**
+
 Watchers observe storage and notify controllers of changes.
 
 ### 2. **State Machine**
+
 Resources progress through well-defined states with clear transitions.
 
 ### 3. **Command Pattern**
+
 Controllers execute commands based on resource state.
 
 ### 4. **Strategy Pattern**
+
 Different provisioning strategies for different lab templates.
 
 ### 5. **Circuit Breaker**
+
 Reconcilers detect failures and prevent cascade issues.
 
 ## 🔧 Configuration Options
@@ -316,7 +325,7 @@ Reconcilers detect failures and prevent cascade issues.
 watcher = LabInstanceWatcher(storage, poll_interval=1.0)
 scheduler = LabInstanceScheduler(storage, reconcile_interval=5.0)
 
-# Production: Optimized performance  
+# Production: Optimized performance
 watcher = LabInstanceWatcher(storage, poll_interval=5.0)
 scheduler = LabInstanceScheduler(storage, reconcile_interval=30.0)
 ```
@@ -360,6 +369,7 @@ pytest samples/lab-resource-manager/tests/test_reconciler.py
 - **[⚡ Execution Flow](../features/watcher-reconciliation-execution.md)** - Component coordination
 - **[🎯 CQRS & Mediation](../features/cqrs-mediation.md)** - Command/Query handling
 - **[🗄️ Data Access](../features/data-access.md)** - Storage patterns
+- **[📋 Source Code Naming Conventions](../references/source_code_naming_convention.md)** - Consistent naming patterns used in this sample
 
 ## 🚀 Next Steps
 

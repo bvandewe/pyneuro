@@ -145,22 +145,22 @@ class PersonState:
 
 class Person(AggregateRoot[str]):
     """Person aggregate root"""
-    
+
     def __init__(self, id: str = None):
         super().__init__(id)
         self.state = PersonState()
-    
-    def register(self, first_name: str, last_name: str, nationality: str, 
+
+    def register(self, first_name: str, last_name: str, nationality: str,
                 gender: PersonGender, date_of_birth: date, address: Address):
         """Register a new person"""
-        
+
         # Validate business rules
         if not first_name or not last_name:
             raise ValueError("First name and last name are required")
-        
+
         if date_of_birth >= date.today():
             raise ValueError("Date of birth must be in the past")
-        
+
         # Raise domain event
         self.apply(PersonRegisteredEvent(
             person_id=self.id,
@@ -171,7 +171,7 @@ class Person(AggregateRoot[str]):
             date_of_birth=date_of_birth,
             address=address
         ))
-    
+
     def update_address(self, new_address: Address):
         """Update person's address"""
         self.apply(PersonAddressUpdatedEvent(
@@ -179,7 +179,7 @@ class Person(AggregateRoot[str]):
             old_address=self.state.address,
             new_address=new_address
         ))
-    
+
     # Event handlers
     def on_person_registered(self, event: PersonRegisteredEvent):
         """Handle person registered event"""
@@ -190,7 +190,7 @@ class Person(AggregateRoot[str]):
         self.state.gender = event.gender
         self.state.date_of_birth = event.date_of_birth
         self.state.address = event.address
-    
+
     def on_person_address_updated(self, event: PersonAddressUpdatedEvent):
         """Handle address updated event"""
         self.state.address = event.new_address
@@ -216,24 +216,24 @@ class AccountState:
 
 class Account(AggregateRoot[str]):
     """Account aggregate root"""
-    
+
     def __init__(self, id: str = None):
         super().__init__(id)
         self.state = AccountState()
-    
+
     def open(self, owner_id: str, account_number: str, initial_deposit: Decimal = None):
         """Open a new account"""
-        
+
         # Validate business rules
         if not owner_id:
             raise ValueError("Owner ID is required")
-        
+
         if not account_number:
             raise ValueError("Account number is required")
-        
+
         if initial_deposit and initial_deposit < Decimal('0'):
             raise ValueError("Initial deposit cannot be negative")
-        
+
         # Raise domain event
         self.apply(AccountOpenedEvent(
             account_id=self.id,
@@ -241,17 +241,17 @@ class Account(AggregateRoot[str]):
             account_number=account_number,
             initial_deposit=initial_deposit or Decimal('0.00')
         ))
-    
+
     def deposit(self, amount: Decimal, description: str = None):
         """Deposit money to the account"""
-        
+
         # Validate business rules
         if amount <= Decimal('0'):
             raise ValueError("Deposit amount must be positive")
-        
+
         if not self.state.is_active:
             raise ValueError("Cannot deposit to inactive account")
-        
+
         # Raise domain event
         self.apply(MoneyDepositedEvent(
             account_id=self.id,
@@ -259,20 +259,20 @@ class Account(AggregateRoot[str]):
             description=description,
             balance_after=self.state.balance + amount
         ))
-    
+
     def withdraw(self, amount: Decimal, description: str = None):
         """Withdraw money from the account"""
-        
+
         # Validate business rules
         if amount <= Decimal('0'):
             raise ValueError("Withdrawal amount must be positive")
-        
+
         if not self.state.is_active:
             raise ValueError("Cannot withdraw from inactive account")
-        
+
         if self.state.balance < amount:
             raise ValueError("Insufficient funds")
-        
+
         # Raise domain event
         self.apply(MoneyWithdrawnEvent(
             account_id=self.id,
@@ -280,7 +280,7 @@ class Account(AggregateRoot[str]):
             description=description,
             balance_after=self.state.balance - amount
         ))
-    
+
     # Event handlers
     def on_account_opened(self, event: AccountOpenedEvent):
         """Handle account opened event"""
@@ -288,11 +288,11 @@ class Account(AggregateRoot[str]):
         self.state.owner_id = event.owner_id
         self.state.account_number = event.account_number
         self.state.balance = event.initial_deposit
-    
+
     def on_money_deposited(self, event: MoneyDepositedEvent):
         """Handle money deposited event"""
         self.state.balance = event.balance_after
-    
+
     def on_money_withdrawn(self, event: MoneyWithdrawnEvent):
         """Handle money withdrawn event"""
         self.state.balance = event.balance_after
@@ -310,18 +310,18 @@ from neuroglia.data.infrastructure.abstractions import Repository
 
 class RegisterPersonCommandHandler(CommandHandler[RegisterPersonCommand, OperationResult[PersonDto]]):
     """Handles person registration commands"""
-    
-    def __init__(self, 
+
+    def __init__(self,
                  mapper: Mapper,
                  person_repository: Repository[Person, str]):
         self.mapper = mapper
         self.person_repository = person_repository
-    
+
     async def handle_async(self, command: RegisterPersonCommand) -> OperationResult[PersonDto]:
         try:
             # Create new person aggregate
             person = Person(str(uuid.uuid4()))
-            
+
             # Execute business operation
             person.register(
                 first_name=command.first_name,
@@ -331,14 +331,14 @@ class RegisterPersonCommandHandler(CommandHandler[RegisterPersonCommand, Operati
                 date_of_birth=command.date_of_birth,
                 address=command.address
             )
-            
+
             # Save to event store
             saved_person = await self.person_repository.add_async(person)
-            
+
             # Map to DTO and return
             person_dto = self.mapper.map(saved_person.state, PersonDto)
             return self.created(person_dto)
-            
+
         except ValueError as ex:
             return self.bad_request(str(ex))
         except Exception as ex:
@@ -346,30 +346,30 @@ class RegisterPersonCommandHandler(CommandHandler[RegisterPersonCommand, Operati
 
 class DepositCommandHandler(CommandHandler[DepositCommand, OperationResult[AccountDto]]):
     """Handles money deposit commands"""
-    
-    def __init__(self, 
+
+    def __init__(self,
                  mapper: Mapper,
                  account_repository: Repository[Account, str]):
         self.mapper = mapper
         self.account_repository = account_repository
-    
+
     async def handle_async(self, command: DepositCommand) -> OperationResult[AccountDto]:
         try:
             # Load account from event store
             account = await self.account_repository.get_by_id_async(command.account_id)
             if account is None:
                 return self.not_found("Account not found")
-            
+
             # Execute business operation
             account.deposit(command.amount, command.description)
-            
+
             # Save changes
             await self.account_repository.update_async(account)
-            
+
             # Map to DTO and return
             account_dto = self.mapper.map(account.state, AccountDto)
             return self.ok(account_dto)
-            
+
         except ValueError as ex:
             return self.bad_request(str(ex))
         except Exception as ex:
@@ -383,27 +383,27 @@ Query handlers retrieve data for read operations:
 ```python
 class GetPersonByIdQueryHandler(QueryHandler[GetPersonByIdQuery, OperationResult[PersonDto]]):
     """Handles person lookup queries"""
-    
-    def __init__(self, 
+
+    def __init__(self,
                  mapper: Mapper,
                  person_repository: Repository[PersonDto, str]):  # Read model repository
         self.mapper = mapper
         self.person_repository = person_repository
-    
+
     async def handle_async(self, query: GetPersonByIdQuery) -> OperationResult[PersonDto]:
         person = await self.person_repository.get_by_id_async(query.person_id)
-        
+
         if person is None:
             return self.not_found(f"Person with ID {query.person_id} not found")
-        
+
         return self.ok(person)
 
 class GetAccountsByOwnerQueryHandler(QueryHandler[GetAccountsByOwnerQuery, OperationResult[List[AccountDto]]]):
     """Handles account lookup by owner queries"""
-    
+
     def __init__(self, account_repository: Repository[AccountDto, str]):
         self.account_repository = account_repository
-    
+
     async def handle_async(self, query: GetAccountsByOwnerQuery) -> OperationResult[List[AccountDto]]:
         accounts = await self.account_repository.find_by_criteria_async(
             {"owner_id": query.owner_id}
@@ -453,13 +453,13 @@ Integration events handle cross-bounded-context communication:
 ```python
 class PersonRegisteredIntegrationEventHandler(EventHandler[PersonRegisteredEvent]):
     """Handles person registered events for integration purposes"""
-    
-    def __init__(self, 
+
+    def __init__(self,
                  cloud_event_publisher: CloudEventPublisher,
                  mapper: Mapper):
         self.cloud_event_publisher = cloud_event_publisher
         self.mapper = mapper
-    
+
     async def handle_async(self, event: PersonRegisteredEvent):
         # Create integration event
         integration_event = PersonRegisteredIntegrationEvent(
@@ -468,7 +468,7 @@ class PersonRegisteredIntegrationEventHandler(EventHandler[PersonRegisteredEvent
             full_name=f"{event.first_name} {event.last_name}",
             timestamp=datetime.utcnow()
         )
-        
+
         # Publish as CloudEvent
         await self.cloud_event_publisher.publish_async(
             event_type="person.registered.v1",
@@ -493,8 +493,8 @@ ESEventStore.configure(builder, EventStoreOptions(database_name, consumer_group)
 
 # Configure event sourcing repositories
 DataAccessLayer.WriteModel.configure(
-    builder, 
-    ["samples.openbank.domain.models"], 
+    builder,
+    ["samples.openbank.domain.models"],
     lambda builder_, entity_type, key_type: EventSourcingRepository.configure(
         builder_, entity_type, key_type
     )
@@ -528,26 +528,26 @@ Controllers expose the domain through REST APIs:
 ```python
 class PersonsController(ControllerBase):
     """Persons management API"""
-    
+
     @post("/", response_model=PersonDto, status_code=201)
     async def register_person(self, command: RegisterPersonCommandDto) -> PersonDto:
         """Register a new person"""
         # Map DTO to domain command
         domain_command = self.mapper.map(command, RegisterPersonCommand)
-        
+
         # Execute through mediator
         result = await self.mediator.execute_async(domain_command)
-        
+
         # Process and return result
         return self.process(result)
-    
+
     @get("/", response_model=List[PersonDto])
     async def list_persons(self) -> List[PersonDto]:
         """List all registered persons"""
         query = ListPersonsQuery()
         result = await self.mediator.execute_async(query)
         return self.process(result)
-    
+
     @get("/{person_id}", response_model=PersonDto)
     async def get_person_by_id(self, person_id: str) -> PersonDto:
         """Get person by ID"""
@@ -557,14 +557,14 @@ class PersonsController(ControllerBase):
 
 class AccountsController(ControllerBase):
     """Accounts management API"""
-    
+
     @post("/", response_model=AccountDto, status_code=201)
     async def open_account(self, command: OpenAccountCommandDto) -> AccountDto:
         """Open a new account"""
         domain_command = self.mapper.map(command, OpenAccountCommand)
         result = await self.mediator.execute_async(domain_command)
         return self.process(result)
-    
+
     @post("/{account_id}/deposit", response_model=AccountDto)
     async def deposit(self, account_id: str, command: DepositCommandDto) -> AccountDto:
         """Deposit money to account"""
@@ -572,7 +572,7 @@ class AccountsController(ControllerBase):
         domain_command.account_id = account_id
         result = await self.mediator.execute_async(domain_command)
         return self.process(result)
-    
+
     @get("/by-owner/{owner_id}", response_model=List[AccountDto])
     async def get_accounts_by_owner(self, owner_id: str) -> List[AccountDto]:
         """Get all accounts for a person"""
@@ -592,7 +592,7 @@ def test_person_registration():
     # Arrange
     person = Person("test-id")
     address = Address("123 Main St", "Anytown", "12345", "USA")
-    
+
     # Act
     person.register(
         first_name="John",
@@ -602,7 +602,7 @@ def test_person_registration():
         date_of_birth=date(1990, 1, 1),
         address=address
     )
-    
+
     # Assert
     assert person.state.first_name == "John"
     assert person.state.last_name == "Doe"
@@ -613,10 +613,10 @@ def test_account_deposit():
     # Arrange
     account = Account("test-account")
     account.open("owner-id", "123456789", Decimal('100.00'))
-    
+
     # Act
     account.deposit(Decimal('50.00'), "Test deposit")
-    
+
     # Assert
     assert account.state.balance == Decimal('150.00')
     assert len(account.uncommitted_events) == 2  # Open + Deposit
@@ -644,16 +644,16 @@ async def test_person_registration_flow():
             "country": "USA"
         }
     }
-    
+
     # Act
     response = client.post("/api/v1/persons", json=person_data)
-    
+
     # Assert
     assert response.status_code == 201
     person = response.json()
     assert person["first_name"] == "John"
     assert person["last_name"] == "Doe"
-    
+
     # Verify person can be retrieved
     get_response = client.get(f"/api/v1/persons/{person['id']}")
     assert get_response.status_code == 200
@@ -735,7 +735,7 @@ The OpenBank sample demonstrates:
 ## 🔗 Related Documentation
 
 - [Getting Started](../getting-started.md) - Basic Neuroglia concepts
-- [Architecture Guide](../architecture.md) - Understanding the architecture
 - [Event Sourcing](../features/event-sourcing.md) - Event sourcing patterns
 - [CQRS & Mediation](../features/cqrs-mediation.md) - Command and query patterns
 - [Event Handling](../features/event-handling.md) - Event-driven architecture
+- [Source Code Naming Conventions](../references/source_code_naming_convention.md) - Naming patterns used throughout this sample

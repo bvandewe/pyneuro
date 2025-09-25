@@ -1368,7 +1368,7 @@ class CreateUserCommandHandler(CommandHandler):
 ## 🔗 Related Documentation
 
 - [Getting Started](../getting-started.md) - Basic CQRS usage
-- [Architecture Guide](../architecture.md) - How CQRS fits in the architecture
 - [Dependency Injection](dependency-injection.md) - DI with handlers
 - [Data Access](data-access.md) - Repositories and units of work
 - [Event Handling](event-handling.md) - Domain events and integration events
+- [Source Code Naming Conventions](../references/source_code_naming_convention.md) - Command, Query, and Handler naming patterns

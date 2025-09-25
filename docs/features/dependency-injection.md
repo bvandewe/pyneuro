@@ -34,6 +34,7 @@ services.add_singleton(SmsNotificationService) # SMS service for all notificatio
 ```
 
 **Pizzeria Use Cases**:
+
 - Database connection pools (shared by all operations)
 - Menu caching service (menu doesn't change often)
 - Kitchen display systems (one display board)
@@ -53,6 +54,7 @@ services.add_scoped(KitchenWorkflowService)    # Kitchen operations for this ord
 ```
 
 **Pizzeria Use Cases**:
+
 - Order repositories (isolated data access per request)
 - Order processing services (specific to current order)
 - Customer context services (customer-specific data)
@@ -93,11 +95,11 @@ class IOrderRepository(ABC):
     @abstractmethod
     async def save_async(self, order: Order) -> None:
         pass
-    
+
     @abstractmethod
     async def get_by_id_async(self, order_id: str) -> Optional[Order]:
         pass
-    
+
     @abstractmethod
     async def get_by_status_async(self, status: str) -> List[Order]:
         pass
@@ -107,7 +109,7 @@ class FileOrderRepository(IOrderRepository):
     def __init__(self, data_dir: str = "data"):
         self.data_dir = Path(data_dir)
         self.data_dir.mkdir(exist_ok=True)
-    
+
     async def save_async(self, order: Order) -> None:
         file_path = self.data_dir / f"{order.id}.json"
         with open(file_path, 'w') as f:
@@ -117,11 +119,11 @@ class FileOrderRepository(IOrderRepository):
 class MongoOrderRepository(IOrderRepository):
     def __init__(self, mongo_client: MongoClient):
         self.collection = mongo_client.pizzeria.orders
-    
+
     async def save_async(self, order: Order) -> None:
         await self.collection.replace_one(
-            {"_id": order.id}, 
-            order.__dict__, 
+            {"_id": order.id},
+            order.__dict__,
             upsert=True
         )
 
@@ -138,7 +140,7 @@ Use factory functions for pizzeria services that need complex initialization:
 def create_payment_gateway() -> IPaymentGateway:
     """Create payment gateway with proper configuration"""
     config = get_payment_config()
-    
+
     if config.environment == "development":
         return MockPaymentGateway()
     elif config.provider == "stripe":
@@ -149,7 +151,7 @@ def create_payment_gateway() -> IPaymentGateway:
 def create_sms_service() -> ISmsService:
     """Create SMS service with proper credentials"""
     settings = get_app_settings()
-    
+
     return TwilioSmsService(
         account_sid=settings.twilio_sid,
         auth_token=settings.twilio_token,
@@ -170,7 +172,7 @@ TKey = TypeVar('TKey')
 
 class FileRepository(Repository[T, TKey], Generic[T, TKey]):
     """Generic file-based repository for any entity type"""
-    
+
     def __init__(self, entity_type: type, data_dir: str = "data"):
         self.entity_type = entity_type
         self.data_dir = Path(data_dir) / entity_type.__name__.lower()
@@ -203,56 +205,56 @@ from neuroglia.mapping import Mapper
 
 def create_pizzeria_app():
     """Create Mario's Pizzeria application with enhanced builder"""
-    
+
     # Create enhanced builder with multi-app support
     builder = EnhancedWebApplicationBuilder()
-    
+
     # === Repository Layer ===
     # File-based repositories for development
     builder.services.add_scoped(lambda: FileRepository(Pizza, "data"))
     builder.services.add_scoped(lambda: FileRepository(Order, "data"))
     builder.services.add_scoped(lambda: FileRepository(Customer, "data"))
-    
+
     # === Application Services ===
     builder.services.add_scoped(PizzeriaOrderService)
     builder.services.add_scoped(KitchenManagementService)
     builder.services.add_scoped(CustomerLoyaltyService)
     builder.services.add_scoped(DeliveryCoordinationService)
-    
+
     # === Infrastructure Services ===
     builder.services.add_singleton(IPaymentGateway, factory=create_payment_gateway)
     builder.services.add_singleton(ISmsService, factory=create_sms_service)
     builder.services.add_singleton(MenuCacheService)
     builder.services.add_singleton(KitchenDisplayService)
-    
+
     # === Transient Services ===
     builder.services.add_transient(PizzaPriceCalculator)
     builder.services.add_transient(DeliveryTimeEstimator)
     builder.services.add_transient(OrderValidator)
-    
+
     # === Configure Core Framework Services ===
     Mediator.configure(builder, ["src.application"])
     Mapper.configure(builder, ["src"])
-    
+
     # === Add Controllers with API Prefix ===
     builder.add_controllers_with_prefix("src.api.controllers", "/api")
-    
+
     # === OAuth Configuration ===
     builder.configure_oauth({
         "orders:read": "Read order information",
-        "orders:write": "Create and modify orders", 
+        "orders:write": "Create and modify orders",
         "kitchen:manage": "Manage kitchen operations",
         "admin": "Full administrative access"
     })
-    
+
     # === Build Application ===
     app = builder.build()
-    
+
     # === Configure Middleware ===
     app.use_cors()
     app.use_swagger_ui()
     app.use_controllers()
-    
+
     return app
 ```
 
@@ -270,7 +272,7 @@ builder = EnhancedWebApplicationBuilder()
 # Automatically discover and register pizzeria services in modules
 builder.services.discover_services([
     "src.application.services",      # PizzeriaOrderService, KitchenManagementService
-    "src.infrastructure.repositories", # FileOrderRepository, MongoPizzaRepository  
+    "src.infrastructure.repositories", # FileOrderRepository, MongoPizzaRepository
     "src.infrastructure.services",    # TwilioSmsService, StripePaymentGateway
     "src.application.handlers"        # Command and query handlers
 ])
@@ -287,8 +289,8 @@ from neuroglia.dependency_injection import service, ServiceLifetime
 @service(ServiceLifetime.SCOPED)
 class PizzeriaOrderService:
     """Handles pizza order business logic"""
-    
-    def __init__(self, 
+
+    def __init__(self,
                  order_repository: Repository[Order, str],
                  pizza_repository: Repository[Pizza, str],
                  notification_service: ISmsService):
@@ -296,10 +298,10 @@ class PizzeriaOrderService:
         self.pizza_repository = pizza_repository
         self.notification_service = notification_service
 
-@service(ServiceLifetime.SINGLETON) 
+@service(ServiceLifetime.SINGLETON)
 class MenuCacheService:
     """Caches menu data for fast retrieval"""
-    
+
     def __init__(self):
         self._cache = {}
         self._cache_expiry = None
@@ -307,7 +309,7 @@ class MenuCacheService:
 @service(ServiceLifetime.TRANSIENT)
 class PizzaPriceCalculator:
     """Calculates pizza pricing with toppings"""
-    
+
     def calculate_total_price(self, pizza: Pizza) -> Decimal:
         base_price = self._get_size_price(pizza.base_price, pizza.size)
         toppings_price = Decimal("1.50") * len(pizza.toppings)
@@ -321,19 +323,19 @@ from neuroglia.dependency_injection import service, ServiceLifetime
 @service(interface=INotificationService, lifetime=ServiceLifetime.SINGLETON)
 class TwilioSmsService(INotificationService):
     """SMS notifications via Twilio"""
-    
+
     def __init__(self):
         self.client = self._create_twilio_client()
-    
+
     async def send_order_confirmation(self, phone: str, order_id: str, ready_time: datetime):
         message = f"Order {order_id[:8]} confirmed! Ready by {ready_time.strftime('%H:%M')}"
         await self._send_sms(phone, message)
 
-# Automatically register repository implementation  
+# Automatically register repository implementation
 @service(interface=IOrderRepository, lifetime=ServiceLifetime.SCOPED)
 class FileOrderRepository(IOrderRepository):
     """File-based order storage for development"""
-    
+
     def __init__(self):
         self.data_dir = Path("data/orders")
         self.data_dir.mkdir(parents=True, exist_ok=True)
@@ -342,8 +344,8 @@ class FileOrderRepository(IOrderRepository):
 @service(lifetime=ServiceLifetime.SCOPED)
 class PizzeriaOrderService:
     """High-level order processing service"""
-    
-    def __init__(self, 
+
+    def __init__(self,
                  order_repository: IOrderRepository,      # Gets FileOrderRepository
                  notification_service: INotificationService): # Gets TwilioSmsService
         self.order_repository = order_repository
@@ -375,19 +377,19 @@ from classy_fastapi.decorators import get, post
 
 class OrdersController(ControllerBase):
     """Pizza orders API controller with dependency injection"""
-    
-    def __init__(self, 
+
+    def __init__(self,
                  service_provider: ServiceProviderBase,
                  mapper: Mapper,
                  mediator: Mediator,
                  order_service: PizzeriaOrderService,        # Automatically injected
-                 payment_service: IPaymentGateway,           # Automatically injected  
+                 payment_service: IPaymentGateway,           # Automatically injected
                  notification_service: INotificationService): # Automatically injected
         super().__init__(service_provider, mapper, mediator)
         self.order_service = order_service
         self.payment_service = payment_service
         self.notification_service = notification_service
-    
+
     @post("/", response_model=dict, status_code=201)
     async def place_order(self, order_data: dict) -> dict:
         # All services are ready to use
@@ -396,10 +398,10 @@ class OrdersController(ControllerBase):
 
 class KitchenController(ControllerBase):
     """Kitchen operations controller"""
-    
+
     def __init__(self,
                  service_provider: ServiceProviderBase,
-                 mapper: Mapper, 
+                 mapper: Mapper,
                  mediator: Mediator,
                  kitchen_service: KitchenManagementService,  # Automatically injected
                  display_service: KitchenDisplayService):    # Automatically injected
@@ -415,27 +417,27 @@ Access optional services through the service provider:
 ```python
 class PizzeriaAnalyticsService:
     """Analytics service with optional dependencies"""
-    
-    def __init__(self, 
+
+    def __init__(self,
                  service_provider: ServiceProviderBase,
                  order_repository: Repository[Order, str]):  # Required dependency
         self.service_provider = service_provider
         self.order_repository = order_repository
-    
+
     async def generate_daily_report(self) -> dict:
         # Required service - injected via constructor
         orders = await self.order_repository.get_by_date_range_async(date.today(), date.today())
-        
+
         # Optional service - resolved when needed
         email_service = self.service_provider.get_service(IEmailService)
         if email_service:
             await email_service.send_daily_report(self._build_report(orders))
-        
+
         # Another optional service
-        slack_service = self.service_provider.get_service(ISlackService) 
+        slack_service = self.service_provider.get_service(ISlackService)
         if slack_service:
             await slack_service.post_daily_summary(orders)
-        
+
         return self._build_report(orders)
 ```
 
@@ -446,17 +448,17 @@ class PizzeriaAnalyticsService:
 ```python
 class PizzeriaServiceLocator:
     """Service locator for pizzeria-wide services"""
-    
+
     _provider: ServiceProviderBase = None
-    
+
     @classmethod
     def configure(cls, provider: ServiceProviderBase):
         cls._provider = provider
-    
+
     @classmethod
     def get_notification_service(cls) -> INotificationService:
         return cls._provider.get_required_service(INotificationService)
-    
+
     @classmethod
     def get_cache_service(cls) -> MenuCacheService:
         return cls._provider.get_required_service(MenuCacheService)
@@ -471,7 +473,7 @@ class OrderPlacedEvent(DomainEvent):
 ```python
 def configure_pizzeria_services(builder: EnhancedWebApplicationBuilder, environment: str):
     """Configure services based on pizzeria environment"""
-    
+
     if environment == "development":
         # Development services
         builder.services.add_scoped(IOrderRepository, FileOrderRepository)
@@ -479,15 +481,15 @@ def configure_pizzeria_services(builder: EnhancedWebApplicationBuilder, environm
         builder.services.add_singleton(IPaymentGateway, MockPaymentGateway)
         builder.services.add_singleton(ICacheService, MemoryCacheService)
         builder.services.add_singleton(INotificationService, ConsoleNotificationService)
-        
+
     elif environment == "production":
-        # Production services  
+        # Production services
         builder.services.add_scoped(IOrderRepository, MongoOrderRepository)
         builder.services.add_scoped(IPizzaRepository, MongoPizzaRepository)
         builder.services.add_singleton(IPaymentGateway, factory=create_stripe_gateway)
         builder.services.add_singleton(ICacheService, RedisCacheService)
         builder.services.add_singleton(INotificationService, TwilioSmsService)
-        
+
     elif environment == "testing":
         # Testing services
         builder.services.add_scoped(IOrderRepository, InMemoryOrderRepository)
@@ -507,25 +509,25 @@ Wrap pizzeria services with additional behavior like logging, caching, or monito
 ```python
 class LoggingOrderService(IOrderService):
     """Decorates order service with logging"""
-    
+
     def __init__(self, inner: IOrderService, logger: logging.Logger):
         self.inner = inner
         self.logger = logger
-    
+
     async def process_order_async(self, order_data: dict) -> OperationResult:
         order_id = order_data.get("temp_id", "unknown")
         self.logger.info(f"Processing order {order_id} for {order_data.get('customer_name')}")
-        
+
         start_time = time.time()
         try:
             result = await self.inner.process_order_async(order_data)
             duration = time.time() - start_time
-            
+
             if result.is_success:
                 self.logger.info(f"Order {order_id} processed successfully in {duration:.2f}s")
             else:
                 self.logger.warning(f"Order {order_id} processing failed: {result.error_message}")
-                
+
             return result
         except Exception as ex:
             duration = time.time() - start_time
@@ -534,23 +536,23 @@ class LoggingOrderService(IOrderService):
 
 class CachingMenuService(IMenuService):
     """Decorates menu service with caching"""
-    
+
     def __init__(self, inner: IMenuService, cache: ICacheService):
         self.inner = inner
         self.cache = cache
-    
+
     async def get_menu_async(self, category: Optional[str] = None) -> List[dict]:
         cache_key = f"menu:{category or 'all'}"
-        
+
         # Check cache first
         cached_menu = await self.cache.get_async(cache_key)
         if cached_menu:
             return cached_menu
-        
+
         # Get from inner service and cache result
         menu = await self.inner.get_menu_async(category)
         await self.cache.set_async(cache_key, menu, expire_minutes=30)
-        
+
         return menu
 
 # Registration with decoration
@@ -558,11 +560,11 @@ def configure_decorated_services(builder: EnhancedWebApplicationBuilder):
     # Register base services
     builder.services.add_scoped(PizzeriaOrderService)
     builder.services.add_scoped(MenuService)
-    
+
     # Add decorations
     builder.services.decorate(IOrderService, LoggingOrderService)
     builder.services.decorate(IMenuService, CachingMenuService)
-    
+
     # The container will resolve: LoggingOrderService -> PizzeriaOrderService
     # And: CachingMenuService -> MenuService
 ```
@@ -572,14 +574,14 @@ from abc import ABC, abstractmethod
 
 class IPizzeriaPlugin(ABC):
     """Interface for pizzeria plugins"""
-    
+
     @abstractmethod
     def configure_services(self, services: ServiceCollection) -> None:
         pass
 
 class DeliveryPlugin(IPizzeriaPlugin):
     """Plugin for delivery services"""
-    
+
     def configure_services(self, services: ServiceCollection) -> None:
         services.add_scoped(DeliveryService)
         services.add_scoped(DeliveryRouteCalculator)
@@ -587,7 +589,7 @@ class DeliveryPlugin(IPizzeriaPlugin):
 
 class LoyaltyPlugin(IPizzeriaPlugin):
     """Plugin for loyalty program"""
-    
+
     def configure_services(self, services: ServiceCollection) -> None:
         services.add_scoped(LoyaltyService)
         services.add_scoped(RewardsCalculator)
@@ -595,13 +597,13 @@ class LoyaltyPlugin(IPizzeriaPlugin):
 
 def configure_plugins(builder: EnhancedWebApplicationBuilder, enabled_plugins: List[str]):
     """Configure enabled plugins"""
-    
+
     available_plugins = {
         "delivery": DeliveryPlugin(),
         "loyalty": LoyaltyPlugin(),
         "analytics": AnalyticsPlugin()
     }
-    
+
     for plugin_name in enabled_plugins:
         if plugin_name in available_plugins:
             plugin = available_plugins[plugin_name]
@@ -635,7 +637,7 @@ class PaymentConfig:
     enable_cash: bool
     enable_card: bool
 
-@dataclass 
+@dataclass
 class NotificationConfig:
     """Notification service configuration"""
     twilio_sid: str
@@ -662,15 +664,15 @@ services.configure(MenuConfig, app_settings.menu)
 class PizzaPriceCalculator:
     def __init__(self, menu_config: MenuConfig):
         self.menu_config = menu_config
-    
+
     def calculate_pizza_price(self, pizza: Pizza) -> Decimal:
         base_price = self.menu_config.base_pizza_price
         size_multiplier = self.menu_config.size_multipliers.get(pizza.size, 1.0)
         topping_cost = len(pizza.toppings) * self.menu_config.topping_price
-        
+
         subtotal = (base_price * Decimal(str(size_multiplier))) + topping_cost
         tax = subtotal * self.menu_config.tax_rate
-        
+
         return subtotal + tax
 ```
 
@@ -683,19 +685,19 @@ from neuroglia.configuration import IOptions
 
 class KitchenManagementService:
     """Kitchen service with configurable options"""
-    
-    def __init__(self, 
+
+    def __init__(self,
                  pizzeria_options: IOptions[PizzeriaConfig],
                  menu_options: IOptions[MenuConfig]):
         self.pizzeria_config = pizzeria_options.value
         self.menu_config = menu_options.value
-    
+
     async def check_if_within_hours(self) -> bool:
         current_hour = datetime.now().hour
         opening_hours = self.pizzeria_config.opening_hours
-        
+
         return opening_hours["open"] <= current_hour <= opening_hours["close"]
-    
+
     async def get_max_prep_time(self) -> int:
         """Get maximum preparation time based on current kitchen load"""
         # Options can be refreshed from configuration store
@@ -738,16 +740,16 @@ async def test_order_service_processes_order_successfully(
         order_repository=mock_order_repository,
         notification_service=mock_notification_service
     )
-    
+
     order_data = {
         "customer_name": "John Doe",
         "customer_phone": "555-0123",
         "pizza_items": [{"pizza_id": "margherita", "size": "large"}]
     }
-    
+
     # Act
     result = await order_service.process_order_async(order_data)
-    
+
     # Assert
     assert result.is_success
     mock_order_repository.save_async.assert_called_once()
@@ -762,32 +764,32 @@ Test with a real service container for integration tests:
 @pytest.fixture
 def test_service_provider():
     """Create service provider for integration tests"""
-    
+
     services = ServiceCollection()
-    
+
     # Use in-memory implementations for testing
     services.add_scoped(IOrderRepository, InMemoryOrderRepository)
     services.add_scoped(IPizzaRepository, InMemoryPizzaRepository)
     services.add_singleton(INotificationService, MockNotificationService)
-    
+
     # Real services
     services.add_scoped(PizzeriaOrderService)
     services.add_scoped(KitchenManagementService)
-    
+
     return services.build_service_provider()
 
 @pytest.mark.asyncio
 async def test_complete_order_workflow(test_service_provider):
     """Test complete order workflow with real services"""
-    
+
     # Get services from container
     order_service = test_service_provider.get_required_service(PizzeriaOrderService)
     kitchen_service = test_service_provider.get_required_service(KitchenManagementService)
-    
+
     # Test complete workflow
     order_result = await order_service.process_order_async(sample_order_data)
     assert order_result.is_success
-    
+
     # Start cooking
     cooking_result = await kitchen_service.start_cooking_async(order_result.data["order_id"])
     assert cooking_result.is_success
@@ -802,13 +804,13 @@ Always use constructor injection for required dependencies:
 ```python
 # ✅ Good - Constructor injection
 class OrderService:
-    def __init__(self, 
+    def __init__(self,
                  order_repository: IOrderRepository,
                  notification_service: INotificationService):
         self.order_repository = order_repository
         self.notification_service = notification_service
 
-# ❌ Avoid - Service locator pattern  
+# ❌ Avoid - Service locator pattern
 class OrderService:
     def process_order(self):
         repository = ServiceLocator.get_service(IOrderRepository)  # Hard to test
@@ -823,7 +825,7 @@ Choose service lifetimes based on usage patterns:
 services.add_singleton(PaymentGateway)        # Expensive to create
 services.add_singleton(MenuCacheService)      # Shared state
 
-# ✅ Scoped for request-specific services  
+# ✅ Scoped for request-specific services
 services.add_scoped(OrderRepository)          # Per-request data access
 services.add_scoped(CustomerContextService)   # Request-specific context
 
@@ -841,14 +843,14 @@ Don't use the service provider directly in business logic:
 class OrderService:
     def __init__(self, service_provider: ServiceProviderBase):
         self.service_provider = service_provider
-    
+
     def process_order(self, order_data):
         # This makes testing difficult and hides dependencies
         payment_service = self.service_provider.get_service(IPaymentService)
 
 # ✅ Good - Explicit dependencies
 class OrderService:
-    def __init__(self, 
+    def __init__(self,
                  order_repository: IOrderRepository,
                  payment_service: IPaymentService):  # Clear dependencies
         self.order_repository = order_repository
@@ -864,18 +866,18 @@ Using Neuroglia's DI container in Mario's Pizzeria provides:
 ✅ **Configuration Flexibility** - Swap implementations for different environments  
 ✅ **Automatic Lifetime Management** - Framework handles object creation and disposal  
 ✅ **Enhanced Web Application Builder** - Simplified setup with multi-app support  
-✅ **Type Safety** - Full type checking and IntelliSense support  
+✅ **Type Safety** - Full type checking and IntelliSense support
 
 ## 🔗 Related Documentation
 
 - **[Getting Started](../getting-started.md)** - Build Mario's Pizzeria with DI from the start
 - **[CQRS & Mediation](cqrs-mediation.md)** - How handlers are resolved through DI
-- **[MVC Controllers](mvc-controllers.md)** - Controller dependency injection patterns  
+- **[MVC Controllers](mvc-controllers.md)** - Controller dependency injection patterns
 - **[Data Access](data-access.md)** - Repository pattern and DI integration
-        if self.options.send_welcome_emails:
-            # Send email logic
-            pass
-```
+  if self.options.send_welcome_emails: # Send email logic
+  pass
+
+````
 
 ## 🧪 Testing with DI
 
@@ -890,18 +892,18 @@ from neuroglia.dependency_injection import ServiceCollection
 @pytest.fixture
 def test_services():
     services = ServiceCollection()
-    
+
     # Register test implementations
     services.add_singleton(IUserRepository, InMemoryUserRepository)
     services.add_singleton(IEmailService, MockEmailService)
-    
+
     return services.build_service_provider()
 
 def test_user_creation(test_services):
     user_service = test_services.get_required_service(UserService)
     result = user_service.create_user(user_data)
     assert result.is_success
-```
+````
 
 ### Mock Dependencies
 
@@ -914,15 +916,15 @@ def test_user_service_with_mocks():
     # Arrange
     mock_repo = Mock(spec=IUserRepository)
     mock_repo.add_async.return_value = test_user
-    
+
     services = ServiceCollection()
     services.add_instance(IUserRepository, mock_repo)
     provider = services.build_service_provider()
-    
+
     # Act
     user_service = provider.get_required_service(UserService)
     result = await user_service.create_user(user_data)
-    
+
     # Assert
     mock_repo.add_async.assert_called_once()
     assert result.email == test_user.email
@@ -957,7 +959,7 @@ Controllers automatically receive dependencies:
 
 ```python
 class UsersController(ControllerBase):
-    def __init__(self, 
+    def __init__(self,
                  service_provider: ServiceProviderBase,
                  mapper: Mapper,
                  mediator: Mediator,
@@ -976,7 +978,7 @@ Middleware can also use dependency injection:
 class AuthenticationMiddleware:
     def __init__(self, auth_service: IAuthService):
         self.auth_service = auth_service
-    
+
     async def __call__(self, request: Request, call_next):
         # Use auth_service for authentication logic
         pass
@@ -1018,7 +1020,7 @@ class UserService:
 class UserService:
     def __init__(self, service_provider: ServiceProviderBase):
         self.service_provider = service_provider
-    
+
     def some_method(self):
         repo = self.service_provider.get_required_service(IUserRepository)
 ```
@@ -1031,7 +1033,7 @@ Ensure all required dependencies are registered:
 def validate_services(provider: ServiceProviderBase):
     """Validate that all required services are registered"""
     required_services = [IUserRepository, IEmailService, ICacheService]
-    
+
     for service_type in required_services:
         service = provider.get_service(service_type)
         if service is None:
@@ -1046,7 +1048,7 @@ Use factory functions for services that need complex initialization:
 def create_user_repository(provider: ServiceProviderBase) -> IUserRepository:
     config = provider.get_required_service(DatabaseConfig)
     connection = provider.get_required_service(DatabaseConnection)
-    
+
     if config.use_caching:
         cache = provider.get_required_service(ICacheService)
         return CachedUserRepository(connection, cache)
@@ -1059,7 +1061,7 @@ services.add_scoped(IUserRepository, factory=create_user_repository)
 ## 🔗 Related Documentation
 
 - [Getting Started](../getting-started.md) - Basic DI usage
-- [Architecture Guide](../architecture.md) - How DI fits in the architecture
 - [CQRS & Mediation](cqrs-mediation.md) - DI with command handlers
 - [Data Access](data-access.md) - DI with repositories
 - [Testing](testing.md) - Testing with dependency injection
+- [Source Code Naming Conventions](../references/source_code_naming_convention.md) - Service, interface, and configuration naming patterns

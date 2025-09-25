@@ -214,7 +214,6 @@ When adding Mermaid diagrams to documentation:
 
 ## 🔗 Related Documentation
 
-- [Architecture Overview](../architecture.md)
 - [CQRS & Mediation](../features/cqrs-mediation.md)
 - [Dependency Injection](../features/dependency-injection.md)
 - [Sample Applications](../samples/openbank.md)
