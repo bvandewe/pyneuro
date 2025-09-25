@@ -27,6 +27,7 @@ class StatusEnum(Enum):
 @dataclass
 class TestEntity:
     """Test entity for repository operations"""
+
     id: str
     name: str = ""
     email: str = ""
@@ -40,12 +41,13 @@ class TestEntity:
         if self.tags is None:
             self.tags = []
         if self.created_at is None:
-            self.created_at = datetime.utcnow()
+            self.created_at = datetime.now(timezone.utc)
 
 
 @dataclass
 class MoneyEntity:
     """Nested entity for testing complex objects"""
+
     amount: Decimal
     currency: str
 
@@ -53,6 +55,7 @@ class MoneyEntity:
 @dataclass
 class ComplexEntity:
     """Complex entity with nested objects"""
+
     id: str
     name: str = ""
     balance: Optional[MoneyEntity] = None
@@ -66,19 +69,17 @@ class TestEnhancedMongoRepository:
         self.mock_mongo_client = Mock()
         self.mock_database = Mock()
         self.mock_collection = Mock()
-        
+
         # Setup the mock chain: client -> database -> collection
         self.mock_mongo_client.__getitem__ = Mock(return_value=self.mock_database)
         self.mock_database.__getitem__ = Mock(return_value=self.mock_collection)
-        
+
         # Create repository options
         self.options = MongoRepositoryOptions[TestEntity, str](database_name="test_db")
-        
+
         # Create repository instance
         self.repository = EnhancedMongoRepository[TestEntity, str](
-            mongo_client=self.mock_mongo_client,
-            options=self.options,
-            entity_type=TestEntity
+            mongo_client=self.mock_mongo_client, options=self.options, entity_type=TestEntity
         )
 
     def test_repository_initialization(self):
@@ -93,34 +94,41 @@ class TestEnhancedMongoRepository:
         """Test checking if entity exists by ID"""
         # Setup mock return value
         self.mock_collection.find_one.return_value = {"_id": "mongo_id", "id": "test_id"}
-        
+
         result = await self.repository.contains_async("test_id")
-        
+
         assert result is True
-        self.mock_collection.find_one.assert_called_once_with({"id": "test_id"}, projection={"_id": 1})
+        self.mock_collection.find_one.assert_called_once_with(
+            {"id": "test_id"}, projection={"_id": 1}
+        )
 
     @pytest.mark.asyncio
     async def test_contains_async_not_found(self):
         """Test checking if entity exists when it doesn't"""
         self.mock_collection.find_one.return_value = None
-        
+
         result = await self.repository.contains_async("nonexistent_id")
-        
+
         assert result is False
 
     @pytest.mark.asyncio
     async def test_get_async(self):
         """Test getting an entity by ID"""
-        mock_document = {"_id": "mongo_id", "id": "test_id", "name": "John", "email": "john@test.com"}
+        mock_document = {
+            "_id": "mongo_id",
+            "id": "test_id",
+            "name": "John",
+            "email": "john@test.com",
+        }
         self.mock_collection.find_one.return_value = mock_document
-        
+
         expected_entity = TestEntity(id="test_id", name="John", email="john@test.com")
-        
-        with patch.object(MongoSerializationHelper, 'deserialize_to_entity') as mock_deserialize:
+
+        with patch.object(MongoSerializationHelper, "deserialize_to_entity") as mock_deserialize:
             mock_deserialize.return_value = expected_entity
-            
+
             result = await self.repository.get_async("test_id")
-            
+
             assert result == expected_entity
             self.mock_collection.find_one.assert_called_once_with({"id": "test_id"})
             mock_deserialize.assert_called_once_with(mock_document, TestEntity)
@@ -129,29 +137,33 @@ class TestEnhancedMongoRepository:
     async def test_get_async_not_found(self):
         """Test getting an entity that doesn't exist"""
         self.mock_collection.find_one.return_value = None
-        
+
         result = await self.repository.get_async("nonexistent_id")
-        
+
         assert result is None
 
     @pytest.mark.asyncio
     async def test_add_async(self):
         """Test adding a new entity"""
         entity = TestEntity(id="new_id", name="John", email="john@test.com")
-        
+
         # Mock contains_async to return False (entity doesn't exist)
-        with patch.object(self.repository, 'contains_async', return_value=False):
+        with patch.object(self.repository, "contains_async", return_value=False):
             # Mock serialization
-            with patch.object(MongoSerializationHelper, 'serialize_to_dict') as mock_serialize:
-                mock_serialize.return_value = {"id": "new_id", "name": "John", "email": "john@test.com"}
-                
+            with patch.object(MongoSerializationHelper, "serialize_to_dict") as mock_serialize:
+                mock_serialize.return_value = {
+                    "id": "new_id",
+                    "name": "John",
+                    "email": "john@test.com",
+                }
+
                 # Mock insert result
                 mock_result = Mock()
                 mock_result.inserted_id = "mongo_id"
                 self.mock_collection.insert_one.return_value = mock_result
-                
+
                 result = await self.repository.add_async(entity)
-                
+
                 assert result == entity
                 mock_serialize.assert_called_once_with(entity)
                 self.mock_collection.insert_one.assert_called_once()
@@ -160,44 +172,50 @@ class TestEnhancedMongoRepository:
     async def test_add_async_already_exists(self):
         """Test adding an entity that already exists"""
         entity = TestEntity(id="existing_id", name="John")
-        
-        with patch.object(self.repository, 'contains_async', return_value=True):
+
+        with patch.object(self.repository, "contains_async", return_value=True):
             with pytest.raises(ValueError) as exc_info:
                 await self.repository.add_async(entity)
-            
+
             assert "already exists" in str(exc_info.value)
 
     @pytest.mark.asyncio
     async def test_update_async(self):
         """Test updating an existing entity"""
         entity = TestEntity(id="existing_id", name="John Updated", email="updated@test.com")
-        
-        with patch.object(self.repository, 'contains_async', return_value=True):
-            with patch.object(MongoSerializationHelper, 'serialize_to_dict') as mock_serialize:
-                mock_serialize.return_value = {"id": "existing_id", "name": "John Updated", "email": "updated@test.com"}
-                
+
+        with patch.object(self.repository, "contains_async", return_value=True):
+            with patch.object(MongoSerializationHelper, "serialize_to_dict") as mock_serialize:
+                mock_serialize.return_value = {
+                    "id": "existing_id",
+                    "name": "John Updated",
+                    "email": "updated@test.com",
+                }
+
                 mock_result = Mock()
                 mock_result.modified_count = 1
                 self.mock_collection.replace_one.return_value = mock_result
-                
+
                 result = await self.repository.update_async(entity)
-                
+
                 assert result == entity
                 mock_serialize.assert_called_once_with(entity)
-                self.mock_collection.replace_one.assert_called_once_with({"id": "existing_id"}, mock_serialize.return_value)
+                self.mock_collection.replace_one.assert_called_once_with(
+                    {"id": "existing_id"}, mock_serialize.return_value
+                )
 
     @pytest.mark.asyncio
     async def test_remove_async(self):
         """Test removing an entity by ID"""
         entity_id = "remove_id"
-        
-        with patch.object(self.repository, 'contains_async', return_value=True):
+
+        with patch.object(self.repository, "contains_async", return_value=True):
             mock_result = Mock()
             mock_result.deleted_count = 1
             self.mock_collection.delete_one.return_value = mock_result
-            
+
             await self.repository.remove_async(entity_id)
-            
+
             self.mock_collection.delete_one.assert_called_once_with({"id": entity_id})
 
     @pytest.mark.asyncio
@@ -206,21 +224,21 @@ class TestEnhancedMongoRepository:
         mock_cursor = Mock()
         mock_documents = [
             {"_id": "1", "id": "1", "name": "John", "status": "ACTIVE"},
-            {"_id": "2", "id": "2", "name": "Jane", "status": "ACTIVE"}
+            {"_id": "2", "id": "2", "name": "Jane", "status": "ACTIVE"},
         ]
         mock_cursor.__iter__ = Mock(return_value=iter(mock_documents))
         self.mock_collection.find.return_value = mock_cursor
-        
+
         expected_entities = [
             TestEntity(id="1", name="John", status=StatusEnum.ACTIVE),
-            TestEntity(id="2", name="Jane", status=StatusEnum.ACTIVE)
+            TestEntity(id="2", name="Jane", status=StatusEnum.ACTIVE),
         ]
-        
-        with patch.object(MongoSerializationHelper, 'deserialize_to_entity') as mock_deserialize:
+
+        with patch.object(MongoSerializationHelper, "deserialize_to_entity") as mock_deserialize:
             mock_deserialize.side_effect = expected_entities
-            
+
             results = await self.repository.find_async({"status": "ACTIVE"})
-            
+
             assert len(results) == 2
             assert results == expected_entities
             self.mock_collection.find.assert_called_once_with({"status": "ACTIVE"})
@@ -230,26 +248,23 @@ class TestEnhancedMongoRepository:
         """Test find operation with pagination and sorting"""
         mock_cursor = Mock()
         mock_documents = [{"_id": "1", "id": "1", "name": "Alice"}]
-        
+
         # Setup method chaining for cursor operations
         mock_cursor.skip.return_value = mock_cursor
         mock_cursor.limit.return_value = mock_cursor
         mock_cursor.sort.return_value = mock_cursor
         mock_cursor.__iter__ = Mock(return_value=iter(mock_documents))
-        
+
         self.mock_collection.find.return_value = mock_cursor
-        
-        with patch.object(MongoSerializationHelper, 'deserialize_to_entity') as mock_deserialize:
+
+        with patch.object(MongoSerializationHelper, "deserialize_to_entity") as mock_deserialize:
             expected_entity = TestEntity(id="1", name="Alice")
             mock_deserialize.return_value = expected_entity
-            
+
             results = await self.repository.find_async(
-                filter_dict={},
-                skip=10,
-                limit=5,
-                sort_by={"name": 1, "created_at": -1}
+                filter_dict={}, skip=10, limit=5, sort_by={"name": 1, "created_at": -1}
             )
-            
+
             assert len(results) == 1
             self.mock_collection.find.assert_called_once_with({})
             mock_cursor.skip.assert_called_once_with(10)
@@ -261,14 +276,14 @@ class TestEnhancedMongoRepository:
         """Test finding a single entity"""
         mock_document = {"_id": "1", "id": "1", "name": "John", "email": "john@test.com"}
         self.mock_collection.find_one.return_value = mock_document
-        
+
         expected_entity = TestEntity(id="1", name="John", email="john@test.com")
-        
-        with patch.object(MongoSerializationHelper, 'deserialize_to_entity') as mock_deserialize:
+
+        with patch.object(MongoSerializationHelper, "deserialize_to_entity") as mock_deserialize:
             mock_deserialize.return_value = expected_entity
-            
+
             result = await self.repository.find_one_async({"name": "John"})
-            
+
             assert result == expected_entity
             self.mock_collection.find_one.assert_called_once_with({"name": "John"})
             mock_deserialize.assert_called_once_with(mock_document, TestEntity)
@@ -277,9 +292,9 @@ class TestEnhancedMongoRepository:
     async def test_count_async(self):
         """Test counting documents with filter"""
         self.mock_collection.count_documents.return_value = 42
-        
+
         count = await self.repository.count_async({"status": "ACTIVE"})
-        
+
         assert count == 42
         self.mock_collection.count_documents.assert_called_once_with({"status": "ACTIVE"})
 
@@ -288,13 +303,13 @@ class TestEnhancedMongoRepository:
         """Test aggregation pipeline execution"""
         pipeline = [
             {"$match": {"status": "ACTIVE"}},
-            {"$group": {"_id": "$department", "count": {"$sum": 1}}}
+            {"$group": {"_id": "$department", "count": {"$sum": 1}}},
         ]
         mock_results = [{"_id": "Engineering", "count": 5}, {"_id": "Sales", "count": 3}]
         self.mock_collection.aggregate.return_value = iter(mock_results)
-        
+
         results = await self.repository.aggregate_async(pipeline)
-        
+
         assert results == mock_results
         self.mock_collection.aggregate.assert_called_once_with(pipeline)
 
@@ -302,17 +317,21 @@ class TestEnhancedMongoRepository:
     async def test_upsert_async(self):
         """Test upsert operation"""
         entity = TestEntity(id="upsert_id", name="John", email="john@test.com")
-        
-        with patch.object(MongoSerializationHelper, 'serialize_to_dict') as mock_serialize:
-            mock_serialize.return_value = {"id": "upsert_id", "name": "John", "email": "john@test.com"}
-            
+
+        with patch.object(MongoSerializationHelper, "serialize_to_dict") as mock_serialize:
+            mock_serialize.return_value = {
+                "id": "upsert_id",
+                "name": "John",
+                "email": "john@test.com",
+            }
+
             mock_result = Mock()
             mock_result.modified_count = 0
             mock_result.upserted_id = "mongo_id"
             self.mock_collection.replace_one.return_value = mock_result
-            
+
             result = await self.repository.upsert_async(entity)
-            
+
             assert result == entity
             mock_serialize.assert_called_once_with(entity)
             self.mock_collection.replace_one.assert_called_once_with(
@@ -324,21 +343,21 @@ class TestEnhancedMongoRepository:
         """Test bulk insert operation"""
         entities = [
             TestEntity(id="1", name="John", email="john@test.com"),
-            TestEntity(id="2", name="Jane", email="jane@test.com")
+            TestEntity(id="2", name="Jane", email="jane@test.com"),
         ]
-        
-        with patch.object(MongoSerializationHelper, 'serialize_to_dict') as mock_serialize:
+
+        with patch.object(MongoSerializationHelper, "serialize_to_dict") as mock_serialize:
             mock_serialize.side_effect = [
                 {"id": "1", "name": "John", "email": "john@test.com"},
-                {"id": "2", "name": "Jane", "email": "jane@test.com"}
+                {"id": "2", "name": "Jane", "email": "jane@test.com"},
             ]
-            
+
             mock_result = Mock()
             mock_result.inserted_ids = ["mongo_id1", "mongo_id2"]
             self.mock_collection.insert_many.return_value = mock_result
-            
+
             result = await self.repository.bulk_insert_async(entities)
-            
+
             assert result == entities
             assert mock_serialize.call_count == 2
             self.mock_collection.insert_many.assert_called_once()
@@ -349,12 +368,12 @@ class TestEnhancedMongoRepository:
         mock_result = Mock()
         mock_result.modified_count = 5
         self.mock_collection.update_many.return_value = mock_result
-        
+
         filter_criteria = {"status": "PENDING"}
         update_data = {"$set": {"status": "ACTIVE"}}
-        
+
         result = await self.repository.update_many_async(filter_criteria, update_data)
-        
+
         assert result == 5
         self.mock_collection.update_many.assert_called_once_with(filter_criteria, update_data)
 
@@ -364,9 +383,9 @@ class TestEnhancedMongoRepository:
         mock_result = Mock()
         mock_result.deleted_count = 10
         self.mock_collection.delete_many.return_value = mock_result
-        
+
         result = await self.repository.delete_many_async({"status": "INACTIVE"})
-        
+
         assert result == 10
         self.mock_collection.delete_many.assert_called_once_with({"status": "INACTIVE"})
 
@@ -375,9 +394,9 @@ class TestEnhancedMongoRepository:
         """Test distinct values operation"""
         distinct_values = ["Engineering", "Sales", "Marketing"]
         self.mock_collection.distinct.return_value = distinct_values
-        
+
         results = await self.repository.distinct_async("department", {"status": "ACTIVE"})
-        
+
         assert results == distinct_values
         self.mock_collection.distinct.assert_called_once_with("department", {"status": "ACTIVE"})
 
@@ -396,7 +415,7 @@ class TestEnhancedMongoRepository:
             email="john@test.com",
             status=StatusEnum.ACTIVE,
             birth_date=date(1990, 5, 15),
-            score=Decimal("95.5")
+            score=Decimal("95.5"),
         )
 
         expected_serialized = {
@@ -405,11 +424,11 @@ class TestEnhancedMongoRepository:
             "email": "john@test.com",
             "status": "ACTIVE",
             "birth_date": date(1990, 5, 15),
-            "score": "95.5"
+            "score": "95.5",
         }
 
-        with patch.object(self.repository, 'contains_async', return_value=False):
-            with patch.object(MongoSerializationHelper, 'serialize_to_dict') as mock_serialize:
+        with patch.object(self.repository, "contains_async", return_value=False):
+            with patch.object(MongoSerializationHelper, "serialize_to_dict") as mock_serialize:
                 mock_serialize.return_value = expected_serialized
                 mock_result = Mock()
                 mock_result.inserted_id = "mongo_id"
@@ -428,15 +447,13 @@ class TestEnhancedMongoRepositoryComplexScenarios:
         self.mock_mongo_client = Mock()
         self.mock_database = Mock()
         self.mock_collection = Mock()
-        
+
         self.mock_mongo_client.__getitem__ = Mock(return_value=self.mock_database)
         self.mock_database.__getitem__ = Mock(return_value=self.mock_collection)
-        
+
         self.options = MongoRepositoryOptions[ComplexEntity, str](database_name="test_db")
         self.repository = EnhancedMongoRepository[ComplexEntity, str](
-            mongo_client=self.mock_mongo_client,
-            options=self.options,
-            entity_type=ComplexEntity
+            mongo_client=self.mock_mongo_client, options=self.options, entity_type=ComplexEntity
         )
 
     @pytest.mark.asyncio
@@ -444,25 +461,29 @@ class TestEnhancedMongoRepositoryComplexScenarios:
         """Test complex aggregation with multiple stages"""
         pipeline = [
             {"$match": {"status": "ACTIVE"}},
-            {"$lookup": {
-                "from": "departments",
-                "localField": "dept_id",
-                "foreignField": "_id",
-                "as": "department"
-            }},
+            {
+                "$lookup": {
+                    "from": "departments",
+                    "localField": "dept_id",
+                    "foreignField": "_id",
+                    "as": "department",
+                }
+            },
             {"$unwind": "$department"},
-            {"$group": {
-                "_id": "$department.name",
-                "employee_count": {"$sum": 1},
-                "avg_salary": {"$avg": "$salary"}
-            }},
+            {
+                "$group": {
+                    "_id": "$department.name",
+                    "employee_count": {"$sum": 1},
+                    "avg_salary": {"$avg": "$salary"},
+                }
+            },
             {"$sort": {"employee_count": -1}},
-            {"$limit": 10}
+            {"$limit": 10},
         ]
 
         expected_results = [
             {"_id": "Engineering", "employee_count": 25, "avg_salary": 95000},
-            {"_id": "Sales", "employee_count": 20, "avg_salary": 75000}
+            {"_id": "Sales", "employee_count": 20, "avg_salary": 75000},
         ]
 
         self.mock_collection.aggregate.return_value = iter(expected_results)

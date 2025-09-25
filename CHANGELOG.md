@@ -9,6 +9,63 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Background Task Scheduling**: Comprehensive background job processing with APScheduler integration
+  - **Scheduled Jobs**: Execute tasks at specific dates and times with `ScheduledBackgroundJob`
+  - **Recurrent Jobs**: Execute tasks at regular intervals with `RecurrentBackgroundJob`
+  - **Task Management**: Complete task lifecycle management with start, stop, and monitoring
+  - **Background Task Bus**: Reactive streams for task coordination and event handling
+  - **Redis Persistence**: Persistent task storage and distributed task coordination
+  - **APScheduler Integration**: Full AsyncIOScheduler support with circuit breaker patterns
+  - **Type Safety**: Strongly typed task descriptors and job configurations
+  - **Framework Integration**: Seamless dependency injection and service provider integration
+
+- **Redis Cache Repository**: High-performance distributed caching with advanced data structures
+  - **Async Operations**: Full async/await support for non-blocking cache operations
+  - **Hash Storage**: Redis hash-based storage for efficient field-level operations
+  - **Distributed Locks**: `set_if_not_exists()` for distributed locking patterns
+  - **Pattern Matching**: `get_all_by_pattern_async()` for bulk key retrieval
+  - **Connection Pooling**: Redis connection pool management with circuit breaker
+  - **Raw Operations**: Direct Redis access for advanced use cases
+  - **Lua Script Support**: Execute Redis Lua scripts for atomic operations
+  - **Type Safety**: Generic type support for compile-time type checking
+
+- **HTTP Service Client**: Production-ready HTTP client with resilience patterns
+  - **Circuit Breaker**: Automatic failure detection and service protection
+  - **Retry Policies**: Exponential backoff, linear delay, and fixed delay strategies
+  - **Request/Response Interceptors**: Middleware pattern for cross-cutting concerns
+  - **Bearer Token Authentication**: Built-in OAuth/JWT token handling
+  - **Request Logging**: Comprehensive HTTP request/response logging
+  - **Timeout Management**: Configurable timeouts with proper error handling
+  - **JSON Convenience Methods**: `get_json()`, `post_json()` for API interactions
+  - **SSL Configuration**: Flexible SSL verification and certificate handling
+
+- **Case Conversion Utilities**: Comprehensive string and object transformation utilities
+  - **String Transformations**: snake_case, camelCase, PascalCase, kebab-case, Title Case
+  - **Dictionary Transformations**: Recursive key conversion for nested data structures
+  - **List Processing**: Handle arrays of objects with nested dictionary conversion
+  - **Performance Optimized**: Efficient regex-based conversions with caching
+  - **API Boundary Integration**: Seamless frontend/backend data format compatibility
+  - **Pydantic Integration**: Optional CamelModel for automatic case conversion
+
+- **Enhanced Model Validation**: Advanced business rule validation with fluent API
+  - **Business Rules**: Fluent API for complex domain validation logic
+  - **Conditional Validation**: Rules that apply only when specific conditions are met
+  - **Property Validators**: Built-in validators for common scenarios (required, length, email, etc.)
+  - **Entity Validators**: Complete object validation with cross-field rules
+  - **Composite Validators**: Combine multiple validators with AND/OR logic
+  - **Custom Validators**: Easy creation of domain-specific validation rules
+  - **Validation Results**: Detailed error reporting with field-level error aggregation
+  - **Exception Handling**: Rich exception hierarchy for different validation scenarios
+
+- **Comprehensive Documentation**: New feature documentation with Mario's Pizzeria examples
+  - **Background Task Scheduling**: Pizza order processing, kitchen automation, delivery coordination
+  - **Redis Cache Repository**: Menu caching, order session management, inventory coordination
+  - **HTTP Service Client**: Payment gateway integration, delivery service APIs, notification services
+  - **Case Conversion Utilities**: API compatibility patterns for frontend/backend integration
+  - **Enhanced Model Validation**: Pizza order validation, customer eligibility, inventory checks
+  - **Architecture Diagrams**: Mermaid diagrams showing framework component interactions
+  - **Testing Patterns**: Comprehensive test examples for all new framework features
+
 - **Development Environment Configuration**: Enhanced development tooling and configuration
   - **VS Code Extensions**: Configured recommended extensions for Python development (`extensions.json`)
   - **Code Quality Tools**: Integrated Markdown linting (`.markdownlint.json`) and Prettier formatting (`.prettierrc`)
@@ -21,6 +78,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - **Test Configuration**: Mario's Pizzeria specific test configuration in `tests/mario_pizzeria_conftest.py`
 
 ### Enhanced
+
+- **Framework Infrastructure**: Major framework capabilities expansion with production-ready components
+  - **Optional Dependencies**: All new features properly handle missing dependencies with graceful fallbacks
+  - **Error Handling**: Comprehensive exception hierarchy with detailed error messages
+  - **Performance Optimization**: Async/await patterns throughout with connection pooling and caching
+  - **Type Safety**: Full generic type support with proper type annotations
+  - **Testing Coverage**: 71+ comprehensive tests covering all success and failure scenarios
+
+- **Documentation Quality**: Professional documentation standards with consistent examples
+  - **Mario's Pizzeria Context**: All new features documented with realistic restaurant scenarios
+  - **Architecture Diagrams**: Mermaid diagrams showing framework integration patterns
+  - **Code Examples**: Complete, runnable examples with proper error handling
+  - **Cross-References**: Consistent linking between related framework features
+  - **Testing Patterns**: Test-driven development examples for all new components
 
 - **Framework Core Improvements**: Enhanced core framework capabilities
   - **Enhanced Web Application Builder**: Improved `src/neuroglia/hosting/enhanced_web_application_builder.py` with additional features

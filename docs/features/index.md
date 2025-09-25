@@ -118,6 +118,69 @@ Reactive programming capabilities using Observable patterns with RxPY integratio
 - Background service integration
 - Real-time data flow management
 
+## 🚀 Enhanced Integration Features
+
+### [⏰ Background Task Scheduling](background-task-scheduling.md)
+
+Enterprise-grade background task scheduling with APScheduler integration, Redis persistence, and comprehensive error handling for complex workflow orchestration.
+
+**Key Capabilities:**
+
+- APScheduler integration with multiple job stores
+- Redis persistence for distributed scheduling
+- Reactive stream processing for real-time events
+- Circuit breaker patterns and retry policies
+- Comprehensive monitoring and error handling
+
+### [⚡ Redis Cache Repository](redis-cache-repository.md)
+
+High-performance Redis-based caching repository with async operations, distributed locks, and intelligent cache management for scalable microservices.
+
+**Key Capabilities:**
+
+- Async Redis operations with connection pooling
+- Distributed locks for cache consistency
+- Hash-based storage with automatic serialization
+- TTL management and cache invalidation strategies
+- Comprehensive error handling and fallback mechanisms
+
+### [🌐 HTTP Service Client](http-service-client.md)
+
+Resilient HTTP client with retry policies, circuit breaker patterns, request/response interceptors, and comprehensive error handling for external API integration.
+
+**Key Capabilities:**
+
+- Circuit breaker patterns for fault tolerance
+- Configurable retry policies with exponential backoff
+- Request/response interceptors for cross-cutting concerns
+- Comprehensive error handling and logging
+- Service-specific configuration management
+
+### [🔤 Case Conversion utilities](case-conversion-utilities.md)
+
+Comprehensive string and object case conversion utilities supporting snake_case, camelCase, PascalCase, kebab-case, and Title Case transformations with Pydantic integration.
+
+**Key Capabilities:**
+
+- Comprehensive case conversion (snake_case ↔ camelCase ↔ PascalCase ↔ kebab-case ↔ Title Case)
+- Recursive dictionary key transformation for nested objects
+- Pydantic CamelModel base class with automatic alias generation
+- API serialization compatibility for different naming conventions
+- Optional dependency management with graceful fallback
+
+### [✅ Enhanced Model Validation](enhanced-model-validation.md)
+
+Advanced validation system with business rules, conditional validation, custom validators, and comprehensive error reporting for complex domain logic validation.
+
+**Key Capabilities:**
+
+- Business rule validation with fluent API
+- Conditional validation rules that apply based on context
+- Property and entity validators with composite logic
+- Comprehensive error aggregation and field-specific reporting
+- Decorator-based method parameter validation
+- Integration with domain-driven design patterns
+
 ## 🧪 Development & Testing Features
 
 All features include comprehensive testing support with:

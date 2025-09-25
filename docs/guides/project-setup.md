@@ -308,7 +308,7 @@ class Order(Entity):
         self.special_instructions = special_instructions
         self.status = OrderStatus.PENDING
         self.total = self._calculate_total()
-        self.created_at = datetime.utcnow()
+        self.created_at = datetime.now(timezone.utc)
         self.updated_at = self.created_at
 
         # Raise domain event
@@ -330,7 +330,7 @@ class Order(Entity):
         if self.status != OrderStatus.PENDING:
             raise ValueError("Only pending orders can be confirmed")
         self.status = OrderStatus.CONFIRMED
-        self.updated_at = datetime.utcnow()
+        self.updated_at = datetime.now(timezone.utc)
 ```
 
 ### 4. First Command Handler

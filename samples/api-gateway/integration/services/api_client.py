@@ -26,7 +26,10 @@ class ApiClient(ABC):
 
     endpoints: dict[str, tuple[str, str]]
 
-    default_headers: dict[str, str] = {"Content-Type": "application/json", "Accept": "application/json"}
+    default_headers: dict[str, str] = {
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+    }
 
     @abstractmethod
     def call_api(self, method: str, endpoint: str) -> Any:
@@ -46,7 +49,9 @@ class UnsecureApiClientOptions(BaseModel):
 
 
 class UnsecureApiClient(ApiClient):
-    def __init__(self, unsecure_api_options: UnsecureApiClientOptions, json_serializer: JsonSerializer):
+    def __init__(
+        self, unsecure_api_options: UnsecureApiClientOptions, json_serializer: JsonSerializer
+    ):
         """
         Initializes the UnsecureApiClient with the given serializer.
 
@@ -79,10 +84,16 @@ class UnsecureApiClient(ApiClient):
         req_id = str(uuid.uuid4())
         url = urljoin(self.base_url, endpoint)
         response = None
-        headers = {"Content-Type": "application/json"} if headers is None else headers.update({"Content-Type": "application/json"})
+        headers = (
+            {"Content-Type": "application/json"}
+            if headers is None
+            else headers.update({"Content-Type": "application/json"})
+        )
 
         try:
-            log.debug(f"Req#{req_id}: Calling {method} {url} {params} type(data):{type(data)} headers: {headers}")
+            log.debug(
+                f"Req#{req_id}: Calling {method} {url} {params} type(data):{type(data)} headers: {headers}"
+            )
             if data is not None:
                 data = self.json_serializer.serialize(data)
                 log.debug(f"Req#{req_id}: Serialized data: {data}")
@@ -114,7 +125,9 @@ class UnsecureApiClient(ApiClient):
 
         finally:
             if response:
-                log.debug(f"Req#{req_id}: HTTP Status Code: {response.status_code}, Response Text: {response.text[:300]}")
+                log.debug(
+                    f"Req#{req_id}: HTTP Status Code: {response.status_code}, Response Text: {response.text[:300]}"
+                )
             else:
                 log.debug(f"Req#{req_id}: NO RESPONSE")
 
@@ -134,7 +147,9 @@ class HttpBasicApiClient(ApiClient):
 
     password: str
 
-    def __init__(self, http_basic_api_options: HttpBasicAuthApiClientOptions, json_serializer: JsonSerializer):
+    def __init__(
+        self, http_basic_api_options: HttpBasicAuthApiClientOptions, json_serializer: JsonSerializer
+    ):
         """
         Initializes the HttpBasicApiClient with the given options and serializer.
 
@@ -168,11 +183,17 @@ class HttpBasicApiClient(ApiClient):
         """
         url = urljoin(self.base_url, endpoint)
         response = None
-        headers = {"Content-Type": "application/json"} if headers is None else headers.update({"Content-Type": "application/json"})
+        headers = (
+            {"Content-Type": "application/json"}
+            if headers is None
+            else headers.update({"Content-Type": "application/json"})
+        )
         auth = (self.username, self.password)
 
         try:
-            log.debug(f"Calling {method} {url} {params} type(data):{type(data)} headers: {headers} auth.username: {auth[0]}")
+            log.debug(
+                f"Calling {method} {url} {params} type(data):{type(data)} headers: {headers} auth.username: {auth[0]}"
+            )
             if data is not None:
                 data = self.json_serializer.serialize(data)
                 log.debug(f"Serialized data: {data}")
@@ -204,11 +225,22 @@ class HttpBasicApiClient(ApiClient):
 
         finally:
             if response:
-                log.debug(f"HTTP Status Code: {response.status_code}, Response Text: {response.text[:300]}")
+                log.debug(
+                    f"HTTP Status Code: {response.status_code}, Response Text: {response.text[:300]}"
+                )
             else:
                 log.debug(f"NO RESPONSE")
 
-    async def call_api_async(self, method: str, endpoint: str, path_params: Optional[dict[str, str]] = None, params: Optional[dict[str, str]] = None, data: Optional[Any] = None, headers: Optional[dict[str, str]] = None, timeout: Optional[float] = None) -> tuple[Any, int]:
+    async def call_api_async(
+        self,
+        method: str,
+        endpoint: str,
+        path_params: Optional[dict[str, str]] = None,
+        params: Optional[dict[str, str]] = None,
+        data: Optional[Any] = None,
+        headers: Optional[dict[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> tuple[Any, int]:
         """
         Internal async method to call the Mozart API.
 
@@ -236,7 +268,9 @@ class HttpBasicApiClient(ApiClient):
         auth = (self.username, self.password)
 
         try:
-            log.debug(f"Calling {method} {url} {params} type(data):{type(data)} headers: {new_headers} auth.username: {auth[0]}")
+            log.debug(
+                f"Calling {method} {url} {params} type(data):{type(data)} headers: {new_headers} auth.username: {auth[0]}"
+            )
             if data is not None:
                 data = self.json_serializer.serialize(data)
                 log.debug(f"Serialized data: {data}")
@@ -244,15 +278,40 @@ class HttpBasicApiClient(ApiClient):
             async with httpx.AsyncClient() as client:
                 match method:
                     case "GET":
-                        response = await client.get(url, params=params, headers=new_headers, auth=auth, timeout=timeout)
+                        response = await client.get(
+                            url, params=params, headers=new_headers, auth=auth, timeout=timeout
+                        )
                     case "POST":
-                        response = await client.post(url, params=params, data=data, headers=new_headers, auth=auth, timeout=timeout)
+                        response = await client.post(
+                            url,
+                            params=params,
+                            data=data,
+                            headers=new_headers,
+                            auth=auth,
+                            timeout=timeout,
+                        )
                     case "PATCH":
-                        response = await client.patch(url, params=params, data=data, headers=new_headers, auth=auth, timeout=timeout)
+                        response = await client.patch(
+                            url,
+                            params=params,
+                            data=data,
+                            headers=new_headers,
+                            auth=auth,
+                            timeout=timeout,
+                        )
                     case "PUT":
-                        response = await client.put(url, params=params, data=data, headers=new_headers, auth=auth, timeout=timeout)
+                        response = await client.put(
+                            url,
+                            params=params,
+                            data=data,
+                            headers=new_headers,
+                            auth=auth,
+                            timeout=timeout,
+                        )
                     case "DELETE":
-                        response = await client.delete(url, params=params, headers=new_headers, auth=auth, timeout=timeout)
+                        response = await client.delete(
+                            url, params=params, headers=new_headers, auth=auth, timeout=timeout
+                        )
                     case _:
                         raise ApiClientException(f"Unsupported HTTP method: {method}")
 
@@ -268,7 +327,9 @@ class HttpBasicApiClient(ApiClient):
 
         finally:
             if response:
-                log.debug(f"HTTP Status Code: {response.status_code}, Response Text: {response.text[:300]}")
+                log.debug(
+                    f"HTTP Status Code: {response.status_code}, Response Text: {response.text[:300]}"
+                )
             else:
                 log.debug(" NO RESPONSE")
 
@@ -312,7 +373,12 @@ class OauthApiClient(ApiClient):
 
     app_settings: ApplicationSettings
 
-    def __init__(self, api_client_options: OauthClientCredentialsAuthApiOptions, json_serializer: JsonSerializer, app_settings: ApplicationSettings):
+    def __init__(
+        self,
+        api_client_options: OauthClientCredentialsAuthApiOptions,
+        json_serializer: JsonSerializer,
+        app_settings: ApplicationSettings,
+    ):
         self.headers = self.default_headers.copy()
         self.json_serializer = json_serializer
         self.base_url = api_client_options.base_url
@@ -326,7 +392,15 @@ class OauthApiClient(ApiClient):
         self.token = None
         self.refresh_token = None
 
-    def call_api(self, method: str, endpoint: str, path_params: Optional[dict[str, str]] = None, params: Optional[dict[str, str]] = None, data: Optional[Any] = None, headers: Optional[dict[str, str]] = None) -> tuple[Any, int]:
+    def call_api(
+        self,
+        method: str,
+        endpoint: str,
+        path_params: Optional[dict[str, str]] = None,
+        params: Optional[dict[str, str]] = None,
+        data: Optional[Any] = None,
+        headers: Optional[dict[str, str]] = None,
+    ) -> tuple[Any, int]:
         """
         Internal method to call the Mozart API.
 
@@ -381,11 +455,21 @@ class OauthApiClient(ApiClient):
 
         finally:
             if response:
-                log.debug(f"HTTP Status Code: {response.status_code}, Response Text: {response.text[:300]}")
+                log.debug(
+                    f"HTTP Status Code: {response.status_code}, Response Text: {response.text[:300]}"
+                )
             else:
                 log.debug(" NO RESPONSE")
 
-    async def call_api_async(self, method: str, endpoint: str, path_params: Optional[dict[str, str]] = None, params: Optional[dict[str, str]] = None, data: Optional[Any] = None, headers: Optional[dict[str, str]] = None) -> tuple[Any, int]:
+    async def call_api_async(
+        self,
+        method: str,
+        endpoint: str,
+        path_params: Optional[dict[str, str]] = None,
+        params: Optional[dict[str, str]] = None,
+        data: Optional[Any] = None,
+        headers: Optional[dict[str, str]] = None,
+    ) -> tuple[Any, int]:
         """
         Internal async method to call the Mozart API.
 
@@ -421,11 +505,17 @@ class OauthApiClient(ApiClient):
                     case "GET":
                         response = await client.get(url, params=params, headers=self.headers)
                     case "POST":
-                        response = await client.post(url, params=params, data=data, headers=self.headers)
+                        response = await client.post(
+                            url, params=params, data=data, headers=self.headers
+                        )
                     case "PATCH":
-                        response = await client.patch(url, params=params, data=data, headers=self.headers)
+                        response = await client.patch(
+                            url, params=params, data=data, headers=self.headers
+                        )
                     case "PUT":
-                        response = await client.put(url, params=params, data=data, headers=self.headers)
+                        response = await client.put(
+                            url, params=params, data=data, headers=self.headers
+                        )
                     case "DELETE":
                         response = await client.delete(url, params=params, headers=self.headers)
                     case _:
@@ -443,7 +533,9 @@ class OauthApiClient(ApiClient):
 
         finally:
             if response:
-                log.debug(f"HTTP Status Code: {response.status_code}, Response Text: {response.text[:300]}")
+                log.debug(
+                    f"HTTP Status Code: {response.status_code}, Response Text: {response.text[:300]}"
+                )
             else:
                 log.debug(" No Response or Error status code.")
 
@@ -480,7 +572,9 @@ class OauthApiClient(ApiClient):
             response.raise_for_status()
             new_token_data = response.json()
             self.token = new_token_data.get("access_token")
-            self.refresh_token = new_token_data.get("refresh_token", self.refresh_token)  # Update refresh token if provided
+            self.refresh_token = new_token_data.get(
+                "refresh_token", self.refresh_token
+            )  # Update refresh token if provided
             log.info(f"Refreshed Token from {self.token_url} for client {self.client_id}")
         except Exception as ex:
             raise OAuthApiClientException(f"while refreshing token to {self.token_url}: {ex}")
@@ -502,7 +596,9 @@ class OauthApiClient(ApiClient):
 
                 if new_token_data:
                     self.token = new_token_data.get("access_token")
-                    self.refresh_token = new_token_data.get("refresh_token", self.refresh_token)  # Update refresh token if provided
+                    self.refresh_token = new_token_data.get(
+                        "refresh_token", self.refresh_token
+                    )  # Update refresh token if provided
                     log.info(f"Refreshed Token from {self.token_url} for client {self.client_id}")
             except Exception as ex:
                 raise OAuthApiClientException(f"while refreshing token to {self.token_url}: {ex}")
@@ -528,8 +624,8 @@ class OauthApiClient(ApiClient):
             return True
         exp = payload["exp"]
         leeway_timedelta = datetime.timedelta(seconds=leeway)
-        expiration_time = datetime.datetime.fromtimestamp(exp).replace(tzinfo=datetime.timezone.utc)
-        current_time = datetime.datetime.now(datetime.timezone.utc) - leeway_timedelta
+        expiration_time = datetime.datetime.fromtimestamp(exp).replace(tzinfo=timezone.utc)
+        current_time = datetime.datetime.now(timezone.utc) - leeway_timedelta
         expired = expiration_time < current_time
         log.debug(f"Token is {'not' if not expired else ''} expired...")
         return expired

@@ -2,8 +2,12 @@
 
 Neuroglia's reactive programming capabilities enable asynchronous event-driven architectures using Observable patterns. Built on RxPY integration, the framework provides powerful tools for handling event streams, background processing, and real-time data flows in Mario's Pizzeria and other applications.
 
-!!! info "🔄 What You'll Learn" - Reactive patterns with AsyncRx and Observable streams - Event stream processing and subscription management  
- - Integration with background services and event sourcing - Real-time data flows in pizzeria order processing
+!!! info What You'll Learn - Reactive patterns with AsyncRx and Observable streams - Event stream processing and subscription management
+
+- Reactive patterns with AsyncRx and Observable streams
+- Event stream processing and subscription management
+- Integration with background services and event sourcing
+- Real-time data flows in pizzeria order processing
 
 ## 🎯 Overview
 

@@ -1,6 +1,6 @@
 """Order entity for Mario's Pizzeria domain"""
 
-from datetime import datetime
+from datetime import datetime, timezone
 from decimal import Decimal
 from typing import List, Optional
 from uuid import uuid4
@@ -20,7 +20,7 @@ class Order(Entity[str]):
         self.customer_id = customer_id
         self.pizzas: List[Pizza] = []
         self.status = OrderStatus.PENDING
-        self.order_time = datetime.utcnow()
+        self.order_time = datetime.now(timezone.utc)
         self.confirmed_time: Optional[datetime] = None
         self.cooking_started_time: Optional[datetime] = None
         self.actual_ready_time: Optional[datetime] = None
@@ -59,7 +59,7 @@ class Order(Entity[str]):
             raise ValueError("Cannot confirm empty order")
 
         self.status = OrderStatus.CONFIRMED
-        self.confirmed_time = datetime.utcnow()
+        self.confirmed_time = datetime.now(timezone.utc)
 
     def start_cooking(self) -> None:
         """Start cooking the order"""
@@ -67,7 +67,7 @@ class Order(Entity[str]):
             raise ValueError("Only confirmed orders can start cooking")
 
         self.status = OrderStatus.COOKING
-        self.cooking_started_time = datetime.utcnow()
+        self.cooking_started_time = datetime.now(timezone.utc)
 
     def mark_ready(self) -> None:
         """Mark order as ready for pickup/delivery"""
@@ -75,7 +75,7 @@ class Order(Entity[str]):
             raise ValueError("Only cooking orders can be marked ready")
 
         self.status = OrderStatus.READY
-        self.actual_ready_time = datetime.utcnow()
+        self.actual_ready_time = datetime.now(timezone.utc)
 
         # Would raise domain event here
         # self.raise_event(OrderReadyEvent(order_id=self.id, ready_at=self.actual_ready_time))
