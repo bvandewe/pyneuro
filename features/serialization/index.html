@@ -1,0 +1,1477 @@
+
+<!DOCTYPE html>
+
+<html class="no-js" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<link href="../event-sourcing/" rel="prev"/>
+<link href="../object-mapping/" rel="next"/>
+<link href="../../assets/images/favicon.png" rel="icon"/>
+<meta content="mkdocs-1.6.1, mkdocs-material-9.6.20" name="generator"/>
+<title>Serialization - Neuroglia Python Framework</title>
+<link href="../../assets/stylesheets/main.e53b48f4.min.css" rel="stylesheet"/>
+<link href="../../assets/stylesheets/palette.06af60db.min.css" rel="stylesheet"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback" rel="stylesheet"/>
+<style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+<script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+</head>
+<body data-md-color-accent="blue" data-md-color-primary="blue" data-md-color-scheme="default" dir="ltr">
+<input autocomplete="off" class="md-toggle" data-md-toggle="drawer" id="__drawer" type="checkbox"/>
+<input autocomplete="off" class="md-toggle" data-md-toggle="search" id="__search" type="checkbox"/>
+<label class="md-overlay" for="__drawer"></label>
+<div data-md-component="skip">
+<a class="md-skip" href="#serialization-deserialization">
+          Skip to content
+        </a>
+</div>
+<div data-md-component="announce">
+</div>
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+<nav aria-label="Header" class="md-header__inner md-grid">
+<a aria-label="Neuroglia Python Framework" class="md-header__button md-logo" data-md-component="logo" href="../.." title="Neuroglia Python Framework">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+</a>
+<label class="md-header__button md-icon" for="__drawer">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+</label>
+<div class="md-header__title" data-md-component="header-title">
+<div class="md-header__ellipsis">
+<div class="md-header__topic">
+<span class="md-ellipsis">
+            Neuroglia Python Framework
+          </span>
+</div>
+<div class="md-header__topic" data-md-component="header-topic">
+<span class="md-ellipsis">
+            
+              Serialization
+            
+          </span>
+</div>
+</div>
+</div>
+<form class="md-header__option" data-md-component="palette">
+<input aria-label="Switch to dark mode" class="md-option" data-md-color-accent="blue" data-md-color-media="" data-md-color-primary="blue" data-md-color-scheme="default" id="__palette_0" name="__palette" type="radio"/>
+<label class="md-header__button md-icon" for="__palette_1" hidden="" title="Switch to dark mode">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+</label>
+<input aria-label="Switch to light mode" class="md-option" data-md-color-accent="blue" data-md-color-media="" data-md-color-primary="blue" data-md-color-scheme="slate" id="__palette_1" name="__palette" type="radio"/>
+<label class="md-header__button md-icon" for="__palette_0" hidden="" title="Switch to light mode">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+</label>
+</form>
+<script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+<label class="md-header__button md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+</label>
+<div class="md-search" data-md-component="search" role="dialog">
+<label class="md-search__overlay" for="__search"></label>
+<div class="md-search__inner" role="search">
+<form class="md-search__form" name="search">
+<input aria-label="Search" autocapitalize="off" autocomplete="off" autocorrect="off" class="md-search__input" data-md-component="search-query" name="query" placeholder="Search" required="" spellcheck="false" type="text"/>
+<label class="md-search__icon md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+</label>
+<nav aria-label="Search" class="md-search__options">
+<a aria-label="Share" class="md-search__icon md-icon" data-clipboard="" data-clipboard-text="" data-md-component="search-share" href="javascript:void(0)" tabindex="-1" title="Share">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"></path></svg>
+</a>
+<button aria-label="Clear" class="md-search__icon md-icon" tabindex="-1" title="Clear" type="reset">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+</button>
+</nav>
+</form>
+<div class="md-search__output">
+<div class="md-search__scrollwrap" data-md-scrollfix="" tabindex="0">
+<div class="md-search-result" data-md-component="search-result">
+<div class="md-search-result__meta">
+            Initializing search
+          </div>
+<ol class="md-search-result__list" role="presentation"></ol>
+</div>
+</div>
+</div>
+</div>
+</div>
+</nav>
+<nav aria-label="Tabs" class="md-tabs" data-md-component="tabs">
+<div class="md-grid">
+<ul class="md-tabs__list">
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../..">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../getting-started/">
+          
+  
+  
+  Getting Started
+
+        </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../patterns/">
+          
+  
+  
+  Patterns
+
+        </a>
+</li>
+<li class="md-tabs__item md-tabs__item--active">
+<a class="md-tabs__link" href="../">
+          
+  
+  
+  Features
+
+        </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../guides/">
+          
+  
+  
+  Guides
+
+        </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../samples/">
+          
+  
+  
+  Sample Applications
+
+        </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../architecture/">
+        
+  
+  
+    
+  
+  Architecture
+
+      </a>
+</li>
+</ul>
+</div>
+</nav>
+</header>
+<div class="md-container" data-md-component="container">
+<main class="md-main" data-md-component="main">
+<div class="md-main__inner md-grid">
+<div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="Navigation" class="md-nav md-nav--primary md-nav--lifted" data-md-level="0">
+<label class="md-nav__title" for="__drawer">
+<a aria-label="Neuroglia Python Framework" class="md-nav__button md-logo" data-md-component="logo" href="../.." title="Neuroglia Python Framework">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+</a>
+    Neuroglia Python Framework
+  </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../..">
+<span class="md-ellipsis">
+    Home
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_2" type="checkbox"/>
+<label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+<span class="md-ellipsis">
+    Getting Started
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_2_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_2">
+<span class="md-nav__icon md-icon"></span>
+            Getting Started
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../getting-started/">
+<span class="md-ellipsis">
+    Overview
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../guides/3-min-bootstrap/">
+<span class="md-ellipsis">
+    3-Minute Bootstrap
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../guides/local-development/">
+<span class="md-ellipsis">
+    Local Development Setup
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../guides/mario-pizzeria-tutorial/">
+<span class="md-ellipsis">
+    Mario's Pizzeria Tutorial
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_3" type="checkbox"/>
+<label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+<span class="md-ellipsis">
+    Patterns
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_3_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_3">
+<span class="md-nav__icon md-icon"></span>
+            Patterns
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../patterns/">
+<span class="md-ellipsis">
+    Overview
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../patterns/clean-architecture/">
+<span class="md-ellipsis">
+    Clean Architecture
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../patterns/cqrs/">
+<span class="md-ellipsis">
+    CQRS
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../patterns/event-driven/">
+<span class="md-ellipsis">
+    Event-Driven
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../patterns/repository/">
+<span class="md-ellipsis">
+    Repository
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../patterns/resource-oriented-architecture/">
+<span class="md-ellipsis">
+    Resource-Oriented Architecture
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../patterns/watcher-reconciliation-patterns/">
+<span class="md-ellipsis">
+    Watcher &amp; Reconciliation Patterns
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../patterns/watcher-reconciliation-execution/">
+<span class="md-ellipsis">
+    Watcher &amp; Reconciliation Execution
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+<input checked="" class="md-nav__toggle md-toggle" id="__nav_4" type="checkbox"/>
+<label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+<span class="md-ellipsis">
+    Features
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="true" aria-labelledby="__nav_4_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_4">
+<span class="md-nav__icon md-icon"></span>
+            Features
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../">
+<span class="md-ellipsis">
+    Overview
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../dependency-injection/">
+<span class="md-ellipsis">
+    Dependency Injection
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../cqrs-mediation/">
+<span class="md-ellipsis">
+    CQRS &amp; Mediation
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../mvc-controllers/">
+<span class="md-ellipsis">
+    MVC Controllers
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../data-access/">
+<span class="md-ellipsis">
+    Data Access
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../event-sourcing/">
+<span class="md-ellipsis">
+    Event Sourcing
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--active">
+<input class="md-nav__toggle md-toggle" id="__toc" type="checkbox"/>
+<label class="md-nav__link md-nav__link--active" for="__toc">
+<span class="md-ellipsis">
+    Serialization
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<a class="md-nav__link md-nav__link--active" href="./">
+<span class="md-ellipsis">
+    Serialization
+    
+  </span>
+</a>
+<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#overview">
+<span class="md-ellipsis">
+      🎯 Overview
+    </span>
+</a>
+<nav aria-label="🎯 Overview" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#key-benefits">
+<span class="md-ellipsis">
+      Key Benefits
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#architecture-overview">
+<span class="md-ellipsis">
+      🏗️ Architecture Overview
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#basic-usage-in-marios-pizzeria">
+<span class="md-ellipsis">
+      🍕 Basic Usage in Mario's Pizzeria
+    </span>
+</a>
+<nav aria-label="🍕 Basic Usage in Mario's Pizzeria" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#pizza-order-serialization">
+<span class="md-ellipsis">
+      Pizza Order Serialization
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#custom-json-encoder">
+<span class="md-ellipsis">
+      🎨 Custom JSON Encoder
+    </span>
+</a>
+<nav aria-label="🎨 Custom JSON Encoder" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#encoder-features">
+<span class="md-ellipsis">
+      Encoder Features
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#advanced-serialization-patterns">
+<span class="md-ellipsis">
+      🔧 Advanced Serialization Patterns
+    </span>
+</a>
+<nav aria-label="🔧 Advanced Serialization Patterns" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#1-nested-object-serialization">
+<span class="md-ellipsis">
+      1. Nested Object Serialization
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#2-generic-type-handling">
+<span class="md-ellipsis">
+      2. Generic Type Handling
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#3-integration-with-dependency-injection">
+<span class="md-ellipsis">
+      3. Integration with Dependency Injection
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#testing-serialization">
+<span class="md-ellipsis">
+      🧪 Testing Serialization
+    </span>
+</a>
+<nav aria-label="🧪 Testing Serialization" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#unit-testing-patterns">
+<span class="md-ellipsis">
+      Unit Testing Patterns
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#real-world-use-cases">
+<span class="md-ellipsis">
+      🎯 Real-World Use Cases
+    </span>
+</a>
+<nav aria-label="🎯 Real-World Use Cases" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#1-api-response-serialization">
+<span class="md-ellipsis">
+      1. API Response Serialization
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#2-event-payload-serialization">
+<span class="md-ellipsis">
+      2. Event Payload Serialization
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#3-configuration-and-settings">
+<span class="md-ellipsis">
+      3. Configuration and Settings
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#error-handling-and-validation">
+<span class="md-ellipsis">
+      🔍 Error Handling and Validation
+    </span>
+</a>
+<nav aria-label="🔍 Error Handling and Validation" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#robust-serialization-patterns">
+<span class="md-ellipsis">
+      Robust Serialization Patterns
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#performance-considerations">
+<span class="md-ellipsis">
+      🚀 Performance Considerations
+    </span>
+</a>
+<nav aria-label="🚀 Performance Considerations" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#optimization-tips">
+<span class="md-ellipsis">
+      Optimization Tips
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#integration-points">
+<span class="md-ellipsis">
+      🔗 Integration Points
+    </span>
+</a>
+<nav aria-label="🔗 Integration Points" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#framework-integration">
+<span class="md-ellipsis">
+      Framework Integration
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#next-steps">
+<span class="md-ellipsis">
+      📚 Next Steps
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../object-mapping/">
+<span class="md-ellipsis">
+    Object Mapping
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../reactive-programming/">
+<span class="md-ellipsis">
+    Reactive Programming
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../mermaid-diagrams/">
+<span class="md-ellipsis">
+    Mermaid Diagrams
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_5" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+<span class="md-ellipsis">
+    Guides
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_5_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_5">
+<span class="md-nav__icon md-icon"></span>
+            Guides
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../guides/">
+<span class="md-ellipsis">
+    Overview
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../guides/project-setup/">
+<span class="md-ellipsis">
+    Project Setup
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../guides/testing-setup/">
+<span class="md-ellipsis">
+    Testing Setup
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_6" type="checkbox"/>
+<label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+<span class="md-ellipsis">
+    Sample Applications
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_6_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_6">
+<span class="md-nav__icon md-icon"></span>
+            Sample Applications
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../samples/">
+<span class="md-ellipsis">
+    Overview
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../samples/openbank/">
+<span class="md-ellipsis">
+    OpenBank
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../samples/api_gateway/">
+<span class="md-ellipsis">
+    API Gateway
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../samples/desktop_controller/">
+<span class="md-ellipsis">
+    Desktop Controller
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../samples/lab-resource-manager/">
+<span class="md-ellipsis">
+    Lab Resource Manager
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../architecture/">
+<span class="md-ellipsis">
+    Architecture
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#overview">
+<span class="md-ellipsis">
+      🎯 Overview
+    </span>
+</a>
+<nav aria-label="🎯 Overview" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#key-benefits">
+<span class="md-ellipsis">
+      Key Benefits
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#architecture-overview">
+<span class="md-ellipsis">
+      🏗️ Architecture Overview
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#basic-usage-in-marios-pizzeria">
+<span class="md-ellipsis">
+      🍕 Basic Usage in Mario's Pizzeria
+    </span>
+</a>
+<nav aria-label="🍕 Basic Usage in Mario's Pizzeria" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#pizza-order-serialization">
+<span class="md-ellipsis">
+      Pizza Order Serialization
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#custom-json-encoder">
+<span class="md-ellipsis">
+      🎨 Custom JSON Encoder
+    </span>
+</a>
+<nav aria-label="🎨 Custom JSON Encoder" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#encoder-features">
+<span class="md-ellipsis">
+      Encoder Features
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#advanced-serialization-patterns">
+<span class="md-ellipsis">
+      🔧 Advanced Serialization Patterns
+    </span>
+</a>
+<nav aria-label="🔧 Advanced Serialization Patterns" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#1-nested-object-serialization">
+<span class="md-ellipsis">
+      1. Nested Object Serialization
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#2-generic-type-handling">
+<span class="md-ellipsis">
+      2. Generic Type Handling
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#3-integration-with-dependency-injection">
+<span class="md-ellipsis">
+      3. Integration with Dependency Injection
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#testing-serialization">
+<span class="md-ellipsis">
+      🧪 Testing Serialization
+    </span>
+</a>
+<nav aria-label="🧪 Testing Serialization" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#unit-testing-patterns">
+<span class="md-ellipsis">
+      Unit Testing Patterns
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#real-world-use-cases">
+<span class="md-ellipsis">
+      🎯 Real-World Use Cases
+    </span>
+</a>
+<nav aria-label="🎯 Real-World Use Cases" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#1-api-response-serialization">
+<span class="md-ellipsis">
+      1. API Response Serialization
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#2-event-payload-serialization">
+<span class="md-ellipsis">
+      2. Event Payload Serialization
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#3-configuration-and-settings">
+<span class="md-ellipsis">
+      3. Configuration and Settings
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#error-handling-and-validation">
+<span class="md-ellipsis">
+      🔍 Error Handling and Validation
+    </span>
+</a>
+<nav aria-label="🔍 Error Handling and Validation" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#robust-serialization-patterns">
+<span class="md-ellipsis">
+      Robust Serialization Patterns
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#performance-considerations">
+<span class="md-ellipsis">
+      🚀 Performance Considerations
+    </span>
+</a>
+<nav aria-label="🚀 Performance Considerations" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#optimization-tips">
+<span class="md-ellipsis">
+      Optimization Tips
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#integration-points">
+<span class="md-ellipsis">
+      🔗 Integration Points
+    </span>
+</a>
+<nav aria-label="🔗 Integration Points" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#framework-integration">
+<span class="md-ellipsis">
+      Framework Integration
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#next-steps">
+<span class="md-ellipsis">
+      📚 Next Steps
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div class="md-content" data-md-component="content">
+<article class="md-content__inner md-typeset">
+<h1 id="serialization-deserialization">🔄 Serialization &amp; Deserialization<a class="headerlink" href="#serialization-deserialization" title="Permanent link">¶</a></h1>
+<p>Neuroglia provides powerful and flexible serialization capabilities for converting objects to and from various formats like JSON. The framework includes built-in serializers with automatic type handling, custom converters, and seamless integration with the dependency injection system.</p>
+<p>!!! info "🎯 What You'll Learn" - JSON serialization with automatic type handling - Custom serializers and converters - Integration with Mario's Pizzeria domain objects - Best practices for data transformation</p>
+<h2 id="overview">🎯 Overview<a class="headerlink" href="#overview" title="Permanent link">¶</a></h2>
+<p>Neuroglia's serialization system offers:</p>
+<ul>
+<li><strong>🔄 Automatic Type Handling</strong> - Seamless conversion of complex objects, enums, and collections</li>
+<li><strong>📅 Built-in Type Support</strong> - Native handling of dates, decimals, UUIDs, and custom types</li>
+<li><strong>🎨 Custom Converters</strong> - Extensible system for specialized serialization logic</li>
+<li><strong>💉 DI Integration</strong> - Service-based serializers with configurable lifetimes</li>
+<li><strong>🧪 Test-Friendly</strong> - Easy mocking and testing of serialization logic</li>
+</ul>
+<h3 id="key-benefits">Key Benefits<a class="headerlink" href="#key-benefits" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>Type Safety</strong>: Strongly-typed deserialization with validation</li>
+<li><strong>Performance</strong>: Efficient JSON processing with minimal overhead</li>
+<li><strong>Flexibility</strong>: Support for custom serialization logic and converters</li>
+<li><strong>Consistency</strong>: Unified serialization patterns across the application</li>
+</ul>
+<h2 id="architecture-overview">🏗️ Architecture Overview<a class="headerlink" href="#architecture-overview" title="Permanent link">¶</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    A["🎯 Client Code&lt;br/&gt;Business Objects"]
+    B["🔄 JsonSerializer&lt;br/&gt;Main Serialization Service"]
+    C["📋 JsonEncoder&lt;br/&gt;Custom Type Handling"]
+    D["🎨 Type Converters&lt;br/&gt;Specialized Logic"]
+
+    subgraph "📦 Serialization Pipeline"
+        E["Object → JSON"]
+        F["JSON → Object"]
+        G["Type Detection"]
+        H["Recursive Processing"]
+    end
+
+    subgraph "🎯 Formats"
+        I["JSON String"]
+        J["Byte Array"]
+        K["Stream Data"]
+    end
+
+    A --&gt; B
+    B --&gt; C
+    B --&gt; D
+    B --&gt; E
+    B --&gt; F
+    E --&gt; G
+    F --&gt; H
+
+    E --&gt; I
+    E --&gt; J
+    F --&gt; I
+    F --&gt; J
+
+    style B fill:#e1f5fe,stroke:#0277bd,stroke-width:3px
+    style C fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    style D fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
+
+    classDef pipeline fill:#fff3e0,stroke:#f57c00,stroke-width:2px
+    class E,F,G,H pipeline</code></pre>
+<h2 id="basic-usage-in-marios-pizzeria">🍕 Basic Usage in Mario's Pizzeria<a class="headerlink" href="#basic-usage-in-marios-pizzeria" title="Permanent link">¶</a></h2>
+<h3 id="pizza-order-serialization">Pizza Order Serialization<a class="headerlink" href="#pizza-order-serialization" title="Permanent link">¶</a></h3>
+<p>Let's see how Mario's Pizzeria uses serialization for order processing:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.serialization.json</span><span class="w"> </span><span class="kn">import</span> <span class="n">JsonSerializer</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.dependency_injection</span><span class="w"> </span><span class="kn">import</span> <span class="n">ServiceCollection</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">decimal</span><span class="w"> </span><span class="kn">import</span> <span class="n">Decimal</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">enum</span><span class="w"> </span><span class="kn">import</span> <span class="n">Enum</span>
+
+<span class="c1"># Domain objects from Mario's Pizzeria</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">OrderStatus</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Enum</span><span class="p">):</span>
+    <span class="n">PENDING</span> <span class="o">=</span> <span class="s2">"pending"</span>
+    <span class="n">COOKING</span> <span class="o">=</span> <span class="s2">"cooking"</span>
+    <span class="n">READY</span> <span class="o">=</span> <span class="s2">"ready"</span>
+    <span class="n">DELIVERED</span> <span class="o">=</span> <span class="s2">"delivered"</span>
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Pizza</span><span class="p">:</span>
+    <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">size</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">base_price</span><span class="p">:</span> <span class="n">Decimal</span>
+    <span class="n">toppings</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Order</span><span class="p">:</span>
+    <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">customer_name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">customer_phone</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">pizzas</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Pizza</span><span class="p">]</span>
+    <span class="n">status</span><span class="p">:</span> <span class="n">OrderStatus</span>
+    <span class="n">order_time</span><span class="p">:</span> <span class="n">datetime</span>
+    <span class="n">total_amount</span><span class="p">:</span> <span class="n">Decimal</span>
+
+<span class="c1"># Using JsonSerializer</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">OrderService</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">serializer</span><span class="p">:</span> <span class="n">JsonSerializer</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">serializer</span> <span class="o">=</span> <span class="n">serializer</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">serialize_order</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">order</span><span class="p">:</span> <span class="n">Order</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Convert order to JSON for storage or API responses"""</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">serializer</span><span class="o">.</span><span class="n">serialize_to_text</span><span class="p">(</span><span class="n">order</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">deserialize_order</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">json_data</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Order</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Convert JSON back to Order object"""</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">serializer</span><span class="o">.</span><span class="n">deserialize_from_text</span><span class="p">(</span><span class="n">json_data</span><span class="p">,</span> <span class="n">Order</span><span class="p">)</span>
+
+<span class="c1"># Example usage</span>
+<span class="n">serializer</span> <span class="o">=</span> <span class="n">JsonSerializer</span><span class="p">()</span>
+<span class="n">order</span> <span class="o">=</span> <span class="n">Order</span><span class="p">(</span>
+    <span class="nb">id</span><span class="o">=</span><span class="s2">"order-123"</span><span class="p">,</span>
+    <span class="n">customer_name</span><span class="o">=</span><span class="s2">"Mario Luigi"</span><span class="p">,</span>
+    <span class="n">customer_phone</span><span class="o">=</span><span class="s2">"+1-555-PIZZA"</span><span class="p">,</span>
+    <span class="n">pizzas</span><span class="o">=</span><span class="p">[</span>
+        <span class="n">Pizza</span><span class="p">(</span><span class="s2">"pizza-1"</span><span class="p">,</span> <span class="s2">"Margherita"</span><span class="p">,</span> <span class="s2">"large"</span><span class="p">,</span> <span class="n">Decimal</span><span class="p">(</span><span class="s2">"15.99"</span><span class="p">),</span> <span class="p">[</span><span class="s2">"basil"</span><span class="p">,</span> <span class="s2">"mozzarella"</span><span class="p">])</span>
+    <span class="p">],</span>
+    <span class="n">status</span><span class="o">=</span><span class="n">OrderStatus</span><span class="o">.</span><span class="n">PENDING</span><span class="p">,</span>
+    <span class="n">order_time</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(),</span>
+    <span class="n">total_amount</span><span class="o">=</span><span class="n">Decimal</span><span class="p">(</span><span class="s2">"17.49"</span><span class="p">)</span>
+<span class="p">)</span>
+
+<span class="c1"># Serialize to JSON</span>
+<span class="n">json_order</span> <span class="o">=</span> <span class="n">serializer</span><span class="o">.</span><span class="n">serialize_to_text</span><span class="p">(</span><span class="n">order</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">json_order</span><span class="p">)</span>
+<span class="c1"># Output: {"id": "order-123", "customer_name": "Mario Luigi", ...}</span>
+
+<span class="c1"># Deserialize back to object</span>
+<span class="n">restored_order</span> <span class="o">=</span> <span class="n">serializer</span><span class="o">.</span><span class="n">deserialize_from_text</span><span class="p">(</span><span class="n">json_order</span><span class="p">,</span> <span class="n">Order</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">restored_order</span><span class="o">.</span><span class="n">customer_name</span> <span class="o">==</span> <span class="s2">"Mario Luigi"</span>
+<span class="k">assert</span> <span class="n">restored_order</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="n">OrderStatus</span><span class="o">.</span><span class="n">PENDING</span>
+</code></pre></div>
+<h2 id="custom-json-encoder">🎨 Custom JSON Encoder<a class="headerlink" href="#custom-json-encoder" title="Permanent link">¶</a></h2>
+<p>Neuroglia includes a custom <code>JsonEncoder</code> that handles special types automatically:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.serialization.json</span><span class="w"> </span><span class="kn">import</span> <span class="n">JsonEncoder</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">decimal</span><span class="w"> </span><span class="kn">import</span> <span class="n">Decimal</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">enum</span><span class="w"> </span><span class="kn">import</span> <span class="n">Enum</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">PizzaSize</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Enum</span><span class="p">):</span>
+    <span class="n">SMALL</span> <span class="o">=</span> <span class="s2">"small"</span>
+    <span class="n">MEDIUM</span> <span class="o">=</span> <span class="s2">"medium"</span>
+    <span class="n">LARGE</span> <span class="o">=</span> <span class="s2">"large"</span>
+
+<span class="c1"># The JsonEncoder automatically handles these types:</span>
+<span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"order_time"</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(),</span>       <span class="c1"># → ISO format string</span>
+    <span class="s2">"total_amount"</span><span class="p">:</span> <span class="n">Decimal</span><span class="p">(</span><span class="s2">"15.99"</span><span class="p">),</span>   <span class="c1"># → string representation</span>
+    <span class="s2">"size"</span><span class="p">:</span> <span class="n">PizzaSize</span><span class="o">.</span><span class="n">LARGE</span><span class="p">,</span>           <span class="c1"># → enum name</span>
+    <span class="s2">"custom_object"</span><span class="p">:</span> <span class="n">Pizza</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>         <span class="c1"># → object's __dict__</span>
+<span class="p">}</span>
+
+<span class="n">json_string</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="bp">cls</span><span class="o">=</span><span class="n">JsonEncoder</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="encoder-features">Encoder Features<a class="headerlink" href="#encoder-features" title="Permanent link">¶</a></h3>
+<p>The <code>JsonEncoder</code> provides:</p>
+<ul>
+<li><strong>DateTime Conversion</strong>: Automatic ISO format serialization</li>
+<li><strong>Enum Handling</strong>: Uses enum names for consistent serialization</li>
+<li><strong>Decimal Support</strong>: Preserves precision for monetary values</li>
+<li><strong>Object Filtering</strong>: Excludes private attributes and None values</li>
+<li><strong>Fallback Handling</strong>: Safe string conversion for unknown types</li>
+</ul>
+<h2 id="advanced-serialization-patterns">🔧 Advanced Serialization Patterns<a class="headerlink" href="#advanced-serialization-patterns" title="Permanent link">¶</a></h2>
+<h3 id="1-nested-object-serialization">1. Nested Object Serialization<a class="headerlink" href="#1-nested-object-serialization" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Customer</span><span class="p">:</span>
+    <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">email</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">addresses</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span>
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Address</span><span class="p">:</span>
+    <span class="n">street</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">city</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">postal_code</span><span class="p">:</span> <span class="nb">str</span>
+
+<span class="c1"># Automatic recursive serialization</span>
+<span class="n">customer</span> <span class="o">=</span> <span class="n">Customer</span><span class="p">(</span>
+    <span class="nb">id</span><span class="o">=</span><span class="s2">"cust-123"</span><span class="p">,</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">"Luigi Mario"</span><span class="p">,</span>
+    <span class="n">email</span><span class="o">=</span><span class="s2">"luigi@pizzeria.com"</span><span class="p">,</span>
+    <span class="n">addresses</span><span class="o">=</span><span class="p">[</span>
+        <span class="n">Address</span><span class="p">(</span><span class="s2">"123 Main St"</span><span class="p">,</span> <span class="s2">"Pizza City"</span><span class="p">,</span> <span class="s2">"12345"</span><span class="p">),</span>
+        <span class="n">Address</span><span class="p">(</span><span class="s2">"456 Oak Ave"</span><span class="p">,</span> <span class="s2">"Pepperoni Town"</span><span class="p">,</span> <span class="s2">"67890"</span><span class="p">)</span>
+    <span class="p">]</span>
+<span class="p">)</span>
+
+<span class="n">serializer</span> <span class="o">=</span> <span class="n">JsonSerializer</span><span class="p">()</span>
+<span class="n">json_data</span> <span class="o">=</span> <span class="n">serializer</span><span class="o">.</span><span class="n">serialize_to_text</span><span class="p">(</span><span class="n">customer</span><span class="p">)</span>
+<span class="n">restored_customer</span> <span class="o">=</span> <span class="n">serializer</span><span class="o">.</span><span class="n">deserialize_from_text</span><span class="p">(</span><span class="n">json_data</span><span class="p">,</span> <span class="n">Customer</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="2-generic-type-handling">2. Generic Type Handling<a class="headerlink" href="#2-generic-type-handling" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Optional</span>
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">MenuSection</span><span class="p">:</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">pizzas</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Pizza</span><span class="p">]</span>
+    <span class="n">metadata</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span>
+    <span class="n">featured_pizza</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Pizza</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+
+<span class="c1"># Serializer handles generic types automatically</span>
+<span class="n">menu_section</span> <span class="o">=</span> <span class="n">MenuSection</span><span class="p">(</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">"Classic Pizzas"</span><span class="p">,</span>
+    <span class="n">pizzas</span><span class="o">=</span><span class="p">[</span><span class="n">margherita_pizza</span><span class="p">,</span> <span class="n">pepperoni_pizza</span><span class="p">],</span>
+    <span class="n">metadata</span><span class="o">=</span><span class="p">{</span><span class="s2">"category"</span><span class="p">:</span> <span class="s2">"traditional"</span><span class="p">,</span> <span class="s2">"popularity"</span><span class="p">:</span> <span class="s2">"high"</span><span class="p">},</span>
+    <span class="n">featured_pizza</span><span class="o">=</span><span class="n">margherita_pizza</span>
+<span class="p">)</span>
+
+<span class="c1"># Serialization preserves type information</span>
+<span class="n">json_data</span> <span class="o">=</span> <span class="n">serializer</span><span class="o">.</span><span class="n">serialize_to_text</span><span class="p">(</span><span class="n">menu_section</span><span class="p">)</span>
+<span class="n">restored_section</span> <span class="o">=</span> <span class="n">serializer</span><span class="o">.</span><span class="n">deserialize_from_text</span><span class="p">(</span><span class="n">json_data</span><span class="p">,</span> <span class="n">MenuSection</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="3-integration-with-dependency-injection">3. Integration with Dependency Injection<a class="headerlink" href="#3-integration-with-dependency-injection" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.hosting</span><span class="w"> </span><span class="kn">import</span> <span class="n">WebApplicationBuilder</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">configure_serialization</span><span class="p">(</span><span class="n">builder</span><span class="p">:</span> <span class="n">WebApplicationBuilder</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Configure serialization services"""</span>
+
+    <span class="c1"># Register JsonSerializer as singleton</span>
+    <span class="n">builder</span><span class="o">.</span><span class="n">services</span><span class="o">.</span><span class="n">add_singleton</span><span class="p">(</span><span class="n">JsonSerializer</span><span class="p">)</span>
+
+    <span class="c1"># Use in controllers</span>
+    <span class="k">class</span><span class="w"> </span><span class="nc">OrdersController</span><span class="p">(</span><span class="n">ControllerBase</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                     <span class="n">service_provider</span><span class="p">:</span> <span class="n">ServiceProviderBase</span><span class="p">,</span>
+                     <span class="n">mapper</span><span class="p">:</span> <span class="n">Mapper</span><span class="p">,</span>
+                     <span class="n">mediator</span><span class="p">:</span> <span class="n">Mediator</span><span class="p">,</span>
+                     <span class="n">serializer</span><span class="p">:</span> <span class="n">JsonSerializer</span><span class="p">):</span>  <span class="c1"># Injected automatically</span>
+            <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">service_provider</span><span class="p">,</span> <span class="n">mapper</span><span class="p">,</span> <span class="n">mediator</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">serializer</span> <span class="o">=</span> <span class="n">serializer</span>
+
+        <span class="nd">@post</span><span class="p">(</span><span class="s2">"/export"</span><span class="p">)</span>
+        <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">export_orders</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">            </span><span class="sd">"""Export all orders as JSON"""</span>
+            <span class="n">orders</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_all_orders</span><span class="p">()</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">serializer</span><span class="o">.</span><span class="n">serialize_to_text</span><span class="p">(</span><span class="n">orders</span><span class="p">)</span>
+</code></pre></div>
+<h2 id="testing-serialization">🧪 Testing Serialization<a class="headerlink" href="#testing-serialization" title="Permanent link">¶</a></h2>
+<h3 id="unit-testing-patterns">Unit Testing Patterns<a class="headerlink" href="#unit-testing-patterns" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.serialization.json</span><span class="w"> </span><span class="kn">import</span> <span class="n">JsonSerializer</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">TestPizzaOrderSerialization</span><span class="p">:</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">setup_method</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">serializer</span> <span class="o">=</span> <span class="n">JsonSerializer</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_order_serialization_round_trip</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Test complete serialization/deserialization cycle"""</span>
+        <span class="c1"># Arrange</span>
+        <span class="n">original_order</span> <span class="o">=</span> <span class="n">create_test_order</span><span class="p">()</span>
+
+        <span class="c1"># Act</span>
+        <span class="n">json_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">serializer</span><span class="o">.</span><span class="n">serialize_to_text</span><span class="p">(</span><span class="n">original_order</span><span class="p">)</span>
+        <span class="n">restored_order</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">serializer</span><span class="o">.</span><span class="n">deserialize_from_text</span><span class="p">(</span><span class="n">json_data</span><span class="p">,</span> <span class="n">Order</span><span class="p">)</span>
+
+        <span class="c1"># Assert</span>
+        <span class="k">assert</span> <span class="n">restored_order</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">original_order</span><span class="o">.</span><span class="n">id</span>
+        <span class="k">assert</span> <span class="n">restored_order</span><span class="o">.</span><span class="n">customer_name</span> <span class="o">==</span> <span class="n">original_order</span><span class="o">.</span><span class="n">customer_name</span>
+        <span class="k">assert</span> <span class="n">restored_order</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="n">original_order</span><span class="o">.</span><span class="n">status</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">restored_order</span><span class="o">.</span><span class="n">pizzas</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">original_order</span><span class="o">.</span><span class="n">pizzas</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_handles_none_values_gracefully</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Test serialization with None values"""</span>
+        <span class="c1"># Arrange</span>
+        <span class="n">order</span> <span class="o">=</span> <span class="n">Order</span><span class="p">(</span>
+            <span class="nb">id</span><span class="o">=</span><span class="s2">"test-order"</span><span class="p">,</span>
+            <span class="n">customer_name</span><span class="o">=</span><span class="s2">"Test Customer"</span><span class="p">,</span>
+            <span class="n">customer_phone</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># None value</span>
+            <span class="n">pizzas</span><span class="o">=</span><span class="p">[],</span>
+            <span class="n">status</span><span class="o">=</span><span class="n">OrderStatus</span><span class="o">.</span><span class="n">PENDING</span><span class="p">,</span>
+            <span class="n">order_time</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(),</span>
+            <span class="n">total_amount</span><span class="o">=</span><span class="n">Decimal</span><span class="p">(</span><span class="s2">"0.00"</span><span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Act &amp; Assert</span>
+        <span class="n">json_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">serializer</span><span class="o">.</span><span class="n">serialize_to_text</span><span class="p">(</span><span class="n">order</span><span class="p">)</span>
+        <span class="n">restored_order</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">serializer</span><span class="o">.</span><span class="n">deserialize_from_text</span><span class="p">(</span><span class="n">json_data</span><span class="p">,</span> <span class="n">Order</span><span class="p">)</span>
+
+        <span class="k">assert</span> <span class="n">restored_order</span><span class="o">.</span><span class="n">customer_phone</span> <span class="ow">is</span> <span class="kc">None</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_decimal_precision_preserved</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Test that decimal precision is maintained"""</span>
+        <span class="c1"># Arrange</span>
+        <span class="n">pizza</span> <span class="o">=</span> <span class="n">Pizza</span><span class="p">(</span>
+            <span class="nb">id</span><span class="o">=</span><span class="s2">"test-pizza"</span><span class="p">,</span>
+            <span class="n">name</span><span class="o">=</span><span class="s2">"Test Pizza"</span><span class="p">,</span>
+            <span class="n">size</span><span class="o">=</span><span class="s2">"medium"</span><span class="p">,</span>
+            <span class="n">base_price</span><span class="o">=</span><span class="n">Decimal</span><span class="p">(</span><span class="s2">"12.99"</span><span class="p">),</span>
+            <span class="n">toppings</span><span class="o">=</span><span class="p">[]</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Act</span>
+        <span class="n">json_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">serializer</span><span class="o">.</span><span class="n">serialize_to_text</span><span class="p">(</span><span class="n">pizza</span><span class="p">)</span>
+        <span class="n">restored_pizza</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">serializer</span><span class="o">.</span><span class="n">deserialize_from_text</span><span class="p">(</span><span class="n">json_data</span><span class="p">,</span> <span class="n">Pizza</span><span class="p">)</span>
+
+        <span class="c1"># Assert</span>
+        <span class="k">assert</span> <span class="n">restored_pizza</span><span class="o">.</span><span class="n">base_price</span> <span class="o">==</span> <span class="n">Decimal</span><span class="p">(</span><span class="s2">"12.99"</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">restored_pizza</span><span class="o">.</span><span class="n">base_price</span><span class="p">,</span> <span class="n">Decimal</span><span class="p">)</span>
+</code></pre></div>
+<h2 id="real-world-use-cases">🎯 Real-World Use Cases<a class="headerlink" href="#real-world-use-cases" title="Permanent link">¶</a></h2>
+<h3 id="1-api-response-serialization">1. API Response Serialization<a class="headerlink" href="#1-api-response-serialization" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">fastapi</span><span class="w"> </span><span class="kn">import</span> <span class="n">FastAPI</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">fastapi.responses</span><span class="w"> </span><span class="kn">import</span> <span class="n">JSONResponse</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">MenuController</span><span class="p">(</span><span class="n">ControllerBase</span><span class="p">):</span>
+
+    <span class="nd">@get</span><span class="p">(</span><span class="s2">"/menu"</span><span class="p">)</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_menu</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JSONResponse</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Get pizzeria menu as JSON"""</span>
+        <span class="n">menu_items</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_menu_items</span><span class="p">()</span>
+
+        <span class="c1"># Serialize complex menu structure</span>
+        <span class="n">json_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">serializer</span><span class="o">.</span><span class="n">serialize_to_text</span><span class="p">(</span><span class="n">menu_items</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">JSONResponse</span><span class="p">(</span>
+            <span class="n">content</span><span class="o">=</span><span class="n">json_data</span><span class="p">,</span>
+            <span class="n">media_type</span><span class="o">=</span><span class="s2">"application/json"</span>
+        <span class="p">)</span>
+</code></pre></div>
+<h3 id="2-event-payload-serialization">2. Event Payload Serialization<a class="headerlink" href="#2-event-payload-serialization" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.eventing</span><span class="w"> </span><span class="kn">import</span> <span class="n">DomainEvent</span>
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">OrderPlacedEvent</span><span class="p">(</span><span class="n">DomainEvent</span><span class="p">):</span>
+    <span class="n">order_id</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">customer_email</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">order_details</span><span class="p">:</span> <span class="n">Order</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">OrderEventHandler</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">serializer</span><span class="p">:</span> <span class="n">JsonSerializer</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">serializer</span> <span class="o">=</span> <span class="n">serializer</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">handle_order_placed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">OrderPlacedEvent</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Handle order placed event with serialization"""</span>
+
+        <span class="c1"># Serialize event for external systems</span>
+        <span class="n">event_json</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">serializer</span><span class="o">.</span><span class="n">serialize_to_text</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+
+        <span class="c1"># Send to message queue, webhook, etc.</span>
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">send_to_external_system</span><span class="p">(</span><span class="n">event_json</span><span class="p">)</span>
+
+        <span class="c1"># Log structured event data</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Order placed"</span><span class="p">,</span> <span class="n">extra</span><span class="o">=</span><span class="p">{</span>
+            <span class="s2">"event_data"</span><span class="p">:</span> <span class="n">event_json</span><span class="p">,</span>
+            <span class="s2">"order_id"</span><span class="p">:</span> <span class="n">event</span><span class="o">.</span><span class="n">order_id</span>
+        <span class="p">})</span>
+</code></pre></div>
+<h3 id="3-configuration-and-settings">3. Configuration and Settings<a class="headerlink" href="#3-configuration-and-settings" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">PizzeriaConfig</span><span class="p">:</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">address</span><span class="p">:</span> <span class="n">Address</span>
+    <span class="n">operating_hours</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span>
+    <span class="n">menu_sections</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">MenuSection</span><span class="p">]</span>
+    <span class="n">pricing_rules</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Decimal</span><span class="p">]</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">ConfigurationService</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">serializer</span><span class="p">:</span> <span class="n">JsonSerializer</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">serializer</span> <span class="o">=</span> <span class="n">serializer</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">load_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PizzeriaConfig</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Load pizzeria configuration from JSON file"""</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">config_path</span><span class="p">,</span> <span class="s1">'r'</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">json_data</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">serializer</span><span class="o">.</span><span class="n">deserialize_from_text</span><span class="p">(</span><span class="n">json_data</span><span class="p">,</span> <span class="n">PizzeriaConfig</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">save_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">PizzeriaConfig</span><span class="p">,</span> <span class="n">config_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Save pizzeria configuration to JSON file"""</span>
+        <span class="n">json_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">serializer</span><span class="o">.</span><span class="n">serialize_to_text</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">config_path</span><span class="p">,</span> <span class="s1">'w'</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">json_data</span><span class="p">)</span>
+</code></pre></div>
+<h2 id="error-handling-and-validation">🔍 Error Handling and Validation<a class="headerlink" href="#error-handling-and-validation" title="Permanent link">¶</a></h2>
+<h3 id="robust-serialization-patterns">Robust Serialization Patterns<a class="headerlink" href="#robust-serialization-patterns" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Union</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">SafeSerializationService</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">serializer</span><span class="p">:</span> <span class="n">JsonSerializer</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">serializer</span> <span class="o">=</span> <span class="n">serializer</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">safe_serialize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">"""Safely serialize object with error handling"""</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">serializer</span><span class="o">.</span><span class="n">serialize_to_text</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Serialization failed for </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">safe_deserialize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">json_data</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">target_type</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">T</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">T</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">"""Safely deserialize with validation"""</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">json_data</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">json_data</span><span class="o">.</span><span class="n">strip</span><span class="p">():</span>
+                <span class="k">return</span> <span class="kc">None</span>
+
+            <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">serializer</span><span class="o">.</span><span class="n">deserialize_from_text</span><span class="p">(</span><span class="n">json_data</span><span class="p">,</span> <span class="n">target_type</span><span class="p">)</span>
+
+            <span class="c1"># Additional validation</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="s1">'validate'</span><span class="p">):</span>
+                <span class="n">result</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span>
+
+            <span class="k">return</span> <span class="n">result</span>
+
+        <span class="k">except</span> <span class="n">json</span><span class="o">.</span><span class="n">JSONDecodeError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Invalid JSON format: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Deserialization failed: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">None</span>
+</code></pre></div>
+<h2 id="performance-considerations">🚀 Performance Considerations<a class="headerlink" href="#performance-considerations" title="Permanent link">¶</a></h2>
+<h3 id="optimization-tips">Optimization Tips<a class="headerlink" href="#optimization-tips" title="Permanent link">¶</a></h3>
+<ol>
+<li><strong>Reuse Serializer Instances</strong>: Register as singleton in DI container</li>
+<li><strong>Minimize Object Creation</strong>: Use object pooling for high-frequency serialization</li>
+<li><strong>Stream Processing</strong>: Use byte arrays for large data sets</li>
+<li><strong>Selective Serialization</strong>: Exclude unnecessary fields to reduce payload size</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="c1"># Performance-optimized serialization</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">OptimizedOrderService</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">serializer</span><span class="p">:</span> <span class="n">JsonSerializer</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">serializer</span> <span class="o">=</span> <span class="n">serializer</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_byte_buffer</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">(</span><span class="mi">8192</span><span class="p">)</span>  <span class="c1"># Reusable buffer</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">serialize_order_summary</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">order</span><span class="p">:</span> <span class="n">Order</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Serialize only essential order information"""</span>
+        <span class="n">summary</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">"id"</span><span class="p">:</span> <span class="n">order</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+            <span class="s2">"customer_name"</span><span class="p">:</span> <span class="n">order</span><span class="o">.</span><span class="n">customer_name</span><span class="p">,</span>
+            <span class="s2">"status"</span><span class="p">:</span> <span class="n">order</span><span class="o">.</span><span class="n">status</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+            <span class="s2">"total_amount"</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">order</span><span class="o">.</span><span class="n">total_amount</span><span class="p">),</span>
+            <span class="s2">"pizza_count"</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">order</span><span class="o">.</span><span class="n">pizzas</span><span class="p">)</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">serializer</span><span class="o">.</span><span class="n">serialize_to_text</span><span class="p">(</span><span class="n">summary</span><span class="p">)</span>
+</code></pre></div>
+<h2 id="integration-points">🔗 Integration Points<a class="headerlink" href="#integration-points" title="Permanent link">¶</a></h2>
+<h3 id="framework-integration">Framework Integration<a class="headerlink" href="#framework-integration" title="Permanent link">¶</a></h3>
+<p>Serialization integrates seamlessly with:</p>
+<ul>
+<li><strong><a href="../object-mapping/">Object Mapping</a></strong> - Automatic DTO conversion before serialization</li>
+<li><strong><a href="../mvc-controllers/">MVC Controllers</a></strong> - Automatic request/response serialization</li>
+<li><strong><a href="../event-sourcing/">Event Sourcing</a></strong> - Event payload serialization for persistence</li>
+<li><strong><a href="../data-access/">Data Access</a></strong> - Document serialization for MongoDB storage</li>
+</ul>
+<h2 id="next-steps">📚 Next Steps<a class="headerlink" href="#next-steps" title="Permanent link">¶</a></h2>
+<p>Explore related Neuroglia features:</p>
+<ul>
+<li><strong><a href="../object-mapping/">Object Mapping</a></strong> - Transform objects before serialization</li>
+<li><strong><a href="../mvc-controllers/">MVC Controllers</a></strong> - Automatic API serialization</li>
+<li><strong><a href="../event-sourcing/">Event Sourcing</a></strong> - Event payload handling</li>
+<li><strong><a href="../../guides/mario-pizzeria-tutorial/">Getting Started Guide</a></strong> - Complete pizzeria implementation</li>
+</ul>
+<hr/>
+<div class="admonition tip">
+<p class="admonition-title">🎯 Best Practice</p>
+</div>
+<p>Always register <code>JsonSerializer</code> as a singleton in your DI container for optimal performance and consistent behavior across your application.</p>
+</article>
+</div>
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+</div>
+<button class="md-top md-icon" data-md-component="top" hidden="" type="button">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"></path></svg>
+  Back to top
+</button>
+</main>
+<footer class="md-footer">
+<div class="md-footer-meta md-typeset">
+<div class="md-footer-meta__inner md-grid">
+<div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" rel="noopener" target="_blank">
+      Material for MkDocs
+    </a>
+</div>
+<div class="md-social">
+<a class="md-social__link" href="https://github.com/bvandewe/pyneuro" rel="noopener" target="_blank" title="github.com">
+<svg viewbox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><!--! Font Awesome Free 7.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"></path></svg>
+</a>
+</div>
+</div>
+</div>
+</footer>
+</div>
+<div class="md-dialog" data-md-component="dialog">
+<div class="md-dialog__inner md-typeset"></div>
+</div>
+<script id="__config" type="application/json">{"base": "../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.expand", "navigation.top", "search.highlight", "search.share"], "search": "../../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+<script src="../../assets/javascripts/bundle.f55a23d4.min.js"></script>
+</body>
+</html>

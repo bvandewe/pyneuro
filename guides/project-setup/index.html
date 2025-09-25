@@ -1,0 +1,1523 @@
+
+<!DOCTYPE html>
+
+<html class="no-js" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<link href="../" rel="prev"/>
+<link href="../testing-setup/" rel="next"/>
+<link href="../../assets/images/favicon.png" rel="icon"/>
+<meta content="mkdocs-1.6.1, mkdocs-material-9.6.20" name="generator"/>
+<title>Project Setup - Neuroglia Python Framework</title>
+<link href="../../assets/stylesheets/main.e53b48f4.min.css" rel="stylesheet"/>
+<link href="../../assets/stylesheets/palette.06af60db.min.css" rel="stylesheet"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback" rel="stylesheet"/>
+<style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+<script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+</head>
+<body data-md-color-accent="blue" data-md-color-primary="blue" data-md-color-scheme="default" dir="ltr">
+<input autocomplete="off" class="md-toggle" data-md-toggle="drawer" id="__drawer" type="checkbox"/>
+<input autocomplete="off" class="md-toggle" data-md-toggle="search" id="__search" type="checkbox"/>
+<label class="md-overlay" for="__drawer"></label>
+<div data-md-component="skip">
+<a class="md-skip" href="#project-setup-guide">
+          Skip to content
+        </a>
+</div>
+<div data-md-component="announce">
+</div>
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+<nav aria-label="Header" class="md-header__inner md-grid">
+<a aria-label="Neuroglia Python Framework" class="md-header__button md-logo" data-md-component="logo" href="../.." title="Neuroglia Python Framework">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+</a>
+<label class="md-header__button md-icon" for="__drawer">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+</label>
+<div class="md-header__title" data-md-component="header-title">
+<div class="md-header__ellipsis">
+<div class="md-header__topic">
+<span class="md-ellipsis">
+            Neuroglia Python Framework
+          </span>
+</div>
+<div class="md-header__topic" data-md-component="header-topic">
+<span class="md-ellipsis">
+            
+              Project Setup
+            
+          </span>
+</div>
+</div>
+</div>
+<form class="md-header__option" data-md-component="palette">
+<input aria-label="Switch to dark mode" class="md-option" data-md-color-accent="blue" data-md-color-media="" data-md-color-primary="blue" data-md-color-scheme="default" id="__palette_0" name="__palette" type="radio"/>
+<label class="md-header__button md-icon" for="__palette_1" hidden="" title="Switch to dark mode">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+</label>
+<input aria-label="Switch to light mode" class="md-option" data-md-color-accent="blue" data-md-color-media="" data-md-color-primary="blue" data-md-color-scheme="slate" id="__palette_1" name="__palette" type="radio"/>
+<label class="md-header__button md-icon" for="__palette_0" hidden="" title="Switch to light mode">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+</label>
+</form>
+<script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+<label class="md-header__button md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+</label>
+<div class="md-search" data-md-component="search" role="dialog">
+<label class="md-search__overlay" for="__search"></label>
+<div class="md-search__inner" role="search">
+<form class="md-search__form" name="search">
+<input aria-label="Search" autocapitalize="off" autocomplete="off" autocorrect="off" class="md-search__input" data-md-component="search-query" name="query" placeholder="Search" required="" spellcheck="false" type="text"/>
+<label class="md-search__icon md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+</label>
+<nav aria-label="Search" class="md-search__options">
+<a aria-label="Share" class="md-search__icon md-icon" data-clipboard="" data-clipboard-text="" data-md-component="search-share" href="javascript:void(0)" tabindex="-1" title="Share">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"></path></svg>
+</a>
+<button aria-label="Clear" class="md-search__icon md-icon" tabindex="-1" title="Clear" type="reset">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+</button>
+</nav>
+</form>
+<div class="md-search__output">
+<div class="md-search__scrollwrap" data-md-scrollfix="" tabindex="0">
+<div class="md-search-result" data-md-component="search-result">
+<div class="md-search-result__meta">
+            Initializing search
+          </div>
+<ol class="md-search-result__list" role="presentation"></ol>
+</div>
+</div>
+</div>
+</div>
+</div>
+</nav>
+<nav aria-label="Tabs" class="md-tabs" data-md-component="tabs">
+<div class="md-grid">
+<ul class="md-tabs__list">
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../..">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../getting-started/">
+          
+  
+  
+  Getting Started
+
+        </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../patterns/">
+          
+  
+  
+  Patterns
+
+        </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../features/">
+          
+  
+  
+  Features
+
+        </a>
+</li>
+<li class="md-tabs__item md-tabs__item--active">
+<a class="md-tabs__link" href="../">
+          
+  
+  
+  Guides
+
+        </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../samples/">
+          
+  
+  
+  Sample Applications
+
+        </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../architecture/">
+        
+  
+  
+    
+  
+  Architecture
+
+      </a>
+</li>
+</ul>
+</div>
+</nav>
+</header>
+<div class="md-container" data-md-component="container">
+<main class="md-main" data-md-component="main">
+<div class="md-main__inner md-grid">
+<div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="Navigation" class="md-nav md-nav--primary md-nav--lifted" data-md-level="0">
+<label class="md-nav__title" for="__drawer">
+<a aria-label="Neuroglia Python Framework" class="md-nav__button md-logo" data-md-component="logo" href="../.." title="Neuroglia Python Framework">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+</a>
+    Neuroglia Python Framework
+  </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../..">
+<span class="md-ellipsis">
+    Home
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_2" type="checkbox"/>
+<label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+<span class="md-ellipsis">
+    Getting Started
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_2_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_2">
+<span class="md-nav__icon md-icon"></span>
+            Getting Started
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../getting-started/">
+<span class="md-ellipsis">
+    Overview
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../3-min-bootstrap/">
+<span class="md-ellipsis">
+    3-Minute Bootstrap
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../local-development/">
+<span class="md-ellipsis">
+    Local Development Setup
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../mario-pizzeria-tutorial/">
+<span class="md-ellipsis">
+    Mario's Pizzeria Tutorial
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_3" type="checkbox"/>
+<label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+<span class="md-ellipsis">
+    Patterns
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_3_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_3">
+<span class="md-nav__icon md-icon"></span>
+            Patterns
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../patterns/">
+<span class="md-ellipsis">
+    Overview
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../patterns/clean-architecture/">
+<span class="md-ellipsis">
+    Clean Architecture
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../patterns/cqrs/">
+<span class="md-ellipsis">
+    CQRS
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../patterns/event-driven/">
+<span class="md-ellipsis">
+    Event-Driven
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../patterns/repository/">
+<span class="md-ellipsis">
+    Repository
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../patterns/resource-oriented-architecture/">
+<span class="md-ellipsis">
+    Resource-Oriented Architecture
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../patterns/watcher-reconciliation-patterns/">
+<span class="md-ellipsis">
+    Watcher &amp; Reconciliation Patterns
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../patterns/watcher-reconciliation-execution/">
+<span class="md-ellipsis">
+    Watcher &amp; Reconciliation Execution
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_4" type="checkbox"/>
+<label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+<span class="md-ellipsis">
+    Features
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_4_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_4">
+<span class="md-nav__icon md-icon"></span>
+            Features
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/">
+<span class="md-ellipsis">
+    Overview
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/dependency-injection/">
+<span class="md-ellipsis">
+    Dependency Injection
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/cqrs-mediation/">
+<span class="md-ellipsis">
+    CQRS &amp; Mediation
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/mvc-controllers/">
+<span class="md-ellipsis">
+    MVC Controllers
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/data-access/">
+<span class="md-ellipsis">
+    Data Access
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/event-sourcing/">
+<span class="md-ellipsis">
+    Event Sourcing
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/serialization/">
+<span class="md-ellipsis">
+    Serialization
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/object-mapping/">
+<span class="md-ellipsis">
+    Object Mapping
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/reactive-programming/">
+<span class="md-ellipsis">
+    Reactive Programming
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/mermaid-diagrams/">
+<span class="md-ellipsis">
+    Mermaid Diagrams
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+<input checked="" class="md-nav__toggle md-toggle" id="__nav_5" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+<span class="md-ellipsis">
+    Guides
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="true" aria-labelledby="__nav_5_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_5">
+<span class="md-nav__icon md-icon"></span>
+            Guides
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../">
+<span class="md-ellipsis">
+    Overview
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--active">
+<input class="md-nav__toggle md-toggle" id="__toc" type="checkbox"/>
+<label class="md-nav__link md-nav__link--active" for="__toc">
+<span class="md-ellipsis">
+    Project Setup
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<a class="md-nav__link md-nav__link--active" href="./">
+<span class="md-ellipsis">
+    Project Setup
+    
+  </span>
+</a>
+<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#overview">
+<span class="md-ellipsis">
+      🎯 Overview
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#prerequisites">
+<span class="md-ellipsis">
+      📋 Prerequisites
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#creating-a-new-project">
+<span class="md-ellipsis">
+      🏗️ Creating a New Project
+    </span>
+</a>
+<nav aria-label="🏗️ Creating a New Project" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#option-1-using-pyneuroctl-recommended">
+<span class="md-ellipsis">
+      Option 1: Using PyNeuroctl (Recommended)
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#option-2-manual-setup">
+<span class="md-ellipsis">
+      Option 2: Manual Setup
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#project-structure">
+<span class="md-ellipsis">
+      📁 Project Structure
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#configuration-setup">
+<span class="md-ellipsis">
+      ⚙️ Configuration Setup
+    </span>
+</a>
+<nav aria-label="⚙️ Configuration Setup" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#1-environment-configuration">
+<span class="md-ellipsis">
+      1. Environment Configuration
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#2-project-configuration">
+<span class="md-ellipsis">
+      2. Project Configuration
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#initial-implementation">
+<span class="md-ellipsis">
+      🍕 Initial Implementation
+    </span>
+</a>
+<nav aria-label="🍕 Initial Implementation" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#1-application-entry-point">
+<span class="md-ellipsis">
+      1. Application Entry Point
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#2-application-startup">
+<span class="md-ellipsis">
+      2. Application Startup
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#3-first-domain-entity">
+<span class="md-ellipsis">
+      3. First Domain Entity
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#4-first-command-handler">
+<span class="md-ellipsis">
+      4. First Command Handler
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#5-first-controller">
+<span class="md-ellipsis">
+      5. First Controller
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#testing-setup">
+<span class="md-ellipsis">
+      🧪 Testing Setup
+    </span>
+</a>
+<nav aria-label="🧪 Testing Setup" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#1-test-configuration">
+<span class="md-ellipsis">
+      1. Test Configuration
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#2-first-unit-test">
+<span class="md-ellipsis">
+      2. First Unit Test
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#running-the-application">
+<span class="md-ellipsis">
+      🚀 Running the Application
+    </span>
+</a>
+<nav aria-label="🚀 Running the Application" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#development-mode">
+<span class="md-ellipsis">
+      Development Mode
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#testing">
+<span class="md-ellipsis">
+      Testing
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#code-quality">
+<span class="md-ellipsis">
+      Code Quality
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#next-steps">
+<span class="md-ellipsis">
+      🔧 Next Steps
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#troubleshooting">
+<span class="md-ellipsis">
+      🆘 Troubleshooting
+    </span>
+</a>
+<nav aria-label="🆘 Troubleshooting" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#common-issues">
+<span class="md-ellipsis">
+      Common Issues
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#related-guides">
+<span class="md-ellipsis">
+      🔗 Related Guides
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../testing-setup/">
+<span class="md-ellipsis">
+    Testing Setup
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_6" type="checkbox"/>
+<label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+<span class="md-ellipsis">
+    Sample Applications
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_6_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_6">
+<span class="md-nav__icon md-icon"></span>
+            Sample Applications
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../samples/">
+<span class="md-ellipsis">
+    Overview
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../samples/openbank/">
+<span class="md-ellipsis">
+    OpenBank
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../samples/api_gateway/">
+<span class="md-ellipsis">
+    API Gateway
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../samples/desktop_controller/">
+<span class="md-ellipsis">
+    Desktop Controller
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../samples/lab-resource-manager/">
+<span class="md-ellipsis">
+    Lab Resource Manager
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../architecture/">
+<span class="md-ellipsis">
+    Architecture
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#overview">
+<span class="md-ellipsis">
+      🎯 Overview
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#prerequisites">
+<span class="md-ellipsis">
+      📋 Prerequisites
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#creating-a-new-project">
+<span class="md-ellipsis">
+      🏗️ Creating a New Project
+    </span>
+</a>
+<nav aria-label="🏗️ Creating a New Project" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#option-1-using-pyneuroctl-recommended">
+<span class="md-ellipsis">
+      Option 1: Using PyNeuroctl (Recommended)
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#option-2-manual-setup">
+<span class="md-ellipsis">
+      Option 2: Manual Setup
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#project-structure">
+<span class="md-ellipsis">
+      📁 Project Structure
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#configuration-setup">
+<span class="md-ellipsis">
+      ⚙️ Configuration Setup
+    </span>
+</a>
+<nav aria-label="⚙️ Configuration Setup" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#1-environment-configuration">
+<span class="md-ellipsis">
+      1. Environment Configuration
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#2-project-configuration">
+<span class="md-ellipsis">
+      2. Project Configuration
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#initial-implementation">
+<span class="md-ellipsis">
+      🍕 Initial Implementation
+    </span>
+</a>
+<nav aria-label="🍕 Initial Implementation" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#1-application-entry-point">
+<span class="md-ellipsis">
+      1. Application Entry Point
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#2-application-startup">
+<span class="md-ellipsis">
+      2. Application Startup
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#3-first-domain-entity">
+<span class="md-ellipsis">
+      3. First Domain Entity
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#4-first-command-handler">
+<span class="md-ellipsis">
+      4. First Command Handler
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#5-first-controller">
+<span class="md-ellipsis">
+      5. First Controller
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#testing-setup">
+<span class="md-ellipsis">
+      🧪 Testing Setup
+    </span>
+</a>
+<nav aria-label="🧪 Testing Setup" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#1-test-configuration">
+<span class="md-ellipsis">
+      1. Test Configuration
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#2-first-unit-test">
+<span class="md-ellipsis">
+      2. First Unit Test
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#running-the-application">
+<span class="md-ellipsis">
+      🚀 Running the Application
+    </span>
+</a>
+<nav aria-label="🚀 Running the Application" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#development-mode">
+<span class="md-ellipsis">
+      Development Mode
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#testing">
+<span class="md-ellipsis">
+      Testing
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#code-quality">
+<span class="md-ellipsis">
+      Code Quality
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#next-steps">
+<span class="md-ellipsis">
+      🔧 Next Steps
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#troubleshooting">
+<span class="md-ellipsis">
+      🆘 Troubleshooting
+    </span>
+</a>
+<nav aria-label="🆘 Troubleshooting" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#common-issues">
+<span class="md-ellipsis">
+      Common Issues
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#related-guides">
+<span class="md-ellipsis">
+      🔗 Related Guides
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div class="md-content" data-md-component="content">
+<article class="md-content__inner md-typeset">
+<h1 id="project-setup-guide">🚀 Project Setup Guide<a class="headerlink" href="#project-setup-guide" title="Permanent link">¶</a></h1>
+<div class="admonition warning">
+<p class="admonition-title">🚧 Under Construction</p>
+</div>
+<p>This guide is currently being developed with comprehensive setup procedures and troubleshooting tips. More detailed examples and best practices are being added.</p>
+<p>Complete guide for setting up new Neuroglia Python Framework projects, from initial creation to deployment-ready applications.</p>
+<h2 id="overview">🎯 Overview<a class="headerlink" href="#overview" title="Permanent link">¶</a></h2>
+<p>This guide walks you through creating a new Neuroglia project using the Mario's Pizzeria example, covering project structure, dependency management, and initial configuration.</p>
+<h2 id="prerequisites">📋 Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">¶</a></h2>
+<p>Before starting, ensure you have:</p>
+<ul>
+<li><strong>Python 3.9+</strong> installed</li>
+<li><strong>Poetry</strong> for dependency management</li>
+<li><strong>Git</strong> for version control</li>
+<li><strong>VS Code</strong> or preferred IDE</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="c1"># Verify Python version</span>
+python<span class="w"> </span>--version<span class="w">  </span><span class="c1"># Should be 3.9 or higher</span>
+
+<span class="c1"># Install Poetry if not already installed</span>
+curl<span class="w"> </span>-sSL<span class="w"> </span>https://install.python-poetry.org<span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-
+
+<span class="c1"># Verify Poetry installation</span>
+poetry<span class="w"> </span>--version
+</code></pre></div>
+<h2 id="creating-a-new-project">🏗️ Creating a New Project<a class="headerlink" href="#creating-a-new-project" title="Permanent link">¶</a></h2>
+<h3 id="option-1-using-pyneuroctl-recommended">Option 1: Using PyNeuroctl (Recommended)<a class="headerlink" href="#option-1-using-pyneuroctl-recommended" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Install the CLI tool</span>
+pip<span class="w"> </span>install<span class="w"> </span>neuroglia-cli
+
+<span class="c1"># Create new project from pizzeria template</span>
+pyneuroctl<span class="w"> </span>new<span class="w"> </span>my-pizzeria<span class="w"> </span>--template<span class="w"> </span>pizzeria
+<span class="nb">cd</span><span class="w"> </span>my-pizzeria
+
+<span class="c1"># Install dependencies</span>
+poetry<span class="w"> </span>install
+
+<span class="c1"># Run the application</span>
+poetry<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </span>main.py
+</code></pre></div>
+<h3 id="option-2-manual-setup">Option 2: Manual Setup<a class="headerlink" href="#option-2-manual-setup" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Create project directory</span>
+mkdir<span class="w"> </span>my-pizzeria<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span>my-pizzeria
+
+<span class="c1"># Initialize Poetry project</span>
+poetry<span class="w"> </span>init<span class="w"> </span>--name<span class="w"> </span>my-pizzeria<span class="w"> </span>--description<span class="w"> </span><span class="s2">"Pizza ordering system"</span>
+
+<span class="c1"># Add Neuroglia framework</span>
+poetry<span class="w"> </span>add<span class="w"> </span>neuroglia
+
+<span class="c1"># Add development dependencies</span>
+poetry<span class="w"> </span>add<span class="w"> </span>--group<span class="w"> </span>dev<span class="w"> </span>pytest<span class="w"> </span>pytest-asyncio<span class="w"> </span>httpx
+
+<span class="c1"># Create project structure</span>
+mkdir<span class="w"> </span>-p<span class="w"> </span>src/<span class="o">{</span>api,application,domain,integration<span class="o">}</span>
+mkdir<span class="w"> </span>-p<span class="w"> </span>tests/<span class="o">{</span>unit,integration<span class="o">}</span>
+</code></pre></div>
+<h2 id="project-structure">📁 Project Structure<a class="headerlink" href="#project-structure" title="Permanent link">¶</a></h2>
+<p>Create the clean architecture structure:</p>
+<div class="highlight"><pre><span></span><code>my-pizzeria/
+├── pyproject.toml              # Project configuration
+├── main.py                     # Application entry point
+├── README.md                   # Project documentation
+├── .env                        # Environment variables
+├── .gitignore                  # Git ignore patterns
+├── src/
+│   ├── __init__.py
+│   ├── api/                    # 🌐 API Layer
+│   │   ├── __init__.py
+│   │   ├── controllers/        # REST endpoints
+│   │   └── dtos/              # Request/response models
+│   ├── application/            # 💼 Application Layer
+│   │   ├── __init__.py
+│   │   ├── commands/          # Write operations
+│   │   ├── queries/           # Read operations
+│   │   ├── handlers/          # Business logic
+│   │   └── services/          # Application services
+│   ├── domain/                # 🏛️ Domain Layer
+│   │   ├── __init__.py
+│   │   ├── entities/          # Business entities
+│   │   ├── events/            # Domain events
+│   │   └── repositories/      # Repository interfaces
+│   └── integration/           # 🔌 Integration Layer
+│       ├── __init__.py
+│       ├── repositories/      # Data access implementations
+│       └── services/          # External service integrations
+├── tests/
+│   ├── __init__.py
+│   ├── conftest.py           # Test configuration
+│   ├── unit/                 # Unit tests
+│   └── integration/          # Integration tests
+└── docs/                     # Project documentation
+</code></pre></div>
+<h2 id="configuration-setup">⚙️ Configuration Setup<a class="headerlink" href="#configuration-setup" title="Permanent link">¶</a></h2>
+<h3 id="1-environment-configuration">1. Environment Configuration<a class="headerlink" href="#1-environment-configuration" title="Permanent link">¶</a></h3>
+<p>Create <code>.env</code> file:</p>
+<div class="highlight"><pre><span></span><code># Application Settings
+APP_NAME=My Pizzeria
+APP_VERSION=1.0.0
+DEBUG=true
+
+# Server Configuration
+HOST=0.0.0.0
+PORT=8000
+
+# Database Configuration
+DATABASE_TYPE=mongodb
+MONGODB_CONNECTION_STRING=mongodb://localhost:27017/pizzeria
+
+# External Services
+SMS_SERVICE_API_KEY=your_sms_api_key
+EMAIL_SERVICE_API_KEY=your_email_api_key
+PAYMENT_GATEWAY_API_KEY=your_payment_api_key
+
+# Logging
+LOG_LEVEL=INFO
+LOG_FORMAT=json
+</code></pre></div>
+<h3 id="2-project-configuration">2. Project Configuration<a class="headerlink" href="#2-project-configuration" title="Permanent link">¶</a></h3>
+<p>Update <code>pyproject.toml</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="k">[tool.poetry]</span>
+<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"my-pizzeria"</span>
+<span class="n">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"1.0.0"</span>
+<span class="n">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Pizza ordering system built with Neuroglia"</span>
+<span class="n">authors</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">"Your Name &lt;your.email@example.com&gt;"</span><span class="p">]</span>
+<span class="n">packages</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[{</span><span class="n">include</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s2">"src"</span><span class="p">}]</span>
+
+<span class="k">[tool.poetry.dependencies]</span>
+<span class="n">python</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"^3.9"</span>
+<span class="n">neuroglia</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"^0.3.0"</span>
+<span class="n">fastapi</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"^0.104.0"</span>
+<span class="n">uvicorn</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"^0.24.0"</span>
+<span class="n">motor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"^3.3.0"</span><span class="w">  </span><span class="c1"># MongoDB async driver</span>
+<span class="n">pydantic-settings</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"^2.0.0"</span>
+
+<span class="k">[tool.poetry.group.dev.dependencies]</span>
+<span class="n">pytest</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"^7.4.0"</span>
+<span class="n">pytest-asyncio</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"^0.21.0"</span>
+<span class="n">httpx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"^0.25.0"</span>
+<span class="n">pytest-cov</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"^4.1.0"</span>
+<span class="n">black</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"^23.0.0"</span>
+<span class="n">isort</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"^5.12.0"</span>
+<span class="n">mypy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"^1.6.0"</span>
+
+<span class="k">[tool.pytest.ini_options]</span>
+<span class="n">asyncio_mode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"auto"</span>
+<span class="n">testpaths</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">"tests"</span><span class="p">]</span>
+<span class="n">python_files</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">"test_*.py"</span><span class="p">,</span><span class="w"> </span><span class="s2">"*_test.py"</span><span class="p">]</span>
+
+<span class="k">[tool.black]</span>
+<span class="n">line-length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">100</span>
+<span class="n">target-version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s1">'py39'</span><span class="p">]</span>
+
+<span class="k">[tool.isort]</span>
+<span class="n">profile</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"black"</span>
+<span class="n">multi_line_output</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span>
+<span class="n">line_length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">100</span>
+
+<span class="k">[build-system]</span>
+<span class="n">requires</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">"poetry-core"</span><span class="p">]</span>
+<span class="n">build-backend</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"poetry.core.masonry.api"</span>
+</code></pre></div>
+<h2 id="initial-implementation">🍕 Initial Implementation<a class="headerlink" href="#initial-implementation" title="Permanent link">¶</a></h2>
+<h3 id="1-application-entry-point">1. Application Entry Point<a class="headerlink" href="#1-application-entry-point" title="Permanent link">¶</a></h3>
+<p>Create <code>main.py</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">src.startup</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_app</span>
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">"""Application entry point"""</span>
+    <span class="n">app</span> <span class="o">=</span> <span class="k">await</span> <span class="n">create_app</span><span class="p">()</span>
+
+    <span class="kn">import</span><span class="w"> </span><span class="nn">uvicorn</span>
+    <span class="n">uvicorn</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
+        <span class="n">app</span><span class="p">,</span>
+        <span class="n">host</span><span class="o">=</span><span class="s2">"0.0.0.0"</span><span class="p">,</span>
+        <span class="n">port</span><span class="o">=</span><span class="mi">8000</span><span class="p">,</span>
+        <span class="n">reload</span><span class="o">=</span><span class="kc">True</span>  <span class="c1"># Development only</span>
+    <span class="p">)</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
+    <span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
+</code></pre></div>
+<h3 id="2-application-startup">2. Application Startup<a class="headerlink" href="#2-application-startup" title="Permanent link">¶</a></h3>
+<p>Create <code>src/startup.py</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.hosting.web</span><span class="w"> </span><span class="kn">import</span> <span class="n">WebApplicationBuilder</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.dependency_injection</span><span class="w"> </span><span class="kn">import</span> <span class="n">ServiceCollection</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">src.api.controllers.orders_controller</span><span class="w"> </span><span class="kn">import</span> <span class="n">OrdersController</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">src.application.handlers.place_order_handler</span><span class="w"> </span><span class="kn">import</span> <span class="n">PlaceOrderHandler</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">src.integration.repositories.mongo_order_repository</span><span class="w"> </span><span class="kn">import</span> <span class="n">MongoOrderRepository</span>
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">create_app</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">"""Configure and build the application"""</span>
+    <span class="n">builder</span> <span class="o">=</span> <span class="n">WebApplicationBuilder</span><span class="p">()</span>
+
+    <span class="c1"># Configure services</span>
+    <span class="n">configure_services</span><span class="p">(</span><span class="n">builder</span><span class="o">.</span><span class="n">services</span><span class="p">)</span>
+
+    <span class="c1"># Build application</span>
+    <span class="n">app</span> <span class="o">=</span> <span class="n">builder</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
+
+    <span class="c1"># Configure middleware</span>
+    <span class="n">configure_middleware</span><span class="p">(</span><span class="n">app</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">app</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">configure_services</span><span class="p">(</span><span class="n">services</span><span class="p">:</span> <span class="n">ServiceCollection</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Configure dependency injection"""</span>
+    <span class="c1"># Add framework services</span>
+    <span class="n">services</span><span class="o">.</span><span class="n">add_mediator</span><span class="p">()</span>
+    <span class="n">services</span><span class="o">.</span><span class="n">add_controllers</span><span class="p">([</span>
+        <span class="s2">"src.api.controllers"</span>
+    <span class="p">])</span>
+
+    <span class="c1"># Add application services</span>
+    <span class="n">services</span><span class="o">.</span><span class="n">add_scoped</span><span class="p">(</span><span class="n">PlaceOrderHandler</span><span class="p">)</span>
+
+    <span class="c1"># Add repositories</span>
+    <span class="n">services</span><span class="o">.</span><span class="n">add_scoped</span><span class="p">(</span><span class="n">MongoOrderRepository</span><span class="p">)</span>
+
+    <span class="c1"># Add external services</span>
+    <span class="c1"># services.add_scoped(SMSService)</span>
+    <span class="c1"># services.add_scoped(PaymentService)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">configure_middleware</span><span class="p">(</span><span class="n">app</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Configure application middleware"""</span>
+    <span class="c1"># Add CORS if needed</span>
+    <span class="c1"># app.add_middleware(CORSMiddleware, ...)</span>
+
+    <span class="c1"># Add authentication if needed</span>
+    <span class="c1"># app.add_middleware(AuthenticationMiddleware, ...)</span>
+
+    <span class="k">pass</span>
+</code></pre></div>
+<h3 id="3-first-domain-entity">3. First Domain Entity<a class="headerlink" href="#3-first-domain-entity" title="Permanent link">¶</a></h3>
+<p>Create <code>src/domain/entities/order.py</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">decimal</span><span class="w"> </span><span class="kn">import</span> <span class="n">Decimal</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">enum</span><span class="w"> </span><span class="kn">import</span> <span class="n">Enum</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.domain</span><span class="w"> </span><span class="kn">import</span> <span class="n">Entity</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">src.domain.events.order_events</span><span class="w"> </span><span class="kn">import</span> <span class="n">OrderPlacedEvent</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">OrderStatus</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="n">PENDING</span> <span class="o">=</span> <span class="s2">"pending"</span>
+    <span class="n">CONFIRMED</span> <span class="o">=</span> <span class="s2">"confirmed"</span>
+    <span class="n">PREPARING</span> <span class="o">=</span> <span class="s2">"preparing"</span>
+    <span class="n">READY</span> <span class="o">=</span> <span class="s2">"ready"</span>
+    <span class="n">DELIVERED</span> <span class="o">=</span> <span class="s2">"delivered"</span>
+    <span class="n">CANCELLED</span> <span class="o">=</span> <span class="s2">"cancelled"</span>
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">OrderItem</span><span class="p">:</span>
+    <span class="n">pizza_name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">size</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">quantity</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">price</span><span class="p">:</span> <span class="n">Decimal</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Order</span><span class="p">(</span><span class="n">Entity</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                 <span class="n">customer_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                 <span class="n">items</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">OrderItem</span><span class="p">],</span>
+                 <span class="n">delivery_address</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                 <span class="n">special_instructions</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">customer_id</span> <span class="o">=</span> <span class="n">customer_id</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">items</span> <span class="o">=</span> <span class="n">items</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">delivery_address</span> <span class="o">=</span> <span class="n">delivery_address</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">special_instructions</span> <span class="o">=</span> <span class="n">special_instructions</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">OrderStatus</span><span class="o">.</span><span class="n">PENDING</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">total</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_calculate_total</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">created_at</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">updated_at</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">created_at</span>
+
+        <span class="c1"># Raise domain event</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">raise_event</span><span class="p">(</span><span class="n">OrderPlacedEvent</span><span class="p">(</span>
+            <span class="n">order_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+            <span class="n">customer_id</span><span class="o">=</span><span class="n">customer_id</span><span class="p">,</span>
+            <span class="n">total</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">total</span><span class="p">,</span>
+            <span class="n">items</span><span class="o">=</span><span class="n">items</span>
+        <span class="p">))</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_calculate_total</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Decimal</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Calculate order total with tax"""</span>
+        <span class="n">subtotal</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">price</span> <span class="o">*</span> <span class="n">item</span><span class="o">.</span><span class="n">quantity</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">items</span><span class="p">)</span>
+        <span class="n">tax</span> <span class="o">=</span> <span class="n">subtotal</span> <span class="o">*</span> <span class="n">Decimal</span><span class="p">(</span><span class="s1">'0.08'</span><span class="p">)</span>  <span class="c1"># 8% tax</span>
+        <span class="k">return</span> <span class="n">subtotal</span> <span class="o">+</span> <span class="n">tax</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">confirm</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Confirm the order"""</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">status</span> <span class="o">!=</span> <span class="n">OrderStatus</span><span class="o">.</span><span class="n">PENDING</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Only pending orders can be confirmed"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">OrderStatus</span><span class="o">.</span><span class="n">CONFIRMED</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">updated_at</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span>
+</code></pre></div>
+<h3 id="4-first-command-handler">4. First Command Handler<a class="headerlink" href="#4-first-command-handler" title="Permanent link">¶</a></h3>
+<p>Create <code>src/application/handlers/place_order_handler.py</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.mediation</span><span class="w"> </span><span class="kn">import</span> <span class="n">Command</span><span class="p">,</span> <span class="n">CommandHandler</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">OperationResult</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">src.domain.entities.order</span><span class="w"> </span><span class="kn">import</span> <span class="n">Order</span><span class="p">,</span> <span class="n">OrderItem</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">src.api.dtos.order_dto</span><span class="w"> </span><span class="kn">import</span> <span class="n">OrderDto</span>
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">PlaceOrderCommand</span><span class="p">(</span><span class="n">Command</span><span class="p">[</span><span class="n">OperationResult</span><span class="p">[</span><span class="n">OrderDto</span><span class="p">]]):</span>
+    <span class="n">customer_id</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">items</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">OrderItem</span><span class="p">]</span>
+    <span class="n">delivery_address</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">special_instructions</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">PlaceOrderHandler</span><span class="p">(</span><span class="n">CommandHandler</span><span class="p">[</span><span class="n">PlaceOrderCommand</span><span class="p">,</span> <span class="n">OperationResult</span><span class="p">[</span><span class="n">OrderDto</span><span class="p">]]):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">order_repository</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_repository</span> <span class="o">=</span> <span class="n">order_repository</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">handle_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command</span><span class="p">:</span> <span class="n">PlaceOrderCommand</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">OperationResult</span><span class="p">[</span><span class="n">OrderDto</span><span class="p">]:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># Create domain entity</span>
+            <span class="n">order</span> <span class="o">=</span> <span class="n">Order</span><span class="p">(</span>
+                <span class="n">customer_id</span><span class="o">=</span><span class="n">command</span><span class="o">.</span><span class="n">customer_id</span><span class="p">,</span>
+                <span class="n">items</span><span class="o">=</span><span class="n">command</span><span class="o">.</span><span class="n">items</span><span class="p">,</span>
+                <span class="n">delivery_address</span><span class="o">=</span><span class="n">command</span><span class="o">.</span><span class="n">delivery_address</span><span class="p">,</span>
+                <span class="n">special_instructions</span><span class="o">=</span><span class="n">command</span><span class="o">.</span><span class="n">special_instructions</span>
+            <span class="p">)</span>
+
+            <span class="c1"># Persist order</span>
+            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_repository</span><span class="o">.</span><span class="n">save_async</span><span class="p">(</span><span class="n">order</span><span class="p">)</span>
+
+            <span class="c1"># Return success result</span>
+            <span class="n">dto</span> <span class="o">=</span> <span class="n">OrderDto</span><span class="p">(</span>
+                <span class="nb">id</span><span class="o">=</span><span class="n">order</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                <span class="n">customer_id</span><span class="o">=</span><span class="n">order</span><span class="o">.</span><span class="n">customer_id</span><span class="p">,</span>
+                <span class="n">total</span><span class="o">=</span><span class="n">order</span><span class="o">.</span><span class="n">total</span><span class="p">,</span>
+                <span class="n">status</span><span class="o">=</span><span class="n">order</span><span class="o">.</span><span class="n">status</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+                <span class="n">created_at</span><span class="o">=</span><span class="n">order</span><span class="o">.</span><span class="n">created_at</span>
+            <span class="p">)</span>
+
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">created</span><span class="p">(</span><span class="n">dto</span><span class="p">)</span>
+
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">ex</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">internal_server_error</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Failed to place order: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">ex</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="5-first-controller">5. First Controller<a class="headerlink" href="#5-first-controller" title="Permanent link">¶</a></h3>
+<p>Create <code>src/api/controllers/orders_controller.py</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">fastapi</span><span class="w"> </span><span class="kn">import</span> <span class="n">HTTPException</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.mvc</span><span class="w"> </span><span class="kn">import</span> <span class="n">ControllerBase</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">classy_fastapi</span><span class="w"> </span><span class="kn">import</span> <span class="n">post</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">src.application.handlers.place_order_handler</span><span class="w"> </span><span class="kn">import</span> <span class="n">PlaceOrderCommand</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">src.api.dtos.place_order_request</span><span class="w"> </span><span class="kn">import</span> <span class="n">PlaceOrderRequest</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">src.api.dtos.order_dto</span><span class="w"> </span><span class="kn">import</span> <span class="n">OrderDto</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">OrdersController</span><span class="p">(</span><span class="n">ControllerBase</span><span class="p">):</span>
+
+    <span class="nd">@post</span><span class="p">(</span><span class="s2">"/orders"</span><span class="p">,</span> <span class="n">response_model</span><span class="o">=</span><span class="n">OrderDto</span><span class="p">,</span> <span class="n">status_code</span><span class="o">=</span><span class="mi">201</span><span class="p">)</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">place_order</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">PlaceOrderRequest</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">OrderDto</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Place a new pizza order"""</span>
+        <span class="n">command</span> <span class="o">=</span> <span class="n">PlaceOrderCommand</span><span class="p">(</span>
+            <span class="n">customer_id</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">customer_id</span><span class="p">,</span>
+            <span class="n">items</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">items</span><span class="p">,</span>
+            <span class="n">delivery_address</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">delivery_address</span><span class="p">,</span>
+            <span class="n">special_instructions</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">special_instructions</span>
+        <span class="p">)</span>
+
+        <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">mediator</span><span class="o">.</span><span class="n">execute_async</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">is_success</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">result</span><span class="o">.</span><span class="n">data</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">HTTPException</span><span class="p">(</span>
+                <span class="n">status_code</span><span class="o">=</span><span class="n">result</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span>
+                <span class="n">detail</span><span class="o">=</span><span class="n">result</span><span class="o">.</span><span class="n">error_message</span>
+            <span class="p">)</span>
+</code></pre></div>
+<h2 id="testing-setup">🧪 Testing Setup<a class="headerlink" href="#testing-setup" title="Permanent link">¶</a></h2>
+<h3 id="1-test-configuration">1. Test Configuration<a class="headerlink" href="#1-test-configuration" title="Permanent link">¶</a></h3>
+<p>Create <code>tests/conftest.py</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">unittest.mock</span><span class="w"> </span><span class="kn">import</span> <span class="n">Mock</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.dependency_injection</span><span class="w"> </span><span class="kn">import</span> <span class="n">ServiceCollection</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">src.startup</span><span class="w"> </span><span class="kn">import</span> <span class="n">configure_services</span>
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">service_collection</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">"""Provide a configured service collection for testing"""</span>
+    <span class="n">services</span> <span class="o">=</span> <span class="n">ServiceCollection</span><span class="p">()</span>
+    <span class="n">configure_services</span><span class="p">(</span><span class="n">services</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">services</span>
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">mock_order_repository</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">"""Provide a mocked order repository"""</span>
+    <span class="k">return</span> <span class="n">Mock</span><span class="p">()</span>
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">sample_order_items</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">"""Provide sample order items for testing"""</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">src.domain.entities.order</span><span class="w"> </span><span class="kn">import</span> <span class="n">OrderItem</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">decimal</span><span class="w"> </span><span class="kn">import</span> <span class="n">Decimal</span>
+
+    <span class="k">return</span> <span class="p">[</span>
+        <span class="n">OrderItem</span><span class="p">(</span>
+            <span class="n">pizza_name</span><span class="o">=</span><span class="s2">"Margherita"</span><span class="p">,</span>
+            <span class="n">size</span><span class="o">=</span><span class="s2">"Large"</span><span class="p">,</span>
+            <span class="n">quantity</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+            <span class="n">price</span><span class="o">=</span><span class="n">Decimal</span><span class="p">(</span><span class="s1">'15.99'</span><span class="p">)</span>
+        <span class="p">),</span>
+        <span class="n">OrderItem</span><span class="p">(</span>
+            <span class="n">pizza_name</span><span class="o">=</span><span class="s2">"Pepperoni"</span><span class="p">,</span>
+            <span class="n">size</span><span class="o">=</span><span class="s2">"Medium"</span><span class="p">,</span>
+            <span class="n">quantity</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+            <span class="n">price</span><span class="o">=</span><span class="n">Decimal</span><span class="p">(</span><span class="s1">'12.99'</span><span class="p">)</span>
+        <span class="p">)</span>
+    <span class="p">]</span>
+</code></pre></div>
+<h3 id="2-first-unit-test">2. First Unit Test<a class="headerlink" href="#2-first-unit-test" title="Permanent link">¶</a></h3>
+<p>Create <code>tests/unit/test_place_order_handler.py</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">decimal</span><span class="w"> </span><span class="kn">import</span> <span class="n">Decimal</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">src.application.handlers.place_order_handler</span><span class="w"> </span><span class="kn">import</span> <span class="n">PlaceOrderHandler</span><span class="p">,</span> <span class="n">PlaceOrderCommand</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">TestPlaceOrderHandler</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setup_method</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mock_repository</span> <span class="o">=</span> <span class="n">Mock</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">handler</span> <span class="o">=</span> <span class="n">PlaceOrderHandler</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mock_repository</span><span class="p">)</span>
+
+    <span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">asyncio</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">test_place_order_success</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sample_order_items</span><span class="p">):</span>
+        <span class="c1"># Arrange</span>
+        <span class="n">command</span> <span class="o">=</span> <span class="n">PlaceOrderCommand</span><span class="p">(</span>
+            <span class="n">customer_id</span><span class="o">=</span><span class="s2">"123"</span><span class="p">,</span>
+            <span class="n">items</span><span class="o">=</span><span class="n">sample_order_items</span><span class="p">,</span>
+            <span class="n">delivery_address</span><span class="o">=</span><span class="s2">"123 Pizza St"</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Act</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">handler</span><span class="o">.</span><span class="n">handle_async</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
+
+        <span class="c1"># Assert</span>
+        <span class="k">assert</span> <span class="n">result</span><span class="o">.</span><span class="n">is_success</span>
+        <span class="k">assert</span> <span class="n">result</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">customer_id</span> <span class="o">==</span> <span class="s2">"123"</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mock_repository</span><span class="o">.</span><span class="n">save_async</span><span class="o">.</span><span class="n">assert_called_once</span><span class="p">()</span>
+</code></pre></div>
+<h2 id="running-the-application">🚀 Running the Application<a class="headerlink" href="#running-the-application" title="Permanent link">¶</a></h2>
+<h3 id="development-mode">Development Mode<a class="headerlink" href="#development-mode" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Install dependencies</span>
+poetry<span class="w"> </span>install
+
+<span class="c1"># Run with hot reload</span>
+poetry<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </span>main.py
+
+<span class="c1"># Or using uvicorn directly</span>
+poetry<span class="w"> </span>run<span class="w"> </span>uvicorn<span class="w"> </span>src.main:app<span class="w"> </span>--reload
+</code></pre></div>
+<h3 id="testing">Testing<a class="headerlink" href="#testing" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Run all tests</span>
+poetry<span class="w"> </span>run<span class="w"> </span>pytest
+
+<span class="c1"># Run with coverage</span>
+poetry<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>--cov<span class="o">=</span>src
+
+<span class="c1"># Run specific test file</span>
+poetry<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>tests/unit/test_place_order_handler.py<span class="w"> </span>-v
+</code></pre></div>
+<h3 id="code-quality">Code Quality<a class="headerlink" href="#code-quality" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Format code</span>
+poetry<span class="w"> </span>run<span class="w"> </span>black<span class="w"> </span>src<span class="w"> </span>tests
+
+<span class="c1"># Sort imports</span>
+poetry<span class="w"> </span>run<span class="w"> </span>isort<span class="w"> </span>src<span class="w"> </span>tests
+
+<span class="c1"># Type checking</span>
+poetry<span class="w"> </span>run<span class="w"> </span>mypy<span class="w"> </span>src
+</code></pre></div>
+<h2 id="next-steps">🔧 Next Steps<a class="headerlink" href="#next-steps" title="Permanent link">¶</a></h2>
+<p>After basic setup, consider:</p>
+<ol>
+<li><strong><a href="api-development.md">API Development Guide</a></strong> - Add more endpoints</li>
+<li><strong><a href="../testing-setup/">Testing Guide</a></strong> - Comprehensive testing strategies</li>
+<li><strong><a href="database-integration.md">Database Integration Guide</a></strong> - Connect to real databases</li>
+<li><strong><a href="deployment.md">Deployment Guide</a></strong> - Deploy to production</li>
+</ol>
+<h2 id="troubleshooting">🆘 Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">¶</a></h2>
+<h3 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">¶</a></h3>
+<p><strong>Import Errors</strong></p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Ensure proper Python path</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">PYTHONPATH</span><span class="o">=</span><span class="s2">"</span><span class="si">${</span><span class="nv">PYTHONPATH</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">PWD</span><span class="si">}</span><span class="s2">/src"</span>
+</code></pre></div>
+<p><strong>Poetry Issues</strong></p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Reset poetry environment</span>
+poetry<span class="w"> </span>env<span class="w"> </span>remove<span class="w"> </span>python
+poetry<span class="w"> </span>install
+</code></pre></div>
+<p><strong>Missing Dependencies</strong></p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Update lock file</span>
+poetry<span class="w"> </span>update
+</code></pre></div>
+<h2 id="related-guides">🔗 Related Guides<a class="headerlink" href="#related-guides" title="Permanent link">¶</a></h2>
+<ul>
+<li><strong><a href="../testing-setup/">Testing Setup</a></strong> - Comprehensive testing strategies</li>
+<li><strong><a href="api-development.md">API Development</a></strong> - Building REST endpoints</li>
+<li><strong><a href="database-integration.md">Database Integration</a></strong> - Data persistence setup</li>
+</ul>
+<hr/>
+<p><em>This guide provides the foundation for building production-ready Neuroglia applications using proven architectural patterns.</em> 🚀</p>
+</article>
+</div>
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+</div>
+<button class="md-top md-icon" data-md-component="top" hidden="" type="button">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"></path></svg>
+  Back to top
+</button>
+</main>
+<footer class="md-footer">
+<div class="md-footer-meta md-typeset">
+<div class="md-footer-meta__inner md-grid">
+<div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" rel="noopener" target="_blank">
+      Material for MkDocs
+    </a>
+</div>
+<div class="md-social">
+<a class="md-social__link" href="https://github.com/bvandewe/pyneuro" rel="noopener" target="_blank" title="github.com">
+<svg viewbox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><!--! Font Awesome Free 7.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"></path></svg>
+</a>
+</div>
+</div>
+</div>
+</footer>
+</div>
+<div class="md-dialog" data-md-component="dialog">
+<div class="md-dialog__inner md-typeset"></div>
+</div>
+<script id="__config" type="application/json">{"base": "../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.expand", "navigation.top", "search.highlight", "search.share"], "search": "../../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+<script src="../../assets/javascripts/bundle.f55a23d4.min.js"></script>
+</body>
+</html>

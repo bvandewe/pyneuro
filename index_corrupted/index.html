@@ -1,0 +1,1638 @@
+
+<!DOCTYPE html>
+
+<html class="no-js" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<link href="../assets/images/favicon.png" rel="icon"/>
+<meta content="mkdocs-1.6.1, mkdocs-material-9.6.20" name="generator"/>
+<title>🧠 Neuroglia Python Framework - Neuroglia Python Framework</title>
+<link href="../assets/stylesheets/main.e53b48f4.min.css" rel="stylesheet"/>
+<link href="../assets/stylesheets/palette.06af60db.min.css" rel="stylesheet"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback" rel="stylesheet"/>
+<style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+<script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+</head>
+<body data-md-color-accent="blue" data-md-color-primary="blue" data-md-color-scheme="default" dir="ltr">
+<input autocomplete="off" class="md-toggle" data-md-toggle="drawer" id="__drawer" type="checkbox"/>
+<input autocomplete="off" class="md-toggle" data-md-toggle="search" id="__search" type="checkbox"/>
+<label class="md-overlay" for="__drawer"></label>
+<div data-md-component="skip">
+<a class="md-skip" href="#neuroglia-python-framework">
+          Skip to content
+        </a>
+</div>
+<div data-md-component="announce">
+</div>
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+<nav aria-label="Header" class="md-header__inner md-grid">
+<a aria-label="Neuroglia Python Framework" class="md-header__button md-logo" data-md-component="logo" href=".." title="Neuroglia Python Framework">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+</a>
+<label class="md-header__button md-icon" for="__drawer">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+</label>
+<div class="md-header__title" data-md-component="header-title">
+<div class="md-header__ellipsis">
+<div class="md-header__topic">
+<span class="md-ellipsis">
+            Neuroglia Python Framework
+          </span>
+</div>
+<div class="md-header__topic" data-md-component="header-topic">
+<span class="md-ellipsis">
+            
+              🧠 Neuroglia Python Framework
+            
+          </span>
+</div>
+</div>
+</div>
+<form class="md-header__option" data-md-component="palette">
+<input aria-label="Switch to dark mode" class="md-option" data-md-color-accent="blue" data-md-color-media="" data-md-color-primary="blue" data-md-color-scheme="default" id="__palette_0" name="__palette" type="radio"/>
+<label class="md-header__button md-icon" for="__palette_1" hidden="" title="Switch to dark mode">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+</label>
+<input aria-label="Switch to light mode" class="md-option" data-md-color-accent="blue" data-md-color-media="" data-md-color-primary="blue" data-md-color-scheme="slate" id="__palette_1" name="__palette" type="radio"/>
+<label class="md-header__button md-icon" for="__palette_0" hidden="" title="Switch to light mode">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+</label>
+</form>
+<script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+<label class="md-header__button md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+</label>
+<div class="md-search" data-md-component="search" role="dialog">
+<label class="md-search__overlay" for="__search"></label>
+<div class="md-search__inner" role="search">
+<form class="md-search__form" name="search">
+<input aria-label="Search" autocapitalize="off" autocomplete="off" autocorrect="off" class="md-search__input" data-md-component="search-query" name="query" placeholder="Search" required="" spellcheck="false" type="text"/>
+<label class="md-search__icon md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+</label>
+<nav aria-label="Search" class="md-search__options">
+<a aria-label="Share" class="md-search__icon md-icon" data-clipboard="" data-clipboard-text="" data-md-component="search-share" href="javascript:void(0)" tabindex="-1" title="Share">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"></path></svg>
+</a>
+<button aria-label="Clear" class="md-search__icon md-icon" tabindex="-1" title="Clear" type="reset">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+</button>
+</nav>
+</form>
+<div class="md-search__output">
+<div class="md-search__scrollwrap" data-md-scrollfix="" tabindex="0">
+<div class="md-search-result" data-md-component="search-result">
+<div class="md-search-result__meta">
+            Initializing search
+          </div>
+<ol class="md-search-result__list" role="presentation"></ol>
+</div>
+</div>
+</div>
+</div>
+</div>
+</nav>
+<nav aria-label="Tabs" class="md-tabs" data-md-component="tabs">
+<div class="md-grid">
+<ul class="md-tabs__list">
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="..">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../getting-started/">
+          
+  
+  
+  Getting Started
+
+        </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../patterns/">
+          
+  
+  
+  Patterns
+
+        </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../features/">
+          
+  
+  
+  Features
+
+        </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../guides/">
+          
+  
+  
+  Guides
+
+        </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../samples/">
+          
+  
+  
+  Sample Applications
+
+        </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../architecture/">
+        
+  
+  
+    
+  
+  Architecture
+
+      </a>
+</li>
+</ul>
+</div>
+</nav>
+</header>
+<div class="md-container" data-md-component="container">
+<main class="md-main" data-md-component="main">
+<div class="md-main__inner md-grid">
+<div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="Navigation" class="md-nav md-nav--primary md-nav--lifted" data-md-level="0">
+<label class="md-nav__title" for="__drawer">
+<a aria-label="Neuroglia Python Framework" class="md-nav__button md-logo" data-md-component="logo" href=".." title="Neuroglia Python Framework">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+</a>
+    Neuroglia Python Framework
+  </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="..">
+<span class="md-ellipsis">
+    Home
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_2" type="checkbox"/>
+<label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+<span class="md-ellipsis">
+    Getting Started
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_2_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_2">
+<span class="md-nav__icon md-icon"></span>
+            Getting Started
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../getting-started/">
+<span class="md-ellipsis">
+    Overview
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../guides/3-min-bootstrap/">
+<span class="md-ellipsis">
+    3-Minute Bootstrap
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../guides/local-development/">
+<span class="md-ellipsis">
+    Local Development Setup
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../guides/mario-pizzeria-tutorial/">
+<span class="md-ellipsis">
+    Mario's Pizzeria Tutorial
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_3" type="checkbox"/>
+<label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+<span class="md-ellipsis">
+    Patterns
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_3_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_3">
+<span class="md-nav__icon md-icon"></span>
+            Patterns
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../patterns/">
+<span class="md-ellipsis">
+    Overview
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../patterns/clean-architecture/">
+<span class="md-ellipsis">
+    Clean Architecture
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../patterns/cqrs/">
+<span class="md-ellipsis">
+    CQRS
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../patterns/event-driven/">
+<span class="md-ellipsis">
+    Event-Driven
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../patterns/repository/">
+<span class="md-ellipsis">
+    Repository
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../patterns/resource-oriented-architecture/">
+<span class="md-ellipsis">
+    Resource-Oriented Architecture
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../patterns/watcher-reconciliation-patterns/">
+<span class="md-ellipsis">
+    Watcher &amp; Reconciliation Patterns
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../patterns/watcher-reconciliation-execution/">
+<span class="md-ellipsis">
+    Watcher &amp; Reconciliation Execution
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_4" type="checkbox"/>
+<label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+<span class="md-ellipsis">
+    Features
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_4_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_4">
+<span class="md-nav__icon md-icon"></span>
+            Features
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../features/">
+<span class="md-ellipsis">
+    Overview
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../features/dependency-injection/">
+<span class="md-ellipsis">
+    Dependency Injection
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../features/cqrs-mediation/">
+<span class="md-ellipsis">
+    CQRS &amp; Mediation
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../features/mvc-controllers/">
+<span class="md-ellipsis">
+    MVC Controllers
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../features/data-access/">
+<span class="md-ellipsis">
+    Data Access
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../features/event-sourcing/">
+<span class="md-ellipsis">
+    Event Sourcing
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../features/serialization/">
+<span class="md-ellipsis">
+    Serialization
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../features/object-mapping/">
+<span class="md-ellipsis">
+    Object Mapping
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../features/reactive-programming/">
+<span class="md-ellipsis">
+    Reactive Programming
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../features/mermaid-diagrams/">
+<span class="md-ellipsis">
+    Mermaid Diagrams
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_5" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+<span class="md-ellipsis">
+    Guides
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_5_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_5">
+<span class="md-nav__icon md-icon"></span>
+            Guides
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../guides/">
+<span class="md-ellipsis">
+    Overview
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../guides/project-setup/">
+<span class="md-ellipsis">
+    Project Setup
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../guides/testing-setup/">
+<span class="md-ellipsis">
+    Testing Setup
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_6" type="checkbox"/>
+<label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+<span class="md-ellipsis">
+    Sample Applications
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_6_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_6">
+<span class="md-nav__icon md-icon"></span>
+            Sample Applications
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../samples/">
+<span class="md-ellipsis">
+    Overview
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../samples/openbank/">
+<span class="md-ellipsis">
+    OpenBank
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../samples/api_gateway/">
+<span class="md-ellipsis">
+    API Gateway
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../samples/desktop_controller/">
+<span class="md-ellipsis">
+    Desktop Controller
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../samples/lab-resource-manager/">
+<span class="md-ellipsis">
+    Lab Resource Manager
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../architecture/">
+<span class="md-ellipsis">
+    Architecture
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#whats-included">
+<span class="md-ellipsis">
+      🚀 What's Included
+    </span>
+</a>
+<nav aria-label="🚀 What's Included" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#framework-core">
+<span class="md-ellipsis">
+      🏗️ Framework Core
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#real-world-samples">
+<span class="md-ellipsis">
+      � Real-World Samples
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#cli-tooling">
+<span class="md-ellipsis">
+      ⚙️ CLI Tooling
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#key-features">
+<span class="md-ellipsis">
+      ✨ Key Features
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#quick-start-your-first-pizzeria-app">
+<span class="md-ellipsis">
+      🚀 Quick Start: Your First Pizzeria App
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#architecture-overview">
+<span class="md-ellipsis">
+      �️ Architecture Overview
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#core-features">
+<span class="md-ellipsis">
+      🎪 Core Features
+    </span>
+</a>
+<nav aria-label="🎪 Core Features" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#dependency-injection">
+<span class="md-ellipsis">
+      💉 Dependency Injection
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#cqrs-mediation">
+<span class="md-ellipsis">
+      🎯 CQRS &amp; Mediation
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#mvc-controllers">
+<span class="md-ellipsis">
+      🔌 MVC Controllers
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#event-driven-architecture">
+<span class="md-ellipsis">
+      📡 Event-Driven Architecture
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#data-access">
+<span class="md-ellipsis">
+      🗄️ Data Access
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#object-mapping">
+<span class="md-ellipsis">
+      📊 Object Mapping
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#learn-through-marios-pizzeria">
+<span class="md-ellipsis">
+      🎓 Learn Through Mario's Pizzeria
+    </span>
+</a>
+<nav aria-label="🎓 Learn Through Mario's Pizzeria" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#complete-business-domain">
+<span class="md-ellipsis">
+      🍕 Complete Business Domain
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#architecture-demonstrated">
+<span class="md-ellipsis">
+      🏗️ Architecture Demonstrated
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#progressive-learning-path">
+<span class="md-ellipsis">
+      🎯 Progressive Learning Path
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#documentation">
+<span class="md-ellipsis">
+      📚 Documentation
+    </span>
+</a>
+<nav aria-label="📚 Documentation" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#getting-started">
+<span class="md-ellipsis">
+      🚀 Getting Started
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#feature-guides">
+<span class="md-ellipsis">
+      🎪 Feature Guides
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#installation-requirements">
+<span class="md-ellipsis">
+      🛠️ Installation &amp; Requirements
+    </span>
+</a>
+<nav aria-label="🛠️ Installation &amp; Requirements" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#prerequisites">
+<span class="md-ellipsis">
+      Prerequisites
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#installation">
+<span class="md-ellipsis">
+      Installation
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#optional-dependencies">
+<span class="md-ellipsis">
+      Optional Dependencies
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#community-support">
+<span class="md-ellipsis">
+      🤝 Community &amp; Support
+    </span>
+</a>
+<nav aria-label="🤝 Community &amp; Support" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#getting-help">
+<span class="md-ellipsis">
+      Getting Help
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#contributing">
+<span class="md-ellipsis">
+      Contributing
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#roadmap">
+<span class="md-ellipsis">
+      Roadmap
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#license">
+<span class="md-ellipsis">
+      � License
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#why-choose-neuroglia">
+<span class="md-ellipsis">
+      🌟 Why Choose Neuroglia?
+    </span>
+</a>
+<nav aria-label="🌟 Why Choose Neuroglia?" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#requirements">
+<span class="md-ellipsis">
+      📋 Requirements
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#contributing_1">
+<span class="md-ellipsis">
+      🤝 Contributing
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#license_1">
+<span class="md-ellipsis">
+      📄 License
+    </span>
+</a>
+<nav aria-label="📄 License" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#running-background-tasks">
+<span class="md-ellipsis">
+      Running Background Tasks
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#advanced-features">
+<span class="md-ellipsis">
+      Advanced Features
+    </span>
+</a>
+<nav aria-label="Advanced Features" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#real-time-communication-with-cloudevents">
+<span class="md-ellipsis">
+      Real-time Communication with CloudEvents
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#custom-repository-implementation">
+<span class="md-ellipsis">
+      Custom Repository Implementation
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#samples">
+<span class="md-ellipsis">
+      Samples
+    </span>
+</a>
+<nav aria-label="Samples" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#openbank">
+<span class="md-ellipsis">
+      OpenBank
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#desktop-controller">
+<span class="md-ellipsis">
+      Desktop Controller
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#api-gateway">
+<span class="md-ellipsis">
+      API Gateway
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#cisco-remote-output-collector">
+<span class="md-ellipsis">
+      Cisco Remote Output Collector
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#deployment">
+<span class="md-ellipsis">
+      Deployment
+    </span>
+</a>
+<nav aria-label="Deployment" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#docker-deployment">
+<span class="md-ellipsis">
+      Docker Deployment
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#environment-configuration">
+<span class="md-ellipsis">
+      Environment Configuration
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#testing">
+<span class="md-ellipsis">
+      Testing
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#best-practices">
+<span class="md-ellipsis">
+      Best Practices
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#conclusion">
+<span class="md-ellipsis">
+      Conclusion
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div class="md-content" data-md-component="content">
+<article class="md-content__inner md-typeset">
+<h1 id="neuroglia-python-framework">🧠 Neuroglia Python Framework<a class="headerlink" href="#neuroglia-python-framework" title="Permanent link">¶</a></h1>
+<p>A lightweight, opinionated Python framework built on <a href="https://fastapi.tiangolo.com/">FastAPI</a> that enforces clean architecture principles and provides comprehensive tooling for building production-ready microservices.</p>
+<h2 id="whats-included">🚀 What's Included<a class="headerlink" href="#whats-included" title="Permanent link">¶</a></h2>
+<h3 id="framework-core">🏗️ <strong>Framework Core</strong><a class="headerlink" href="#framework-core" title="Permanent link">¶</a></h3>
+<p>Clean architecture patterns with dependency injection, CQRS, event-driven design, and comprehensive testing utilities.</p>
+<h3 id="real-world-samples">� <strong>Real-World Samples</strong><a class="headerlink" href="#real-world-samples" title="Permanent link">¶</a></h3>
+<p>Complete Mario's Pizzeria application demonstrating every framework feature in a production-ready business scenario.</p>
+<h3 id="cli-tooling">⚙️ <strong>CLI Tooling</strong><a class="headerlink" href="#cli-tooling" title="Permanent link">¶</a></h3>
+<p>PyNeuroctl command-line interface for managing, testing, and deploying your applications with zero configuration.</p>
+<h2 id="key-features">✨ Key Features<a class="headerlink" href="#key-features" title="Permanent link">¶</a></h2>
+<ul>
+<li><strong>� CQRS &amp; Mediation</strong>: Built-in Command Query Responsibility Segregation with mediator pattern</li>
+<li><strong>💉 Dependency Injection</strong>: Lightweight container with automatic service discovery</li>
+<li><strong>🔌 MVC Controllers</strong>: Class-based controllers with automatic OpenAPI generation  </li>
+<li><strong>📡 Event-Driven</strong>: Native CloudEvents support and domain event handling</li>
+<li><strong>🗄️ Data Access</strong>: Repository pattern with file-based, MongoDB, and event sourcing support</li>
+<li><strong>🧪 Testing Utilities</strong>: Comprehensive testing patterns for all architectural layers</li>
+</ul>
+<h2 id="quick-start-your-first-pizzeria-app">🚀 Quick Start: Your First Pizzeria App<a class="headerlink" href="#quick-start-your-first-pizzeria-app" title="Permanent link">¶</a></h2>
+<p>Get Mario's Pizzeria running in minutes:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Install Neuroglia</span>
+pip<span class="w"> </span>install<span class="w"> </span>neuroglia
+
+<span class="c1"># Create a simple pizzeria API</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1"># main.py</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.hosting.web</span><span class="w"> </span><span class="kn">import</span> <span class="n">WebApplicationBuilder</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.mvc</span><span class="w"> </span><span class="kn">import</span> <span class="n">ControllerBase</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">classy_fastapi</span><span class="w"> </span><span class="kn">import</span> <span class="n">get</span><span class="p">,</span> <span class="n">post</span>
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">PizzaDto</span><span class="p">:</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">size</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">price</span><span class="p">:</span> <span class="nb">float</span>
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">OrderDto</span><span class="p">:</span>
+    <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">customer_name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">pizzas</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">PizzaDto</span><span class="p">]</span>
+    <span class="n">total</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">status</span><span class="p">:</span> <span class="nb">str</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">MenuController</span><span class="p">(</span><span class="n">ControllerBase</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Mario's menu management"""</span>
+
+    <span class="nd">@get</span><span class="p">(</span><span class="s2">"/menu/pizzas"</span><span class="p">,</span> <span class="n">response_model</span><span class="o">=</span><span class="n">List</span><span class="p">[</span><span class="n">PizzaDto</span><span class="p">])</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_pizzas</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">PizzaDto</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="p">[</span>
+            <span class="n">PizzaDto</span><span class="p">(</span><span class="s2">"Margherita"</span><span class="p">,</span> <span class="s2">"large"</span><span class="p">,</span> <span class="mf">15.99</span><span class="p">),</span>
+            <span class="n">PizzaDto</span><span class="p">(</span><span class="s2">"Pepperoni"</span><span class="p">,</span> <span class="s2">"large"</span><span class="p">,</span> <span class="mf">17.99</span><span class="p">),</span>
+            <span class="n">PizzaDto</span><span class="p">(</span><span class="s2">"Quattro Stagioni"</span><span class="p">,</span> <span class="s2">"large"</span><span class="p">,</span> <span class="mf">19.99</span><span class="p">)</span>
+        <span class="p">]</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">OrdersController</span><span class="p">(</span><span class="n">ControllerBase</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Mario's order management"""</span>
+
+    <span class="nd">@post</span><span class="p">(</span><span class="s2">"/orders"</span><span class="p">,</span> <span class="n">response_model</span><span class="o">=</span><span class="n">OrderDto</span><span class="p">)</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">place_order</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">customer_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">pizza_names</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">OrderDto</span><span class="p">:</span>
+        <span class="c1"># Simple order creation</span>
+        <span class="n">pizzas</span> <span class="o">=</span> <span class="p">[</span><span class="n">PizzaDto</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="s2">"large"</span><span class="p">,</span> <span class="mf">15.99</span><span class="p">)</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">pizza_names</span><span class="p">]</span>
+        <span class="n">total</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">price</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">pizzas</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">OrderDto</span><span class="p">(</span>
+            <span class="nb">id</span><span class="o">=</span><span class="s2">"order_123"</span><span class="p">,</span>
+            <span class="n">customer_name</span><span class="o">=</span><span class="n">customer_name</span><span class="p">,</span>
+            <span class="n">pizzas</span><span class="o">=</span><span class="n">pizzas</span><span class="p">,</span>
+            <span class="n">total</span><span class="o">=</span><span class="n">total</span><span class="p">,</span>
+            <span class="n">status</span><span class="o">=</span><span class="s2">"received"</span>
+        <span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">create_pizzeria_app</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">"""Create Mario's Pizzeria application"""</span>
+    <span class="n">builder</span> <span class="o">=</span> <span class="n">WebApplicationBuilder</span><span class="p">()</span>
+
+    <span class="c1"># Add controllers</span>
+    <span class="n">builder</span><span class="o">.</span><span class="n">services</span><span class="o">.</span><span class="n">add_controllers</span><span class="p">([</span><span class="s2">"__main__"</span><span class="p">])</span>
+
+    <span class="n">app</span> <span class="o">=</span> <span class="n">builder</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">use_controllers</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">app</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
+    <span class="n">app</span> <span class="o">=</span> <span class="n">create_pizzeria_app</span><span class="p">()</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1"># Run the pizzeria</span>
+python<span class="w"> </span>main.py
+
+<span class="c1"># Test the API</span>
+curl<span class="w"> </span>http://localhost:8000/menu/pizzas
+curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">"http://localhost:8000/orders?customer_name=Mario"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">     </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/json"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">     </span>-d<span class="w"> </span><span class="s1">'["Margherita", "Pepperoni"]'</span>
+</code></pre></div>
+<p><strong><a href="../getting-started/">👉 Complete Tutorial: Build the Full Pizzeria System</a></strong></p>
+<h2 id="architecture-overview">�️ Architecture Overview<a class="headerlink" href="#architecture-overview" title="Permanent link">¶</a></h2>
+<p>Mario's Pizzeria demonstrates clean, layered architecture:</p>
+<div class="highlight"><pre><span></span><code>    🌐 API Layer (Controllers &amp; DTOs)
+         OrdersController, MenuController, KitchenController
+         ↓ Commands &amp; Queries
+    💼 Application Layer (CQRS Handlers)
+         PlaceOrderHandler, GetMenuHandler, UpdateOrderStatusHandler
+         ↓ Domain Operations  
+    🏛️ Domain Layer (Business Logic)
+         Order, Pizza, Customer entities with business rules
+         ↑ Repository Interfaces
+    🔌 Integration Layer (Data &amp; External Services)
+         FileOrderRepository, MongoOrderRepository, PaymentService
+</code></pre></div>
+<p>Each layer has specific responsibilities:</p>
+<ul>
+<li><strong>🌐 API Layer</strong>: HTTP endpoints, request/response handling, authentication</li>
+<li><strong>💼 Application Layer</strong>: Business workflows, command/query processing, event coordination</li>
+<li><strong>🏛️ Domain Layer</strong>: Core business rules, entity logic, domain events</li>
+<li><strong>🔌 Integration Layer</strong>: Data persistence, external APIs, infrastructure services</li>
+</ul>
+<p><strong><a href="../architecture/">📖 Deep Dive: Clean Architecture with Mario's Pizzeria</a></strong></p>
+<h2 id="core-features">🎪 Core Features<a class="headerlink" href="#core-features" title="Permanent link">¶</a></h2>
+<h3 id="dependency-injection">💉 Dependency Injection<a class="headerlink" href="#dependency-injection" title="Permanent link">¶</a></h3>
+<p>Powerful service container demonstrated through Mario's Pizzeria:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Service registration for pizzeria</span>
+<span class="n">builder</span><span class="o">.</span><span class="n">services</span><span class="o">.</span><span class="n">add_scoped</span><span class="p">(</span><span class="n">IOrderRepository</span><span class="p">,</span> <span class="n">FileOrderRepository</span><span class="p">)</span>
+<span class="n">builder</span><span class="o">.</span><span class="n">services</span><span class="o">.</span><span class="n">add_scoped</span><span class="p">(</span><span class="n">IPaymentService</span><span class="p">,</span> <span class="n">MockPaymentService</span><span class="p">)</span> 
+<span class="n">builder</span><span class="o">.</span><span class="n">services</span><span class="o">.</span><span class="n">add_mediator</span><span class="p">()</span>
+<span class="n">builder</span><span class="o">.</span><span class="n">services</span><span class="o">.</span><span class="n">add_controllers</span><span class="p">([</span><span class="s2">"api.controllers"</span><span class="p">])</span>
+
+<span class="c1"># Constructor injection in controllers</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">OrdersController</span><span class="p">(</span><span class="n">ControllerBase</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">service_provider</span><span class="p">:</span> <span class="n">ServiceProviderBase</span><span class="p">,</span> 
+                 <span class="n">mapper</span><span class="p">:</span> <span class="n">Mapper</span><span class="p">,</span> <span class="n">mediator</span><span class="p">:</span> <span class="n">Mediator</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">service_provider</span><span class="p">,</span> <span class="n">mapper</span><span class="p">,</span> <span class="n">mediator</span><span class="p">)</span>
+
+    <span class="nd">@post</span><span class="p">(</span><span class="s2">"/orders"</span><span class="p">,</span> <span class="n">response_model</span><span class="o">=</span><span class="n">OrderDto</span><span class="p">)</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">place_order</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">PlaceOrderDto</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">OrderDto</span><span class="p">:</span>
+        <span class="n">command</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mapper</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">PlaceOrderCommand</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">mediator</span><span class="o">.</span><span class="n">execute_async</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+</code></pre></div>
+<p><strong><a href="../features/dependency-injection/">📖 Dependency Injection with Mario's Pizzeria</a></strong></p>
+<h3 id="cqrs-mediation">🎯 CQRS &amp; Mediation<a class="headerlink" href="#cqrs-mediation" title="Permanent link">¶</a></h3>
+<p>Clean command/query separation demonstrated through pizza ordering:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Command for placing orders</span>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">PlaceOrderCommand</span><span class="p">(</span><span class="n">Command</span><span class="p">[</span><span class="n">OperationResult</span><span class="p">[</span><span class="n">OrderDto</span><span class="p">]]):</span>
+    <span class="n">customer_name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">customer_phone</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">customer_address</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">pizzas</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">PizzaOrderDto</span><span class="p">]</span>
+    <span class="n">payment_method</span><span class="p">:</span> <span class="nb">str</span>
+
+<span class="c1"># Handler with business logic</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">PlaceOrderCommandHandler</span><span class="p">(</span><span class="n">CommandHandler</span><span class="p">[</span><span class="n">PlaceOrderCommand</span><span class="p">,</span> <span class="n">OperationResult</span><span class="p">[</span><span class="n">OrderDto</span><span class="p">]]):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">order_repository</span><span class="p">:</span> <span class="n">IOrderRepository</span><span class="p">,</span> 
+                 <span class="n">payment_service</span><span class="p">:</span> <span class="n">IPaymentService</span><span class="p">,</span>
+                 <span class="n">mapper</span><span class="p">:</span> <span class="n">Mapper</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">order_repository</span> <span class="o">=</span> <span class="n">order_repository</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">payment_service</span> <span class="o">=</span> <span class="n">payment_service</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mapper</span> <span class="o">=</span> <span class="n">mapper</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">handle_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command</span><span class="p">:</span> <span class="n">PlaceOrderCommand</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">OperationResult</span><span class="p">[</span><span class="n">OrderDto</span><span class="p">]:</span>
+        <span class="c1"># 1. Create domain entity with business logic</span>
+        <span class="n">pizzas</span> <span class="o">=</span> <span class="p">[</span><span class="n">Pizza</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">p</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="n">p</span><span class="o">.</span><span class="n">extras</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">command</span><span class="o">.</span><span class="n">pizzas</span><span class="p">]</span>
+        <span class="n">order</span> <span class="o">=</span> <span class="n">Order</span><span class="o">.</span><span class="n">create_new</span><span class="p">(</span>
+            <span class="n">command</span><span class="o">.</span><span class="n">customer_name</span><span class="p">,</span> 
+            <span class="n">command</span><span class="o">.</span><span class="n">customer_phone</span><span class="p">,</span>
+            <span class="n">command</span><span class="o">.</span><span class="n">customer_address</span><span class="p">,</span>
+            <span class="n">pizzas</span><span class="p">,</span>
+            <span class="n">command</span><span class="o">.</span><span class="n">payment_method</span>
+        <span class="p">)</span>
+
+        <span class="c1"># 2. Process payment</span>
+        <span class="n">payment_result</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">payment_service</span><span class="o">.</span><span class="n">process_payment_async</span><span class="p">(</span>
+            <span class="n">order</span><span class="o">.</span><span class="n">total_amount</span><span class="p">,</span> <span class="n">command</span><span class="o">.</span><span class="n">payment_method</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">payment_result</span><span class="o">.</span><span class="n">is_success</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">bad_request</span><span class="p">(</span><span class="s2">"Payment processing failed"</span><span class="p">)</span>
+
+        <span class="c1"># 3. Save order and return result</span>
+        <span class="n">saved_order</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">order_repository</span><span class="o">.</span><span class="n">save_async</span><span class="p">(</span><span class="n">order</span><span class="p">)</span>
+        <span class="n">order_dto</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mapper</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">saved_order</span><span class="p">,</span> <span class="n">OrderDto</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">created</span><span class="p">(</span><span class="n">order_dto</span><span class="p">)</span>
+
+<span class="c1"># Query for retrieving menu</span>
+<span class="nd">@dataclass</span>  
+<span class="k">class</span><span class="w"> </span><span class="nc">GetMenuQuery</span><span class="p">(</span><span class="n">Query</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">PizzaDto</span><span class="p">]]):</span>
+    <span class="n">category</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">GetMenuQueryHandler</span><span class="p">(</span><span class="n">QueryHandler</span><span class="p">[</span><span class="n">GetMenuQuery</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">PizzaDto</span><span class="p">]]):</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">handle_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">:</span> <span class="n">GetMenuQuery</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">PizzaDto</span><span class="p">]:</span>
+        <span class="c1"># Query logic here</span>
+        <span class="n">pizzas</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">pizza_repository</span><span class="o">.</span><span class="n">get_all_async</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">query</span><span class="o">.</span><span class="n">category</span><span class="p">:</span>
+            <span class="n">pizzas</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">pizzas</span> <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">category</span> <span class="o">==</span> <span class="n">query</span><span class="o">.</span><span class="n">category</span><span class="p">]</span>
+        <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">mapper</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">PizzaDto</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">pizzas</span><span class="p">]</span>
+
+<span class="c1"># Usage in controller</span>
+<span class="nd">@post</span><span class="p">(</span><span class="s2">"/orders"</span><span class="p">,</span> <span class="n">response_model</span><span class="o">=</span><span class="n">OrderDto</span><span class="p">)</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">place_order</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">PlaceOrderDto</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">OrderDto</span><span class="p">:</span>
+    <span class="n">command</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mapper</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">PlaceOrderCommand</span><span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">mediator</span><span class="o">.</span><span class="n">execute_async</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+</code></pre></div>
+<p><strong><a href="../features/cqrs-mediation/">📖 CQRS &amp; Mediation with Mario's Pizzeria</a></strong></p>
+<h3 id="mvc-controllers">🔌 MVC Controllers<a class="headerlink" href="#mvc-controllers" title="Permanent link">¶</a></h3>
+<p>Class-based controllers with automatic discovery demonstrated through pizzeria APIs:</p>
+<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">OrdersController</span><span class="p">(</span><span class="n">ControllerBase</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Mario's order management endpoint"""</span>
+
+    <span class="nd">@post</span><span class="p">(</span><span class="s2">"/orders"</span><span class="p">,</span> <span class="n">response_model</span><span class="o">=</span><span class="n">OrderDto</span><span class="p">,</span> <span class="n">status_code</span><span class="o">=</span><span class="mi">201</span><span class="p">)</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">place_order</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">PlaceOrderDto</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">OrderDto</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Place a new pizza order"""</span>
+        <span class="n">command</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mapper</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">PlaceOrderCommand</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">mediator</span><span class="o">.</span><span class="n">execute_async</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+
+    <span class="nd">@get</span><span class="p">(</span><span class="s2">"/orders/</span><span class="si">{order_id}</span><span class="s2">"</span><span class="p">,</span> <span class="n">response_model</span><span class="o">=</span><span class="n">OrderDto</span><span class="p">)</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_order</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">order_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">OrderDto</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Get order details by ID"""</span>
+        <span class="n">query</span> <span class="o">=</span> <span class="n">GetOrderByIdQuery</span><span class="p">(</span><span class="n">order_id</span><span class="o">=</span><span class="n">order_id</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">mediator</span><span class="o">.</span><span class="n">execute_async</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">MenuController</span><span class="p">(</span><span class="n">ControllerBase</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Mario's menu management"""</span>
+
+    <span class="nd">@get</span><span class="p">(</span><span class="s2">"/menu/pizzas"</span><span class="p">,</span> <span class="n">response_model</span><span class="o">=</span><span class="n">List</span><span class="p">[</span><span class="n">PizzaDto</span><span class="p">])</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_pizzas</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">category</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">PizzaDto</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">"""Get available pizzas, optionally filtered by category"""</span>
+        <span class="n">query</span> <span class="o">=</span> <span class="n">GetMenuQuery</span><span class="p">(</span><span class="n">category</span><span class="o">=</span><span class="n">category</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">mediator</span><span class="o">.</span><span class="n">execute_async</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+
+<span class="c1"># Automatic OpenAPI documentation generation</span>
+<span class="c1"># Built-in validation, error handling, and response formatting</span>
+</code></pre></div>
+<p><strong><a href="../features/mvc-controllers/">📖 MVC Controllers with Mario's Pizzeria</a></strong></p>
+<h3 id="event-driven-architecture">📡 Event-Driven Architecture<a class="headerlink" href="#event-driven-architecture" title="Permanent link">¶</a></h3>
+<p>Native support for domain events and reactive programming demonstrated through pizzeria operations:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Domain events in Mario's Pizzeria</span>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">OrderPlacedEvent</span><span class="p">(</span><span class="n">DomainEvent</span><span class="p">):</span>
+    <span class="n">order_id</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">customer_name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">total_amount</span><span class="p">:</span> <span class="n">Decimal</span>
+    <span class="n">pizzas</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">OrderReadyEvent</span><span class="p">(</span><span class="n">DomainEvent</span><span class="p">):</span>
+    <span class="n">order_id</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">customer_phone</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">pickup_time</span><span class="p">:</span> <span class="n">datetime</span>
+
+<span class="c1"># Event handlers for pizzeria workflow</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">KitchenNotificationHandler</span><span class="p">(</span><span class="n">EventHandler</span><span class="p">[</span><span class="n">OrderPlacedEvent</span><span class="p">]):</span>
+<span class="w">    </span><span class="sd">"""Notify kitchen when order is placed"""</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">handle_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">OrderPlacedEvent</span><span class="p">):</span>
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">kitchen_service</span><span class="o">.</span><span class="n">add_to_queue</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">order_id</span><span class="p">,</span> <span class="n">event</span><span class="o">.</span><span class="n">pizzas</span><span class="p">)</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">CustomerNotificationHandler</span><span class="p">(</span><span class="n">EventHandler</span><span class="p">[</span><span class="n">OrderReadyEvent</span><span class="p">]):</span>
+<span class="w">    </span><span class="sd">"""Notify customer when order is ready"""</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">handle_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">OrderReadyEvent</span><span class="p">):</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"Your order </span><span class="si">{</span><span class="n">event</span><span class="o">.</span><span class="n">order_id</span><span class="si">}</span><span class="s2"> is ready for pickup!"</span>
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">sms_service</span><span class="o">.</span><span class="n">send_message</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">customer_phone</span><span class="p">,</span> <span class="n">message</span><span class="p">)</span>
+
+<span class="c1"># Events are automatically published when domain entities change</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Order</span><span class="p">(</span><span class="n">Entity</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_status</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_status</span><span class="p">:</span> <span class="n">OrderStatus</span><span class="p">,</span> <span class="n">updated_by</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">new_status</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">last_updated</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">updated_by</span> <span class="o">=</span> <span class="n">updated_by</span>
+
+        <span class="c1"># Raise domain event</span>
+        <span class="k">if</span> <span class="n">new_status</span> <span class="o">==</span> <span class="n">OrderStatus</span><span class="o">.</span><span class="n">READY</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">raise_event</span><span class="p">(</span><span class="n">OrderReadyEvent</span><span class="p">(</span>
+                <span class="n">order_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                <span class="n">customer_phone</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">customer_phone</span><span class="p">,</span>
+                <span class="n">pickup_time</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span>
+            <span class="p">))</span>
+</code></pre></div>
+<p><strong><a href="../features/event-sourcing/">📖 Event-Driven Architecture with Mario's Pizzeria</a></strong></p>
+<h3 id="data-access">🗄️ Data Access<a class="headerlink" href="#data-access" title="Permanent link">¶</a></h3>
+<p>Flexible repository pattern with multiple storage backends demonstrated through Mario's Pizzeria:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Repository interface for orders</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">IOrderRepository</span><span class="p">(</span><span class="n">Repository</span><span class="p">[</span><span class="n">Order</span><span class="p">,</span> <span class="nb">str</span><span class="p">]):</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_by_customer_phone_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">phone</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Order</span><span class="p">]:</span>
+        <span class="k">pass</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_orders_by_status_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">status</span><span class="p">:</span> <span class="n">OrderStatus</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Order</span><span class="p">]:</span>
+        <span class="k">pass</span>
+
+<span class="c1"># File-based implementation (development)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">FileOrderRepository</span><span class="p">(</span><span class="n">IOrderRepository</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_directory</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_directory</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">data_directory</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_directory</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">save_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">order</span><span class="p">:</span> <span class="n">Order</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Order</span><span class="p">:</span>
+        <span class="n">order_data</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">"id"</span><span class="p">:</span> <span class="n">order</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+            <span class="s2">"customer_name"</span><span class="p">:</span> <span class="n">order</span><span class="o">.</span><span class="n">customer_name</span><span class="p">,</span>
+            <span class="s2">"status"</span><span class="p">:</span> <span class="n">order</span><span class="o">.</span><span class="n">status</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+            <span class="s2">"total_amount"</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">order</span><span class="o">.</span><span class="n">total_amount</span><span class="p">),</span>
+            <span class="s2">"created_at"</span><span class="p">:</span> <span class="n">order</span><span class="o">.</span><span class="n">created_at</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span>
+        <span class="p">}</span>
+
+        <span class="n">file_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_directory</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">order</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">.json"</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="s1">'w'</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">order_data</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">order</span>
+
+<span class="c1"># MongoDB implementation (production)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">MongoOrderRepository</span><span class="p">(</span><span class="n">IOrderRepository</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">collection</span><span class="p">:</span> <span class="n">Collection</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">collection</span> <span class="o">=</span> <span class="n">collection</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">save_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">order</span><span class="p">:</span> <span class="n">Order</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Order</span><span class="p">:</span>
+        <span class="n">document</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_order_to_document</span><span class="p">(</span><span class="n">order</span><span class="p">)</span>
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">collection</span><span class="o">.</span><span class="n">insert_one</span><span class="p">(</span><span class="n">document</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">order</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_orders_by_status_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">status</span><span class="p">:</span> <span class="n">OrderStatus</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Order</span><span class="p">]:</span>
+        <span class="n">cursor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">collection</span><span class="o">.</span><span class="n">find</span><span class="p">({</span><span class="s2">"status"</span><span class="p">:</span> <span class="n">status</span><span class="o">.</span><span class="n">value</span><span class="p">})</span>
+        <span class="n">documents</span> <span class="o">=</span> <span class="k">await</span> <span class="n">cursor</span><span class="o">.</span><span class="n">to_list</span><span class="p">(</span><span class="n">length</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_document_to_order</span><span class="p">(</span><span class="n">doc</span><span class="p">)</span> <span class="k">for</span> <span class="n">doc</span> <span class="ow">in</span> <span class="n">documents</span><span class="p">]</span>
+
+<span class="c1"># Event sourcing for complex workflows</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">EventSourcedOrderRepository</span><span class="p">(</span><span class="n">IOrderRepository</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Track complete order lifecycle through events"""</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">save_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">order</span><span class="p">:</span> <span class="n">Order</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Order</span><span class="p">:</span>
+        <span class="c1"># Persist domain events instead of just final state</span>
+        <span class="n">events</span> <span class="o">=</span> <span class="n">order</span><span class="o">.</span><span class="n">get_uncommitted_events</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">events</span><span class="p">:</span>
+            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">event_store</span><span class="o">.</span><span class="n">append_async</span><span class="p">(</span><span class="n">order</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">event</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">order</span>
+</code></pre></div>
+<p><strong><a href="../features/data-access/">📖 Data Access with Mario's Pizzeria</a></strong></p>
+<h3 id="object-mapping">📊 Object Mapping<a class="headerlink" href="#object-mapping" title="Permanent link">¶</a></h3>
+<p>Bidirectional mapping between domain entities and DTOs:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Automatic mapping configuration</span>
+<span class="n">builder</span><span class="o">.</span><span class="n">services</span><span class="o">.</span><span class="n">add_auto_mapper</span><span class="p">()</span>
+
+<span class="c1"># Domain entity</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Order</span><span class="p">(</span><span class="n">Entity</span><span class="p">):</span>
+    <span class="n">customer_name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">pizzas</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Pizza</span><span class="p">]</span> 
+    <span class="n">total_amount</span><span class="p">:</span> <span class="n">Decimal</span>
+    <span class="n">status</span><span class="p">:</span> <span class="n">OrderStatus</span>
+
+<span class="c1"># DTO for API</span>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">OrderDto</span><span class="p">:</span>
+    <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">customer_name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">pizzas</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">PizzaDto</span><span class="p">]</span>
+    <span class="n">total_amount</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">status</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">created_at</span><span class="p">:</span> <span class="nb">str</span>
+
+<span class="c1"># Usage in handlers</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">PlaceOrderCommandHandler</span><span class="p">(</span><span class="n">CommandHandler</span><span class="p">[</span><span class="n">PlaceOrderCommand</span><span class="p">,</span> <span class="n">OperationResult</span><span class="p">[</span><span class="n">OrderDto</span><span class="p">]]):</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">handle_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command</span><span class="p">:</span> <span class="n">PlaceOrderCommand</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">OperationResult</span><span class="p">[</span><span class="n">OrderDto</span><span class="p">]:</span>
+        <span class="c1"># Create domain entity</span>
+        <span class="n">order</span> <span class="o">=</span> <span class="n">Order</span><span class="o">.</span><span class="n">create_new</span><span class="p">(</span><span class="n">command</span><span class="o">.</span><span class="n">customer_name</span><span class="p">,</span> <span class="o">...</span><span class="p">)</span>
+
+        <span class="c1"># Save entity</span>
+        <span class="n">saved_order</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">order_repository</span><span class="o">.</span><span class="n">save_async</span><span class="p">(</span><span class="n">order</span><span class="p">)</span>
+
+        <span class="c1"># Map to DTO for response</span>
+        <span class="n">order_dto</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mapper</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">saved_order</span><span class="p">,</span> <span class="n">OrderDto</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">created</span><span class="p">(</span><span class="n">order_dto</span><span class="p">)</span>
+</code></pre></div>
+<h2 id="learn-through-marios-pizzeria">🎓 Learn Through Mario's Pizzeria<a class="headerlink" href="#learn-through-marios-pizzeria" title="Permanent link">¶</a></h2>
+<p>All documentation uses <strong>Mario's Pizzeria</strong> as a consistent, comprehensive example:</p>
+<h3 id="complete-business-domain">🍕 Complete Business Domain<a class="headerlink" href="#complete-business-domain" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>👥 Customer Management</strong>: Registration, authentication, order history</li>
+<li><strong>📋 Order Processing</strong>: Place orders, payment processing, status tracking  </li>
+<li><strong>🍕 Menu Management</strong>: Pizzas, ingredients, pricing, categories</li>
+<li><strong>👨‍🍳 Kitchen Operations</strong>: Order queue, preparation workflow, notifications</li>
+<li><strong>📊 Business Analytics</strong>: Sales reports, popular items, customer insights</li>
+<li><strong>🔐 Staff Authentication</strong>: Role-based access for different staff functions</li>
+</ul>
+<h3 id="architecture-demonstrated">🏗️ Architecture Demonstrated<a class="headerlink" href="#architecture-demonstrated" title="Permanent link">¶</a></h3>
+<p>Each major framework feature is shown through realistic pizzeria scenarios:</p>
+<ul>
+<li><strong>🌐 API Layer</strong>: RESTful endpoints for customers and staff</li>
+<li><strong>� Application Layer</strong>: Business workflows like order processing</li>
+<li><strong>🏛️ Domain Layer</strong>: Rich business entities with validation and events  </li>
+<li><strong>🔌 Integration Layer</strong>: File storage, MongoDB, payment services, SMS notifications</li>
+</ul>
+<h3 id="progressive-learning-path">🎯 Progressive Learning Path<a class="headerlink" href="#progressive-learning-path" title="Permanent link">¶</a></h3>
+<ol>
+<li><strong><a href="../getting-started/">🚀 Getting Started</a></strong> - Build your first pizzeria app step-by-step</li>
+<li><strong><a href="../architecture/">🏗️ Architecture</a></strong> - Understand clean architecture through pizzeria layers</li>
+<li><strong><a href="../features/dependency-injection/">� Dependency Injection</a></strong> - Configure pizzeria services and repositories</li>
+<li><strong><a href="../features/cqrs-mediation/">🎯 CQRS &amp; Mediation</a></strong> - Implement order processing workflows</li>
+<li><strong><a href="../features/mvc-controllers/">� MVC Controllers</a></strong> - Build pizzeria API endpoints</li>
+<li><strong><a href="../features/data-access/">🗄️ Data Access</a></strong> - Persist orders with file and database storage</li>
+</ol>
+<h2 id="documentation">📚 Documentation<a class="headerlink" href="#documentation" title="Permanent link">¶</a></h2>
+<h3 id="getting-started">🚀 Getting Started<a class="headerlink" href="#getting-started" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong><a href="../getting-started/">Quick Start Guide</a></strong> - Build Mario's Pizzeria in 7 steps</li>
+<li><strong><a href="../architecture/">Architecture Overview</a></strong> - Clean architecture through pizzeria example</li>
+<li><strong><a href="../getting-started/#project-structure">Project Structure</a></strong> - Organize pizzeria code properly</li>
+</ul>
+<h3 id="feature-guides">🎪 Feature Guides<a class="headerlink" href="#feature-guides" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Mario's Pizzeria Example</th>
+<th>Documentation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>🏗️ Architecture</strong></td>
+<td>Complete pizzeria system layers</td>
+<td><a href="../architecture/">📖 Guide</a></td>
+</tr>
+<tr>
+<td><strong>💉 Dependency Injection</strong></td>
+<td>Service registration for pizzeria</td>
+<td><a href="../features/dependency-injection/">📖 Guide</a></td>
+</tr>
+<tr>
+<td><strong>🎯 CQRS &amp; Mediation</strong></td>
+<td>Order processing commands &amp; queries</td>
+<td><a href="../features/cqrs-mediation/">📖 Guide</a></td>
+</tr>
+<tr>
+<td><strong>🔌 MVC Controllers</strong></td>
+<td>Pizzeria API endpoints</td>
+<td><a href="../features/mvc-controllers/">📖 Guide</a></td>
+</tr>
+<tr>
+<td><strong>🗄️ Data Access</strong></td>
+<td>Order &amp; menu repositories</td>
+<td><a href="../features/data-access/">📖 Guide</a></td>
+</tr>
+</tbody>
+</table>
+<h2 id="installation-requirements">🛠️ Installation &amp; Requirements<a class="headerlink" href="#installation-requirements" title="Permanent link">¶</a></h2>
+<h3 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>Python 3.8+</strong> (Python 3.11+ recommended)</li>
+<li><strong>pip</strong> or <strong>poetry</strong> for dependency management</li>
+</ul>
+<h3 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Install from PyPI (coming soon)</span>
+pip<span class="w"> </span>install<span class="w"> </span>neuroglia
+
+<span class="c1"># Or install from source for development</span>
+git<span class="w"> </span>clone<span class="w"> </span>https://github.com/neuroglia-io/python.git
+<span class="nb">cd</span><span class="w"> </span>python
+pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.
+</code></pre></div>
+<h3 id="optional-dependencies">Optional Dependencies<a class="headerlink" href="#optional-dependencies" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># MongoDB support</span>
+pip<span class="w"> </span>install<span class="w"> </span>neuroglia<span class="o">[</span>mongo<span class="o">]</span>
+
+<span class="c1"># Event sourcing with EventStoreDB</span>
+pip<span class="w"> </span>install<span class="w"> </span>neuroglia<span class="o">[</span>eventstore<span class="o">]</span>
+
+<span class="c1"># All features</span>
+pip<span class="w"> </span>install<span class="w"> </span>neuroglia<span class="o">[</span>all<span class="o">]</span>
+</code></pre></div>
+<h2 id="community-support">🤝 Community &amp; Support<a class="headerlink" href="#community-support" title="Permanent link">¶</a></h2>
+<h3 id="getting-help">Getting Help<a class="headerlink" href="#getting-help" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>📖 Documentation</strong>: Comprehensive guides with Mario's Pizzeria examples</li>
+<li><strong>💬 GitHub Discussions</strong>: Ask questions and share ideas</li>
+<li><strong>🐛 Issues</strong>: Report bugs and request features</li>
+<li><strong>📧 Email</strong>: Contact maintainers directly</li>
+</ul>
+<h3 id="contributing">Contributing<a class="headerlink" href="#contributing" title="Permanent link">¶</a></h3>
+<p>We welcome contributions from the community:</p>
+<ul>
+<li>📝 <strong>Documentation</strong> - Help improve pizzeria examples and guides</li>
+<li>🐛 <strong>Bug Reports</strong> - Help us identify and fix issues  </li>
+<li>✨ <strong>Features</strong> - Propose new framework capabilities</li>
+<li>🧪 <strong>Tests</strong> - Improve test coverage and quality</li>
+<li>🔧 <strong>Code</strong> - Submit PRs with improvements and fixes</li>
+</ul>
+<h3 id="roadmap">Roadmap<a class="headerlink" href="#roadmap" title="Permanent link">¶</a></h3>
+<p>Upcoming features and improvements:</p>
+<ul>
+<li><strong>Enhanced Resource Oriented Architecture</strong> - Extended watcher and controller patterns</li>
+<li><strong>Advanced Event Sourcing</strong> - More sophisticated event store integrations  </li>
+<li><strong>Performance Optimizations</strong> - Faster startup and runtime performance</li>
+<li><strong>Additional Storage Backends</strong> - PostgreSQL, Redis, and more</li>
+<li><strong>Extended Authentication</strong> - Additional OAuth providers and JWT enhancements</li>
+<li><strong>Monitoring &amp; Observability</strong> - Built-in metrics and distributed tracing</li>
+</ul>
+<h2 id="license">� License<a class="headerlink" href="#license" title="Permanent link">¶</a></h2>
+<p>This project is licensed under the <strong>MIT License</strong> - see the <a href="LICENSE">LICENSE</a> file for details.</p>
+<h2 id="why-choose-neuroglia">🌟 Why Choose Neuroglia?<a class="headerlink" href="#why-choose-neuroglia" title="Permanent link">¶</a></h2>
+<p>✅ <strong>Production Ready</strong>: Battle-tested patterns used in real-world applications<br/>
+✅ <strong>Developer Friendly</strong>: Intuitive APIs with consistent Mario's Pizzeria examples<br/>
+✅ <strong>Highly Testable</strong>: Comprehensive testing utilities and patterns built-in<br/>
+✅ <strong>Scalable Architecture</strong>: Clean architecture principles that grow with your needs<br/>
+✅ <strong>Modern Framework</strong>: Leverages latest Python 3.11+ and FastAPI features<br/>
+✅ <strong>Flexible Design</strong>: Use individual components or the complete framework<br/>
+✅ <strong>Excellent Documentation</strong>: Every feature explained through practical examples<br/>
+✅ <strong>Active Development</strong>: Continuously improved with community feedback  </p>
+<hr/>
+<p><strong>Ready to build Mario's Pizzeria?</strong> <a href="../getting-started/">Get Started Now</a> 🍕
+| <strong>Data Access</strong> | Repository pattern and persistence | <a href="../features/data-access/">📖 Guide</a> |
+| <strong>Event Handling</strong> | Events, messaging, and reactive programming | <a href="features/event-handling.md">📖 Guide</a> |
+| <strong>Object Mapping</strong> | Automatic object-to-object mapping | <a href="../features/object-mapping/">📖 Guide</a> |
+| <strong>Configuration</strong> | Settings and environment management | <a href="features/configuration.md">📖 Guide</a> |
+| <strong>Hosting</strong> | Web application hosting and lifecycle | <a href="features/hosting.md">📖 Guide</a> |</p>
+<h3 id="requirements">📋 Requirements<a class="headerlink" href="#requirements" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>Python 3.11+</strong></li>
+<li><strong>FastAPI</strong> (automatic)</li>
+<li><strong>Pydantic</strong> (automatic)</li>
+<li><strong>Optional</strong>: MongoDB, EventStoreDB, Redis (based on features used)</li>
+</ul>
+<h2 id="contributing_1">🤝 Contributing<a class="headerlink" href="#contributing_1" title="Permanent link">¶</a></h2>
+<p>We welcome contributions! Here's how you can help:</p>
+<ul>
+<li>🐛 <strong>Report bugs</strong> - Found an issue? Let us know!</li>
+<li>💡 <strong>Suggest features</strong> - Have an idea? We'd love to hear it!</li>
+<li>📝 <strong>Improve docs</strong> - Help make our documentation better</li>
+<li>🔧 <strong>Submit PRs</strong> - Code contributions are always welcome</li>
+</ul>
+<p><strong><a href="CONTRIBUTING.md">👉 Contributing Guide</a></strong></p>
+<h2 id="license_1">📄 License<a class="headerlink" href="#license_1" title="Permanent link">¶</a></h2>
+<h3 id="running-background-tasks">Running Background Tasks<a class="headerlink" href="#running-background-tasks" title="Permanent link">¶</a></h3>
+<p>Neuroglia integrates with apscheduler for background tasks:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">apscheduler.schedulers.asyncio</span><span class="w"> </span><span class="kn">import</span> <span class="n">AsyncIOScheduler</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.hosting.abstractions</span><span class="w"> </span><span class="kn">import</span> <span class="n">HostedService</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">BackgroundTaskService</span><span class="p">(</span><span class="n">HostedService</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_scheduler</span> <span class="o">=</span> <span class="n">AsyncIOScheduler</span><span class="p">()</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">start_async</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Add jobs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_scheduler</span><span class="o">.</span><span class="n">add_job</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_process_data</span><span class="p">,</span> <span class="s1">'interval'</span><span class="p">,</span> <span class="n">minutes</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_scheduler</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">stop_async</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_scheduler</span><span class="o">.</span><span class="n">shutdown</span><span class="p">()</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_process_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Task implementation</span>
+        <span class="k">pass</span>
+</code></pre></div>
+<h3 id="advanced-features">Advanced Features<a class="headerlink" href="#advanced-features" title="Permanent link">¶</a></h3>
+<h4 id="real-time-communication-with-cloudevents">Real-time Communication with CloudEvents<a class="headerlink" href="#real-time-communication-with-cloudevents" title="Permanent link">¶</a></h4>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.eventing.cloud_events.infrastructure</span><span class="w"> </span><span class="kn">import</span> <span class="n">CloudEventIngestor</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.eventing.cloud_events.decorators</span><span class="w"> </span><span class="kn">import</span> <span class="n">cloud_event_handler</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">NotificationService</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event_ingestor</span><span class="p">:</span> <span class="n">CloudEventIngestor</span><span class="p">):</span>
+        <span class="n">event_ingestor</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span><span class="s2">"user.created"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_on_user_created</span><span class="p">)</span>
+
+    <span class="nd">@cloud_event_handler</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_on_user_created</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event_data</span><span class="p">):</span>
+        <span class="c1"># Process user created event</span>
+        <span class="n">user_id</span> <span class="o">=</span> <span class="n">event_data</span><span class="p">[</span><span class="s2">"id"</span><span class="p">]</span>
+        <span class="c1"># Send notification</span>
+</code></pre></div>
+<h4 id="custom-repository-implementation">Custom Repository Implementation<a class="headerlink" href="#custom-repository-implementation" title="Permanent link">¶</a></h4>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.data.infrastructure.abstractions</span><span class="w"> </span><span class="kn">import</span> <span class="n">Repository</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">CustomRepository</span><span class="p">(</span><span class="n">Repository</span><span class="p">[</span><span class="n">Entity</span><span class="p">,</span> <span class="nb">str</span><span class="p">]):</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity</span><span class="p">:</span> <span class="n">Entity</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># Custom implementation</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity</span><span class="p">:</span> <span class="n">Entity</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># Custom implementation</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">remove</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity</span><span class="p">:</span> <span class="n">Entity</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># Custom implementation</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">find_by_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Entity</span><span class="p">]:</span>
+        <span class="c1"># Custom implementation</span>
+</code></pre></div>
+<h2 id="samples">Samples<a class="headerlink" href="#samples" title="Permanent link">¶</a></h2>
+<h3 id="openbank">OpenBank<a class="headerlink" href="#openbank" title="Permanent link">¶</a></h3>
+<p>Implements a simplified Bank that manages Accounts, Users and Transactions with full <a href="https://microservices.io/patterns/data/event-sourcing.html">Event Sourcing</a>, <a href="https://microservices.io/patterns/data/cqrs.html">CQRS</a></p>
+<p><a href="https://github.com/bvandewe/pyneuro/tree/main/samples/openbank">Explore OpenBank</a></p>
+<h3 id="desktop-controller">Desktop Controller<a class="headerlink" href="#desktop-controller" title="Permanent link">¶</a></h3>
+<p>Remotely and securely control custom files or commands on a Desktop running the app as a Docker container...</p>
+<p><a href="https://github.com/bvandewe/pyneuro/tree/main/samples/desktop-controller">Explore Desktop Controller</a></p>
+<h3 id="api-gateway">API Gateway<a class="headerlink" href="#api-gateway" title="Permanent link">¶</a></h3>
+<p>Expose single entry point for 3rd party clients into an internal layer, like a GenAI stack...
+Models a Prompt entity, enforces a business logic (e.g. Prompt' state-machine), handles scheduled background task (with persistence), exposes API with multiple Security schemes, ...</p>
+<p><a href="https://github.com/bvandewe/pyneuro/tree/main/samples/api-gateway">Explore API Gateway</a></p>
+<h3 id="cisco-remote-output-collector">Cisco Remote Output Collector<a class="headerlink" href="#cisco-remote-output-collector" title="Permanent link">¶</a></h3>
+<p>Statefull microservice that handles complex and custom HTTP Commands which in turn each encapsulates arbitrary interactions with given Cisco Device(s) via Telnet, such as <code>FindPrompt</code>, <code>CollectCommandLineOutput</code>, <code>AddConfiguration</code>, <code>SaveConfiguration</code>, <code>Ping</code>, <code>Traceroute</code>, <code>ClearNatTranslation</code>, <code>CheckReachability</code>, <code>BounceInterface</code>, <code>RunViaTelnetTo</code>, <code>FindSpanningTreeRoot</code>, ... etc.</p>
+<p><a href="https://github.com/bvandewe/ios-roc/tree/main/">Explore IOS ROC</a></p>
+<p><strong>Current state</strong>: functional but simple implemention, 100% stateless collection of multiple CLI to a single device via Telnet.</p>
+<p><strong>TODO</strong>:</p>
+<ul>
+<li>[ ] Add Session management (defines a Pod for subsequent scenarios) with persistence</li>
+<li>[ ] Add DeviceConnection and ConnectionManager</li>
+<li>[ ] Add DeviceDrivers and PromptPatterns libraries</li>
+<li>[ ] ...</li>
+</ul>
+<h2 id="deployment">Deployment<a class="headerlink" href="#deployment" title="Permanent link">¶</a></h2>
+<h3 id="docker-deployment">Docker Deployment<a class="headerlink" href="#docker-deployment" title="Permanent link">¶</a></h3>
+<p>The framework is designed to work seamlessly with Docker. A typical Dockerfile might look like:</p>
+<div class="highlight"><pre><span></span><code><span class="k">FROM</span><span class="w"> </span><span class="s">python:3.10-slim</span>
+
+<span class="k">WORKDIR</span><span class="w"> </span><span class="s">/app</span>
+
+<span class="k">COPY</span><span class="w"> </span>requirements.txt<span class="w"> </span>.
+<span class="k">RUN</span><span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>--no-cache-dir<span class="w"> </span>-r<span class="w"> </span>requirements.txt
+
+<span class="k">COPY</span><span class="w"> </span>.<span class="w"> </span>.
+
+<span class="k">EXPOSE</span><span class="w"> </span><span class="s">8000</span>
+
+<span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">"uvicorn"</span><span class="p">,</span><span class="w"> </span><span class="s2">"api.main:app"</span><span class="p">,</span><span class="w"> </span><span class="s2">"--host"</span><span class="p">,</span><span class="w"> </span><span class="s2">"0.0.0.0"</span><span class="p">,</span><span class="w"> </span><span class="s2">"--port"</span><span class="p">,</span><span class="w"> </span><span class="s2">"8000"</span><span class="p">]</span>
+</code></pre></div>
+<h3 id="environment-configuration">Environment Configuration<a class="headerlink" href="#environment-configuration" title="Permanent link">¶</a></h3>
+<p>Following the 12-Factor App principles, configuration is stored in environment variables:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.hosting.abstractions</span><span class="w"> </span><span class="kn">import</span> <span class="n">ApplicationSettings</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseSettings</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">MyAppSettings</span><span class="p">(</span><span class="n">ApplicationSettings</span><span class="p">):</span>
+    <span class="n">database_url</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">api_key</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">debug_mode</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+</code></pre></div>
+<h2 id="testing">Testing<a class="headerlink" href="#testing" title="Permanent link">¶</a></h2>
+<p>The framework supports comprehensive testing with pytest:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Example test for a command handler</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">test_create_user_command</span><span class="p">():</span>
+    <span class="c1"># Arrange</span>
+    <span class="n">handler</span> <span class="o">=</span> <span class="n">CreateUserCommandHandler</span><span class="p">(</span><span class="n">mock_repository</span><span class="p">)</span>
+    <span class="n">command</span> <span class="o">=</span> <span class="n">CreateUserCommand</span><span class="p">(</span><span class="s2">"test"</span><span class="p">,</span> <span class="s2">"test@example.com"</span><span class="p">)</span>
+
+    <span class="c1"># Act</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">handler</span><span class="o">.</span><span class="n">handle</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
+
+    <span class="c1"># Assert</span>
+    <span class="k">assert</span> <span class="n">result</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+    <span class="k">assert</span> <span class="n">mock_repository</span><span class="o">.</span><span class="n">add</span><span class="o">.</span><span class="n">called_once</span>
+</code></pre></div>
+<h2 id="best-practices">Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">¶</a></h2>
+<ol>
+<li><strong>Keep Domain Models Pure</strong>: Domain models should be free of infrastructure concerns</li>
+<li><strong>Use Commands for State Changes</strong>: All state-changing operations should be modeled as commands</li>
+<li><strong>Use Queries for Reading Data</strong>: All data retrieval should be modeled as queries</li>
+<li><strong>Leverage Dependency Injection</strong>: Always use DI to create loosely coupled components</li>
+<li><strong>Handle Errors with Problem Details</strong>: Use the standard ProblemDetails format for error responses</li>
+<li><strong>Follow Layered Architecture</strong>: Maintain clear boundaries between API, Application, Domain, and Integration layers</li>
+</ol>
+<h2 id="conclusion">Conclusion<a class="headerlink" href="#conclusion" title="Permanent link">¶</a></h2>
+<p>The Neuroglia Python Framework provides a comprehensive foundation for building clean, maintainable, and feature-rich microservices. By embracing modern architectural patterns like CQRS, Event Sourcing, and Clean Architecture, it helps developers create applications that are easier to understand, test, and evolve over time.</p>
+<p>For more information, check out the sample applications or contribute to the framework development.</p>
+</article>
+</div>
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+</div>
+<button class="md-top md-icon" data-md-component="top" hidden="" type="button">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"></path></svg>
+  Back to top
+</button>
+</main>
+<footer class="md-footer">
+<div class="md-footer-meta md-typeset">
+<div class="md-footer-meta__inner md-grid">
+<div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" rel="noopener" target="_blank">
+      Material for MkDocs
+    </a>
+</div>
+<div class="md-social">
+<a class="md-social__link" href="https://github.com/bvandewe/pyneuro" rel="noopener" target="_blank" title="github.com">
+<svg viewbox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><!--! Font Awesome Free 7.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"></path></svg>
+</a>
+</div>
+</div>
+</div>
+</footer>
+</div>
+<div class="md-dialog" data-md-component="dialog">
+<div class="md-dialog__inner md-typeset"></div>
+</div>
+<script id="__config" type="application/json">{"base": "..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.expand", "navigation.top", "search.highlight", "search.share"], "search": "../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+<script src="../assets/javascripts/bundle.f55a23d4.min.js"></script>
+</body>
+</html>
