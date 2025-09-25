@@ -413,6 +413,46 @@
 </a>
 </li>
 <li class="md-nav__item">
+<a class="md-nav__link" href="../../features/background-task-scheduling/">
+<span class="md-ellipsis">
+    Background Task Scheduling
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/redis-cache-repository/">
+<span class="md-ellipsis">
+    Redis Cache Repository
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/http-service-client/">
+<span class="md-ellipsis">
+    HTTP Service Client
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/case-conversion-utilities/">
+<span class="md-ellipsis">
+    Case Conversion Utilities
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/enhanced-model-validation/">
+<span class="md-ellipsis">
+    Enhanced Model Validation
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
 <a class="md-nav__link" href="../../features/mermaid-diagrams/">
 <span class="md-ellipsis">
     Mermaid Diagrams
@@ -1739,7 +1779,7 @@
 <h2 id="what-youll-learn">🎯 What You'll Learn<a class="headerlink" href="#what-youll-learn" title="Permanent link">¶</a></h2>
 <ul>
 <li><strong>Remote System Control</strong>: SSH-based command execution on host systems</li>
-<li><strong>Background Service Patterns</strong>: Periodic self-registration and heartbeat services  </li>
+<li><strong>Background Service Patterns</strong>: Periodic self-registration and heartbeat services</li>
 <li><strong>Cloud Event Publishing</strong>: Automated service discovery and registration events</li>
 <li><strong>System Integration</strong>: Host system information gathering and state management</li>
 <li><strong>OAuth2 Security</strong>: Enterprise authentication with secure SSH key management</li>
@@ -1824,7 +1864,7 @@
 
     <span class="k">def</span><span class="w"> </span><span class="nf">update_system_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_state</span><span class="p">:</span> <span class="n">HostState</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">host_state</span> <span class="o">=</span> <span class="n">new_state</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">last_seen</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">last_seen</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">)</span>
 </code></pre></div>
 <h3 id="4-commandquery-pattern-for-remote-operations">4. <strong>Command/Query Pattern for Remote Operations</strong><a class="headerlink" href="#4-commandquery-pattern-for-remote-operations" title="Permanent link">¶</a></h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Remote command execution</span>
@@ -2001,15 +2041,15 @@ cp<span class="w"> </span>.env.example<span class="w"> </span>.env
 <span class="c1"># Edit .env with your settings</span>
 
 <span class="c1"># 3. Mount SSH private key and run</span>
-docker<span class="w"> </span>run<span class="w"> </span>-d<span class="w"> </span>
-<span class="w">  </span>-p<span class="w"> </span><span class="m">8080</span>:80<span class="w"> </span>
-<span class="w">  </span>-v<span class="w"> </span>~/.ssh/desktop_controller_key:/app/id_rsa:ro<span class="w"> </span>
-<span class="w">  </span>-e<span class="w"> </span><span class="nv">DOCKER_HOST_USER_NAME</span><span class="o">=</span>sys-admin<span class="w"> </span>
-<span class="w">  </span>-e<span class="w"> </span><span class="nv">JWT_AUTHORITY</span><span class="o">=</span>http://your-keycloak/realms/mozart<span class="w"> </span>
+docker<span class="w"> </span>run<span class="w"> </span>-d
+<span class="w">  </span>-p<span class="w"> </span><span class="m">8080</span>:80
+<span class="w">  </span>-v<span class="w"> </span>~/.ssh/desktop_controller_key:/app/id_rsa:ro
+<span class="w">  </span>-e<span class="w"> </span><span class="nv">DOCKER_HOST_USER_NAME</span><span class="o">=</span>sys-admin
+<span class="w">  </span>-e<span class="w"> </span><span class="nv">JWT_AUTHORITY</span><span class="o">=</span>http://your-keycloak/realms/mozart
 <span class="w">  </span>desktop-controller:latest
 
 <span class="c1"># 4. Test the API</span>
-curl<span class="w"> </span>-H<span class="w"> </span><span class="s2">"Authorization: Bearer &lt;token&gt;"</span><span class="w"> </span>
+curl<span class="w"> </span>-H<span class="w"> </span><span class="s2">"Authorization: Bearer &lt;token&gt;"</span>
 <span class="w">     </span>http://localhost:8080/api/host/info
 </code></pre></div>
 <h3 id="development-setup">Development Setup<a class="headerlink" href="#development-setup" title="Permanent link">¶</a></h3>
@@ -2304,11 +2344,11 @@ open<span class="w"> </span>http://localhost:8080/docs
 <h3 id="setup">Setup<a class="headerlink" href="#setup" title="Permanent link">¶</a></h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># 0. Prerequisites:</span>
 <span class="c1">#    Have Python 3.12 installed</span>
-<span class="c1"># </span>
+<span class="c1">#</span>
 <span class="c1">#    - Create/Activate a local python environment (e.g. with pyenv)</span>
 <span class="c1">#      pyenv virtualenv 3.12.2 desktop-controller</span>
 <span class="c1">#      pyenv activate desktop-controller</span>
-<span class="c1"># </span>
+<span class="c1">#</span>
 <span class="c1">#    - Start Docker Desktop locally</span>
 <span class="c1">#</span>
 <span class="c1"># 1. Clone the repository</span>
@@ -2322,7 +2362,7 @@ git<span class="w"> </span>clone<span class="w"> </span>git@....
 pre-commit<span class="w"> </span>install
 
 <span class="c1"># pip install poetry</span>
-poetry<span class="w"> </span>lock<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>poetry<span class="w"> </span>install<span class="w"> </span>
+poetry<span class="w"> </span>lock<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>poetry<span class="w"> </span>install
 
 <span class="c1"># 2. Start the docker-compose stack</span>
 <span class="c1"># sudo apt-get install make</span>

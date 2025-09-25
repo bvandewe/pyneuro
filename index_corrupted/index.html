@@ -411,6 +411,46 @@
 </a>
 </li>
 <li class="md-nav__item">
+<a class="md-nav__link" href="../features/background-task-scheduling/">
+<span class="md-ellipsis">
+    Background Task Scheduling
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../features/redis-cache-repository/">
+<span class="md-ellipsis">
+    Redis Cache Repository
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../features/http-service-client/">
+<span class="md-ellipsis">
+    HTTP Service Client
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../features/case-conversion-utilities/">
+<span class="md-ellipsis">
+    Case Conversion Utilities
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../features/enhanced-model-validation/">
+<span class="md-ellipsis">
+    Enhanced Model Validation
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
 <a class="md-nav__link" href="../features/mermaid-diagrams/">
 <span class="md-ellipsis">
     Mermaid Diagrams
@@ -950,7 +990,7 @@
 <ul>
 <li><strong>� CQRS &amp; Mediation</strong>: Built-in Command Query Responsibility Segregation with mediator pattern</li>
 <li><strong>💉 Dependency Injection</strong>: Lightweight container with automatic service discovery</li>
-<li><strong>🔌 MVC Controllers</strong>: Class-based controllers with automatic OpenAPI generation  </li>
+<li><strong>🔌 MVC Controllers</strong>: Class-based controllers with automatic OpenAPI generation</li>
 <li><strong>📡 Event-Driven</strong>: Native CloudEvents support and domain event handling</li>
 <li><strong>🗄️ Data Access</strong>: Repository pattern with file-based, MongoDB, and event sourcing support</li>
 <li><strong>🧪 Testing Utilities</strong>: Comprehensive testing patterns for all architectural layers</li>
@@ -1044,7 +1084,7 @@ curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </spa
          ↓ Commands &amp; Queries
     💼 Application Layer (CQRS Handlers)
          PlaceOrderHandler, GetMenuHandler, UpdateOrderStatusHandler
-         ↓ Domain Operations  
+         ↓ Domain Operations
     🏛️ Domain Layer (Business Logic)
          Order, Pizza, Customer entities with business rules
          ↑ Repository Interfaces
@@ -1064,13 +1104,13 @@ curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </spa
 <p>Powerful service container demonstrated through Mario's Pizzeria:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Service registration for pizzeria</span>
 <span class="n">builder</span><span class="o">.</span><span class="n">services</span><span class="o">.</span><span class="n">add_scoped</span><span class="p">(</span><span class="n">IOrderRepository</span><span class="p">,</span> <span class="n">FileOrderRepository</span><span class="p">)</span>
-<span class="n">builder</span><span class="o">.</span><span class="n">services</span><span class="o">.</span><span class="n">add_scoped</span><span class="p">(</span><span class="n">IPaymentService</span><span class="p">,</span> <span class="n">MockPaymentService</span><span class="p">)</span> 
+<span class="n">builder</span><span class="o">.</span><span class="n">services</span><span class="o">.</span><span class="n">add_scoped</span><span class="p">(</span><span class="n">IPaymentService</span><span class="p">,</span> <span class="n">MockPaymentService</span><span class="p">)</span>
 <span class="n">builder</span><span class="o">.</span><span class="n">services</span><span class="o">.</span><span class="n">add_mediator</span><span class="p">()</span>
 <span class="n">builder</span><span class="o">.</span><span class="n">services</span><span class="o">.</span><span class="n">add_controllers</span><span class="p">([</span><span class="s2">"api.controllers"</span><span class="p">])</span>
 
 <span class="c1"># Constructor injection in controllers</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">OrdersController</span><span class="p">(</span><span class="n">ControllerBase</span><span class="p">):</span>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">service_provider</span><span class="p">:</span> <span class="n">ServiceProviderBase</span><span class="p">,</span> 
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">service_provider</span><span class="p">:</span> <span class="n">ServiceProviderBase</span><span class="p">,</span>
                  <span class="n">mapper</span><span class="p">:</span> <span class="n">Mapper</span><span class="p">,</span> <span class="n">mediator</span><span class="p">:</span> <span class="n">Mediator</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">service_provider</span><span class="p">,</span> <span class="n">mapper</span><span class="p">,</span> <span class="n">mediator</span><span class="p">)</span>
 
@@ -1094,7 +1134,7 @@ curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </spa
 
 <span class="c1"># Handler with business logic</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">PlaceOrderCommandHandler</span><span class="p">(</span><span class="n">CommandHandler</span><span class="p">[</span><span class="n">PlaceOrderCommand</span><span class="p">,</span> <span class="n">OperationResult</span><span class="p">[</span><span class="n">OrderDto</span><span class="p">]]):</span>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">order_repository</span><span class="p">:</span> <span class="n">IOrderRepository</span><span class="p">,</span> 
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">order_repository</span><span class="p">:</span> <span class="n">IOrderRepository</span><span class="p">,</span>
                  <span class="n">payment_service</span><span class="p">:</span> <span class="n">IPaymentService</span><span class="p">,</span>
                  <span class="n">mapper</span><span class="p">:</span> <span class="n">Mapper</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">order_repository</span> <span class="o">=</span> <span class="n">order_repository</span>
@@ -1105,7 +1145,7 @@ curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </spa
         <span class="c1"># 1. Create domain entity with business logic</span>
         <span class="n">pizzas</span> <span class="o">=</span> <span class="p">[</span><span class="n">Pizza</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">p</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="n">p</span><span class="o">.</span><span class="n">extras</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">command</span><span class="o">.</span><span class="n">pizzas</span><span class="p">]</span>
         <span class="n">order</span> <span class="o">=</span> <span class="n">Order</span><span class="o">.</span><span class="n">create_new</span><span class="p">(</span>
-            <span class="n">command</span><span class="o">.</span><span class="n">customer_name</span><span class="p">,</span> 
+            <span class="n">command</span><span class="o">.</span><span class="n">customer_name</span><span class="p">,</span>
             <span class="n">command</span><span class="o">.</span><span class="n">customer_phone</span><span class="p">,</span>
             <span class="n">command</span><span class="o">.</span><span class="n">customer_address</span><span class="p">,</span>
             <span class="n">pizzas</span><span class="p">,</span>
@@ -1125,7 +1165,7 @@ curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </spa
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">created</span><span class="p">(</span><span class="n">order_dto</span><span class="p">)</span>
 
 <span class="c1"># Query for retrieving menu</span>
-<span class="nd">@dataclass</span>  
+<span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">GetMenuQuery</span><span class="p">(</span><span class="n">Query</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">PizzaDto</span><span class="p">]]):</span>
     <span class="n">category</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 
@@ -1210,7 +1250,7 @@ curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </spa
 <span class="k">class</span><span class="w"> </span><span class="nc">Order</span><span class="p">(</span><span class="n">Entity</span><span class="p">):</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">update_status</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_status</span><span class="p">:</span> <span class="n">OrderStatus</span><span class="p">,</span> <span class="n">updated_by</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">new_status</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">last_updated</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">last_updated</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">updated_by</span> <span class="o">=</span> <span class="n">updated_by</span>
 
         <span class="c1"># Raise domain event</span>
@@ -1287,7 +1327,7 @@ curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </spa
 <span class="c1"># Domain entity</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Order</span><span class="p">(</span><span class="n">Entity</span><span class="p">):</span>
     <span class="n">customer_name</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">pizzas</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Pizza</span><span class="p">]</span> 
+    <span class="n">pizzas</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Pizza</span><span class="p">]</span>
     <span class="n">total_amount</span><span class="p">:</span> <span class="n">Decimal</span>
     <span class="n">status</span><span class="p">:</span> <span class="n">OrderStatus</span>
 
@@ -1319,7 +1359,7 @@ curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </spa
 <h3 id="complete-business-domain">🍕 Complete Business Domain<a class="headerlink" href="#complete-business-domain" title="Permanent link">¶</a></h3>
 <ul>
 <li><strong>👥 Customer Management</strong>: Registration, authentication, order history</li>
-<li><strong>📋 Order Processing</strong>: Place orders, payment processing, status tracking  </li>
+<li><strong>📋 Order Processing</strong>: Place orders, payment processing, status tracking</li>
 <li><strong>🍕 Menu Management</strong>: Pizzas, ingredients, pricing, categories</li>
 <li><strong>👨‍🍳 Kitchen Operations</strong>: Order queue, preparation workflow, notifications</li>
 <li><strong>📊 Business Analytics</strong>: Sales reports, popular items, customer insights</li>
@@ -1330,7 +1370,7 @@ curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </spa
 <ul>
 <li><strong>🌐 API Layer</strong>: RESTful endpoints for customers and staff</li>
 <li><strong>� Application Layer</strong>: Business workflows like order processing</li>
-<li><strong>🏛️ Domain Layer</strong>: Rich business entities with validation and events  </li>
+<li><strong>🏛️ Domain Layer</strong>: Rich business entities with validation and events</li>
 <li><strong>🔌 Integration Layer</strong>: File storage, MongoDB, payment services, SMS notifications</li>
 </ul>
 <h3 id="progressive-learning-path">🎯 Progressive Learning Path<a class="headerlink" href="#progressive-learning-path" title="Permanent link">¶</a></h3>
@@ -1423,7 +1463,7 @@ pip<span class="w"> </span>install<span class="w"> </span>neuroglia<span class="
 <p>We welcome contributions from the community:</p>
 <ul>
 <li>📝 <strong>Documentation</strong> - Help improve pizzeria examples and guides</li>
-<li>🐛 <strong>Bug Reports</strong> - Help us identify and fix issues  </li>
+<li>🐛 <strong>Bug Reports</strong> - Help us identify and fix issues</li>
 <li>✨ <strong>Features</strong> - Propose new framework capabilities</li>
 <li>🧪 <strong>Tests</strong> - Improve test coverage and quality</li>
 <li>🔧 <strong>Code</strong> - Submit PRs with improvements and fixes</li>
@@ -1432,7 +1472,7 @@ pip<span class="w"> </span>install<span class="w"> </span>neuroglia<span class="
 <p>Upcoming features and improvements:</p>
 <ul>
 <li><strong>Enhanced Resource Oriented Architecture</strong> - Extended watcher and controller patterns</li>
-<li><strong>Advanced Event Sourcing</strong> - More sophisticated event store integrations  </li>
+<li><strong>Advanced Event Sourcing</strong> - More sophisticated event store integrations</li>
 <li><strong>Performance Optimizations</strong> - Faster startup and runtime performance</li>
 <li><strong>Additional Storage Backends</strong> - PostgreSQL, Redis, and more</li>
 <li><strong>Extended Authentication</strong> - Additional OAuth providers and JWT enhancements</li>
@@ -1448,7 +1488,7 @@ pip<span class="w"> </span>install<span class="w"> </span>neuroglia<span class="
 ✅ <strong>Modern Framework</strong>: Leverages latest Python 3.11+ and FastAPI features<br/>
 ✅ <strong>Flexible Design</strong>: Use individual components or the complete framework<br/>
 ✅ <strong>Excellent Documentation</strong>: Every feature explained through practical examples<br/>
-✅ <strong>Active Development</strong>: Continuously improved with community feedback  </p>
+✅ <strong>Active Development</strong>: Continuously improved with community feedback</p>
 <hr/>
 <p><strong>Ready to build Mario's Pizzeria?</strong> <a href="../getting-started/">Get Started Now</a> 🍕
 | <strong>Data Access</strong> | Repository pattern and persistence | <a href="../features/data-access/">📖 Guide</a> |

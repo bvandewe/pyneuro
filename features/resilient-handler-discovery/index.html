@@ -411,6 +411,46 @@
 </a>
 </li>
 <li class="md-nav__item">
+<a class="md-nav__link" href="../background-task-scheduling/">
+<span class="md-ellipsis">
+    Background Task Scheduling
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../redis-cache-repository/">
+<span class="md-ellipsis">
+    Redis Cache Repository
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../http-service-client/">
+<span class="md-ellipsis">
+    HTTP Service Client
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../case-conversion-utilities/">
+<span class="md-ellipsis">
+    Case Conversion Utilities
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../enhanced-model-validation/">
+<span class="md-ellipsis">
+    Enhanced Model Validation
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
 <a class="md-nav__link" href="../mermaid-diagrams/">
 <span class="md-ellipsis">
     Mermaid Diagrams
@@ -798,7 +838,7 @@
 <p>Previously, <code>Mediator.configure()</code> would fail completely if a package's <code>__init__.py</code> had any import errors, even when the package contained valid handlers that could be imported individually. This blocked automatic discovery in:</p>
 <ul>
 <li><strong>Legacy migrations</strong> from UseCase patterns to CQRS handlers</li>
-<li><strong>Mixed codebases</strong> with varying dependency graphs  </li>
+<li><strong>Mixed codebases</strong> with varying dependency graphs</li>
 <li><strong>Optional dependencies</strong> that may not be available in all environments</li>
 <li><strong>Modular monoliths</strong> with packages containing both new and legacy patterns</li>
 </ul>
@@ -818,7 +858,7 @@
 
 <span class="c1"># Example fallback discovery:</span>
 <span class="c1"># application.runtime_agent.queries.get_worker_query     ✅ SUCCESS</span>
-<span class="c1"># application.runtime_agent.queries.list_workers_query   ✅ SUCCESS  </span>
+<span class="c1"># application.runtime_agent.queries.list_workers_query   ✅ SUCCESS</span>
 <span class="c1"># application.runtime_agent.queries.broken_module        ❌ SKIPPED</span>
 </code></pre></div>
 <h2 id="usage-examples">🚀 Usage Examples<a class="headerlink" href="#usage-examples" title="Permanent link">¶</a></h2>
@@ -889,7 +929,7 @@ DEBUG: Skipping submodule 'application.queries.broken_module': ImportError
 <div class="highlight"><pre><span></span><code><span class="c1"># Start with clean packages, gradually add legacy ones</span>
 <span class="n">modules</span> <span class="o">=</span> <span class="p">[</span>
     <span class="s1">'application.commands.user'</span><span class="p">,</span>      <span class="c1"># ✅ Clean CQRS handlers</span>
-    <span class="s1">'application.queries.user'</span><span class="p">,</span>       <span class="c1"># ✅ Clean CQRS handlers  </span>
+    <span class="s1">'application.queries.user'</span><span class="p">,</span>       <span class="c1"># ✅ Clean CQRS handlers</span>
     <span class="s1">'application.legacy.commands'</span><span class="p">,</span>    <span class="c1"># ⚠️  Mixed patterns - will use fallback</span>
 <span class="p">]</span>
 
@@ -913,18 +953,18 @@ DEBUG: Skipping submodule 'application.queries.broken_module': ImportError
 <span class="c1"># Before migration (uses fallback):</span>
 <span class="c1"># WARNING: Package import failed, using fallback discovery</span>
 
-<span class="c1"># After migration (normal discovery):  </span>
+<span class="c1"># After migration (normal discovery):</span>
 <span class="c1"># INFO: Successfully registered 5 handlers from package: application.commands</span>
 </code></pre></div>
 <h2 id="advanced-configuration">🔧 Advanced Configuration<a class="headerlink" href="#advanced-configuration" title="Permanent link">¶</a></h2>
 <h3 id="individual-module-specification">Individual Module Specification<a class="headerlink" href="#individual-module-specification" title="Permanent link">¶</a></h3>
-<p>You can also specify individual modules instead of packages:
+<p>You can also specify individual modules instead of packages:</p>
 <div class="highlight"><pre><span></span><code><span class="n">Mediator</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="p">[</span>
     <span class="s1">'application.commands.create_user_command'</span><span class="p">,</span>
     <span class="s1">'application.commands.update_user_command'</span><span class="p">,</span>
     <span class="s1">'application.queries.get_user_query'</span>
 <span class="p">])</span>
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="error-handling">Error Handling<a class="headerlink" href="#error-handling" title="Permanent link">¶</a></h3>
 <div class="highlight"><pre><span></span><code><span class="k">try</span><span class="p">:</span>
     <span class="n">Mediator</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="p">[</span><span class="s1">'your.package'</span><span class="p">])</span>

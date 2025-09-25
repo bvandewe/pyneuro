@@ -692,6 +692,46 @@
 </a>
 </li>
 <li class="md-nav__item">
+<a class="md-nav__link" href="../background-task-scheduling/">
+<span class="md-ellipsis">
+    Background Task Scheduling
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../redis-cache-repository/">
+<span class="md-ellipsis">
+    Redis Cache Repository
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../http-service-client/">
+<span class="md-ellipsis">
+    HTTP Service Client
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../case-conversion-utilities/">
+<span class="md-ellipsis">
+    Case Conversion Utilities
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../enhanced-model-validation/">
+<span class="md-ellipsis">
+    Enhanced Model Validation
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
 <a class="md-nav__link" href="../mermaid-diagrams/">
 <span class="md-ellipsis">
     Mermaid Diagrams
@@ -1245,7 +1285,7 @@
 <span class="k">class</span><span class="w"> </span><span class="nc">PlaceOrderCommandHandler</span><span class="p">(</span><span class="n">CommandHandler</span><span class="p">[</span><span class="n">PlaceOrderCommand</span><span class="p">,</span> <span class="n">OperationResult</span><span class="p">]):</span>
 <span class="w">    </span><span class="sd">"""Handles pizza order placement"""</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                  <span class="n">order_repository</span><span class="p">:</span> <span class="n">Repository</span><span class="p">[</span><span class="n">Order</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span>
                  <span class="n">pizza_repository</span><span class="p">:</span> <span class="n">Repository</span><span class="p">[</span><span class="n">Pizza</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span>
                  <span class="n">mapper</span><span class="p">:</span> <span class="n">Mapper</span><span class="p">,</span>
@@ -1321,7 +1361,7 @@
 <span class="k">class</span><span class="w"> </span><span class="nc">StartCookingCommandHandler</span><span class="p">(</span><span class="n">CommandHandler</span><span class="p">[</span><span class="n">StartCookingCommand</span><span class="p">,</span> <span class="n">OperationResult</span><span class="p">]):</span>
 <span class="w">    </span><span class="sd">"""Handles starting to cook an order"""</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                  <span class="n">order_repository</span><span class="p">:</span> <span class="n">Repository</span><span class="p">[</span><span class="n">Order</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span>
                  <span class="n">kitchen_service</span><span class="p">:</span> <span class="n">IKitchenService</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">order_repository</span> <span class="o">=</span> <span class="n">order_repository</span>
@@ -1356,7 +1396,7 @@
 <span class="k">class</span><span class="w"> </span><span class="nc">GetMenuQueryHandler</span><span class="p">(</span><span class="n">QueryHandler</span><span class="p">[</span><span class="n">GetMenuQuery</span><span class="p">,</span> <span class="n">OperationResult</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">dict</span><span class="p">]]]):</span>
 <span class="w">    </span><span class="sd">"""Handles menu retrieval queries"""</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                  <span class="n">pizza_repository</span><span class="p">:</span> <span class="n">Repository</span><span class="p">[</span><span class="n">Pizza</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span>
                  <span class="n">cache_service</span><span class="p">:</span> <span class="n">ICacheService</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">pizza_repository</span> <span class="o">=</span> <span class="n">pizza_repository</span>
@@ -1463,7 +1503,7 @@
 <span class="k">class</span><span class="w"> </span><span class="nc">OrderPlacedEventHandler</span><span class="p">(</span><span class="n">EventHandler</span><span class="p">[</span><span class="n">OrderPlacedEvent</span><span class="p">]):</span>
 <span class="w">    </span><span class="sd">"""Handles order placed events - sends notifications"""</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                  <span class="n">notification_service</span><span class="p">:</span> <span class="n">INotificationService</span><span class="p">,</span>
                  <span class="n">analytics_service</span><span class="p">:</span> <span class="n">IAnalyticsService</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">notification_service</span> <span class="o">=</span> <span class="n">notification_service</span>
@@ -1493,7 +1533,7 @@
 <span class="k">class</span><span class="w"> </span><span class="nc">CookingStartedEventHandler</span><span class="p">(</span><span class="n">EventHandler</span><span class="p">[</span><span class="n">CookingStartedEvent</span><span class="p">]):</span>
 <span class="w">    </span><span class="sd">"""Handles cooking started events - updates displays"""</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                  <span class="n">kitchen_display_service</span><span class="p">:</span> <span class="n">IKitchenDisplayService</span><span class="p">,</span>
                  <span class="n">performance_service</span><span class="p">:</span> <span class="n">IPerformanceService</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">kitchen_display_service</span> <span class="o">=</span> <span class="n">kitchen_display_service</span>
@@ -1518,7 +1558,7 @@
 <span class="k">class</span><span class="w"> </span><span class="nc">PizzaReadyEventHandler</span><span class="p">(</span><span class="n">EventHandler</span><span class="p">[</span><span class="n">PizzaReadyEvent</span><span class="p">]):</span>
 <span class="w">    </span><span class="sd">"""Handles pizza ready events - manages completion tracking"""</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                  <span class="n">order_service</span><span class="p">:</span> <span class="n">IOrderService</span><span class="p">,</span>
                  <span class="n">performance_service</span><span class="p">:</span> <span class="n">IPerformanceService</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">order_service</span> <span class="o">=</span> <span class="n">order_service</span>
@@ -1543,7 +1583,7 @@
 <span class="k">class</span><span class="w"> </span><span class="nc">OrderCompletedEventHandler</span><span class="p">(</span><span class="n">EventHandler</span><span class="p">[</span><span class="n">OrderCompletedEvent</span><span class="p">]):</span>
 <span class="w">    </span><span class="sd">"""Handles order completion - final notifications"""</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                  <span class="n">notification_service</span><span class="p">:</span> <span class="n">INotificationService</span><span class="p">,</span>
                  <span class="n">loyalty_service</span><span class="p">:</span> <span class="n">ILoyaltyService</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">notification_service</span> <span class="o">=</span> <span class="n">notification_service</span>
@@ -1649,14 +1689,14 @@
             <span class="n">include_seasonal</span><span class="o">=</span><span class="n">include_seasonal</span>
         <span class="p">)</span>
 
-        <span class="c1"># Execute through mediator  </span>
+        <span class="c1"># Execute through mediator</span>
         <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">mediator</span><span class="o">.</span><span class="n">execute_async</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
 
         <span class="c1"># Process result and return</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
 
     <span class="nd">@get</span><span class="p">(</span><span class="s2">"/"</span><span class="p">,</span> <span class="n">response_model</span><span class="o">=</span><span class="n">List</span><span class="p">[</span><span class="n">UserDto</span><span class="p">])</span>
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">search_users</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">search_users</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                           <span class="n">search</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">""</span><span class="p">,</span>
                           <span class="n">page</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
 </code></pre></div>
@@ -1918,7 +1958,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">email</span> <span class="o">=</span> <span class="n">email</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">first_name</span> <span class="o">=</span> <span class="n">first_name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">last_name</span> <span class="o">=</span> <span class="n">last_name</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">created_at</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">created_at</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">)</span>
 
         <span class="c1"># Raise domain event</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">raise_event</span><span class="p">(</span><span class="n">UserCreatedEvent</span><span class="p">(</span>
@@ -1970,8 +2010,8 @@
     <span class="n">mock_email_service</span> <span class="o">=</span> <span class="n">Mock</span><span class="p">()</span>
 
     <span class="n">handler</span> <span class="o">=</span> <span class="n">CreateUserCommandHandler</span><span class="p">(</span>
-        <span class="n">mock_repository</span><span class="p">,</span> 
-        <span class="n">mock_mapper</span><span class="p">,</span> 
+        <span class="n">mock_repository</span><span class="p">,</span>
+        <span class="n">mock_mapper</span><span class="p">,</span>
         <span class="n">mock_password_service</span><span class="p">,</span>
         <span class="n">mock_email_service</span>
 <span class="err">```</span><span class="n">python</span>
@@ -2055,7 +2095,7 @@
 
     <span class="n">command</span> <span class="o">=</span> <span class="n">PlaceOrderCommand</span><span class="p">(</span>
         <span class="n">customer_name</span><span class="o">=</span><span class="s2">"John Doe"</span><span class="p">,</span>
-        <span class="n">customer_phone</span><span class="o">=</span><span class="s2">"555-0123"</span><span class="p">,</span> 
+        <span class="n">customer_phone</span><span class="o">=</span><span class="s2">"555-0123"</span><span class="p">,</span>
         <span class="n">customer_address</span><span class="o">=</span><span class="s2">"123 Pizza St"</span><span class="p">,</span>
         <span class="n">pizza_items</span><span class="o">=</span><span class="p">[</span><span class="n">PizzaItem</span><span class="p">(</span><span class="n">pizza_id</span><span class="o">=</span><span class="s2">"nonexistent"</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="s2">"large"</span><span class="p">,</span> <span class="n">toppings</span><span class="o">=</span><span class="p">[])],</span>
         <span class="n">payment_method</span><span class="o">=</span><span class="s2">"cash"</span>
@@ -2114,12 +2154,12 @@
     <span class="c1"># Create order</span>
     <span class="n">order_data</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s2">"customer_name"</span><span class="p">:</span> <span class="s2">"John Doe"</span><span class="p">,</span>
-        <span class="s2">"customer_phone"</span><span class="p">:</span> <span class="s2">"555-0123"</span><span class="p">,</span> 
+        <span class="s2">"customer_phone"</span><span class="p">:</span> <span class="s2">"555-0123"</span><span class="p">,</span>
         <span class="s2">"customer_address"</span><span class="p">:</span> <span class="s2">"123 Pizza St"</span><span class="p">,</span>
         <span class="s2">"pizza_items"</span><span class="p">:</span> <span class="p">[</span>
             <span class="p">{</span>
                 <span class="s2">"pizza_id"</span><span class="p">:</span> <span class="s2">"margherita"</span><span class="p">,</span>
-                <span class="s2">"size"</span><span class="p">:</span> <span class="s2">"large"</span><span class="p">,</span> 
+                <span class="s2">"size"</span><span class="p">:</span> <span class="s2">"large"</span><span class="p">,</span>
                 <span class="s2">"toppings"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"extra_cheese"</span><span class="p">],</span>
                 <span class="s2">"special_instructions"</span><span class="p">:</span> <span class="s2">"Extra crispy"</span>
             <span class="p">}</span>
@@ -2162,10 +2202,10 @@
 <p>Each command/query should have a single, well-defined business purpose:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># ✅ Good - Single responsibility</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">PlaceOrderCommand</span><span class="p">:</span> <span class="k">pass</span>          <span class="c1"># Only handles order placement</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">UpdateOrderAddressCommand</span><span class="p">:</span> <span class="k">pass</span>  <span class="c1"># Only updates delivery address  </span>
+<span class="k">class</span><span class="w"> </span><span class="nc">UpdateOrderAddressCommand</span><span class="p">:</span> <span class="k">pass</span>  <span class="c1"># Only updates delivery address</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">StartCookingCommand</span><span class="p">:</span> <span class="k">pass</span>        <span class="c1"># Only starts cooking process</span>
 
-<span class="c1"># ❌ Avoid - Multiple responsibilities  </span>
+<span class="c1"># ❌ Avoid - Multiple responsibilities</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">ManageOrderCommand</span><span class="p">:</span>              <span class="c1"># Too broad, unclear purpose</span>
     <span class="n">action</span><span class="p">:</span> <span class="nb">str</span>  <span class="c1"># "place", "update", "cook" - violates SRP</span>
 </code></pre></div>
@@ -2264,7 +2304,7 @@
 ✅ <strong>Event-Driven Integration</strong> - Events enable loose coupling between order, kitchen, and notification systems<br/>
 ✅ <strong>Testable Components</strong> - Each handler can be unit tested in isolation<br/>
 ✅ <strong>Cross-Cutting Concerns</strong> - Pipeline behaviors handle validation, logging, and caching consistently<br/>
-✅ <strong>Business Rule Enforcement</strong> - Domain logic is centralized in command handlers  </p>
+✅ <strong>Business Rule Enforcement</strong> - Domain logic is centralized in command handlers</p>
 <h2 id="related-documentation">🔗 Related Documentation<a class="headerlink" href="#related-documentation" title="Permanent link">¶</a></h2>
 <ul>
 <li><strong><a href="../../getting-started/">Getting Started</a></strong> - Build Mario's Pizzeria step-by-step</li>
@@ -2272,10 +2312,10 @@
 <li><strong><a href="../data-access/">Data Access</a></strong> - Repository patterns and persistence</li>
 <li><strong><a href="../mvc-controllers/">MVC Controllers</a></strong> - API endpoints and request handling</li>
 <li><strong><a href="../resilient-handler-discovery/">Resilient Handler Discovery</a></strong> - Robust handler registration for mixed codebases
-class DeactivateUserCommand: pass</li>
+  class DeactivateUserCommand: pass</li>
 </ul>
 <h1 id="avoid-multiple-responsibilities">Avoid - Multiple responsibilities<a class="headerlink" href="#avoid-multiple-responsibilities" title="Permanent link">¶</a></h1>
-<p>class ManageUserCommand: pass  # Too broad
+<p>class ManageUserCommand: pass # Too broad</p>
 <div class="highlight"><pre><span></span><code>### 2. Immutable Requests
 
 Make commands and queries immutable:
@@ -2293,7 +2333,7 @@ class CreateUserCommand:
     def __init__(self):
         self.email = None
         self.first_name = None
-</code></pre></div></p>
+</code></pre></div>
 <h3 id="3-rich-domain-models">3. Rich Domain Models<a class="headerlink" href="#3-rich-domain-models" title="Permanent link">¶</a></h3>
 <p>Use domain events to decouple side effects:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Good - Domain events</span>

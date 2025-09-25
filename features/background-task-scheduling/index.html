@@ -1,0 +1,1579 @@
+
+<!DOCTYPE html>
+
+<html class="no-js" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<link href="../reactive-programming/" rel="prev"/>
+<link href="../redis-cache-repository/" rel="next"/>
+<link href="../../assets/images/favicon.png" rel="icon"/>
+<meta content="mkdocs-1.6.1, mkdocs-material-9.6.20" name="generator"/>
+<title>Background Task Scheduling - Neuroglia Python Framework</title>
+<link href="../../assets/stylesheets/main.e53b48f4.min.css" rel="stylesheet"/>
+<link href="../../assets/stylesheets/palette.06af60db.min.css" rel="stylesheet"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback" rel="stylesheet"/>
+<style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+<script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+</head>
+<body data-md-color-accent="blue" data-md-color-primary="blue" data-md-color-scheme="default" dir="ltr">
+<input autocomplete="off" class="md-toggle" data-md-toggle="drawer" id="__drawer" type="checkbox"/>
+<input autocomplete="off" class="md-toggle" data-md-toggle="search" id="__search" type="checkbox"/>
+<label class="md-overlay" for="__drawer"></label>
+<div data-md-component="skip">
+<a class="md-skip" href="#background-task-scheduling">
+          Skip to content
+        </a>
+</div>
+<div data-md-component="announce">
+</div>
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+<nav aria-label="Header" class="md-header__inner md-grid">
+<a aria-label="Neuroglia Python Framework" class="md-header__button md-logo" data-md-component="logo" href="../.." title="Neuroglia Python Framework">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+</a>
+<label class="md-header__button md-icon" for="__drawer">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+</label>
+<div class="md-header__title" data-md-component="header-title">
+<div class="md-header__ellipsis">
+<div class="md-header__topic">
+<span class="md-ellipsis">
+            Neuroglia Python Framework
+          </span>
+</div>
+<div class="md-header__topic" data-md-component="header-topic">
+<span class="md-ellipsis">
+            
+              Background Task Scheduling
+            
+          </span>
+</div>
+</div>
+</div>
+<form class="md-header__option" data-md-component="palette">
+<input aria-label="Switch to dark mode" class="md-option" data-md-color-accent="blue" data-md-color-media="" data-md-color-primary="blue" data-md-color-scheme="default" id="__palette_0" name="__palette" type="radio"/>
+<label class="md-header__button md-icon" for="__palette_1" hidden="" title="Switch to dark mode">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+</label>
+<input aria-label="Switch to light mode" class="md-option" data-md-color-accent="blue" data-md-color-media="" data-md-color-primary="blue" data-md-color-scheme="slate" id="__palette_1" name="__palette" type="radio"/>
+<label class="md-header__button md-icon" for="__palette_0" hidden="" title="Switch to light mode">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+</label>
+</form>
+<script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+<label class="md-header__button md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+</label>
+<div class="md-search" data-md-component="search" role="dialog">
+<label class="md-search__overlay" for="__search"></label>
+<div class="md-search__inner" role="search">
+<form class="md-search__form" name="search">
+<input aria-label="Search" autocapitalize="off" autocomplete="off" autocorrect="off" class="md-search__input" data-md-component="search-query" name="query" placeholder="Search" required="" spellcheck="false" type="text"/>
+<label class="md-search__icon md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+</label>
+<nav aria-label="Search" class="md-search__options">
+<a aria-label="Share" class="md-search__icon md-icon" data-clipboard="" data-clipboard-text="" data-md-component="search-share" href="javascript:void(0)" tabindex="-1" title="Share">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"></path></svg>
+</a>
+<button aria-label="Clear" class="md-search__icon md-icon" tabindex="-1" title="Clear" type="reset">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+</button>
+</nav>
+</form>
+<div class="md-search__output">
+<div class="md-search__scrollwrap" data-md-scrollfix="" tabindex="0">
+<div class="md-search-result" data-md-component="search-result">
+<div class="md-search-result__meta">
+            Initializing search
+          </div>
+<ol class="md-search-result__list" role="presentation"></ol>
+</div>
+</div>
+</div>
+</div>
+</div>
+</nav>
+<nav aria-label="Tabs" class="md-tabs" data-md-component="tabs">
+<div class="md-grid">
+<ul class="md-tabs__list">
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../..">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../getting-started/">
+          
+  
+  
+  Getting Started
+
+        </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../patterns/">
+          
+  
+  
+  Patterns
+
+        </a>
+</li>
+<li class="md-tabs__item md-tabs__item--active">
+<a class="md-tabs__link" href="../">
+          
+  
+  
+  Features
+
+        </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../guides/">
+          
+  
+  
+  Guides
+
+        </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../samples/">
+          
+  
+  
+  Sample Applications
+
+        </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../architecture/">
+        
+  
+  
+    
+  
+  Architecture
+
+      </a>
+</li>
+</ul>
+</div>
+</nav>
+</header>
+<div class="md-container" data-md-component="container">
+<main class="md-main" data-md-component="main">
+<div class="md-main__inner md-grid">
+<div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="Navigation" class="md-nav md-nav--primary md-nav--lifted" data-md-level="0">
+<label class="md-nav__title" for="__drawer">
+<a aria-label="Neuroglia Python Framework" class="md-nav__button md-logo" data-md-component="logo" href="../.." title="Neuroglia Python Framework">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+</a>
+    Neuroglia Python Framework
+  </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../..">
+<span class="md-ellipsis">
+    Home
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_2" type="checkbox"/>
+<label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+<span class="md-ellipsis">
+    Getting Started
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_2_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_2">
+<span class="md-nav__icon md-icon"></span>
+            Getting Started
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../getting-started/">
+<span class="md-ellipsis">
+    Overview
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../guides/3-min-bootstrap/">
+<span class="md-ellipsis">
+    3-Minute Bootstrap
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../guides/local-development/">
+<span class="md-ellipsis">
+    Local Development Setup
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../guides/mario-pizzeria-tutorial/">
+<span class="md-ellipsis">
+    Mario's Pizzeria Tutorial
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_3" type="checkbox"/>
+<label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+<span class="md-ellipsis">
+    Patterns
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_3_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_3">
+<span class="md-nav__icon md-icon"></span>
+            Patterns
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../patterns/">
+<span class="md-ellipsis">
+    Overview
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../patterns/clean-architecture/">
+<span class="md-ellipsis">
+    Clean Architecture
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../patterns/cqrs/">
+<span class="md-ellipsis">
+    CQRS
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../patterns/event-driven/">
+<span class="md-ellipsis">
+    Event-Driven
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../patterns/repository/">
+<span class="md-ellipsis">
+    Repository
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../patterns/resource-oriented-architecture/">
+<span class="md-ellipsis">
+    Resource-Oriented Architecture
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../patterns/watcher-reconciliation-patterns/">
+<span class="md-ellipsis">
+    Watcher &amp; Reconciliation Patterns
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../patterns/watcher-reconciliation-execution/">
+<span class="md-ellipsis">
+    Watcher &amp; Reconciliation Execution
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+<input checked="" class="md-nav__toggle md-toggle" id="__nav_4" type="checkbox"/>
+<label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+<span class="md-ellipsis">
+    Features
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="true" aria-labelledby="__nav_4_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_4">
+<span class="md-nav__icon md-icon"></span>
+            Features
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../">
+<span class="md-ellipsis">
+    Overview
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../dependency-injection/">
+<span class="md-ellipsis">
+    Dependency Injection
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../cqrs-mediation/">
+<span class="md-ellipsis">
+    CQRS &amp; Mediation
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../mvc-controllers/">
+<span class="md-ellipsis">
+    MVC Controllers
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../data-access/">
+<span class="md-ellipsis">
+    Data Access
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../event-sourcing/">
+<span class="md-ellipsis">
+    Event Sourcing
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../serialization/">
+<span class="md-ellipsis">
+    Serialization
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../object-mapping/">
+<span class="md-ellipsis">
+    Object Mapping
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../reactive-programming/">
+<span class="md-ellipsis">
+    Reactive Programming
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--active">
+<input class="md-nav__toggle md-toggle" id="__toc" type="checkbox"/>
+<label class="md-nav__link md-nav__link--active" for="__toc">
+<span class="md-ellipsis">
+    Background Task Scheduling
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<a class="md-nav__link md-nav__link--active" href="./">
+<span class="md-ellipsis">
+    Background Task Scheduling
+    
+  </span>
+</a>
+<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#overview">
+<span class="md-ellipsis">
+      🎯 Overview
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#architecture">
+<span class="md-ellipsis">
+      🏗️ Architecture
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#basic-usage">
+<span class="md-ellipsis">
+      🚀 Basic Usage
+    </span>
+</a>
+<nav aria-label="🚀 Basic Usage" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#service-registration">
+<span class="md-ellipsis">
+      Service Registration
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#scheduled-task-definition">
+<span class="md-ellipsis">
+      Scheduled Task Definition
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#periodic-tasks">
+<span class="md-ellipsis">
+      📅 Periodic Tasks
+    </span>
+</a>
+<nav aria-label="📅 Periodic Tasks" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#daily-operations">
+<span class="md-ellipsis">
+      Daily Operations
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#hourly-monitoring">
+<span class="md-ellipsis">
+      Hourly Monitoring
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#reactive-task-processing">
+<span class="md-ellipsis">
+      🔄 Reactive Task Processing
+    </span>
+</a>
+<nav aria-label="🔄 Reactive Task Processing" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#event-driven-scheduling">
+<span class="md-ellipsis">
+      Event-Driven Scheduling
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#stream-processing-integration">
+<span class="md-ellipsis">
+      Stream Processing Integration
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#error-handling-and-resilience">
+<span class="md-ellipsis">
+      🛡️ Error Handling and Resilience
+    </span>
+</a>
+<nav aria-label="🛡️ Error Handling and Resilience" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#circuit-breaker-integration">
+<span class="md-ellipsis">
+      Circuit Breaker Integration
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#comprehensive-error-monitoring">
+<span class="md-ellipsis">
+      Comprehensive Error Monitoring
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#advanced-configuration">
+<span class="md-ellipsis">
+      🔧 Advanced Configuration
+    </span>
+</a>
+<nav aria-label="🔧 Advanced Configuration" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#redis-job-store-configuration">
+<span class="md-ellipsis">
+      Redis Job Store Configuration
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#custom-task-executors">
+<span class="md-ellipsis">
+      Custom Task Executors
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#testing">
+<span class="md-ellipsis">
+      🧪 Testing
+    </span>
+</a>
+<nav aria-label="🧪 Testing" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#unit-testing-with-mocks">
+<span class="md-ellipsis">
+      Unit Testing with Mocks
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#integration-testing">
+<span class="md-ellipsis">
+      Integration Testing
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#monitoring-and-observability">
+<span class="md-ellipsis">
+      📊 Monitoring and Observability
+    </span>
+</a>
+<nav aria-label="📊 Monitoring and Observability" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#task-execution-metrics">
+<span class="md-ellipsis">
+      Task Execution Metrics
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#related-documentation">
+<span class="md-ellipsis">
+      🔗 Related Documentation
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../redis-cache-repository/">
+<span class="md-ellipsis">
+    Redis Cache Repository
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../http-service-client/">
+<span class="md-ellipsis">
+    HTTP Service Client
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../case-conversion-utilities/">
+<span class="md-ellipsis">
+    Case Conversion Utilities
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../enhanced-model-validation/">
+<span class="md-ellipsis">
+    Enhanced Model Validation
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../mermaid-diagrams/">
+<span class="md-ellipsis">
+    Mermaid Diagrams
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_5" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+<span class="md-ellipsis">
+    Guides
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_5_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_5">
+<span class="md-nav__icon md-icon"></span>
+            Guides
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../guides/">
+<span class="md-ellipsis">
+    Overview
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../guides/project-setup/">
+<span class="md-ellipsis">
+    Project Setup
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../guides/testing-setup/">
+<span class="md-ellipsis">
+    Testing Setup
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_6" type="checkbox"/>
+<label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+<span class="md-ellipsis">
+    Sample Applications
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_6_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_6">
+<span class="md-nav__icon md-icon"></span>
+            Sample Applications
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../samples/">
+<span class="md-ellipsis">
+    Overview
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../samples/openbank/">
+<span class="md-ellipsis">
+    OpenBank
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../samples/api_gateway/">
+<span class="md-ellipsis">
+    API Gateway
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../samples/desktop_controller/">
+<span class="md-ellipsis">
+    Desktop Controller
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../samples/lab-resource-manager/">
+<span class="md-ellipsis">
+    Lab Resource Manager
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../architecture/">
+<span class="md-ellipsis">
+    Architecture
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#overview">
+<span class="md-ellipsis">
+      🎯 Overview
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#architecture">
+<span class="md-ellipsis">
+      🏗️ Architecture
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#basic-usage">
+<span class="md-ellipsis">
+      🚀 Basic Usage
+    </span>
+</a>
+<nav aria-label="🚀 Basic Usage" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#service-registration">
+<span class="md-ellipsis">
+      Service Registration
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#scheduled-task-definition">
+<span class="md-ellipsis">
+      Scheduled Task Definition
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#periodic-tasks">
+<span class="md-ellipsis">
+      📅 Periodic Tasks
+    </span>
+</a>
+<nav aria-label="📅 Periodic Tasks" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#daily-operations">
+<span class="md-ellipsis">
+      Daily Operations
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#hourly-monitoring">
+<span class="md-ellipsis">
+      Hourly Monitoring
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#reactive-task-processing">
+<span class="md-ellipsis">
+      🔄 Reactive Task Processing
+    </span>
+</a>
+<nav aria-label="🔄 Reactive Task Processing" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#event-driven-scheduling">
+<span class="md-ellipsis">
+      Event-Driven Scheduling
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#stream-processing-integration">
+<span class="md-ellipsis">
+      Stream Processing Integration
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#error-handling-and-resilience">
+<span class="md-ellipsis">
+      🛡️ Error Handling and Resilience
+    </span>
+</a>
+<nav aria-label="🛡️ Error Handling and Resilience" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#circuit-breaker-integration">
+<span class="md-ellipsis">
+      Circuit Breaker Integration
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#comprehensive-error-monitoring">
+<span class="md-ellipsis">
+      Comprehensive Error Monitoring
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#advanced-configuration">
+<span class="md-ellipsis">
+      🔧 Advanced Configuration
+    </span>
+</a>
+<nav aria-label="🔧 Advanced Configuration" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#redis-job-store-configuration">
+<span class="md-ellipsis">
+      Redis Job Store Configuration
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#custom-task-executors">
+<span class="md-ellipsis">
+      Custom Task Executors
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#testing">
+<span class="md-ellipsis">
+      🧪 Testing
+    </span>
+</a>
+<nav aria-label="🧪 Testing" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#unit-testing-with-mocks">
+<span class="md-ellipsis">
+      Unit Testing with Mocks
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#integration-testing">
+<span class="md-ellipsis">
+      Integration Testing
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#monitoring-and-observability">
+<span class="md-ellipsis">
+      📊 Monitoring and Observability
+    </span>
+</a>
+<nav aria-label="📊 Monitoring and Observability" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#task-execution-metrics">
+<span class="md-ellipsis">
+      Task Execution Metrics
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#related-documentation">
+<span class="md-ellipsis">
+      🔗 Related Documentation
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div class="md-content" data-md-component="content">
+<article class="md-content__inner md-typeset">
+<h1 id="background-task-scheduling">⏰ Background Task Scheduling<a class="headerlink" href="#background-task-scheduling" title="Permanent link">¶</a></h1>
+<p>The Neuroglia framework provides enterprise-grade background task scheduling capabilities through seamless APScheduler integration, enabling complex workflow orchestration with Redis persistence, reactive stream processing, and comprehensive error handling.</p>
+<h2 id="overview">🎯 Overview<a class="headerlink" href="#overview" title="Permanent link">¶</a></h2>
+<p>Background task scheduling is essential for microservices that need to perform operations asynchronously, handle periodic tasks, or respond to events with delayed processing. The framework's implementation provides:</p>
+<ul>
+<li><strong>APScheduler Integration</strong>: Full integration with Advanced Python Scheduler</li>
+<li><strong>Redis Persistence</strong>: Distributed job persistence across service instances</li>
+<li><strong>Reactive Processing</strong>: Real-time event stream processing</li>
+<li><strong>Fault Tolerance</strong>: Circuit breaker patterns and retry policies</li>
+<li><strong>Monitoring</strong>: Comprehensive job execution monitoring and error handling</li>
+</ul>
+<h2 id="architecture">🏗️ Architecture<a class="headerlink" href="#architecture" title="Permanent link">¶</a></h2>
+<pre class="mermaid"><code>graph TB
+    subgraph "🍕 Mario's Pizzeria Application"
+        OrderService[Order Service]
+        DeliveryService[Delivery Service]
+        KitchenService[Kitchen Service]
+    end
+
+    subgraph "⏰ Background Task Scheduler"
+        Scheduler[Task Scheduler]
+        JobStore[Redis Job Store]
+        Executor[Task Executor]
+    end
+
+    subgraph "🔄 Task Types"
+        Periodic[Periodic Tasks]
+        Delayed[Delayed Tasks]
+        Reactive[Event-Driven Tasks]
+    end
+
+    OrderService --&gt; Scheduler
+    DeliveryService --&gt; Scheduler
+    KitchenService --&gt; Scheduler
+
+    Scheduler --&gt; JobStore
+    Scheduler --&gt; Executor
+
+    Executor --&gt; Periodic
+    Executor --&gt; Delayed
+    Executor --&gt; Reactive
+
+    style Scheduler fill:#e3f2fd
+    style JobStore fill:#ffebee
+    style Executor fill:#e8f5e8</code></pre>
+<h2 id="basic-usage">🚀 Basic Usage<a class="headerlink" href="#basic-usage" title="Permanent link">¶</a></h2>
+<h3 id="service-registration">Service Registration<a class="headerlink" href="#service-registration" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.hosting.web</span><span class="w"> </span><span class="kn">import</span> <span class="n">WebApplicationBuilder</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.scheduling</span><span class="w"> </span><span class="kn">import</span> <span class="n">BackgroundTaskScheduler</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">create_app</span><span class="p">():</span>
+    <span class="n">builder</span> <span class="o">=</span> <span class="n">WebApplicationBuilder</span><span class="p">()</span>
+
+    <span class="c1"># Register background task scheduler</span>
+    <span class="n">builder</span><span class="o">.</span><span class="n">services</span><span class="o">.</span><span class="n">add_background_task_scheduler</span><span class="p">(</span>
+        <span class="n">redis_url</span><span class="o">=</span><span class="s2">"redis://localhost:6379"</span><span class="p">,</span>
+        <span class="n">job_store_prefix</span><span class="o">=</span><span class="s2">"mario_pizzeria"</span>
+    <span class="p">)</span>
+
+    <span class="n">app</span> <span class="o">=</span> <span class="n">builder</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">app</span>
+</code></pre></div>
+<h3 id="scheduled-task-definition">Scheduled Task Definition<a class="headerlink" href="#scheduled-task-definition" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.scheduling</span><span class="w"> </span><span class="kn">import</span> <span class="n">BackgroundTask</span><span class="p">,</span> <span class="n">schedule_task</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.dependency_injection</span><span class="w"> </span><span class="kn">import</span> <span class="n">ServiceProviderBase</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">PizzaOrderService</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">service_provider</span><span class="p">:</span> <span class="n">ServiceProviderBase</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">service_provider</span> <span class="o">=</span> <span class="n">service_provider</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">scheduler</span> <span class="o">=</span> <span class="n">service_provider</span><span class="o">.</span><span class="n">get_service</span><span class="p">(</span><span class="n">BackgroundTaskScheduler</span><span class="p">)</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">schedule_order_reminders</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">order_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Schedule reminder tasks for a pizza order."""</span>
+
+        <span class="c1"># Schedule preparation reminder (15 minutes)</span>
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">scheduler</span><span class="o">.</span><span class="n">schedule_delayed_task</span><span class="p">(</span>
+            <span class="s2">"order_preparation_reminder"</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">send_preparation_reminder</span><span class="p">,</span>
+            <span class="n">delay_minutes</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span>
+            <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="n">order_id</span><span class="p">],</span>
+            <span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="s2">"order"</span><span class="p">,</span> <span class="s2">"reminder"</span><span class="p">]</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Schedule delivery reminder (45 minutes)</span>
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">scheduler</span><span class="o">.</span><span class="n">schedule_delayed_task</span><span class="p">(</span>
+            <span class="s2">"order_delivery_reminder"</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">send_delivery_reminder</span><span class="p">,</span>
+            <span class="n">delay_minutes</span><span class="o">=</span><span class="mi">45</span><span class="p">,</span>
+            <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="n">order_id</span><span class="p">],</span>
+            <span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="s2">"delivery"</span><span class="p">,</span> <span class="s2">"reminder"</span><span class="p">]</span>
+        <span class="p">)</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">send_preparation_reminder</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">order_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Send preparation reminder to kitchen."""</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"🍕 Kitchen reminder: Start preparing order </span><span class="si">{</span><span class="n">order_id</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+        <span class="c1"># Business logic for kitchen notification</span>
+        <span class="n">kitchen_service</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">service_provider</span><span class="o">.</span><span class="n">get_service</span><span class="p">(</span><span class="n">KitchenService</span><span class="p">)</span>
+        <span class="k">await</span> <span class="n">kitchen_service</span><span class="o">.</span><span class="n">notify_preparation_due</span><span class="p">(</span><span class="n">order_id</span><span class="p">)</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">send_delivery_reminder</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">order_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Send delivery reminder to delivery team."""</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"🚚 Delivery reminder: Order </span><span class="si">{</span><span class="n">order_id</span><span class="si">}</span><span class="s2"> ready for delivery"</span><span class="p">)</span>
+
+        <span class="c1"># Business logic for delivery notification</span>
+        <span class="n">delivery_service</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">service_provider</span><span class="o">.</span><span class="n">get_service</span><span class="p">(</span><span class="n">DeliveryService</span><span class="p">)</span>
+        <span class="k">await</span> <span class="n">delivery_service</span><span class="o">.</span><span class="n">schedule_pickup</span><span class="p">(</span><span class="n">order_id</span><span class="p">)</span>
+</code></pre></div>
+<h2 id="periodic-tasks">📅 Periodic Tasks<a class="headerlink" href="#periodic-tasks" title="Permanent link">¶</a></h2>
+<h3 id="daily-operations">Daily Operations<a class="headerlink" href="#daily-operations" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="nd">@schedule_task</span><span class="p">(</span><span class="n">cron</span><span class="o">=</span><span class="s2">"0 8 * * *"</span><span class="p">)</span>  <span class="c1"># Daily at 8 AM</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">daily_inventory_check</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">"""Check pizza ingredient inventory daily."""</span>
+    <span class="n">inventory_service</span> <span class="o">=</span> <span class="n">get_service</span><span class="p">(</span><span class="n">InventoryService</span><span class="p">)</span>
+
+    <span class="c1"># Check ingredient levels</span>
+    <span class="n">low_ingredients</span> <span class="o">=</span> <span class="k">await</span> <span class="n">inventory_service</span><span class="o">.</span><span class="n">get_low_stock_ingredients</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">low_ingredients</span><span class="p">:</span>
+        <span class="c1"># Schedule reorder tasks</span>
+        <span class="k">for</span> <span class="n">ingredient</span> <span class="ow">in</span> <span class="n">low_ingredients</span><span class="p">:</span>
+            <span class="k">await</span> <span class="n">schedule_ingredient_reorder</span><span class="p">(</span><span class="n">ingredient</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"📊 Daily inventory check completed: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">low_ingredients</span><span class="p">)</span><span class="si">}</span><span class="s2"> items need reordering"</span><span class="p">)</span>
+
+<span class="nd">@schedule_task</span><span class="p">(</span><span class="n">cron</span><span class="o">=</span><span class="s2">"0 23 * * *"</span><span class="p">)</span>  <span class="c1"># Daily at 11 PM</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">daily_sales_report</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">"""Generate daily sales report."""</span>
+    <span class="n">analytics_service</span> <span class="o">=</span> <span class="n">get_service</span><span class="p">(</span><span class="n">AnalyticsService</span><span class="p">)</span>
+
+    <span class="n">today</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">date</span><span class="p">()</span>
+    <span class="n">report</span> <span class="o">=</span> <span class="k">await</span> <span class="n">analytics_service</span><span class="o">.</span><span class="n">generate_daily_report</span><span class="p">(</span><span class="n">today</span><span class="p">)</span>
+
+    <span class="c1"># Send report to management</span>
+    <span class="n">notification_service</span> <span class="o">=</span> <span class="n">get_service</span><span class="p">(</span><span class="n">NotificationService</span><span class="p">)</span>
+    <span class="k">await</span> <span class="n">notification_service</span><span class="o">.</span><span class="n">send_sales_report</span><span class="p">(</span><span class="n">report</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"📈 Daily sales report generated: </span><span class="si">{</span><span class="n">report</span><span class="o">.</span><span class="n">total_orders</span><span class="si">}</span><span class="s2"> orders, $</span><span class="si">{</span><span class="n">report</span><span class="o">.</span><span class="n">total_revenue</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="hourly-monitoring">Hourly Monitoring<a class="headerlink" href="#hourly-monitoring" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="nd">@schedule_task</span><span class="p">(</span><span class="n">cron</span><span class="o">=</span><span class="s2">"0 * * * *"</span><span class="p">)</span>  <span class="c1"># Every hour</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">hourly_order_monitoring</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">"""Monitor order processing efficiency."""</span>
+    <span class="n">order_service</span> <span class="o">=</span> <span class="n">get_service</span><span class="p">(</span><span class="n">OrderService</span><span class="p">)</span>
+
+    <span class="c1"># Check for delayed orders</span>
+    <span class="n">delayed_orders</span> <span class="o">=</span> <span class="k">await</span> <span class="n">order_service</span><span class="o">.</span><span class="n">get_delayed_orders</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="n">order</span> <span class="ow">in</span> <span class="n">delayed_orders</span><span class="p">:</span>
+        <span class="c1"># Escalate delayed orders</span>
+        <span class="k">await</span> <span class="n">order_service</span><span class="o">.</span><span class="n">escalate_delayed_order</span><span class="p">(</span><span class="n">order</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+
+        <span class="c1"># Notify customer</span>
+        <span class="n">notification_service</span> <span class="o">=</span> <span class="n">get_service</span><span class="p">(</span><span class="n">NotificationService</span><span class="p">)</span>
+        <span class="k">await</span> <span class="n">notification_service</span><span class="o">.</span><span class="n">send_delay_notification</span><span class="p">(</span><span class="n">order</span><span class="o">.</span><span class="n">customer_id</span><span class="p">,</span> <span class="n">order</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"🔍 Hourly monitoring: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">delayed_orders</span><span class="p">)</span><span class="si">}</span><span class="s2"> delayed orders processed"</span><span class="p">)</span>
+</code></pre></div>
+<h2 id="reactive-task-processing">🔄 Reactive Task Processing<a class="headerlink" href="#reactive-task-processing" title="Permanent link">¶</a></h2>
+<h3 id="event-driven-scheduling">Event-Driven Scheduling<a class="headerlink" href="#event-driven-scheduling" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.eventing</span><span class="w"> </span><span class="kn">import</span> <span class="n">EventHandler</span><span class="p">,</span> <span class="n">DomainEvent</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.scheduling</span><span class="w"> </span><span class="kn">import</span> <span class="n">ReactiveTaskProcessor</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">OrderPlacedEvent</span><span class="p">(</span><span class="n">DomainEvent</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">order_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">customer_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">estimated_delivery</span><span class="p">:</span> <span class="n">datetime</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">order_id</span> <span class="o">=</span> <span class="n">order_id</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">customer_id</span> <span class="o">=</span> <span class="n">customer_id</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">estimated_delivery</span> <span class="o">=</span> <span class="n">estimated_delivery</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">OrderTaskScheduler</span><span class="p">(</span><span class="n">EventHandler</span><span class="p">[</span><span class="n">OrderPlacedEvent</span><span class="p">]):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">task_scheduler</span><span class="p">:</span> <span class="n">BackgroundTaskScheduler</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">task_scheduler</span> <span class="o">=</span> <span class="n">task_scheduler</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">handle_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">OrderPlacedEvent</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Schedule all tasks related to a new order."""</span>
+
+        <span class="c1"># Schedule kitchen preparation task</span>
+        <span class="n">prep_time</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">estimated_delivery</span> <span class="o">-</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">minutes</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">task_scheduler</span><span class="o">.</span><span class="n">schedule_at</span><span class="p">(</span>
+            <span class="s2">"kitchen_preparation"</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">start_kitchen_preparation</span><span class="p">,</span>
+            <span class="n">scheduled_time</span><span class="o">=</span><span class="n">prep_time</span><span class="p">,</span>
+            <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="n">event</span><span class="o">.</span><span class="n">order_id</span><span class="p">]</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Schedule delivery dispatch task</span>
+        <span class="n">dispatch_time</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">estimated_delivery</span> <span class="o">-</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">minutes</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">task_scheduler</span><span class="o">.</span><span class="n">schedule_at</span><span class="p">(</span>
+            <span class="s2">"delivery_dispatch"</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dispatch_delivery</span><span class="p">,</span>
+            <span class="n">scheduled_time</span><span class="o">=</span><span class="n">dispatch_time</span><span class="p">,</span>
+            <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="n">event</span><span class="o">.</span><span class="n">order_id</span><span class="p">,</span> <span class="n">event</span><span class="o">.</span><span class="n">customer_id</span><span class="p">]</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Schedule customer notification task</span>
+        <span class="n">notify_time</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">estimated_delivery</span> <span class="o">-</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">minutes</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">task_scheduler</span><span class="o">.</span><span class="n">schedule_at</span><span class="p">(</span>
+            <span class="s2">"customer_notification"</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">notify_customer_ready</span><span class="p">,</span>
+            <span class="n">scheduled_time</span><span class="o">=</span><span class="n">notify_time</span><span class="p">,</span>
+            <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="n">event</span><span class="o">.</span><span class="n">customer_id</span><span class="p">,</span> <span class="n">event</span><span class="o">.</span><span class="n">order_id</span><span class="p">]</span>
+        <span class="p">)</span>
+</code></pre></div>
+<h3 id="stream-processing-integration">Stream Processing Integration<a class="headerlink" href="#stream-processing-integration" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.reactive</span><span class="w"> </span><span class="kn">import</span> <span class="n">Observable</span><span class="p">,</span> <span class="n">StreamProcessor</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">OrderStreamProcessor</span><span class="p">(</span><span class="n">StreamProcessor</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">task_scheduler</span><span class="p">:</span> <span class="n">BackgroundTaskScheduler</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">task_scheduler</span> <span class="o">=</span> <span class="n">task_scheduler</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">order_stream</span> <span class="o">=</span> <span class="n">Observable</span><span class="o">.</span><span class="n">create_subject</span><span class="p">()</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">process_order_events</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Process continuous stream of order events."""</span>
+
+        <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">handle_order_stream</span><span class="p">(</span><span class="n">order_event</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">order_event</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">"order_placed"</span><span class="p">:</span>
+                <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">schedule_order_workflow</span><span class="p">(</span><span class="n">order_event</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">order_event</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">"order_cancelled"</span><span class="p">:</span>
+                <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">cancel_order_tasks</span><span class="p">(</span><span class="n">order_event</span><span class="o">.</span><span class="n">order_id</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">order_event</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">"order_modified"</span><span class="p">:</span>
+                <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">reschedule_order_tasks</span><span class="p">(</span><span class="n">order_event</span><span class="p">)</span>
+
+        <span class="c1"># Subscribe to order event stream</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">order_stream</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span><span class="n">handle_order_stream</span><span class="p">)</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">schedule_order_workflow</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">order_event</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Schedule complete order workflow."""</span>
+        <span class="n">workflow_tasks</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="p">(</span><span class="s2">"inventory_check"</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_inventory</span><span class="p">),</span>
+            <span class="p">(</span><span class="s2">"kitchen_queue"</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_to_kitchen_queue</span><span class="p">),</span>
+            <span class="p">(</span><span class="s2">"preparation_start"</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_preparation</span><span class="p">),</span>
+            <span class="p">(</span><span class="s2">"quality_check"</span><span class="p">,</span> <span class="mi">25</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">perform_quality_check</span><span class="p">),</span>
+            <span class="p">(</span><span class="s2">"delivery_ready"</span><span class="p">,</span> <span class="mi">35</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">mark_ready_for_delivery</span><span class="p">)</span>
+        <span class="p">]</span>
+
+        <span class="k">for</span> <span class="n">task_name</span><span class="p">,</span> <span class="n">delay_minutes</span><span class="p">,</span> <span class="n">task_func</span> <span class="ow">in</span> <span class="n">workflow_tasks</span><span class="p">:</span>
+            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">task_scheduler</span><span class="o">.</span><span class="n">schedule_delayed_task</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">task_name</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">order_event</span><span class="o">.</span><span class="n">order_id</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
+                <span class="n">task_func</span><span class="p">,</span>
+                <span class="n">delay_minutes</span><span class="o">=</span><span class="n">delay_minutes</span><span class="p">,</span>
+                <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="n">order_event</span><span class="o">.</span><span class="n">order_id</span><span class="p">],</span>
+                <span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="s2">"workflow"</span><span class="p">,</span> <span class="n">order_event</span><span class="o">.</span><span class="n">order_id</span><span class="p">]</span>
+            <span class="p">)</span>
+</code></pre></div>
+<h2 id="error-handling-and-resilience">🛡️ Error Handling and Resilience<a class="headerlink" href="#error-handling-and-resilience" title="Permanent link">¶</a></h2>
+<h3 id="circuit-breaker-integration">Circuit Breaker Integration<a class="headerlink" href="#circuit-breaker-integration" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.scheduling</span><span class="w"> </span><span class="kn">import</span> <span class="n">CircuitBreakerPolicy</span><span class="p">,</span> <span class="n">RetryPolicy</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">ResilientOrderProcessor</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">task_scheduler</span><span class="p">:</span> <span class="n">BackgroundTaskScheduler</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">task_scheduler</span> <span class="o">=</span> <span class="n">task_scheduler</span>
+
+        <span class="c1"># Configure circuit breaker for external services</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">circuit_breaker</span> <span class="o">=</span> <span class="n">CircuitBreakerPolicy</span><span class="p">(</span>
+            <span class="n">failure_threshold</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+            <span class="n">recovery_timeout</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span>
+            <span class="n">success_threshold</span><span class="o">=</span><span class="mi">3</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Configure retry policy</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">retry_policy</span> <span class="o">=</span> <span class="n">RetryPolicy</span><span class="p">(</span>
+            <span class="n">max_attempts</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+            <span class="n">backoff_factor</span><span class="o">=</span><span class="mf">2.0</span><span class="p">,</span>
+            <span class="n">max_delay</span><span class="o">=</span><span class="mi">300</span>
+        <span class="p">)</span>
+
+    <span class="nd">@circuit_breaker</span><span class="o">.</span><span class="n">apply</span>
+    <span class="nd">@retry_policy</span><span class="o">.</span><span class="n">apply</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">process_payment_task</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">order_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">amount</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Process payment with circuit breaker and retry policies."""</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">payment_service</span> <span class="o">=</span> <span class="n">get_service</span><span class="p">(</span><span class="n">PaymentService</span><span class="p">)</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">payment_service</span><span class="o">.</span><span class="n">charge_customer</span><span class="p">(</span><span class="n">order_id</span><span class="p">,</span> <span class="n">amount</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">success</span><span class="p">:</span>
+                <span class="c1"># Schedule order fulfillment</span>
+                <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">task_scheduler</span><span class="o">.</span><span class="n">schedule_immediate_task</span><span class="p">(</span>
+                    <span class="s2">"order_fulfillment"</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">fulfill_order</span><span class="p">,</span>
+                    <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="n">order_id</span><span class="p">]</span>
+                <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># Schedule payment retry</span>
+                <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">task_scheduler</span><span class="o">.</span><span class="n">schedule_delayed_task</span><span class="p">(</span>
+                    <span class="s2">"payment_retry"</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">retry_payment</span><span class="p">,</span>
+                    <span class="n">delay_minutes</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+                    <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="n">order_id</span><span class="p">,</span> <span class="n">amount</span><span class="p">]</span>
+                <span class="p">)</span>
+
+        <span class="k">except</span> <span class="n">PaymentServiceUnavailableError</span><span class="p">:</span>
+            <span class="c1"># Schedule fallback payment processing</span>
+            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">task_scheduler</span><span class="o">.</span><span class="n">schedule_delayed_task</span><span class="p">(</span>
+                <span class="s2">"fallback_payment"</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">process_fallback_payment</span><span class="p">,</span>
+                <span class="n">delay_minutes</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+                <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="n">order_id</span><span class="p">,</span> <span class="n">amount</span><span class="p">]</span>
+            <span class="p">)</span>
+</code></pre></div>
+<h3 id="comprehensive-error-monitoring">Comprehensive Error Monitoring<a class="headerlink" href="#comprehensive-error-monitoring" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.scheduling</span><span class="w"> </span><span class="kn">import</span> <span class="n">TaskExecutionResult</span><span class="p">,</span> <span class="n">TaskFailureHandler</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">OrderTaskMonitor</span><span class="p">(</span><span class="n">TaskFailureHandler</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">notification_service</span><span class="p">:</span> <span class="n">NotificationService</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">notification_service</span> <span class="o">=</span> <span class="n">notification_service</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">handle_task_failure</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">task_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">exception</span><span class="p">:</span> <span class="ne">Exception</span><span class="p">,</span> <span class="n">context</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Handle task execution failures with comprehensive logging."""</span>
+
+        <span class="n">error_details</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">"task_name"</span><span class="p">:</span> <span class="n">task_name</span><span class="p">,</span>
+            <span class="s2">"error_type"</span><span class="p">:</span> <span class="nb">type</span><span class="p">(</span><span class="n">exception</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+            <span class="s2">"error_message"</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">exception</span><span class="p">),</span>
+            <span class="s2">"execution_time"</span><span class="p">:</span> <span class="n">context</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"execution_time"</span><span class="p">),</span>
+            <span class="s2">"retry_count"</span><span class="p">:</span> <span class="n">context</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"retry_count"</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="p">}</span>
+
+        <span class="c1"># Log error details</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Task execution failed: </span><span class="si">{</span><span class="n">task_name</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="n">extra</span><span class="o">=</span><span class="n">error_details</span><span class="p">)</span>
+
+        <span class="c1"># Critical task failure notifications</span>
+        <span class="k">if</span> <span class="n">task_name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"payment_"</span><span class="p">)</span> <span class="ow">or</span> <span class="n">task_name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"order_"</span><span class="p">):</span>
+            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">notification_service</span><span class="o">.</span><span class="n">send_critical_alert</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"Critical task failure: </span><span class="si">{</span><span class="n">task_name</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
+                <span class="n">error_details</span>
+            <span class="p">)</span>
+
+        <span class="c1"># Schedule recovery tasks based on failure type</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">exception</span><span class="p">,</span> <span class="n">InventoryShortageError</span><span class="p">):</span>
+            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">schedule_inventory_reorder</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"order_id"</span><span class="p">))</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">exception</span><span class="p">,</span> <span class="n">KitchenOverloadError</span><span class="p">):</span>
+            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">schedule_order_delay_notification</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"order_id"</span><span class="p">))</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">handle_task_success</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">task_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="nb">any</span><span class="p">,</span> <span class="n">context</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Monitor successful task executions."""</span>
+
+        <span class="c1"># Track task performance metrics</span>
+        <span class="n">execution_time</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"execution_time"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">execution_time</span> <span class="o">&gt;</span> <span class="mi">30</span><span class="p">:</span>  <span class="c1"># Tasks taking longer than 30 seconds</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Slow task execution: </span><span class="si">{</span><span class="n">task_name</span><span class="si">}</span><span class="s2"> took </span><span class="si">{</span><span class="n">execution_time</span><span class="si">}</span><span class="s2">s"</span><span class="p">)</span>
+
+        <span class="c1"># Update order status based on completed tasks</span>
+        <span class="k">if</span> <span class="n">task_name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"delivery_"</span><span class="p">):</span>
+            <span class="n">order_id</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"order_id"</span><span class="p">)</span>
+            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">update_order_status</span><span class="p">(</span><span class="n">order_id</span><span class="p">,</span> <span class="s2">"delivered"</span><span class="p">)</span>
+</code></pre></div>
+<h2 id="advanced-configuration">🔧 Advanced Configuration<a class="headerlink" href="#advanced-configuration" title="Permanent link">¶</a></h2>
+<h3 id="redis-job-store-configuration">Redis Job Store Configuration<a class="headerlink" href="#redis-job-store-configuration" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.scheduling</span><span class="w"> </span><span class="kn">import</span> <span class="n">RedisJobStoreConfig</span><span class="p">,</span> <span class="n">SchedulerConfig</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">configure_advanced_scheduler</span><span class="p">():</span>
+    <span class="n">redis_config</span> <span class="o">=</span> <span class="n">RedisJobStoreConfig</span><span class="p">(</span>
+        <span class="n">host</span><span class="o">=</span><span class="s2">"redis://localhost:6379"</span><span class="p">,</span>
+        <span class="n">db</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">password</span><span class="o">=</span><span class="s2">"your_redis_password"</span><span class="p">,</span>
+        <span class="n">connection_pool_size</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
+        <span class="n">health_check_interval</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span>
+
+        <span class="c1"># Job persistence settings</span>
+        <span class="n">job_defaults</span><span class="o">=</span><span class="p">{</span>
+            <span class="s1">'coalesce'</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s1">'max_instances'</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+            <span class="s1">'misfire_grace_time'</span><span class="p">:</span> <span class="mi">300</span>
+        <span class="p">},</span>
+
+        <span class="c1"># Distributed locking</span>
+        <span class="n">distributed_lock_timeout</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span>
+        <span class="n">lock_prefix</span><span class="o">=</span><span class="s2">"mario_pizzeria_locks"</span>
+    <span class="p">)</span>
+
+    <span class="n">scheduler_config</span> <span class="o">=</span> <span class="n">SchedulerConfig</span><span class="p">(</span>
+        <span class="n">job_stores</span><span class="o">=</span><span class="p">{</span><span class="s1">'redis'</span><span class="p">:</span> <span class="n">redis_config</span><span class="p">},</span>
+        <span class="n">executors</span><span class="o">=</span><span class="p">{</span>
+            <span class="s1">'default'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'type'</span><span class="p">:</span> <span class="s1">'threadpool'</span><span class="p">,</span> <span class="s1">'max_workers'</span><span class="p">:</span> <span class="mi">20</span><span class="p">},</span>
+            <span class="s1">'processpool'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'type'</span><span class="p">:</span> <span class="s1">'processpool'</span><span class="p">,</span> <span class="s1">'max_workers'</span><span class="p">:</span> <span class="mi">5</span><span class="p">}</span>
+        <span class="p">},</span>
+        <span class="n">job_defaults</span><span class="o">=</span><span class="p">{</span>
+            <span class="s1">'coalesce'</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s1">'max_instances'</span><span class="p">:</span> <span class="mi">3</span>
+        <span class="p">},</span>
+        <span class="n">timezone</span><span class="o">=</span><span class="s1">'UTC'</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">scheduler_config</span>
+</code></pre></div>
+<h3 id="custom-task-executors">Custom Task Executors<a class="headerlink" href="#custom-task-executors" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.scheduling</span><span class="w"> </span><span class="kn">import</span> <span class="n">CustomTaskExecutor</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">PizzaOrderExecutor</span><span class="p">(</span><span class="n">CustomTaskExecutor</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Custom executor optimized for pizza order processing."""</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">max_concurrent_orders</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">semaphore</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">Semaphore</span><span class="p">(</span><span class="n">max_concurrent_orders</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">active_orders</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">execute_task</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">task_func</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Execute task with order-specific resource management."""</span>
+        <span class="k">async</span> <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">semaphore</span><span class="p">:</span>
+            <span class="n">order_id</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'order_id'</span><span class="p">)</span> <span class="ow">or</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="n">args</span> <span class="k">else</span> <span class="kc">None</span>
+
+            <span class="k">if</span> <span class="n">order_id</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">order_id</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">active_orders</span><span class="p">:</span>
+                    <span class="c1"># Skip duplicate order processing</span>
+                    <span class="k">return</span> <span class="p">{</span><span class="s2">"status"</span><span class="p">:</span> <span class="s2">"skipped"</span><span class="p">,</span> <span class="s2">"reason"</span><span class="p">:</span> <span class="s2">"already_processing"</span><span class="p">}</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">active_orders</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">order_id</span><span class="p">)</span>
+
+            <span class="k">try</span><span class="p">:</span>
+                <span class="c1"># Execute the actual task</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">task_func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+                <span class="k">return</span> <span class="p">{</span><span class="s2">"status"</span><span class="p">:</span> <span class="s2">"completed"</span><span class="p">,</span> <span class="s2">"result"</span><span class="p">:</span> <span class="n">result</span><span class="p">}</span>
+
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="k">return</span> <span class="p">{</span><span class="s2">"status"</span><span class="p">:</span> <span class="s2">"failed"</span><span class="p">,</span> <span class="s2">"error"</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)}</span>
+
+            <span class="k">finally</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">order_id</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">active_orders</span><span class="o">.</span><span class="n">discard</span><span class="p">(</span><span class="n">order_id</span><span class="p">)</span>
+</code></pre></div>
+<h2 id="testing">🧪 Testing<a class="headerlink" href="#testing" title="Permanent link">¶</a></h2>
+<h3 id="unit-testing-with-mocks">Unit Testing with Mocks<a class="headerlink" href="#unit-testing-with-mocks" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">unittest.mock</span><span class="w"> </span><span class="kn">import</span> <span class="n">AsyncMock</span><span class="p">,</span> <span class="n">Mock</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.scheduling</span><span class="w"> </span><span class="kn">import</span> <span class="n">BackgroundTaskScheduler</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">TestOrderTaskScheduling</span><span class="p">:</span>
+
+    <span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">mock_scheduler</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">scheduler</span> <span class="o">=</span> <span class="n">Mock</span><span class="p">(</span><span class="n">spec</span><span class="o">=</span><span class="n">BackgroundTaskScheduler</span><span class="p">)</span>
+        <span class="n">scheduler</span><span class="o">.</span><span class="n">schedule_delayed_task</span> <span class="o">=</span> <span class="n">AsyncMock</span><span class="p">()</span>
+        <span class="n">scheduler</span><span class="o">.</span><span class="n">schedule_at</span> <span class="o">=</span> <span class="n">AsyncMock</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">scheduler</span>
+
+    <span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">order_service</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mock_scheduler</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">PizzaOrderService</span><span class="p">(</span><span class="n">mock_scheduler</span><span class="p">)</span>
+
+    <span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">asyncio</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">test_schedule_order_reminders</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">order_service</span><span class="p">,</span> <span class="n">mock_scheduler</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Test order reminder scheduling."""</span>
+        <span class="n">order_id</span> <span class="o">=</span> <span class="s2">"order_123"</span>
+
+        <span class="k">await</span> <span class="n">order_service</span><span class="o">.</span><span class="n">schedule_order_reminders</span><span class="p">(</span><span class="n">order_id</span><span class="p">)</span>
+
+        <span class="c1"># Verify preparation reminder scheduled</span>
+        <span class="n">mock_scheduler</span><span class="o">.</span><span class="n">schedule_delayed_task</span><span class="o">.</span><span class="n">assert_any_call</span><span class="p">(</span>
+            <span class="s2">"order_preparation_reminder"</span><span class="p">,</span>
+            <span class="n">order_service</span><span class="o">.</span><span class="n">send_preparation_reminder</span><span class="p">,</span>
+            <span class="n">delay_minutes</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span>
+            <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="n">order_id</span><span class="p">],</span>
+            <span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="s2">"order"</span><span class="p">,</span> <span class="s2">"reminder"</span><span class="p">]</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Verify delivery reminder scheduled</span>
+        <span class="n">mock_scheduler</span><span class="o">.</span><span class="n">schedule_delayed_task</span><span class="o">.</span><span class="n">assert_any_call</span><span class="p">(</span>
+            <span class="s2">"order_delivery_reminder"</span><span class="p">,</span>
+            <span class="n">order_service</span><span class="o">.</span><span class="n">send_delivery_reminder</span><span class="p">,</span>
+            <span class="n">delay_minutes</span><span class="o">=</span><span class="mi">45</span><span class="p">,</span>
+            <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="n">order_id</span><span class="p">],</span>
+            <span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="s2">"delivery"</span><span class="p">,</span> <span class="s2">"reminder"</span><span class="p">]</span>
+        <span class="p">)</span>
+
+    <span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">asyncio</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">test_reactive_order_processing</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mock_scheduler</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Test reactive task scheduling from events."""</span>
+        <span class="n">event</span> <span class="o">=</span> <span class="n">OrderPlacedEvent</span><span class="p">(</span><span class="s2">"order_123"</span><span class="p">,</span> <span class="s2">"customer_456"</span><span class="p">,</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">hours</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+        <span class="n">handler</span> <span class="o">=</span> <span class="n">OrderTaskScheduler</span><span class="p">(</span><span class="n">mock_scheduler</span><span class="p">)</span>
+
+        <span class="k">await</span> <span class="n">handler</span><span class="o">.</span><span class="n">handle_async</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+
+        <span class="c1"># Verify all order-related tasks were scheduled</span>
+        <span class="k">assert</span> <span class="n">mock_scheduler</span><span class="o">.</span><span class="n">schedule_at</span><span class="o">.</span><span class="n">call_count</span> <span class="o">==</span> <span class="mi">3</span>
+</code></pre></div>
+<h3 id="integration-testing">Integration Testing<a class="headerlink" href="#integration-testing" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">integration</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">TestSchedulerIntegration</span><span class="p">:</span>
+
+    <span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">redis_scheduler</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">scheduler</span> <span class="o">=</span> <span class="n">BackgroundTaskScheduler</span><span class="p">(</span>
+            <span class="n">redis_url</span><span class="o">=</span><span class="s2">"redis://localhost:6379/15"</span><span class="p">,</span>  <span class="c1"># Test database</span>
+            <span class="n">job_store_prefix</span><span class="o">=</span><span class="s2">"test_mario_pizzeria"</span>
+        <span class="p">)</span>
+        <span class="k">await</span> <span class="n">scheduler</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+        <span class="k">yield</span> <span class="n">scheduler</span>
+        <span class="k">await</span> <span class="n">scheduler</span><span class="o">.</span><span class="n">shutdown</span><span class="p">()</span>
+        <span class="k">await</span> <span class="n">scheduler</span><span class="o">.</span><span class="n">clear_all_jobs</span><span class="p">()</span>  <span class="c1"># Cleanup</span>
+
+    <span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">asyncio</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">test_end_to_end_order_workflow</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">redis_scheduler</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Test complete order processing workflow."""</span>
+        <span class="n">order_id</span> <span class="o">=</span> <span class="s2">"integration_test_order"</span>
+        <span class="n">executed_tasks</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">track_task_execution</span><span class="p">(</span><span class="n">task_name</span><span class="p">):</span>
+            <span class="n">executed_tasks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">task_name</span><span class="p">)</span>
+
+        <span class="c1"># Schedule workflow tasks</span>
+        <span class="k">await</span> <span class="n">redis_scheduler</span><span class="o">.</span><span class="n">schedule_immediate_task</span><span class="p">(</span>
+            <span class="s2">"inventory_check"</span><span class="p">,</span>
+            <span class="n">track_task_execution</span><span class="p">,</span>
+            <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="s2">"inventory_check"</span><span class="p">]</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Wait for task execution</span>
+        <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+
+        <span class="k">assert</span> <span class="s2">"inventory_check"</span> <span class="ow">in</span> <span class="n">executed_tasks</span>
+</code></pre></div>
+<h2 id="monitoring-and-observability">📊 Monitoring and Observability<a class="headerlink" href="#monitoring-and-observability" title="Permanent link">¶</a></h2>
+<h3 id="task-execution-metrics">Task Execution Metrics<a class="headerlink" href="#task-execution-metrics" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.scheduling</span><span class="w"> </span><span class="kn">import</span> <span class="n">TaskMetrics</span><span class="p">,</span> <span class="n">MetricsCollector</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">PizzaOrderMetrics</span><span class="p">(</span><span class="n">MetricsCollector</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">metrics</span> <span class="o">=</span> <span class="n">TaskMetrics</span><span class="p">()</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">collect_order_metrics</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Collect pizza order processing metrics."""</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">"total_orders_processed"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">metrics</span><span class="o">.</span><span class="n">get_counter</span><span class="p">(</span><span class="s2">"orders_processed"</span><span class="p">),</span>
+            <span class="s2">"average_preparation_time"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">metrics</span><span class="o">.</span><span class="n">get_gauge</span><span class="p">(</span><span class="s2">"avg_prep_time"</span><span class="p">),</span>
+            <span class="s2">"failed_tasks_count"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">metrics</span><span class="o">.</span><span class="n">get_counter</span><span class="p">(</span><span class="s2">"task_failures"</span><span class="p">),</span>
+            <span class="s2">"active_tasks"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">metrics</span><span class="o">.</span><span class="n">get_gauge</span><span class="p">(</span><span class="s2">"active_tasks"</span><span class="p">),</span>
+            <span class="s2">"task_queue_size"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">metrics</span><span class="o">.</span><span class="n">get_gauge</span><span class="p">(</span><span class="s2">"queue_size"</span><span class="p">)</span>
+        <span class="p">}</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">export_metrics_to_prometheus</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Export metrics in Prometheus format."""</span>
+        <span class="n">metrics</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">collect_order_metrics</span><span class="p">()</span>
+
+        <span class="n">prometheus_metrics</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">metric_name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">metrics</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">prometheus_metrics</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">"mario_pizzeria_</span><span class="si">{</span><span class="n">metric_name</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">prometheus_metrics</span><span class="p">)</span>
+</code></pre></div>
+<h2 id="related-documentation">🔗 Related Documentation<a class="headerlink" href="#related-documentation" title="Permanent link">¶</a></h2>
+<ul>
+<li><a href="../dependency-injection/">🔧 Dependency Injection</a> - Service registration patterns</li>
+<li><a href="../event-sourcing/">📨 Event Sourcing</a> - Event-driven architecture</li>
+<li><a href="../reactive-programming/">🔄 Reactive Programming</a> - Stream processing</li>
+<li><a href="../redis-cache-repository/">⚡ Redis Cache Repository</a> - Distributed caching</li>
+<li><a href="../http-service-client/">🌐 HTTP Service Client</a> - External service integration</li>
+</ul>
+<hr/>
+<p>The background task scheduling system provides enterprise-grade capabilities for building resilient,
+scalable microservices with complex workflow requirements. By leveraging APScheduler with Redis
+persistence and reactive processing, Mario's Pizzeria can handle high-volume operations with
+confidence and reliability.</p>
+</article>
+</div>
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+</div>
+<button class="md-top md-icon" data-md-component="top" hidden="" type="button">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"></path></svg>
+  Back to top
+</button>
+</main>
+<footer class="md-footer">
+<div class="md-footer-meta md-typeset">
+<div class="md-footer-meta__inner md-grid">
+<div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" rel="noopener" target="_blank">
+      Material for MkDocs
+    </a>
+</div>
+<div class="md-social">
+<a class="md-social__link" href="https://github.com/bvandewe/pyneuro" rel="noopener" target="_blank" title="github.com">
+<svg viewbox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><!--! Font Awesome Free 7.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"></path></svg>
+</a>
+</div>
+</div>
+</div>
+</footer>
+</div>
+<div class="md-dialog" data-md-component="dialog">
+<div class="md-dialog__inner md-typeset"></div>
+</div>
+<script id="__config" type="application/json">{"base": "../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.expand", "navigation.top", "search.highlight", "search.share"], "search": "../../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+<script src="../../assets/javascripts/bundle.f55a23d4.min.js"></script>
+</body>
+</html>

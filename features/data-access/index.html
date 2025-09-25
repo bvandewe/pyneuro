@@ -525,6 +525,46 @@
 </a>
 </li>
 <li class="md-nav__item">
+<a class="md-nav__link" href="../background-task-scheduling/">
+<span class="md-ellipsis">
+    Background Task Scheduling
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../redis-cache-repository/">
+<span class="md-ellipsis">
+    Redis Cache Repository
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../http-service-client/">
+<span class="md-ellipsis">
+    HTTP Service Client
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../case-conversion-utilities/">
+<span class="md-ellipsis">
+    Case Conversion Utilities
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../enhanced-model-validation/">
+<span class="md-ellipsis">
+    Enhanced Model Validation
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
 <a class="md-nav__link" href="../mermaid-diagrams/">
 <span class="md-ellipsis">
     Mermaid Diagrams
@@ -1005,7 +1045,7 @@
 
     <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_by_date_range_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start_date</span><span class="p">:</span> <span class="n">date</span><span class="p">,</span> <span class="n">end_date</span><span class="p">:</span> <span class="n">date</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Order</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">"""Get orders within date range"""</span>
-        <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">find_async</span><span class="p">(</span><span class="k">lambda</span> <span class="n">order</span><span class="p">:</span> 
+        <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">find_async</span><span class="p">(</span><span class="k">lambda</span> <span class="n">order</span><span class="p">:</span>
             <span class="n">start_date</span> <span class="o">&lt;=</span> <span class="n">order</span><span class="o">.</span><span class="n">order_time</span><span class="o">.</span><span class="n">date</span><span class="p">()</span> <span class="o">&lt;=</span> <span class="n">end_date</span><span class="p">)</span>
 
 <span class="k">class</span><span class="w"> </span><span class="nc">FilePizzaRepository</span><span class="p">(</span><span class="n">FileRepository</span><span class="p">[</span><span class="n">Pizza</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="n">IPizzaRepository</span><span class="p">):</span>
@@ -1183,7 +1223,7 @@
     <span class="k">await</span> <span class="n">orders_collection</span><span class="o">.</span><span class="n">create_index</span><span class="p">([(</span><span class="s2">"order_time"</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)])</span>  <span class="c1"># Recent orders first</span>
     <span class="k">await</span> <span class="n">orders_collection</span><span class="o">.</span><span class="n">create_index</span><span class="p">(</span><span class="s2">"estimated_ready_time"</span><span class="p">)</span>  <span class="c1"># Ready time tracking</span>
 
-    <span class="c1"># Pizza collection indexes  </span>
+    <span class="c1"># Pizza collection indexes</span>
     <span class="k">await</span> <span class="n">pizzas_collection</span><span class="o">.</span><span class="n">create_index</span><span class="p">(</span><span class="s2">"category"</span><span class="p">)</span>  <span class="c1"># Menu category filtering</span>
     <span class="k">await</span> <span class="n">pizzas_collection</span><span class="o">.</span><span class="n">create_index</span><span class="p">(</span><span class="s2">"is_available"</span><span class="p">)</span>  <span class="c1"># Available items only</span>
     <span class="k">await</span> <span class="n">pizzas_collection</span><span class="o">.</span><span class="n">create_index</span><span class="p">([(</span><span class="s2">"category"</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="s2">"name"</span><span class="p">,</span> <span class="mi">1</span><span class="p">)])</span>  <span class="c1"># Sorted menu display</span>
@@ -1255,9 +1295,9 @@
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event_repository</span><span class="p">:</span> <span class="n">IEventRepository</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">event_repository</span> <span class="o">=</span> <span class="n">event_repository</span>
 
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">record_order_status_change</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
-                                         <span class="n">order_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> 
-                                         <span class="n">old_status</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> 
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">record_order_status_change</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                                         <span class="n">order_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                                         <span class="n">old_status</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
                                          <span class="n">new_status</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
                                          <span class="n">changed_by</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
                                          <span class="n">change_reason</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -1273,13 +1313,13 @@
 
         <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">event_repository</span><span class="o">.</span><span class="n">save_event_async</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
 
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">record_pizza_started</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
-                                   <span class="n">order_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> 
-                                   <span class="n">pizza_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> 
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">record_pizza_started</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                                   <span class="n">order_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                                   <span class="n">pizza_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
                                    <span class="n">pizza_index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
                                    <span class="n">started_by</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""Record when pizza preparation begins"""</span>
-        <span class="n">estimated_completion</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span>
+        <span class="n">estimated_completion</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">)</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span>
             <span class="n">minutes</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_pizza_prep_time</span><span class="p">(</span><span class="n">pizza_name</span><span class="p">)</span>
         <span class="p">)</span>
 
@@ -1293,14 +1333,14 @@
 
         <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">event_repository</span><span class="o">.</span><span class="n">save_event_async</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
 
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">record_pizza_completed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
-                                     <span class="n">order_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> 
-                                     <span class="n">pizza_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> 
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">record_pizza_completed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                                     <span class="n">order_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                                     <span class="n">pizza_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
                                      <span class="n">pizza_index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
                                      <span class="n">completed_by</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
                                      <span class="n">start_time</span><span class="p">:</span> <span class="n">datetime</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""Record when pizza is completed"""</span>
-        <span class="n">completion_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span>
+        <span class="n">completion_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">)</span>
         <span class="n">duration_minutes</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="n">completion_time</span> <span class="o">-</span> <span class="n">start_time</span><span class="p">)</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">()</span> <span class="o">/</span> <span class="mi">60</span><span class="p">)</span>
 
         <span class="n">event</span> <span class="o">=</span> <span class="n">PizzaCompletedEvent</span><span class="p">(</span>
@@ -1365,8 +1405,8 @@
         <span class="k">async</span> <span class="k">with</span> <span class="n">aiofiles</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">event_file</span><span class="p">,</span> <span class="s1">'w'</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
             <span class="k">await</span> <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">event_data</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">))</span>
 
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_events_by_date_range_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
-                                             <span class="n">start_date</span><span class="p">:</span> <span class="n">date</span><span class="p">,</span> 
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_events_by_date_range_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                                             <span class="n">start_date</span><span class="p">:</span> <span class="n">date</span><span class="p">,</span>
                                              <span class="n">end_date</span><span class="p">:</span> <span class="n">date</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">DomainEvent</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">"""Get events within date range"""</span>
         <span class="n">events</span> <span class="o">=</span> <span class="p">[]</span>
@@ -1414,7 +1454,7 @@
 
         <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">collection</span><span class="o">.</span><span class="n">insert_one</span><span class="p">(</span><span class="n">document</span><span class="p">)</span>
 
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_kitchen_timeline_events</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_kitchen_timeline_events</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                                           <span class="n">order_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
                                           <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">DomainEvent</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">"""Get chronological timeline of kitchen events for an order"""</span>
@@ -1428,7 +1468,7 @@
         <span class="n">documents</span> <span class="o">=</span> <span class="k">await</span> <span class="n">cursor</span><span class="o">.</span><span class="n">to_list</span><span class="p">(</span><span class="n">length</span><span class="o">=</span><span class="n">limit</span><span class="p">)</span>
         <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_deserialize_event</span><span class="p">(</span><span class="n">doc</span><span class="p">)</span> <span class="k">for</span> <span class="n">doc</span> <span class="ow">in</span> <span class="n">documents</span><span class="p">]</span>
 
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_performance_aggregation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_performance_aggregation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                                           <span class="n">start_date</span><span class="p">:</span> <span class="n">datetime</span><span class="p">,</span>
                                           <span class="n">end_date</span><span class="p">:</span> <span class="n">datetime</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">"""Get aggregated kitchen performance metrics"""</span>
@@ -1469,14 +1509,14 @@
 <span class="k">class</span><span class="w"> </span><span class="nc">IAnalyticsRepository</span><span class="p">(</span><span class="n">IQueryableRepository</span><span class="p">[</span><span class="n">Order</span><span class="p">,</span> <span class="nb">str</span><span class="p">]):</span>
 <span class="w">    </span><span class="sd">"""Enhanced queryable interface for pizzeria analytics"""</span>
 
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_revenue_by_period_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_revenue_by_period_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                                           <span class="n">period</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>  <span class="c1"># 'daily', 'weekly', 'monthly'</span>
                                           <span class="n">start_date</span><span class="p">:</span> <span class="n">date</span><span class="p">,</span>
                                           <span class="n">end_date</span><span class="p">:</span> <span class="n">date</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">"""Get revenue metrics grouped by time period"""</span>
         <span class="k">pass</span>
 
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_popular_pizzas_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_popular_pizzas_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                                        <span class="n">start_date</span><span class="p">:</span> <span class="n">date</span><span class="p">,</span>
                                        <span class="n">end_date</span><span class="p">:</span> <span class="n">date</span><span class="p">,</span>
                                        <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
@@ -1496,7 +1536,7 @@
 <span class="k">class</span><span class="w"> </span><span class="nc">MongoAnalyticsRepository</span><span class="p">(</span><span class="n">MongoOrderRepository</span><span class="p">,</span> <span class="n">IAnalyticsRepository</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""MongoDB implementation with advanced analytics capabilities"""</span>
 
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_revenue_by_period_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_revenue_by_period_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                                           <span class="n">period</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
                                           <span class="n">start_date</span><span class="p">:</span> <span class="n">date</span><span class="p">,</span>
                                           <span class="n">end_date</span><span class="p">:</span> <span class="n">date</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
@@ -1543,7 +1583,7 @@
             <span class="p">}</span>
         <span class="p">}</span>
 
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_popular_pizzas_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_popular_pizzas_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                                        <span class="n">start_date</span><span class="p">:</span> <span class="n">date</span><span class="p">,</span>
                                        <span class="n">end_date</span><span class="p">:</span> <span class="n">date</span><span class="p">,</span>
                                        <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
@@ -1819,7 +1859,7 @@
                 <span class="n">order_time</span><span class="o">=</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2024</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
             <span class="p">),</span>
             <span class="n">Order</span><span class="p">(</span>
-                <span class="nb">id</span><span class="o">=</span><span class="s2">"order_2"</span><span class="p">,</span> 
+                <span class="nb">id</span><span class="o">=</span><span class="s2">"order_2"</span><span class="p">,</span>
                 <span class="n">total_amount</span><span class="o">=</span><span class="n">Decimal</span><span class="p">(</span><span class="s2">"18.50"</span><span class="p">),</span>
                 <span class="n">status</span><span class="o">=</span><span class="s2">"delivered"</span><span class="p">,</span>
                 <span class="n">order_time</span><span class="o">=</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2024</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">18</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
@@ -1904,7 +1944,7 @@
 <h2 id="related-documentation">🔗 Related Documentation<a class="headerlink" href="#related-documentation" title="Permanent link">¶</a></h2>
 <ul>
 <li><a href="../../getting-started/">Getting Started Guide</a> - Complete pizzeria application tutorial</li>
-<li><a href="../cqrs-mediation/">CQRS &amp; Mediation</a> - Commands and queries with pizzeria examples  </li>
+<li><a href="../cqrs-mediation/">CQRS &amp; Mediation</a> - Commands and queries with pizzeria examples</li>
 <li><a href="../dependency-injection/">Dependency Injection</a> - Service registration for repositories</li>
 <li><a href="../mvc-controllers/">MVC Controllers</a> - API endpoints using these repositories</li>
 </ul>
