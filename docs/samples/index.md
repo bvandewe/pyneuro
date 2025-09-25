@@ -79,83 +79,6 @@ Shows how to build background services that interact with system resources, hand
 - System API integration
 - Inter-process communication
 
-### [🧪 Lab Resource Manager - Kubernetes Operator](lab-resource-manager.md)
-
-Kubernetes operator pattern implementation for managing laboratory resources, demonstrating watcher patterns, reconciliation loops, and cloud-native development.
-
-**Domain Focus:**
-
-- Laboratory equipment management
-- Resource allocation and scheduling
-- Experiment workflow orchestration
-- Usage tracking and reporting
-
-**Key Patterns:**
-
-- Kubernetes operator pattern
-- Watcher and reconciliation loops
-- Resource state management
-- Cloud-native architecture
-
-**Technology Stack:**
-
-- Kubernetes API integration
-- Custom Resource Definitions (CRDs)
-- Controller runtime
-- Cloud storage integration
-
-## 🎯 Sample Application Architecture
-
-Each sample demonstrates different architectural focuses:
-
-```mermaid
-graph TB
-    subgraph "🏦 OpenBank"
-        ES[Event Sourcing]
-        CQRS1[CQRS]
-        BANK[Banking Domain]
-    end
-
-    subgraph "🌐 API Gateway"
-        RT[Request Routing]
-        AUTH[Authentication]
-        RATE[Rate Limiting]
-    end
-
-    subgraph "🖥️ Desktop Controller"
-        BG[Background Services]
-        SYS[System Integration]
-        PROC[Process Management]
-    end
-
-    subgraph "🧪 Lab Resource Manager"
-        K8S[Kubernetes Operator]
-        WATCH[Watcher Patterns]
-        REC[Reconciliation]
-    end
-
-    subgraph "🎯 Common Patterns"
-        CA[Clean Architecture]
-        DI[Dependency Injection]
-        TEST[Testing Strategies]
-    end
-
-    ES --> CA
-    CQRS1 --> CA
-    RT --> CA
-    BG --> CA
-    K8S --> CA
-
-    CA --> DI
-    CA --> TEST
-
-    style ES fill:#e8f5e8
-    style RT fill:#e3f2fd
-    style BG fill:#fff3e0
-    style K8S fill:#f3e5f5
-    style CA fill:#fce4ec
-```
-
 ## 🚀 Getting Started with Samples
 
 ### Quick Start Guide
@@ -220,14 +143,14 @@ graph LR
 
 ## 📊 Sample Comparison Matrix
 
-| Feature          | OpenBank           | API Gateway       | Desktop Controller  | Lab Resource Manager |
-| ---------------- | ------------------ | ----------------- | ------------------- | -------------------- |
-| **Complexity**   | 🔴 Advanced        | 🟡 Intermediate   | 🟢 Beginner         | 🔴 Advanced          |
-| **Domain**       | Financial          | Integration       | System              | Scientific           |
-| **Architecture** | Event Sourcing     | Gateway Pattern   | Background Services | Operator Pattern     |
-| **Storage**      | EventStore + Mongo | Redis + SQL       | File System         | Kubernetes etcd      |
-| **Integration**  | REST APIs          | Multiple Services | System APIs         | Kubernetes APIs      |
-| **Deployment**   | Cloud/On-Premise   | Cloud Native      | Desktop/Server      | Kubernetes Only      |
+| Feature          | OpenBank           | API Gateway       | Desktop Controller  |
+| ---------------- | ------------------ | ----------------- | ------------------- |
+| **Complexity**   | 🔴 Advanced        | 🟡 Intermediate   | 🟢 Beginner         |
+| **Domain**       | Financial          | Integration       | System              |
+| **Architecture** | Event Sourcing     | Gateway Pattern   | Background Services |
+| **Storage**      | EventStore + Mongo | Redis + SQL       | File System         |
+| **Integration**  | REST APIs          | Multiple Services | System APIs         |
+| **Deployment**   | Cloud/On-Premise   | Cloud Native      | Desktop/Server      |
 
 ## 🎓 Learning Outcomes
 

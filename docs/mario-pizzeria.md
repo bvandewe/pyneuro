@@ -4,13 +4,22 @@ Mario's Pizzeria is the comprehensive business domain used throughout the Neurog
 
 ## 🎯 Business Overview
 
-Mario's Pizzeria is a local pizza restaurant that needs a digital ordering system to handle:
+**Mario's Pizzeria** is a local pizza restaurant that needs a digital ordering system to handle:
 
 - **Customer Orders**: Online pizza ordering with customizations
 - **Menu Management**: Pizza catalog with sizes, toppings, and pricing
 - **Kitchen Operations**: Order queue management and preparation workflow
 - **Payment Processing**: Multiple payment methods and transaction handling
 - **Customer Notifications**: SMS alerts for order status updates
+
+The pizzeria demonstrates how a simple restaurant business can be modeled using domain-driven design principles:
+
+- Takes pizza orders from customers
+- Manages pizza recipes and inventory
+- Cooks pizzas in the kitchen with capacity management
+- Tracks order status through complete lifecycle
+- Handles payments and customer notifications
+- Provides real-time status updates to customers and staff
 
 ## 🏗️ System Architecture
 
@@ -240,6 +249,136 @@ classDiagram
     note for Kitchen "Aggregate root for\ncapacity management"
 ```
 
+## 🏗️ Detailed Domain Entities
+
+### Pizza Entity
+
+```python
+from dataclasses import dataclass
+from typing import List, Optional
+from decimal import Decimal
+from neuroglia.data.abstractions import Entity
+
+@dataclass
+class Pizza(Entity[str]):
+    """A pizza with toppings and size"""
+    id: str
+    name: str
+    size: str  # "small", "medium", "large"
+    base_price: Decimal
+    toppings: List[str]
+    preparation_time_minutes: int
+
+    @property
+    def total_price(self) -> Decimal:
+        return self.base_price + (Decimal("1.50") * len(self.toppings))
+
+    def add_topping(self, topping: str) -> None:
+        if topping not in self.toppings:
+            self.toppings.append(topping)
+
+    def remove_topping(self, topping: str) -> None:
+        if topping in self.toppings:
+            self.toppings.remove(topping)
+```
+
+### Order Entity
+
+```python
+@dataclass
+class Order(Entity[str]):
+    """A customer pizza order"""
+    id: str
+    customer_name: str
+    customer_phone: str
+    pizzas: List[Pizza]
+    status: str  # "pending", "cooking", "ready", "delivered"
+    order_time: datetime
+    estimated_ready_time: Optional[datetime] = None
+    total_amount: Optional[Decimal] = None
+
+    def __post_init__(self):
+        if self.total_amount is None:
+            self.total_amount = sum(pizza.total_price for pizza in self.pizzas)
+
+    def add_pizza(self, pizza: Pizza) -> None:
+        self.pizzas.append(pizza)
+        self.total_amount = sum(p.total_price for p in self.pizzas)
+
+    def confirm_order(self) -> None:
+        if self.status == "pending":
+            self.status = "confirmed"
+
+    def start_cooking(self) -> None:
+        if self.status == "confirmed":
+            self.status = "cooking"
+
+    def mark_ready(self) -> None:
+        if self.status == "cooking":
+            self.status = "ready"
+```
+
+### Kitchen Entity
+
+```python
+@dataclass
+class Kitchen(Entity[str]):
+    """Kitchen state and cooking capacity"""
+    id: str
+    active_orders: List[str]  # Order IDs being cooked
+    max_concurrent_orders: int = 3
+
+    @property
+    def is_busy(self) -> bool:
+        return len(self.active_orders) >= self.max_concurrent_orders
+
+    @property
+    def current_capacity(self) -> int:
+        return len(self.active_orders)
+
+    def start_order(self, order_id: str) -> bool:
+        if not self.is_busy:
+            self.active_orders.append(order_id)
+            return True
+        return False
+
+    def complete_order(self, order_id: str) -> None:
+        if order_id in self.active_orders:
+            self.active_orders.remove(order_id)
+```
+
+## 📊 Value Objects
+
+### Address
+
+```python
+@dataclass
+class Address:
+    street: str
+    city: str
+    zip_code: str
+
+    def __str__(self) -> str:
+        return f"{self.street}, {self.city} {self.zip_code}"
+```
+
+### Money
+
+```python
+@dataclass
+class Money:
+    amount: Decimal
+    currency: str = "USD"
+
+    def __str__(self) -> str:
+        return f"${self.amount:.2f}"
+
+    def add(self, other: 'Money') -> 'Money':
+        if self.currency != other.currency:
+            raise ValueError("Cannot add different currencies")
+        return Money(self.amount + other.amount, self.currency)
+```
+
 ## 🎯 CQRS Commands and Queries
 
 The system uses CQRS pattern with clear separation between write and read operations:
@@ -264,6 +403,91 @@ class StartCookingCommand(Command[OperationResult[OrderDto]]):
 class CompleteOrderCommand(Command[OperationResult[OrderDto]]):
     order_id: str
     completion_time: Optional[datetime] = None
+```
+
+## 📡 Domain Events
+
+The pizzeria system uses domain events to handle complex business workflows:
+
+### OrderPlacedEvent
+
+```python
+@dataclass
+class OrderPlacedEvent(DomainEvent):
+    order_id: str
+    customer_name: str
+    total_amount: Decimal
+    estimated_ready_time: datetime
+```
+
+### CookingStartedEvent
+
+```python
+@dataclass
+class CookingStartedEvent(DomainEvent):
+    order_id: str
+    started_at: datetime
+```
+
+### OrderReadyEvent
+
+```python
+@dataclass
+class OrderReadyEvent(DomainEvent):
+    order_id: str
+    customer_name: str
+    customer_phone: str
+```
+
+## 📋 Data Transfer Objects (DTOs)
+
+### OrderDto
+
+```python
+@dataclass
+class OrderDto:
+    id: str
+    customer_name: str
+    customer_phone: str
+    pizzas: List[PizzaDto]
+    status: str
+    total_amount: str  # Formatted money
+    order_time: str   # ISO datetime
+    estimated_ready_time: Optional[str] = None
+```
+
+### PizzaDto
+
+```python
+@dataclass
+class PizzaDto:
+    id: str
+    name: str
+    size: str
+    toppings: List[str]
+    price: str  # Formatted money
+```
+
+### CreateOrderDto
+
+```python
+@dataclass
+class CreateOrderDto:
+    customer_name: str
+    customer_phone: str
+    pizzas: List[PizzaOrderItem]
+    delivery_address: Optional[AddressDto] = None
+```
+
+### KitchenStatusDto
+
+```python
+@dataclass
+class KitchenStatusDto:
+    current_capacity: int
+    max_concurrent_orders: int
+    active_orders: List[str]
+    is_at_capacity: bool
 ```
 
 ### Queries (Read Operations)
@@ -379,6 +603,24 @@ Event Store:
 │   └── OrderReadyEvent
 ```
 
+### Detailed File Structure
+
+```text
+pizzeria_data/
+├── orders/
+│   ├── 2024-09-22/           # Orders by date
+│   │   ├── order_001.json
+│   │   ├── order_002.json
+│   │   └── order_003.json
+│   └── index.json            # Order index
+├── menu/
+│   └── pizzas.json           # Available pizzas
+├── kitchen/
+│   └── status.json           # Kitchen state
+└── customers/
+    └── customers.json        # Customer history
+```
+
 ## 🌐 API Endpoints
 
 Complete RESTful API for all pizzeria operations:
@@ -409,6 +651,42 @@ Complete RESTful API for all pizzeria operations:
 | `GET`  | `/kitchen/queue`                | Get current cooking queue   |
 | `POST` | `/kitchen/orders/{id}/start`    | Start cooking order         |
 | `POST` | `/kitchen/orders/{id}/complete` | Complete order              |
+
+## 🔐 OAuth Scopes
+
+The pizzeria system uses OAuth2 scopes for fine-grained access control:
+
+```python
+SCOPES = {
+    "orders:read": "Read order information",
+    "orders:write": "Create and modify orders",
+    "kitchen:read": "View kitchen status",
+    "kitchen:manage": "Manage kitchen operations",
+    "menu:read": "View menu items",
+    "admin": "Full administrative access"
+}
+```
+
+## 🎨 Simple UI Pages
+
+The pizzeria system provides a complete user interface:
+
+1. **Menu Page** - Display available pizzas with ordering interface
+2. **Order Page** - Place new orders with customization options
+3. **Status Page** - Check order status and estimated ready time
+4. **Kitchen Dashboard** - Manage cooking queue (staff only)
+5. **Admin Panel** - Manage menu and view analytics
+
+## 🚀 Benefits of This Domain Model
+
+- **Familiar Context** - Everyone understands pizza ordering workflows
+- **Clear Bounded Context** - Well-defined business operations and boundaries
+- **Rich Domain Logic** - Complex pricing, cooking times, status workflows
+- **Event-Driven** - Natural events (order placed, cooking started, ready)
+- **Multiple User Types** - Customers, kitchen staff, managers with different needs
+- **Simple Data Model** - Easy to understand and maintain
+- **Realistic Complexity** - Enough features to demonstrate patterns without being overwhelming
+- **Production Ready** - Real business logic that could be deployed
 
 ## 🧪 Testing Strategy
 

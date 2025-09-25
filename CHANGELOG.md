@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - **Background Task Scheduling**: Comprehensive background job processing with APScheduler integration
+
   - **Scheduled Jobs**: Execute tasks at specific dates and times with `ScheduledBackgroundJob`
   - **Recurrent Jobs**: Execute tasks at regular intervals with `RecurrentBackgroundJob`
   - **Task Management**: Complete task lifecycle management with start, stop, and monitoring
@@ -20,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - **Framework Integration**: Seamless dependency injection and service provider integration
 
 - **Redis Cache Repository**: High-performance distributed caching with advanced data structures
+
   - **Async Operations**: Full async/await support for non-blocking cache operations
   - **Hash Storage**: Redis hash-based storage for efficient field-level operations
   - **Distributed Locks**: `set_if_not_exists()` for distributed locking patterns
@@ -30,6 +32,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - **Type Safety**: Generic type support for compile-time type checking
 
 - **HTTP Service Client**: Production-ready HTTP client with resilience patterns
+
   - **Circuit Breaker**: Automatic failure detection and service protection
   - **Retry Policies**: Exponential backoff, linear delay, and fixed delay strategies
   - **Request/Response Interceptors**: Middleware pattern for cross-cutting concerns
@@ -40,6 +43,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - **SSL Configuration**: Flexible SSL verification and certificate handling
 
 - **Case Conversion Utilities**: Comprehensive string and object transformation utilities
+
   - **String Transformations**: snake_case, camelCase, PascalCase, kebab-case, Title Case
   - **Dictionary Transformations**: Recursive key conversion for nested data structures
   - **List Processing**: Handle arrays of objects with nested dictionary conversion
@@ -48,6 +52,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - **Pydantic Integration**: Optional CamelModel for automatic case conversion
 
 - **Enhanced Model Validation**: Advanced business rule validation with fluent API
+
   - **Business Rules**: Fluent API for complex domain validation logic
   - **Conditional Validation**: Rules that apply only when specific conditions are met
   - **Property Validators**: Built-in validators for common scenarios (required, length, email, etc.)
@@ -58,6 +63,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - **Exception Handling**: Rich exception hierarchy for different validation scenarios
 
 - **Comprehensive Documentation**: New feature documentation with Mario's Pizzeria examples
+
   - **Background Task Scheduling**: Pizza order processing, kitchen automation, delivery coordination
   - **Redis Cache Repository**: Menu caching, order session management, inventory coordination
   - **HTTP Service Client**: Payment gateway integration, delivery service APIs, notification services
@@ -67,6 +73,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - **Testing Patterns**: Comprehensive test examples for all new framework features
 
 - **Development Environment Configuration**: Enhanced development tooling and configuration
+
   - **VS Code Extensions**: Configured recommended extensions for Python development (`extensions.json`)
   - **Code Quality Tools**: Integrated Markdown linting (`.markdownlint.json`) and Prettier formatting (`.prettierrc`)
   - **Development Scripts**: Added comprehensive build and utility scripts in `scripts/` directory
@@ -80,6 +87,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Enhanced
 
 - **Framework Infrastructure**: Major framework capabilities expansion with production-ready components
+
   - **Optional Dependencies**: All new features properly handle missing dependencies with graceful fallbacks
   - **Error Handling**: Comprehensive exception hierarchy with detailed error messages
   - **Performance Optimization**: Async/await patterns throughout with connection pooling and caching
@@ -87,6 +95,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - **Testing Coverage**: 71+ comprehensive tests covering all success and failure scenarios
 
 - **Documentation Quality**: Professional documentation standards with consistent examples
+
   - **Mario's Pizzeria Context**: All new features documented with realistic restaurant scenarios
   - **Architecture Diagrams**: Mermaid diagrams showing framework integration patterns
   - **Code Examples**: Complete, runnable examples with proper error handling
@@ -94,11 +103,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - **Testing Patterns**: Test-driven development examples for all new components
 
 - **Framework Core Improvements**: Enhanced core framework capabilities
+
   - **Enhanced Web Application Builder**: Improved `src/neuroglia/hosting/enhanced_web_application_builder.py` with additional features
   - **Mediator Enhancements**: Updated `src/neuroglia/mediation/mediator.py` with improved functionality
   - **Dependency Management**: Updated `pyproject.toml` and `poetry.lock` with latest dependencies
 
 - **Development Environment**: Improved developer experience and tooling
+
   - **VS Code Configuration**: Enhanced debugging configuration in `.vscode/launch.json`
   - **Settings Optimization**: Improved development settings in `.vscode/settings.json`
   - **Git Configuration**: Updated `.gitignore` for better file exclusion patterns
@@ -247,7 +258,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `docs/features/dependency-injection.md`: Service registration for pizzeria infrastructure
   - `docs/features/data-access.md`: File repositories, MongoDB, event sourcing for pizzeria data
   - `docs/features/mvc-controllers.md`: Pizzeria API controllers with OAuth and validation
-  - `docs/_pizzeria_domain.md`: Central domain model specification for consistent examples
+  - `docs/mario-pizzeria.md`: Complete bounded context specification with detailed domain model
 
 - **Quality Improvements**: Professional documentation standards throughout
 
