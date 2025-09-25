@@ -1,5 +1,16 @@
 # 🏗️ Architecture Guide
 
+!!! danger "⚠️ Deprecated"
+This page is deprecated and will be removed in a future version. The content has been migrated to more focused sections:
+
+    - **[Clean Architecture Pattern](patterns/clean-architecture.md)** - Four-layer separation and dependency rules
+    - **[CQRS Pattern](patterns/cqrs.md)** - Command Query Responsibility Segregation
+    - **[Event-Driven Pattern](patterns/event-driven.md)** - Domain events and messaging
+    - **[Mario's Pizzeria](mario-pizzeria.md)** - Complete bounded context example
+    - **[Features](features/)** - Framework-specific implementation details
+
+    Please use the new structure for the most up-to-date documentation.
+
 Neuroglia's clean architecture is demonstrated through **Mario's Pizzeria**, showing how layered architecture promotes separation of concerns, testability, and maintainability in a real-world application.
 
 ## 🎯 What You'll Learn
@@ -72,7 +83,7 @@ Pizza order flow demonstrates how dependencies always point inward:
 # src/api/controllers/orders_controller.py
 class OrdersController(ControllerBase):
     """Handle customer pizza orders"""
-    
+
     @post("/", response_model=OrderDto, status_code=201)
     async def place_order(self, order_request: PlaceOrderDto) -> OrderDto:
         """Place new pizza order"""
@@ -82,7 +93,7 @@ class OrdersController(ControllerBase):
             pizzas=order_request.pizzas,
             payment_method=order_request.payment_method
         )
-        
+
         result = await self.mediator.execute_async(command)
         return self.process(result)  # Framework handles success/error response
 
@@ -117,15 +128,15 @@ class PlaceOrderDto(BaseModel):
 # src/integration/repositories/file_order_repository.py
 class FileOrderRepository(IOrderRepository):
     """File-based order repository for development"""
-    
+
     def __init__(self, orders_directory: str = "data/orders"):
         self.orders_directory = Path(orders_directory)
         self.orders_directory.mkdir(parents=True, exist_ok=True)
-    
+
     async def save_async(self, order: Order) -> Order:
         """Save order to JSON file"""
         order_file = self.orders_directory / f"{order.id}.json"
-        
+
         order_data = {
             "id": order.id,
             "customer_name": order.customer_name,
@@ -136,24 +147,24 @@ class FileOrderRepository(IOrderRepository):
             "order_time": order.order_time.isoformat(),
             "total_amount": float(order.total_amount)
         }
-        
+
         async with aiofiles.open(order_file, 'w') as f:
             await f.write(json.dumps(order_data, indent=2))
-        
+
         return order
 
 # src/integration/services/payment_service.py
 class StripePaymentService(IPaymentService):
     """Payment processing using Stripe API"""
-    
-    async def process_payment_async(self, 
-                                    amount: Decimal, 
+
+    async def process_payment_async(self,
+                                    amount: Decimal,
                                     payment_method: str) -> PaymentResult:
         """Process payment through Stripe"""
         try:
             import stripe
             stripe.api_key = os.getenv("STRIPE_SECRET_KEY")
-            
+
             # Create payment intent
             intent = stripe.PaymentIntent.create(
                 amount=int(amount * 100),  # Convert to cents
@@ -162,13 +173,13 @@ class StripePaymentService(IPaymentService):
                 confirm=True,
                 return_url="https://marios-pizzeria.com/payment-success"
             )
-            
+
             return PaymentResult(
                 is_success=True,
                 transaction_id=intent.id,
                 amount_processed=amount
             )
-            
+
         except stripe.error.StripeError as e:
             return PaymentResult(
                 is_success=False,
@@ -178,31 +189,31 @@ class StripePaymentService(IPaymentService):
 # src/integration/services/notification_service.py
 class TwilioNotificationService(INotificationService):
     """SMS notifications using Twilio"""
-    
+
     async def send_order_confirmation_async(self, order: Order) -> None:
         """Send order confirmation SMS"""
         from twilio.rest import Client
-        
+
         client = Client(
             os.getenv("TWILIO_ACCOUNT_SID"),
             os.getenv("TWILIO_AUTH_TOKEN")
         )
-        
+
         message = (f"Hi {order.customer_name}! Your pizza order #{order.id} "
                   f"has been confirmed. Total: ${order.total_amount}. "
                   f"Estimated ready time: {order.estimated_ready_time.strftime('%I:%M %p')}")
-        
+
         await client.messages.create(
             body=message,
             from_=os.getenv("TWILIO_PHONE_NUMBER"),
             to=order.customer_phone
         )
-    
+
     async def send_order_ready_notification_async(self, order: Order) -> None:
         """Send order ready SMS"""
         message = (f"🍕 Your order #{order.id} is ready for pickup at Mario's Pizzeria! "
                   f"Please arrive within 15 minutes to keep your pizzas hot.")
-        
+
         # Implementation details...
 ```
 
@@ -284,7 +295,7 @@ OrderCompletedEvent → AnalyticsHandler → Update Revenue Metrics
 ```python
 class KitchenNotificationHandler(EventHandler[OrderPlacedEvent]):
     """Update kitchen display when new order placed"""
-    
+
     async def handle_async(self, event: OrderPlacedEvent):
         # Add order to kitchen queue
         command = AddToKitchenQueueCommand(
@@ -295,7 +306,7 @@ class KitchenNotificationHandler(EventHandler[OrderPlacedEvent]):
 
 class CustomerNotificationHandler(EventHandler[OrderReadyEvent]):
     """Notify customer when order is ready"""
-    
+
     async def handle_async(self, event: OrderReadyEvent):
         # Send SMS notification
         await self.notification_service.send_order_ready_notification_async(
@@ -305,7 +316,7 @@ class CustomerNotificationHandler(EventHandler[OrderReadyEvent]):
 
 class RevenueAnalyticsHandler(EventHandler[OrderCompletedEvent]):
     """Update revenue analytics when order completed"""
-    
+
     async def handle_async(self, event: OrderCompletedEvent):
         # Update daily revenue
         command = UpdateDailyRevenueCommand(
@@ -338,13 +349,13 @@ async def test_place_order_success(orders_controller, mock_mediator):
         customer_phone="+1234567890",
         pizzas=[PizzaOrderDto(name="Margherita", size="large", quantity=1)]
     )
-    
+
     expected_order = OrderDto(id="order_123", status="received")
     mock_mediator.execute_async.return_value = OperationResult.success(expected_order)
-    
+
     # Act
     result = await orders_controller.place_order(order_request)
-    
+
     # Assert
     assert result.id == "order_123"
     assert result.status == "received"
@@ -357,19 +368,19 @@ async def test_place_order_success(orders_controller, mock_mediator):
 - **Event Tests**: Validate domain events are raised correctly
 
 ```python
-@pytest.mark.asyncio 
+@pytest.mark.asyncio
 async def test_place_order_handler_workflow(mock_order_repo, mock_payment_service):
     """Test complete order placement workflow"""
     # Arrange
     handler = PlaceOrderCommandHandler(mock_order_repo, mock_payment_service, ...)
     command = PlaceOrderCommand(customer_name="Test", pizzas=[...])
-    
+
     mock_payment_service.process_payment_async.return_value = PaymentResult(success=True)
     mock_order_repo.save_async.return_value = Order(id="order_123")
-    
+
     # Act
     result = await handler.handle_async(command)
-    
+
     # Assert
     assert result.is_success
     mock_payment_service.process_payment_async.assert_called_once()
@@ -390,27 +401,27 @@ def test_order_total_calculation():
         Pizza("Margherita", "large", ["extra_cheese"]),
         Pizza("Pepperoni", "medium", [])
     ]
-    
+
     # Act
     order = Order.create_new("Customer", "+1234567890", "Address", pizzas, "card")
-    
+
     # Assert
     expected_subtotal = Decimal("15.99") + Decimal("12.99")  # Pizza prices
     expected_tax = expected_subtotal * Decimal("0.0875")     # 8.75% tax
     expected_delivery = Decimal("2.99")                      # Delivery fee
     expected_total = expected_subtotal + expected_tax + expected_delivery
-    
+
     assert order.total_amount == expected_total.quantize(Decimal("0.01"))
 
 def test_order_status_transition_validation():
     """Test order status transition business rules"""
     # Arrange
     order = Order.create_new("Customer", "+1234567890", "Address", [], "card")
-    
+
     # Act & Assert - Valid transition
     order.update_status(OrderStatus.PREPARING, "chef_mario")
     assert order.status == OrderStatus.PREPARING
-    
+
     # Act & Assert - Invalid transition
     with pytest.raises(DomainException):
         order.update_status(OrderStatus.DELIVERED, "chef_mario")  # Cannot skip to delivered
@@ -419,10 +430,10 @@ def test_domain_events_raised():
     """Test that domain events are raised correctly"""
     # Arrange
     pizzas = [Pizza("Margherita", "large", [])]
-    
+
     # Act
     order = Order.create_new("Customer", "+1234567890", "Address", pizzas, "card")
-    
+
     # Assert
     events = order.get_uncommitted_events()
     assert len(events) == 1
@@ -443,11 +454,11 @@ async def test_file_order_repository_roundtrip():
     # Arrange
     repository = FileOrderRepository("test_data/orders")
     order = Order.create_new("Test Customer", "+1234567890", "Test Address", [], "cash")
-    
+
     # Act
     saved_order = await repository.save_async(order)
     retrieved_order = await repository.get_by_id_async(saved_order.id)
-    
+
     # Assert
     assert retrieved_order is not None
     assert retrieved_order.customer_name == "Test Customer"
@@ -459,10 +470,10 @@ async def test_stripe_payment_service():
     # Arrange
     payment_service = StripePaymentService()
     amount = Decimal("29.99")
-    
+
     # Act
     result = await payment_service.process_payment_async(amount, "pm_card_visa")
-    
+
     # Assert
     assert result.is_success
     assert result.amount_processed == amount
@@ -481,7 +492,7 @@ async def test_complete_pizza_order_workflow():
         # 1. Get menu
         menu_response = await client.get("/api/menu/pizzas")
         assert menu_response.status_code == 200
-        
+
         # 2. Place order
         order_data = {
             "customer_name": "E2E Test Customer",
@@ -490,11 +501,11 @@ async def test_complete_pizza_order_workflow():
             "pizzas": [{"name": "Margherita", "size": "large", "quantity": 1}],
             "payment_method": "card"
         }
-        
+
         order_response = await client.post("/api/orders/", json=order_data)
         assert order_response.status_code == 201
         order = order_response.json()
-        
+
         # 3. Update order status (kitchen)
         status_update = {"status": "preparing", "notes": "Started preparation"}
         status_response = await client.put(
@@ -503,7 +514,7 @@ async def test_complete_pizza_order_workflow():
             headers={"Authorization": "Bearer {kitchen_token}"}
         )
         assert status_response.status_code == 200
-        
+
         # 4. Verify order status
         check_response = await client.get(f"/api/orders/{order['id']}")
         updated_order = check_response.json()
@@ -519,37 +530,37 @@ from neuroglia.hosting.web import WebApplicationBuilder
 
 def configure_pizzeria_services(builder: WebApplicationBuilder):
     """Configure all services for Mario's Pizzeria"""
-    
+
     # Domain services
     builder.services.add_scoped(KitchenWorkflowService)
     builder.services.add_scoped(PricingService)
-    
+
     # Application services
     builder.services.add_mediator()
     builder.services.add_auto_mapper()
-    
+
     # Infrastructure services (environment-specific)
     environment = os.getenv("ENVIRONMENT", "development")
-    
+
     if environment == "development":
         # File-based repositories for development
         builder.services.add_scoped(IOrderRepository, FileOrderRepository)
         builder.services.add_scoped(IPizzaRepository, FilePizzaRepository)
         builder.services.add_scoped(INotificationService, ConsoleNotificationService)
         builder.services.add_scoped(IPaymentService, MockPaymentService)
-    
+
     else:  # production
         # MongoDB repositories for production
         builder.services.add_scoped(IOrderRepository, MongoOrderRepository)
         builder.services.add_scoped(IPizzaRepository, MongoPizzaRepository)
         builder.services.add_scoped(INotificationService, TwilioNotificationService)
         builder.services.add_scoped(IPaymentService, StripePaymentService)
-    
+
     # Event handlers
     builder.services.add_scoped(EventHandler[OrderPlacedEvent], KitchenNotificationHandler)
     builder.services.add_scoped(EventHandler[OrderReadyEvent], CustomerNotificationHandler)
     builder.services.add_scoped(EventHandler[OrderCompletedEvent], AnalyticsHandler)
-    
+
     # Controllers
     builder.services.add_controllers([
         "api.controllers.orders_controller",
@@ -571,7 +582,7 @@ def configure_pizzeria_services(builder: WebApplicationBuilder):
 ### For Development Teams
 
 - **Clear Responsibilities**: Each layer has well-defined purpose and boundaries
-- **Technology Independence**: Can swap infrastructure without changing business logic  
+- **Technology Independence**: Can swap infrastructure without changing business logic
 - **Parallel Development**: Teams can work on different layers simultaneously
 - **Easy Onboarding**: New developers understand system through consistent patterns
 
@@ -592,7 +603,7 @@ def configure_pizzeria_services(builder: WebApplicationBuilder):
 
 ---
 
-*This architecture guide demonstrates clean architecture principles using Mario's Pizzeria as a comprehensive example. The layered approach shown here scales from simple applications to complex enterprise systems while maintaining clear separation of concerns and testability.*
+_This architecture guide demonstrates clean architecture principles using Mario's Pizzeria as a comprehensive example. The layered approach shown here scales from simple applications to complex enterprise systems while maintaining clear separation of concerns and testability._
 
 ### 💼 Application Layer: Pizza Business Workflow
 
@@ -621,8 +632,8 @@ class PlaceOrderCommand(Command[OperationResult[OrderDto]]):
 # src/application/handlers/place_order_handler.py
 class PlaceOrderCommandHandler(CommandHandler[PlaceOrderCommand, OperationResult[OrderDto]]):
     """Handles pizza order placement business workflow"""
-    
-    def __init__(self, 
+
+    def __init__(self,
                  order_repository: IOrderRepository,
                  pizza_repository: IPizzaRepository,
                  payment_service: IPaymentService,
@@ -633,7 +644,7 @@ class PlaceOrderCommandHandler(CommandHandler[PlaceOrderCommand, OperationResult
         self.payment_service = payment_service
         self.notification_service = notification_service
         self.mapper = mapper
-    
+
     async def handle_async(self, command: PlaceOrderCommand) -> OperationResult[OrderDto]:
         """Execute pizza order placement workflow"""
         try:
@@ -642,7 +653,7 @@ class PlaceOrderCommandHandler(CommandHandler[PlaceOrderCommand, OperationResult
                 pizza = await self.pizza_repository.get_by_name_async(pizza_request.name)
                 if not pizza or not pizza.is_available:
                     return self.bad_request(f"Pizza '{pizza_request.name}' is not available")
-            
+
             # 2. Calculate order total using domain logic
             order = Order.create_new(
                 customer_name=command.customer_name,
@@ -651,30 +662,30 @@ class PlaceOrderCommandHandler(CommandHandler[PlaceOrderCommand, OperationResult
                 pizzas=command.pizzas,
                 payment_method=command.payment_method
             )
-            
+
             # 3. Process payment (integration layer)
             payment_result = await self.payment_service.process_payment_async(
                 order.total_amount, command.payment_method
             )
-            
+
             if not payment_result.is_success:
                 return self.bad_request("Payment processing failed")
-            
+
             order.mark_payment_processed(payment_result.transaction_id)
-            
+
             # 4. Save order (integration layer)
             saved_order = await self.order_repository.save_async(order)
-            
+
             # 5. Domain event will trigger kitchen notification automatically
             # (OrderPlacedEvent is raised by Order entity)
-            
+
             # 6. Send customer confirmation
             await self.notification_service.send_order_confirmation_async(saved_order)
-            
+
             # 7. Return success result
             order_dto = self.mapper.map(saved_order, OrderDto)
             return self.created(order_dto)
-            
+
         except Exception as ex:
             return self.internal_server_error(f"Failed to place order: {str(ex)}")
 ```
@@ -967,10 +978,10 @@ def test_user_registration():
     # Arrange
     command = CreateUserCommand("test@example.com", "John", "Doe")
     handler = CreateUserCommandHandler(mock_repository)
-    
+
     # Act
     result = await handler.handle_async(command)
-    
+
     # Assert
     assert result.is_success
 ```

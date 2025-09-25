@@ -5,8 +5,9 @@ This document defines the unified pizzeria domain model used consistently throug
 ## 📋 Domain Overview
 
 **Mario's Pizzeria** is a simple restaurant that:
+
 - Takes pizza orders from customers
-- Manages pizza recipes and inventory  
+- Manages pizza recipes and inventory
 - Cooks pizzas in the kitchen
 - Tracks order status and completion
 - Handles payments and customer notifications
@@ -14,6 +15,7 @@ This document defines the unified pizzeria domain model used consistently throug
 ## 🏗️ Domain Entities
 
 ### Pizza
+
 ```python
 from dataclasses import dataclass
 from typing import List, Optional
@@ -29,15 +31,16 @@ class Pizza(Entity[str]):
     base_price: Decimal
     toppings: List[str]
     preparation_time_minutes: int
-    
+
     @property
     def total_price(self) -> Decimal:
         return self.base_price + (Decimal("1.50") * len(self.toppings))
 ```
 
 ### Order
+
 ```python
-@dataclass 
+@dataclass
 class Order(Entity[str]):
     """A customer pizza order"""
     id: str
@@ -48,13 +51,14 @@ class Order(Entity[str]):
     order_time: datetime
     estimated_ready_time: Optional[datetime] = None
     total_amount: Optional[Decimal] = None
-    
+
     def __post_init__(self):
         if self.total_amount is None:
             self.total_amount = sum(pizza.total_price for pizza in self.pizzas)
 ```
 
 ### Kitchen
+
 ```python
 @dataclass
 class Kitchen(Entity[str]):
@@ -62,7 +66,7 @@ class Kitchen(Entity[str]):
     id: str
     active_orders: List[str]  # Order IDs being cooked
     max_concurrent_orders: int = 3
-    
+
     @property
     def is_busy(self) -> bool:
         return len(self.active_orders) >= self.max_concurrent_orders
@@ -71,24 +75,26 @@ class Kitchen(Entity[str]):
 ## 📊 Value Objects
 
 ### Address
+
 ```python
 @dataclass
 class Address:
     street: str
     city: str
     zip_code: str
-    
+
     def __str__(self) -> str:
         return f"{self.street}, {self.city} {self.zip_code}"
 ```
 
 ### Money
+
 ```python
-@dataclass 
+@dataclass
 class Money:
     amount: Decimal
     currency: str = "USD"
-    
+
     def __str__(self) -> str:
         return f"${self.amount:.2f}"
 ```
@@ -96,6 +102,7 @@ class Money:
 ## 🎯 Commands (Write Operations)
 
 ### PlaceOrderCommand
+
 ```python
 @dataclass
 class PlaceOrderCommand(Command[OperationResult[OrderDto]]):
@@ -105,7 +112,8 @@ class PlaceOrderCommand(Command[OperationResult[OrderDto]]):
     delivery_address: Optional[Address] = None
 ```
 
-### StartCookingCommand  
+### StartCookingCommand
+
 ```python
 @dataclass
 class StartCookingCommand(Command[OperationResult[OrderDto]]):
@@ -113,6 +121,7 @@ class StartCookingCommand(Command[OperationResult[OrderDto]]):
 ```
 
 ### CompleteOrderCommand
+
 ```python
 @dataclass
 class CompleteOrderCommand(Command[OperationResult[OrderDto]]):
@@ -122,6 +131,7 @@ class CompleteOrderCommand(Command[OperationResult[OrderDto]]):
 ## 🔍 Queries (Read Operations)
 
 ### GetOrderQuery
+
 ```python
 @dataclass
 class GetOrderQuery(Query[OperationResult[OrderDto]]):
@@ -129,13 +139,15 @@ class GetOrderQuery(Query[OperationResult[OrderDto]]):
 ```
 
 ### GetMenuQuery
+
 ```python
-@dataclass  
+@dataclass
 class GetMenuQuery(Query[OperationResult[List[PizzaDto]]]):
     pass
 ```
 
 ### GetKitchenStatusQuery
+
 ```python
 @dataclass
 class GetKitchenStatusQuery(Query[OperationResult[KitchenStatusDto]]):
@@ -145,6 +157,7 @@ class GetKitchenStatusQuery(Query[OperationResult[KitchenStatusDto]]):
 ## 📡 Events
 
 ### OrderPlacedEvent
+
 ```python
 @dataclass
 class OrderPlacedEvent(DomainEvent):
@@ -155,6 +168,7 @@ class OrderPlacedEvent(DomainEvent):
 ```
 
 ### CookingStartedEvent
+
 ```python
 @dataclass
 class CookingStartedEvent(DomainEvent):
@@ -163,7 +177,8 @@ class CookingStartedEvent(DomainEvent):
 ```
 
 ### OrderReadyEvent
-```python  
+
+```python
 @dataclass
 class OrderReadyEvent(DomainEvent):
     order_id: str
@@ -174,11 +189,12 @@ class OrderReadyEvent(DomainEvent):
 ## 📋 DTOs (Data Transfer Objects)
 
 ### OrderDto
+
 ```python
 @dataclass
 class OrderDto:
     id: str
-    customer_name: str  
+    customer_name: str
     customer_phone: str
     pizzas: List[PizzaDto]
     status: str
@@ -188,6 +204,7 @@ class OrderDto:
 ```
 
 ### PizzaDto
+
 ```python
 @dataclass
 class PizzaDto:
@@ -199,6 +216,7 @@ class PizzaDto:
 ```
 
 ### CreateOrderDto
+
 ```python
 @dataclass
 class CreateOrderDto:
@@ -229,21 +247,24 @@ pizzeria_data/
 ## 🌐 API Endpoints
 
 ### Orders API
+
 ```python
 POST   /api/orders           # Place new order
-GET    /api/orders/{id}      # Get order details  
+GET    /api/orders/{id}      # Get order details
 GET    /api/orders           # List orders
 PUT    /api/orders/{id}/cook # Start cooking
 PUT    /api/orders/{id}/ready # Mark ready
 ```
 
-### Menu API  
+### Menu API
+
 ```python
 GET    /api/menu            # Get available pizzas
 GET    /api/menu/{id}       # Get pizza details
 ```
 
 ### Kitchen API
+
 ```python
 GET    /api/kitchen/status  # Get kitchen status
 GET    /api/kitchen/queue   # Get cooking queue
@@ -254,7 +275,7 @@ GET    /api/kitchen/queue   # Get cooking queue
 ```python
 SCOPES = {
     "orders:read": "Read order information",
-    "orders:write": "Create and modify orders", 
+    "orders:write": "Create and modify orders",
     "kitchen:read": "View kitchen status",
     "kitchen:manage": "Manage kitchen operations",
     "menu:read": "View menu items",
@@ -265,7 +286,7 @@ SCOPES = {
 ## 🎨 Simple UI Pages
 
 1. **Menu Page** - Display available pizzas with ordering
-2. **Order Page** - Place new orders 
+2. **Order Page** - Place new orders
 3. **Status Page** - Check order status
 4. **Kitchen Dashboard** - Manage cooking queue (staff only)
 5. **Admin Panel** - Manage menu and view analytics
@@ -273,7 +294,7 @@ SCOPES = {
 ## 🚀 Benefits of This Domain
 
 - **Familiar Context** - Everyone understands pizza ordering
-- **Clear Bounded Context** - Well-defined business operations  
+- **Clear Bounded Context** - Well-defined business operations
 - **Rich Domain Logic** - Pricing, cooking times, status workflows
 - **Event-Driven** - Natural events (order placed, cooking started, ready)
 - **Multiple User Types** - Customers, kitchen staff, managers
