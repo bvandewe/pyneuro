@@ -59,6 +59,13 @@ Visit `http://localhost:8000/docs` to explore the auto-generated API documentati
 - **[Features](features/)** - Deep dive into framework capabilities
 - **[Guides](guides/)** - How-to procedures and troubleshooting
 
+### 📖 Reference Documentation
+
+- **[Source Code Naming Conventions](references/source_code_naming_convention.md)** - Comprehensive naming patterns for maintainable codebases
+- **[12-Factor App Compliance](references/12-factor-app.md)** - How Neuroglia meets cloud-native application standards
+- **[Python Type Hints](references/python_type_hints.md)** - Advanced typing patterns for better code clarity
+- **[Python Generic Types](references/python_generic_types.md)** - Generic type usage in framework components
+
 ---
 
 _Neuroglia Python Framework - Building better software through better architecture_ 🧠✨

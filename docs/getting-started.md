@@ -54,6 +54,7 @@ The **Domain Layer** is at the center and has no dependencies on outer layers. T
 - **💉 Dependency Injection** - Constructor-based DI with service lifetime management (Singleton, Scoped, Transient)
 - **📡 Event-Driven Architecture** - Domain events enable loose coupling and eventual consistency
 - **🧪 Test-First Development** - Framework designed for comprehensive unit and integration testing
+- **🏷️ Consistent Naming** - Enforced [naming conventions](references/source_code_naming_convention.md) across all layers for maintainable code
 
 ## 🚀 Quick Start Options
 
@@ -103,7 +104,6 @@ Build a complete pizza ordering system that demonstrates clean architecture, CQR
 
 ## 📚 Documentation Structure
 
-
 Deep dive into clean architecture principles, layer responsibilities, and design patterns used throughout Neuroglia.
 
 ### 🚀 [Feature Documentation](features/)
@@ -131,6 +131,14 @@ Neuroglia is **opinionated by design** to promote:
 3. **Testability** - Framework designed for comprehensive testing
 4. **Productivity** - Reduce boilerplate while maintaining flexibility
 5. **Quality** - Built-in patterns for error handling, logging, and monitoring
+
+### 📏 Framework Standards
+
+Neuroglia applications follow industry best practices and standards:
+
+- **[Source Code Naming Conventions](references/source_code_naming_convention.md)** - Consistent naming patterns across all layers (snake_case, PascalCase, layer-specific conventions)
+- **[12-Factor App Methodology](references/12-factor-app.md)** - Cloud-native application principles with framework-specific implementation guidance
+- **[Python Best Practices](references/python_type_hints.md)** - Modern Python patterns including type hints, generics, and object-oriented design
 
 ## 🚀 Ready to Start?
 

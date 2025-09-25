@@ -771,7 +771,7 @@ Now that you've built a complete application, explore advanced Neuroglia feature
 
 ### 🏛️ Architecture Deep Dives
 
-- **[Architecture Overview](../architecture.md)** - Clean architecture principles and layer separation
+- Clean architecture principles and layer separation
 - **[CQRS & Mediation](../features/cqrs-mediation.md)** - Advanced command/query patterns and pipeline behaviors
 - **[Dependency Injection](../features/dependency-injection.md)** - Advanced DI patterns and service lifetimes
 

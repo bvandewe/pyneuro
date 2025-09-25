@@ -5,7 +5,7 @@ Neuroglia's MVC system provides powerful class-based API development using **Mar
 ## 🎯 What You'll Learn
 
 - **Pizza Order Management**: OrdersController for handling customer orders
-- **Menu Administration**: MenuController for pizza and topping management  
+- **Menu Administration**: MenuController for pizza and topping management
 - **Kitchen Operations**: KitchenController for order preparation workflow
 - **Authentication & Authorization**: OAuth integration for staff and customer access
 - **Error Handling**: Comprehensive error responses and validation
@@ -30,66 +30,66 @@ from datetime import date
 
 class OrdersController(ControllerBase):
     """Controller for managing pizza orders at Mario's Pizzeria"""
-    
-    def __init__(self, 
+
+    def __init__(self,
                  service_provider: ServiceProviderBase,
                  mapper: Mapper,
                  mediator: Mediator):
         super().__init__(service_provider, mapper, mediator)
         self.security = HTTPBearer(auto_error=False)
-    
-    @get("/", 
-         response_model=List[OrderDto], 
+
+    @get("/",
+         response_model=List[OrderDto],
          summary="Get customer orders",
          description="Retrieve orders for authenticated customer")
-    async def get_my_orders(self, 
+    async def get_my_orders(self,
                             token: str = Depends(HTTPBearer()),
                             limit: int = 10) -> List[OrderDto]:
         """Get orders for authenticated customer"""
         try:
             # Validate customer token and get customer info
             customer_info = await self._validate_customer_token(token.credentials)
-            
+
             # Query customer's orders
             query = GetOrdersByCustomerQuery(
                 customer_phone=customer_info.phone,
                 limit=limit
             )
             result = await self.mediator.execute_async(query)
-            
+
             return self.process(result)
-            
+
         except Exception as e:
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="Invalid authentication token"
             )
-    
-    @get("/{order_id}", 
+
+    @get("/{order_id}",
          response_model=OrderDto,
          summary="Get specific order",
          description="Get details of a specific pizza order")
-    async def get_order(self, 
+    async def get_order(self,
                         order_id: str,
                         token: str = Depends(HTTPBearer())) -> OrderDto:
         """Get specific order details"""
         # Validate customer access to this order
         customer_info = await self._validate_customer_token(token.credentials)
-        
+
         query = GetOrderByIdQuery(
             order_id=order_id,
             customer_phone=customer_info.phone  # Ensure customer owns order
         )
         result = await self.mediator.execute_async(query)
-        
+
         return self.process(result)
-    
-    @post("/", 
-          response_model=OrderDto, 
+
+    @post("/",
+          response_model=OrderDto,
           status_code=201,
           summary="Place pizza order",
           description="Place a new pizza order with customer details and pizza selection")
-    async def place_order(self, 
+    async def place_order(self,
                           order_request: PlaceOrderDto,
                           token: Optional[str] = Depends(HTTPBearer(auto_error=False))) -> OrderDto:
         """Place a new pizza order"""
@@ -98,7 +98,7 @@ class OrdersController(ControllerBase):
             customer_info = None
             if token:
                 customer_info = await self._validate_customer_token(token.credentials)
-            
+
             # Create place order command
             command = PlaceOrderCommand(
                 customer_name=customer_info.name if customer_info else order_request.customer_name,
@@ -108,10 +108,10 @@ class OrdersController(ControllerBase):
                 payment_method=order_request.payment_method,
                 special_instructions=order_request.special_instructions
             )
-            
+
             result = await self.mediator.execute_async(command)
             return self.process(result)
-            
+
         except ValidationError as e:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
@@ -122,58 +122,58 @@ class OrdersController(ControllerBase):
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 detail="Failed to place order. Please try again."
             )
-    
-    @put("/{order_id}/cancel", 
+
+    @put("/{order_id}/cancel",
          response_model=OrderDto,
          summary="Cancel order",
          description="Cancel a pizza order if it hasn't started preparation")
-    async def cancel_order(self, 
+    async def cancel_order(self,
                            order_id: str,
                            cancellation_request: CancelOrderDto,
                            token: str = Depends(HTTPBearer())) -> OrderDto:
         """Cancel an existing order"""
         customer_info = await self._validate_customer_token(token.credentials)
-        
+
         command = CancelOrderCommand(
             order_id=order_id,
             customer_phone=customer_info.phone,
             cancellation_reason=cancellation_request.reason
         )
-        
+
         result = await self.mediator.execute_async(command)
         return self.process(result)
-    
+
     @get("/{order_id}/status",
          response_model=OrderStatusDto,
          summary="Get order status",
          description="Get current status and estimated ready time for order")
-    async def get_order_status(self, 
+    async def get_order_status(self,
                                order_id: str,
                                token: str = Depends(HTTPBearer())) -> OrderStatusDto:
         """Get order status and tracking information"""
         customer_info = await self._validate_customer_token(token.credentials)
-        
+
         query = GetOrderStatusQuery(
             order_id=order_id,
             customer_phone=customer_info.phone
         )
-        
+
         result = await self.mediator.execute_async(query)
         return self.process(result)
-    
+
     async def _validate_customer_token(self, token: str) -> CustomerInfo:
         """Validate customer authentication token"""
         # In production, this would validate JWT token
         # For demo purposes, we'll use a simple validation
         query = ValidateCustomerTokenQuery(token=token)
         result = await self.mediator.execute_async(query)
-        
+
         if not result.is_success:
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="Invalid or expired token"
             )
-        
+
         return result.data
 ```
 
@@ -182,18 +182,18 @@ class OrdersController(ControllerBase):
 ```python
 class MenuController(ControllerBase):
     """Controller for managing Mario's Pizzeria menu"""
-    
-    def __init__(self, 
+
+    def __init__(self,
                  service_provider: ServiceProviderBase,
                  mapper: Mapper,
                  mediator: Mediator):
         super().__init__(service_provider, mapper, mediator)
-    
-    @get("/pizzas", 
+
+    @get("/pizzas",
          response_model=List[PizzaDto],
          summary="Get pizza menu",
          description="Get all available pizzas organized by category")
-    async def get_menu(self, 
+    async def get_menu(self,
                        category: Optional[str] = Query(None, description="Filter by pizza category"),
                        available_only: bool = Query(True, description="Show only available pizzas")) -> List[PizzaDto]:
         """Get pizza menu with optional filtering"""
@@ -203,8 +203,8 @@ class MenuController(ControllerBase):
         )
         result = await self.mediator.execute_async(query)
         return self.process(result)
-    
-    @get("/pizzas/{pizza_id}", 
+
+    @get("/pizzas/{pizza_id}",
          response_model=PizzaDto,
          summary="Get pizza details",
          description="Get detailed information about a specific pizza")
@@ -213,7 +213,7 @@ class MenuController(ControllerBase):
         query = GetPizzaByIdQuery(pizza_id=pizza_id)
         result = await self.mediator.execute_async(query)
         return self.process(result)
-    
+
     @get("/categories",
          response_model=List[str],
          summary="Get pizza categories",
@@ -223,7 +223,7 @@ class MenuController(ControllerBase):
         query = GetPizzaCategoriesQuery()
         result = await self.mediator.execute_async(query)
         return self.process(result)
-    
+
     @get("/toppings",
          response_model=List[ToppingDto],
          summary="Get available toppings",
@@ -234,19 +234,19 @@ class MenuController(ControllerBase):
         query = GetToppingsQuery(vegetarian_only=vegetarian_only)
         result = await self.mediator.execute_async(query)
         return self.process(result)
-    
+
     # Admin endpoints (require staff authentication)
-    @post("/pizzas", 
-          response_model=PizzaDto, 
+    @post("/pizzas",
+          response_model=PizzaDto,
           status_code=201,
           summary="Add new pizza (Staff Only)",
           description="Add a new pizza to the menu")
-    async def add_pizza(self, 
+    async def add_pizza(self,
                         pizza_request: CreatePizzaDto,
                         staff_token: str = Depends(HTTPBearer())) -> PizzaDto:
         """Add new pizza to menu (staff only)"""
         await self._validate_staff_token(staff_token.credentials, required_role="manager")
-        
+
         command = CreatePizzaCommand(
             name=pizza_request.name,
             description=pizza_request.description,
@@ -256,27 +256,27 @@ class MenuController(ControllerBase):
             preparation_time_minutes=pizza_request.preparation_time_minutes,
             is_seasonal=pizza_request.is_seasonal
         )
-        
+
         result = await self.mediator.execute_async(command)
         return self.process(result)
-    
-    @put("/pizzas/{pizza_id}/availability", 
+
+    @put("/pizzas/{pizza_id}/availability",
          response_model=PizzaDto,
          summary="Update pizza availability (Staff Only)",
          description="Mark pizza as available or sold out")
-    async def update_pizza_availability(self, 
+    async def update_pizza_availability(self,
                                         pizza_id: str,
                                         availability_request: UpdateAvailabilityDto,
                                         staff_token: str = Depends(HTTPBearer())) -> PizzaDto:
         """Update pizza availability"""
         await self._validate_staff_token(staff_token.credentials, required_role="staff")
-        
+
         command = UpdatePizzaAvailabilityCommand(
             pizza_id=pizza_id,
             is_available=availability_request.is_available,
             reason=availability_request.reason
         )
-        
+
         result = await self.mediator.execute_async(command)
         return self.process(result)
 ```
@@ -286,14 +286,14 @@ class MenuController(ControllerBase):
 ```python
 class KitchenController(ControllerBase):
     """Controller for kitchen operations and order management"""
-    
-    def __init__(self, 
+
+    def __init__(self,
                  service_provider: ServiceProviderBase,
                  mapper: Mapper,
                  mediator: Mediator):
         super().__init__(service_provider, mapper, mediator)
-    
-    @get("/queue", 
+
+    @get("/queue",
          response_model=List[KitchenOrderDto],
          summary="Get kitchen queue",
          description="Get orders in kitchen queue ordered by priority")
@@ -301,24 +301,24 @@ class KitchenController(ControllerBase):
                                 staff_token: str = Depends(HTTPBearer())) -> List[KitchenOrderDto]:
         """Get orders in kitchen preparation queue"""
         await self._validate_staff_token(staff_token.credentials, required_role="kitchen")
-        
+
         query = GetKitchenQueueQuery(
             statuses=["received", "preparing", "cooking"]
         )
         result = await self.mediator.execute_async(query)
         return self.process(result)
-    
-    @put("/orders/{order_id}/status", 
+
+    @put("/orders/{order_id}/status",
          response_model=OrderDto,
          summary="Update order status",
          description="Update order status in kitchen workflow")
-    async def update_order_status(self, 
+    async def update_order_status(self,
                                   order_id: str,
                                   status_update: UpdateOrderStatusDto,
                                   staff_token: str = Depends(HTTPBearer())) -> OrderDto:
         """Update order status (kitchen staff only)"""
         staff_info = await self._validate_staff_token(staff_token.credentials, required_role="kitchen")
-        
+
         command = UpdateOrderStatusCommand(
             order_id=order_id,
             new_status=status_update.status,
@@ -326,53 +326,53 @@ class KitchenController(ControllerBase):
             notes=status_update.notes,
             estimated_ready_time=status_update.estimated_ready_time
         )
-        
+
         result = await self.mediator.execute_async(command)
         return self.process(result)
-    
-    @post("/orders/{order_id}/pizzas/{pizza_index}/start", 
+
+    @post("/orders/{order_id}/pizzas/{pizza_index}/start",
           response_model=OrderDto,
           summary="Start pizza preparation",
           description="Mark pizza as started in preparation")
-    async def start_pizza(self, 
+    async def start_pizza(self,
                           order_id: str,
                           pizza_index: int,
                           staff_token: str = Depends(HTTPBearer())) -> OrderDto:
         """Start pizza preparation"""
         staff_info = await self._validate_staff_token(staff_token.credentials, required_role="kitchen")
-        
+
         command = StartPizzaPreparationCommand(
             order_id=order_id,
             pizza_index=pizza_index,
             chef_id=staff_info.staff_id
         )
-        
+
         result = await self.mediator.execute_async(command)
         return self.process(result)
-    
-    @post("/orders/{order_id}/pizzas/{pizza_index}/complete", 
+
+    @post("/orders/{order_id}/pizzas/{pizza_index}/complete",
           response_model=OrderDto,
           summary="Complete pizza preparation",
           description="Mark pizza as completed")
-    async def complete_pizza(self, 
+    async def complete_pizza(self,
                              order_id: str,
                              pizza_index: int,
                              completion_request: CompletePizzaDto,
                              staff_token: str = Depends(HTTPBearer())) -> OrderDto:
         """Complete pizza preparation"""
         staff_info = await self._validate_staff_token(staff_token.credentials, required_role="kitchen")
-        
+
         command = CompletePizzaPreparationCommand(
             order_id=order_id,
             pizza_index=pizza_index,
             chef_id=staff_info.staff_id,
             quality_notes=completion_request.quality_notes
         )
-        
+
         result = await self.mediator.execute_async(command)
         return self.process(result)
-    
-    @get("/performance", 
+
+    @get("/performance",
          response_model=KitchenPerformanceDto,
          summary="Get kitchen performance metrics",
          description="Get kitchen performance analytics")
@@ -382,14 +382,14 @@ class KitchenController(ControllerBase):
                                       staff_token: str = Depends(HTTPBearer())) -> KitchenPerformanceDto:
         """Get kitchen performance metrics"""
         await self._validate_staff_token(staff_token.credentials, required_role="manager")
-        
+
         query = GetKitchenPerformanceQuery(
             start_date=start_date,
             end_date=end_date
         )
         result = await self.mediator.execute_async(query)
         return self.process(result)
-    
+
     async def _validate_staff_token(self, token: str, required_role: str) -> StaffInfo:
         """Validate staff authentication and role"""
         query = ValidateStaffTokenQuery(
@@ -397,21 +397,21 @@ class KitchenController(ControllerBase):
             required_role=required_role
         )
         result = await self.mediator.execute_async(query)
-        
+
         if not result.is_success:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
                 detail=f"Insufficient permissions. Required role: {required_role}"
             )
-        
+
         return result.data
 ```
 
 ```python
 class ReportsController(ControllerBase):
     """Controller for pizzeria analytics and reporting"""
-    
-    @get("/orders", 
+
+    @get("/orders",
          response_model=List[OrderReportDto],
          summary="Get order reports",
          description="Get filtered order data for reporting")
@@ -427,7 +427,7 @@ class ReportsController(ControllerBase):
                                 staff_token: str = Depends(HTTPBearer())) -> List[OrderReportDto]:
         """Get order reports with advanced filtering"""
         await self._validate_staff_token(staff_token.credentials, required_role="manager")
-        
+
         query = GetOrderReportsQuery(
             start_date=start_date,
             end_date=end_date,
@@ -438,11 +438,11 @@ class ReportsController(ControllerBase):
             limit=limit,
             offset=offset
         )
-        
+
         result = await self.mediator.execute_async(query)
         return self.process(result)
-    
-    @get("/revenue", 
+
+    @get("/revenue",
          response_model=RevenueReportDto,
          summary="Get revenue analytics",
          description="Get revenue breakdown and analytics")
@@ -453,13 +453,13 @@ class ReportsController(ControllerBase):
                                  staff_token: str = Depends(HTTPBearer())) -> RevenueReportDto:
         """Get revenue analytics by period"""
         await self._validate_staff_token(staff_token.credentials, required_role="manager")
-        
+
         query = GetRevenueAnalyticsQuery(
             period=period,
             start_date=start_date,
             end_date=end_date
         )
-        
+
         result = await self.mediator.execute_async(query)
         return self.process(result)
 ```
@@ -467,18 +467,19 @@ class ReportsController(ControllerBase):
 ### Request Validation and DTOs
 
 Comprehensive validation for pizzeria data:
-        """Get users with filtering and pagination"""
-        
+"""Get users with filtering and pagination"""
+
         query = GetUsersQuery(
             department=department,
             active_only=active_only,
             page=page,
             page_size=page_size
         )
-        
+
         result = await self.mediator.execute_async(query)
         return self.process(result)
-```
+
+````
 
 ### Request Body Validation
 
@@ -493,7 +494,7 @@ class CreateUserDto(BaseModel):
     first_name: str = Field(..., min_length=1, max_length=50, description="First name")
     last_name: str = Field(..., min_length=1, max_length=50, description="Last name")
     department: Optional[str] = Field(None, max_length=100, description="Department")
-    
+
     class Config:
         schema_extra = {
             "example": {
@@ -505,14 +506,14 @@ class CreateUserDto(BaseModel):
         }
 
 class UsersController(ControllerBase):
-    
+
     @post("/", response_model=UserDto, status_code=status.HTTP_201_CREATED)
     async def create_user(self, create_user_dto: CreateUserDto) -> UserDto:
         """Create a new user"""
         command = self.mapper.map(create_user_dto, CreateUserCommand)
         result = await self.mediator.execute_async(command)
         return self.process(result)
-```
+````
 
 ### File Uploads
 
@@ -522,17 +523,17 @@ Handle file uploads:
 from fastapi import UploadFile, File
 
 class UsersController(ControllerBase):
-    
+
     @post("/{user_id}/avatar", response_model=UserDto)
-    async def upload_avatar(self, 
+    async def upload_avatar(self,
                            user_id: str,
                            file: UploadFile = File(..., description="Avatar image")) -> UserDto:
         """Upload user avatar"""
-        
+
         # Validate file type
         if not file.content_type.startswith('image/'):
             return self.bad_request("File must be an image")
-        
+
         # Create command
         command = UploadUserAvatarCommand(
             user_id=user_id,
@@ -540,7 +541,7 @@ class UsersController(ControllerBase):
             file_content=await file.read(),
             content_type=file.content_type
         )
-        
+
         result = await self.mediator.execute_async(command)
         return self.process(result)
 ```
@@ -553,21 +554,21 @@ Set custom response headers:
 from fastapi import Response
 
 class UsersController(ControllerBase):
-    
+
     @get("/{user_id}/export", response_class=Response)
     async def export_user_data(self, user_id: str, response: Response):
         """Export user data as CSV"""
-        
+
         query = ExportUserDataQuery(user_id=user_id)
         result = await self.mediator.execute_async(query)
-        
+
         if not result.is_success:
             return self.process(result)
-        
+
         # Set CSV headers
         response.headers["Content-Type"] = "text/csv"
         response.headers["Content-Disposition"] = f"attachment; filename=user_{user_id}.csv"
-        
+
         return result.data
 ```
 
@@ -581,14 +582,14 @@ Customize controller routing:
 class UsersController(ControllerBase):
     def __init__(self, service_provider, mapper, mediator):
         super().__init__(service_provider, mapper, mediator)
-        
+
         # Custom prefix and tags
         self.router.prefix = "/users"
         self.router.tags = ["User Management"]
-        
+
         # Add custom middleware to this controller
         self.router.middleware("http")(self.auth_middleware)
-    
+
     async def auth_middleware(self, request, call_next):
         """Custom authentication middleware for this controller"""
         # Authentication logic
@@ -603,18 +604,18 @@ Create hierarchical resource structures:
 ```python
 class UserAccountsController(ControllerBase):
     """Handles user account operations"""
-    
+
     def __init__(self, service_provider, mapper, mediator):
         super().__init__(service_provider, mapper, mediator)
         self.router.prefix = "/users/{user_id}/accounts"
-    
+
     @get("/", response_model=List[AccountDto])
     async def get_user_accounts(self, user_id: str) -> List[AccountDto]:
         """Get all accounts for a user"""
         query = GetUserAccountsQuery(user_id=user_id)
         result = await self.mediator.execute_async(query)
         return self.process(result)
-    
+
     @post("/", response_model=AccountDto, status_code=status.HTTP_201_CREATED)
     async def create_account(self, user_id: str, create_account_dto: CreateAccountDto) -> AccountDto:
         """Create a new account for a user"""
@@ -632,8 +633,8 @@ Controllers include standard error responses:
 
 ```python
 class UsersController(ControllerBase):
-    
-    @get("/{user_id}", 
+
+    @get("/{user_id}",
          response_model=UserDto,
          responses=ControllerBase.error_responses)  # Adds 400, 404, 500 responses
     async def get_user(self, user_id: str) -> UserDto:
@@ -651,7 +652,7 @@ Add custom error handling:
 from fastapi import HTTPException
 
 class UsersController(ControllerBase):
-    
+
     @post("/", response_model=UserDto, status_code=status.HTTP_201_CREATED)
     async def create_user(self, create_user_dto: CreateUserDto) -> UserDto:
         """Create a new user"""
@@ -659,7 +660,7 @@ class UsersController(ControllerBase):
             command = self.mapper.map(create_user_dto, CreateUserCommand)
             result = await self.mediator.execute_async(command)
             return self.process(result)
-            
+
         except EmailAlreadyExistsException:
             raise HTTPException(
                 status_code=status.HTTP_409_CONFLICT,
@@ -694,17 +695,17 @@ from fastapi import Depends
 from neuroglia.security import IAuthService, AuthUser
 
 class UsersController(ControllerBase):
-    
-    def __init__(self, 
+
+    def __init__(self,
                  service_provider: ServiceProviderBase,
                  mapper: Mapper,
                  mediator: Mediator,
                  auth_service: IAuthService):
         super().__init__(service_provider, mapper, mediator)
         self.auth_service = auth_service
-    
+
     @get("/profile", response_model=UserDto)
-    async def get_current_user(self, 
+    async def get_current_user(self,
                               current_user: AuthUser = Depends(auth_service.get_current_user)) -> UserDto:
         """Get current user's profile"""
         query = GetUserByIdQuery(user_id=current_user.user_id)
@@ -720,7 +721,7 @@ Implement role-based access control:
 from neuroglia.security import require_role
 
 class UsersController(ControllerBase):
-    
+
     @get("/", response_model=List[UserDto])
     @require_role("admin")  # Custom decorator
     async def get_all_users(self) -> List[UserDto]:
@@ -728,7 +729,7 @@ class UsersController(ControllerBase):
         query = GetAllUsersQuery()
         result = await self.mediator.execute_async(query)
         return self.process(result)
-    
+
     @delete("/{user_id}")
     @require_role(["admin", "manager"])  # Multiple roles
     async def delete_user(self, user_id: str):
@@ -764,20 +765,20 @@ Override response processing for special cases:
 
 ```python
 class UsersController(ControllerBase):
-    
+
     @get("/{user_id}", response_model=UserDto)
     async def get_user(self, user_id: str) -> UserDto:
         """Get user by ID"""
         query = GetUserByIdQuery(user_id=user_id)
         result = await self.mediator.execute_async(query)
-        
+
         # Custom processing
         if not result.is_success:
             if result.status_code == 404:
                 # Log the attempt
                 self.logger.warning(f"Attempt to access non-existent user: {user_id}")
             return self.process(result)
-        
+
         # Add custom headers for successful responses
         response = self.process(result)
         # Custom logic here
@@ -799,16 +800,16 @@ async def test_get_user_success():
     # Arrange
     mock_mediator = Mock()
     mock_mediator.execute_async = AsyncMock(return_value=OperationResult.success(test_user_dto))
-    
+
     controller = UsersController(
         service_provider=mock_service_provider,
         mapper=mock_mapper,
         mediator=mock_mediator
     )
-    
+
     # Act
     result = await controller.get_user("user123")
-    
+
     # Assert
     assert result == test_user_dto
     mock_mediator.execute_async.assert_called_once()
@@ -829,13 +830,13 @@ def test_create_user_integration():
         "first_name": "John",
         "last_name": "Doe"
     }
-    
+
     # Act
     response = client.post("/api/v1/users", json=user_data)
-    
+
     # Assert
     assert response.status_code == 201
-    
+
     created_user = response.json()
     assert created_user["email"] == user_data["email"]
     assert "id" in created_user
@@ -848,28 +849,28 @@ Test the complete API flow:
 ```python
 def test_user_crud_flow():
     client = TestClient(app)
-    
+
     # Create user
     create_response = client.post("/api/v1/users", json=test_user_data)
     assert create_response.status_code == 201
     user = create_response.json()
     user_id = user["id"]
-    
+
     # Get user
     get_response = client.get(f"/api/v1/users/{user_id}")
     assert get_response.status_code == 200
     assert get_response.json()["id"] == user_id
-    
+
     # Update user
     update_data = {"first_name": "Jane"}
     update_response = client.put(f"/api/v1/users/{user_id}", json=update_data)
     assert update_response.status_code == 200
     assert update_response.json()["first_name"] == "Jane"
-    
+
     # Delete user
     delete_response = client.delete(f"/api/v1/users/{user_id}")
     assert delete_response.status_code == 204
-    
+
     # Verify deletion
     get_deleted_response = client.get(f"/api/v1/users/{user_id}")
     assert get_deleted_response.status_code == 404
@@ -897,12 +898,12 @@ class UsersController(ControllerBase):
         # Validate email
         if not self.is_valid_email(create_user_dto.email):
             raise HTTPException(400, "Invalid email")
-        
+
         # Check if user exists
         existing = await self.user_repo.get_by_email(create_user_dto.email)
         if existing:
             raise HTTPException(409, "User exists")
-        
+
         # Create user
         user = User(...)
         # ... more business logic
@@ -939,8 +940,8 @@ Use consistent patterns for error handling:
 
 ```python
 class UsersController(ControllerBase):
-    
-    @get("/{user_id}", 
+
+    @get("/{user_id}",
          response_model=UserDto,
          responses={
              404: {"description": "User not found"},
@@ -950,11 +951,11 @@ class UsersController(ControllerBase):
         # Validate input format
         if not self.is_valid_uuid(user_id):
             return self.bad_request("Invalid user ID format")
-        
+
         # Execute query
         query = GetUserByIdQuery(user_id=user_id)
         result = await self.mediator.execute_async(query)
-        
+
         # Process will handle 404 automatically
         return self.process(result)
 ```
@@ -965,7 +966,7 @@ Provide comprehensive API documentation:
 
 ```python
 class UsersController(ControllerBase):
-    
+
     @post("/",
           response_model=UserDto,
           status_code=status.HTTP_201_CREATED,
@@ -976,11 +977,11 @@ class UsersController(ControllerBase):
     async def create_user(self, create_user_dto: CreateUserDto) -> UserDto:
         """
         Create a new user account.
-        
+
         - **email**: User's email address (must be unique)
         - **first_name**: User's first name
         - **last_name**: User's last name
-        
+
         Returns the created user with generated ID and timestamps.
         """
         command = self.mapper.map(create_user_dto, CreateUserCommand)
@@ -992,7 +993,7 @@ class UsersController(ControllerBase):
 
 Plan for API versioning:
 
-```python
+````python
 # v1 controller
 class V1UsersController(ControllerBase):
     def __init__(self, service_provider, mapper, mediator):
@@ -1004,34 +1005,34 @@ from neuroglia.mvc import ControllerDiscovery
 def create_pizzeria_app():
     """Configure Mario's Pizzeria application with controllers"""
     builder = WebApplicationBuilder()
-    
+
     # Configure services
     builder.services.add_mediator()
     builder.services.add_auto_mapper()
-    
+
     # Add controllers with automatic discovery
     builder.services.add_controllers([
         "api.controllers.orders_controller",
-        "api.controllers.menu_controller", 
+        "api.controllers.menu_controller",
         "api.controllers.kitchen_controller",
         "api.controllers.reports_controller",
         "api.controllers.auth_controller"
     ])
-    
+
     # Build application
     app = builder.build()
-    
+
     # Configure controller routes with prefixes
     app.include_router(OrdersController().router, prefix="/api/orders", tags=["Orders"])
     app.include_router(MenuController().router, prefix="/api/menu", tags=["Menu"])
     app.include_router(KitchenController().router, prefix="/api/kitchen", tags=["Kitchen"])
     app.include_router(ReportsController().router, prefix="/api/reports", tags=["Reports"])
     app.include_router(AuthController().router, prefix="/api/auth", tags=["Authentication"])
-    
+
     # Add exception handlers
     app.add_exception_handler(PizzeriaException, pizzeria_exception_handler)
     app.add_exception_handler(RequestValidationError, validation_exception_handler)
-    
+
     return app
 
 # Environment-specific controller registration
@@ -1045,7 +1046,7 @@ def configure_production_controllers(builder: WebApplicationBuilder):
     # Add monitoring and health check controllers
     builder.services.add_controller(HealthController)
     builder.services.add_controller(MetricsController)
-```
+````
 
 ### Controller Middleware and Interceptors
 
@@ -1059,27 +1060,27 @@ import logging
 
 class PizzeriaRequestLoggingMiddleware(BaseHTTPMiddleware):
     """Log all pizzeria API requests"""
-    
+
     async def dispatch(self, request: Request, call_next):
         start_time = time.time()
-        
+
         # Log incoming request
         logging.info(f"Incoming {request.method} {request.url}")
-        
+
         # Process request
         response = await call_next(request)
-        
+
         # Log response
         process_time = time.time() - start_time
         logging.info(f"Completed {request.method} {request.url} - "
                     f"Status: {response.status_code} - "
                     f"Duration: {process_time:.2f}s")
-        
+
         return response
 
 class OrderValidationMiddleware(BaseHTTPMiddleware):
     """Validate order-related requests"""
-    
+
     async def dispatch(self, request: Request, call_next):
         if request.url.path.startswith("/api/orders"):
             # Add order-specific validation
@@ -1090,9 +1091,9 @@ class OrderValidationMiddleware(BaseHTTPMiddleware):
                         status_code=400,
                         content={"error": "Pizzeria is currently closed"}
                     )
-        
+
         return await call_next(request)
-    
+
     def is_business_hours(self) -> bool:
         """Check if pizzeria is open for orders"""
         from datetime import datetime
@@ -1118,22 +1119,22 @@ from neuroglia.mediation import OperationResult
 
 class TestOrdersController:
     """Unit tests for orders controller"""
-    
+
     @pytest.fixture
     def mock_mediator(self):
         """Mock mediator for testing"""
         mediator = AsyncMock()
         return mediator
-    
+
     @pytest.fixture
     def orders_controller(self, mock_mediator):
         """Orders controller with mocked dependencies"""
         service_provider = Mock()
         mapper = Mock()
-        
+
         controller = OrdersController(service_provider, mapper, mock_mediator)
         return controller
-    
+
     @pytest.mark.asyncio
     async def test_place_order_success(self, orders_controller, mock_mediator):
         """Test successful order placement"""
@@ -1145,24 +1146,24 @@ class TestOrdersController:
             pizzas=[PizzaOrderDto(name="Margherita", size="large", quantity=1)],
             payment_method="card"
         )
-        
+
         expected_order = OrderDto(
             id="order_123",
             customer_name="John Doe",
             status="received",
             total_amount=15.99
         )
-        
+
         mock_mediator.execute_async.return_value = OperationResult.success(expected_order)
-        
+
         # Act
         result = await orders_controller.place_order(order_request)
-        
+
         # Assert
         assert result.id == "order_123"
         assert result.customer_name == "John Doe"
         mock_mediator.execute_async.assert_called_once()
-    
+
     @pytest.mark.asyncio
     async def test_place_order_validation_error(self, orders_controller, mock_mediator):
         """Test order placement with validation error"""
@@ -1174,7 +1175,7 @@ class TestOrdersController:
             pizzas=[],  # No pizzas
             payment_method="invalid"  # Invalid payment method
         )
-        
+
         # Act & Assert
         with pytest.raises(ValidationError):
             await orders_controller.place_order(invalid_order)
@@ -1182,28 +1183,28 @@ class TestOrdersController:
 @pytest.mark.integration
 class TestOrdersControllerIntegration:
     """Integration tests for orders controller"""
-    
+
     @pytest.fixture
     def test_client(self):
         """Test client for integration testing"""
         app = create_pizzeria_app()
         return TestClient(app)
-    
+
     def test_get_menu_integration(self, test_client):
         """Test menu retrieval integration"""
         response = test_client.get("/api/menu/pizzas")
-        
+
         assert response.status_code == 200
         menu = response.json()
         assert isinstance(menu, list)
-        
+
         # Validate pizza structure
         if menu:
             pizza = menu[0]
             assert "id" in pizza
             assert "name" in pizza
             assert "base_price" in pizza
-    
+
     def test_place_order_integration(self, test_client):
         """Test order placement integration"""
         order_data = {
@@ -1220,9 +1221,9 @@ class TestOrdersControllerIntegration:
             ],
             "payment_method": "card"
         }
-        
+
         response = test_client.post("/api/orders/", json=order_data)
-        
+
         assert response.status_code == 201
         order = response.json()
         assert order["customer_name"] == "Integration Test Customer"
@@ -1243,47 +1244,47 @@ from fastapi.openapi.utils import get_openapi
 def create_pizzeria_app_with_docs():
     """Create Mario's Pizzeria app with enhanced documentation"""
     app = create_pizzeria_app()
-    
+
     # Custom OpenAPI schema
     def custom_openapi():
         if app.openapi_schema:
             return app.openapi_schema
-        
+
         openapi_schema = get_openapi(
             title="Mario's Pizzeria API",
             version="1.0.0",
             description="""
             # 🍕 Mario's Pizzeria API
-            
-            Welcome to Mario's Pizzeria API! This API provides comprehensive 
-            functionality for managing pizza orders, menu items, kitchen workflow, 
+
+            Welcome to Mario's Pizzeria API! This API provides comprehensive
+            functionality for managing pizza orders, menu items, kitchen workflow,
             and customer interactions.
-            
+
             ## Features
-            
+
             - **Order Management**: Place, track, and manage pizza orders
             - **Menu Administration**: Manage pizzas, toppings, and availability
             - **Kitchen Workflow**: Handle order preparation and status updates
             - **Customer Authentication**: Secure customer account management
             - **Staff Portal**: Role-based access for staff operations
             - **Analytics**: Revenue and performance reporting
-            
+
             ## Authentication
-            
+
             The API uses OAuth 2.0 with JWT tokens:
-            
+
             - **Customers**: Phone-based OTP authentication
             - **Staff**: Username/password with role-based permissions
-            
+
             ## Rate Limiting
-            
+
             - **Customers**: 100 requests per hour
             - **Staff**: 500 requests per hour
             - **Managers**: Unlimited
             """,
             routes=app.routes,
         )
-        
+
         # Add custom tags for better organization
         openapi_schema["tags"] = [
             {
@@ -1307,7 +1308,7 @@ def create_pizzeria_app_with_docs():
                 "description": "Analytics and reporting (Manager only)"
             }
         ]
-        
+
         # Add security schemes
         openapi_schema["components"]["securitySchemes"] = {
             "BearerAuth": {
@@ -1339,10 +1340,10 @@ def create_pizzeria_app_with_docs():
                 }
             }
         }
-        
+
         app.openapi_schema = openapi_schema
         return app.openapi_schema
-    
+
     app.openapi = custom_openapi
     return app
 ```
@@ -1353,7 +1354,8 @@ def create_pizzeria_app_with_docs():
 - [CQRS & Mediation](cqrs-mediation.md) - Command and query handlers used in controllers
 - [Dependency Injection](dependency-injection.md) - Service registration for controller dependencies
 - [Data Access](data-access.md) - Repository patterns used by controller commands/queries
+- [Source Code Naming Conventions](../references/source_code_naming_convention.md) - Controller, DTO, and method naming patterns
 
 ---
 
-*This documentation demonstrates MVC controller patterns using Mario's Pizzeria as a consistent example throughout the Neuroglia framework. The examples show real-world API design with authentication, validation, error handling, and comprehensive testing.*
+_This documentation demonstrates MVC controller patterns using Mario's Pizzeria as a consistent example throughout the Neuroglia framework. The examples show real-world API design with authentication, validation, error handling, and comprehensive testing._
