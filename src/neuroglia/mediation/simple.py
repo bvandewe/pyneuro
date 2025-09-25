@@ -13,105 +13,128 @@ from neuroglia.core.operation_result import OperationResult
 from neuroglia.dependency_injection.service_provider import ServiceCollection
 
 if TYPE_CHECKING:
-    from neuroglia.mediation.mediator import Command, Query, CommandHandler, QueryHandler, RequestHandler
+    from neuroglia.mediation.mediator import (
+        Command,
+        Query,
+        CommandHandler,
+        QueryHandler,
+        RequestHandler,
+    )
 
 
-TResult = TypeVar('TResult')
-TCommand = TypeVar('TCommand')
-TQuery = TypeVar('TQuery')
+TResult = TypeVar("TResult")
+TCommand = TypeVar("TCommand")
+TQuery = TypeVar("TQuery")
 
 
 class SimpleCommandHandler(Generic[TCommand, TResult], ABC):
     """
     Simplified command handler base class for basic CQRS scenarios.
-    
+
     This handler provides sensible defaults and helper methods without requiring
     complex dependency injection setup.
-    
+
     Example:
         @dataclass
         class CreateUserCommand(Command[OperationResult[UserDto]]):
             name: str
             email: str
-        
+
         class CreateUserHandler(SimpleCommandHandler[CreateUserCommand, OperationResult[UserDto]]):
             def __init__(self, user_repository):
                 self.user_repository = user_repository
-            
+
             async def handle_async(self, command: CreateUserCommand) -> OperationResult[UserDto]:
                 # Validate
                 if not command.email:
                     return self.bad_request("Email is required")
-                
+
                 # Business logic
                 user = User(command.name, command.email)
                 await self.user_repository.save_async(user)
-                
+
                 # Return success
                 user_dto = UserDto(user.id, user.name, user.email)
                 return self.ok(user_dto)
     """
-    
+
     @abstractmethod
     async def handle_async(self, command: TCommand) -> TResult:
         """Handle the command and return the result."""
         raise NotImplementedError()
-    
+
     # Convenience methods for common response patterns
-    
+
     def ok(self, data=None) -> "OperationResult":
         """Create a successful operation result."""
         result = OperationResult("OK", 200)
         result.data = data
         return result
-    
+
     def created(self, data=None) -> "OperationResult":
         """Create a successful creation result (HTTP 201)."""
         result = OperationResult("Created", 201)
         result.data = data
         return result
-    
+
     def bad_request(self, message: str) -> "OperationResult":
         """Create a bad request error result (HTTP 400)."""
-        return OperationResult("Bad Request", 400, message, "https://www.w3.org/Protocols/HTTP/HTRESP.html#:~:text=Bad%20Request")
-    
+        return OperationResult(
+            "Bad Request",
+            400,
+            message,
+            "https://www.w3.org/Protocols/HTTP/HTRESP.html#:~:text=Bad%20Request",
+        )
+
     def not_found(self, message: str = "Resource not found") -> "OperationResult":
         """Create a not found error result (HTTP 404)."""
-        return OperationResult("Not Found", 404, message, "https://www.w3.org/Protocols/HTTP/HTRESP.html#:~:text=Not%20found%20404")
-    
+        return OperationResult(
+            "Not Found",
+            404,
+            message,
+            "https://www.w3.org/Protocols/HTTP/HTRESP.html#:~:text=Not%20found%20404",
+        )
+
     def conflict(self, message: str) -> "OperationResult":
         """Create a conflict error result (HTTP 409)."""
-        return OperationResult("Conflict", 409, message, "https://www.w3.org/Protocols/HTTP/HTRESP.html")
-    
+        return OperationResult(
+            "Conflict", 409, message, "https://www.w3.org/Protocols/HTTP/HTRESP.html"
+        )
+
     def internal_error(self, message: str) -> "OperationResult":
         """Create an internal server error result (HTTP 500)."""
-        return OperationResult("Internal Server Error", 500, message, "https://www.w3.org/Protocols/HTTP/HTRESP.html#:~:text=Internal%20Server%20Error")
+        return OperationResult(
+            "Internal Server Error",
+            500,
+            message,
+            "https://www.w3.org/Protocols/HTTP/HTRESP.html#:~:text=Internal%20Server%20Error",
+        )
 
 
 class SimpleQueryHandler(Generic[TQuery, TResult], ABC):
     """
     Simplified query handler base class for basic CQRS scenarios.
-    
+
     This handler provides common patterns for read operations without requiring
     complex setup.
-    
+
     Example:
         @dataclass
         class GetUserByIdQuery(Query[Optional[UserDto]]):
             user_id: str
-        
+
         class GetUserByIdHandler(SimpleQueryHandler[GetUserByIdQuery, Optional[UserDto]]):
             def __init__(self, user_repository):
                 self.user_repository = user_repository
-            
+
             async def handle_async(self, query: GetUserByIdQuery) -> Optional[UserDto]:
                 user = await self.user_repository.get_by_id_async(query.user_id)
                 if not user:
                     return None
-                
+
                 return UserDto(user.id, user.name, user.email)
     """
-    
+
     @abstractmethod
     async def handle_async(self, query: TQuery) -> TResult:
         """Handle the query and return the result."""
@@ -120,25 +143,26 @@ class SimpleQueryHandler(Generic[TQuery, TResult], ABC):
 
 # Helper functions for simple service registration
 
+
 def add_simple_mediator(services: ServiceCollection) -> ServiceCollection:
     """
     Add basic mediator setup without complex cloud events infrastructure.
-    
+
     This is a simplified version that just registers the core mediator
     without event sourcing or cloud events dependencies.
-    
+
     Usage:
         services = ServiceCollection()
         add_simple_mediator(services)
-        
+
         # Register your handlers
         register_simple_handler(services, CreateUserHandler)
         register_simple_handler(services, GetUserByIdHandler)
-        
+
         provider = services.build()
     """
     from neuroglia.mediation.mediator import Mediator
-    
+
     # Register core mediator the same way tests do it
     services.add_singleton(Mediator, Mediator)
     return services
@@ -147,14 +171,14 @@ def add_simple_mediator(services: ServiceCollection) -> ServiceCollection:
 def register_simple_handler(services: ServiceCollection, handler_class):
     """
     Convenience method to register command or query handlers.
-    
+
     Usage:
         register_simple_handler(services, CreateUserHandler)
         register_simple_handler(services, GetUserByIdHandler)
     """
     # Import locally to avoid circular dependencies
     from neuroglia.mediation.mediator import RequestHandler
-    
+
     services.add_scoped(RequestHandler, handler_class)
     return services
 
@@ -162,7 +186,7 @@ def register_simple_handler(services: ServiceCollection, handler_class):
 def register_simple_handlers(services: ServiceCollection, *handler_classes):
     """
     Convenience method to register multiple handlers at once.
-    
+
     Usage:
         register_simple_handlers(services, CreateUserHandler, UpdateUserHandler, GetUserByIdHandler)
     """
@@ -174,57 +198,58 @@ def register_simple_handlers(services: ServiceCollection, *handler_classes):
 def create_simple_app(*handler_classes, repositories=None):
     """
     One-line app creation for simple CQRS applications.
-    
+
     Usage:
         # Basic usage
         provider = create_simple_app(CreateTaskHandler, GetTaskHandler)
-        
-        # With repositories  
+
+        # With repositories
         provider = create_simple_app(
             CreateTaskHandler, GetTaskHandler,
             repositories=[InMemoryRepository[Task]]
         )
     """
     services = ServiceCollection()
-    
+
     # Add mediator
     add_simple_mediator(services)
-    
+
     # Register repositories if provided
     if repositories:
         for repo_class in repositories:
             services.add_singleton(repo_class)
-    
+
     # Register handlers
     register_simple_handlers(services, *handler_classes)
-    
+
     return services.build()
 
 
 # Common patterns for simple applications
 
+
 class InMemoryRepository(Generic[TResult], ABC):
     """
     Simple in-memory repository for testing and prototyping.
-    
+
     This provides a basic storage implementation without requiring database setup.
     """
-    
+
     def __init__(self):
         self._storage = {}
-    
+
     async def save_async(self, entity) -> None:
         """Save an entity to memory storage."""
         self._storage[entity.id] = entity
-    
+
     async def get_by_id_async(self, entity_id: str) -> Optional[TResult]:
         """Get an entity by ID from memory storage."""
         return self._storage.get(entity_id)
-    
+
     async def get_all_async(self) -> list[TResult]:
         """Get all entities from memory storage."""
         return list(self._storage.values())
-    
+
     async def delete_async(self, entity_id: str) -> bool:
         """Delete an entity from memory storage."""
         if entity_id in self._storage:
@@ -237,19 +262,19 @@ class InMemoryRepository(Generic[TResult], ABC):
 class SimpleApplicationSettings:
     """
     Minimal settings class for simple applications that don't need cloud events.
-    
+
     This can be used instead of the full ApplicationSettings when you only need
     basic configuration without event sourcing complexity.
     """
-    
+
     app_name: str = "MyApp"
     debug: bool = False
     log_level: str = "INFO"
-    
+
     # Database settings (optional)
     database_url: Optional[str] = None
     database_name: str = "myapp"
-    
+
     # API settings
     api_title: str = "My Application API"
     api_version: str = "1.0.0"
