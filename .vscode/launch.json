@@ -25,6 +25,36 @@
             ],
             "console": "integratedTerminal",
             "justMyCode": false
+        },
+        {
+            "name": "Python: Test Suite",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "pytest",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}",
+            "python": "${workspaceFolder}/.venv/bin/python",
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}/src"
+            },
+            "args": [
+                "tests/",
+                "-v"
+            ],
+            "justMyCode": false
+        },
+        {
+            "name": "Python: MkDocs Serve",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "mkdocs",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}",
+            "python": "${workspaceFolder}/.venv/bin/python",
+            "args": [
+                "serve"
+            ],
+            "justMyCode": false
         }
     ]
 }
