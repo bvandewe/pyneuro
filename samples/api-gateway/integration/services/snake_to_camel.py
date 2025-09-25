@@ -28,5 +28,12 @@ if __name__ == "__main__":
     original_model = OriginalModel()
     print(original_model.model_dump_json())
     print(original_model)
-    print(OriginalModel.model_validate({"snakeCaseAttribute": "new_value", "nestedModel": {"anotherSnakeCaseAttribute": "new_nested_value"}}))
-    print(datetime.datetime.now(tz=datetime.timezone.utc).isoformat(timespec="milliseconds"))
+    print(
+        OriginalModel.model_validate(
+            {
+                "snakeCaseAttribute": "new_value",
+                "nestedModel": {"anotherSnakeCaseAttribute": "new_nested_value"},
+            }
+        )
+    )
+    print(datetime.datetime.now(tz=timezone.utc).isoformat(timespec="milliseconds"))

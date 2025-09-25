@@ -5,7 +5,7 @@ The Desktop Controller sample demonstrates how to build a remote desktop managem
 ## 🎯 What You'll Learn
 
 - **Remote System Control**: SSH-based command execution on host systems
-- **Background Service Patterns**: Periodic self-registration and heartbeat services  
+- **Background Service Patterns**: Periodic self-registration and heartbeat services
 - **Cloud Event Publishing**: Automated service discovery and registration events
 - **System Integration**: Host system information gathering and state management
 - **OAuth2 Security**: Enterprise authentication with secure SSH key management
@@ -21,27 +21,27 @@ graph TB
         B --> C[Command/Query Handlers]
         C --> D[Domain Models]
         C --> E[SSH Integration Services]
-        
+
         F[OAuth2 Middleware] --> A
         G[Background Registrator] --> H[Cloud Event Bus]
         I[SSH Client] --> J[Docker Host]
-        
+
         C --> K[File System Repository]
         K --> I
     end
-    
+
     subgraph "External Dependencies"
         L[Keycloak OAuth2]
         M[Desktop Registry]
         N[Docker Host/VM]
         O[Remote File System]
     end
-    
+
     F --> L
     H --> M
     I --> N
     K --> O
-    
+
     style A fill:#e1f5fe
     style G fill:#f3e5f5
     style I fill:#fff3e0
@@ -60,7 +60,7 @@ class SecuredHost:
         stdin, stdout, stderr = await asyncio.to_thread(
             self.ssh_client.exec_command, command.line
         )
-        
+
         exit_status = stdout.channel.recv_exit_status()
         return HostCommandResult(
             command=command.line,
@@ -79,7 +79,7 @@ class DesktopRegistrator(HostedService):
         while not self.cancellation_token.is_cancelled:
             await self._register_desktop()
             await asyncio.sleep(self.registration_interval_seconds)
-    
+
     async def _register_desktop(self):
         event = DesktopHostRegistrationRequestedIntegrationEventV1(
             desktop_id=self.desktop_id,
@@ -101,10 +101,10 @@ class HostInfo(Entity[str]):
     last_seen: datetime
     is_locked: bool
     system_info: dict[str, Any]
-    
+
     def update_system_state(self, new_state: HostState):
         self.host_state = new_state
-        self.last_seen = datetime.utcnow()
+        self.last_seen = datetime.now(timezone.utc)
 ```
 
 ### 4. **Command/Query Pattern for Remote Operations**
@@ -119,7 +119,7 @@ class HostLockCommandsHandler(CommandHandler[SetHostLockCommand, OperationResult
     async def handle_async(self, command: SetHostLockCommand) -> OperationResult[Any]:
         host_command = HostCommand(line=command.script_name)
         result = await self.docker_host_command_runner.run_async(host_command)
-        
+
         if result.exit_status == 0:
             return self.success("Host locked successfully")
         return self.bad_request(f"Lock command failed: {result.stderr}")
@@ -146,16 +146,16 @@ class DesktopControllerSettings(ApplicationSettings):
     jwt_authority: str = "http://keycloak47/realms/mozart"
     jwt_audience: str = "desktops"
     required_scope: str = "api"
-    
+
     # SSH Configuration
     docker_host_user_name: str = "sys-admin"
     docker_host_host_name: str = "host.docker.internal"
-    
+
     # File System Configuration
     remotefs_base_folder: str = "/tmp"
     hostinfo_filename: str = "hostinfo.json"
     userinfo_filename: str = "userinfo.json"
-    
+
     # Registration Configuration
     desktop_registration_interval: int = 30  # seconds
 ```
@@ -184,7 +184,7 @@ class TestHostController:
     def test_host_lock_command_success(self):
         # Test successful host locking
         command = SetHostLockCommand(script_name="/usr/local/bin/lock.sh")
-        
+
         # Mock SSH client response
         mock_result = HostCommandResult(
             command="/usr/local/bin/lock.sh",
@@ -192,7 +192,7 @@ class TestHostController:
             stdout="Host locked",
             stderr=""
         )
-        
+
         result = await handler.handle_async(command)
         assert result.is_success
         assert "locked successfully" in result.data
@@ -207,9 +207,9 @@ class TestDesktopControllerIntegration:
         # Test actual SSH communication with test host
         ssh_client = SecuredHost(test_ssh_settings)
         command = HostCommand(line="echo 'test'")
-        
+
         result = await ssh_client.run_command_async(command)
-        
+
         assert result.exit_status == 0
         assert "test" in result.stdout
 ```
@@ -251,7 +251,7 @@ class TestDesktopControllerIntegration:
 ```python
 class SecuredDockerHost:
     """SSH-based secure communication with Docker host system"""
-    
+
     async def execute_system_command(self, command: str) -> CommandResult:
         ssh_command = HostCommand(line=command)
         return await self.secured_host.run_command_async(ssh_command)
@@ -262,9 +262,9 @@ class SecuredDockerHost:
 ```python
 class DesktopRegistrationEvent:
     """Periodic registration with external desktop registry"""
-    
+
     event_type = "com.cisco.mozart.desktop.registered.v1"
-    
+
     async def publish_registration(self):
         cloud_event = CloudEvent(
             type=self.event_type,
@@ -283,11 +283,11 @@ class DesktopRegistrationEvent:
 ```python
 class RemoteFileSystemRepository:
     """File-based data persistence on host system"""
-    
+
     async def save_host_info(self, host_info: HostInfo):
         json_data = self.json_serializer.serialize(host_info)
         await self.write_file_async("hostinfo.json", json_data)
-    
+
     async def write_file_async(self, filename: str, content: str):
         # Use SSH to write files to host filesystem
         command = f"echo '{content}' > {self.base_path}/{filename}"
@@ -319,15 +319,15 @@ cp .env.example .env
 # Edit .env with your settings
 
 # 3. Mount SSH private key and run
-docker run -d 
-  -p 8080:80 
-  -v ~/.ssh/desktop_controller_key:/app/id_rsa:ro 
-  -e DOCKER_HOST_USER_NAME=sys-admin 
-  -e JWT_AUTHORITY=http://your-keycloak/realms/mozart 
+docker run -d
+  -p 8080:80
+  -v ~/.ssh/desktop_controller_key:/app/id_rsa:ro
+  -e DOCKER_HOST_USER_NAME=sys-admin
+  -e JWT_AUTHORITY=http://your-keycloak/realms/mozart
   desktop-controller:latest
 
 # 4. Test the API
-curl -H "Authorization: Bearer <token>" 
+curl -H "Authorization: Bearer <token>"
      http://localhost:8080/api/host/info
 ```
 
@@ -543,7 +543,7 @@ services.add_scoped(MongoRepository)  # For read models
 class DesktopRegistrator(HostedService):
     async def start_async(self):
         self.registration_task = asyncio.create_task(self.registration_loop())
-    
+
     async def registration_loop(self):
         while not self.stopping:
             await self.register_with_registry()
@@ -625,7 +625,7 @@ class TestBankAccount:
     def test_account_creation_raises_creation_event(self):
         account = BankAccount()
         account.create_account("owner-123", Decimal("1000.00"))
-        
+
         events = account._pending_events
         assert len(events) == 1
         assert isinstance(events[0], BankAccountCreatedDomainEventV1)
@@ -693,7 +693,7 @@ TODO
 ## Design
 
 TODO
-  
+
 ## Development
 
 ### Setup
@@ -702,11 +702,11 @@ TODO
 
 # 0. Prerequisites:
 #    Have Python 3.12 installed
-# 
+#
 #    - Create/Activate a local python environment (e.g. with pyenv)
 #      pyenv virtualenv 3.12.2 desktop-controller
 #      pyenv activate desktop-controller
-# 
+#
 #    - Start Docker Desktop locally
 #
 # 1. Clone the repository
@@ -720,7 +720,7 @@ cd desktop-controller
 pre-commit install
 
 # pip install poetry
-poetry lock && poetry install 
+poetry lock && poetry install
 
 # 2. Start the docker-compose stack
 # sudo apt-get install make
