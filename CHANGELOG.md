@@ -5,6 +5,91 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Enhanced
+
+- **Documentation Architecture Reorganization**: Improved conceptual organization and navigation structure
+  - **New Feature Documentation**: Added comprehensive documentation for previously undocumented features
+    - **Serialization**: Complete guide to JsonSerializer with automatic type handling, custom encoders, and Mario's Pizzeria examples
+    - **Object Mapping**: Advanced object-to-object mapping with Mapper class, custom transformations, and mapping profiles
+    - **Reactive Programming**: Observable patterns with AsyncRx integration for event-driven architectures
+  - **Pattern Organization**: Reorganized architectural patterns for better conceptual coherence
+    - **Moved to Patterns Section**: Resource-Oriented Architecture, Watcher & Reconciliation Patterns, and Watcher & Reconciliation Execution
+    - **Enhanced Pattern Integration**: Updated implementation flow showing Clean Architecture → CQRS → Event-Driven → Repository → Resource-Oriented → Watcher Patterns
+    - **Improved Navigation**: Logical grouping of architectural patterns separate from framework-specific features
+  - **Updated Navigation Structure**: Comprehensive mkdocs.yml updates reflecting new organization
+    - Clear separation between architectural patterns and framework features
+    - Enhanced pattern discovery and learning path guidance
+    - Consistent Mario's Pizzeria examples throughout all new documentation
+
+## [0.3.1] - 2025-09-25
+
+### Added
+
+- **PyNeuroctl CLI Tool**: Complete command-line interface for managing Neuroglia sample applications
+
+  - **Process Management**: Start, stop, and monitor sample applications with proper PID tracking
+  - **Log Management**: Capture and view application logs with real-time following capabilities
+  - **Port Validation**: Automatic port availability checking and conflict detection
+  - **Status Monitoring**: Real-time status reporting for all running sample applications
+  - **Sample Validation**: Pre-flight configuration validation for sample applications
+  - **Global Access**: Shell wrapper enabling pyneuroctl usage from any directory
+  - **Environment Detection**: Intelligent Python environment detection (venv, Poetry, pyenv, system)
+  - **Automated Setup**: Comprehensive installation scripts with PATH integration
+
+- **Mario's Pizzeria Sample Application**: Complete production-ready CQRS sample demonstrating clean architecture
+  - **Full CQRS Implementation**: Commands, queries, and handlers for pizza ordering workflow
+  - **Domain-Driven Design**: Rich domain entities with business logic and validation
+  - **Clean Architecture**: Proper layer separation with dependency inversion
+  - **FastAPI Integration**: RESTful API with Swagger documentation and validation
+  - **Event-Driven Patterns**: Domain events and handlers for order lifecycle management
+  - **Repository Pattern**: File-based persistence with proper abstraction
+  - **Comprehensive Testing**: Unit and integration tests with fixtures and mocks
+
+### Enhanced
+
+- **Code Organization**: Improved maintainability through proper file structure
+
+  - **Domain Entity Separation**: Split monolithic domain entities into individual files
+    - `enums.py`: PizzaSize and OrderStatus enumerations
+    - `pizza.py`: Pizza entity with pricing logic and topping management
+    - `customer.py`: Customer entity with contact information and validation
+    - `order.py`: Order entity with business logic and status management
+    - `kitchen.py`: Kitchen entity with capacity management and order processing
+  - **Clean Import Structure**: Maintained backward compatibility with clean `__init__.py` exports
+  - **Type Safety**: Enhanced type annotations and proper generic type usage
+  - **Code Quality**: Consistent formatting, documentation, and error handling
+
+- **Developer Experience**: Streamlined development workflow with powerful tooling
+  - **One-Command Management**: Simple CLI commands for all sample application lifecycle operations
+  - **Enhanced Logging**: Detailed debug information and structured log output
+  - **Setup Automation**: Zero-configuration installation with automatic PATH management
+  - **Cross-Platform Support**: Shell detection and environment compatibility across systems
+
+### Technical Details
+
+- **CLI Implementation**: `src/cli/pyneuroctl.py` with comprehensive process management
+
+  - Socket-based port checking with proper resource cleanup
+  - PID persistence with automatic cleanup of stale process files
+  - Log file rotation and structured output formatting
+  - Background process management with proper signal handling
+  - Comprehensive error handling with user-friendly messages
+
+- **Shell Integration**: Global pyneuroctl wrapper with environment detection
+
+  - Bash script with intelligent Python interpreter discovery
+  - PYTHONPATH configuration for proper module resolution
+  - Symlink management for global CLI access
+  - Installation validation with automated testing
+
+- **Sample Application Structure**: Production-ready clean architecture implementation
+  - API layer with FastAPI controllers and dependency injection
+  - Application layer with CQRS handlers and service orchestration
+  - Domain layer with entities, value objects, and business rules
+  - Integration layer with repository implementations and external services
+
 ## [0.3.0] - 2025-09-22
 
 ### Added
@@ -40,6 +125,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Enhanced
 
 - **Developer Experience**: Dramatically improved documentation quality and consistency
+
   - **Unified Examples**: Single coherent business domain replaces scattered abstract examples
   - **Practical Learning Path**: Real-world pizzeria scenarios demonstrate production patterns
   - **Consistent Cross-References**: All documentation sections reference the same domain model
@@ -55,6 +141,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Technical Details
 
 - **Documentation Files Transformed**: Complete rewrite of all major documentation sections
+
   - `docs/index.md`: Framework introduction with pizzeria quick start and feature showcase
   - `docs/getting-started.md`: 7-step pizzeria tutorial with enhanced web builder
   - `docs/architecture.md`: Clean architecture layers demonstrated through pizzeria workflow
@@ -65,6 +152,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `docs/_pizzeria_domain.md`: Central domain model specification for consistent examples
 
 - **Quality Improvements**: Professional documentation standards throughout
+
   - **Consistent Business Domain**: Mario's Pizzeria used in 100+ examples across all documentation
   - **Cross-Reference Validation**: All internal links verified and working properly
   - **Code Example Quality**: Complete, runnable examples with proper error handling
@@ -81,6 +169,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - **Resilient Handler Discovery**: Enhanced Mediator with fallback discovery for mixed codebases
+
   - **Automatic Fallback**: When package imports fail, automatically discovers individual modules
   - **Legacy Migration Support**: Handles packages with broken dependencies while still discovering valid handlers
   - **Comprehensive Logging**: Debug, info, and warning levels show what was discovered vs skipped
@@ -91,6 +180,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - **Production Ready**: Minimal performance impact, detailed diagnostics, and robust error recovery
 
 - **MongoDB Infrastructure Extensions**: Complete type-safe MongoDB data access layer
+
   - **TypedMongoQuery**: Type-safe MongoDB querying with automatic dictionary-to-entity conversion
     - Direct MongoDB cursor optimization for improved performance
     - Complex type handling for enums, dates, and nested objects
@@ -106,6 +196,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     - `from neuroglia.data.infrastructure.mongo import TypedMongoQuery, MongoSerializationHelper`
 
 - **Enhanced MongoDB Repository**: Advanced MongoDB operations for production applications
+
   - **Bulk Operations**: High-performance bulk insert, update, and delete operations
     - `bulk_insert_async()`: Efficient batch document insertion with validation
     - `update_many_async()`: Bulk document updates with MongoDB native filtering
@@ -138,6 +229,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Enhanced
 
 - **Framework Architecture**: Production-ready infrastructure capabilities
+
   - MongoDB data access layer now supports enterprise-grade applications
   - Type-safe operations throughout the data access stack
   - Comprehensive error handling and logging across all infrastructure components
@@ -152,6 +244,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Technical Details
 
 - **Test Coverage**: Comprehensive test suites for all new infrastructure components
+
   - **MongoDB Serialization**: 12 comprehensive tests covering complex type scenarios
     - Decimal serialization/deserialization with precision validation
     - Enum type safety with proper class validation
@@ -169,6 +262,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     - Build process validation and application lifecycle management
 
 - **Performance Optimizations**: Infrastructure tuned for production workloads
+
   - Direct MongoDB cursor integration bypasses unnecessary data transformations
   - Bulk operations reduce database round-trips for large-scale operations
   - Type-safe serialization optimized for complex business domain objects
@@ -185,6 +279,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - **Critical Infrastructure**: Resolved circular import between core framework modules
+
   - Fixed circular dependency chain: `serialization.json` → `hosting.web` → `mvc.controller_base` → `serialization.json`
   - Implemented TYPE_CHECKING import pattern to break dependency cycle while preserving type hints
   - Added late imports in runtime methods to maintain functionality without circular dependencies
@@ -208,6 +303,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Enhanced
 
 - **Documentation**: Comprehensive documentation enhancement for core framework classes
+
   - Added extensive docstrings to `OperationResult` class with usage patterns and best practices
   - Enhanced `ProblemDetails` class documentation with RFC 7807 compliance details
   - Included practical code examples for CQRS handlers, controllers, and manual construction
@@ -221,7 +317,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     - `fastapi`, `classy-fastapi`, `pydantic-settings`, `python-dotenv`, `typing-extensions`, `annotated-types`
   - **Optional Dependencies**: Organized into logical groups with extras
     - `web` extra: `uvicorn`, `httpx` for web hosting and HTTP client features
-    - `mongodb` extra: `pymongo` for MongoDB repository implementations  
+    - `mongodb` extra: `pymongo` for MongoDB repository implementations
     - `eventstore` extra: `esdbclient`, `rx` for event sourcing capabilities
     - `grpc` extra: `grpcio` for gRPC communication support
     - `all` extra: includes all optional dependencies
@@ -232,6 +328,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - **Code Quality**: Resolved trailing whitespace and formatting issues
+
   - Fixed whitespace consistency across core modules
   - Improved code formatting in `__init__.py` files
   - Maintained strict linting compliance for better code quality
@@ -281,24 +378,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - **Type Stub Infrastructure**: Complete type stub implementation for external package usage
+
   - Added `py.typed` marker file for type checking support
   - Comprehensive `__all__` exports with 34+ framework components
   - Lazy loading mechanism with `__getattr__` to avoid circular imports
   - Dynamic import handling with graceful error handling for optional dependencies
 
 - **Module Organization**: Improved module structure and initialization
+
   - Added missing `__init__.py` files for all submodules
   - Organized imports with proper module boundaries
   - Enhanced package discoverability for IDEs and tools
 
 - **Testing Infrastructure**: Comprehensive test coverage for type stub validation
   - `test_type_stubs.py` - Full framework component testing
-  - `test_type_stubs_simple.py` - Core functionality validation  
+  - `test_type_stubs_simple.py` - Core functionality validation
   - `test_documentation_report.py` - Coverage analysis and documentation
 
 ### Changed
 
 - **Import Resolution**: Fixed circular import issues throughout the framework
+
   - Updated relative imports in `core/operation_result.py`
   - Fixed dependency injection module imports
   - Resolved cross-module dependency conflicts
@@ -324,7 +424,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Developer Experience
 
 - **IDE Support**: Full type checking and autocomplete in VS Code, PyCharm, and other IDEs
-- **MyPy Compatibility**: All exported types recognized by MyPy and other type checkers  
+- **MyPy Compatibility**: All exported types recognized by MyPy and other type checkers
 - **External Usage**: Framework can now be safely used as external dependency with complete type information
 - **Documentation**: Comprehensive test reports provide framework coverage insights
 
