@@ -1,0 +1,2714 @@
+
+<!DOCTYPE html>
+
+<html class="no-js" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<link href="../source_code_naming_convention/" rel="prev"/>
+<link href="../../assets/images/favicon.png" rel="icon"/>
+<meta content="mkdocs-1.6.1, mkdocs-material-9.6.20" name="generator"/>
+<title>12-Factor App - Neuroglia Python Framework</title>
+<link href="../../assets/stylesheets/main.e53b48f4.min.css" rel="stylesheet"/>
+<link href="../../assets/stylesheets/palette.06af60db.min.css" rel="stylesheet"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback" rel="stylesheet"/>
+<style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+<script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+</head>
+<body data-md-color-accent="blue" data-md-color-primary="blue" data-md-color-scheme="default" dir="ltr">
+<input autocomplete="off" class="md-toggle" data-md-toggle="drawer" id="__drawer" type="checkbox"/>
+<input autocomplete="off" class="md-toggle" data-md-toggle="search" id="__search" type="checkbox"/>
+<label class="md-overlay" for="__drawer"></label>
+<div data-md-component="skip">
+<a class="md-skip" href="#the-twelve-factor-app-with-neuroglia">
+          Skip to content
+        </a>
+</div>
+<div data-md-component="announce">
+</div>
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+<nav aria-label="Header" class="md-header__inner md-grid">
+<a aria-label="Neuroglia Python Framework" class="md-header__button md-logo" data-md-component="logo" href="../.." title="Neuroglia Python Framework">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+</a>
+<label class="md-header__button md-icon" for="__drawer">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+</label>
+<div class="md-header__title" data-md-component="header-title">
+<div class="md-header__ellipsis">
+<div class="md-header__topic">
+<span class="md-ellipsis">
+            Neuroglia Python Framework
+          </span>
+</div>
+<div class="md-header__topic" data-md-component="header-topic">
+<span class="md-ellipsis">
+            
+              12-Factor App
+            
+          </span>
+</div>
+</div>
+</div>
+<form class="md-header__option" data-md-component="palette">
+<input aria-label="Switch to dark mode" class="md-option" data-md-color-accent="blue" data-md-color-media="" data-md-color-primary="blue" data-md-color-scheme="default" id="__palette_0" name="__palette" type="radio"/>
+<label class="md-header__button md-icon" for="__palette_1" hidden="" title="Switch to dark mode">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+</label>
+<input aria-label="Switch to light mode" class="md-option" data-md-color-accent="blue" data-md-color-media="" data-md-color-primary="blue" data-md-color-scheme="slate" id="__palette_1" name="__palette" type="radio"/>
+<label class="md-header__button md-icon" for="__palette_0" hidden="" title="Switch to light mode">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+</label>
+</form>
+<script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+<label class="md-header__button md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+</label>
+<div class="md-search" data-md-component="search" role="dialog">
+<label class="md-search__overlay" for="__search"></label>
+<div class="md-search__inner" role="search">
+<form class="md-search__form" name="search">
+<input aria-label="Search" autocapitalize="off" autocomplete="off" autocorrect="off" class="md-search__input" data-md-component="search-query" name="query" placeholder="Search" required="" spellcheck="false" type="text"/>
+<label class="md-search__icon md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+</label>
+<nav aria-label="Search" class="md-search__options">
+<a aria-label="Share" class="md-search__icon md-icon" data-clipboard="" data-clipboard-text="" data-md-component="search-share" href="javascript:void(0)" tabindex="-1" title="Share">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"></path></svg>
+</a>
+<button aria-label="Clear" class="md-search__icon md-icon" tabindex="-1" title="Clear" type="reset">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+</button>
+</nav>
+</form>
+<div class="md-search__output">
+<div class="md-search__scrollwrap" data-md-scrollfix="" tabindex="0">
+<div class="md-search-result" data-md-component="search-result">
+<div class="md-search-result__meta">
+            Initializing search
+          </div>
+<ol class="md-search-result__list" role="presentation"></ol>
+</div>
+</div>
+</div>
+</div>
+</div>
+</nav>
+<nav aria-label="Tabs" class="md-tabs" data-md-component="tabs">
+<div class="md-grid">
+<ul class="md-tabs__list">
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../..">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../getting-started/">
+          
+  
+  
+  Getting Started
+
+        </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../mario-pizzeria/">
+        
+  
+  
+    
+  
+  Mario Pizzeria
+
+      </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../patterns/">
+          
+  
+  
+  Patterns
+
+        </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../features/">
+          
+  
+  
+  Features
+
+        </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../guides/">
+          
+  
+  
+  Guides
+
+        </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../samples/">
+          
+  
+  
+  Samples
+
+        </a>
+</li>
+<li class="md-tabs__item md-tabs__item--active">
+<a class="md-tabs__link" href="../python_type_hints/">
+          
+  
+  
+  References
+
+        </a>
+</li>
+</ul>
+</div>
+</nav>
+</header>
+<div class="md-container" data-md-component="container">
+<main class="md-main" data-md-component="main">
+<div class="md-main__inner md-grid">
+<div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="Navigation" class="md-nav md-nav--primary md-nav--lifted" data-md-level="0">
+<label class="md-nav__title" for="__drawer">
+<a aria-label="Neuroglia Python Framework" class="md-nav__button md-logo" data-md-component="logo" href="../.." title="Neuroglia Python Framework">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+</a>
+    Neuroglia Python Framework
+  </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../..">
+<span class="md-ellipsis">
+    Home
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_2" type="checkbox"/>
+<label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+<span class="md-ellipsis">
+    Getting Started
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_2_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_2">
+<span class="md-nav__icon md-icon"></span>
+            Getting Started
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../getting-started/">
+<span class="md-ellipsis">
+    Overview
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../guides/3-min-bootstrap/">
+<span class="md-ellipsis">
+    3-Minute Bootstrap
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../guides/local-development/">
+<span class="md-ellipsis">
+    Local Development Setup
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../guides/mario-pizzeria-tutorial/">
+<span class="md-ellipsis">
+    Mario's Pizzeria Tutorial
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../mario-pizzeria/">
+<span class="md-ellipsis">
+    Mario Pizzeria
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_4" type="checkbox"/>
+<label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+<span class="md-ellipsis">
+    Patterns
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_4_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_4">
+<span class="md-nav__icon md-icon"></span>
+            Patterns
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../patterns/">
+<span class="md-ellipsis">
+    Overview
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../patterns/clean-architecture/">
+<span class="md-ellipsis">
+    Clean Architecture
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../patterns/cqrs/">
+<span class="md-ellipsis">
+    CQRS
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../patterns/event-driven/">
+<span class="md-ellipsis">
+    Event-Driven
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../patterns/repository/">
+<span class="md-ellipsis">
+    Repository
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../patterns/resource-oriented-architecture/">
+<span class="md-ellipsis">
+    Resource-Oriented Architecture
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../patterns/watcher-reconciliation-patterns/">
+<span class="md-ellipsis">
+    Watcher &amp; Reconciliation Patterns
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../patterns/watcher-reconciliation-execution/">
+<span class="md-ellipsis">
+    Watcher &amp; Reconciliation Execution
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_5" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+<span class="md-ellipsis">
+    Features
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_5_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_5">
+<span class="md-nav__icon md-icon"></span>
+            Features
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/">
+<span class="md-ellipsis">
+    Overview
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/dependency-injection/">
+<span class="md-ellipsis">
+    Dependency Injection
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/cqrs-mediation/">
+<span class="md-ellipsis">
+    CQRS &amp; Mediation
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/mvc-controllers/">
+<span class="md-ellipsis">
+    MVC Controllers
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/data-access/">
+<span class="md-ellipsis">
+    Data Access
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/event-sourcing/">
+<span class="md-ellipsis">
+    Event Sourcing
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/serialization/">
+<span class="md-ellipsis">
+    Serialization
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/object-mapping/">
+<span class="md-ellipsis">
+    Object Mapping
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/reactive-programming/">
+<span class="md-ellipsis">
+    Reactive Programming
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/background-task-scheduling/">
+<span class="md-ellipsis">
+    Background Task Scheduling
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/redis-cache-repository/">
+<span class="md-ellipsis">
+    Redis Cache Repository
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/http-service-client/">
+<span class="md-ellipsis">
+    HTTP Service Client
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/case-conversion-utilities/">
+<span class="md-ellipsis">
+    Case Conversion Utilities
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/enhanced-model-validation/">
+<span class="md-ellipsis">
+    Enhanced Model Validation
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/mermaid-diagrams/">
+<span class="md-ellipsis">
+    Mermaid Diagrams
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_6" type="checkbox"/>
+<label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+<span class="md-ellipsis">
+    Guides
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_6_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_6">
+<span class="md-nav__icon md-icon"></span>
+            Guides
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../guides/">
+<span class="md-ellipsis">
+    Overview
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../guides/project-setup/">
+<span class="md-ellipsis">
+    Project Setup
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../guides/testing-setup/">
+<span class="md-ellipsis">
+    Testing Setup
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_7" type="checkbox"/>
+<label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+<span class="md-ellipsis">
+    Samples
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_7_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_7">
+<span class="md-nav__icon md-icon"></span>
+            Samples
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../samples/">
+<span class="md-ellipsis">
+    Overview
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../samples/openbank/">
+<span class="md-ellipsis">
+    OpenBank
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../samples/api_gateway/">
+<span class="md-ellipsis">
+    API Gateway
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../samples/desktop_controller/">
+<span class="md-ellipsis">
+    Desktop Controller
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+<input checked="" class="md-nav__toggle md-toggle" id="__nav_8" type="checkbox"/>
+<label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="">
+<span class="md-ellipsis">
+    References
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="true" aria-labelledby="__nav_8_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_8">
+<span class="md-nav__icon md-icon"></span>
+            References
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../python_type_hints/">
+<span class="md-ellipsis">
+    Python Type Hints
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../python_generic_types/">
+<span class="md-ellipsis">
+    Python Generic Types
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../python_modular_code/">
+<span class="md-ellipsis">
+    Python Modular Code
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../python_object_oriented/">
+<span class="md-ellipsis">
+    Python Object-Oriented Programming
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../source_code_naming_convention/">
+<span class="md-ellipsis">
+    Source Code Naming Conventions
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--active">
+<input class="md-nav__toggle md-toggle" id="__toc" type="checkbox"/>
+<label class="md-nav__link md-nav__link--active" for="__toc">
+<span class="md-ellipsis">
+    12-Factor App
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<a class="md-nav__link md-nav__link--active" href="./">
+<span class="md-ellipsis">
+    12-Factor App
+    
+  </span>
+</a>
+<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#what-youll-learn">
+<span class="md-ellipsis">
+      🎯 What You'll Learn
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#i-codebase">
+<span class="md-ellipsis">
+      I. Codebase 📁
+    </span>
+</a>
+<nav aria-label="I. Codebase 📁" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#requirements">
+<span class="md-ellipsis">
+      Requirements
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#how-neuroglia-supports-this">
+<span class="md-ellipsis">
+      How Neuroglia Supports This
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#ii-dependencies">
+<span class="md-ellipsis">
+      II. Dependencies 📦
+    </span>
+</a>
+<nav aria-label="II. Dependencies 📦" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#requirements_1">
+<span class="md-ellipsis">
+      Requirements
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#how-neuroglia-supports-this_1">
+<span class="md-ellipsis">
+      How Neuroglia Supports This
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#iii-config">
+<span class="md-ellipsis">
+      III. Config ⚙️
+    </span>
+</a>
+<nav aria-label="III. Config ⚙️" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#requirements_2">
+<span class="md-ellipsis">
+      Requirements
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#how-neuroglia-supports-this_2">
+<span class="md-ellipsis">
+      How Neuroglia Supports This
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#iv-backing-services">
+<span class="md-ellipsis">
+      IV. Backing Services 🔌
+    </span>
+</a>
+<nav aria-label="IV. Backing Services 🔌" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#requirements_3">
+<span class="md-ellipsis">
+      Requirements
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#how-neuroglia-supports-this_3">
+<span class="md-ellipsis">
+      How Neuroglia Supports This
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#v-build-release-run">
+<span class="md-ellipsis">
+      V. Build, Release, Run 🚀
+    </span>
+</a>
+<nav aria-label="V. Build, Release, Run 🚀" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#requirements_4">
+<span class="md-ellipsis">
+      Requirements
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#how-neuroglia-supports-this_4">
+<span class="md-ellipsis">
+      How Neuroglia Supports This
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#vi-processes">
+<span class="md-ellipsis">
+      VI. Processes 🔄
+    </span>
+</a>
+<nav aria-label="VI. Processes 🔄" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#requirements_5">
+<span class="md-ellipsis">
+      Requirements
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#how-neuroglia-supports-this_5">
+<span class="md-ellipsis">
+      How Neuroglia Supports This
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#vii-port-binding">
+<span class="md-ellipsis">
+      VII. Port Binding 🌐
+    </span>
+</a>
+<nav aria-label="VII. Port Binding 🌐" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#requirements_6">
+<span class="md-ellipsis">
+      Requirements
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#how-neuroglia-supports-this_6">
+<span class="md-ellipsis">
+      How Neuroglia Supports This
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#viii-concurrency">
+<span class="md-ellipsis">
+      VIII. Concurrency 🔀
+    </span>
+</a>
+<nav aria-label="VIII. Concurrency 🔀" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#requirements_7">
+<span class="md-ellipsis">
+      Requirements
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#how-neuroglia-supports-this_7">
+<span class="md-ellipsis">
+      How Neuroglia Supports This
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#ix-disposability">
+<span class="md-ellipsis">
+      IX. Disposability ♻️
+    </span>
+</a>
+<nav aria-label="IX. Disposability ♻️" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#requirements_8">
+<span class="md-ellipsis">
+      Requirements
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#how-neuroglia-supports-this_8">
+<span class="md-ellipsis">
+      How Neuroglia Supports This
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#x-devprod-parity">
+<span class="md-ellipsis">
+      X. Dev/Prod Parity 🔄
+    </span>
+</a>
+<nav aria-label="X. Dev/Prod Parity 🔄" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#requirements_9">
+<span class="md-ellipsis">
+      Requirements
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#how-neuroglia-supports-this_9">
+<span class="md-ellipsis">
+      How Neuroglia Supports This
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#xi-logs">
+<span class="md-ellipsis">
+      XI. Logs 📊
+    </span>
+</a>
+<nav aria-label="XI. Logs 📊" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#requirements_10">
+<span class="md-ellipsis">
+      Requirements
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#how-neuroglia-supports-this_10">
+<span class="md-ellipsis">
+      How Neuroglia Supports This
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#xii-admin-processes">
+<span class="md-ellipsis">
+      XII. Admin Processes 🔧
+    </span>
+</a>
+<nav aria-label="XII. Admin Processes 🔧" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#requirements_11">
+<span class="md-ellipsis">
+      Requirements
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#how-neuroglia-supports-this_11">
+<span class="md-ellipsis">
+      How Neuroglia Supports This
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#summary">
+<span class="md-ellipsis">
+      🎯 Summary
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#building-12-factor-apps-with-neuroglia">
+<span class="md-ellipsis">
+      🚀 Building 12-Factor Apps with Neuroglia
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#related-documentation">
+<span class="md-ellipsis">
+      🔗 Related Documentation
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#what-youll-learn">
+<span class="md-ellipsis">
+      🎯 What You'll Learn
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#i-codebase">
+<span class="md-ellipsis">
+      I. Codebase 📁
+    </span>
+</a>
+<nav aria-label="I. Codebase 📁" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#requirements">
+<span class="md-ellipsis">
+      Requirements
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#how-neuroglia-supports-this">
+<span class="md-ellipsis">
+      How Neuroglia Supports This
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#ii-dependencies">
+<span class="md-ellipsis">
+      II. Dependencies 📦
+    </span>
+</a>
+<nav aria-label="II. Dependencies 📦" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#requirements_1">
+<span class="md-ellipsis">
+      Requirements
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#how-neuroglia-supports-this_1">
+<span class="md-ellipsis">
+      How Neuroglia Supports This
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#iii-config">
+<span class="md-ellipsis">
+      III. Config ⚙️
+    </span>
+</a>
+<nav aria-label="III. Config ⚙️" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#requirements_2">
+<span class="md-ellipsis">
+      Requirements
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#how-neuroglia-supports-this_2">
+<span class="md-ellipsis">
+      How Neuroglia Supports This
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#iv-backing-services">
+<span class="md-ellipsis">
+      IV. Backing Services 🔌
+    </span>
+</a>
+<nav aria-label="IV. Backing Services 🔌" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#requirements_3">
+<span class="md-ellipsis">
+      Requirements
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#how-neuroglia-supports-this_3">
+<span class="md-ellipsis">
+      How Neuroglia Supports This
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#v-build-release-run">
+<span class="md-ellipsis">
+      V. Build, Release, Run 🚀
+    </span>
+</a>
+<nav aria-label="V. Build, Release, Run 🚀" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#requirements_4">
+<span class="md-ellipsis">
+      Requirements
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#how-neuroglia-supports-this_4">
+<span class="md-ellipsis">
+      How Neuroglia Supports This
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#vi-processes">
+<span class="md-ellipsis">
+      VI. Processes 🔄
+    </span>
+</a>
+<nav aria-label="VI. Processes 🔄" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#requirements_5">
+<span class="md-ellipsis">
+      Requirements
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#how-neuroglia-supports-this_5">
+<span class="md-ellipsis">
+      How Neuroglia Supports This
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#vii-port-binding">
+<span class="md-ellipsis">
+      VII. Port Binding 🌐
+    </span>
+</a>
+<nav aria-label="VII. Port Binding 🌐" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#requirements_6">
+<span class="md-ellipsis">
+      Requirements
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#how-neuroglia-supports-this_6">
+<span class="md-ellipsis">
+      How Neuroglia Supports This
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#viii-concurrency">
+<span class="md-ellipsis">
+      VIII. Concurrency 🔀
+    </span>
+</a>
+<nav aria-label="VIII. Concurrency 🔀" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#requirements_7">
+<span class="md-ellipsis">
+      Requirements
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#how-neuroglia-supports-this_7">
+<span class="md-ellipsis">
+      How Neuroglia Supports This
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#ix-disposability">
+<span class="md-ellipsis">
+      IX. Disposability ♻️
+    </span>
+</a>
+<nav aria-label="IX. Disposability ♻️" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#requirements_8">
+<span class="md-ellipsis">
+      Requirements
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#how-neuroglia-supports-this_8">
+<span class="md-ellipsis">
+      How Neuroglia Supports This
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#x-devprod-parity">
+<span class="md-ellipsis">
+      X. Dev/Prod Parity 🔄
+    </span>
+</a>
+<nav aria-label="X. Dev/Prod Parity 🔄" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#requirements_9">
+<span class="md-ellipsis">
+      Requirements
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#how-neuroglia-supports-this_9">
+<span class="md-ellipsis">
+      How Neuroglia Supports This
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#xi-logs">
+<span class="md-ellipsis">
+      XI. Logs 📊
+    </span>
+</a>
+<nav aria-label="XI. Logs 📊" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#requirements_10">
+<span class="md-ellipsis">
+      Requirements
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#how-neuroglia-supports-this_10">
+<span class="md-ellipsis">
+      How Neuroglia Supports This
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#xii-admin-processes">
+<span class="md-ellipsis">
+      XII. Admin Processes 🔧
+    </span>
+</a>
+<nav aria-label="XII. Admin Processes 🔧" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#requirements_11">
+<span class="md-ellipsis">
+      Requirements
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#how-neuroglia-supports-this_11">
+<span class="md-ellipsis">
+      How Neuroglia Supports This
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#summary">
+<span class="md-ellipsis">
+      🎯 Summary
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#building-12-factor-apps-with-neuroglia">
+<span class="md-ellipsis">
+      🚀 Building 12-Factor Apps with Neuroglia
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#related-documentation">
+<span class="md-ellipsis">
+      🔗 Related Documentation
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div class="md-content" data-md-component="content">
+<article class="md-content__inner md-typeset">
+<h1 id="the-twelve-factor-app-with-neuroglia">🏭 The Twelve-Factor App with Neuroglia<a class="headerlink" href="#the-twelve-factor-app-with-neuroglia" title="Permanent link">¶</a></h1>
+<p>The <a href="https://12factor.net/">Twelve-Factor App</a> is a methodology for building software-as-a-service applications that are portable, scalable, and maintainable. The Neuroglia framework was designed from the ground up to support and enforce these principles, making it easy to build cloud-native applications that follow best practices.</p>
+<h2 id="what-youll-learn">🎯 What You'll Learn<a class="headerlink" href="#what-youll-learn" title="Permanent link">¶</a></h2>
+<ul>
+<li>How each of the 12 factors applies to modern cloud-native applications</li>
+<li>How Neuroglia framework features directly support 12-factor compliance</li>
+<li>Practical implementation patterns using Mario's Pizzeria as an example</li>
+<li>Best practices for deploying and managing 12-factor applications</li>
+</ul>
+<hr/>
+<h2 id="i-codebase">I. Codebase 📁<a class="headerlink" href="#i-codebase" title="Permanent link">¶</a></h2>
+<p><strong>Principle</strong>: <em>One codebase tracked in revision control, many deploys</em></p>
+<h3 id="requirements">Requirements<a class="headerlink" href="#requirements" title="Permanent link">¶</a></h3>
+<ul>
+<li>Single codebase in version control (Git)</li>
+<li>Multiple deployments from same codebase (dev, staging, production)</li>
+<li>No shared code between apps - use libraries instead</li>
+</ul>
+<h3 id="how-neuroglia-supports-this">How Neuroglia Supports This<a class="headerlink" href="#how-neuroglia-supports-this" title="Permanent link">¶</a></h3>
+<p>The framework enforces clean separation of concerns through its modular architecture:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Single codebase structure</span>
+<span class="n">src</span><span class="o">/</span>
+<span class="err">├──</span> <span class="n">marios_pizzeria</span><span class="o">/</span>           <span class="c1"># Single application codebase</span>
+<span class="err">│</span>   <span class="err">├──</span> <span class="n">api</span><span class="o">/</span>                   <span class="c1"># API layer</span>
+<span class="err">│</span>   <span class="err">├──</span> <span class="n">application</span><span class="o">/</span>           <span class="c1"># Business logic</span>
+<span class="err">│</span>   <span class="err">├──</span> <span class="n">domain</span><span class="o">/</span>                <span class="c1"># Core domain</span>
+<span class="err">│</span>   <span class="err">└──</span> <span class="n">integration</span><span class="o">/</span>           <span class="c1"># External integrations</span>
+<span class="err">├──</span> <span class="n">shared_libs</span><span class="o">/</span>               <span class="c1"># Reusable libraries</span>
+<span class="err">│</span>   <span class="err">└──</span> <span class="n">neuroglia</span><span class="o">/</span>            <span class="c1"># Framework as separate library</span>
+<span class="err">└──</span> <span class="n">deployment</span><span class="o">/</span>                <span class="c1"># Environment-specific configs</span>
+    <span class="err">├──</span> <span class="n">dev</span><span class="o">/</span>
+    <span class="err">├──</span> <span class="n">staging</span><span class="o">/</span>
+    <span class="err">└──</span> <span class="n">production</span><span class="o">/</span>
+</code></pre></div>
+<p><strong>Example</strong>: Mario's Pizzeria has one codebase but deploys to multiple environments:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># main.py - Same code, different configs</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.hosting.web</span><span class="w"> </span><span class="kn">import</span> <span class="n">WebApplicationBuilder</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">create_app</span><span class="p">():</span>
+    <span class="n">builder</span> <span class="o">=</span> <span class="n">WebApplicationBuilder</span><span class="p">()</span>
+
+    <span class="c1"># Configuration varies by environment</span>
+    <span class="c1"># but same codebase everywhere</span>
+    <span class="n">services</span> <span class="o">=</span> <span class="n">builder</span><span class="o">.</span><span class="n">services</span>
+    <span class="n">services</span><span class="o">.</span><span class="n">add_controllers</span><span class="p">([</span><span class="s2">"api.controllers"</span><span class="p">])</span>
+    <span class="n">services</span><span class="o">.</span><span class="n">add_mediator</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">builder</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
+</code></pre></div>
+<hr/>
+<h2 id="ii-dependencies">II. Dependencies 📦<a class="headerlink" href="#ii-dependencies" title="Permanent link">¶</a></h2>
+<p><strong>Principle</strong>: <em>Explicitly declare and isolate dependencies</em></p>
+<h3 id="requirements_1">Requirements<a class="headerlink" href="#requirements_1" title="Permanent link">¶</a></h3>
+<ul>
+<li>Explicit dependency declaration</li>
+<li>Dependency isolation (no system-wide packages)</li>
+<li>No implicit dependencies on system tools</li>
+</ul>
+<h3 id="how-neuroglia-supports-this_1">How Neuroglia Supports This<a class="headerlink" href="#how-neuroglia-supports-this_1" title="Permanent link">¶</a></h3>
+<p>The framework uses Poetry and virtual environments for complete dependency isolation:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># pyproject.toml - Explicit dependency declaration</span>
+<span class="k">[tool.poetry.dependencies]</span>
+<span class="n">python</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"^3.11"</span>
+<span class="n">fastapi</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"^0.104.0"</span>
+<span class="n">uvicorn</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"^0.24.0"</span>
+<span class="n">pydantic</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"^2.4.0"</span>
+<span class="n">motor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"^3.3.0"</span>
+
+<span class="k">[tool.poetry.group.dev.dependencies]</span>
+<span class="n">pytest</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"^7.4.0"</span>
+<span class="n">pytest-asyncio</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"^0.21.0"</span>
+</code></pre></div>
+<p><strong>Dependency Injection Container</strong> ensures services are properly declared:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.dependency_injection</span><span class="w"> </span><span class="kn">import</span> <span class="n">ServiceLifetime</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">configure_services</span><span class="p">(</span><span class="n">services</span><span class="p">):</span>
+    <span class="c1"># Explicit service dependencies</span>
+    <span class="n">services</span><span class="o">.</span><span class="n">add_singleton</span><span class="p">(</span><span class="n">OrderService</span><span class="p">)</span>
+    <span class="n">services</span><span class="o">.</span><span class="n">add_scoped</span><span class="p">(</span><span class="n">PizzaRepository</span><span class="p">,</span> <span class="n">MongoDbPizzaRepository</span><span class="p">)</span>
+    <span class="n">services</span><span class="o">.</span><span class="n">add_transient</span><span class="p">(</span><span class="n">EmailService</span><span class="p">,</span> <span class="n">SmtpEmailService</span><span class="p">)</span>
+
+    <span class="c1"># Framework handles dependency resolution</span>
+    <span class="n">services</span><span class="o">.</span><span class="n">add_mediator</span><span class="p">()</span>
+</code></pre></div>
+<p><strong>No System Dependencies</strong> - Everything runs in isolated containers:</p>
+<div class="highlight"><pre><span></span><code><span class="c"># Dockerfile - Isolated environment</span>
+<span class="k">FROM</span><span class="w"> </span><span class="s">python:3.11-slim</span>
+<span class="k">WORKDIR</span><span class="w"> </span><span class="s">/app</span>
+<span class="k">COPY</span><span class="w"> </span>pyproject.toml<span class="w"> </span>poetry.lock<span class="w"> </span>./
+<span class="k">RUN</span><span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>poetry<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>poetry<span class="w"> </span>install<span class="w"> </span>--no-dev
+<span class="k">COPY</span><span class="w"> </span>src/<span class="w"> </span>./src/
+<span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">"poetry"</span><span class="p">,</span><span class="w"> </span><span class="s2">"run"</span><span class="p">,</span><span class="w"> </span><span class="s2">"python"</span><span class="p">,</span><span class="w"> </span><span class="s2">"main.py"</span><span class="p">]</span>
+</code></pre></div>
+<hr/>
+<h2 id="iii-config">III. Config ⚙️<a class="headerlink" href="#iii-config" title="Permanent link">¶</a></h2>
+<p><strong>Principle</strong>: <em>Store config in the environment</em></p>
+<h3 id="requirements_2">Requirements<a class="headerlink" href="#requirements_2" title="Permanent link">¶</a></h3>
+<ul>
+<li>Configuration in environment variables</li>
+<li>Strict separation of config from code</li>
+<li>No passwords or API keys in code</li>
+</ul>
+<h3 id="how-neuroglia-supports-this_2">How Neuroglia Supports This<a class="headerlink" href="#how-neuroglia-supports-this_2" title="Permanent link">¶</a></h3>
+<p><strong>Environment-Based Configuration</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseSettings</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">AppSettings</span><span class="p">(</span><span class="n">BaseSettings</span><span class="p">):</span>
+    <span class="c1"># Database configuration</span>
+    <span class="n">mongodb_connection_string</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">database_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"marios_pizzeria"</span>
+
+    <span class="c1"># External service configuration</span>
+    <span class="n">payment_api_key</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">email_smtp_host</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">email_smtp_port</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">587</span>
+
+    <span class="c1"># Application configuration</span>
+    <span class="n">jwt_secret_key</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">log_level</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"INFO"</span>
+
+    <span class="k">class</span><span class="w"> </span><span class="nc">Config</span><span class="p">:</span>
+        <span class="n">env_file</span> <span class="o">=</span> <span class="s2">".env"</span>
+        <span class="n">env_file_encoding</span> <span class="o">=</span> <span class="s2">"utf-8"</span>
+
+<span class="c1"># Usage in application</span>
+<span class="n">settings</span> <span class="o">=</span> <span class="n">AppSettings</span><span class="p">()</span>
+
+<span class="n">services</span><span class="o">.</span><span class="n">add_singleton</span><span class="p">(</span><span class="n">AppSettings</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">_</span><span class="p">:</span> <span class="n">settings</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Environment-Specific Deployment</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Development environment</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">MONGODB_CONNECTION_STRING</span><span class="o">=</span><span class="s2">"mongodb://localhost:27017"</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">PAYMENT_API_KEY</span><span class="o">=</span><span class="s2">"test_key_123"</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">JWT_SECRET_KEY</span><span class="o">=</span><span class="s2">"dev-secret"</span>
+
+<span class="c1"># Production environment</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">MONGODB_CONNECTION_STRING</span><span class="o">=</span><span class="s2">"mongodb://prod-cluster:27017/marios"</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">PAYMENT_API_KEY</span><span class="o">=</span><span class="s2">"pk_live_abc123"</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">JWT_SECRET_KEY</span><span class="o">=</span><span class="s2">"</span><span class="k">$(</span>openssl<span class="w"> </span>rand<span class="w"> </span>-base64<span class="w"> </span><span class="m">32</span><span class="k">)</span><span class="s2">"</span>
+</code></pre></div>
+<p><strong>Configuration Injection</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">OrderController</span><span class="p">(</span><span class="n">ControllerBase</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">service_provider</span><span class="p">:</span> <span class="n">ServiceProviderBase</span><span class="p">,</span>
+                 <span class="n">mapper</span><span class="p">:</span> <span class="n">Mapper</span><span class="p">,</span> <span class="n">mediator</span><span class="p">:</span> <span class="n">Mediator</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">service_provider</span><span class="p">,</span> <span class="n">mapper</span><span class="p">,</span> <span class="n">mediator</span><span class="p">)</span>
+        <span class="c1"># Settings injected automatically</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_settings</span> <span class="o">=</span> <span class="n">service_provider</span><span class="o">.</span><span class="n">get_service</span><span class="p">(</span><span class="n">AppSettings</span><span class="p">)</span>
+
+    <span class="nd">@post</span><span class="p">(</span><span class="s2">"/orders"</span><span class="p">)</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">create_order</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">order_dto</span><span class="p">:</span> <span class="n">CreateOrderDto</span><span class="p">):</span>
+        <span class="c1"># Use configuration without hardcoding</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_settings</span><span class="o">.</span><span class="n">payment_api_key</span><span class="p">:</span>
+            <span class="c1"># Process payment</span>
+            <span class="k">pass</span>
+</code></pre></div>
+<hr/>
+<h2 id="iv-backing-services">IV. Backing Services 🔌<a class="headerlink" href="#iv-backing-services" title="Permanent link">¶</a></h2>
+<p><strong>Principle</strong>: <em>Treat backing services as attached resources</em></p>
+<h3 id="requirements_3">Requirements<a class="headerlink" href="#requirements_3" title="Permanent link">¶</a></h3>
+<ul>
+<li>Database, message queues, caches as attached resources</li>
+<li>No distinction between local and third-party services</li>
+<li>Services attachable via configuration</li>
+</ul>
+<h3 id="how-neuroglia-supports-this_3">How Neuroglia Supports This<a class="headerlink" href="#how-neuroglia-supports-this_3" title="Permanent link">¶</a></h3>
+<p><strong>Repository Pattern</strong> abstracts backing services:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Abstract repository - same interface for all backing services</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">PizzaRepository</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">save_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pizza</span><span class="p">:</span> <span class="n">Pizza</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">pass</span>
+
+    <span class="nd">@abstractmethod</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_by_id_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pizza_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Pizza</span><span class="p">]:</span>
+        <span class="k">pass</span>
+
+<span class="c1"># MongoDB implementation</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">MongoDbPizzaRepository</span><span class="p">(</span><span class="n">PizzaRepository</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">connection_string</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_client</span> <span class="o">=</span> <span class="n">AsyncIOMotorClient</span><span class="p">(</span><span class="n">connection_string</span><span class="p">)</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">save_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pizza</span><span class="p">:</span> <span class="n">Pizza</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_collection</span><span class="o">.</span><span class="n">insert_one</span><span class="p">(</span><span class="n">pizza</span><span class="o">.</span><span class="n">to_dict</span><span class="p">())</span>
+
+<span class="c1"># In-memory implementation (for testing)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">InMemoryPizzaRepository</span><span class="p">(</span><span class="n">PizzaRepository</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_store</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">save_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pizza</span><span class="p">:</span> <span class="n">Pizza</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_store</span><span class="p">[</span><span class="n">pizza</span><span class="o">.</span><span class="n">id</span><span class="p">]</span> <span class="o">=</span> <span class="n">pizza</span>
+</code></pre></div>
+<p><strong>Service Registration</strong> based on environment:</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">configure_backing_services</span><span class="p">(</span><span class="n">services</span><span class="p">,</span> <span class="n">settings</span><span class="p">:</span> <span class="n">AppSettings</span><span class="p">):</span>
+    <span class="c1"># Database service - swappable via config</span>
+    <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">environment</span> <span class="o">==</span> <span class="s2">"production"</span><span class="p">:</span>
+        <span class="n">services</span><span class="o">.</span><span class="n">add_scoped</span><span class="p">(</span><span class="n">PizzaRepository</span><span class="p">,</span>
+            <span class="k">lambda</span> <span class="n">sp</span><span class="p">:</span> <span class="n">MongoDbPizzaRepository</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">mongodb_connection_string</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">services</span><span class="o">.</span><span class="n">add_scoped</span><span class="p">(</span><span class="n">PizzaRepository</span><span class="p">,</span> <span class="n">InMemoryPizzaRepository</span><span class="p">)</span>
+
+    <span class="c1"># Cache service - Redis in prod, memory in dev</span>
+    <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">redis_url</span><span class="p">:</span>
+        <span class="n">services</span><span class="o">.</span><span class="n">add_singleton</span><span class="p">(</span><span class="n">CacheService</span><span class="p">,</span>
+            <span class="k">lambda</span> <span class="n">sp</span><span class="p">:</span> <span class="n">RedisCacheService</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">redis_url</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">services</span><span class="o">.</span><span class="n">add_singleton</span><span class="p">(</span><span class="n">CacheService</span><span class="p">,</span> <span class="n">InMemoryCacheService</span><span class="p">)</span>
+
+    <span class="c1"># Message queue - RabbitMQ in prod, in-memory in dev</span>
+    <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">rabbitmq_url</span><span class="p">:</span>
+        <span class="n">services</span><span class="o">.</span><span class="n">add_scoped</span><span class="p">(</span><span class="n">EventBus</span><span class="p">,</span>
+            <span class="k">lambda</span> <span class="n">sp</span><span class="p">:</span> <span class="n">RabbitMqEventBus</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">rabbitmq_url</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">services</span><span class="o">.</span><span class="n">add_scoped</span><span class="p">(</span><span class="n">EventBus</span><span class="p">,</span> <span class="n">InMemoryEventBus</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Service Abstraction</strong> through dependency injection:</p>
+<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">ProcessOrderHandler</span><span class="p">(</span><span class="n">CommandHandler</span><span class="p">[</span><span class="n">ProcessOrderCommand</span><span class="p">,</span> <span class="n">OperationResult</span><span class="p">]):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pizza_repository</span><span class="p">:</span> <span class="n">PizzaRepository</span><span class="p">,</span>
+                 <span class="n">cache_service</span><span class="p">:</span> <span class="n">CacheService</span><span class="p">,</span>
+                 <span class="n">event_bus</span><span class="p">:</span> <span class="n">EventBus</span><span class="p">):</span>
+        <span class="c1"># Handler doesn't know which implementations it's using</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_pizza_repository</span> <span class="o">=</span> <span class="n">pizza_repository</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_cache_service</span> <span class="o">=</span> <span class="n">cache_service</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_event_bus</span> <span class="o">=</span> <span class="n">event_bus</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">handle_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command</span><span class="p">:</span> <span class="n">ProcessOrderCommand</span><span class="p">):</span>
+        <span class="c1"># Same code works with any backing service implementation</span>
+        <span class="n">pizza</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pizza_repository</span><span class="o">.</span><span class="n">get_by_id_async</span><span class="p">(</span><span class="n">command</span><span class="o">.</span><span class="n">pizza_id</span><span class="p">)</span>
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cache_service</span><span class="o">.</span><span class="n">set_async</span><span class="p">(</span><span class="sa">f</span><span class="s2">"order:</span><span class="si">{</span><span class="n">command</span><span class="o">.</span><span class="n">order_id</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="n">pizza</span><span class="p">)</span>
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_event_bus</span><span class="o">.</span><span class="n">publish_async</span><span class="p">(</span><span class="n">OrderProcessedEvent</span><span class="p">(</span><span class="n">command</span><span class="o">.</span><span class="n">order_id</span><span class="p">))</span>
+</code></pre></div>
+<hr/>
+<h2 id="v-build-release-run">V. Build, Release, Run 🚀<a class="headerlink" href="#v-build-release-run" title="Permanent link">¶</a></h2>
+<p><strong>Principle</strong>: <em>Strictly separate build and run stages</em></p>
+<h3 id="requirements_4">Requirements<a class="headerlink" href="#requirements_4" title="Permanent link">¶</a></h3>
+<ul>
+<li>Build stage: convert code into executable bundle</li>
+<li>Release stage: combine build with configuration</li>
+<li>Run stage: execute the release in runtime environment</li>
+</ul>
+<h3 id="how-neuroglia-supports-this_4">How Neuroglia Supports This<a class="headerlink" href="#how-neuroglia-supports-this_4" title="Permanent link">¶</a></h3>
+<p><strong>Build Stage</strong> - Create deployable artifacts:</p>
+<div class="highlight"><pre><span></span><code><span class="ch">#!/bin/bash</span>
+<span class="c1"># build.sh - Build stage</span>
+<span class="nb">set</span><span class="w"> </span>-e
+
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"🔨 Building Neuroglia application..."</span>
+
+<span class="c1"># Install dependencies</span>
+poetry<span class="w"> </span>install<span class="w"> </span>--no-dev
+
+<span class="c1"># Run tests</span>
+poetry<span class="w"> </span>run<span class="w"> </span>pytest
+
+<span class="c1"># Build wheel package</span>
+poetry<span class="w"> </span>build
+
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"✅ Build complete: dist/marios_pizzeria-1.0.0-py3-none-any.whl"</span>
+</code></pre></div>
+<p><strong>Release Stage</strong> - Combine build with configuration:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># release.py - Release stage</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">shutil</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">create_release</span><span class="p">(</span><span class="n">build_artifact</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">environment</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">version</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="n">release_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="sa">f</span><span class="s2">"releases/</span><span class="si">{</span><span class="n">version</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">environment</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="n">release_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># Copy build artifact</span>
+    <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">build_artifact</span><span class="p">,</span> <span class="n">release_dir</span> <span class="o">/</span> <span class="s2">"app.whl"</span><span class="p">)</span>
+
+    <span class="c1"># Copy environment-specific configuration</span>
+    <span class="n">env_config</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="sa">f</span><span class="s2">"deployment/</span><span class="si">{</span><span class="n">environment</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="n">shutil</span><span class="o">.</span><span class="n">copytree</span><span class="p">(</span><span class="n">env_config</span><span class="p">,</span> <span class="n">release_dir</span> <span class="o">/</span> <span class="s2">"config"</span><span class="p">)</span>
+
+    <span class="c1"># Create release manifest</span>
+    <span class="n">manifest</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">"version"</span><span class="p">:</span> <span class="n">version</span><span class="p">,</span>
+        <span class="s2">"environment"</span><span class="p">:</span> <span class="n">environment</span><span class="p">,</span>
+        <span class="s2">"build_artifact"</span><span class="p">:</span> <span class="s2">"app.whl"</span><span class="p">,</span>
+        <span class="s2">"configuration"</span><span class="p">:</span> <span class="s2">"config/"</span><span class="p">,</span>
+        <span class="s2">"created_at"</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span>
+    <span class="p">}</span>
+
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">release_dir</span> <span class="o">/</span> <span class="s2">"manifest.json"</span><span class="p">,</span> <span class="s2">"w"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">manifest</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">release_dir</span>
+</code></pre></div>
+<p><strong>Run Stage</strong> - Execute specific release:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># run.py - Run stage</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">run_release</span><span class="p">(</span><span class="n">release_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">):</span>
+    <span class="c1"># Load release manifest</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">release_path</span> <span class="o">/</span> <span class="s2">"manifest.json"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">manifest</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+
+    <span class="c1"># Set environment from release configuration</span>
+    <span class="n">config_dir</span> <span class="o">=</span> <span class="n">release_path</span> <span class="o">/</span> <span class="n">manifest</span><span class="p">[</span><span class="s2">"configuration"</span><span class="p">]</span>
+    <span class="n">load_environment_from_config</span><span class="p">(</span><span class="n">config_dir</span><span class="p">)</span>
+
+    <span class="c1"># Install and run the exact build artifact</span>
+    <span class="n">app_wheel</span> <span class="o">=</span> <span class="n">release_path</span> <span class="o">/</span> <span class="n">manifest</span><span class="p">[</span><span class="s2">"build_artifact"</span><span class="p">]</span>
+    <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="s2">"pip"</span><span class="p">,</span> <span class="s2">"install"</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">app_wheel</span><span class="p">)])</span>
+
+    <span class="c1"># Start the application</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">marios_pizzeria.main</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_app</span>
+    <span class="n">app</span> <span class="o">=</span> <span class="n">create_app</span><span class="p">()</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</code></pre></div>
+<p><strong>Docker Integration</strong> for immutable releases:</p>
+<div class="highlight"><pre><span></span><code><span class="c"># Multi-stage build</span>
+<span class="k">FROM</span><span class="w"> </span><span class="s">python:3.11-slim</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="s">builder</span>
+<span class="k">WORKDIR</span><span class="w"> </span><span class="s">/build</span>
+<span class="k">COPY</span><span class="w"> </span>pyproject.toml<span class="w"> </span>poetry.lock<span class="w"> </span>./
+<span class="k">RUN</span><span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>poetry<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>poetry<span class="w"> </span>install<span class="w"> </span>--no-dev
+<span class="k">COPY</span><span class="w"> </span>src/<span class="w"> </span>./src/
+<span class="k">RUN</span><span class="w"> </span>poetry<span class="w"> </span>build
+
+<span class="k">FROM</span><span class="w"> </span><span class="s">python:3.11-slim</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="s">runtime</span>
+<span class="k">WORKDIR</span><span class="w"> </span><span class="s">/app</span>
+<span class="c"># Copy only the build artifact</span>
+<span class="k">COPY</span><span class="w"> </span>--from<span class="o">=</span>builder<span class="w"> </span>/build/dist/*.whl<span class="w"> </span>./
+<span class="k">RUN</span><span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>*.whl
+<span class="c"># Configuration comes from environment</span>
+<span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">"python"</span><span class="p">,</span><span class="w"> </span><span class="s2">"-m"</span><span class="p">,</span><span class="w"> </span><span class="s2">"marios_pizzeria"</span><span class="p">]</span>
+</code></pre></div>
+<hr/>
+<h2 id="vi-processes">VI. Processes 🔄<a class="headerlink" href="#vi-processes" title="Permanent link">¶</a></h2>
+<p><strong>Principle</strong>: <em>Execute the app as one or more stateless processes</em></p>
+<h3 id="requirements_5">Requirements<a class="headerlink" href="#requirements_5" title="Permanent link">¶</a></h3>
+<ul>
+<li>Processes are stateless and share-nothing</li>
+<li>Persistent data stored in backing services</li>
+<li>No sticky sessions or in-process caching</li>
+</ul>
+<h3 id="how-neuroglia-supports-this_5">How Neuroglia Supports This<a class="headerlink" href="#how-neuroglia-supports-this_5" title="Permanent link">¶</a></h3>
+<p><strong>Stateless Design</strong> through dependency injection:</p>
+<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">PizzaController</span><span class="p">(</span><span class="n">ControllerBase</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">service_provider</span><span class="p">:</span> <span class="n">ServiceProviderBase</span><span class="p">,</span>
+                 <span class="n">mapper</span><span class="p">:</span> <span class="n">Mapper</span><span class="p">,</span> <span class="n">mediator</span><span class="p">:</span> <span class="n">Mediator</span><span class="p">):</span>
+        <span class="c1"># Controller has no instance state</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">service_provider</span><span class="p">,</span> <span class="n">mapper</span><span class="p">,</span> <span class="n">mediator</span><span class="p">)</span>
+
+    <span class="nd">@get</span><span class="p">(</span><span class="s2">"/pizzas/</span><span class="si">{pizza_id}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_pizza</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pizza_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PizzaDto</span><span class="p">:</span>
+        <span class="c1"># All state comes from request and backing services</span>
+        <span class="n">query</span> <span class="o">=</span> <span class="n">GetPizzaByIdQuery</span><span class="p">(</span><span class="n">pizza_id</span><span class="o">=</span><span class="n">pizza_id</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">mediator</span><span class="o">.</span><span class="n">execute_async</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Repository Pattern</strong> for persistent data:</p>
+<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">GetPizzaByIdHandler</span><span class="p">(</span><span class="n">QueryHandler</span><span class="p">[</span><span class="n">GetPizzaByIdQuery</span><span class="p">,</span> <span class="n">PizzaDto</span><span class="p">]):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pizza_repository</span><span class="p">:</span> <span class="n">PizzaRepository</span><span class="p">,</span> <span class="n">mapper</span><span class="p">:</span> <span class="n">Mapper</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_pizza_repository</span> <span class="o">=</span> <span class="n">pizza_repository</span>  <span class="c1"># Stateless service</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_mapper</span> <span class="o">=</span> <span class="n">mapper</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">handle_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">:</span> <span class="n">GetPizzaByIdQuery</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PizzaDto</span><span class="p">:</span>
+        <span class="c1"># No process state - all data from backing service</span>
+        <span class="n">pizza</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pizza_repository</span><span class="o">.</span><span class="n">get_by_id_async</span><span class="p">(</span><span class="n">query</span><span class="o">.</span><span class="n">pizza_id</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">pizza</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">NotFoundException</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Pizza </span><span class="si">{</span><span class="n">query</span><span class="o">.</span><span class="n">pizza_id</span><span class="si">}</span><span class="s2"> not found"</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mapper</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">pizza</span><span class="p">,</span> <span class="n">PizzaDto</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Process Scaling</strong> configuration:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># docker-compose.yml - Horizontal scaling</span>
+<span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="s">"3.8"</span>
+<span class="nt">services</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">web</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">marios-pizzeria:latest</span>
+<span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"8000-8003:8000"</span><span class="w"> </span><span class="c1"># Multiple process instances</span>
+<span class="w">    </span><span class="nt">environment</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MONGODB_CONNECTION_STRING=${MONGODB_URL}</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">REDIS_URL=${REDIS_URL}</span>
+<span class="w">    </span><span class="nt">deploy</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">replicas</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">4</span><span class="w"> </span><span class="c1"># 4 stateless processes</span>
+
+<span class="w">  </span><span class="nt">nginx</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nginx:alpine</span>
+<span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"80:80"</span>
+<span class="w">    </span><span class="nt">depends_on</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">web</span>
+<span class="w">    </span><span class="c1"># Load balancer - no session affinity needed</span>
+</code></pre></div>
+<p><strong>Session State</strong> externalization:</p>
+<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">SessionService</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cache_service</span><span class="p">:</span> <span class="n">CacheService</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_cache</span> <span class="o">=</span> <span class="n">cache_service</span>  <span class="c1"># External session store</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_user_session</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">UserSession</span><span class="p">]:</span>
+        <span class="c1"># Session stored in external cache, not process memory</span>
+        <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cache</span><span class="o">.</span><span class="n">get_async</span><span class="p">(</span><span class="sa">f</span><span class="s2">"session:</span><span class="si">{</span><span class="n">session_id</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">save_user_session</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">:</span> <span class="n">UserSession</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cache</span><span class="o">.</span><span class="n">set_async</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">"session:</span><span class="si">{</span><span class="n">session</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
+            <span class="n">session</span><span class="p">,</span>
+            <span class="n">ttl</span><span class="o">=</span><span class="n">timedelta</span><span class="p">(</span><span class="n">hours</span><span class="o">=</span><span class="mi">24</span><span class="p">)</span>
+        <span class="p">)</span>
+</code></pre></div>
+<hr/>
+<h2 id="vii-port-binding">VII. Port Binding 🌐<a class="headerlink" href="#vii-port-binding" title="Permanent link">¶</a></h2>
+<p><strong>Principle</strong>: <em>Export services via port binding</em></p>
+<h3 id="requirements_6">Requirements<a class="headerlink" href="#requirements_6" title="Permanent link">¶</a></h3>
+<ul>
+<li>App is self-contained and exports HTTP via port binding</li>
+<li>No reliance on runtime injection by webserver</li>
+<li>One app can become backing service for another</li>
+</ul>
+<h3 id="how-neuroglia-supports-this_6">How Neuroglia Supports This<a class="headerlink" href="#how-neuroglia-supports-this_6" title="Permanent link">¶</a></h3>
+<p><strong>Self-Contained HTTP Server</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># main.py - Self-contained application</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.hosting.web</span><span class="w"> </span><span class="kn">import</span> <span class="n">WebApplicationBuilder</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">uvicorn</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">create_app</span><span class="p">():</span>
+    <span class="n">builder</span> <span class="o">=</span> <span class="n">WebApplicationBuilder</span><span class="p">()</span>
+
+    <span class="c1"># Configure services</span>
+    <span class="n">services</span> <span class="o">=</span> <span class="n">builder</span><span class="o">.</span><span class="n">services</span>
+    <span class="n">services</span><span class="o">.</span><span class="n">add_controllers</span><span class="p">([</span><span class="s2">"api.controllers"</span><span class="p">])</span>
+    <span class="n">services</span><span class="o">.</span><span class="n">add_mediator</span><span class="p">()</span>
+
+    <span class="c1"># Build FastAPI application</span>
+    <span class="n">app</span> <span class="o">=</span> <span class="n">builder</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">use_controllers</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">app</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
+    <span class="n">app</span> <span class="o">=</span> <span class="n">create_app</span><span class="p">()</span>
+
+    <span class="c1"># Self-contained HTTP server via port binding</span>
+    <span class="n">port</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"PORT"</span><span class="p">,</span> <span class="mi">8000</span><span class="p">))</span>
+    <span class="n">uvicorn</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="n">host</span><span class="o">=</span><span class="s2">"0.0.0.0"</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="n">port</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Port Configuration</strong> via environment:</p>
+<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">ServerSettings</span><span class="p">(</span><span class="n">BaseSettings</span><span class="p">):</span>
+    <span class="n">port</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">8000</span>
+    <span class="n">host</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"0.0.0.0"</span>
+    <span class="n">workers</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span>
+
+    <span class="k">class</span><span class="w"> </span><span class="nc">Config</span><span class="p">:</span>
+        <span class="n">env_prefix</span> <span class="o">=</span> <span class="s2">"SERVER_"</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">run_server</span><span class="p">():</span>
+    <span class="n">settings</span> <span class="o">=</span> <span class="n">ServerSettings</span><span class="p">()</span>
+    <span class="n">app</span> <span class="o">=</span> <span class="n">create_app</span><span class="p">()</span>
+
+    <span class="n">uvicorn</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
+        <span class="n">app</span><span class="p">,</span>
+        <span class="n">host</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">host</span><span class="p">,</span>
+        <span class="n">port</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">port</span><span class="p">,</span>
+        <span class="n">workers</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">workers</span>
+    <span class="p">)</span>
+</code></pre></div>
+<p><strong>Service-to-Service Communication</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Pizza service exports HTTP interface</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">PizzaServiceClient</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">base_url</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_base_url</span> <span class="o">=</span> <span class="n">base_url</span>  <span class="c1"># Port-bound service URL</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_client</span> <span class="o">=</span> <span class="n">httpx</span><span class="o">.</span><span class="n">AsyncClient</span><span class="p">()</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_pizza_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pizza_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PizzaDto</span><span class="p">:</span>
+        <span class="c1"># Call another 12-factor app via its port binding</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_base_url</span><span class="si">}</span><span class="s2">/pizzas/</span><span class="si">{</span><span class="n">pizza_id</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">PizzaDto</span><span class="o">.</span><span class="n">model_validate</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">())</span>
+
+<span class="c1"># Order service uses Pizza service as backing service</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">OrderService</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pizza_service</span><span class="p">:</span> <span class="n">PizzaServiceClient</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_pizza_service</span> <span class="o">=</span> <span class="n">pizza_service</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">create_order_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">order</span><span class="p">:</span> <span class="n">CreateOrderRequest</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Order</span><span class="p">:</span>
+        <span class="c1"># Verify pizza exists via HTTP call</span>
+        <span class="n">pizza</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pizza_service</span><span class="o">.</span><span class="n">get_pizza_async</span><span class="p">(</span><span class="n">order</span><span class="o">.</span><span class="n">pizza_id</span><span class="p">)</span>
+        <span class="c1"># Create order...</span>
+</code></pre></div>
+<p><strong>Docker Port Mapping</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="c"># Dockerfile - Port binding configuration</span>
+<span class="k">FROM</span><span class="w"> </span><span class="s">python:3.11-slim</span>
+<span class="k">WORKDIR</span><span class="w"> </span><span class="s">/app</span>
+<span class="k">COPY</span><span class="w"> </span>.<span class="w"> </span>.
+<span class="k">RUN</span><span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
+
+<span class="c"># Expose port for binding</span>
+<span class="k">EXPOSE</span><span class="w"> </span><span class="s">8000</span>
+
+<span class="c"># Run self-contained server</span>
+<span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">"python"</span><span class="p">,</span><span class="w"> </span><span class="s2">"main.py"</span><span class="p">]</span>
+</code></pre></div>
+<hr/>
+<h2 id="viii-concurrency">VIII. Concurrency 🔀<a class="headerlink" href="#viii-concurrency" title="Permanent link">¶</a></h2>
+<p><strong>Principle</strong>: <em>Scale out via the process model</em></p>
+<h3 id="requirements_7">Requirements<a class="headerlink" href="#requirements_7" title="Permanent link">¶</a></h3>
+<ul>
+<li>Scale horizontally by adding more processes</li>
+<li>Different process types for different work</li>
+<li>Processes handle their own internal multiplexing</li>
+</ul>
+<h3 id="how-neuroglia-supports-this_7">How Neuroglia Supports This<a class="headerlink" href="#how-neuroglia-supports-this_7" title="Permanent link">¶</a></h3>
+<p><strong>Process Types</strong> definition:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Different process types for different workloads</span>
+<span class="c1"># web.py - HTTP request handler processes</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">create_web_app</span><span class="p">():</span>
+    <span class="n">builder</span> <span class="o">=</span> <span class="n">WebApplicationBuilder</span><span class="p">()</span>
+    <span class="n">services</span> <span class="o">=</span> <span class="n">builder</span><span class="o">.</span><span class="n">services</span>
+    <span class="n">services</span><span class="o">.</span><span class="n">add_controllers</span><span class="p">([</span><span class="s2">"api.controllers"</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">builder</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
+
+<span class="c1"># worker.py - Background task processes</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">create_worker_app</span><span class="p">():</span>
+    <span class="n">builder</span> <span class="o">=</span> <span class="n">WebApplicationBuilder</span><span class="p">()</span>
+    <span class="n">services</span> <span class="o">=</span> <span class="n">builder</span><span class="o">.</span><span class="n">services</span>
+    <span class="n">services</span><span class="o">.</span><span class="n">add_event_handlers</span><span class="p">([</span><span class="s2">"application.handlers"</span><span class="p">])</span>
+    <span class="n">services</span><span class="o">.</span><span class="n">add_background_tasks</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">builder</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
+
+<span class="c1"># scheduler.py - Periodic task processes</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">create_scheduler_app</span><span class="p">():</span>
+    <span class="n">builder</span> <span class="o">=</span> <span class="n">WebApplicationBuilder</span><span class="p">()</span>
+    <span class="n">services</span> <span class="o">=</span> <span class="n">builder</span><span class="o">.</span><span class="n">services</span>
+    <span class="n">services</span><span class="o">.</span><span class="n">add_scheduled_tasks</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">builder</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
+</code></pre></div>
+<p><strong>Process Scaling</strong> configuration:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Procfile - Process type definitions</span>
+<span class="nt">web</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">python web.py</span>
+<span class="nt">worker</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">python worker.py</span>
+<span class="nt">scheduler</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">python scheduler.py</span>
+</code></pre></div>
+<p><strong>Horizontal Scaling</strong> with different process counts:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># docker-compose.yml</span>
+<span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="s">"3.8"</span>
+<span class="nt">services</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">web</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">marios-pizzeria:latest</span>
+<span class="w">    </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">python web.py</span>
+<span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"8000-8003:8000"</span>
+<span class="w">    </span><span class="nt">deploy</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">replicas</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">4</span><span class="w"> </span><span class="c1"># 4 web processes</span>
+
+<span class="w">  </span><span class="nt">worker</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">marios-pizzeria:latest</span>
+<span class="w">    </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">python worker.py</span>
+<span class="w">    </span><span class="nt">deploy</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">replicas</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span><span class="w"> </span><span class="c1"># 2 worker processes</span>
+
+<span class="w">  </span><span class="nt">scheduler</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">marios-pizzeria:latest</span>
+<span class="w">    </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">python scheduler.py</span>
+<span class="w">    </span><span class="nt">deploy</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">replicas</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"> </span><span class="c1"># 1 scheduler process</span>
+</code></pre></div>
+<p><strong>Internal Multiplexing</strong> with async/await:</p>
+<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">OrderController</span><span class="p">(</span><span class="n">ControllerBase</span><span class="p">):</span>
+    <span class="nd">@post</span><span class="p">(</span><span class="s2">"/orders"</span><span class="p">)</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">create_order</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">order_dto</span><span class="p">:</span> <span class="n">CreateOrderDto</span><span class="p">):</span>
+        <span class="c1"># Single process handles multiple concurrent requests</span>
+        <span class="c1"># via async/await internal multiplexing</span>
+        <span class="n">command</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mapper</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">order_dto</span><span class="p">,</span> <span class="n">CreateOrderCommand</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">mediator</span><span class="o">.</span><span class="n">execute_async</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">BackgroundTaskService</span><span class="p">(</span><span class="n">HostedService</span><span class="p">):</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">start_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cancellation_token</span><span class="p">):</span>
+        <span class="c1"># Single worker process handles multiple tasks concurrently</span>
+        <span class="n">tasks</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">process_emails</span><span class="p">(),</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">process_notifications</span><span class="p">(),</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">process_analytics</span><span class="p">()</span>
+        <span class="p">]</span>
+        <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="o">*</span><span class="n">tasks</span><span class="p">)</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">process_emails</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="c1"># Internal multiplexing within single process</span>
+            <span class="k">async</span> <span class="k">for</span> <span class="n">email</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">email_queue</span><span class="p">:</span>
+                <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">send_email</span><span class="p">(</span><span class="n">email</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Process Management</strong> with supervision:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># supervisor.conf - Process supervision</span>
+<span class="p">[</span><span class="n">program</span><span class="p">:</span><span class="n">marios</span><span class="o">-</span><span class="n">web</span><span class="p">]</span>
+<span class="n">command</span><span class="o">=</span><span class="n">python</span> <span class="n">web</span><span class="o">.</span><span class="n">py</span>
+<span class="n">numprocs</span><span class="o">=</span><span class="mi">4</span>
+<span class="n">autostart</span><span class="o">=</span><span class="n">true</span>
+<span class="n">autorestart</span><span class="o">=</span><span class="n">true</span>
+
+<span class="p">[</span><span class="n">program</span><span class="p">:</span><span class="n">marios</span><span class="o">-</span><span class="n">worker</span><span class="p">]</span>
+<span class="n">command</span><span class="o">=</span><span class="n">python</span> <span class="n">worker</span><span class="o">.</span><span class="n">py</span>
+<span class="n">numprocs</span><span class="o">=</span><span class="mi">2</span>
+<span class="n">autostart</span><span class="o">=</span><span class="n">true</span>
+<span class="n">autorestart</span><span class="o">=</span><span class="n">true</span>
+</code></pre></div>
+<hr/>
+<h2 id="ix-disposability">IX. Disposability ♻️<a class="headerlink" href="#ix-disposability" title="Permanent link">¶</a></h2>
+<p><strong>Principle</strong>: <em>Maximize robustness with fast startup and graceful shutdown</em></p>
+<h3 id="requirements_8">Requirements<a class="headerlink" href="#requirements_8" title="Permanent link">¶</a></h3>
+<ul>
+<li>Fast startup for elastic scaling</li>
+<li>Graceful shutdown on SIGTERM</li>
+<li>Robust against sudden termination</li>
+</ul>
+<h3 id="how-neuroglia-supports-this_8">How Neuroglia Supports This<a class="headerlink" href="#how-neuroglia-supports-this_8" title="Permanent link">¶</a></h3>
+<p><strong>Fast Startup</strong> through optimized initialization:</p>
+<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">WebApplicationBuilder</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">build</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FastAPI</span><span class="p">:</span>
+        <span class="n">app</span> <span class="o">=</span> <span class="n">FastAPI</span><span class="p">(</span>
+            <span class="n">title</span><span class="o">=</span><span class="s2">"Mario's Pizzeria API"</span><span class="p">,</span>
+            <span class="c1"># Fast startup - minimal initialization</span>
+            <span class="n">docs_url</span><span class="o">=</span><span class="s2">"/docs"</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_development</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">redoc_url</span><span class="o">=</span><span class="s2">"/redoc"</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_development</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Lazy service initialization</span>
+        <span class="n">app</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">service_provider</span> <span class="o">=</span> <span class="n">LazyServiceProvider</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_services</span><span class="p">)</span>
+
+        <span class="c1"># Fast health check endpoint</span>
+        <span class="nd">@app</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"/health"</span><span class="p">)</span>
+        <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">health_check</span><span class="p">():</span>
+            <span class="k">return</span> <span class="p">{</span><span class="s2">"status"</span><span class="p">:</span> <span class="s2">"healthy"</span><span class="p">,</span> <span class="s2">"timestamp"</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()}</span>
+
+        <span class="k">return</span> <span class="n">app</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">create_app</span><span class="p">():</span>
+    <span class="c1"># Optimized for fast startup</span>
+    <span class="n">builder</span> <span class="o">=</span> <span class="n">WebApplicationBuilder</span><span class="p">()</span>
+
+    <span class="c1"># Register services (no initialization yet)</span>
+    <span class="n">builder</span><span class="o">.</span><span class="n">services</span><span class="o">.</span><span class="n">add_controllers</span><span class="p">([</span><span class="s2">"api.controllers"</span><span class="p">])</span>
+    <span class="n">builder</span><span class="o">.</span><span class="n">services</span><span class="o">.</span><span class="n">add_mediator</span><span class="p">()</span>
+
+    <span class="c1"># Build returns immediately</span>
+    <span class="k">return</span> <span class="n">builder</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
+</code></pre></div>
+<p><strong>Graceful Shutdown</strong> handling:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">signal</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">contextlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">asynccontextmanager</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">GracefulShutdownHandler</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">app</span><span class="p">:</span> <span class="n">FastAPI</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_app</span> <span class="o">=</span> <span class="n">app</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_shutdown_event</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">Event</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_background_tasks</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">setup_signal_handlers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Handle SIGTERM gracefully</span>
+        <span class="n">signal</span><span class="o">.</span><span class="n">signal</span><span class="p">(</span><span class="n">signal</span><span class="o">.</span><span class="n">SIGTERM</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_signal_handler</span><span class="p">)</span>
+        <span class="n">signal</span><span class="o">.</span><span class="n">signal</span><span class="p">(</span><span class="n">signal</span><span class="o">.</span><span class="n">SIGINT</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_signal_handler</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_signal_handler</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">signum</span><span class="p">,</span> <span class="n">frame</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Received signal </span><span class="si">{</span><span class="n">signum</span><span class="si">}</span><span class="s2">, initiating graceful shutdown..."</span><span class="p">)</span>
+        <span class="n">asyncio</span><span class="o">.</span><span class="n">create_task</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_graceful_shutdown</span><span class="p">())</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_graceful_shutdown</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Stop accepting new requests</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_app</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">accepting_requests</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="c1"># Wait for current requests to complete (max 30 seconds)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">wait_for</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_wait_for_requests_to_complete</span><span class="p">(),</span>
+                <span class="n">timeout</span><span class="o">=</span><span class="mf">30.0</span>
+            <span class="p">)</span>
+        <span class="k">except</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">TimeoutError</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">"Timeout waiting for requests to complete"</span><span class="p">)</span>
+
+        <span class="c1"># Cancel background tasks</span>
+        <span class="k">for</span> <span class="n">task</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_background_tasks</span><span class="p">:</span>
+            <span class="n">task</span><span class="o">.</span><span class="n">cancel</span><span class="p">()</span>
+
+        <span class="c1"># Close connections</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_app</span><span class="o">.</span><span class="n">state</span><span class="p">,</span> <span class="s1">'database'</span><span class="p">):</span>
+            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_app</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_shutdown_event</span><span class="o">.</span><span class="n">set</span><span class="p">()</span>
+
+<span class="nd">@asynccontextmanager</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">lifespan</span><span class="p">(</span><span class="n">app</span><span class="p">:</span> <span class="n">FastAPI</span><span class="p">):</span>
+    <span class="c1"># Startup</span>
+    <span class="n">shutdown_handler</span> <span class="o">=</span> <span class="n">GracefulShutdownHandler</span><span class="p">(</span><span class="n">app</span><span class="p">)</span>
+    <span class="n">shutdown_handler</span><span class="o">.</span><span class="n">setup_signal_handlers</span><span class="p">()</span>
+
+    <span class="k">yield</span>
+
+    <span class="c1"># Shutdown</span>
+    <span class="k">await</span> <span class="n">shutdown_handler</span><span class="o">.</span><span class="n">_shutdown_event</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">create_app</span><span class="p">():</span>
+    <span class="k">return</span> <span class="n">FastAPI</span><span class="p">(</span><span class="n">lifespan</span><span class="o">=</span><span class="n">lifespan</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Background Task Resilience</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">BackgroundTaskService</span><span class="p">(</span><span class="n">HostedService</span><span class="p">):</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">start_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cancellation_token</span><span class="p">):</span>
+        <span class="k">while</span> <span class="ow">not</span> <span class="n">cancellation_token</span><span class="o">.</span><span class="n">is_cancelled</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="c1"># Process work with checkpoints</span>
+                <span class="k">async</span> <span class="k">for</span> <span class="n">work_item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_work_items</span><span class="p">():</span>
+                    <span class="k">if</span> <span class="n">cancellation_token</span><span class="o">.</span><span class="n">is_cancelled</span><span class="p">:</span>
+                        <span class="c1"># Return work to queue on shutdown</span>
+                        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">return_to_queue</span><span class="p">(</span><span class="n">work_item</span><span class="p">)</span>
+                        <span class="k">break</span>
+
+                    <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">process_work_item</span><span class="p">(</span><span class="n">work_item</span><span class="p">)</span>
+
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">ex</span><span class="p">:</span>
+                <span class="c1"># Log error but continue running</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Background task error: </span><span class="si">{</span><span class="n">ex</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+                <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>  <span class="c1"># Brief pause before retry</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">OrderProcessingService</span><span class="p">:</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">process_order</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">order_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="c1"># Idempotent processing - safe to retry</span>
+        <span class="n">order</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_repository</span><span class="o">.</span><span class="n">get_by_id_async</span><span class="p">(</span><span class="n">order_id</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">order</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="n">OrderStatus</span><span class="o">.</span><span class="n">COMPLETED</span><span class="p">:</span>
+            <span class="k">return</span>  <span class="c1"># Already processed</span>
+
+        <span class="c1"># Process with database transaction</span>
+        <span class="k">async</span> <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_repository</span><span class="o">.</span><span class="n">begin_transaction</span><span class="p">():</span>
+            <span class="n">order</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">OrderStatus</span><span class="o">.</span><span class="n">PROCESSING</span>
+            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_repository</span><span class="o">.</span><span class="n">save_async</span><span class="p">(</span><span class="n">order</span><span class="p">)</span>
+
+            <span class="c1"># Do work...</span>
+
+            <span class="n">order</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">OrderStatus</span><span class="o">.</span><span class="n">COMPLETED</span>
+            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_repository</span><span class="o">.</span><span class="n">save_async</span><span class="p">(</span><span class="n">order</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Container Health Checks</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="c"># Dockerfile with health check</span>
+<span class="k">FROM</span><span class="w"> </span><span class="s">python:3.11-slim</span>
+<span class="k">WORKDIR</span><span class="w"> </span><span class="s">/app</span>
+<span class="k">COPY</span><span class="w"> </span>.<span class="w"> </span>.
+<span class="k">RUN</span><span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
+
+<span class="c"># Health check for fast failure detection</span>
+<span class="k">HEALTHCHECK</span><span class="w"> </span>--interval<span class="o">=</span>30s<span class="w"> </span>--timeout<span class="o">=</span>3s<span class="w"> </span>--start-period<span class="o">=</span>5s<span class="w"> </span>--retries<span class="o">=</span><span class="m">3</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>CMD<span class="w"> </span>curl<span class="w"> </span>-f<span class="w"> </span>http://localhost:8000/health<span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span>
+
+<span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">"python"</span><span class="p">,</span><span class="w"> </span><span class="s2">"main.py"</span><span class="p">]</span>
+</code></pre></div>
+<hr/>
+<h2 id="x-devprod-parity">X. Dev/Prod Parity 🔄<a class="headerlink" href="#x-devprod-parity" title="Permanent link">¶</a></h2>
+<p><strong>Principle</strong>: <em>Keep development, staging, and production as similar as possible</em></p>
+<h3 id="requirements_9">Requirements<a class="headerlink" href="#requirements_9" title="Permanent link">¶</a></h3>
+<ul>
+<li>Minimize time gap between development and production</li>
+<li>Same people involved in development and deployment</li>
+<li>Use same backing services in all environments</li>
+</ul>
+<h3 id="how-neuroglia-supports-this_9">How Neuroglia Supports This<a class="headerlink" href="#how-neuroglia-supports-this_9" title="Permanent link">¶</a></h3>
+<p><strong>Same Backing Services</strong> across environments:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Use same service types everywhere</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">DatabaseSettings</span><span class="p">(</span><span class="n">BaseSettings</span><span class="p">):</span>
+    <span class="n">connection_string</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">database_name</span><span class="p">:</span> <span class="nb">str</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_mongodb</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">connection_string</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"mongodb://"</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">configure_database</span><span class="p">(</span><span class="n">services</span><span class="p">,</span> <span class="n">settings</span><span class="p">:</span> <span class="n">DatabaseSettings</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">is_mongodb</span><span class="p">:</span>
+        <span class="c1"># MongoDB in all environments (dev uses local, prod uses cluster)</span>
+        <span class="n">services</span><span class="o">.</span><span class="n">add_scoped</span><span class="p">(</span>
+            <span class="n">PizzaRepository</span><span class="p">,</span>
+            <span class="k">lambda</span> <span class="n">sp</span><span class="p">:</span> <span class="n">MongoDbPizzaRepository</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">connection_string</span><span class="p">)</span>
+        <span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># Don't use SQLite in dev and PostgreSQL in prod</span>
+        <span class="c1"># Use PostgreSQL everywhere via Docker</span>
+        <span class="n">services</span><span class="o">.</span><span class="n">add_scoped</span><span class="p">(</span>
+            <span class="n">PizzaRepository</span><span class="p">,</span>
+            <span class="k">lambda</span> <span class="n">sp</span><span class="p">:</span> <span class="n">PostgreSQLPizzaRepository</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">connection_string</span><span class="p">)</span>
+        <span class="p">)</span>
+</code></pre></div>
+<p><strong>Docker Development Environment</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># docker-compose.dev.yml - Same services as production</span>
+<span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="s">"3.8"</span>
+<span class="nt">services</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">app</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">build</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.</span>
+<span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"8000:8000"</span>
+<span class="w">    </span><span class="nt">environment</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ENVIRONMENT=development</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MONGODB_CONNECTION_STRING=mongodb://mongo:27017/marios_dev</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">REDIS_URL=redis://redis:6379</span>
+<span class="w">    </span><span class="nt">depends_on</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mongo</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">redis</span>
+
+<span class="w">  </span><span class="nt">mongo</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mongo:7.0</span><span class="w"> </span><span class="c1"># Same version as production</span>
+<span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"27017:27017"</span>
+
+<span class="w">  </span><span class="nt">redis</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">redis:7.2</span><span class="w"> </span><span class="c1"># Same version as production</span>
+<span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"6379:6379"</span>
+</code></pre></div>
+<p><strong>Environment Parity Validation</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">EnvironmentValidator</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">settings</span><span class="p">:</span> <span class="n">AppSettings</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_settings</span> <span class="o">=</span> <span class="n">settings</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">validate_parity</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Ensure dev/staging/prod use compatible services"""</span>
+        <span class="n">warnings</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="c1"># Check database compatibility</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_settings</span><span class="o">.</span><span class="n">environment</span> <span class="o">==</span> <span class="s2">"development"</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s2">"sqlite"</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_settings</span><span class="o">.</span><span class="n">mongodb_connection_string</span><span class="o">.</span><span class="n">lower</span><span class="p">():</span>
+                <span class="n">warnings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="s2">"Development uses SQLite but production uses MongoDB. "</span>
+                    <span class="s2">"Use MongoDB in development for better parity."</span>
+                <span class="p">)</span>
+
+        <span class="c1"># Check cache compatibility</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_settings</span><span class="o">.</span><span class="n">redis_url</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_settings</span><span class="o">.</span><span class="n">environment</span> <span class="o">!=</span> <span class="s2">"test"</span><span class="p">:</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="s2">"No Redis configuration found. "</span>
+                <span class="s2">"Use Redis in all environments for dev/prod parity."</span>
+            <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">warnings</span>
+
+<span class="c1"># Application startup validation</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">create_app</span><span class="p">():</span>
+    <span class="n">settings</span> <span class="o">=</span> <span class="n">AppSettings</span><span class="p">()</span>
+    <span class="n">validator</span> <span class="o">=</span> <span class="n">EnvironmentValidator</span><span class="p">(</span><span class="n">settings</span><span class="p">)</span>
+
+    <span class="n">parity_warnings</span> <span class="o">=</span> <span class="n">validator</span><span class="o">.</span><span class="n">validate_parity</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">parity_warnings</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">warning</span> <span class="ow">in</span> <span class="n">parity_warnings</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Dev/Prod Parity: </span><span class="si">{</span><span class="n">warning</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+    <span class="n">builder</span> <span class="o">=</span> <span class="n">WebApplicationBuilder</span><span class="p">()</span>
+    <span class="c1"># ... configure app</span>
+    <span class="k">return</span> <span class="n">builder</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
+</code></pre></div>
+<p><strong>Continuous Deployment Pipeline</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># .github/workflows/deploy.yml</span>
+<span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Deploy</span>
+<span class="nt">on</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">push</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">branches</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">main</span><span class="p p-Indicator">]</span>
+
+<span class="nt">jobs</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">test</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ubuntu-latest</span>
+<span class="w">    </span><span class="nt">services</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">mongo</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mongo:7.0</span>
+<span class="w">      </span><span class="nt">redis</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">redis:7.2</span>
+<span class="w">    </span><span class="nt">steps</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/checkout@v3</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Run tests against production-like services</span>
+<span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">          </span><span class="no">export MONGODB_CONNECTION_STRING=mongodb://mongo:27017/test</span>
+<span class="w">          </span><span class="no">export REDIS_URL=redis://redis:6379</span>
+<span class="w">          </span><span class="no">poetry run pytest</span>
+
+<span class="w">  </span><span class="nt">deploy-staging</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">needs</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">test</span>
+<span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ubuntu-latest</span>
+<span class="w">    </span><span class="nt">steps</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Deploy to staging</span>
+<span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">          </span><span class="no"># Same deployment process as production</span>
+<span class="w">          </span><span class="no">docker build -t marios-pizzeria:${{ github.sha }} .</span>
+<span class="w">          </span><span class="no">docker push registry/marios-pizzeria:${{ github.sha }}</span>
+<span class="w">          </span><span class="no">kubectl set image deployment/app app=registry/marios-pizzeria:${{ github.sha }}</span>
+
+<span class="w">  </span><span class="nt">deploy-production</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">needs</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">deploy-staging</span>
+<span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ubuntu-latest</span>
+<span class="w">    </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">github.ref == 'refs/heads/main'</span>
+<span class="w">    </span><span class="nt">steps</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Deploy to production</span>
+<span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">          </span><span class="no"># Identical process to staging</span>
+<span class="w">          </span><span class="no">kubectl set image deployment/app app=registry/marios-pizzeria:${{ github.sha }}</span>
+</code></pre></div>
+<hr/>
+<h2 id="xi-logs">XI. Logs 📊<a class="headerlink" href="#xi-logs" title="Permanent link">¶</a></h2>
+<p><strong>Principle</strong>: <em>Treat logs as event streams</em></p>
+<h3 id="requirements_10">Requirements<a class="headerlink" href="#requirements_10" title="Permanent link">¶</a></h3>
+<ul>
+<li>Write unbuffered logs to stdout</li>
+<li>No log file management by the application</li>
+<li>Log aggregation handled by execution environment</li>
+</ul>
+<h3 id="how-neuroglia-supports-this_10">How Neuroglia Supports This<a class="headerlink" href="#how-neuroglia-supports-this_10" title="Permanent link">¶</a></h3>
+<p><strong>Structured Logging</strong> to stdout:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">structlog</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+
+<span class="c1"># Configure structured logging</span>
+<span class="n">structlog</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span>
+    <span class="n">processors</span><span class="o">=</span><span class="p">[</span>
+        <span class="n">structlog</span><span class="o">.</span><span class="n">stdlib</span><span class="o">.</span><span class="n">filter_by_level</span><span class="p">,</span>
+        <span class="n">structlog</span><span class="o">.</span><span class="n">stdlib</span><span class="o">.</span><span class="n">add_logger_name</span><span class="p">,</span>
+        <span class="n">structlog</span><span class="o">.</span><span class="n">stdlib</span><span class="o">.</span><span class="n">add_log_level</span><span class="p">,</span>
+        <span class="n">structlog</span><span class="o">.</span><span class="n">stdlib</span><span class="o">.</span><span class="n">PositionalArgumentsFormatter</span><span class="p">(),</span>
+        <span class="n">structlog</span><span class="o">.</span><span class="n">processors</span><span class="o">.</span><span class="n">TimeStamper</span><span class="p">(</span><span class="n">fmt</span><span class="o">=</span><span class="s2">"iso"</span><span class="p">),</span>
+        <span class="n">structlog</span><span class="o">.</span><span class="n">processors</span><span class="o">.</span><span class="n">StackInfoRenderer</span><span class="p">(),</span>
+        <span class="n">structlog</span><span class="o">.</span><span class="n">processors</span><span class="o">.</span><span class="n">format_exc_info</span><span class="p">,</span>
+        <span class="n">structlog</span><span class="o">.</span><span class="n">processors</span><span class="o">.</span><span class="n">UnicodeDecoder</span><span class="p">(),</span>
+        <span class="n">structlog</span><span class="o">.</span><span class="n">processors</span><span class="o">.</span><span class="n">JSONRenderer</span><span class="p">()</span>  <span class="c1"># JSON for structured logs</span>
+    <span class="p">],</span>
+    <span class="n">context_class</span><span class="o">=</span><span class="nb">dict</span><span class="p">,</span>
+    <span class="n">logger_factory</span><span class="o">=</span><span class="n">structlog</span><span class="o">.</span><span class="n">stdlib</span><span class="o">.</span><span class="n">LoggerFactory</span><span class="p">(),</span>
+    <span class="n">wrapper_class</span><span class="o">=</span><span class="n">structlog</span><span class="o">.</span><span class="n">stdlib</span><span class="o">.</span><span class="n">BoundLogger</span><span class="p">,</span>
+    <span class="n">cache_logger_on_first_use</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># Application logger - writes to stdout only</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">structlog</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">OrderController</span><span class="p">(</span><span class="n">ControllerBase</span><span class="p">):</span>
+    <span class="nd">@post</span><span class="p">(</span><span class="s2">"/orders"</span><span class="p">)</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">create_order</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">order_dto</span><span class="p">:</span> <span class="n">CreateOrderDto</span><span class="p">):</span>
+        <span class="c1"># Structured logging with context</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+            <span class="s2">"Order creation started"</span><span class="p">,</span>
+            <span class="n">customer_id</span><span class="o">=</span><span class="n">order_dto</span><span class="o">.</span><span class="n">customer_id</span><span class="p">,</span>
+            <span class="n">pizza_count</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">order_dto</span><span class="o">.</span><span class="n">pizzas</span><span class="p">),</span>
+            <span class="n">total_amount</span><span class="o">=</span><span class="n">order_dto</span><span class="o">.</span><span class="n">total_amount</span><span class="p">,</span>
+            <span class="n">correlation_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">get_correlation_id</span><span class="p">()</span>
+        <span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">command</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mapper</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">order_dto</span><span class="p">,</span> <span class="n">CreateOrderCommand</span><span class="p">)</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">mediator</span><span class="o">.</span><span class="n">execute_async</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
+
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                <span class="s2">"Order created successfully"</span><span class="p">,</span>
+                <span class="n">order_id</span><span class="o">=</span><span class="n">result</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                <span class="n">correlation_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">get_correlation_id</span><span class="p">()</span>
+            <span class="p">)</span>
+
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">ex</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                <span class="s2">"Order creation failed"</span><span class="p">,</span>
+                <span class="n">error</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">ex</span><span class="p">),</span>
+                <span class="n">error_type</span><span class="o">=</span><span class="nb">type</span><span class="p">(</span><span class="n">ex</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+                <span class="n">correlation_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">get_correlation_id</span><span class="p">()</span>
+            <span class="p">)</span>
+            <span class="k">raise</span>
+</code></pre></div>
+<p><strong>Request/Response Logging Middleware</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">fastapi</span><span class="w"> </span><span class="kn">import</span> <span class="n">Request</span><span class="p">,</span> <span class="n">Response</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">LoggingMiddleware</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">app</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">app</span> <span class="o">=</span> <span class="n">app</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scope</span><span class="p">,</span> <span class="n">receive</span><span class="p">,</span> <span class="n">send</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">scope</span><span class="p">[</span><span class="s2">"type"</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">"http"</span><span class="p">:</span>
+            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">app</span><span class="p">(</span><span class="n">scope</span><span class="p">,</span> <span class="n">receive</span><span class="p">,</span> <span class="n">send</span><span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="n">request</span> <span class="o">=</span> <span class="n">Request</span><span class="p">(</span><span class="n">scope</span><span class="p">,</span> <span class="n">receive</span><span class="p">)</span>
+        <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+
+        <span class="c1"># Log request</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+            <span class="s2">"HTTP request started"</span><span class="p">,</span>
+            <span class="n">method</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">method</span><span class="p">,</span>
+            <span class="n">path</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">url</span><span class="o">.</span><span class="n">path</span><span class="p">,</span>
+            <span class="n">query_params</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">query_params</span><span class="p">),</span>
+            <span class="n">user_agent</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">headers</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"user-agent"</span><span class="p">),</span>
+            <span class="n">client_ip</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">host</span> <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">client</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="p">)</span>
+
+        <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">send_wrapper</span><span class="p">(</span><span class="n">message</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">message</span><span class="p">[</span><span class="s2">"type"</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"http.response.start"</span><span class="p">:</span>
+                <span class="c1"># Log response</span>
+                <span class="n">duration</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                    <span class="s2">"HTTP request completed"</span><span class="p">,</span>
+                    <span class="n">method</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">method</span><span class="p">,</span>
+                    <span class="n">path</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">url</span><span class="o">.</span><span class="n">path</span><span class="p">,</span>
+                    <span class="n">status_code</span><span class="o">=</span><span class="n">message</span><span class="p">[</span><span class="s2">"status"</span><span class="p">],</span>
+                    <span class="n">duration_ms</span><span class="o">=</span><span class="nb">round</span><span class="p">(</span><span class="n">duration</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+                <span class="p">)</span>
+            <span class="k">await</span> <span class="n">send</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">app</span><span class="p">(</span><span class="n">scope</span><span class="p">,</span> <span class="n">receive</span><span class="p">,</span> <span class="n">send_wrapper</span><span class="p">)</span>
+
+<span class="c1"># Add middleware to application</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">create_app</span><span class="p">():</span>
+    <span class="n">builder</span> <span class="o">=</span> <span class="n">WebApplicationBuilder</span><span class="p">()</span>
+    <span class="n">app</span> <span class="o">=</span> <span class="n">builder</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
+
+    <span class="c1"># Add logging middleware</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">add_middleware</span><span class="p">(</span><span class="n">LoggingMiddleware</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">app</span>
+</code></pre></div>
+<p><strong>No Log File Management</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># main.py - No log files, only stdout</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">configure_logging</span><span class="p">():</span>
+    <span class="c1"># Only configure stdout handler</span>
+    <span class="n">root_logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">()</span>
+
+    <span class="c1"># Remove any existing handlers</span>
+    <span class="n">root_logger</span><span class="o">.</span><span class="n">handlers</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+
+    <span class="c1"># Add only stdout handler</span>
+    <span class="n">stdout_handler</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">StreamHandler</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">)</span>
+    <span class="n">stdout_handler</span><span class="o">.</span><span class="n">setFormatter</span><span class="p">(</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">Formatter</span><span class="p">(</span>
+            <span class="s1">'</span><span class="si">%(asctime)s</span><span class="s1"> - </span><span class="si">%(name)s</span><span class="s1"> - </span><span class="si">%(levelname)s</span><span class="s1"> - </span><span class="si">%(message)s</span><span class="s1">'</span>
+        <span class="p">)</span>
+    <span class="p">)</span>
+
+    <span class="n">root_logger</span><span class="o">.</span><span class="n">addHandler</span><span class="p">(</span><span class="n">stdout_handler</span><span class="p">)</span>
+    <span class="n">root_logger</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
+    <span class="n">configure_logging</span><span class="p">()</span>  <span class="c1"># No file handlers</span>
+    <span class="n">app</span> <span class="o">=</span> <span class="n">create_app</span><span class="p">()</span>
+
+    <span class="c1"># Application logs go to stdout, captured by container runtime</span>
+    <span class="n">uvicorn</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="n">host</span><span class="o">=</span><span class="s2">"0.0.0.0"</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">8000</span><span class="p">,</span> <span class="n">log_config</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Log Aggregation</strong> via deployment environment:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># kubernetes deployment with log aggregation</span>
+<span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apps/v1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Deployment</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">marios-pizzeria</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">template</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">spec</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">containers</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">app</span>
+<span class="w">          </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">marios-pizzeria:latest</span>
+<span class="w">          </span><span class="c1"># Logs go to stdout, captured by Kubernetes</span>
+<span class="w">          </span><span class="nt">env</span><span class="p">:</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">LOG_LEVEL</span>
+<span class="w">              </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">"INFO"</span>
+<span class="w">          </span><span class="c1"># No volume mounts for log files</span>
+<span class="nn">---</span>
+<span class="c1"># Fluentd configuration for log aggregation</span>
+<span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ConfigMap</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fluentd-config</span>
+<span class="nt">data</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">fluent.conf</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">    </span><span class="no">&lt;source&gt;</span>
+<span class="w">      </span><span class="no">@type tail</span>
+<span class="w">      </span><span class="no">path /var/log/containers/marios-pizzeria-*.log</span>
+<span class="w">      </span><span class="no">pos_file /var/log/fluentd-containers.log.pos</span>
+<span class="w">      </span><span class="no">tag kubernetes.*</span>
+<span class="w">      </span><span class="no">format json</span>
+<span class="w">    </span><span class="no">&lt;/source&gt;</span>
+
+<span class="w">    </span><span class="no">&lt;match kubernetes.**&gt;</span>
+<span class="w">      </span><span class="no">@type elasticsearch</span>
+<span class="w">      </span><span class="no">host elasticsearch.logging.svc.cluster.local</span>
+<span class="w">      </span><span class="no">port 9200</span>
+<span class="w">      </span><span class="no">index_name marios-pizzeria</span>
+<span class="w">    </span><span class="no">&lt;/match&gt;</span>
+</code></pre></div>
+<hr/>
+<h2 id="xii-admin-processes">XII. Admin Processes 🔧<a class="headerlink" href="#xii-admin-processes" title="Permanent link">¶</a></h2>
+<p><strong>Principle</strong>: <em>Run admin/management tasks as one-off processes</em></p>
+<h3 id="requirements_11">Requirements<a class="headerlink" href="#requirements_11" title="Permanent link">¶</a></h3>
+<ul>
+<li>Admin tasks run in identical environment as regular processes</li>
+<li>Use same codebase and configuration</li>
+<li>Run against specific releases</li>
+</ul>
+<h3 id="how-neuroglia-supports-this_11">How Neuroglia Supports This<a class="headerlink" href="#how-neuroglia-supports-this_11" title="Permanent link">¶</a></h3>
+<p><strong>Admin Command Framework</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># cli/admin.py - Admin process framework</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.hosting.web</span><span class="w"> </span><span class="kn">import</span> <span class="n">WebApplicationBuilder</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">AdminCommand</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">execute_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">service_provider</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Execute admin command, return exit code"""</span>
+        <span class="k">pass</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">MigrateDatabaseCommand</span><span class="p">(</span><span class="n">AdminCommand</span><span class="p">):</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">execute_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">service_provider</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Starting database migration..."</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># Use same services as web processes</span>
+            <span class="n">repository</span> <span class="o">=</span> <span class="n">service_provider</span><span class="o">.</span><span class="n">get_service</span><span class="p">(</span><span class="n">PizzaRepository</span><span class="p">)</span>
+            <span class="k">await</span> <span class="n">repository</span><span class="o">.</span><span class="n">migrate_schema_async</span><span class="p">()</span>
+
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Database migration completed successfully"</span><span class="p">)</span>
+            <span class="k">return</span> <span class="mi">0</span>
+
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">ex</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Database migration failed: </span><span class="si">{</span><span class="n">ex</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+            <span class="k">return</span> <span class="mi">1</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">SeedDataCommand</span><span class="p">(</span><span class="n">AdminCommand</span><span class="p">):</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">execute_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">service_provider</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Seeding initial data..."</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># Use same repositories as application</span>
+            <span class="n">pizza_repo</span> <span class="o">=</span> <span class="n">service_provider</span><span class="o">.</span><span class="n">get_service</span><span class="p">(</span><span class="n">PizzaRepository</span><span class="p">)</span>
+
+            <span class="c1"># Create default pizzas</span>
+            <span class="n">default_pizzas</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="n">Pizza</span><span class="p">(</span><span class="s2">"margherita"</span><span class="p">,</span> <span class="s2">"Margherita"</span><span class="p">,</span> <span class="mf">12.99</span><span class="p">),</span>
+                <span class="n">Pizza</span><span class="p">(</span><span class="s2">"pepperoni"</span><span class="p">,</span> <span class="s2">"Pepperoni"</span><span class="p">,</span> <span class="mf">14.99</span><span class="p">),</span>
+                <span class="n">Pizza</span><span class="p">(</span><span class="s2">"hawaiian"</span><span class="p">,</span> <span class="s2">"Hawaiian"</span><span class="p">,</span> <span class="mf">15.99</span><span class="p">)</span>
+            <span class="p">]</span>
+
+            <span class="k">for</span> <span class="n">pizza</span> <span class="ow">in</span> <span class="n">default_pizzas</span><span class="p">:</span>
+                <span class="k">await</span> <span class="n">pizza_repo</span><span class="o">.</span><span class="n">save_async</span><span class="p">(</span><span class="n">pizza</span><span class="p">)</span>
+
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Seeded </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">default_pizzas</span><span class="p">)</span><span class="si">}</span><span class="s2"> default pizzas"</span><span class="p">)</span>
+            <span class="k">return</span> <span class="mi">0</span>
+
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">ex</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Data seeding failed: </span><span class="si">{</span><span class="n">ex</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+            <span class="k">return</span> <span class="mi">1</span>
+
+<span class="c1"># Admin process runner</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">run_admin_command</span><span class="p">(</span><span class="n">command_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="c1"># Create same application context as web processes</span>
+    <span class="n">builder</span> <span class="o">=</span> <span class="n">WebApplicationBuilder</span><span class="p">()</span>
+
+    <span class="c1"># Same service configuration as main application</span>
+    <span class="n">builder</span><span class="o">.</span><span class="n">services</span><span class="o">.</span><span class="n">add_scoped</span><span class="p">(</span><span class="n">PizzaRepository</span><span class="p">,</span> <span class="n">MongoDbPizzaRepository</span><span class="p">)</span>
+    <span class="n">builder</span><span class="o">.</span><span class="n">services</span><span class="o">.</span><span class="n">add_mediator</span><span class="p">()</span>
+
+    <span class="n">service_provider</span> <span class="o">=</span> <span class="n">builder</span><span class="o">.</span><span class="n">services</span><span class="o">.</span><span class="n">build_provider</span><span class="p">()</span>
+
+    <span class="c1"># Map commands</span>
+    <span class="n">commands</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">"migrate"</span><span class="p">:</span> <span class="n">MigrateDatabaseCommand</span><span class="p">(),</span>
+        <span class="s2">"seed"</span><span class="p">:</span> <span class="n">SeedDataCommand</span><span class="p">(),</span>
+    <span class="p">}</span>
+
+    <span class="k">if</span> <span class="n">command_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">commands</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Unknown command: </span><span class="si">{</span><span class="n">command_name</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="k">return</span> <span class="mi">1</span>
+
+    <span class="c1"># Execute command with same environment</span>
+    <span class="k">return</span> <span class="k">await</span> <span class="n">commands</span><span class="p">[</span><span class="n">command_name</span><span class="p">]</span><span class="o">.</span><span class="n">execute_async</span><span class="p">(</span><span class="n">service_provider</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">"Usage: python admin.py &lt;command&gt;"</span><span class="p">)</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">command</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">exit_code</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">run_admin_command</span><span class="p">(</span><span class="n">command</span><span class="p">))</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="n">exit_code</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Container-Based Admin Tasks</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="c"># Same image for web and admin processes</span>
+<span class="k">FROM</span><span class="w"> </span><span class="s">python:3.11-slim</span>
+<span class="k">WORKDIR</span><span class="w"> </span><span class="s">/app</span>
+<span class="k">COPY</span><span class="w"> </span>.<span class="w"> </span>.
+<span class="k">RUN</span><span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
+
+<span class="c"># Default command is web process</span>
+<span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">"python"</span><span class="p">,</span><span class="w"> </span><span class="s2">"main.py"</span><span class="p">]</span>
+
+<span class="c"># Admin processes use same image with different command</span>
+<span class="c"># docker run marios-pizzeria:latest python admin.py migrate</span>
+<span class="c"># docker run marios-pizzeria:latest python admin.py seed</span>
+</code></pre></div>
+<p><strong>Kubernetes Jobs</strong> for admin processes:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Database migration job</span>
+<span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">batch/v1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Job</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">marios-pizzeria-migrate</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">template</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">spec</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">containers</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">migrate</span>
+<span class="w">          </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">marios-pizzeria:v1.2.3</span><span class="w"> </span><span class="c1"># Same image as web deployment</span>
+<span class="w">          </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"python"</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"admin.py"</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"migrate"</span><span class="p p-Indicator">]</span>
+<span class="w">          </span><span class="nt">env</span><span class="p">:</span>
+<span class="w">            </span><span class="c1"># Same environment as web processes</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MONGODB_CONNECTION_STRING</span>
+<span class="w">              </span><span class="nt">valueFrom</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">secretKeyRef</span><span class="p">:</span>
+<span class="w">                  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">database-secret</span>
+<span class="w">                  </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">connection-string</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ENVIRONMENT</span>
+<span class="w">              </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">"production"</span>
+<span class="w">      </span><span class="nt">restartPolicy</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">OnFailure</span>
+<span class="nn">---</span>
+<span class="c1"># Data seeding job</span>
+<span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">batch/v1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Job</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">marios-pizzeria-seed</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">template</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">spec</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">containers</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">seed</span>
+<span class="w">          </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">marios-pizzeria:v1.2.3</span><span class="w"> </span><span class="c1"># Exact same release</span>
+<span class="w">          </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"python"</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"admin.py"</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"seed"</span><span class="p p-Indicator">]</span>
+<span class="w">          </span><span class="nt">env</span><span class="p">:</span>
+<span class="w">            </span><span class="c1"># Identical configuration</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MONGODB_CONNECTION_STRING</span>
+<span class="w">              </span><span class="nt">valueFrom</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">secretKeyRef</span><span class="p">:</span>
+<span class="w">                  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">database-secret</span>
+<span class="w">                  </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">connection-string</span>
+<span class="w">      </span><span class="nt">restartPolicy</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">OnFailure</span>
+</code></pre></div>
+<p><strong>Production Admin Process Examples</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Run admin processes in production using same deployment</span>
+<span class="c1"># Database migration before release</span>
+kubectl<span class="w"> </span>create<span class="w"> </span>job<span class="w"> </span>--from<span class="o">=</span>deployment/marios-pizzeria<span class="w"> </span>migrate-v1-2-3<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--dry-run<span class="o">=</span>client<span class="w"> </span>-o<span class="w"> </span>yaml<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>sed<span class="w"> </span><span class="s1">'s/app/migrate/'</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>sed<span class="w"> </span><span class="s1">'s/main.py/admin.py migrate/'</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>-
+
+<span class="c1"># One-off data fix</span>
+kubectl<span class="w"> </span>run<span class="w"> </span>data-fix<span class="w"> </span>--image<span class="o">=</span>marios-pizzeria:v1.2.3<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--env<span class="o">=</span><span class="s2">"MONGODB_CONNECTION_STRING=</span><span class="nv">$PROD_DB</span><span class="s2">"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--restart<span class="o">=</span>Never<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--rm<span class="w"> </span>-it<span class="w"> </span>--<span class="w"> </span>python<span class="w"> </span>admin.py<span class="w"> </span>fix-corrupted-orders
+
+<span class="c1"># Interactive shell for debugging</span>
+kubectl<span class="w"> </span>run<span class="w"> </span>debug-shell<span class="w"> </span>--image<span class="o">=</span>marios-pizzeria:v1.2.3<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--env<span class="o">=</span><span class="s2">"MONGODB_CONNECTION_STRING=</span><span class="nv">$PROD_DB</span><span class="s2">"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--restart<span class="o">=</span>Never<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--rm<span class="w"> </span>-it<span class="w"> </span>--<span class="w"> </span>python<span class="w"> </span>-c<span class="w"> </span><span class="s2">"</span>
+<span class="s2">from main import create_app</span>
+<span class="s2">app = create_app()</span>
+<span class="s2"># Interactive Python shell with full application context</span>
+<span class="s2">import IPython; IPython.embed()</span>
+<span class="s2">"</span>
+</code></pre></div>
+<hr/>
+<h2 id="summary">🎯 Summary<a class="headerlink" href="#summary" title="Permanent link">¶</a></h2>
+<p>The Neuroglia framework was designed from the ground up to support the Twelve-Factor App methodology. Here's how each principle is addressed:</p>
+<table>
+<thead>
+<tr>
+<th>Factor</th>
+<th>Neuroglia Support</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>I. Codebase</strong></td>
+<td>Modular architecture with clean separation, single codebase for multiple deployments</td>
+</tr>
+<tr>
+<td><strong>II. Dependencies</strong></td>
+<td>Poetry dependency management, dependency injection container, Docker isolation</td>
+</tr>
+<tr>
+<td><strong>III. Config</strong></td>
+<td>Pydantic settings with environment variables, no hardcoded configuration</td>
+</tr>
+<tr>
+<td><strong>IV. Backing Services</strong></td>
+<td>Repository pattern, service abstractions, configurable implementations</td>
+</tr>
+<tr>
+<td><strong>V. Build/Release/Run</strong></td>
+<td>Docker builds, immutable releases, environment-specific deployments</td>
+</tr>
+<tr>
+<td><strong>VI. Processes</strong></td>
+<td>Stateless controllers, repository persistence, horizontal scaling support</td>
+</tr>
+<tr>
+<td><strong>VII. Port Binding</strong></td>
+<td>Self-contained FastAPI server, uvicorn HTTP binding, service-to-service HTTP</td>
+</tr>
+<tr>
+<td><strong>VIII. Concurrency</strong></td>
+<td>Process types, async/await concurrency, container orchestration</td>
+</tr>
+<tr>
+<td><strong>IX. Disposability</strong></td>
+<td>Fast startup, graceful shutdown handlers, idempotent operations</td>
+</tr>
+<tr>
+<td><strong>X. Dev/Prod Parity</strong></td>
+<td>Docker dev environments, same backing services, continuous deployment</td>
+</tr>
+<tr>
+<td><strong>XI. Logs</strong></td>
+<td>Structured logging to stdout, no file management, aggregation-ready</td>
+</tr>
+<tr>
+<td><strong>XII. Admin Processes</strong></td>
+<td>CLI command framework, same environment as web processes, container jobs</td>
+</tr>
+</tbody>
+</table>
+<h2 id="building-12-factor-apps-with-neuroglia">🚀 Building 12-Factor Apps with Neuroglia<a class="headerlink" href="#building-12-factor-apps-with-neuroglia" title="Permanent link">¶</a></h2>
+<p>When building applications with Neuroglia, following these patterns ensures your application is:</p>
+<ul>
+<li><strong>Portable</strong>: Runs consistently across different environments</li>
+<li><strong>Scalable</strong>: Horizontal scaling through stateless processes</li>
+<li><strong>Maintainable</strong>: Clean separation of concerns and dependency management</li>
+<li><strong>Observable</strong>: Comprehensive logging and health monitoring</li>
+<li><strong>Resilient</strong>: Graceful handling of failures and shutdowns</li>
+<li><strong>Cloud-Native</strong>: Ready for container orchestration and continuous deployment</li>
+</ul>
+<p>The framework's opinionated architecture guides you toward 12-factor compliance naturally, making it easier to build modern, cloud-native applications that follow industry best practices.</p>
+<h2 id="related-documentation">🔗 Related Documentation<a class="headerlink" href="#related-documentation" title="Permanent link">¶</a></h2>
+<ul>
+<li><a href="../../getting-started/">Getting Started</a> - Framework setup and basic usage</li>
+<li><a href="../../features/dependency-injection/">Dependency Injection</a> - Service container and lifetime management</li>
+<li><a href="../../features/cqrs-mediation/">CQRS &amp; Mediation</a> - Command and query patterns</li>
+<li><a href="../../features/mvc-controllers/">MVC Controllers</a> - HTTP API development</li>
+<li><a href="../../features/data-access/">Data Access</a> - Repository pattern and backing services</li>
+<li><a href="../../samples/openbank/">OpenBank Sample</a> - Complete 12-factor application example</li>
+</ul>
+</article>
+</div>
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+</div>
+<button class="md-top md-icon" data-md-component="top" hidden="" type="button">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"></path></svg>
+  Back to top
+</button>
+</main>
+<footer class="md-footer">
+<div class="md-footer-meta md-typeset">
+<div class="md-footer-meta__inner md-grid">
+<div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" rel="noopener" target="_blank">
+      Material for MkDocs
+    </a>
+</div>
+<div class="md-social">
+<a class="md-social__link" href="https://github.com/bvandewe/pyneuro" rel="noopener" target="_blank" title="github.com">
+<svg viewbox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><!--! Font Awesome Free 7.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"></path></svg>
+</a>
+</div>
+</div>
+</div>
+</footer>
+</div>
+<div class="md-dialog" data-md-component="dialog">
+<div class="md-dialog__inner md-typeset"></div>
+</div>
+<script id="__config" type="application/json">{"base": "../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.expand", "navigation.top", "search.highlight", "search.share"], "search": "../../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+<script src="../../assets/javascripts/bundle.f55a23d4.min.js"></script>
+</body>
+</html>

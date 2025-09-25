@@ -937,7 +937,7 @@
 <li class="md-nav__item">
 <a class="md-nav__link" href="../../references/python_type_hints/">
 <span class="md-ellipsis">
-    Python Type hints
+    Python Type Hints
     
   </span>
 </a>
@@ -946,6 +946,38 @@
 <a class="md-nav__link" href="../../references/python_generic_types/">
 <span class="md-ellipsis">
     Python Generic Types
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../references/python_modular_code/">
+<span class="md-ellipsis">
+    Python Modular Code
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../references/python_object_oriented/">
+<span class="md-ellipsis">
+    Python Object-Oriented Programming
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../references/source_code_naming_convention/">
+<span class="md-ellipsis">
+    Source Code Naming Conventions
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../references/12-factor-app/">
+<span class="md-ellipsis">
+    12-Factor App
     
   </span>
 </a>
@@ -1331,12 +1363,14 @@
 <span class="n">services</span><span class="o">.</span><span class="n">add_singleton</span><span class="p">(</span><span class="n">PaymentGateway</span><span class="p">)</span>          <span class="c1"># Payment processing service</span>
 <span class="n">services</span><span class="o">.</span><span class="n">add_singleton</span><span class="p">(</span><span class="n">SmsNotificationService</span><span class="p">)</span> <span class="c1"># SMS service for all notifications</span>
 </code></pre></div>
-<p><strong>Pizzeria Use Cases</strong>:
-- Database connection pools (shared by all operations)
-- Menu caching service (menu doesn't change often)
-- Kitchen display systems (one display board)
-- Payment gateway connections (shared across all transactions)
-- SMS/email notification services (one service instance)</p>
+<p><strong>Pizzeria Use Cases</strong>:</p>
+<ul>
+<li>Database connection pools (shared by all operations)</li>
+<li>Menu caching service (menu doesn't change often)</li>
+<li>Kitchen display systems (one display board)</li>
+<li>Payment gateway connections (shared across all transactions)</li>
+<li>SMS/email notification services (one service instance)</li>
+</ul>
 <h3 id="scoped-per-order-services">Scoped - Per-Order Services<a class="headerlink" href="#scoped-per-order-services" title="Permanent link">¶</a></h3>
 <p>Created once per scope (typically per customer order or HTTP request):</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Services that are specific to each order/request</span>
@@ -1345,12 +1379,14 @@
 <span class="n">services</span><span class="o">.</span><span class="n">add_scoped</span><span class="p">(</span><span class="n">CustomerContextService</span><span class="p">)</span>    <span class="c1"># Customer-specific context</span>
 <span class="n">services</span><span class="o">.</span><span class="n">add_scoped</span><span class="p">(</span><span class="n">KitchenWorkflowService</span><span class="p">)</span>    <span class="c1"># Kitchen operations for this order</span>
 </code></pre></div>
-<p><strong>Pizzeria Use Cases</strong>:
-- Order repositories (isolated data access per request)
-- Order processing services (specific to current order)
-- Customer context services (customer-specific data)
-- Kitchen workflow coordination (per-order cooking process)
-- Delivery routing services (per-order logistics)</p>
+<p><strong>Pizzeria Use Cases</strong>:</p>
+<ul>
+<li>Order repositories (isolated data access per request)</li>
+<li>Order processing services (specific to current order)</li>
+<li>Customer context services (customer-specific data)</li>
+<li>Kitchen workflow coordination (per-order cooking process)</li>
+<li>Delivery routing services (per-order logistics)</li>
+</ul>
 <h3 id="transient-per-use-tools">Transient - Per-Use Tools<a class="headerlink" href="#transient-per-use-tools" title="Permanent link">¶</a></h3>
 <p>Created each time they are requested (like individual kitchen tools):</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Services created fresh each time they're needed</span>
@@ -1405,8 +1441,8 @@
 
     <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">save_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">order</span><span class="p">:</span> <span class="n">Order</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">collection</span><span class="o">.</span><span class="n">replace_one</span><span class="p">(</span>
-            <span class="p">{</span><span class="s2">"_id"</span><span class="p">:</span> <span class="n">order</span><span class="o">.</span><span class="n">id</span><span class="p">},</span> 
-            <span class="n">order</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">,</span> 
+            <span class="p">{</span><span class="s2">"_id"</span><span class="p">:</span> <span class="n">order</span><span class="o">.</span><span class="n">id</span><span class="p">},</span>
+            <span class="n">order</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">,</span>
             <span class="n">upsert</span><span class="o">=</span><span class="kc">True</span>
         <span class="p">)</span>
 
@@ -1515,7 +1551,7 @@
     <span class="c1"># === OAuth Configuration ===</span>
     <span class="n">builder</span><span class="o">.</span><span class="n">configure_oauth</span><span class="p">({</span>
         <span class="s2">"orders:read"</span><span class="p">:</span> <span class="s2">"Read order information"</span><span class="p">,</span>
-        <span class="s2">"orders:write"</span><span class="p">:</span> <span class="s2">"Create and modify orders"</span><span class="p">,</span> 
+        <span class="s2">"orders:write"</span><span class="p">:</span> <span class="s2">"Create and modify orders"</span><span class="p">,</span>
         <span class="s2">"kitchen:manage"</span><span class="p">:</span> <span class="s2">"Manage kitchen operations"</span><span class="p">,</span>
         <span class="s2">"admin"</span><span class="p">:</span> <span class="s2">"Full administrative access"</span>
     <span class="p">})</span>
@@ -1540,7 +1576,7 @@
 <span class="c1"># Automatically discover and register pizzeria services in modules</span>
 <span class="n">builder</span><span class="o">.</span><span class="n">services</span><span class="o">.</span><span class="n">discover_services</span><span class="p">([</span>
     <span class="s2">"src.application.services"</span><span class="p">,</span>      <span class="c1"># PizzeriaOrderService, KitchenManagementService</span>
-    <span class="s2">"src.infrastructure.repositories"</span><span class="p">,</span> <span class="c1"># FileOrderRepository, MongoPizzaRepository  </span>
+    <span class="s2">"src.infrastructure.repositories"</span><span class="p">,</span> <span class="c1"># FileOrderRepository, MongoPizzaRepository</span>
     <span class="s2">"src.infrastructure.services"</span><span class="p">,</span>    <span class="c1"># TwilioSmsService, StripePaymentGateway</span>
     <span class="s2">"src.application.handlers"</span>        <span class="c1"># Command and query handlers</span>
 <span class="p">])</span>
@@ -1554,7 +1590,7 @@
 <span class="k">class</span><span class="w"> </span><span class="nc">PizzeriaOrderService</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""Handles pizza order business logic"""</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                  <span class="n">order_repository</span><span class="p">:</span> <span class="n">Repository</span><span class="p">[</span><span class="n">Order</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span>
                  <span class="n">pizza_repository</span><span class="p">:</span> <span class="n">Repository</span><span class="p">[</span><span class="n">Pizza</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span>
                  <span class="n">notification_service</span><span class="p">:</span> <span class="n">ISmsService</span><span class="p">):</span>
@@ -1562,7 +1598,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">pizza_repository</span> <span class="o">=</span> <span class="n">pizza_repository</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">notification_service</span> <span class="o">=</span> <span class="n">notification_service</span>
 
-<span class="nd">@service</span><span class="p">(</span><span class="n">ServiceLifetime</span><span class="o">.</span><span class="n">SINGLETON</span><span class="p">)</span> 
+<span class="nd">@service</span><span class="p">(</span><span class="n">ServiceLifetime</span><span class="o">.</span><span class="n">SINGLETON</span><span class="p">)</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">MenuCacheService</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""Caches menu data for fast retrieval"""</span>
 
@@ -1593,7 +1629,7 @@
         <span class="n">message</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"Order </span><span class="si">{</span><span class="n">order_id</span><span class="p">[:</span><span class="mi">8</span><span class="p">]</span><span class="si">}</span><span class="s2"> confirmed! Ready by </span><span class="si">{</span><span class="n">ready_time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">'%H:%M'</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span>
         <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_send_sms</span><span class="p">(</span><span class="n">phone</span><span class="p">,</span> <span class="n">message</span><span class="p">)</span>
 
-<span class="c1"># Automatically register repository implementation  </span>
+<span class="c1"># Automatically register repository implementation</span>
 <span class="nd">@service</span><span class="p">(</span><span class="n">interface</span><span class="o">=</span><span class="n">IOrderRepository</span><span class="p">,</span> <span class="n">lifetime</span><span class="o">=</span><span class="n">ServiceLifetime</span><span class="o">.</span><span class="n">SCOPED</span><span class="p">)</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">FileOrderRepository</span><span class="p">(</span><span class="n">IOrderRepository</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""File-based order storage for development"""</span>
@@ -1607,7 +1643,7 @@
 <span class="k">class</span><span class="w"> </span><span class="nc">PizzeriaOrderService</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""High-level order processing service"""</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                  <span class="n">order_repository</span><span class="p">:</span> <span class="n">IOrderRepository</span><span class="p">,</span>      <span class="c1"># Gets FileOrderRepository</span>
                  <span class="n">notification_service</span><span class="p">:</span> <span class="n">INotificationService</span><span class="p">):</span> <span class="c1"># Gets TwilioSmsService</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">order_repository</span> <span class="o">=</span> <span class="n">order_repository</span>
@@ -1633,12 +1669,12 @@
 <span class="k">class</span><span class="w"> </span><span class="nc">OrdersController</span><span class="p">(</span><span class="n">ControllerBase</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""Pizza orders API controller with dependency injection"""</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                  <span class="n">service_provider</span><span class="p">:</span> <span class="n">ServiceProviderBase</span><span class="p">,</span>
                  <span class="n">mapper</span><span class="p">:</span> <span class="n">Mapper</span><span class="p">,</span>
                  <span class="n">mediator</span><span class="p">:</span> <span class="n">Mediator</span><span class="p">,</span>
                  <span class="n">order_service</span><span class="p">:</span> <span class="n">PizzeriaOrderService</span><span class="p">,</span>        <span class="c1"># Automatically injected</span>
-                 <span class="n">payment_service</span><span class="p">:</span> <span class="n">IPaymentGateway</span><span class="p">,</span>           <span class="c1"># Automatically injected  </span>
+                 <span class="n">payment_service</span><span class="p">:</span> <span class="n">IPaymentGateway</span><span class="p">,</span>           <span class="c1"># Automatically injected</span>
                  <span class="n">notification_service</span><span class="p">:</span> <span class="n">INotificationService</span><span class="p">):</span> <span class="c1"># Automatically injected</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">service_provider</span><span class="p">,</span> <span class="n">mapper</span><span class="p">,</span> <span class="n">mediator</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">order_service</span> <span class="o">=</span> <span class="n">order_service</span>
@@ -1656,7 +1692,7 @@
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                  <span class="n">service_provider</span><span class="p">:</span> <span class="n">ServiceProviderBase</span><span class="p">,</span>
-                 <span class="n">mapper</span><span class="p">:</span> <span class="n">Mapper</span><span class="p">,</span> 
+                 <span class="n">mapper</span><span class="p">:</span> <span class="n">Mapper</span><span class="p">,</span>
                  <span class="n">mediator</span><span class="p">:</span> <span class="n">Mediator</span><span class="p">,</span>
                  <span class="n">kitchen_service</span><span class="p">:</span> <span class="n">KitchenManagementService</span><span class="p">,</span>  <span class="c1"># Automatically injected</span>
                  <span class="n">display_service</span><span class="p">:</span> <span class="n">KitchenDisplayService</span><span class="p">):</span>    <span class="c1"># Automatically injected</span>
@@ -1669,7 +1705,7 @@
 <div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">PizzeriaAnalyticsService</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""Analytics service with optional dependencies"""</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                  <span class="n">service_provider</span><span class="p">:</span> <span class="n">ServiceProviderBase</span><span class="p">,</span>
                  <span class="n">order_repository</span><span class="p">:</span> <span class="n">Repository</span><span class="p">[</span><span class="n">Order</span><span class="p">,</span> <span class="nb">str</span><span class="p">]):</span>  <span class="c1"># Required dependency</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">service_provider</span> <span class="o">=</span> <span class="n">service_provider</span>
@@ -1685,7 +1721,7 @@
             <span class="k">await</span> <span class="n">email_service</span><span class="o">.</span><span class="n">send_daily_report</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_build_report</span><span class="p">(</span><span class="n">orders</span><span class="p">))</span>
 
         <span class="c1"># Another optional service</span>
-        <span class="n">slack_service</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">service_provider</span><span class="o">.</span><span class="n">get_service</span><span class="p">(</span><span class="n">ISlackService</span><span class="p">)</span> 
+        <span class="n">slack_service</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">service_provider</span><span class="o">.</span><span class="n">get_service</span><span class="p">(</span><span class="n">ISlackService</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">slack_service</span><span class="p">:</span>
             <span class="k">await</span> <span class="n">slack_service</span><span class="o">.</span><span class="n">post_daily_summary</span><span class="p">(</span><span class="n">orders</span><span class="p">)</span>
 
@@ -1728,7 +1764,7 @@
         <span class="n">builder</span><span class="o">.</span><span class="n">services</span><span class="o">.</span><span class="n">add_singleton</span><span class="p">(</span><span class="n">INotificationService</span><span class="p">,</span> <span class="n">ConsoleNotificationService</span><span class="p">)</span>
 
     <span class="k">elif</span> <span class="n">environment</span> <span class="o">==</span> <span class="s2">"production"</span><span class="p">:</span>
-        <span class="c1"># Production services  </span>
+        <span class="c1"># Production services</span>
         <span class="n">builder</span><span class="o">.</span><span class="n">services</span><span class="o">.</span><span class="n">add_scoped</span><span class="p">(</span><span class="n">IOrderRepository</span><span class="p">,</span> <span class="n">MongoOrderRepository</span><span class="p">)</span>
         <span class="n">builder</span><span class="o">.</span><span class="n">services</span><span class="o">.</span><span class="n">add_scoped</span><span class="p">(</span><span class="n">IPizzaRepository</span><span class="p">,</span> <span class="n">MongoPizzaRepository</span><span class="p">)</span>
         <span class="n">builder</span><span class="o">.</span><span class="n">services</span><span class="o">.</span><span class="n">add_singleton</span><span class="p">(</span><span class="n">IPaymentGateway</span><span class="p">,</span> <span class="n">factory</span><span class="o">=</span><span class="n">create_stripe_gateway</span><span class="p">)</span>
@@ -1873,7 +1909,7 @@
     <span class="n">enable_cash</span><span class="p">:</span> <span class="nb">bool</span>
     <span class="n">enable_card</span><span class="p">:</span> <span class="nb">bool</span>
 
-<span class="nd">@dataclass</span> 
+<span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">NotificationConfig</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""Notification service configuration"""</span>
     <span class="n">twilio_sid</span><span class="p">:</span> <span class="nb">str</span>
@@ -1918,7 +1954,7 @@
 <span class="k">class</span><span class="w"> </span><span class="nc">KitchenManagementService</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""Kitchen service with configurable options"""</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                  <span class="n">pizzeria_options</span><span class="p">:</span> <span class="n">IOptions</span><span class="p">[</span><span class="n">PizzeriaConfig</span><span class="p">],</span>
                  <span class="n">menu_options</span><span class="p">:</span> <span class="n">IOptions</span><span class="p">[</span><span class="n">MenuConfig</span><span class="p">]):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">pizzeria_config</span> <span class="o">=</span> <span class="n">pizzeria_options</span><span class="o">.</span><span class="n">value</span>
@@ -2022,13 +2058,13 @@
 <p>Always use constructor injection for required dependencies:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># ✅ Good - Constructor injection</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">OrderService</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                  <span class="n">order_repository</span><span class="p">:</span> <span class="n">IOrderRepository</span><span class="p">,</span>
                  <span class="n">notification_service</span><span class="p">:</span> <span class="n">INotificationService</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">order_repository</span> <span class="o">=</span> <span class="n">order_repository</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">notification_service</span> <span class="o">=</span> <span class="n">notification_service</span>
 
-<span class="c1"># ❌ Avoid - Service locator pattern  </span>
+<span class="c1"># ❌ Avoid - Service locator pattern</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">OrderService</span><span class="p">:</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">process_order</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">repository</span> <span class="o">=</span> <span class="n">ServiceLocator</span><span class="o">.</span><span class="n">get_service</span><span class="p">(</span><span class="n">IOrderRepository</span><span class="p">)</span>  <span class="c1"># Hard to test</span>
@@ -2039,7 +2075,7 @@
 <span class="n">services</span><span class="o">.</span><span class="n">add_singleton</span><span class="p">(</span><span class="n">PaymentGateway</span><span class="p">)</span>        <span class="c1"># Expensive to create</span>
 <span class="n">services</span><span class="o">.</span><span class="n">add_singleton</span><span class="p">(</span><span class="n">MenuCacheService</span><span class="p">)</span>      <span class="c1"># Shared state</span>
 
-<span class="c1"># ✅ Scoped for request-specific services  </span>
+<span class="c1"># ✅ Scoped for request-specific services</span>
 <span class="n">services</span><span class="o">.</span><span class="n">add_scoped</span><span class="p">(</span><span class="n">OrderRepository</span><span class="p">)</span>          <span class="c1"># Per-request data access</span>
 <span class="n">services</span><span class="o">.</span><span class="n">add_scoped</span><span class="p">(</span><span class="n">CustomerContextService</span><span class="p">)</span>   <span class="c1"># Request-specific context</span>
 
@@ -2060,7 +2096,7 @@
 
 <span class="c1"># ✅ Good - Explicit dependencies</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">OrderService</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                  <span class="n">order_repository</span><span class="p">:</span> <span class="n">IOrderRepository</span><span class="p">,</span>
                  <span class="n">payment_service</span><span class="p">:</span> <span class="n">IPaymentService</span><span class="p">):</span>  <span class="c1"># Clear dependencies</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">order_repository</span> <span class="o">=</span> <span class="n">order_repository</span>
@@ -2073,16 +2109,16 @@
 ✅ <strong>Configuration Flexibility</strong> - Swap implementations for different environments<br/>
 ✅ <strong>Automatic Lifetime Management</strong> - Framework handles object creation and disposal<br/>
 ✅ <strong>Enhanced Web Application Builder</strong> - Simplified setup with multi-app support<br/>
-✅ <strong>Type Safety</strong> - Full type checking and IntelliSense support  </p>
+✅ <strong>Type Safety</strong> - Full type checking and IntelliSense support</p>
 <h2 id="related-documentation">🔗 Related Documentation<a class="headerlink" href="#related-documentation" title="Permanent link">¶</a></h2>
 <ul>
 <li><strong><a href="../../getting-started/">Getting Started</a></strong> - Build Mario's Pizzeria with DI from the start</li>
 <li><strong><a href="../cqrs-mediation/">CQRS &amp; Mediation</a></strong> - How handlers are resolved through DI</li>
-<li><strong><a href="../mvc-controllers/">MVC Controllers</a></strong> - Controller dependency injection patterns  </li>
+<li><strong><a href="../mvc-controllers/">MVC Controllers</a></strong> - Controller dependency injection patterns</li>
 <li><strong><a href="../data-access/">Data Access</a></strong> - Repository pattern and DI integration
-        if self.options.send_welcome_emails:
-            # Send email logic
-            pass
+  if self.options.send_welcome_emails: # Send email logic
+  pass</li>
+</ul>
 <div class="highlight"><pre><span></span><code>## 🧪 Testing with DI
 
 ### Test Service Registration
@@ -2107,8 +2143,7 @@ def test_user_creation(test_services):
     user_service = test_services.get_required_service(UserService)
     result = user_service.create_user(user_data)
     assert result.is_success
-</code></pre></div></li>
-</ul>
+</code></pre></div>
 <h3 id="mock-dependencies">Mock Dependencies<a class="headerlink" href="#mock-dependencies" title="Permanent link">¶</a></h3>
 <p>Use mocking frameworks with DI:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">unittest.mock</span><span class="w"> </span><span class="kn">import</span> <span class="n">Mock</span>
@@ -2151,7 +2186,7 @@ def test_user_creation(test_services):
 <h3 id="controller-dependencies">Controller Dependencies<a class="headerlink" href="#controller-dependencies" title="Permanent link">¶</a></h3>
 <p>Controllers automatically receive dependencies:</p>
 <div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">UsersController</span><span class="p">(</span><span class="n">ControllerBase</span><span class="p">):</span>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                  <span class="n">service_provider</span><span class="p">:</span> <span class="n">ServiceProviderBase</span><span class="p">,</span>
                  <span class="n">mapper</span><span class="p">:</span> <span class="n">Mapper</span><span class="p">,</span>
                  <span class="n">mediator</span><span class="p">:</span> <span class="n">Mediator</span><span class="p">,</span>
@@ -2230,10 +2265,10 @@ def test_user_creation(test_services):
 <h2 id="related-documentation_1">🔗 Related Documentation<a class="headerlink" href="#related-documentation_1" title="Permanent link">¶</a></h2>
 <ul>
 <li><a href="../../getting-started/">Getting Started</a> - Basic DI usage</li>
-<li><a href="../../architecture/">Architecture Guide</a> - How DI fits in the architecture</li>
 <li><a href="../cqrs-mediation/">CQRS &amp; Mediation</a> - DI with command handlers</li>
 <li><a href="../data-access/">Data Access</a> - DI with repositories</li>
 <li><a href="testing.md">Testing</a> - Testing with dependency injection</li>
+<li><a href="../../references/source_code_naming_convention/">Source Code Naming Conventions</a> - Service, interface, and configuration naming patterns</li>
 </ul>
 </article>
 </div>

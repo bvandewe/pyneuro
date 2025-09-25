@@ -446,13 +446,6 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#request-body-validation">
-<span class="md-ellipsis">
-      Request Body Validation
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
 <a class="md-nav__link" href="#file-uploads">
 <span class="md-ellipsis">
       File Uploads
@@ -908,7 +901,7 @@
 <li class="md-nav__item">
 <a class="md-nav__link" href="../../references/python_type_hints/">
 <span class="md-ellipsis">
-    Python Type hints
+    Python Type Hints
     
   </span>
 </a>
@@ -917,6 +910,38 @@
 <a class="md-nav__link" href="../../references/python_generic_types/">
 <span class="md-ellipsis">
     Python Generic Types
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../references/python_modular_code/">
+<span class="md-ellipsis">
+    Python Modular Code
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../references/python_object_oriented/">
+<span class="md-ellipsis">
+    Python Object-Oriented Programming
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../references/source_code_naming_convention/">
+<span class="md-ellipsis">
+    Source Code Naming Conventions
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../references/12-factor-app/">
+<span class="md-ellipsis">
+    12-Factor App
     
   </span>
 </a>
@@ -978,13 +1003,6 @@
 <a class="md-nav__link" href="#request-validation-and-dtos">
 <span class="md-ellipsis">
       Request Validation and DTOs
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#request-body-validation">
-<span class="md-ellipsis">
-      Request Body Validation
     </span>
 </a>
 </li>
@@ -1252,7 +1270,7 @@
 <h2 id="what-youll-learn">🎯 What You'll Learn<a class="headerlink" href="#what-youll-learn" title="Permanent link">¶</a></h2>
 <ul>
 <li><strong>Pizza Order Management</strong>: OrdersController for handling customer orders</li>
-<li><strong>Menu Administration</strong>: MenuController for pizza and topping management  </li>
+<li><strong>Menu Administration</strong>: MenuController for pizza and topping management</li>
 <li><strong>Kitchen Operations</strong>: KitchenController for order preparation workflow</li>
 <li><strong>Authentication &amp; Authorization</strong>: OAuth integration for staff and customer access</li>
 <li><strong>Error Handling</strong>: Comprehensive error responses and validation</li>
@@ -1274,18 +1292,18 @@
 <span class="k">class</span><span class="w"> </span><span class="nc">OrdersController</span><span class="p">(</span><span class="n">ControllerBase</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""Controller for managing pizza orders at Mario's Pizzeria"""</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                  <span class="n">service_provider</span><span class="p">:</span> <span class="n">ServiceProviderBase</span><span class="p">,</span>
                  <span class="n">mapper</span><span class="p">:</span> <span class="n">Mapper</span><span class="p">,</span>
                  <span class="n">mediator</span><span class="p">:</span> <span class="n">Mediator</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">service_provider</span><span class="p">,</span> <span class="n">mapper</span><span class="p">,</span> <span class="n">mediator</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">security</span> <span class="o">=</span> <span class="n">HTTPBearer</span><span class="p">(</span><span class="n">auto_error</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
-    <span class="nd">@get</span><span class="p">(</span><span class="s2">"/"</span><span class="p">,</span> 
-         <span class="n">response_model</span><span class="o">=</span><span class="n">List</span><span class="p">[</span><span class="n">OrderDto</span><span class="p">],</span> 
+    <span class="nd">@get</span><span class="p">(</span><span class="s2">"/"</span><span class="p">,</span>
+         <span class="n">response_model</span><span class="o">=</span><span class="n">List</span><span class="p">[</span><span class="n">OrderDto</span><span class="p">],</span>
          <span class="n">summary</span><span class="o">=</span><span class="s2">"Get customer orders"</span><span class="p">,</span>
          <span class="n">description</span><span class="o">=</span><span class="s2">"Retrieve orders for authenticated customer"</span><span class="p">)</span>
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_my_orders</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_my_orders</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                             <span class="n">token</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Depends</span><span class="p">(</span><span class="n">HTTPBearer</span><span class="p">()),</span>
                             <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">OrderDto</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">"""Get orders for authenticated customer"""</span>
@@ -1308,11 +1326,11 @@
                 <span class="n">detail</span><span class="o">=</span><span class="s2">"Invalid authentication token"</span>
             <span class="p">)</span>
 
-    <span class="nd">@get</span><span class="p">(</span><span class="s2">"/</span><span class="si">{order_id}</span><span class="s2">"</span><span class="p">,</span> 
+    <span class="nd">@get</span><span class="p">(</span><span class="s2">"/</span><span class="si">{order_id}</span><span class="s2">"</span><span class="p">,</span>
          <span class="n">response_model</span><span class="o">=</span><span class="n">OrderDto</span><span class="p">,</span>
          <span class="n">summary</span><span class="o">=</span><span class="s2">"Get specific order"</span><span class="p">,</span>
          <span class="n">description</span><span class="o">=</span><span class="s2">"Get details of a specific pizza order"</span><span class="p">)</span>
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_order</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_order</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                         <span class="n">order_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
                         <span class="n">token</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Depends</span><span class="p">(</span><span class="n">HTTPBearer</span><span class="p">()))</span> <span class="o">-&gt;</span> <span class="n">OrderDto</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""Get specific order details"""</span>
@@ -1327,12 +1345,12 @@
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
 
-    <span class="nd">@post</span><span class="p">(</span><span class="s2">"/"</span><span class="p">,</span> 
-          <span class="n">response_model</span><span class="o">=</span><span class="n">OrderDto</span><span class="p">,</span> 
+    <span class="nd">@post</span><span class="p">(</span><span class="s2">"/"</span><span class="p">,</span>
+          <span class="n">response_model</span><span class="o">=</span><span class="n">OrderDto</span><span class="p">,</span>
           <span class="n">status_code</span><span class="o">=</span><span class="mi">201</span><span class="p">,</span>
           <span class="n">summary</span><span class="o">=</span><span class="s2">"Place pizza order"</span><span class="p">,</span>
           <span class="n">description</span><span class="o">=</span><span class="s2">"Place a new pizza order with customer details and pizza selection"</span><span class="p">)</span>
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">place_order</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">place_order</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                           <span class="n">order_request</span><span class="p">:</span> <span class="n">PlaceOrderDto</span><span class="p">,</span>
                           <span class="n">token</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Depends</span><span class="p">(</span><span class="n">HTTPBearer</span><span class="p">(</span><span class="n">auto_error</span><span class="o">=</span><span class="kc">False</span><span class="p">)))</span> <span class="o">-&gt;</span> <span class="n">OrderDto</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""Place a new pizza order"""</span>
@@ -1366,11 +1384,11 @@
                 <span class="n">detail</span><span class="o">=</span><span class="s2">"Failed to place order. Please try again."</span>
             <span class="p">)</span>
 
-    <span class="nd">@put</span><span class="p">(</span><span class="s2">"/</span><span class="si">{order_id}</span><span class="s2">/cancel"</span><span class="p">,</span> 
+    <span class="nd">@put</span><span class="p">(</span><span class="s2">"/</span><span class="si">{order_id}</span><span class="s2">/cancel"</span><span class="p">,</span>
          <span class="n">response_model</span><span class="o">=</span><span class="n">OrderDto</span><span class="p">,</span>
          <span class="n">summary</span><span class="o">=</span><span class="s2">"Cancel order"</span><span class="p">,</span>
          <span class="n">description</span><span class="o">=</span><span class="s2">"Cancel a pizza order if it hasn't started preparation"</span><span class="p">)</span>
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">cancel_order</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">cancel_order</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                            <span class="n">order_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
                            <span class="n">cancellation_request</span><span class="p">:</span> <span class="n">CancelOrderDto</span><span class="p">,</span>
                            <span class="n">token</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Depends</span><span class="p">(</span><span class="n">HTTPBearer</span><span class="p">()))</span> <span class="o">-&gt;</span> <span class="n">OrderDto</span><span class="p">:</span>
@@ -1390,7 +1408,7 @@
          <span class="n">response_model</span><span class="o">=</span><span class="n">OrderStatusDto</span><span class="p">,</span>
          <span class="n">summary</span><span class="o">=</span><span class="s2">"Get order status"</span><span class="p">,</span>
          <span class="n">description</span><span class="o">=</span><span class="s2">"Get current status and estimated ready time for order"</span><span class="p">)</span>
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_order_status</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_order_status</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                                <span class="n">order_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
                                <span class="n">token</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Depends</span><span class="p">(</span><span class="n">HTTPBearer</span><span class="p">()))</span> <span class="o">-&gt;</span> <span class="n">OrderStatusDto</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""Get order status and tracking information"""</span>
@@ -1423,17 +1441,17 @@
 <div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">MenuController</span><span class="p">(</span><span class="n">ControllerBase</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""Controller for managing Mario's Pizzeria menu"""</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                  <span class="n">service_provider</span><span class="p">:</span> <span class="n">ServiceProviderBase</span><span class="p">,</span>
                  <span class="n">mapper</span><span class="p">:</span> <span class="n">Mapper</span><span class="p">,</span>
                  <span class="n">mediator</span><span class="p">:</span> <span class="n">Mediator</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">service_provider</span><span class="p">,</span> <span class="n">mapper</span><span class="p">,</span> <span class="n">mediator</span><span class="p">)</span>
 
-    <span class="nd">@get</span><span class="p">(</span><span class="s2">"/pizzas"</span><span class="p">,</span> 
+    <span class="nd">@get</span><span class="p">(</span><span class="s2">"/pizzas"</span><span class="p">,</span>
          <span class="n">response_model</span><span class="o">=</span><span class="n">List</span><span class="p">[</span><span class="n">PizzaDto</span><span class="p">],</span>
          <span class="n">summary</span><span class="o">=</span><span class="s2">"Get pizza menu"</span><span class="p">,</span>
          <span class="n">description</span><span class="o">=</span><span class="s2">"Get all available pizzas organized by category"</span><span class="p">)</span>
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_menu</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_menu</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                        <span class="n">category</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Query</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">"Filter by pizza category"</span><span class="p">),</span>
                        <span class="n">available_only</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">Query</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">"Show only available pizzas"</span><span class="p">))</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">PizzaDto</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">"""Get pizza menu with optional filtering"""</span>
@@ -1444,7 +1462,7 @@
         <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">mediator</span><span class="o">.</span><span class="n">execute_async</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
 
-    <span class="nd">@get</span><span class="p">(</span><span class="s2">"/pizzas/</span><span class="si">{pizza_id}</span><span class="s2">"</span><span class="p">,</span> 
+    <span class="nd">@get</span><span class="p">(</span><span class="s2">"/pizzas/</span><span class="si">{pizza_id}</span><span class="s2">"</span><span class="p">,</span>
          <span class="n">response_model</span><span class="o">=</span><span class="n">PizzaDto</span><span class="p">,</span>
          <span class="n">summary</span><span class="o">=</span><span class="s2">"Get pizza details"</span><span class="p">,</span>
          <span class="n">description</span><span class="o">=</span><span class="s2">"Get detailed information about a specific pizza"</span><span class="p">)</span>
@@ -1476,12 +1494,12 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
 
     <span class="c1"># Admin endpoints (require staff authentication)</span>
-    <span class="nd">@post</span><span class="p">(</span><span class="s2">"/pizzas"</span><span class="p">,</span> 
-          <span class="n">response_model</span><span class="o">=</span><span class="n">PizzaDto</span><span class="p">,</span> 
+    <span class="nd">@post</span><span class="p">(</span><span class="s2">"/pizzas"</span><span class="p">,</span>
+          <span class="n">response_model</span><span class="o">=</span><span class="n">PizzaDto</span><span class="p">,</span>
           <span class="n">status_code</span><span class="o">=</span><span class="mi">201</span><span class="p">,</span>
           <span class="n">summary</span><span class="o">=</span><span class="s2">"Add new pizza (Staff Only)"</span><span class="p">,</span>
           <span class="n">description</span><span class="o">=</span><span class="s2">"Add a new pizza to the menu"</span><span class="p">)</span>
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">add_pizza</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">add_pizza</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                         <span class="n">pizza_request</span><span class="p">:</span> <span class="n">CreatePizzaDto</span><span class="p">,</span>
                         <span class="n">staff_token</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Depends</span><span class="p">(</span><span class="n">HTTPBearer</span><span class="p">()))</span> <span class="o">-&gt;</span> <span class="n">PizzaDto</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""Add new pizza to menu (staff only)"""</span>
@@ -1500,11 +1518,11 @@
         <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">mediator</span><span class="o">.</span><span class="n">execute_async</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
 
-    <span class="nd">@put</span><span class="p">(</span><span class="s2">"/pizzas/</span><span class="si">{pizza_id}</span><span class="s2">/availability"</span><span class="p">,</span> 
+    <span class="nd">@put</span><span class="p">(</span><span class="s2">"/pizzas/</span><span class="si">{pizza_id}</span><span class="s2">/availability"</span><span class="p">,</span>
          <span class="n">response_model</span><span class="o">=</span><span class="n">PizzaDto</span><span class="p">,</span>
          <span class="n">summary</span><span class="o">=</span><span class="s2">"Update pizza availability (Staff Only)"</span><span class="p">,</span>
          <span class="n">description</span><span class="o">=</span><span class="s2">"Mark pizza as available or sold out"</span><span class="p">)</span>
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">update_pizza_availability</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">update_pizza_availability</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                                         <span class="n">pizza_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
                                         <span class="n">availability_request</span><span class="p">:</span> <span class="n">UpdateAvailabilityDto</span><span class="p">,</span>
                                         <span class="n">staff_token</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Depends</span><span class="p">(</span><span class="n">HTTPBearer</span><span class="p">()))</span> <span class="o">-&gt;</span> <span class="n">PizzaDto</span><span class="p">:</span>
@@ -1524,13 +1542,13 @@
 <div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">KitchenController</span><span class="p">(</span><span class="n">ControllerBase</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""Controller for kitchen operations and order management"""</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                  <span class="n">service_provider</span><span class="p">:</span> <span class="n">ServiceProviderBase</span><span class="p">,</span>
                  <span class="n">mapper</span><span class="p">:</span> <span class="n">Mapper</span><span class="p">,</span>
                  <span class="n">mediator</span><span class="p">:</span> <span class="n">Mediator</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">service_provider</span><span class="p">,</span> <span class="n">mapper</span><span class="p">,</span> <span class="n">mediator</span><span class="p">)</span>
 
-    <span class="nd">@get</span><span class="p">(</span><span class="s2">"/queue"</span><span class="p">,</span> 
+    <span class="nd">@get</span><span class="p">(</span><span class="s2">"/queue"</span><span class="p">,</span>
          <span class="n">response_model</span><span class="o">=</span><span class="n">List</span><span class="p">[</span><span class="n">KitchenOrderDto</span><span class="p">],</span>
          <span class="n">summary</span><span class="o">=</span><span class="s2">"Get kitchen queue"</span><span class="p">,</span>
          <span class="n">description</span><span class="o">=</span><span class="s2">"Get orders in kitchen queue ordered by priority"</span><span class="p">)</span>
@@ -1545,11 +1563,11 @@
         <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">mediator</span><span class="o">.</span><span class="n">execute_async</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
 
-    <span class="nd">@put</span><span class="p">(</span><span class="s2">"/orders/</span><span class="si">{order_id}</span><span class="s2">/status"</span><span class="p">,</span> 
+    <span class="nd">@put</span><span class="p">(</span><span class="s2">"/orders/</span><span class="si">{order_id}</span><span class="s2">/status"</span><span class="p">,</span>
          <span class="n">response_model</span><span class="o">=</span><span class="n">OrderDto</span><span class="p">,</span>
          <span class="n">summary</span><span class="o">=</span><span class="s2">"Update order status"</span><span class="p">,</span>
          <span class="n">description</span><span class="o">=</span><span class="s2">"Update order status in kitchen workflow"</span><span class="p">)</span>
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">update_order_status</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">update_order_status</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                                   <span class="n">order_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
                                   <span class="n">status_update</span><span class="p">:</span> <span class="n">UpdateOrderStatusDto</span><span class="p">,</span>
                                   <span class="n">staff_token</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Depends</span><span class="p">(</span><span class="n">HTTPBearer</span><span class="p">()))</span> <span class="o">-&gt;</span> <span class="n">OrderDto</span><span class="p">:</span>
@@ -1567,11 +1585,11 @@
         <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">mediator</span><span class="o">.</span><span class="n">execute_async</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
 
-    <span class="nd">@post</span><span class="p">(</span><span class="s2">"/orders/</span><span class="si">{order_id}</span><span class="s2">/pizzas/</span><span class="si">{pizza_index}</span><span class="s2">/start"</span><span class="p">,</span> 
+    <span class="nd">@post</span><span class="p">(</span><span class="s2">"/orders/</span><span class="si">{order_id}</span><span class="s2">/pizzas/</span><span class="si">{pizza_index}</span><span class="s2">/start"</span><span class="p">,</span>
           <span class="n">response_model</span><span class="o">=</span><span class="n">OrderDto</span><span class="p">,</span>
           <span class="n">summary</span><span class="o">=</span><span class="s2">"Start pizza preparation"</span><span class="p">,</span>
           <span class="n">description</span><span class="o">=</span><span class="s2">"Mark pizza as started in preparation"</span><span class="p">)</span>
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">start_pizza</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">start_pizza</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                           <span class="n">order_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
                           <span class="n">pizza_index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
                           <span class="n">staff_token</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Depends</span><span class="p">(</span><span class="n">HTTPBearer</span><span class="p">()))</span> <span class="o">-&gt;</span> <span class="n">OrderDto</span><span class="p">:</span>
@@ -1587,11 +1605,11 @@
         <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">mediator</span><span class="o">.</span><span class="n">execute_async</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
 
-    <span class="nd">@post</span><span class="p">(</span><span class="s2">"/orders/</span><span class="si">{order_id}</span><span class="s2">/pizzas/</span><span class="si">{pizza_index}</span><span class="s2">/complete"</span><span class="p">,</span> 
+    <span class="nd">@post</span><span class="p">(</span><span class="s2">"/orders/</span><span class="si">{order_id}</span><span class="s2">/pizzas/</span><span class="si">{pizza_index}</span><span class="s2">/complete"</span><span class="p">,</span>
           <span class="n">response_model</span><span class="o">=</span><span class="n">OrderDto</span><span class="p">,</span>
           <span class="n">summary</span><span class="o">=</span><span class="s2">"Complete pizza preparation"</span><span class="p">,</span>
           <span class="n">description</span><span class="o">=</span><span class="s2">"Mark pizza as completed"</span><span class="p">)</span>
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">complete_pizza</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">complete_pizza</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                              <span class="n">order_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
                              <span class="n">pizza_index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
                              <span class="n">completion_request</span><span class="p">:</span> <span class="n">CompletePizzaDto</span><span class="p">,</span>
@@ -1609,7 +1627,7 @@
         <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">mediator</span><span class="o">.</span><span class="n">execute_async</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
 
-    <span class="nd">@get</span><span class="p">(</span><span class="s2">"/performance"</span><span class="p">,</span> 
+    <span class="nd">@get</span><span class="p">(</span><span class="s2">"/performance"</span><span class="p">,</span>
          <span class="n">response_model</span><span class="o">=</span><span class="n">KitchenPerformanceDto</span><span class="p">,</span>
          <span class="n">summary</span><span class="o">=</span><span class="s2">"Get kitchen performance metrics"</span><span class="p">,</span>
          <span class="n">description</span><span class="o">=</span><span class="s2">"Get kitchen performance analytics"</span><span class="p">)</span>
@@ -1646,7 +1664,7 @@
 <div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">ReportsController</span><span class="p">(</span><span class="n">ControllerBase</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""Controller for pizzeria analytics and reporting"""</span>
 
-    <span class="nd">@get</span><span class="p">(</span><span class="s2">"/orders"</span><span class="p">,</span> 
+    <span class="nd">@get</span><span class="p">(</span><span class="s2">"/orders"</span><span class="p">,</span>
          <span class="n">response_model</span><span class="o">=</span><span class="n">List</span><span class="p">[</span><span class="n">OrderReportDto</span><span class="p">],</span>
          <span class="n">summary</span><span class="o">=</span><span class="s2">"Get order reports"</span><span class="p">,</span>
          <span class="n">description</span><span class="o">=</span><span class="s2">"Get filtered order data for reporting"</span><span class="p">)</span>
@@ -1677,7 +1695,7 @@
         <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">mediator</span><span class="o">.</span><span class="n">execute_async</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
 
-    <span class="nd">@get</span><span class="p">(</span><span class="s2">"/revenue"</span><span class="p">,</span> 
+    <span class="nd">@get</span><span class="p">(</span><span class="s2">"/revenue"</span><span class="p">,</span>
          <span class="n">response_model</span><span class="o">=</span><span class="n">RevenueReportDto</span><span class="p">,</span>
          <span class="n">summary</span><span class="o">=</span><span class="s2">"Get revenue analytics"</span><span class="p">,</span>
          <span class="n">description</span><span class="o">=</span><span class="s2">"Get revenue breakdown and analytics"</span><span class="p">)</span>
@@ -1700,7 +1718,7 @@
 </code></pre></div>
 <h3 id="request-validation-and-dtos">Request Validation and DTOs<a class="headerlink" href="#request-validation-and-dtos" title="Permanent link">¶</a></h3>
 <p>Comprehensive validation for pizzeria data:
-        """Get users with filtering and pagination"""</p>
+"""Get users with filtering and pagination"""</p>
 <div class="codehilite"><pre><span></span><code>    query = GetUsersQuery(
         department=department,
         active_only=active_only,
@@ -1711,12 +1729,11 @@
     result = await self.mediator.execute_async(query)
     return self.process(result)
 </code></pre></div>
-<p>```
-</p>
-<h3 id="request-body-validation">Request Body Validation<a class="headerlink" href="#request-body-validation" title="Permanent link">¶</a></h3>
-<p>Use Pydantic models for request validation:
+<div class="highlight"><pre><span></span><code>### Request Body Validation
 
-<code>python
+Use Pydantic models for request validation:
+
+```python
 from pydantic import BaseModel, Field, EmailStr
 from typing import Optional
 
@@ -1743,7 +1760,8 @@ class UsersController(ControllerBase):
         """Create a new user"""
         command = self.mapper.map(create_user_dto, CreateUserCommand)
         result = await self.mediator.execute_async(command)
-        return self.process(result)</code></p>
+        return self.process(result)
+</code></pre></div>
 <h3 id="file-uploads">File Uploads<a class="headerlink" href="#file-uploads" title="Permanent link">¶</a></h3>
 <p>Handle file uploads:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">fastapi</span><span class="w"> </span><span class="kn">import</span> <span class="n">UploadFile</span><span class="p">,</span> <span class="n">File</span>
@@ -1751,7 +1769,7 @@ class UsersController(ControllerBase):
 <span class="k">class</span><span class="w"> </span><span class="nc">UsersController</span><span class="p">(</span><span class="n">ControllerBase</span><span class="p">):</span>
 
     <span class="nd">@post</span><span class="p">(</span><span class="s2">"/</span><span class="si">{user_id}</span><span class="s2">/avatar"</span><span class="p">,</span> <span class="n">response_model</span><span class="o">=</span><span class="n">UserDto</span><span class="p">)</span>
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">upload_avatar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">upload_avatar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                            <span class="n">user_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
                            <span class="n">file</span><span class="p">:</span> <span class="n">UploadFile</span> <span class="o">=</span> <span class="n">File</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">"Avatar image"</span><span class="p">))</span> <span class="o">-&gt;</span> <span class="n">UserDto</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""Upload user avatar"""</span>
@@ -1842,7 +1860,7 @@ class UsersController(ControllerBase):
 <p>Controllers include standard error responses:</p>
 <div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">UsersController</span><span class="p">(</span><span class="n">ControllerBase</span><span class="p">):</span>
 
-    <span class="nd">@get</span><span class="p">(</span><span class="s2">"/</span><span class="si">{user_id}</span><span class="s2">"</span><span class="p">,</span> 
+    <span class="nd">@get</span><span class="p">(</span><span class="s2">"/</span><span class="si">{user_id}</span><span class="s2">"</span><span class="p">,</span>
          <span class="n">response_model</span><span class="o">=</span><span class="n">UserDto</span><span class="p">,</span>
          <span class="n">responses</span><span class="o">=</span><span class="n">ControllerBase</span><span class="o">.</span><span class="n">error_responses</span><span class="p">)</span>  <span class="c1"># Adds 400, 404, 500 responses</span>
     <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_user</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">UserDto</span><span class="p">:</span>
@@ -1891,7 +1909,7 @@ class UsersController(ControllerBase):
 
 <span class="k">class</span><span class="w"> </span><span class="nc">UsersController</span><span class="p">(</span><span class="n">ControllerBase</span><span class="p">):</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                  <span class="n">service_provider</span><span class="p">:</span> <span class="n">ServiceProviderBase</span><span class="p">,</span>
                  <span class="n">mapper</span><span class="p">:</span> <span class="n">Mapper</span><span class="p">,</span>
                  <span class="n">mediator</span><span class="p">:</span> <span class="n">Mediator</span><span class="p">,</span>
@@ -1900,7 +1918,7 @@ class UsersController(ControllerBase):
         <span class="bp">self</span><span class="o">.</span><span class="n">auth_service</span> <span class="o">=</span> <span class="n">auth_service</span>
 
     <span class="nd">@get</span><span class="p">(</span><span class="s2">"/profile"</span><span class="p">,</span> <span class="n">response_model</span><span class="o">=</span><span class="n">UserDto</span><span class="p">)</span>
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_current_user</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_current_user</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                               <span class="n">current_user</span><span class="p">:</span> <span class="n">AuthUser</span> <span class="o">=</span> <span class="n">Depends</span><span class="p">(</span><span class="n">auth_service</span><span class="o">.</span><span class="n">get_current_user</span><span class="p">))</span> <span class="o">-&gt;</span> <span class="n">UserDto</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""Get current user's profile"""</span>
         <span class="n">query</span> <span class="o">=</span> <span class="n">GetUserByIdQuery</span><span class="p">(</span><span class="n">user_id</span><span class="o">=</span><span class="n">current_user</span><span class="o">.</span><span class="n">user_id</span><span class="p">)</span>
@@ -2097,7 +2115,7 @@ class UsersController(ControllerBase):
 <p>Use consistent patterns for error handling:</p>
 <div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">UsersController</span><span class="p">(</span><span class="n">ControllerBase</span><span class="p">):</span>
 
-    <span class="nd">@get</span><span class="p">(</span><span class="s2">"/</span><span class="si">{user_id}</span><span class="s2">"</span><span class="p">,</span> 
+    <span class="nd">@get</span><span class="p">(</span><span class="s2">"/</span><span class="si">{user_id}</span><span class="s2">"</span><span class="p">,</span>
          <span class="n">response_model</span><span class="o">=</span><span class="n">UserDto</span><span class="p">,</span>
          <span class="n">responses</span><span class="o">=</span><span class="p">{</span>
              <span class="mi">404</span><span class="p">:</span> <span class="p">{</span><span class="s2">"description"</span><span class="p">:</span> <span class="s2">"User not found"</span><span class="p">},</span>
@@ -2161,7 +2179,7 @@ class UsersController(ControllerBase):
     <span class="c1"># Add controllers with automatic discovery</span>
     <span class="n">builder</span><span class="o">.</span><span class="n">services</span><span class="o">.</span><span class="n">add_controllers</span><span class="p">([</span>
         <span class="s2">"api.controllers.orders_controller"</span><span class="p">,</span>
-        <span class="s2">"api.controllers.menu_controller"</span><span class="p">,</span> 
+        <span class="s2">"api.controllers.menu_controller"</span><span class="p">,</span>
         <span class="s2">"api.controllers.kitchen_controller"</span><span class="p">,</span>
         <span class="s2">"api.controllers.reports_controller"</span><span class="p">,</span>
         <span class="s2">"api.controllers.auth_controller"</span>
@@ -2390,8 +2408,8 @@ class UsersController(ControllerBase):
             <span class="n">description</span><span class="o">=</span><span class="s2">"""</span>
 <span class="s2">            # 🍕 Mario's Pizzeria API</span>
 
-<span class="s2">            Welcome to Mario's Pizzeria API! This API provides comprehensive </span>
-<span class="s2">            functionality for managing pizza orders, menu items, kitchen workflow, </span>
+<span class="s2">            Welcome to Mario's Pizzeria API! This API provides comprehensive</span>
+<span class="s2">            functionality for managing pizza orders, menu items, kitchen workflow,</span>
 <span class="s2">            and customer interactions.</span>
 
 <span class="s2">            ## Features</span>
@@ -2487,6 +2505,7 @@ class UsersController(ControllerBase):
 <li><a href="../cqrs-mediation/">CQRS &amp; Mediation</a> - Command and query handlers used in controllers</li>
 <li><a href="../dependency-injection/">Dependency Injection</a> - Service registration for controller dependencies</li>
 <li><a href="../data-access/">Data Access</a> - Repository patterns used by controller commands/queries</li>
+<li><a href="../../references/source_code_naming_convention/">Source Code Naming Conventions</a> - Controller, DTO, and method naming patterns</li>
 </ul>
 <hr/>
 <p><em>This documentation demonstrates MVC controller patterns using Mario's Pizzeria as a consistent example throughout the Neuroglia framework. The examples show real-world API design with authentication, validation, error handling, and comprehensive testing.</em></p>

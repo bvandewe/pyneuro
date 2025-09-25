@@ -1,0 +1,2256 @@
+
+<!DOCTYPE html>
+
+<html class="no-js" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<link href="../python_object_oriented/" rel="prev"/>
+<link href="../12-factor-app/" rel="next"/>
+<link href="../../assets/images/favicon.png" rel="icon"/>
+<meta content="mkdocs-1.6.1, mkdocs-material-9.6.20" name="generator"/>
+<title>Source Code Naming Conventions - Neuroglia Python Framework</title>
+<link href="../../assets/stylesheets/main.e53b48f4.min.css" rel="stylesheet"/>
+<link href="../../assets/stylesheets/palette.06af60db.min.css" rel="stylesheet"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback" rel="stylesheet"/>
+<style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+<script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+</head>
+<body data-md-color-accent="blue" data-md-color-primary="blue" data-md-color-scheme="default" dir="ltr">
+<input autocomplete="off" class="md-toggle" data-md-toggle="drawer" id="__drawer" type="checkbox"/>
+<input autocomplete="off" class="md-toggle" data-md-toggle="search" id="__search" type="checkbox"/>
+<label class="md-overlay" for="__drawer"></label>
+<div data-md-component="skip">
+<a class="md-skip" href="#source-code-naming-conventions">
+          Skip to content
+        </a>
+</div>
+<div data-md-component="announce">
+</div>
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+<nav aria-label="Header" class="md-header__inner md-grid">
+<a aria-label="Neuroglia Python Framework" class="md-header__button md-logo" data-md-component="logo" href="../.." title="Neuroglia Python Framework">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+</a>
+<label class="md-header__button md-icon" for="__drawer">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+</label>
+<div class="md-header__title" data-md-component="header-title">
+<div class="md-header__ellipsis">
+<div class="md-header__topic">
+<span class="md-ellipsis">
+            Neuroglia Python Framework
+          </span>
+</div>
+<div class="md-header__topic" data-md-component="header-topic">
+<span class="md-ellipsis">
+            
+              Source Code Naming Conventions
+            
+          </span>
+</div>
+</div>
+</div>
+<form class="md-header__option" data-md-component="palette">
+<input aria-label="Switch to dark mode" class="md-option" data-md-color-accent="blue" data-md-color-media="" data-md-color-primary="blue" data-md-color-scheme="default" id="__palette_0" name="__palette" type="radio"/>
+<label class="md-header__button md-icon" for="__palette_1" hidden="" title="Switch to dark mode">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+</label>
+<input aria-label="Switch to light mode" class="md-option" data-md-color-accent="blue" data-md-color-media="" data-md-color-primary="blue" data-md-color-scheme="slate" id="__palette_1" name="__palette" type="radio"/>
+<label class="md-header__button md-icon" for="__palette_0" hidden="" title="Switch to light mode">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+</label>
+</form>
+<script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+<label class="md-header__button md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+</label>
+<div class="md-search" data-md-component="search" role="dialog">
+<label class="md-search__overlay" for="__search"></label>
+<div class="md-search__inner" role="search">
+<form class="md-search__form" name="search">
+<input aria-label="Search" autocapitalize="off" autocomplete="off" autocorrect="off" class="md-search__input" data-md-component="search-query" name="query" placeholder="Search" required="" spellcheck="false" type="text"/>
+<label class="md-search__icon md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+</label>
+<nav aria-label="Search" class="md-search__options">
+<a aria-label="Share" class="md-search__icon md-icon" data-clipboard="" data-clipboard-text="" data-md-component="search-share" href="javascript:void(0)" tabindex="-1" title="Share">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"></path></svg>
+</a>
+<button aria-label="Clear" class="md-search__icon md-icon" tabindex="-1" title="Clear" type="reset">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+</button>
+</nav>
+</form>
+<div class="md-search__output">
+<div class="md-search__scrollwrap" data-md-scrollfix="" tabindex="0">
+<div class="md-search-result" data-md-component="search-result">
+<div class="md-search-result__meta">
+            Initializing search
+          </div>
+<ol class="md-search-result__list" role="presentation"></ol>
+</div>
+</div>
+</div>
+</div>
+</div>
+</nav>
+<nav aria-label="Tabs" class="md-tabs" data-md-component="tabs">
+<div class="md-grid">
+<ul class="md-tabs__list">
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../..">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../getting-started/">
+          
+  
+  
+  Getting Started
+
+        </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../mario-pizzeria/">
+        
+  
+  
+    
+  
+  Mario Pizzeria
+
+      </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../patterns/">
+          
+  
+  
+  Patterns
+
+        </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../features/">
+          
+  
+  
+  Features
+
+        </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../guides/">
+          
+  
+  
+  Guides
+
+        </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../samples/">
+          
+  
+  
+  Samples
+
+        </a>
+</li>
+<li class="md-tabs__item md-tabs__item--active">
+<a class="md-tabs__link" href="../python_type_hints/">
+          
+  
+  
+  References
+
+        </a>
+</li>
+</ul>
+</div>
+</nav>
+</header>
+<div class="md-container" data-md-component="container">
+<main class="md-main" data-md-component="main">
+<div class="md-main__inner md-grid">
+<div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="Navigation" class="md-nav md-nav--primary md-nav--lifted" data-md-level="0">
+<label class="md-nav__title" for="__drawer">
+<a aria-label="Neuroglia Python Framework" class="md-nav__button md-logo" data-md-component="logo" href="../.." title="Neuroglia Python Framework">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+</a>
+    Neuroglia Python Framework
+  </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../..">
+<span class="md-ellipsis">
+    Home
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_2" type="checkbox"/>
+<label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+<span class="md-ellipsis">
+    Getting Started
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_2_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_2">
+<span class="md-nav__icon md-icon"></span>
+            Getting Started
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../getting-started/">
+<span class="md-ellipsis">
+    Overview
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../guides/3-min-bootstrap/">
+<span class="md-ellipsis">
+    3-Minute Bootstrap
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../guides/local-development/">
+<span class="md-ellipsis">
+    Local Development Setup
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../guides/mario-pizzeria-tutorial/">
+<span class="md-ellipsis">
+    Mario's Pizzeria Tutorial
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../mario-pizzeria/">
+<span class="md-ellipsis">
+    Mario Pizzeria
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_4" type="checkbox"/>
+<label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+<span class="md-ellipsis">
+    Patterns
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_4_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_4">
+<span class="md-nav__icon md-icon"></span>
+            Patterns
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../patterns/">
+<span class="md-ellipsis">
+    Overview
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../patterns/clean-architecture/">
+<span class="md-ellipsis">
+    Clean Architecture
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../patterns/cqrs/">
+<span class="md-ellipsis">
+    CQRS
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../patterns/event-driven/">
+<span class="md-ellipsis">
+    Event-Driven
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../patterns/repository/">
+<span class="md-ellipsis">
+    Repository
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../patterns/resource-oriented-architecture/">
+<span class="md-ellipsis">
+    Resource-Oriented Architecture
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../patterns/watcher-reconciliation-patterns/">
+<span class="md-ellipsis">
+    Watcher &amp; Reconciliation Patterns
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../patterns/watcher-reconciliation-execution/">
+<span class="md-ellipsis">
+    Watcher &amp; Reconciliation Execution
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_5" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+<span class="md-ellipsis">
+    Features
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_5_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_5">
+<span class="md-nav__icon md-icon"></span>
+            Features
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/">
+<span class="md-ellipsis">
+    Overview
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/dependency-injection/">
+<span class="md-ellipsis">
+    Dependency Injection
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/cqrs-mediation/">
+<span class="md-ellipsis">
+    CQRS &amp; Mediation
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/mvc-controllers/">
+<span class="md-ellipsis">
+    MVC Controllers
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/data-access/">
+<span class="md-ellipsis">
+    Data Access
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/event-sourcing/">
+<span class="md-ellipsis">
+    Event Sourcing
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/serialization/">
+<span class="md-ellipsis">
+    Serialization
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/object-mapping/">
+<span class="md-ellipsis">
+    Object Mapping
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/reactive-programming/">
+<span class="md-ellipsis">
+    Reactive Programming
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/background-task-scheduling/">
+<span class="md-ellipsis">
+    Background Task Scheduling
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/redis-cache-repository/">
+<span class="md-ellipsis">
+    Redis Cache Repository
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/http-service-client/">
+<span class="md-ellipsis">
+    HTTP Service Client
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/case-conversion-utilities/">
+<span class="md-ellipsis">
+    Case Conversion Utilities
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/enhanced-model-validation/">
+<span class="md-ellipsis">
+    Enhanced Model Validation
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/mermaid-diagrams/">
+<span class="md-ellipsis">
+    Mermaid Diagrams
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_6" type="checkbox"/>
+<label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+<span class="md-ellipsis">
+    Guides
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_6_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_6">
+<span class="md-nav__icon md-icon"></span>
+            Guides
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../guides/">
+<span class="md-ellipsis">
+    Overview
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../guides/project-setup/">
+<span class="md-ellipsis">
+    Project Setup
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../guides/testing-setup/">
+<span class="md-ellipsis">
+    Testing Setup
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_7" type="checkbox"/>
+<label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+<span class="md-ellipsis">
+    Samples
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_7_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_7">
+<span class="md-nav__icon md-icon"></span>
+            Samples
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../samples/">
+<span class="md-ellipsis">
+    Overview
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../samples/openbank/">
+<span class="md-ellipsis">
+    OpenBank
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../samples/api_gateway/">
+<span class="md-ellipsis">
+    API Gateway
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../samples/desktop_controller/">
+<span class="md-ellipsis">
+    Desktop Controller
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+<input checked="" class="md-nav__toggle md-toggle" id="__nav_8" type="checkbox"/>
+<label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="">
+<span class="md-ellipsis">
+    References
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="true" aria-labelledby="__nav_8_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_8">
+<span class="md-nav__icon md-icon"></span>
+            References
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../python_type_hints/">
+<span class="md-ellipsis">
+    Python Type Hints
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../python_generic_types/">
+<span class="md-ellipsis">
+    Python Generic Types
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../python_modular_code/">
+<span class="md-ellipsis">
+    Python Modular Code
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../python_object_oriented/">
+<span class="md-ellipsis">
+    Python Object-Oriented Programming
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--active">
+<input class="md-nav__toggle md-toggle" id="__toc" type="checkbox"/>
+<label class="md-nav__link md-nav__link--active" for="__toc">
+<span class="md-ellipsis">
+    Source Code Naming Conventions
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<a class="md-nav__link md-nav__link--active" href="./">
+<span class="md-ellipsis">
+    Source Code Naming Conventions
+    
+  </span>
+</a>
+<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#what-youll-learn">
+<span class="md-ellipsis">
+      🎯 What You'll Learn
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#benefits-of-naming-conventions">
+<span class="md-ellipsis">
+      📋 Benefits of Naming Conventions
+    </span>
+</a>
+<nav aria-label="📋 Benefits of Naming Conventions" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#cognitive-load-reduction">
+<span class="md-ellipsis">
+      🧠 Cognitive Load Reduction
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#team-collaboration">
+<span class="md-ellipsis">
+      👥 Team Collaboration
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#searchability-navigation">
+<span class="md-ellipsis">
+      🔍 Searchability &amp; Navigation
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#architecture-enforcement">
+<span class="md-ellipsis">
+      🏗️ Architecture Enforcement
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#productivity-maintenance">
+<span class="md-ellipsis">
+      🚀 Productivity &amp; Maintenance
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#python-language-conventions">
+<span class="md-ellipsis">
+      🐍 Python Language Conventions
+    </span>
+</a>
+<nav aria-label="🐍 Python Language Conventions" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#snake_case-usage">
+<span class="md-ellipsis">
+      snake_case Usage
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#pascalcase-usage">
+<span class="md-ellipsis">
+      PascalCase Usage
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#upper_case-usage">
+<span class="md-ellipsis">
+      UPPER_CASE Usage
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#layer-specific-naming-conventions">
+<span class="md-ellipsis">
+      🏗️ Layer-Specific Naming Conventions
+    </span>
+</a>
+<nav aria-label="🏗️ Layer-Specific Naming Conventions" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#api-layer-api">
+<span class="md-ellipsis">
+      🌐 API Layer (api/)
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#application-layer-application">
+<span class="md-ellipsis">
+      💼 Application Layer (application/)
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#domain-layer-domain">
+<span class="md-ellipsis">
+      🏛️ Domain Layer (domain/)
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#integration-layer-integration">
+<span class="md-ellipsis">
+      🔌 Integration Layer (integration/)
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#testing-naming-conventions">
+<span class="md-ellipsis">
+      🧪 Testing Naming Conventions
+    </span>
+</a>
+<nav aria-label="🧪 Testing Naming Conventions" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#test-files">
+<span class="md-ellipsis">
+      Test Files
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#test-classes">
+<span class="md-ellipsis">
+      Test Classes
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#test-methods">
+<span class="md-ellipsis">
+      Test Methods
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#test-fixtures-and-utilities">
+<span class="md-ellipsis">
+      Test Fixtures and Utilities
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#case-conversion-patterns">
+<span class="md-ellipsis">
+      🔄 Case Conversion Patterns
+    </span>
+</a>
+<nav aria-label="🔄 Case Conversion Patterns" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#api-boundary-conversion">
+<span class="md-ellipsis">
+      API Boundary Conversion
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#database-field-mapping">
+<span class="md-ellipsis">
+      Database Field Mapping
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#file-and-directory-naming">
+<span class="md-ellipsis">
+      📁 File and Directory Naming
+    </span>
+</a>
+<nav aria-label="📁 File and Directory Naming" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#file-naming-patterns">
+<span class="md-ellipsis">
+      File Naming Patterns
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#directory-structure">
+<span class="md-ellipsis">
+      Directory Structure
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#common-anti-patterns-to-avoid">
+<span class="md-ellipsis">
+      ⚡ Common Anti-Patterns to Avoid
+    </span>
+</a>
+<nav aria-label="⚡ Common Anti-Patterns to Avoid" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#inconsistent-casing">
+<span class="md-ellipsis">
+      ❌ Inconsistent Casing
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#unclear-abbreviations">
+<span class="md-ellipsis">
+      ❌ Unclear Abbreviations
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#misleading-names">
+<span class="md-ellipsis">
+      ❌ Misleading Names
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#generic-names">
+<span class="md-ellipsis">
+      ❌ Generic Names
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#framework-specific-patterns">
+<span class="md-ellipsis">
+      🎯 Framework-Specific Patterns
+    </span>
+</a>
+<nav aria-label="🎯 Framework-Specific Patterns" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#command-and-query-naming">
+<span class="md-ellipsis">
+      Command and Query Naming
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#event-naming">
+<span class="md-ellipsis">
+      Event Naming
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#repository-naming">
+<span class="md-ellipsis">
+      Repository Naming
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#best-practices-summary">
+<span class="md-ellipsis">
+      🚀 Best Practices Summary
+    </span>
+</a>
+<nav aria-label="🚀 Best Practices Summary" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#dos">
+<span class="md-ellipsis">
+      ✅ Do's
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#donts">
+<span class="md-ellipsis">
+      ❌ Don'ts
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#marios-pizzeria-example">
+<span class="md-ellipsis">
+      🍕 Mario's Pizzeria Example
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#related-documentation">
+<span class="md-ellipsis">
+      🔗 Related Documentation
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../12-factor-app/">
+<span class="md-ellipsis">
+    12-Factor App
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#what-youll-learn">
+<span class="md-ellipsis">
+      🎯 What You'll Learn
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#benefits-of-naming-conventions">
+<span class="md-ellipsis">
+      📋 Benefits of Naming Conventions
+    </span>
+</a>
+<nav aria-label="📋 Benefits of Naming Conventions" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#cognitive-load-reduction">
+<span class="md-ellipsis">
+      🧠 Cognitive Load Reduction
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#team-collaboration">
+<span class="md-ellipsis">
+      👥 Team Collaboration
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#searchability-navigation">
+<span class="md-ellipsis">
+      🔍 Searchability &amp; Navigation
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#architecture-enforcement">
+<span class="md-ellipsis">
+      🏗️ Architecture Enforcement
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#productivity-maintenance">
+<span class="md-ellipsis">
+      🚀 Productivity &amp; Maintenance
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#python-language-conventions">
+<span class="md-ellipsis">
+      🐍 Python Language Conventions
+    </span>
+</a>
+<nav aria-label="🐍 Python Language Conventions" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#snake_case-usage">
+<span class="md-ellipsis">
+      snake_case Usage
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#pascalcase-usage">
+<span class="md-ellipsis">
+      PascalCase Usage
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#upper_case-usage">
+<span class="md-ellipsis">
+      UPPER_CASE Usage
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#layer-specific-naming-conventions">
+<span class="md-ellipsis">
+      🏗️ Layer-Specific Naming Conventions
+    </span>
+</a>
+<nav aria-label="🏗️ Layer-Specific Naming Conventions" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#api-layer-api">
+<span class="md-ellipsis">
+      🌐 API Layer (api/)
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#application-layer-application">
+<span class="md-ellipsis">
+      💼 Application Layer (application/)
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#domain-layer-domain">
+<span class="md-ellipsis">
+      🏛️ Domain Layer (domain/)
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#integration-layer-integration">
+<span class="md-ellipsis">
+      🔌 Integration Layer (integration/)
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#testing-naming-conventions">
+<span class="md-ellipsis">
+      🧪 Testing Naming Conventions
+    </span>
+</a>
+<nav aria-label="🧪 Testing Naming Conventions" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#test-files">
+<span class="md-ellipsis">
+      Test Files
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#test-classes">
+<span class="md-ellipsis">
+      Test Classes
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#test-methods">
+<span class="md-ellipsis">
+      Test Methods
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#test-fixtures-and-utilities">
+<span class="md-ellipsis">
+      Test Fixtures and Utilities
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#case-conversion-patterns">
+<span class="md-ellipsis">
+      🔄 Case Conversion Patterns
+    </span>
+</a>
+<nav aria-label="🔄 Case Conversion Patterns" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#api-boundary-conversion">
+<span class="md-ellipsis">
+      API Boundary Conversion
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#database-field-mapping">
+<span class="md-ellipsis">
+      Database Field Mapping
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#file-and-directory-naming">
+<span class="md-ellipsis">
+      📁 File and Directory Naming
+    </span>
+</a>
+<nav aria-label="📁 File and Directory Naming" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#file-naming-patterns">
+<span class="md-ellipsis">
+      File Naming Patterns
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#directory-structure">
+<span class="md-ellipsis">
+      Directory Structure
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#common-anti-patterns-to-avoid">
+<span class="md-ellipsis">
+      ⚡ Common Anti-Patterns to Avoid
+    </span>
+</a>
+<nav aria-label="⚡ Common Anti-Patterns to Avoid" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#inconsistent-casing">
+<span class="md-ellipsis">
+      ❌ Inconsistent Casing
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#unclear-abbreviations">
+<span class="md-ellipsis">
+      ❌ Unclear Abbreviations
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#misleading-names">
+<span class="md-ellipsis">
+      ❌ Misleading Names
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#generic-names">
+<span class="md-ellipsis">
+      ❌ Generic Names
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#framework-specific-patterns">
+<span class="md-ellipsis">
+      🎯 Framework-Specific Patterns
+    </span>
+</a>
+<nav aria-label="🎯 Framework-Specific Patterns" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#command-and-query-naming">
+<span class="md-ellipsis">
+      Command and Query Naming
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#event-naming">
+<span class="md-ellipsis">
+      Event Naming
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#repository-naming">
+<span class="md-ellipsis">
+      Repository Naming
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#best-practices-summary">
+<span class="md-ellipsis">
+      🚀 Best Practices Summary
+    </span>
+</a>
+<nav aria-label="🚀 Best Practices Summary" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#dos">
+<span class="md-ellipsis">
+      ✅ Do's
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#donts">
+<span class="md-ellipsis">
+      ❌ Don'ts
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#marios-pizzeria-example">
+<span class="md-ellipsis">
+      🍕 Mario's Pizzeria Example
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#related-documentation">
+<span class="md-ellipsis">
+      🔗 Related Documentation
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div class="md-content" data-md-component="content">
+<article class="md-content__inner md-typeset">
+<h1 id="source-code-naming-conventions">🏷️ Source Code Naming Conventions<a class="headerlink" href="#source-code-naming-conventions" title="Permanent link">¶</a></h1>
+<p>Consistent naming conventions are crucial for maintainable, readable, and professional codebases. The Neuroglia framework follows Python's established conventions while adding domain-specific patterns for clean architecture. This reference provides comprehensive guidelines for naming across all layers of your application.</p>
+<h2 id="what-youll-learn">🎯 What You'll Learn<a class="headerlink" href="#what-youll-learn" title="Permanent link">¶</a></h2>
+<ul>
+<li>When to use snake_case vs CamelCase vs PascalCase across different contexts</li>
+<li>Naming patterns for entities, events, handlers, controllers, and methods</li>
+<li>Layer-specific conventions that enforce clean architecture boundaries</li>
+<li>Benefits of consistent naming conventions for team productivity</li>
+<li>Mario's Pizzeria examples demonstrating proper naming in practice</li>
+</ul>
+<hr/>
+<h2 id="benefits-of-naming-conventions">📋 Benefits of Naming Conventions<a class="headerlink" href="#benefits-of-naming-conventions" title="Permanent link">¶</a></h2>
+<h3 id="cognitive-load-reduction">🧠 Cognitive Load Reduction<a class="headerlink" href="#cognitive-load-reduction" title="Permanent link">¶</a></h3>
+<p>Consistent patterns reduce mental overhead when reading code. Developers can instantly identify the purpose and layer of any component based on its name.</p>
+<h3 id="team-collaboration">👥 Team Collaboration<a class="headerlink" href="#team-collaboration" title="Permanent link">¶</a></h3>
+<p>Standardized naming eliminates debates about "what to call this" and ensures new team members can navigate the codebase intuitively.</p>
+<h3 id="searchability-navigation">🔍 Searchability &amp; Navigation<a class="headerlink" href="#searchability-navigation" title="Permanent link">¶</a></h3>
+<p>Well-named components are easier to find using IDE search, grep, and other tools. Consistent patterns enable powerful refactoring operations.</p>
+<h3 id="architecture-enforcement">🏗️ Architecture Enforcement<a class="headerlink" href="#architecture-enforcement" title="Permanent link">¶</a></h3>
+<p>Naming conventions reinforce clean architecture boundaries - you can immediately tell if a component violates layer dependencies.</p>
+<h3 id="productivity-maintenance">🚀 Productivity &amp; Maintenance<a class="headerlink" href="#productivity-maintenance" title="Permanent link">¶</a></h3>
+<p>Less time spent deciphering unclear names means more time focused on business logic and feature development.</p>
+<hr/>
+<h2 id="python-language-conventions">🐍 Python Language Conventions<a class="headerlink" href="#python-language-conventions" title="Permanent link">¶</a></h2>
+<p>The framework strictly follows <a href="https://peps.python.org/pep-0008/">PEP 8</a> and Python naming conventions as the foundation:</p>
+<h3 id="snake_case-usage">snake_case Usage<a class="headerlink" href="#snake_case-usage" title="Permanent link">¶</a></h3>
+<p><strong>Files and Modules:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="c1"># ✅ Correct</span>
+<span class="n">user_service</span><span class="o">.</span><span class="n">py</span>
+<span class="n">create_order_command</span><span class="o">.</span><span class="n">py</span>
+<span class="n">bank_account_repository</span><span class="o">.</span><span class="n">py</span>
+
+<span class="c1"># ❌ Incorrect</span>
+<span class="n">UserService</span><span class="o">.</span><span class="n">py</span>
+<span class="n">CreateOrderCommand</span><span class="o">.</span><span class="n">py</span>
+<span class="n">BankAccount</span><span class="o">-</span><span class="n">Repository</span><span class="o">.</span><span class="n">py</span>
+</code></pre></div>
+<p><strong>Variables and Functions:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="c1"># ✅ Correct</span>
+<span class="n">user_name</span> <span class="o">=</span> <span class="s2">"Mario"</span>
+<span class="n">total_amount</span> <span class="o">=</span> <span class="n">calculate_order_total</span><span class="p">()</span>
+<span class="n">order_placed_at</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">process_payment_async</span><span class="p">(</span><span class="n">amount</span><span class="p">:</span> <span class="n">Decimal</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">pass</span>
+
+<span class="c1"># ❌ Incorrect</span>
+<span class="n">userName</span> <span class="o">=</span> <span class="s2">"Mario"</span>
+<span class="n">totalAmount</span> <span class="o">=</span> <span class="n">calculateOrderTotal</span><span class="p">()</span>
+<span class="n">OrderPlacedAt</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">ProcessPaymentAsync</span><span class="p">(</span><span class="n">amount</span><span class="p">:</span> <span class="n">Decimal</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">pass</span>
+</code></pre></div>
+<p><strong>Method and Attribute Names:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Pizza</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pizza_name</span> <span class="o">=</span> <span class="s2">""</span>        <span class="c1"># snake_case attributes</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">base_price</span> <span class="o">=</span> <span class="n">Decimal</span><span class="p">(</span><span class="s2">"0"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">available_sizes</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">calculate_total_price</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="c1"># snake_case methods</span>
+        <span class="k">pass</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">save_to_database_async</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="c1"># async suffix</span>
+        <span class="k">pass</span>
+</code></pre></div>
+<h3 id="pascalcase-usage">PascalCase Usage<a class="headerlink" href="#pascalcase-usage" title="Permanent link">¶</a></h3>
+<p><strong>Classes, Types, and Interfaces:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="c1"># ✅ Correct - Classes</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">OrderService</span><span class="p">:</span>
+    <span class="k">pass</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">CreatePizzaCommand</span><span class="p">:</span>
+    <span class="k">pass</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">PizzaOrderHandler</span><span class="p">:</span>
+    <span class="k">pass</span>
+
+<span class="c1"># ✅ Correct - Type Variables</span>
+<span class="n">TEntity</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s2">"TEntity"</span><span class="p">)</span>
+<span class="n">TKey</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s2">"TKey"</span><span class="p">)</span>
+<span class="n">TResult</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s2">"TResult"</span><span class="p">)</span>
+
+<span class="c1"># ✅ Correct - Exceptions</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ValidationException</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">OrderNotFoundException</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="k">pass</span>
+</code></pre></div>
+<p><strong>Enums:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">OrderStatus</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="n">PENDING</span> <span class="o">=</span> <span class="s2">"pending"</span>
+    <span class="n">CONFIRMED</span> <span class="o">=</span> <span class="s2">"confirmed"</span>
+    <span class="n">PREPARING</span> <span class="o">=</span> <span class="s2">"preparing"</span>
+    <span class="n">READY</span> <span class="o">=</span> <span class="s2">"ready"</span>
+    <span class="n">DELIVERED</span> <span class="o">=</span> <span class="s2">"delivered"</span>
+    <span class="n">CANCELLED</span> <span class="o">=</span> <span class="s2">"cancelled"</span>
+</code></pre></div>
+<h3 id="upper_case-usage">UPPER_CASE Usage<a class="headerlink" href="#upper_case-usage" title="Permanent link">¶</a></h3>
+<p><strong>Constants:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="c1"># ✅ Correct - Module-level constants</span>
+<span class="n">DEFAULT_PIZZA_SIZE</span> <span class="o">=</span> <span class="s2">"medium"</span>
+<span class="n">MAX_ORDER_ITEMS</span> <span class="o">=</span> <span class="mi">20</span>
+<span class="n">API_BASE_URL</span> <span class="o">=</span> <span class="s2">"https://api.mariospizza.com"</span>
+
+<span class="c1"># ✅ Correct - Class constants</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">PizzaService</span><span class="p">:</span>
+    <span class="n">DEFAULT_COOKING_TIME</span> <span class="o">=</span> <span class="mi">15</span>  <span class="c1"># minutes</span>
+    <span class="n">MAX_TOPPINGS_PER_PIZZA</span> <span class="o">=</span> <span class="mi">8</span>
+</code></pre></div>
+<hr/>
+<h2 id="layer-specific-naming-conventions">🏗️ Layer-Specific Naming Conventions<a class="headerlink" href="#layer-specific-naming-conventions" title="Permanent link">¶</a></h2>
+<p>The framework enforces different naming patterns for each architectural layer to maintain clean separation of concerns.</p>
+<h3 id="api-layer-api">🌐 API Layer (<code>api/</code>)<a class="headerlink" href="#api-layer-api" title="Permanent link">¶</a></h3>
+<p>The API layer handles HTTP requests and responses, following REST conventions.</p>
+<p><strong>Controllers:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Pattern: {Entity}Controller (PascalCase)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">PizzasController</span><span class="p">(</span><span class="n">ControllerBase</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">OrdersController</span><span class="p">(</span><span class="n">ControllerBase</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">CustomersController</span><span class="p">(</span><span class="n">ControllerBase</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+<span class="c1"># ❌ Avoid</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">PizzaController</span><span class="p">:</span>      <span class="c1"># Singular form</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Pizza_Controller</span><span class="p">:</span>     <span class="c1"># snake_case</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">pizzaController</span><span class="p">:</span>      <span class="c1"># camelCase</span>
+</code></pre></div>
+<p><strong>Controller Methods:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">PizzasController</span><span class="p">(</span><span class="n">ControllerBase</span><span class="p">):</span>
+    <span class="c1"># Pattern: HTTP verb + descriptive name (snake_case)</span>
+    <span class="nd">@get</span><span class="p">(</span><span class="s2">"/</span><span class="si">{pizza_id}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_pizza</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pizza_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PizzaDto</span><span class="p">:</span>
+        <span class="k">pass</span>
+
+    <span class="nd">@post</span><span class="p">(</span><span class="s2">"/"</span><span class="p">)</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">create_pizza</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pizza_dto</span><span class="p">:</span> <span class="n">CreatePizzaDto</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PizzaDto</span><span class="p">:</span>
+        <span class="k">pass</span>
+
+    <span class="nd">@put</span><span class="p">(</span><span class="s2">"/</span><span class="si">{pizza_id}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">update_pizza</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pizza_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">pizza_dto</span><span class="p">:</span> <span class="n">UpdatePizzaDto</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PizzaDto</span><span class="p">:</span>
+        <span class="k">pass</span>
+
+    <span class="nd">@delete</span><span class="p">(</span><span class="s2">"/</span><span class="si">{pizza_id}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">delete_pizza</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pizza_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">pass</span>
+
+    <span class="c1"># Complex operations get descriptive names</span>
+    <span class="nd">@post</span><span class="p">(</span><span class="s2">"/</span><span class="si">{pizza_id}</span><span class="s2">/customize"</span><span class="p">)</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">customize_pizza_toppings</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pizza_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">toppings</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">PizzaDto</span><span class="p">:</span>
+        <span class="k">pass</span>
+</code></pre></div>
+<p><strong>DTOs (Data Transfer Objects):</strong></p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Pattern: {Purpose}{Entity}Dto (PascalCase)</span>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">PizzaDto</span><span class="p">:</span>
+    <span class="n">pizza_id</span><span class="p">:</span> <span class="nb">str</span>           <span class="c1"># snake_case fields</span>
+    <span class="n">pizza_name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">base_price</span><span class="p">:</span> <span class="n">Decimal</span>
+    <span class="n">available_sizes</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">CreatePizzaDto</span><span class="p">:</span>
+    <span class="n">pizza_name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">base_price</span><span class="p">:</span> <span class="n">Decimal</span>
+    <span class="n">ingredient_ids</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">UpdatePizzaDto</span><span class="p">:</span>
+    <span class="n">pizza_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">base_price</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Decimal</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+
+<span class="c1"># Specialized DTOs</span>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">PizzaMenuItemDto</span><span class="p">:</span>     <span class="c1"># Specific context</span>
+    <span class="k">pass</span>
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">PizzaInventoryDto</span><span class="p">:</span>    <span class="c1"># Different view</span>
+    <span class="k">pass</span>
+</code></pre></div>
+<h3 id="application-layer-application">💼 Application Layer (<code>application/</code>)<a class="headerlink" href="#application-layer-application" title="Permanent link">¶</a></h3>
+<p>The application layer orchestrates business operations through commands, queries, and handlers.</p>
+<p><strong>Commands (Write Operations):</strong></p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Pattern: {Verb}{Entity}Command (PascalCase)</span>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">CreatePizzaCommand</span><span class="p">(</span><span class="n">Command</span><span class="p">[</span><span class="n">OperationResult</span><span class="p">[</span><span class="n">PizzaDto</span><span class="p">]]):</span>
+    <span class="n">pizza_name</span><span class="p">:</span> <span class="nb">str</span>         <span class="c1"># snake_case fields</span>
+    <span class="n">base_price</span><span class="p">:</span> <span class="n">Decimal</span>
+    <span class="n">ingredient_ids</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">UpdatePizzaCommand</span><span class="p">(</span><span class="n">Command</span><span class="p">[</span><span class="n">OperationResult</span><span class="p">[</span><span class="n">PizzaDto</span><span class="p">]]):</span>
+    <span class="n">pizza_id</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">pizza_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">base_price</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Decimal</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">DeletePizzaCommand</span><span class="p">(</span><span class="n">Command</span><span class="p">[</span><span class="n">OperationResult</span><span class="p">]):</span>
+    <span class="n">pizza_id</span><span class="p">:</span> <span class="nb">str</span>
+
+<span class="c1"># Complex business operations</span>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ProcessOrderPaymentCommand</span><span class="p">(</span><span class="n">Command</span><span class="p">[</span><span class="n">OperationResult</span><span class="p">[</span><span class="n">PaymentDto</span><span class="p">]]):</span>
+    <span class="n">order_id</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">payment_method</span><span class="p">:</span> <span class="n">PaymentMethod</span>
+    <span class="n">amount</span><span class="p">:</span> <span class="n">Decimal</span>
+</code></pre></div>
+<p><strong>Queries (Read Operations):</strong></p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Pattern: {Action}{Entity}Query (PascalCase)</span>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">GetPizzaByIdQuery</span><span class="p">(</span><span class="n">Query</span><span class="p">[</span><span class="n">PizzaDto</span><span class="p">]):</span>
+    <span class="n">pizza_id</span><span class="p">:</span> <span class="nb">str</span>
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">GetPizzasByTypeQuery</span><span class="p">(</span><span class="n">Query</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">PizzaDto</span><span class="p">]]):</span>
+    <span class="n">pizza_type</span><span class="p">:</span> <span class="n">PizzaType</span>
+    <span class="n">include_unavailable</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">SearchPizzasQuery</span><span class="p">(</span><span class="n">Query</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">PizzaDto</span><span class="p">]]):</span>
+    <span class="n">search_term</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">max_results</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50</span>
+
+<span class="c1"># Complex queries with business logic</span>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">GetPopularPizzasForRegionQuery</span><span class="p">(</span><span class="n">Query</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">PizzaDto</span><span class="p">]]):</span>
+    <span class="n">region_code</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">date_range</span><span class="p">:</span> <span class="n">DateRange</span>
+    <span class="n">min_order_count</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span>
+</code></pre></div>
+<p><strong>Handlers:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Pattern: {Command/Query}Handler (PascalCase)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">CreatePizzaCommandHandler</span><span class="p">(</span><span class="n">CommandHandler</span><span class="p">[</span><span class="n">CreatePizzaCommand</span><span class="p">,</span> <span class="n">OperationResult</span><span class="p">[</span><span class="n">PizzaDto</span><span class="p">]]):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                 <span class="n">pizza_repository</span><span class="p">:</span> <span class="n">PizzaRepository</span><span class="p">,</span>
+                 <span class="n">mapper</span><span class="p">:</span> <span class="n">Mapper</span><span class="p">,</span>
+                 <span class="n">event_bus</span><span class="p">:</span> <span class="n">EventBus</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_pizza_repository</span> <span class="o">=</span> <span class="n">pizza_repository</span>    <span class="c1"># snake_case fields</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_mapper</span> <span class="o">=</span> <span class="n">mapper</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_event_bus</span> <span class="o">=</span> <span class="n">event_bus</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">handle_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command</span><span class="p">:</span> <span class="n">CreatePizzaCommand</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">OperationResult</span><span class="p">[</span><span class="n">PizzaDto</span><span class="p">]:</span>
+        <span class="c1"># snake_case method names and variables</span>
+        <span class="n">validation_result</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_validate_command</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">validation_result</span><span class="o">.</span><span class="n">is_success</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">validation_result</span>
+
+        <span class="n">pizza</span> <span class="o">=</span> <span class="n">Pizza</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">command</span><span class="o">.</span><span class="n">pizza_name</span><span class="p">,</span>
+            <span class="n">base_price</span><span class="o">=</span><span class="n">command</span><span class="o">.</span><span class="n">base_price</span>
+        <span class="p">)</span>
+
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pizza_repository</span><span class="o">.</span><span class="n">save_async</span><span class="p">(</span><span class="n">pizza</span><span class="p">)</span>
+
+        <span class="c1"># Raise domain event</span>
+        <span class="n">pizza_created_event</span> <span class="o">=</span> <span class="n">PizzaCreatedEvent</span><span class="p">(</span>
+            <span class="n">pizza_id</span><span class="o">=</span><span class="n">pizza</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+            <span class="n">pizza_name</span><span class="o">=</span><span class="n">pizza</span><span class="o">.</span><span class="n">name</span>
+        <span class="p">)</span>
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_event_bus</span><span class="o">.</span><span class="n">publish_async</span><span class="p">(</span><span class="n">pizza_created_event</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">created</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_mapper</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">pizza</span><span class="p">,</span> <span class="n">PizzaDto</span><span class="p">))</span>
+</code></pre></div>
+<p><strong>Services:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Pattern: {Entity}Service or {Purpose}Service (PascalCase)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">PizzaService</span><span class="p">:</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">calculate_cooking_time_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pizza</span><span class="p">:</span> <span class="n">Pizza</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">pass</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">check_ingredient_availability_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingredients</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">pass</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">OrderService</span><span class="p">:</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">process_order_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">order</span><span class="p">:</span> <span class="n">Order</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">OperationResult</span><span class="p">[</span><span class="n">Order</span><span class="p">]:</span>
+        <span class="k">pass</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">PaymentService</span><span class="p">:</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">process_payment_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">payment_info</span><span class="p">:</span> <span class="n">PaymentInfo</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PaymentResult</span><span class="p">:</span>
+        <span class="k">pass</span>
+
+<span class="c1"># Specialized services</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">PizzaRecommendationService</span><span class="p">:</span>
+    <span class="k">pass</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">OrderNotificationService</span><span class="p">:</span>
+    <span class="k">pass</span>
+</code></pre></div>
+<h3 id="domain-layer-domain">🏛️ Domain Layer (<code>domain/</code>)<a class="headerlink" href="#domain-layer-domain" title="Permanent link">¶</a></h3>
+<p>The domain layer contains core business logic and entities, following domain-driven design principles.</p>
+<p><strong>Entities:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Pattern: {BusinessConcept} (PascalCase, singular)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Pizza</span><span class="p">(</span><span class="n">Entity</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">base_price</span><span class="p">:</span> <span class="n">Decimal</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>                    <span class="c1"># snake_case attributes</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">base_price</span> <span class="o">=</span> <span class="n">base_price</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">available_sizes</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">created_at</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+
+    <span class="c1"># Business method names in snake_case</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_ingredient</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingredient</span><span class="p">:</span> <span class="n">Ingredient</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">can_add_ingredient</span><span class="p">(</span><span class="n">ingredient</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">BusinessRuleViolation</span><span class="p">(</span><span class="s2">"Cannot add ingredient to pizza"</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">ingredients</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ingredient</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">raise_event</span><span class="p">(</span><span class="n">IngredientAddedEvent</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">ingredient</span><span class="o">.</span><span class="n">id</span><span class="p">))</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">calculate_total_price</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="n">PizzaSize</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Decimal</span><span class="p">:</span>
+        <span class="n">base_cost</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_price</span> <span class="o">*</span> <span class="n">size</span><span class="o">.</span><span class="n">price_multiplier</span>
+        <span class="n">ingredient_cost</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">price</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ingredients</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">base_cost</span> <span class="o">+</span> <span class="n">ingredient_cost</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">can_add_ingredient</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingredient</span><span class="p">:</span> <span class="n">Ingredient</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="c1"># Business rules</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ingredients</span><span class="p">)</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">MAX_INGREDIENTS</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Order</span><span class="p">(</span><span class="n">Entity</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">customer_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">customer_id</span> <span class="o">=</span> <span class="n">customer_id</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">order_items</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">OrderStatus</span><span class="o">.</span><span class="n">PENDING</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">total_amount</span> <span class="o">=</span> <span class="n">Decimal</span><span class="p">(</span><span class="s2">"0"</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_pizza</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pizza</span><span class="p">:</span> <span class="n">Pizza</span><span class="p">,</span> <span class="n">quantity</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">status</span> <span class="o">!=</span> <span class="n">OrderStatus</span><span class="o">.</span><span class="n">PENDING</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">BusinessRuleViolation</span><span class="p">(</span><span class="s2">"Cannot modify confirmed order"</span><span class="p">)</span>
+
+        <span class="n">order_item</span> <span class="o">=</span> <span class="n">OrderItem</span><span class="p">(</span><span class="n">pizza</span><span class="p">,</span> <span class="n">quantity</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">order_items</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">order_item</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_recalculate_total</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">raise_event</span><span class="p">(</span><span class="n">PizzaAddedToOrderEvent</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">pizza</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">quantity</span><span class="p">))</span>
+</code></pre></div>
+<p><strong>Value Objects:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Pattern: {Concept} (PascalCase, represents a value)</span>
+<span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Money</span><span class="p">:</span>
+    <span class="n">amount</span><span class="p">:</span> <span class="n">Decimal</span>
+    <span class="n">currency</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"USD"</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="s1">'Money'</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">'Money'</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">currency</span> <span class="o">!=</span> <span class="n">other</span><span class="o">.</span><span class="n">currency</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Cannot add different currencies"</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">Money</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">amount</span> <span class="o">+</span> <span class="n">other</span><span class="o">.</span><span class="n">amount</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">currency</span><span class="p">)</span>
+
+<span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Address</span><span class="p">:</span>
+    <span class="n">street</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">city</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">state</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">zip_code</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">country</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"USA"</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">to_display_string</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">street</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">city</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">zip_code</span><span class="si">}</span><span class="s2">"</span>
+
+<span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">EmailAddress</span><span class="p">:</span>
+    <span class="n">value</span><span class="p">:</span> <span class="nb">str</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="s2">"@"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Invalid email address"</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Domain Events:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Pattern: {Entity}{Action}Event (PascalCase)</span>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">PizzaCreatedEvent</span><span class="p">(</span><span class="n">DomainEvent</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
+    <span class="n">pizza_id</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">pizza_name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">created_by</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">created_at</span><span class="p">:</span> <span class="n">datetime</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">)</span>
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">OrderConfirmedEvent</span><span class="p">(</span><span class="n">DomainEvent</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
+    <span class="n">order_id</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">customer_id</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">total_amount</span><span class="p">:</span> <span class="n">Decimal</span>
+    <span class="n">estimated_delivery</span><span class="p">:</span> <span class="n">datetime</span>
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">PaymentProcessedEvent</span><span class="p">(</span><span class="n">DomainEvent</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
+    <span class="n">payment_id</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">order_id</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">amount</span><span class="p">:</span> <span class="n">Decimal</span>
+    <span class="n">payment_method</span><span class="p">:</span> <span class="nb">str</span>
+
+<span class="c1"># Complex business events</span>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">PizzaCustomizationCompletedEvent</span><span class="p">(</span><span class="n">DomainEvent</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
+    <span class="n">pizza_id</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">customization_options</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>
+    <span class="n">final_price</span><span class="p">:</span> <span class="n">Decimal</span>
+</code></pre></div>
+<p><strong>Repository Interfaces:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Pattern: {Entity}Repository (PascalCase)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">PizzaRepository</span><span class="p">(</span><span class="n">Repository</span><span class="p">[</span><span class="n">Pizza</span><span class="p">,</span> <span class="nb">str</span><span class="p">]):</span>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_by_name_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Pizza</span><span class="p">]:</span>
+        <span class="k">pass</span>
+
+    <span class="nd">@abstractmethod</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_popular_pizzas_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Pizza</span><span class="p">]:</span>
+        <span class="k">pass</span>
+
+    <span class="nd">@abstractmethod</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">search_by_ingredients_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingredients</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Pizza</span><span class="p">]:</span>
+        <span class="k">pass</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">OrderRepository</span><span class="p">(</span><span class="n">Repository</span><span class="p">[</span><span class="n">Order</span><span class="p">,</span> <span class="nb">str</span><span class="p">]):</span>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_by_customer_id_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">customer_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Order</span><span class="p">]:</span>
+        <span class="k">pass</span>
+
+    <span class="nd">@abstractmethod</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_pending_orders_async</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Order</span><span class="p">]:</span>
+        <span class="k">pass</span>
+</code></pre></div>
+<p><strong>Business Exceptions:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Pattern: {Reason}Exception (PascalCase)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">BusinessRuleViolation</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">rule_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rule_name</span> <span class="o">=</span> <span class="n">rule_name</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">PizzaNotAvailableException</span><span class="p">(</span><span class="n">BusinessRuleViolation</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pizza_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Pizza '</span><span class="si">{</span><span class="n">pizza_name</span><span class="si">}</span><span class="s2">' is not available"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pizza_name</span> <span class="o">=</span> <span class="n">pizza_name</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">InsufficientInventoryException</span><span class="p">(</span><span class="n">BusinessRuleViolation</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingredient_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">requested</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">available</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Insufficient </span><span class="si">{</span><span class="n">ingredient_name</span><span class="si">}</span><span class="s2">: requested </span><span class="si">{</span><span class="n">requested</span><span class="si">}</span><span class="s2">, available </span><span class="si">{</span><span class="n">available</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ingredient_name</span> <span class="o">=</span> <span class="n">ingredient_name</span>
+</code></pre></div>
+<h3 id="integration-layer-integration">🔌 Integration Layer (<code>integration/</code>)<a class="headerlink" href="#integration-layer-integration" title="Permanent link">¶</a></h3>
+<p>The integration layer handles external systems, databases, and infrastructure concerns.</p>
+<p><strong>Repository Implementations:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Pattern: {Technology}{Entity}Repository (PascalCase)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">MongoDbPizzaRepository</span><span class="p">(</span><span class="n">PizzaRepository</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">database</span><span class="p">:</span> <span class="n">Database</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_collection</span> <span class="o">=</span> <span class="n">database</span><span class="o">.</span><span class="n">pizzas</span>    <span class="c1"># snake_case field</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">save_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pizza</span><span class="p">:</span> <span class="n">Pizza</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">pizza_doc</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">"_id"</span><span class="p">:</span> <span class="n">pizza</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+            <span class="s2">"name"</span><span class="p">:</span> <span class="n">pizza</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+            <span class="s2">"base_price"</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">pizza</span><span class="o">.</span><span class="n">base_price</span><span class="p">),</span>
+            <span class="s2">"ingredients"</span><span class="p">:</span> <span class="p">[</span><span class="n">i</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">pizza</span><span class="o">.</span><span class="n">ingredients</span><span class="p">],</span>
+            <span class="s2">"created_at"</span><span class="p">:</span> <span class="n">pizza</span><span class="o">.</span><span class="n">created_at</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span>
+        <span class="p">}</span>
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_collection</span><span class="o">.</span><span class="n">insert_one</span><span class="p">(</span><span class="n">pizza_doc</span><span class="p">)</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_by_id_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pizza_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Pizza</span><span class="p">]:</span>
+        <span class="n">doc</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_collection</span><span class="o">.</span><span class="n">find_one</span><span class="p">({</span><span class="s2">"_id"</span><span class="p">:</span> <span class="n">pizza_id</span><span class="p">})</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_map_to_pizza</span><span class="p">(</span><span class="n">doc</span><span class="p">)</span> <span class="k">if</span> <span class="n">doc</span> <span class="k">else</span> <span class="kc">None</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">InMemoryPizzaRepository</span><span class="p">(</span><span class="n">PizzaRepository</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_store</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Pizza</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>    <span class="c1"># snake_case field</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">save_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pizza</span><span class="p">:</span> <span class="n">Pizza</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_store</span><span class="p">[</span><span class="n">pizza</span><span class="o">.</span><span class="n">id</span><span class="p">]</span> <span class="o">=</span> <span class="n">pizza</span>
+</code></pre></div>
+<p><strong>External Service Clients:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Pattern: {Service}Client or {System}Service (PascalCase)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">PaymentGatewayClient</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">api_key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">base_url</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_api_key</span> <span class="o">=</span> <span class="n">api_key</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_base_url</span> <span class="o">=</span> <span class="n">base_url</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_http_client</span> <span class="o">=</span> <span class="n">httpx</span><span class="o">.</span><span class="n">AsyncClient</span><span class="p">()</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">process_payment_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">payment_request</span><span class="p">:</span> <span class="n">PaymentRequest</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PaymentResponse</span><span class="p">:</span>
+        <span class="k">pass</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">refund_payment_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RefundResponse</span><span class="p">:</span>
+        <span class="k">pass</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">EmailNotificationService</span><span class="p">:</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">send_order_confirmation_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">order</span><span class="p">:</span> <span class="n">Order</span><span class="p">,</span> <span class="n">customer_email</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">pass</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">send_delivery_notification_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">order</span><span class="p">:</span> <span class="n">Order</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">pass</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">InventoryManagementService</span><span class="p">:</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">check_ingredient_availability_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingredient_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">pass</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">reserve_ingredients_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reservations</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">IngredientReservation</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">pass</span>
+</code></pre></div>
+<p><strong>Configuration Models:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Pattern: {Purpose}Settings or {System}Config (PascalCase)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">DatabaseSettings</span><span class="p">(</span><span class="n">BaseSettings</span><span class="p">):</span>
+    <span class="n">connection_string</span><span class="p">:</span> <span class="nb">str</span>           <span class="c1"># snake_case fields</span>
+    <span class="n">database_name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">connection_timeout</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">30</span>
+
+    <span class="k">class</span><span class="w"> </span><span class="nc">Config</span><span class="p">:</span>
+        <span class="n">env_prefix</span> <span class="o">=</span> <span class="s2">"DATABASE_"</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">ApiSettings</span><span class="p">(</span><span class="n">BaseSettings</span><span class="p">):</span>
+    <span class="n">host</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"0.0.0.0"</span>
+    <span class="n">port</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">8000</span>
+    <span class="n">debug</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">cors_origins</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"*"</span><span class="p">]</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">PaymentGatewaySettings</span><span class="p">(</span><span class="n">BaseSettings</span><span class="p">):</span>
+    <span class="n">api_key</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">webhook_secret</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">sandbox_mode</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">timeout_seconds</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">30</span>
+</code></pre></div>
+<hr/>
+<h2 id="testing-naming-conventions">🧪 Testing Naming Conventions<a class="headerlink" href="#testing-naming-conventions" title="Permanent link">¶</a></h2>
+<p>Consistent test naming makes it easy to understand what's being tested and why tests might be failing.</p>
+<h3 id="test-files">Test Files<a class="headerlink" href="#test-files" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Pattern: test_{module_under_test}.py</span>
+<span class="n">test_pizza_service</span><span class="o">.</span><span class="n">py</span>
+<span class="n">test_order_controller</span><span class="o">.</span><span class="n">py</span>
+<span class="n">test_create_pizza_command_handler</span><span class="o">.</span><span class="n">py</span>
+<span class="n">test_mongo_pizza_repository</span><span class="o">.</span><span class="n">py</span>
+</code></pre></div>
+<h3 id="test-classes">Test Classes<a class="headerlink" href="#test-classes" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Pattern: Test{ClassUnderTest}</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">TestPizzaService</span><span class="p">:</span>
+    <span class="k">pass</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">TestCreatePizzaCommandHandler</span><span class="p">:</span>
+    <span class="k">pass</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">TestOrderController</span><span class="p">:</span>
+    <span class="k">pass</span>
+</code></pre></div>
+<h3 id="test-methods">Test Methods<a class="headerlink" href="#test-methods" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">TestPizzaService</span><span class="p">:</span>
+    <span class="c1"># Pattern: test_{method}_{scenario}_{expected_result}</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_calculate_total_price_with_large_pizza_returns_correct_amount</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_add_ingredient_with_max_ingredients_raises_exception</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_create_pizza_with_valid_data_returns_success</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+    <span class="c1"># Async tests</span>
+    <span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">asyncio</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">test_save_pizza_async_with_valid_data_saves_successfully</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+    <span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">asyncio</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">test_get_pizza_by_id_async_with_nonexistent_id_returns_none</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+</code></pre></div>
+<h3 id="test-fixtures-and-utilities">Test Fixtures and Utilities<a class="headerlink" href="#test-fixtures-and-utilities" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Pattern: create_{entity} or {entity}_fixture</span>
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">pizza_fixture</span><span class="p">():</span>
+    <span class="k">return</span> <span class="n">Pizza</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"Margherita"</span><span class="p">,</span> <span class="n">base_price</span><span class="o">=</span><span class="n">Decimal</span><span class="p">(</span><span class="s2">"12.99"</span><span class="p">))</span>
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">customer_fixture</span><span class="p">():</span>
+    <span class="k">return</span> <span class="n">Customer</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"Mario"</span><span class="p">,</span> <span class="n">email</span><span class="o">=</span><span class="s2">"mario@test.com"</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">create_test_pizza</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"Test Pizza"</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Pizza</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">Pizza</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">base_price</span><span class="o">=</span><span class="n">Decimal</span><span class="p">(</span><span class="s2">"10.00"</span><span class="p">))</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">create_mock_repository</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Mock</span><span class="p">:</span>
+    <span class="n">repository</span> <span class="o">=</span> <span class="n">Mock</span><span class="p">(</span><span class="n">spec</span><span class="o">=</span><span class="n">PizzaRepository</span><span class="p">)</span>
+    <span class="n">repository</span><span class="o">.</span><span class="n">save_async</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">return</span> <span class="n">repository</span>
+</code></pre></div>
+<hr/>
+<h2 id="case-conversion-patterns">🔄 Case Conversion Patterns<a class="headerlink" href="#case-conversion-patterns" title="Permanent link">¶</a></h2>
+<p>The framework provides utilities to handle different naming conventions across system boundaries.</p>
+<h3 id="api-boundary-conversion">API Boundary Conversion<a class="headerlink" href="#api-boundary-conversion" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Internal Python code uses snake_case</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">PizzaService</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">total_price</span> <span class="o">=</span> <span class="n">Decimal</span><span class="p">(</span><span class="s2">"0"</span><span class="p">)</span>      <span class="c1"># snake_case</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cooking_time</span> <span class="o">=</span> <span class="mi">15</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ingredient_list</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="c1"># API DTOs can use camelCase for frontend compatibility</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">PizzaDto</span><span class="p">(</span><span class="n">CamelModel</span><span class="p">):</span>
+    <span class="n">pizza_name</span><span class="p">:</span> <span class="nb">str</span>          <span class="c1"># Becomes "pizzaName" in JSON</span>
+    <span class="n">base_price</span><span class="p">:</span> <span class="n">Decimal</span>      <span class="c1"># Becomes "basePrice" in JSON</span>
+    <span class="n">cooking_time</span><span class="p">:</span> <span class="nb">int</span>        <span class="c1"># Becomes "cookingTime" in JSON</span>
+    <span class="n">ingredient_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>  <span class="c1"># Becomes "ingredientList" in JSON</span>
+
+<span class="c1"># Frontend receives camelCase JSON</span>
+<span class="p">{</span>
+    <span class="s2">"pizzaName"</span><span class="p">:</span> <span class="s2">"Margherita"</span><span class="p">,</span>
+    <span class="s2">"basePrice"</span><span class="p">:</span> <span class="mf">12.99</span><span class="p">,</span>
+    <span class="s2">"cookingTime"</span><span class="p">:</span> <span class="mi">15</span><span class="p">,</span>
+    <span class="s2">"ingredientList"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"tomato"</span><span class="p">,</span> <span class="s2">"mozzarella"</span><span class="p">,</span> <span class="s2">"basil"</span><span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="database-field-mapping">Database Field Mapping<a class="headerlink" href="#database-field-mapping" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Python entity with snake_case</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Pizza</span><span class="p">(</span><span class="n">Entity</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pizza_name</span> <span class="o">=</span> <span class="s2">""</span>         <span class="c1"># snake_case in Python</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">base_price</span> <span class="o">=</span> <span class="n">Decimal</span><span class="p">(</span><span class="s2">"0"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">created_at</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+
+<span class="c1"># MongoDB document mapping</span>
+<span class="n">pizza_document</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"pizza_name"</span><span class="p">:</span> <span class="n">pizza</span><span class="o">.</span><span class="n">pizza_name</span><span class="p">,</span>      <span class="c1"># snake_case in database</span>
+    <span class="s2">"base_price"</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">pizza</span><span class="o">.</span><span class="n">base_price</span><span class="p">),</span>
+    <span class="s2">"created_at"</span><span class="p">:</span> <span class="n">pizza</span><span class="o">.</span><span class="n">created_at</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span>
+<span class="p">}</span>
+
+<span class="c1"># SQL table with snake_case columns</span>
+<span class="n">CREATE</span> <span class="n">TABLE</span> <span class="n">pizzas</span> <span class="p">(</span>
+    <span class="n">pizza_id</span> <span class="n">UUID</span> <span class="n">PRIMARY</span> <span class="n">KEY</span><span class="p">,</span>
+    <span class="n">pizza_name</span> <span class="n">VARCHAR</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span> <span class="n">NOT</span> <span class="n">NULL</span><span class="p">,</span>    <span class="o">--</span> <span class="n">snake_case</span> <span class="n">columns</span>
+    <span class="n">base_price</span> <span class="n">DECIMAL</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span> <span class="n">NOT</span> <span class="n">NULL</span><span class="p">,</span>
+    <span class="n">created_at</span> <span class="n">TIMESTAMP</span> <span class="n">DEFAULT</span> <span class="n">NOW</span><span class="p">()</span>
+<span class="p">);</span>
+</code></pre></div>
+<hr/>
+<h2 id="file-and-directory-naming">📁 File and Directory Naming<a class="headerlink" href="#file-and-directory-naming" title="Permanent link">¶</a></h2>
+<p>Consistent file organization makes codebases navigable and maintainable.</p>
+<h3 id="file-naming-patterns">File Naming Patterns<a class="headerlink" href="#file-naming-patterns" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code># ✅ Correct - snake_case for all files
+pizza_service.py
+create_order_command.py
+mongo_pizza_repository.py
+order_controller.py
+pizza_created_event.py
+
+# ❌ Incorrect
+PizzaService.py
+CreateOrderCommand.py
+MongoPizzaRepository.py
+OrderController.py
+</code></pre></div>
+<h3 id="directory-structure">Directory Structure<a class="headerlink" href="#directory-structure" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code>src/marios_pizzeria/
+├── api/                          # Layer directories
+│   ├── controllers/              # Component type directories
+│   │   ├── pizzas_controller.py  # Plural for REST controllers
+│   │   ├── orders_controller.py
+│   │   └── customers_controller.py
+│   └── dtos/
+│       ├── pizza_dto.py          # Singular entity + dto
+│       ├── create_pizza_dto.py   # Action + entity + dto
+│       └── order_dto.py
+├── application/
+│   ├── commands/
+│   │   ├── pizzas/               # Group by entity
+│   │   │   ├── create_pizza_command.py
+│   │   │   ├── update_pizza_command.py
+│   │   │   └── delete_pizza_command.py
+│   │   └── orders/
+│   │       ├── create_order_command.py
+│   │       └── confirm_order_command.py
+│   ├── queries/
+│   │   ├── get_pizza_by_id_query.py
+│   │   └── search_pizzas_query.py
+│   └── handlers/
+│       ├── create_pizza_handler.py
+│       └── process_order_handler.py
+├── domain/
+│   ├── entities/
+│   │   ├── pizza.py              # Singular entity names
+│   │   ├── order.py
+│   │   └── customer.py
+│   ├── events/
+│   │   ├── pizza_events.py       # Group related events
+│   │   └── order_events.py
+│   ├── repositories/
+│   │   ├── pizza_repository.py   # Abstract interfaces
+│   │   └── order_repository.py
+│   └── exceptions/
+│       ├── business_exceptions.py
+│       └── validation_exceptions.py
+└── integration/
+    ├── repositories/
+    │   ├── mongodb_pizza_repository.py  # Technology + entity + repository
+    │   └── postgres_order_repository.py
+    ├── services/
+    │   ├── payment_gateway_client.py
+    │   └── email_notification_service.py
+    └── configuration/
+        ├── database_settings.py
+        └── api_settings.py
+</code></pre></div>
+<hr/>
+<h2 id="common-anti-patterns-to-avoid">⚡ Common Anti-Patterns to Avoid<a class="headerlink" href="#common-anti-patterns-to-avoid" title="Permanent link">¶</a></h2>
+<h3 id="inconsistent-casing">❌ Inconsistent Casing<a class="headerlink" href="#inconsistent-casing" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># ❌ Mixed conventions in same context</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">PizzaService</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pizzaName</span> <span class="o">=</span> <span class="s2">""</span>          <span class="c1"># camelCase in Python</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">base_price</span> <span class="o">=</span> <span class="n">Decimal</span><span class="p">(</span><span class="s2">"0"</span><span class="p">)</span>  <span class="c1"># snake_case</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">CookingTime</span> <span class="o">=</span> <span class="mi">15</span>        <span class="c1"># PascalCase</span>
+
+<span class="c1"># ✅ Consistent snake_case</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">PizzaService</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pizza_name</span> <span class="o">=</span> <span class="s2">""</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">base_price</span> <span class="o">=</span> <span class="n">Decimal</span><span class="p">(</span><span class="s2">"0"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cooking_time</span> <span class="o">=</span> <span class="mi">15</span>
+</code></pre></div>
+<h3 id="unclear-abbreviations">❌ Unclear Abbreviations<a class="headerlink" href="#unclear-abbreviations" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># ❌ Cryptic abbreviations</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">PzSvc</span><span class="p">:</span>           <span class="c1"># Pizza Service?</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">calc_ttl_prc</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="c1"># Calculate total price?</span>
+        <span class="k">pass</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">proc_ord</span><span class="p">(</span><span class="n">ord_id</span><span class="p">):</span>  <span class="c1"># Process order?</span>
+    <span class="k">pass</span>
+
+<span class="c1"># ✅ Clear, descriptive names</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">PizzaService</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">calculate_total_price</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">process_order</span><span class="p">(</span><span class="n">order_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="k">pass</span>
+</code></pre></div>
+<h3 id="misleading-names">❌ Misleading Names<a class="headerlink" href="#misleading-names" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># ❌ Name doesn't match behavior</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">PizzaService</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_pizza</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pizza_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="c1"># Actually creates and saves a new pizza!</span>
+        <span class="n">pizza</span> <span class="o">=</span> <span class="n">Pizza</span><span class="p">(</span><span class="s2">"New Pizza"</span><span class="p">,</span> <span class="n">Decimal</span><span class="p">(</span><span class="s2">"10.00"</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">repository</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">pizza</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">pizza</span>
+
+<span class="c1"># ✅ Name matches behavior</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">PizzaService</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_pizza</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">price</span><span class="p">:</span> <span class="n">Decimal</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Pizza</span><span class="p">:</span>
+        <span class="n">pizza</span> <span class="o">=</span> <span class="n">Pizza</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">price</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">repository</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">pizza</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">pizza</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_pizza</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pizza_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Pizza</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">repository</span><span class="o">.</span><span class="n">get_by_id</span><span class="p">(</span><span class="n">pizza_id</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="generic-names">❌ Generic Names<a class="headerlink" href="#generic-names" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># ❌ Too generic</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Manager</span><span class="p">:</span>
+    <span class="k">pass</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Helper</span><span class="p">:</span>
+    <span class="k">pass</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">process</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+<span class="c1"># ✅ Specific and descriptive</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">OrderManager</span><span class="p">:</span>
+    <span class="k">pass</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">PizzaValidationHelper</span><span class="p">:</span>
+    <span class="k">pass</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">process_payment_transaction</span><span class="p">(</span><span class="n">payment_info</span><span class="p">:</span> <span class="n">PaymentInfo</span><span class="p">):</span>
+    <span class="k">pass</span>
+</code></pre></div>
+<hr/>
+<h2 id="framework-specific-patterns">🎯 Framework-Specific Patterns<a class="headerlink" href="#framework-specific-patterns" title="Permanent link">¶</a></h2>
+<h3 id="command-and-query-naming">Command and Query Naming<a class="headerlink" href="#command-and-query-naming" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Commands (imperative, action-oriented)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">CreatePizzaCommand</span><span class="p">:</span>         <span class="c1"># Create + Entity + Command</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">UpdateOrderStatusCommand</span><span class="p">:</span>   <span class="c1"># Update + Entity + Attribute + Command</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ProcessPaymentCommand</span><span class="p">:</span>      <span class="c1"># Process + Concept + Command</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">CancelOrderCommand</span><span class="p">:</span>         <span class="c1"># Cancel + Entity + Command</span>
+
+<span class="c1"># Queries (descriptive, question-oriented)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">GetPizzaByIdQuery</span><span class="p">:</span>          <span class="c1"># Get + Entity + Criteria + Query</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">FindOrdersByCustomerQuery</span><span class="p">:</span>  <span class="c1"># Find + Entity + Criteria + Query</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">SearchPizzasQuery</span><span class="p">:</span>          <span class="c1"># Search + Entity + Query</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">CountActiveOrdersQuery</span><span class="p">:</span>     <span class="c1"># Count + Description + Query</span>
+</code></pre></div>
+<h3 id="event-naming">Event Naming<a class="headerlink" href="#event-naming" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Domain Events (past tense, what happened)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">PizzaCreatedEvent</span><span class="p">:</span>          <span class="c1"># Entity + Action + Event</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">OrderConfirmedEvent</span><span class="p">:</span>        <span class="c1"># Entity + Action + Event</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">PaymentProcessedEvent</span><span class="p">:</span>      <span class="c1"># Concept + Action + Event</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">InventoryUpdatedEvent</span><span class="p">:</span>      <span class="c1"># System + Action + Event</span>
+
+<span class="c1"># Integration Events (external system communication)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">CustomerRegisteredIntegrationEvent</span><span class="p">:</span>  <span class="c1"># Action + Integration + Event</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">OrderShippedIntegrationEvent</span><span class="p">:</span>        <span class="c1"># Action + Integration + Event</span>
+</code></pre></div>
+<h3 id="repository-naming">Repository Naming<a class="headerlink" href="#repository-naming" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Abstract repositories (domain layer)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">PizzaRepository</span><span class="p">(</span><span class="n">Repository</span><span class="p">[</span><span class="n">Pizza</span><span class="p">,</span> <span class="nb">str</span><span class="p">]):</span>
+    <span class="k">pass</span>
+
+<span class="c1"># Concrete implementations (integration layer)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">MongoDbPizzaRepository</span><span class="p">(</span><span class="n">PizzaRepository</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">PostgreSqlOrderRepository</span><span class="p">(</span><span class="n">OrderRepository</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">InMemoryCustomerRepository</span><span class="p">(</span><span class="n">CustomerRepository</span><span class="p">):</span>  <span class="c1"># For testing</span>
+    <span class="k">pass</span>
+</code></pre></div>
+<hr/>
+<h2 id="best-practices-summary">🚀 Best Practices Summary<a class="headerlink" href="#best-practices-summary" title="Permanent link">¶</a></h2>
+<h3 id="dos">✅ Do's<a class="headerlink" href="#dos" title="Permanent link">¶</a></h3>
+<ol>
+<li><strong>Be Consistent</strong>: Use the same patterns throughout your codebase</li>
+<li><strong>Be Descriptive</strong>: Names should clearly indicate purpose and behavior</li>
+<li><strong>Follow Layer Conventions</strong>: Different layers have different naming patterns</li>
+<li><strong>Use Standard Suffixes</strong>: Command, Query, Handler, Repository, Service, etc.</li>
+<li><strong>Group Related Items</strong>: Use directories and modules to organize related code</li>
+<li><strong>Consider Context</strong>: API DTOs might need different casing than internal models</li>
+<li><strong>Test Names Should Tell Stories</strong>: Long, descriptive test method names are good</li>
+</ol>
+<h3 id="donts">❌ Don'ts<a class="headerlink" href="#donts" title="Permanent link">¶</a></h3>
+<ol>
+<li><strong>Don't Mix Conventions</strong>: Pick snake_case or camelCase and stick to it within context</li>
+<li><strong>Don't Use Abbreviations</strong>: Prefer <code>customer_service</code> over <code>cust_svc</code></li>
+<li><strong>Don't Use Generic Names</strong>: Avoid <code>Manager</code>, <code>Helper</code>, <code>Utility</code> without context</li>
+<li><strong>Don't Ignore Framework Patterns</strong>: Follow established Command/Query/Handler patterns</li>
+<li><strong>Don't Violate Layer Naming</strong>: Controllers in API layer, Handlers in Application layer</li>
+<li><strong>Don't Use Misleading Names</strong>: Names should match actual behavior</li>
+<li><strong>Don't Skip Namespace Prefixes</strong>: Use clear module organization</li>
+</ol>
+<hr/>
+<h2 id="marios-pizzeria-example">🍕 Mario's Pizzeria Example<a class="headerlink" href="#marios-pizzeria-example" title="Permanent link">¶</a></h2>
+<p>Here's how all these conventions work together in a complete feature:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Domain Layer - domain/entities/pizza.py</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Pizza</span><span class="p">(</span><span class="n">Entity</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">base_price</span><span class="p">:</span> <span class="n">Decimal</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">base_price</span> <span class="o">=</span> <span class="n">base_price</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">toppings</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_topping</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">topping</span><span class="p">:</span> <span class="n">Topping</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">toppings</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">MAX_TOPPINGS</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">TooManyToppingsException</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">toppings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">topping</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">raise_event</span><span class="p">(</span><span class="n">ToppingAddedEvent</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">topping</span><span class="o">.</span><span class="n">id</span><span class="p">))</span>
+
+<span class="c1"># Domain Layer - domain/events/pizza_events.py</span>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">PizzaCreatedEvent</span><span class="p">(</span><span class="n">DomainEvent</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
+    <span class="n">pizza_id</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">pizza_name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">base_price</span><span class="p">:</span> <span class="n">Decimal</span>
+
+<span class="c1"># Application Layer - application/commands/create_pizza_command.py</span>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">CreatePizzaCommand</span><span class="p">(</span><span class="n">Command</span><span class="p">[</span><span class="n">OperationResult</span><span class="p">[</span><span class="n">PizzaDto</span><span class="p">]]):</span>
+    <span class="n">pizza_name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">base_price</span><span class="p">:</span> <span class="n">Decimal</span>
+    <span class="n">topping_ids</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+
+<span class="c1"># Application Layer - application/handlers/create_pizza_handler.py</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">CreatePizzaCommandHandler</span><span class="p">(</span><span class="n">CommandHandler</span><span class="p">[</span><span class="n">CreatePizzaCommand</span><span class="p">,</span> <span class="n">OperationResult</span><span class="p">[</span><span class="n">PizzaDto</span><span class="p">]]):</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">handle_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command</span><span class="p">:</span> <span class="n">CreatePizzaCommand</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">OperationResult</span><span class="p">[</span><span class="n">PizzaDto</span><span class="p">]:</span>
+        <span class="n">pizza</span> <span class="o">=</span> <span class="n">Pizza</span><span class="p">(</span><span class="n">command</span><span class="o">.</span><span class="n">pizza_name</span><span class="p">,</span> <span class="n">command</span><span class="o">.</span><span class="n">base_price</span><span class="p">)</span>
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pizza_repository</span><span class="o">.</span><span class="n">save_async</span><span class="p">(</span><span class="n">pizza</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">created</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_mapper</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">pizza</span><span class="p">,</span> <span class="n">PizzaDto</span><span class="p">))</span>
+
+<span class="c1"># API Layer - api/controllers/pizzas_controller.py</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">PizzasController</span><span class="p">(</span><span class="n">ControllerBase</span><span class="p">):</span>
+    <span class="nd">@post</span><span class="p">(</span><span class="s2">"/"</span><span class="p">,</span> <span class="n">response_model</span><span class="o">=</span><span class="n">PizzaDto</span><span class="p">,</span> <span class="n">status_code</span><span class="o">=</span><span class="mi">201</span><span class="p">)</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">create_pizza</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">create_dto</span><span class="p">:</span> <span class="n">CreatePizzaDto</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PizzaDto</span><span class="p">:</span>
+        <span class="n">command</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mapper</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">create_dto</span><span class="p">,</span> <span class="n">CreatePizzaCommand</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">mediator</span><span class="o">.</span><span class="n">execute_async</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+
+<span class="c1"># Integration Layer - integration/repositories/mongodb_pizza_repository.py</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">MongoDbPizzaRepository</span><span class="p">(</span><span class="n">PizzaRepository</span><span class="p">):</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">save_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pizza</span><span class="p">:</span> <span class="n">Pizza</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">document</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_map_to_document</span><span class="p">(</span><span class="n">pizza</span><span class="p">)</span>
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_collection</span><span class="o">.</span><span class="n">insert_one</span><span class="p">(</span><span class="n">document</span><span class="p">)</span>
+</code></pre></div>
+<p>This example demonstrates how naming conventions create a clear, navigable codebase where each component's purpose and location are immediately obvious.</p>
+<h2 id="related-documentation">🔗 Related Documentation<a class="headerlink" href="#related-documentation" title="Permanent link">¶</a></h2>
+<ul>
+<li><a href="../python_type_hints/">Python Type Hints</a> - Advanced typing patterns for better code clarity</li>
+<li><a href="../python_generic_types/">Python Generic Types</a> - Generic type usage in framework components</li>
+<li><a href="../python_object_oriented/">Python Object-Oriented Programming</a> - OOP principles and class design</li>
+<li><a href="../../features/cqrs-mediation/">CQRS &amp; Mediation</a> - Command and query pattern implementation</li>
+<li><a href="../../features/dependency-injection/">Dependency Injection</a> - Service registration and naming patterns</li>
+</ul>
+</article>
+</div>
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+</div>
+<button class="md-top md-icon" data-md-component="top" hidden="" type="button">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"></path></svg>
+  Back to top
+</button>
+</main>
+<footer class="md-footer">
+<div class="md-footer-meta md-typeset">
+<div class="md-footer-meta__inner md-grid">
+<div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" rel="noopener" target="_blank">
+      Material for MkDocs
+    </a>
+</div>
+<div class="md-social">
+<a class="md-social__link" href="https://github.com/bvandewe/pyneuro" rel="noopener" target="_blank" title="github.com">
+<svg viewbox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><!--! Font Awesome Free 7.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"></path></svg>
+</a>
+</div>
+</div>
+</div>
+</footer>
+</div>
+<div class="md-dialog" data-md-component="dialog">
+<div class="md-dialog__inner md-typeset"></div>
+</div>
+<script id="__config" type="application/json">{"base": "../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.expand", "navigation.top", "search.highlight", "search.share"], "search": "../../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+<script src="../../assets/javascripts/bundle.f55a23d4.min.js"></script>
+</body>
+</html>

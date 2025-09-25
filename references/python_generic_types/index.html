@@ -6,6 +6,7 @@
 <meta charset="utf-8"/>
 <meta content="width=device-width,initial-scale=1" name="viewport"/>
 <link href="../python_type_hints/" rel="prev"/>
+<link href="../python_modular_code/" rel="next"/>
 <link href="../../assets/images/favicon.png" rel="icon"/>
 <meta content="mkdocs-1.6.1, mkdocs-material-9.6.20" name="generator"/>
 <title>Python Generic Types - Neuroglia Python Framework</title>
@@ -21,6 +22,9 @@
 <input autocomplete="off" class="md-toggle" data-md-toggle="search" id="__search" type="checkbox"/>
 <label class="md-overlay" for="__drawer"></label>
 <div data-md-component="skip">
+<a class="md-skip" href="#python-generic-types-reference">
+          Skip to content
+        </a>
 </div>
 <div data-md-component="announce">
 </div>
@@ -586,16 +590,255 @@
 <li class="md-nav__item">
 <a class="md-nav__link" href="../python_type_hints/">
 <span class="md-ellipsis">
-    Python Type hints
+    Python Type Hints
     
   </span>
 </a>
 </li>
 <li class="md-nav__item md-nav__item--active">
 <input class="md-nav__toggle md-toggle" id="__toc" type="checkbox"/>
+<label class="md-nav__link md-nav__link--active" for="__toc">
+<span class="md-ellipsis">
+    Python Generic Types
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
 <a class="md-nav__link md-nav__link--active" href="./">
 <span class="md-ellipsis">
     Python Generic Types
+    
+  </span>
+</a>
+<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#what-are-generic-types">
+<span class="md-ellipsis">
+      🎯 What Are Generic Types?
+    </span>
+</a>
+<nav aria-label="🎯 What Are Generic Types?" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#simple-analogy">
+<span class="md-ellipsis">
+      Simple Analogy
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#core-generic-concepts">
+<span class="md-ellipsis">
+      🔧 Core Generic Concepts
+    </span>
+</a>
+<nav aria-label="🔧 Core Generic Concepts" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#typevar-type-variables">
+<span class="md-ellipsis">
+      TypeVar - Type Variables
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#generic-classes">
+<span class="md-ellipsis">
+      Generic Classes
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#generic-types-in-neuroglia-framework">
+<span class="md-ellipsis">
+      🏗️ Generic Types in Neuroglia Framework
+    </span>
+</a>
+<nav aria-label="🏗️ Generic Types in Neuroglia Framework" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#repository-pattern">
+<span class="md-ellipsis">
+      Repository Pattern
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#cqrs-commands-and-queries">
+<span class="md-ellipsis">
+      CQRS Commands and Queries
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#handler-pattern">
+<span class="md-ellipsis">
+      Handler Pattern
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#advanced-generic-patterns">
+<span class="md-ellipsis">
+      🎨 Advanced Generic Patterns
+    </span>
+</a>
+<nav aria-label="🎨 Advanced Generic Patterns" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#bounded-type-variables">
+<span class="md-ellipsis">
+      Bounded Type Variables
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#generic-protocols">
+<span class="md-ellipsis">
+      Generic Protocols
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#generic-type-testing">
+<span class="md-ellipsis">
+      🧪 Generic Type Testing
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#best-practices">
+<span class="md-ellipsis">
+      🚀 Best Practices
+    </span>
+</a>
+<nav aria-label="🚀 Best Practices" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#1-use-descriptive-type-variable-names">
+<span class="md-ellipsis">
+      1. Use Descriptive Type Variable Names
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#2-provide-type-bounds-when-appropriate">
+<span class="md-ellipsis">
+      2. Provide Type Bounds When Appropriate
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#3-use-generic-aliases-for-complex-types">
+<span class="md-ellipsis">
+      3. Use Generic Aliases for Complex Types
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#4-document-generic-constraints">
+<span class="md-ellipsis">
+      4. Document Generic Constraints
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#common-pitfalls-to-avoid">
+<span class="md-ellipsis">
+      🎯 Common Pitfalls to Avoid
+    </span>
+</a>
+<nav aria-label="🎯 Common Pitfalls to Avoid" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#1-runtime-type-checking">
+<span class="md-ellipsis">
+      1. Runtime Type Checking
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#2-overcomplicating-simple-cases">
+<span class="md-ellipsis">
+      2. Overcomplicating Simple Cases
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#3-missing-type-bounds">
+<span class="md-ellipsis">
+      3. Missing Type Bounds
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#related-documentation">
+<span class="md-ellipsis">
+      🔗 Related Documentation
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#further-reading">
+<span class="md-ellipsis">
+      📚 Further Reading
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../python_modular_code/">
+<span class="md-ellipsis">
+    Python Modular Code
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../python_object_oriented/">
+<span class="md-ellipsis">
+    Python Object-Oriented Programming
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../source_code_naming_convention/">
+<span class="md-ellipsis">
+    Source Code Naming Conventions
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../12-factor-app/">
+<span class="md-ellipsis">
+    12-Factor App
     
   </span>
 </a>
@@ -612,13 +855,675 @@
 <div class="md-sidebar__scrollwrap">
 <div class="md-sidebar__inner">
 <nav aria-label="Table of contents" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#what-are-generic-types">
+<span class="md-ellipsis">
+      🎯 What Are Generic Types?
+    </span>
+</a>
+<nav aria-label="🎯 What Are Generic Types?" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#simple-analogy">
+<span class="md-ellipsis">
+      Simple Analogy
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#core-generic-concepts">
+<span class="md-ellipsis">
+      🔧 Core Generic Concepts
+    </span>
+</a>
+<nav aria-label="🔧 Core Generic Concepts" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#typevar-type-variables">
+<span class="md-ellipsis">
+      TypeVar - Type Variables
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#generic-classes">
+<span class="md-ellipsis">
+      Generic Classes
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#generic-types-in-neuroglia-framework">
+<span class="md-ellipsis">
+      🏗️ Generic Types in Neuroglia Framework
+    </span>
+</a>
+<nav aria-label="🏗️ Generic Types in Neuroglia Framework" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#repository-pattern">
+<span class="md-ellipsis">
+      Repository Pattern
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#cqrs-commands-and-queries">
+<span class="md-ellipsis">
+      CQRS Commands and Queries
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#handler-pattern">
+<span class="md-ellipsis">
+      Handler Pattern
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#advanced-generic-patterns">
+<span class="md-ellipsis">
+      🎨 Advanced Generic Patterns
+    </span>
+</a>
+<nav aria-label="🎨 Advanced Generic Patterns" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#bounded-type-variables">
+<span class="md-ellipsis">
+      Bounded Type Variables
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#generic-protocols">
+<span class="md-ellipsis">
+      Generic Protocols
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#generic-type-testing">
+<span class="md-ellipsis">
+      🧪 Generic Type Testing
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#best-practices">
+<span class="md-ellipsis">
+      🚀 Best Practices
+    </span>
+</a>
+<nav aria-label="🚀 Best Practices" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#1-use-descriptive-type-variable-names">
+<span class="md-ellipsis">
+      1. Use Descriptive Type Variable Names
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#2-provide-type-bounds-when-appropriate">
+<span class="md-ellipsis">
+      2. Provide Type Bounds When Appropriate
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#3-use-generic-aliases-for-complex-types">
+<span class="md-ellipsis">
+      3. Use Generic Aliases for Complex Types
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#4-document-generic-constraints">
+<span class="md-ellipsis">
+      4. Document Generic Constraints
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#common-pitfalls-to-avoid">
+<span class="md-ellipsis">
+      🎯 Common Pitfalls to Avoid
+    </span>
+</a>
+<nav aria-label="🎯 Common Pitfalls to Avoid" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#1-runtime-type-checking">
+<span class="md-ellipsis">
+      1. Runtime Type Checking
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#2-overcomplicating-simple-cases">
+<span class="md-ellipsis">
+      2. Overcomplicating Simple Cases
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#3-missing-type-bounds">
+<span class="md-ellipsis">
+      3. Missing Type Bounds
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#related-documentation">
+<span class="md-ellipsis">
+      🔗 Related Documentation
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#further-reading">
+<span class="md-ellipsis">
+      📚 Further Reading
+    </span>
+</a>
+</li>
+</ul>
 </nav>
 </div>
 </div>
 </div>
 <div class="md-content" data-md-component="content">
 <article class="md-content__inner md-typeset">
-<h1>Python Generic Types</h1>
+<h1 id="python-generic-types-reference">🧬 Python Generic Types Reference<a class="headerlink" href="#python-generic-types-reference" title="Permanent link">¶</a></h1>
+<p>Understanding generics is crucial for working with the Neuroglia framework, as they provide type safety and flexibility throughout the architecture.</p>
+<h2 id="what-are-generic-types">🎯 What Are Generic Types?<a class="headerlink" href="#what-are-generic-types" title="Permanent link">¶</a></h2>
+<p>Generic types allow you to write code that works with different types while maintaining type safety. Think of them as "type parameters" that get filled in later.</p>
+<h3 id="simple-analogy">Simple Analogy<a class="headerlink" href="#simple-analogy" title="Permanent link">¶</a></h3>
+<p>Imagine a <strong>generic container</strong> that can hold any type of item:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Instead of creating separate containers for each type:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">StringContainer</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">IntContainer</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span>
+
+<span class="c1"># We create ONE generic container:</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Generic</span><span class="p">,</span> <span class="n">TypeVar</span>
+
+<span class="n">T</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s1">'T'</span><span class="p">)</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Container</span><span class="p">(</span><span class="n">Generic</span><span class="p">[</span><span class="n">T</span><span class="p">]):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">T</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_value</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">T</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span>
+
+<span class="c1"># Now we can use it with any type:</span>
+<span class="n">string_container</span> <span class="o">=</span> <span class="n">Container</span><span class="p">[</span><span class="nb">str</span><span class="p">](</span><span class="s2">"Hello"</span><span class="p">)</span>
+<span class="n">int_container</span> <span class="o">=</span> <span class="n">Container</span><span class="p">[</span><span class="nb">int</span><span class="p">](</span><span class="mi">42</span><span class="p">)</span>
+</code></pre></div>
+<h2 id="core-generic-concepts">🔧 Core Generic Concepts<a class="headerlink" href="#core-generic-concepts" title="Permanent link">¶</a></h2>
+<h3 id="typevar-type-variables">TypeVar - Type Variables<a class="headerlink" href="#typevar-type-variables" title="Permanent link">¶</a></h3>
+<p><code>TypeVar</code> creates a placeholder for a type that will be specified later:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TypeVar</span><span class="p">,</span> <span class="n">List</span>
+
+<span class="c1"># Define a type variable</span>
+<span class="n">T</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s1">'T'</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">get_first_item</span><span class="p">(</span><span class="n">items</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">T</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">T</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Returns the first item from a list, preserving its type."""</span>
+    <span class="k">return</span> <span class="n">items</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+<span class="c1"># Usage examples:</span>
+<span class="n">numbers</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
+<span class="n">first_number</span> <span class="o">=</span> <span class="n">get_first_item</span><span class="p">(</span><span class="n">numbers</span><span class="p">)</span>  <span class="c1"># Type: int</span>
+
+<span class="n">names</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"Alice"</span><span class="p">,</span> <span class="s2">"Bob"</span><span class="p">,</span> <span class="s2">"Charlie"</span><span class="p">]</span>
+<span class="n">first_name</span> <span class="o">=</span> <span class="n">get_first_item</span><span class="p">(</span><span class="n">names</span><span class="p">)</span>      <span class="c1"># Type: str</span>
+</code></pre></div>
+<h3 id="generic-classes">Generic Classes<a class="headerlink" href="#generic-classes" title="Permanent link">¶</a></h3>
+<p>Classes can be made generic to work with different types:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Generic</span><span class="p">,</span> <span class="n">TypeVar</span><span class="p">,</span> <span class="n">Optional</span>
+
+<span class="n">T</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s1">'T'</span><span class="p">)</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Repository</span><span class="p">(</span><span class="n">Generic</span><span class="p">[</span><span class="n">T</span><span class="p">]):</span>
+<span class="w">    </span><span class="sd">"""A generic repository that can store any type of entity."""</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_items</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">T</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">:</span> <span class="n">T</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_items</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_by_index</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">T</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">index</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_items</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_items</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_all</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">T</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_items</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+<span class="c1"># Usage with specific types:</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">User</span><span class="p">:</span>
+    <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Product</span><span class="p">:</span>
+    <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">price</span><span class="p">:</span> <span class="nb">float</span>
+
+<span class="c1"># Create type-specific repositories:</span>
+<span class="n">user_repo</span> <span class="o">=</span> <span class="n">Repository</span><span class="p">[</span><span class="n">User</span><span class="p">]()</span>
+<span class="n">product_repo</span> <span class="o">=</span> <span class="n">Repository</span><span class="p">[</span><span class="n">Product</span><span class="p">]()</span>
+
+<span class="c1"># Type safety is maintained:</span>
+<span class="n">user_repo</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">User</span><span class="p">(</span><span class="s2">"1"</span><span class="p">,</span> <span class="s2">"Alice"</span><span class="p">))</span>        <span class="c1"># ✅ Correct</span>
+<span class="n">product_repo</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Product</span><span class="p">(</span><span class="s2">"1"</span><span class="p">,</span> <span class="s2">"Pizza"</span><span class="p">,</span> <span class="mf">12.99</span><span class="p">))</span>  <span class="c1"># ✅ Correct</span>
+
+<span class="c1"># user_repo.add(Product("1", "Pizza", 12.99))  # ❌ Type error!</span>
+</code></pre></div>
+<h2 id="generic-types-in-neuroglia-framework">🏗️ Generic Types in Neuroglia Framework<a class="headerlink" href="#generic-types-in-neuroglia-framework" title="Permanent link">¶</a></h2>
+<h3 id="repository-pattern">Repository Pattern<a class="headerlink" href="#repository-pattern" title="Permanent link">¶</a></h3>
+<p>The framework uses generics extensively in the repository pattern:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Generic</span><span class="p">,</span> <span class="n">TypeVar</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">List</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
+
+<span class="n">TEntity</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s1">'TEntity'</span><span class="p">)</span>
+<span class="n">TId</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s1">'TId'</span><span class="p">)</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Repository</span><span class="p">(</span><span class="n">Generic</span><span class="p">[</span><span class="n">TEntity</span><span class="p">,</span> <span class="n">TId</span><span class="p">],</span> <span class="n">ABC</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Generic repository interface for any entity type."""</span>
+
+    <span class="nd">@abstractmethod</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_by_id_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span> <span class="n">TId</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">TEntity</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">"""Get an entity by its ID."""</span>
+        <span class="k">pass</span>
+
+    <span class="nd">@abstractmethod</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">save_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity</span><span class="p">:</span> <span class="n">TEntity</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Save an entity."""</span>
+        <span class="k">pass</span>
+
+    <span class="nd">@abstractmethod</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">delete_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span> <span class="n">TId</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Delete an entity by ID."""</span>
+        <span class="k">pass</span>
+
+    <span class="nd">@abstractmethod</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_all_async</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">TEntity</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">"""Get all entities."""</span>
+        <span class="k">pass</span>
+
+<span class="c1"># Mario's Pizzeria example:</span>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Pizza</span><span class="p">:</span>
+    <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">price</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">ingredients</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">PizzaRepository</span><span class="p">(</span><span class="n">Repository</span><span class="p">[</span><span class="n">Pizza</span><span class="p">,</span> <span class="nb">str</span><span class="p">]):</span>
+<span class="w">    </span><span class="sd">"""Concrete repository for Pizza entities."""</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_pizzas</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Pizza</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_by_id_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Pizza</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pizzas</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">save_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pizza</span><span class="p">:</span> <span class="n">Pizza</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_pizzas</span><span class="p">[</span><span class="n">pizza</span><span class="o">.</span><span class="n">id</span><span class="p">]</span> <span class="o">=</span> <span class="n">pizza</span>
+
+    <span class="c1"># ... other methods</span>
+</code></pre></div>
+<h3 id="cqrs-commands-and-queries">CQRS Commands and Queries<a class="headerlink" href="#cqrs-commands-and-queries" title="Permanent link">¶</a></h3>
+<p>Commands and queries use generics to specify their return types:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Generic</span><span class="p">,</span> <span class="n">TypeVar</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
+
+<span class="n">TResult</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s1">'TResult'</span><span class="p">)</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Command</span><span class="p">(</span><span class="n">Generic</span><span class="p">[</span><span class="n">TResult</span><span class="p">]):</span>
+<span class="w">    </span><span class="sd">"""Base class for commands that return a specific result type."""</span>
+    <span class="k">pass</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Query</span><span class="p">(</span><span class="n">Generic</span><span class="p">[</span><span class="n">TResult</span><span class="p">]):</span>
+<span class="w">    </span><span class="sd">"""Base class for queries that return a specific result type."""</span>
+    <span class="k">pass</span>
+
+<span class="c1"># Mario's Pizzeria examples:</span>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">CreatePizzaCommand</span><span class="p">(</span><span class="n">Command</span><span class="p">[</span><span class="n">Pizza</span><span class="p">]):</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">price</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">ingredients</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">GetPizzaByIdQuery</span><span class="p">(</span><span class="n">Query</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="n">Pizza</span><span class="p">]]):</span>
+    <span class="n">pizza_id</span><span class="p">:</span> <span class="nb">str</span>
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">GetAllPizzasQuery</span><span class="p">(</span><span class="n">Query</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Pizza</span><span class="p">]]):</span>
+    <span class="k">pass</span>  <span class="c1"># No parameters needed</span>
+</code></pre></div>
+<h3 id="handler-pattern">Handler Pattern<a class="headerlink" href="#handler-pattern" title="Permanent link">¶</a></h3>
+<p>Handlers use generics to specify which command/query they handle and what they return:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Generic</span><span class="p">,</span> <span class="n">TypeVar</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
+
+<span class="n">TRequest</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s1">'TRequest'</span><span class="p">)</span>
+<span class="n">TResponse</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s1">'TResponse'</span><span class="p">)</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Handler</span><span class="p">(</span><span class="n">Generic</span><span class="p">[</span><span class="n">TRequest</span><span class="p">,</span> <span class="n">TResponse</span><span class="p">],</span> <span class="n">ABC</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Generic handler interface."""</span>
+
+    <span class="nd">@abstractmethod</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">handle_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">TRequest</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TResponse</span><span class="p">:</span>
+        <span class="k">pass</span>
+
+<span class="c1"># Specific handler implementations:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">CreatePizzaHandler</span><span class="p">(</span><span class="n">Handler</span><span class="p">[</span><span class="n">CreatePizzaCommand</span><span class="p">,</span> <span class="n">Pizza</span><span class="p">]):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">repository</span><span class="p">:</span> <span class="n">PizzaRepository</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_repository</span> <span class="o">=</span> <span class="n">repository</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">handle_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command</span><span class="p">:</span> <span class="n">CreatePizzaCommand</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Pizza</span><span class="p">:</span>
+        <span class="n">pizza</span> <span class="o">=</span> <span class="n">Pizza</span><span class="p">(</span>
+            <span class="nb">id</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">()),</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">command</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+            <span class="n">price</span><span class="o">=</span><span class="n">command</span><span class="o">.</span><span class="n">price</span><span class="p">,</span>
+            <span class="n">ingredients</span><span class="o">=</span><span class="n">command</span><span class="o">.</span><span class="n">ingredients</span>
+        <span class="p">)</span>
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_repository</span><span class="o">.</span><span class="n">save_async</span><span class="p">(</span><span class="n">pizza</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">pizza</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">GetPizzaByIdHandler</span><span class="p">(</span><span class="n">Handler</span><span class="p">[</span><span class="n">GetPizzaByIdQuery</span><span class="p">,</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Pizza</span><span class="p">]]):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">repository</span><span class="p">:</span> <span class="n">PizzaRepository</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_repository</span> <span class="o">=</span> <span class="n">repository</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">handle_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">:</span> <span class="n">GetPizzaByIdQuery</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Pizza</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_repository</span><span class="o">.</span><span class="n">get_by_id_async</span><span class="p">(</span><span class="n">query</span><span class="o">.</span><span class="n">pizza_id</span><span class="p">)</span>
+</code></pre></div>
+<h2 id="advanced-generic-patterns">🎨 Advanced Generic Patterns<a class="headerlink" href="#advanced-generic-patterns" title="Permanent link">¶</a></h2>
+<h3 id="bounded-type-variables">Bounded Type Variables<a class="headerlink" href="#bounded-type-variables" title="Permanent link">¶</a></h3>
+<p>You can constrain what types a <code>TypeVar</code> can be:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TypeVar</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">ABC</span>
+
+<span class="c1"># Constraint to specific types:</span>
+<span class="n">NumberType</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s1">'NumberType'</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">add_numbers</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="n">NumberType</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">NumberType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NumberType</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span>
+
+<span class="c1"># Bound to a base class:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Entity</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="nb">id</span>
+
+<span class="n">EntityType</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s1">'EntityType'</span><span class="p">,</span> <span class="n">bound</span><span class="o">=</span><span class="n">Entity</span><span class="p">)</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">EntityService</span><span class="p">(</span><span class="n">Generic</span><span class="p">[</span><span class="n">EntityType</span><span class="p">]):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">repository</span><span class="p">:</span> <span class="n">Repository</span><span class="p">[</span><span class="n">EntityType</span><span class="p">,</span> <span class="nb">str</span><span class="p">]):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_repository</span> <span class="o">=</span> <span class="n">repository</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_by_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">EntityType</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_repository</span><span class="o">.</span><span class="n">get_by_id_async</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span>
+
+<span class="c1"># Usage - only works with Entity subclasses:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Pizza</span><span class="p">(</span><span class="n">Entity</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+
+<span class="n">pizza_service</span> <span class="o">=</span> <span class="n">EntityService</span><span class="p">[</span><span class="n">Pizza</span><span class="p">](</span><span class="n">pizza_repository</span><span class="p">)</span>  <span class="c1"># ✅ Works</span>
+<span class="c1"># str_service = EntityService[str](string_repo)         # ❌ Error: str is not an Entity</span>
+</code></pre></div>
+<h3 id="generic-protocols">Generic Protocols<a class="headerlink" href="#generic-protocols" title="Permanent link">¶</a></h3>
+<p>Protocols define interfaces that any type can implement:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Protocol</span><span class="p">,</span> <span class="n">TypeVar</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Comparable</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Protocol for types that can be compared."""</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__lt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="s1">'Comparable'</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span> <span class="o">...</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span> <span class="o">...</span>
+
+<span class="n">T</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s1">'T'</span><span class="p">,</span> <span class="n">bound</span><span class="o">=</span><span class="n">Comparable</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">sort_items</span><span class="p">(</span><span class="n">items</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">T</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">T</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">"""Sort any list of comparable items."""</span>
+    <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">items</span><span class="p">)</span>
+
+<span class="c1"># Works with any type that implements comparison:</span>
+<span class="n">numbers</span> <span class="o">=</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">]</span>
+<span class="n">sorted_numbers</span> <span class="o">=</span> <span class="n">sort_items</span><span class="p">(</span><span class="n">numbers</span><span class="p">)</span>  <span class="c1"># ✅ int implements comparison</span>
+
+<span class="n">names</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"Charlie"</span><span class="p">,</span> <span class="s2">"Alice"</span><span class="p">,</span> <span class="s2">"Bob"</span><span class="p">]</span>
+<span class="n">sorted_names</span> <span class="o">=</span> <span class="n">sort_items</span><span class="p">(</span><span class="n">names</span><span class="p">)</span>      <span class="c1"># ✅ str implements comparison</span>
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Pizza</span><span class="p">:</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">price</span><span class="p">:</span> <span class="nb">float</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__lt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="s1">'Pizza'</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">price</span> <span class="o">&lt;</span> <span class="n">other</span><span class="o">.</span><span class="n">price</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">Pizza</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">name</span>
+
+<span class="n">pizzas</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">Pizza</span><span class="p">(</span><span class="s2">"Margherita"</span><span class="p">,</span> <span class="mf">12.99</span><span class="p">),</span>
+    <span class="n">Pizza</span><span class="p">(</span><span class="s2">"Pepperoni"</span><span class="p">,</span> <span class="mf">14.99</span><span class="p">),</span>
+    <span class="n">Pizza</span><span class="p">(</span><span class="s2">"Hawaiian"</span><span class="p">,</span> <span class="mf">13.49</span><span class="p">)</span>
+<span class="p">]</span>
+<span class="n">sorted_pizzas</span> <span class="o">=</span> <span class="n">sort_items</span><span class="p">(</span><span class="n">pizzas</span><span class="p">)</span>    <span class="c1"># ✅ Pizza implements Comparable</span>
+</code></pre></div>
+<h2 id="generic-type-testing">🧪 Generic Type Testing<a class="headerlink" href="#generic-type-testing" title="Permanent link">¶</a></h2>
+<p>When writing tests for generic code, you need to test with multiple types:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TypeVar</span><span class="p">,</span> <span class="n">Generic</span><span class="p">,</span> <span class="n">List</span>
+
+<span class="n">T</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s1">'T'</span><span class="p">)</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Stack</span><span class="p">(</span><span class="n">Generic</span><span class="p">[</span><span class="n">T</span><span class="p">]):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_items</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">T</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">push</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">:</span> <span class="n">T</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_items</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">pop</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">T</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_items</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">IndexError</span><span class="p">(</span><span class="s2">"Stack is empty"</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_items</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_empty</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_items</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span>
+
+<span class="c1"># Test with multiple types:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">TestStack</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_string_stack</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">stack</span> <span class="o">=</span> <span class="n">Stack</span><span class="p">[</span><span class="nb">str</span><span class="p">]()</span>
+        <span class="n">stack</span><span class="o">.</span><span class="n">push</span><span class="p">(</span><span class="s2">"hello"</span><span class="p">)</span>
+        <span class="n">stack</span><span class="o">.</span><span class="n">push</span><span class="p">(</span><span class="s2">"world"</span><span class="p">)</span>
+
+        <span class="k">assert</span> <span class="n">stack</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span> <span class="o">==</span> <span class="s2">"world"</span>
+        <span class="k">assert</span> <span class="n">stack</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span> <span class="o">==</span> <span class="s2">"hello"</span>
+        <span class="k">assert</span> <span class="n">stack</span><span class="o">.</span><span class="n">is_empty</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_int_stack</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">stack</span> <span class="o">=</span> <span class="n">Stack</span><span class="p">[</span><span class="nb">int</span><span class="p">]()</span>
+        <span class="n">stack</span><span class="o">.</span><span class="n">push</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">stack</span><span class="o">.</span><span class="n">push</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+
+        <span class="k">assert</span> <span class="n">stack</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span> <span class="o">==</span> <span class="mi">2</span>
+        <span class="k">assert</span> <span class="n">stack</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span> <span class="o">==</span> <span class="mi">1</span>
+        <span class="k">assert</span> <span class="n">stack</span><span class="o">.</span><span class="n">is_empty</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_pizza_stack</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">stack</span> <span class="o">=</span> <span class="n">Stack</span><span class="p">[</span><span class="n">Pizza</span><span class="p">]()</span>
+        <span class="n">pizza</span> <span class="o">=</span> <span class="n">Pizza</span><span class="p">(</span><span class="s2">"1"</span><span class="p">,</span> <span class="s2">"Margherita"</span><span class="p">,</span> <span class="mf">12.99</span><span class="p">,</span> <span class="p">[</span><span class="s2">"tomato"</span><span class="p">,</span> <span class="s2">"mozzarella"</span><span class="p">])</span>
+        <span class="n">stack</span><span class="o">.</span><span class="n">push</span><span class="p">(</span><span class="n">pizza</span><span class="p">)</span>
+
+        <span class="n">popped_pizza</span> <span class="o">=</span> <span class="n">stack</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+        <span class="k">assert</span> <span class="n">popped_pizza</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">"Margherita"</span>
+        <span class="k">assert</span> <span class="n">stack</span><span class="o">.</span><span class="n">is_empty</span><span class="p">()</span>
+</code></pre></div>
+<h2 id="best-practices">🚀 Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">¶</a></h2>
+<h3 id="1-use-descriptive-type-variable-names">1. Use Descriptive Type Variable Names<a class="headerlink" href="#1-use-descriptive-type-variable-names" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Good - descriptive names:</span>
+<span class="n">TEntity</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s1">'TEntity'</span><span class="p">)</span>
+<span class="n">TId</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s1">'TId'</span><span class="p">)</span>
+<span class="n">TRequest</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s1">'TRequest'</span><span class="p">)</span>
+<span class="n">TResponse</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s1">'TResponse'</span><span class="p">)</span>
+
+<span class="c1"># Avoid - generic names unless appropriate:</span>
+<span class="n">T</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s1">'T'</span><span class="p">)</span>  <span class="c1"># Only use for truly generic cases</span>
+</code></pre></div>
+<h3 id="2-provide-type-bounds-when-appropriate">2. Provide Type Bounds When Appropriate<a class="headerlink" href="#2-provide-type-bounds-when-appropriate" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Good - constrained when you need specific capabilities:</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Protocol</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Serializable</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span> <span class="o">...</span>
+
+<span class="n">TSerializable</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s1">'TSerializable'</span><span class="p">,</span> <span class="n">bound</span><span class="o">=</span><span class="n">Serializable</span><span class="p">)</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">ApiService</span><span class="p">(</span><span class="n">Generic</span><span class="p">[</span><span class="n">TSerializable</span><span class="p">]):</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">send_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">TSerializable</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">json_data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>  <span class="c1"># Safe - we know it has to_dict()</span>
+        <span class="c1"># ... send to API</span>
+</code></pre></div>
+<h3 id="3-use-generic-aliases-for-complex-types">3. Use Generic Aliases for Complex Types<a class="headerlink" href="#3-use-generic-aliases-for-complex-types" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">TypeVar</span>
+
+<span class="n">TEntity</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s1">'TEntity'</span><span class="p">)</span>
+<span class="n">TId</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s1">'TId'</span><span class="p">)</span>
+
+<span class="c1"># Create aliases for complex generic types:</span>
+<span class="n">EntityDict</span> <span class="o">=</span> <span class="n">Dict</span><span class="p">[</span><span class="n">TId</span><span class="p">,</span> <span class="n">TEntity</span><span class="p">]</span>
+<span class="n">EntityList</span> <span class="o">=</span> <span class="n">List</span><span class="p">[</span><span class="n">TEntity</span><span class="p">]</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">InMemoryRepository</span><span class="p">(</span><span class="n">Repository</span><span class="p">[</span><span class="n">TEntity</span><span class="p">,</span> <span class="n">TId</span><span class="p">]):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_entities</span><span class="p">:</span> <span class="n">EntityDict</span><span class="p">[</span><span class="n">TId</span><span class="p">,</span> <span class="n">TEntity</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_all_async</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EntityList</span><span class="p">[</span><span class="n">TEntity</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_entities</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+</code></pre></div>
+<h3 id="4-document-generic-constraints">4. Document Generic Constraints<a class="headerlink" href="#4-document-generic-constraints" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TypeVar</span><span class="p">,</span> <span class="n">Union</span>
+
+<span class="c1"># Document what types are expected:</span>
+<span class="n">NumericType</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s1">'NumericType'</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">complex</span><span class="p">)</span>
+<span class="sd">"""Type variable for numeric types that support arithmetic operations."""</span>
+
+<span class="n">IdType</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s1">'IdType'</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="n">UUID</span><span class="p">)</span>
+<span class="sd">"""Type variable for entity identifier types."""</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">calculate_total</span><span class="p">(</span><span class="n">values</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">NumericType</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">NumericType</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Calculate the sum of numeric values.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        values: List of numeric values (int, float, or complex)</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Sum of the values, maintaining the input type</span>
+<span class="sd">    """</span>
+    <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
+</code></pre></div>
+<h2 id="common-pitfalls-to-avoid">🎯 Common Pitfalls to Avoid<a class="headerlink" href="#common-pitfalls-to-avoid" title="Permanent link">¶</a></h2>
+<h3 id="1-runtime-type-checking">1. Runtime Type Checking<a class="headerlink" href="#1-runtime-type-checking" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># ❌ Wrong - generics are erased at runtime:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">bad_function</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="n">T</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>  <span class="c1"># This works, but defeats the purpose</span>
+        <span class="k">return</span> <span class="n">value</span>
+    <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+<span class="c1"># ✅ Better - use proper type bounds:</span>
+<span class="n">StrOrConvertible</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s1">'StrOrConvertible'</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">good_function</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="n">StrOrConvertible</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="2-overcomplicating-simple-cases">2. Overcomplicating Simple Cases<a class="headerlink" href="#2-overcomplicating-simple-cases" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># ❌ Overkill for simple functions:</span>
+<span class="n">T</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s1">'T'</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">identity</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">T</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">T</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">x</span>
+
+<span class="c1"># ✅ Simple functions often don't need generics:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">identity</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">x</span>
+</code></pre></div>
+<h3 id="3-missing-type-bounds">3. Missing Type Bounds<a class="headerlink" href="#3-missing-type-bounds" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># ❌ Too permissive - might not have needed methods:</span>
+<span class="n">T</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s1">'T'</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">sort_and_print</span><span class="p">(</span><span class="n">items</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">T</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">sorted_items</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">items</span><span class="p">)</span>  <span class="c1"># Might fail if T doesn't support comparison</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">sorted_items</span><span class="p">)</span>
+
+<span class="c1"># ✅ Use bounds when you need specific capabilities:</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Protocol</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Comparable</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__lt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="s1">'Comparable'</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span> <span class="o">...</span>
+
+<span class="n">T</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s1">'T'</span><span class="p">,</span> <span class="n">bound</span><span class="o">=</span><span class="n">Comparable</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">sort_and_print</span><span class="p">(</span><span class="n">items</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">T</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">sorted_items</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">items</span><span class="p">)</span>  <span class="c1"># Safe - T is guaranteed to be comparable</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">sorted_items</span><span class="p">)</span>
+</code></pre></div>
+<h2 id="related-documentation">🔗 Related Documentation<a class="headerlink" href="#related-documentation" title="Permanent link">¶</a></h2>
+<ul>
+<li><a href="../python_type_hints/">Python Type Hints Reference</a> - Understanding type annotations</li>
+<li><a href="../python_object_oriented/">Python Object-Oriented Programming</a> - Classes and inheritance patterns</li>
+<li><a href="../../features/cqrs-mediation/">CQRS &amp; Mediation</a> - How generics enable the command/query pattern</li>
+<li><a href="../../features/data-access/">Data Access</a> - Generic repository implementations</li>
+</ul>
+<h2 id="further-reading">📚 Further Reading<a class="headerlink" href="#further-reading" title="Permanent link">¶</a></h2>
+<ul>
+<li><a href="https://peps.python.org/pep-0484/">PEP 484 - Type Hints</a></li>
+<li><a href="https://peps.python.org/pep-0585/">PEP 585 - Type Hinting Generics</a></li>
+<li><a href="https://docs.python.org/3/library/typing.html">Python typing module documentation</a></li>
+</ul>
 </article>
 </div>
 <script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>

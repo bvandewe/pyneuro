@@ -1,0 +1,2123 @@
+
+<!DOCTYPE html>
+
+<html class="no-js" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<link href="../python_generic_types/" rel="prev"/>
+<link href="../python_object_oriented/" rel="next"/>
+<link href="../../assets/images/favicon.png" rel="icon"/>
+<meta content="mkdocs-1.6.1, mkdocs-material-9.6.20" name="generator"/>
+<title>Python Modular Code - Neuroglia Python Framework</title>
+<link href="../../assets/stylesheets/main.e53b48f4.min.css" rel="stylesheet"/>
+<link href="../../assets/stylesheets/palette.06af60db.min.css" rel="stylesheet"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback" rel="stylesheet"/>
+<style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+<script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+</head>
+<body data-md-color-accent="blue" data-md-color-primary="blue" data-md-color-scheme="default" dir="ltr">
+<input autocomplete="off" class="md-toggle" data-md-toggle="drawer" id="__drawer" type="checkbox"/>
+<input autocomplete="off" class="md-toggle" data-md-toggle="search" id="__search" type="checkbox"/>
+<label class="md-overlay" for="__drawer"></label>
+<div data-md-component="skip">
+<a class="md-skip" href="#python-modular-code-reference">
+          Skip to content
+        </a>
+</div>
+<div data-md-component="announce">
+</div>
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+<nav aria-label="Header" class="md-header__inner md-grid">
+<a aria-label="Neuroglia Python Framework" class="md-header__button md-logo" data-md-component="logo" href="../.." title="Neuroglia Python Framework">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+</a>
+<label class="md-header__button md-icon" for="__drawer">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+</label>
+<div class="md-header__title" data-md-component="header-title">
+<div class="md-header__ellipsis">
+<div class="md-header__topic">
+<span class="md-ellipsis">
+            Neuroglia Python Framework
+          </span>
+</div>
+<div class="md-header__topic" data-md-component="header-topic">
+<span class="md-ellipsis">
+            
+              Python Modular Code
+            
+          </span>
+</div>
+</div>
+</div>
+<form class="md-header__option" data-md-component="palette">
+<input aria-label="Switch to dark mode" class="md-option" data-md-color-accent="blue" data-md-color-media="" data-md-color-primary="blue" data-md-color-scheme="default" id="__palette_0" name="__palette" type="radio"/>
+<label class="md-header__button md-icon" for="__palette_1" hidden="" title="Switch to dark mode">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+</label>
+<input aria-label="Switch to light mode" class="md-option" data-md-color-accent="blue" data-md-color-media="" data-md-color-primary="blue" data-md-color-scheme="slate" id="__palette_1" name="__palette" type="radio"/>
+<label class="md-header__button md-icon" for="__palette_0" hidden="" title="Switch to light mode">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+</label>
+</form>
+<script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+<label class="md-header__button md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+</label>
+<div class="md-search" data-md-component="search" role="dialog">
+<label class="md-search__overlay" for="__search"></label>
+<div class="md-search__inner" role="search">
+<form class="md-search__form" name="search">
+<input aria-label="Search" autocapitalize="off" autocomplete="off" autocorrect="off" class="md-search__input" data-md-component="search-query" name="query" placeholder="Search" required="" spellcheck="false" type="text"/>
+<label class="md-search__icon md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+</label>
+<nav aria-label="Search" class="md-search__options">
+<a aria-label="Share" class="md-search__icon md-icon" data-clipboard="" data-clipboard-text="" data-md-component="search-share" href="javascript:void(0)" tabindex="-1" title="Share">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"></path></svg>
+</a>
+<button aria-label="Clear" class="md-search__icon md-icon" tabindex="-1" title="Clear" type="reset">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+</button>
+</nav>
+</form>
+<div class="md-search__output">
+<div class="md-search__scrollwrap" data-md-scrollfix="" tabindex="0">
+<div class="md-search-result" data-md-component="search-result">
+<div class="md-search-result__meta">
+            Initializing search
+          </div>
+<ol class="md-search-result__list" role="presentation"></ol>
+</div>
+</div>
+</div>
+</div>
+</div>
+</nav>
+<nav aria-label="Tabs" class="md-tabs" data-md-component="tabs">
+<div class="md-grid">
+<ul class="md-tabs__list">
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../..">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../getting-started/">
+          
+  
+  
+  Getting Started
+
+        </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../mario-pizzeria/">
+        
+  
+  
+    
+  
+  Mario Pizzeria
+
+      </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../patterns/">
+          
+  
+  
+  Patterns
+
+        </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../features/">
+          
+  
+  
+  Features
+
+        </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../guides/">
+          
+  
+  
+  Guides
+
+        </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../samples/">
+          
+  
+  
+  Samples
+
+        </a>
+</li>
+<li class="md-tabs__item md-tabs__item--active">
+<a class="md-tabs__link" href="../python_type_hints/">
+          
+  
+  
+  References
+
+        </a>
+</li>
+</ul>
+</div>
+</nav>
+</header>
+<div class="md-container" data-md-component="container">
+<main class="md-main" data-md-component="main">
+<div class="md-main__inner md-grid">
+<div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="Navigation" class="md-nav md-nav--primary md-nav--lifted" data-md-level="0">
+<label class="md-nav__title" for="__drawer">
+<a aria-label="Neuroglia Python Framework" class="md-nav__button md-logo" data-md-component="logo" href="../.." title="Neuroglia Python Framework">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+</a>
+    Neuroglia Python Framework
+  </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../..">
+<span class="md-ellipsis">
+    Home
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_2" type="checkbox"/>
+<label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+<span class="md-ellipsis">
+    Getting Started
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_2_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_2">
+<span class="md-nav__icon md-icon"></span>
+            Getting Started
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../getting-started/">
+<span class="md-ellipsis">
+    Overview
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../guides/3-min-bootstrap/">
+<span class="md-ellipsis">
+    3-Minute Bootstrap
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../guides/local-development/">
+<span class="md-ellipsis">
+    Local Development Setup
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../guides/mario-pizzeria-tutorial/">
+<span class="md-ellipsis">
+    Mario's Pizzeria Tutorial
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../mario-pizzeria/">
+<span class="md-ellipsis">
+    Mario Pizzeria
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_4" type="checkbox"/>
+<label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+<span class="md-ellipsis">
+    Patterns
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_4_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_4">
+<span class="md-nav__icon md-icon"></span>
+            Patterns
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../patterns/">
+<span class="md-ellipsis">
+    Overview
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../patterns/clean-architecture/">
+<span class="md-ellipsis">
+    Clean Architecture
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../patterns/cqrs/">
+<span class="md-ellipsis">
+    CQRS
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../patterns/event-driven/">
+<span class="md-ellipsis">
+    Event-Driven
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../patterns/repository/">
+<span class="md-ellipsis">
+    Repository
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../patterns/resource-oriented-architecture/">
+<span class="md-ellipsis">
+    Resource-Oriented Architecture
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../patterns/watcher-reconciliation-patterns/">
+<span class="md-ellipsis">
+    Watcher &amp; Reconciliation Patterns
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../patterns/watcher-reconciliation-execution/">
+<span class="md-ellipsis">
+    Watcher &amp; Reconciliation Execution
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_5" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+<span class="md-ellipsis">
+    Features
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_5_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_5">
+<span class="md-nav__icon md-icon"></span>
+            Features
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/">
+<span class="md-ellipsis">
+    Overview
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/dependency-injection/">
+<span class="md-ellipsis">
+    Dependency Injection
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/cqrs-mediation/">
+<span class="md-ellipsis">
+    CQRS &amp; Mediation
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/mvc-controllers/">
+<span class="md-ellipsis">
+    MVC Controllers
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/data-access/">
+<span class="md-ellipsis">
+    Data Access
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/event-sourcing/">
+<span class="md-ellipsis">
+    Event Sourcing
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/serialization/">
+<span class="md-ellipsis">
+    Serialization
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/object-mapping/">
+<span class="md-ellipsis">
+    Object Mapping
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/reactive-programming/">
+<span class="md-ellipsis">
+    Reactive Programming
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/background-task-scheduling/">
+<span class="md-ellipsis">
+    Background Task Scheduling
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/redis-cache-repository/">
+<span class="md-ellipsis">
+    Redis Cache Repository
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/http-service-client/">
+<span class="md-ellipsis">
+    HTTP Service Client
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/case-conversion-utilities/">
+<span class="md-ellipsis">
+    Case Conversion Utilities
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/enhanced-model-validation/">
+<span class="md-ellipsis">
+    Enhanced Model Validation
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/mermaid-diagrams/">
+<span class="md-ellipsis">
+    Mermaid Diagrams
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_6" type="checkbox"/>
+<label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+<span class="md-ellipsis">
+    Guides
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_6_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_6">
+<span class="md-nav__icon md-icon"></span>
+            Guides
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../guides/">
+<span class="md-ellipsis">
+    Overview
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../guides/project-setup/">
+<span class="md-ellipsis">
+    Project Setup
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../guides/testing-setup/">
+<span class="md-ellipsis">
+    Testing Setup
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_7" type="checkbox"/>
+<label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+<span class="md-ellipsis">
+    Samples
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_7_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_7">
+<span class="md-nav__icon md-icon"></span>
+            Samples
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../samples/">
+<span class="md-ellipsis">
+    Overview
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../samples/openbank/">
+<span class="md-ellipsis">
+    OpenBank
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../samples/api_gateway/">
+<span class="md-ellipsis">
+    API Gateway
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../samples/desktop_controller/">
+<span class="md-ellipsis">
+    Desktop Controller
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+<input checked="" class="md-nav__toggle md-toggle" id="__nav_8" type="checkbox"/>
+<label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="">
+<span class="md-ellipsis">
+    References
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="true" aria-labelledby="__nav_8_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_8">
+<span class="md-nav__icon md-icon"></span>
+            References
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../python_type_hints/">
+<span class="md-ellipsis">
+    Python Type Hints
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../python_generic_types/">
+<span class="md-ellipsis">
+    Python Generic Types
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--active">
+<input class="md-nav__toggle md-toggle" id="__toc" type="checkbox"/>
+<label class="md-nav__link md-nav__link--active" for="__toc">
+<span class="md-ellipsis">
+    Python Modular Code
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<a class="md-nav__link md-nav__link--active" href="./">
+<span class="md-ellipsis">
+    Python Modular Code
+    
+  </span>
+</a>
+<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#what-is-modular-code">
+<span class="md-ellipsis">
+      🎯 What is Modular Code?
+    </span>
+</a>
+<nav aria-label="🎯 What is Modular Code?" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#the-pizza-kitchen-analogy">
+<span class="md-ellipsis">
+      The Pizza Kitchen Analogy
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#python-module-basics">
+<span class="md-ellipsis">
+      🔧 Python Module Basics
+    </span>
+</a>
+<nav aria-label="🔧 Python Module Basics" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#what-is-a-module">
+<span class="md-ellipsis">
+      What is a Module?
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#packages-modules-organized-in-directories">
+<span class="md-ellipsis">
+      Packages - Modules Organized in Directories
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#neuroglia-framework-architecture">
+<span class="md-ellipsis">
+      🏛️ Neuroglia Framework Architecture
+    </span>
+</a>
+<nav aria-label="🏛️ Neuroglia Framework Architecture" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#directory-structure">
+<span class="md-ellipsis">
+      Directory Structure
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#module-organization-principles">
+<span class="md-ellipsis">
+      Module Organization Principles
+    </span>
+</a>
+<nav aria-label="Module Organization Principles" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#1-single-responsibility-principle">
+<span class="md-ellipsis">
+      1. Single Responsibility Principle
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#2-high-cohesion-low-coupling">
+<span class="md-ellipsis">
+      2. High Cohesion, Low Coupling
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#import-strategies">
+<span class="md-ellipsis">
+      📦 Import Strategies
+    </span>
+</a>
+<nav aria-label="📦 Import Strategies" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#absolute-vs-relative-imports">
+<span class="md-ellipsis">
+      Absolute vs Relative Imports
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#import-organization">
+<span class="md-ellipsis">
+      Import Organization
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#controlling-what-gets-imported">
+<span class="md-ellipsis">
+      Controlling What Gets Imported
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#lazy-loading-for-performance">
+<span class="md-ellipsis">
+      Lazy Loading for Performance
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#advanced-modular-patterns">
+<span class="md-ellipsis">
+      🎨 Advanced Modular Patterns
+    </span>
+</a>
+<nav aria-label="🎨 Advanced Modular Patterns" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#factory-pattern-with-modules">
+<span class="md-ellipsis">
+      Factory Pattern with Modules
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#plugin-architecture-with-modules">
+<span class="md-ellipsis">
+      Plugin Architecture with Modules
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#configuration-modules">
+<span class="md-ellipsis">
+      Configuration Modules
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#testing-modular-code">
+<span class="md-ellipsis">
+      🧪 Testing Modular Code
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#best-practices-for-modular-code">
+<span class="md-ellipsis">
+      🚀 Best Practices for Modular Code
+    </span>
+</a>
+<nav aria-label="🚀 Best Practices for Modular Code" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#1-use-meaningful-module-names">
+<span class="md-ellipsis">
+      1. Use Meaningful Module Names
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#2-keep-modules-focused-and-small">
+<span class="md-ellipsis">
+      2. Keep Modules Focused and Small
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#3-use-dependency-injection-for-module-coupling">
+<span class="md-ellipsis">
+      3. Use Dependency Injection for Module Coupling
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#4-design-clear-module-interfaces">
+<span class="md-ellipsis">
+      4. Design Clear Module Interfaces
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#5-use-module-level-constants-and-configuration">
+<span class="md-ellipsis">
+      5. Use Module-Level Constants and Configuration
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#6-document-module-purposes-and-apis">
+<span class="md-ellipsis">
+      6. Document Module Purposes and APIs
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#related-documentation">
+<span class="md-ellipsis">
+      🔗 Related Documentation
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#further-reading">
+<span class="md-ellipsis">
+      📚 Further Reading
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../python_object_oriented/">
+<span class="md-ellipsis">
+    Python Object-Oriented Programming
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../source_code_naming_convention/">
+<span class="md-ellipsis">
+    Source Code Naming Conventions
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../12-factor-app/">
+<span class="md-ellipsis">
+    12-Factor App
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#what-is-modular-code">
+<span class="md-ellipsis">
+      🎯 What is Modular Code?
+    </span>
+</a>
+<nav aria-label="🎯 What is Modular Code?" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#the-pizza-kitchen-analogy">
+<span class="md-ellipsis">
+      The Pizza Kitchen Analogy
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#python-module-basics">
+<span class="md-ellipsis">
+      🔧 Python Module Basics
+    </span>
+</a>
+<nav aria-label="🔧 Python Module Basics" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#what-is-a-module">
+<span class="md-ellipsis">
+      What is a Module?
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#packages-modules-organized-in-directories">
+<span class="md-ellipsis">
+      Packages - Modules Organized in Directories
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#neuroglia-framework-architecture">
+<span class="md-ellipsis">
+      🏛️ Neuroglia Framework Architecture
+    </span>
+</a>
+<nav aria-label="🏛️ Neuroglia Framework Architecture" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#directory-structure">
+<span class="md-ellipsis">
+      Directory Structure
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#module-organization-principles">
+<span class="md-ellipsis">
+      Module Organization Principles
+    </span>
+</a>
+<nav aria-label="Module Organization Principles" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#1-single-responsibility-principle">
+<span class="md-ellipsis">
+      1. Single Responsibility Principle
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#2-high-cohesion-low-coupling">
+<span class="md-ellipsis">
+      2. High Cohesion, Low Coupling
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#import-strategies">
+<span class="md-ellipsis">
+      📦 Import Strategies
+    </span>
+</a>
+<nav aria-label="📦 Import Strategies" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#absolute-vs-relative-imports">
+<span class="md-ellipsis">
+      Absolute vs Relative Imports
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#import-organization">
+<span class="md-ellipsis">
+      Import Organization
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#controlling-what-gets-imported">
+<span class="md-ellipsis">
+      Controlling What Gets Imported
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#lazy-loading-for-performance">
+<span class="md-ellipsis">
+      Lazy Loading for Performance
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#advanced-modular-patterns">
+<span class="md-ellipsis">
+      🎨 Advanced Modular Patterns
+    </span>
+</a>
+<nav aria-label="🎨 Advanced Modular Patterns" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#factory-pattern-with-modules">
+<span class="md-ellipsis">
+      Factory Pattern with Modules
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#plugin-architecture-with-modules">
+<span class="md-ellipsis">
+      Plugin Architecture with Modules
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#configuration-modules">
+<span class="md-ellipsis">
+      Configuration Modules
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#testing-modular-code">
+<span class="md-ellipsis">
+      🧪 Testing Modular Code
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#best-practices-for-modular-code">
+<span class="md-ellipsis">
+      🚀 Best Practices for Modular Code
+    </span>
+</a>
+<nav aria-label="🚀 Best Practices for Modular Code" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#1-use-meaningful-module-names">
+<span class="md-ellipsis">
+      1. Use Meaningful Module Names
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#2-keep-modules-focused-and-small">
+<span class="md-ellipsis">
+      2. Keep Modules Focused and Small
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#3-use-dependency-injection-for-module-coupling">
+<span class="md-ellipsis">
+      3. Use Dependency Injection for Module Coupling
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#4-design-clear-module-interfaces">
+<span class="md-ellipsis">
+      4. Design Clear Module Interfaces
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#5-use-module-level-constants-and-configuration">
+<span class="md-ellipsis">
+      5. Use Module-Level Constants and Configuration
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#6-document-module-purposes-and-apis">
+<span class="md-ellipsis">
+      6. Document Module Purposes and APIs
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#related-documentation">
+<span class="md-ellipsis">
+      🔗 Related Documentation
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#further-reading">
+<span class="md-ellipsis">
+      📚 Further Reading
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div class="md-content" data-md-component="content">
+<article class="md-content__inner md-typeset">
+<h1 id="python-modular-code-reference">🏗️ Python Modular Code Reference<a class="headerlink" href="#python-modular-code-reference" title="Permanent link">¶</a></h1>
+<p>Understanding modular code organization is essential for working with the Neuroglia framework, which emphasizes clean architecture and separation of concerns.</p>
+<h2 id="what-is-modular-code">🎯 What is Modular Code?<a class="headerlink" href="#what-is-modular-code" title="Permanent link">¶</a></h2>
+<p>Modular code organizes functionality into separate, reusable components (modules) that have clear responsibilities and well-defined interfaces. This makes code easier to understand, test, maintain, and extend.</p>
+<h3 id="the-pizza-kitchen-analogy">The Pizza Kitchen Analogy<a class="headerlink" href="#the-pizza-kitchen-analogy" title="Permanent link">¶</a></h3>
+<p>Think of a pizzeria kitchen:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># ❌ Everything in one big file (messy kitchen):</span>
+<span class="c1"># pizza_chaos.py - 2000+ lines doing everything</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">make_dough</span><span class="p">():</span>
+    <span class="k">pass</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">prepare_sauce</span><span class="p">():</span>
+    <span class="k">pass</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">add_toppings</span><span class="p">():</span>
+    <span class="k">pass</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">bake_pizza</span><span class="p">():</span>
+    <span class="k">pass</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">take_order</span><span class="p">():</span>
+    <span class="k">pass</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">process_payment</span><span class="p">():</span>
+    <span class="k">pass</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">manage_inventory</span><span class="p">():</span>
+    <span class="k">pass</span>
+
+<span class="c1"># ... 1900+ more lines</span>
+
+<span class="c1"># ✅ Organized into modules (specialized stations):</span>
+
+<span class="c1"># dough_station.py</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">make_dough</span><span class="p">(</span><span class="n">flour_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">water_amount</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dough</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Specialized dough preparation."""</span>
+    <span class="k">pass</span>
+
+<span class="c1"># sauce_station.py</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">prepare_marinara</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Sauce</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Specialized sauce preparation."""</span>
+    <span class="k">pass</span>
+
+<span class="c1"># assembly_station.py</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">assemble_pizza</span><span class="p">(</span><span class="n">dough</span><span class="p">:</span> <span class="n">Dough</span><span class="p">,</span> <span class="n">sauce</span><span class="p">:</span> <span class="n">Sauce</span><span class="p">,</span> <span class="n">toppings</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Pizza</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Specialized pizza assembly."""</span>
+    <span class="k">pass</span>
+
+<span class="c1"># order_management.py</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">take_order</span><span class="p">(</span><span class="n">customer</span><span class="p">:</span> <span class="n">Customer</span><span class="p">,</span> <span class="n">items</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Order</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Specialized order handling."""</span>
+    <span class="k">pass</span>
+</code></pre></div>
+<h2 id="python-module-basics">🔧 Python Module Basics<a class="headerlink" href="#python-module-basics" title="Permanent link">¶</a></h2>
+<h3 id="what-is-a-module">What is a Module?<a class="headerlink" href="#what-is-a-module" title="Permanent link">¶</a></h3>
+<p>A module is simply a Python file containing code. When you create a <code>.py</code> file, you've created a module.</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># math_utils.py - This is a module</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">add</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Add two numbers."""</span>
+    <span class="k">return</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">multiply</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Multiply two numbers."""</span>
+    <span class="k">return</span> <span class="n">a</span> <span class="o">*</span> <span class="n">b</span>
+
+<span class="n">PI</span> <span class="o">=</span> <span class="mf">3.14159</span>
+
+<span class="c1"># Using the module in another file:</span>
+<span class="c1"># main.py</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">math_utils</span>
+
+<span class="n">result</span> <span class="o">=</span> <span class="n">math_utils</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="n">circle_area</span> <span class="o">=</span> <span class="n">math_utils</span><span class="o">.</span><span class="n">PI</span> <span class="o">*</span> <span class="n">radius</span> <span class="o">**</span> <span class="mi">2</span>
+</code></pre></div>
+<h3 id="packages-modules-organized-in-directories">Packages - Modules Organized in Directories<a class="headerlink" href="#packages-modules-organized-in-directories" title="Permanent link">¶</a></h3>
+<p>A package is a directory containing multiple modules:</p>
+<div class="highlight"><pre><span></span><code>mario_pizzeria/
+├── __init__.py          # Makes this a package
+├── pizza.py             # Pizza-related code
+├── customer.py          # Customer-related code
+└── order.py             # Order-related code
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1"># __init__.py - Package initialization</span>
+<span class="sd">"""Mario's Pizzeria - A delicious pizza ordering system."""</span>
+
+<span class="n">__version__</span> <span class="o">=</span> <span class="s2">"1.0.0"</span>
+<span class="n">__author__</span> <span class="o">=</span> <span class="s2">"Mario"</span>
+
+<span class="c1"># pizza.py</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span>
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Pizza</span><span class="p">:</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">price</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">ingredients</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">create_margherita</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Pizza</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">Pizza</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">"Margherita"</span><span class="p">,</span>
+        <span class="n">price</span><span class="o">=</span><span class="mf">12.99</span><span class="p">,</span>
+        <span class="n">ingredients</span><span class="o">=</span><span class="p">[</span><span class="s2">"tomato"</span><span class="p">,</span> <span class="s2">"mozzarella"</span><span class="p">,</span> <span class="s2">"basil"</span><span class="p">]</span>
+    <span class="p">)</span>
+
+<span class="c1"># Using the package:</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mario_pizzeria.pizza</span><span class="w"> </span><span class="kn">import</span> <span class="n">Pizza</span><span class="p">,</span> <span class="n">create_margherita</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mario_pizzeria</span><span class="w"> </span><span class="kn">import</span> <span class="n">__version__</span>
+
+<span class="n">margherita</span> <span class="o">=</span> <span class="n">create_margherita</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Using Mario's Pizzeria v</span><span class="si">{</span><span class="n">__version__</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</code></pre></div>
+<h2 id="neuroglia-framework-architecture">🏛️ Neuroglia Framework Architecture<a class="headerlink" href="#neuroglia-framework-architecture" title="Permanent link">¶</a></h2>
+<p>The Neuroglia framework follows a layered architecture with clear module organization:</p>
+<h3 id="directory-structure">Directory Structure<a class="headerlink" href="#directory-structure" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code>src/
+├── neuroglia/                    # Framework core
+│   ├── __init__.py
+│   ├── dependency_injection/     # DI container modules
+│   │   ├── __init__.py
+│   │   ├── service_collection.py
+│   │   ├── service_provider.py
+│   │   └── extensions.py
+│   ├── mediation/               # CQRS pattern modules
+│   │   ├── __init__.py
+│   │   ├── mediator.py
+│   │   ├── commands.py
+│   │   ├── queries.py
+│   │   └── handlers.py
+│   ├── mvc/                     # MVC pattern modules
+│   │   ├── __init__.py
+│   │   ├── controller_base.py
+│   │   └── routing.py
+│   └── data/                    # Data access modules
+│       ├── __init__.py
+│       ├── repository.py
+│       └── mongo_repository.py
+└── mario_pizzeria/              # Application code
+    ├── __init__.py
+    ├── api/                     # API layer
+    │   ├── __init__.py
+    │   ├── controllers/
+    │   │   ├── __init__.py
+    │   │   └── pizza_controller.py
+    │   └── dtos/
+    │       ├── __init__.py
+    │       └── pizza_dto.py
+    ├── application/             # Application layer
+    │   ├── __init__.py
+    │   ├── commands/
+    │   │   ├── __init__.py
+    │   │   └── create_pizza_command.py
+    │   ├── queries/
+    │   │   ├── __init__.py
+    │   │   └── get_pizza_query.py
+    │   └── handlers/
+    │       ├── __init__.py
+    │       ├── create_pizza_handler.py
+    │       └── get_pizza_handler.py
+    ├── domain/                  # Domain layer
+    │   ├── __init__.py
+    │   ├── entities/
+    │   │   ├── __init__.py
+    │   │   └── pizza.py
+    │   └── repositories/
+    │       ├── __init__.py
+    │       └── pizza_repository.py
+    └── integration/             # Integration layer
+        ├── __init__.py
+        └── repositories/
+            ├── __init__.py
+            └── mongo_pizza_repository.py
+</code></pre></div>
+<h3 id="module-organization-principles">Module Organization Principles<a class="headerlink" href="#module-organization-principles" title="Permanent link">¶</a></h3>
+<h4 id="1-single-responsibility-principle">1. Single Responsibility Principle<a class="headerlink" href="#1-single-responsibility-principle" title="Permanent link">¶</a></h4>
+<p>Each module should have one clear purpose:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># ✅ Good - pizza.py focuses only on Pizza entity</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Pizza</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Represents a pizza entity."""</span>
+    <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">price</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">ingredients</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+    <span class="n">created_at</span><span class="p">:</span> <span class="n">datetime</span>
+    <span class="n">is_available</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_ingredient</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingredient</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Add an ingredient to the pizza."""</span>
+        <span class="k">if</span> <span class="n">ingredient</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ingredients</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ingredients</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ingredient</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">calculate_cost</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Calculate base cost based on ingredients."""</span>
+        <span class="n">base_cost</span> <span class="o">=</span> <span class="mf">8.0</span>
+        <span class="k">return</span> <span class="n">base_cost</span> <span class="o">+</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ingredients</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.50</span><span class="p">)</span>
+
+<span class="c1"># ❌ Bad - pizza_everything.py tries to do too much</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Pizza</span><span class="p">:</span>
+    <span class="c1"># Pizza logic...</span>
+    <span class="k">pass</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Customer</span><span class="p">:</span>  <span class="c1"># Should be in customer.py</span>
+    <span class="k">pass</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Order</span><span class="p">:</span>     <span class="c1"># Should be in order.py</span>
+    <span class="k">pass</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">send_email</span><span class="p">():</span>    <span class="c1"># Should be in notification.py</span>
+    <span class="k">pass</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">connect_to_database</span><span class="p">():</span>  <span class="c1"># Should be in database.py</span>
+    <span class="k">pass</span>
+</code></pre></div>
+<h4 id="2-high-cohesion-low-coupling">2. High Cohesion, Low Coupling<a class="headerlink" href="#2-high-cohesion-low-coupling" title="Permanent link">¶</a></h4>
+<p>Related functionality stays together, unrelated functionality is separated:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># High cohesion - pizza_operations.py</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.pizza</span><span class="w"> </span><span class="kn">import</span> <span class="n">Pizza</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">PizzaService</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Service for pizza-related operations."""</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">repository</span><span class="p">:</span> <span class="s1">'PizzaRepository'</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_repository</span> <span class="o">=</span> <span class="n">repository</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">create_pizza</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">price</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">ingredients</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Pizza</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Create a new pizza."""</span>
+        <span class="n">pizza</span> <span class="o">=</span> <span class="n">Pizza</span><span class="p">(</span>
+            <span class="nb">id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_generate_id</span><span class="p">(),</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
+            <span class="n">price</span><span class="o">=</span><span class="n">price</span><span class="p">,</span>
+            <span class="n">ingredients</span><span class="o">=</span><span class="n">ingredients</span><span class="p">,</span>
+            <span class="n">created_at</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+        <span class="p">)</span>
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_repository</span><span class="o">.</span><span class="n">save_async</span><span class="p">(</span><span class="n">pizza</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">pizza</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_available_pizzas</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Pizza</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">"""Get all available pizzas."""</span>
+        <span class="n">all_pizzas</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_repository</span><span class="o">.</span><span class="n">get_all_async</span><span class="p">()</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">pizza</span> <span class="k">for</span> <span class="n">pizza</span> <span class="ow">in</span> <span class="n">all_pizzas</span> <span class="k">if</span> <span class="n">pizza</span><span class="o">.</span><span class="n">is_available</span><span class="p">]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_generate_id</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Generate unique pizza ID."""</span>
+        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">())</span>
+
+<span class="c1"># Low coupling - separate concerns into different modules</span>
+<span class="c1"># customer_service.py</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">CustomerService</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Service for customer-related operations."""</span>
+    <span class="k">pass</span>
+
+<span class="c1"># order_service.py</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">OrderService</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Service for order-related operations."""</span>
+    <span class="k">pass</span>
+</code></pre></div>
+<h2 id="import-strategies">📦 Import Strategies<a class="headerlink" href="#import-strategies" title="Permanent link">¶</a></h2>
+<h3 id="absolute-vs-relative-imports">Absolute vs Relative Imports<a class="headerlink" href="#absolute-vs-relative-imports" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Project structure:</span>
+<span class="n">mario_pizzeria</span><span class="o">/</span>
+<span class="err">├──</span> <span class="fm">__init__</span><span class="o">.</span><span class="n">py</span>
+<span class="err">├──</span> <span class="n">domain</span><span class="o">/</span>
+<span class="err">│</span>   <span class="err">├──</span> <span class="fm">__init__</span><span class="o">.</span><span class="n">py</span>
+<span class="err">│</span>   <span class="err">├──</span> <span class="n">entities</span><span class="o">/</span>
+<span class="err">│</span>   <span class="err">│</span>   <span class="err">├──</span> <span class="fm">__init__</span><span class="o">.</span><span class="n">py</span>
+<span class="err">│</span>   <span class="err">│</span>   <span class="err">├──</span> <span class="n">pizza</span><span class="o">.</span><span class="n">py</span>
+<span class="err">│</span>   <span class="err">│</span>   <span class="err">└──</span> <span class="n">customer</span><span class="o">.</span><span class="n">py</span>
+<span class="err">│</span>   <span class="err">└──</span> <span class="n">services</span><span class="o">/</span>
+<span class="err">│</span>       <span class="err">├──</span> <span class="fm">__init__</span><span class="o">.</span><span class="n">py</span>
+<span class="err">│</span>       <span class="err">└──</span> <span class="n">pizza_service</span><span class="o">.</span><span class="n">py</span>
+<span class="err">└──</span> <span class="n">infrastructure</span><span class="o">/</span>
+    <span class="err">├──</span> <span class="fm">__init__</span><span class="o">.</span><span class="n">py</span>
+    <span class="err">└──</span> <span class="n">repositories</span><span class="o">/</span>
+        <span class="err">├──</span> <span class="fm">__init__</span><span class="o">.</span><span class="n">py</span>
+        <span class="err">└──</span> <span class="n">pizza_repository</span><span class="o">.</span><span class="n">py</span>
+
+<span class="c1"># ✅ Absolute imports (preferred for clarity):</span>
+<span class="c1"># In pizza_service.py</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mario_pizzeria.domain.entities.pizza</span><span class="w"> </span><span class="kn">import</span> <span class="n">Pizza</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mario_pizzeria.domain.entities.customer</span><span class="w"> </span><span class="kn">import</span> <span class="n">Customer</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mario_pizzeria.infrastructure.repositories.pizza_repository</span><span class="w"> </span><span class="kn">import</span> <span class="n">PizzaRepository</span>
+
+<span class="c1"># ✅ Relative imports (good for internal package references):</span>
+<span class="c1"># In pizza_service.py</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..entities.pizza</span><span class="w"> </span><span class="kn">import</span> <span class="n">Pizza</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..entities.customer</span><span class="w"> </span><span class="kn">import</span> <span class="n">Customer</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">...infrastructure.repositories.pizza_repository</span><span class="w"> </span><span class="kn">import</span> <span class="n">PizzaRepository</span>
+
+<span class="c1"># ❌ Avoid mixing styles in the same file</span>
+</code></pre></div>
+<h3 id="import-organization">Import Organization<a class="headerlink" href="#import-organization" title="Permanent link">¶</a></h3>
+<p>Organize imports in a standard order:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Standard library imports</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Dict</span>
+
+<span class="c1"># Third-party imports</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">fastapi</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pymongo</span>
+
+<span class="c1"># Local application imports</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.dependency_injection</span><span class="w"> </span><span class="kn">import</span> <span class="n">ServiceProvider</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.mediation</span><span class="w"> </span><span class="kn">import</span> <span class="n">Mediator</span><span class="p">,</span> <span class="n">Command</span><span class="p">,</span> <span class="n">Query</span>
+
+<span class="c1"># Local relative imports</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.pizza</span><span class="w"> </span><span class="kn">import</span> <span class="n">Pizza</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.customer</span><span class="w"> </span><span class="kn">import</span> <span class="n">Customer</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..repositories.pizza_repository</span><span class="w"> </span><span class="kn">import</span> <span class="n">PizzaRepository</span>
+</code></pre></div>
+<h3 id="controlling-what-gets-imported">Controlling What Gets Imported<a class="headerlink" href="#controlling-what-gets-imported" title="Permanent link">¶</a></h3>
+<p>Use <code>__init__.py</code> files to control the public API:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># domain/entities/__init__.py</span>
+<span class="sd">"""Domain entities for Mario's Pizzeria."""</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">.pizza</span><span class="w"> </span><span class="kn">import</span> <span class="n">Pizza</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.customer</span><span class="w"> </span><span class="kn">import</span> <span class="n">Customer</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.order</span><span class="w"> </span><span class="kn">import</span> <span class="n">Order</span>
+
+<span class="c1"># Make only specific classes available when importing the package</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'Pizza'</span><span class="p">,</span> <span class="s1">'Customer'</span><span class="p">,</span> <span class="s1">'Order'</span><span class="p">]</span>
+
+<span class="c1"># Usage - clean imports for users:</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mario_pizzeria.domain.entities</span><span class="w"> </span><span class="kn">import</span> <span class="n">Pizza</span><span class="p">,</span> <span class="n">Customer</span>
+<span class="c1"># Instead of:</span>
+<span class="c1"># from mario_pizzeria.domain.entities.pizza import Pizza</span>
+<span class="c1"># from mario_pizzeria.domain.entities.customer import Customer</span>
+</code></pre></div>
+<h3 id="lazy-loading-for-performance">Lazy Loading for Performance<a class="headerlink" href="#lazy-loading-for-performance" title="Permanent link">¶</a></h3>
+<p>Load expensive modules only when needed:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># heavy_analytics.py - expensive to import</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">generate_sales_report</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+    <span class="c1"># Expensive analytics operations</span>
+    <span class="k">pass</span>
+
+<span class="c1"># pizza_service.py - lazy loading</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TYPE_CHECKING</span>
+
+<span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
+    <span class="c1"># Import only for type checking, not at runtime</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">.heavy_analytics</span><span class="w"> </span><span class="kn">import</span> <span class="n">generate_sales_report</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">PizzaService</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_basic_stats</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Fast operation - no heavy imports needed."""</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">"total_pizzas"</span><span class="p">:</span> <span class="mi">42</span><span class="p">}</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_detailed_analytics</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">'pd.DataFrame'</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Load analytics module only when needed."""</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">.heavy_analytics</span><span class="w"> </span><span class="kn">import</span> <span class="n">generate_sales_report</span>
+        <span class="k">return</span> <span class="n">generate_sales_report</span><span class="p">()</span>
+</code></pre></div>
+<h2 id="advanced-modular-patterns">🎨 Advanced Modular Patterns<a class="headerlink" href="#advanced-modular-patterns" title="Permanent link">¶</a></h2>
+<h3 id="factory-pattern-with-modules">Factory Pattern with Modules<a class="headerlink" href="#factory-pattern-with-modules" title="Permanent link">¶</a></h3>
+<p>Organize related creation logic:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># factories/__init__.py</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.pizza_factory</span><span class="w"> </span><span class="kn">import</span> <span class="n">PizzaFactory</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.customer_factory</span><span class="w"> </span><span class="kn">import</span> <span class="n">CustomerFactory</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'PizzaFactory'</span><span class="p">,</span> <span class="s1">'CustomerFactory'</span><span class="p">]</span>
+
+<span class="c1"># factories/pizza_factory.py</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..domain.entities.pizza</span><span class="w"> </span><span class="kn">import</span> <span class="n">Pizza</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">PizzaFactory</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Factory for creating different types of pizzas."""</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_margherita</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Pizza</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">Pizza</span><span class="p">(</span>
+            <span class="nb">id</span><span class="o">=</span><span class="n">PizzaFactory</span><span class="o">.</span><span class="n">_generate_id</span><span class="p">(),</span>
+            <span class="n">name</span><span class="o">=</span><span class="s2">"Margherita"</span><span class="p">,</span>
+            <span class="n">price</span><span class="o">=</span><span class="mf">12.99</span><span class="p">,</span>
+            <span class="n">ingredients</span><span class="o">=</span><span class="p">[</span><span class="s2">"tomato sauce"</span><span class="p">,</span> <span class="s2">"mozzarella"</span><span class="p">,</span> <span class="s2">"basil"</span><span class="p">],</span>
+            <span class="n">created_at</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+        <span class="p">)</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_pepperoni</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Pizza</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">Pizza</span><span class="p">(</span>
+            <span class="nb">id</span><span class="o">=</span><span class="n">PizzaFactory</span><span class="o">.</span><span class="n">_generate_id</span><span class="p">(),</span>
+            <span class="n">name</span><span class="o">=</span><span class="s2">"Pepperoni"</span><span class="p">,</span>
+            <span class="n">price</span><span class="o">=</span><span class="mf">14.99</span><span class="p">,</span>
+            <span class="n">ingredients</span><span class="o">=</span><span class="p">[</span><span class="s2">"tomato sauce"</span><span class="p">,</span> <span class="s2">"mozzarella"</span><span class="p">,</span> <span class="s2">"pepperoni"</span><span class="p">],</span>
+            <span class="n">created_at</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+        <span class="p">)</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_custom</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">ingredients</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Pizza</span><span class="p">:</span>
+        <span class="n">base_price</span> <span class="o">=</span> <span class="mf">10.0</span>
+        <span class="n">price</span> <span class="o">=</span> <span class="n">base_price</span> <span class="o">+</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ingredients</span><span class="p">)</span> <span class="o">*</span> <span class="mf">1.50</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">Pizza</span><span class="p">(</span>
+            <span class="nb">id</span><span class="o">=</span><span class="n">PizzaFactory</span><span class="o">.</span><span class="n">_generate_id</span><span class="p">(),</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
+            <span class="n">price</span><span class="o">=</span><span class="n">price</span><span class="p">,</span>
+            <span class="n">ingredients</span><span class="o">=</span><span class="n">ingredients</span><span class="p">,</span>
+            <span class="n">created_at</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+        <span class="p">)</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_generate_id</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">())</span>
+
+<span class="c1"># Usage:</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mario_pizzeria.factories</span><span class="w"> </span><span class="kn">import</span> <span class="n">PizzaFactory</span>
+
+<span class="n">margherita</span> <span class="o">=</span> <span class="n">PizzaFactory</span><span class="o">.</span><span class="n">create_margherita</span><span class="p">()</span>
+<span class="n">custom_pizza</span> <span class="o">=</span> <span class="n">PizzaFactory</span><span class="o">.</span><span class="n">create_custom</span><span class="p">(</span><span class="s2">"Veggie Supreme"</span><span class="p">,</span>
+                                         <span class="p">[</span><span class="s2">"tomato"</span><span class="p">,</span> <span class="s2">"mozzarella"</span><span class="p">,</span> <span class="s2">"mushrooms"</span><span class="p">,</span> <span class="s2">"peppers"</span><span class="p">])</span>
+</code></pre></div>
+<h3 id="plugin-architecture-with-modules">Plugin Architecture with Modules<a class="headerlink" href="#plugin-architecture-with-modules" title="Permanent link">¶</a></h3>
+<p>Create extensible systems using module discovery:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># plugins/__init__.py</span>
+<span class="sd">"""Plugin system for Mario's Pizzeria."""</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">importlib</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pkgutil</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Type</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">PizzaPlugin</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Base class for pizza plugins."""</span>
+
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">pass</span>
+
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_pizza</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Pizza</span><span class="p">:</span>
+        <span class="k">pass</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">discover_plugins</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Type</span><span class="p">[</span><span class="n">PizzaPlugin</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">"""Discover all available pizza plugins."""</span>
+    <span class="n">plugins</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="c1"># Discover plugins in the plugins package</span>
+    <span class="k">for</span> <span class="n">finder</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">ispkg</span> <span class="ow">in</span> <span class="n">pkgutil</span><span class="o">.</span><span class="n">iter_modules</span><span class="p">(</span><span class="n">__path__</span><span class="p">):</span>
+        <span class="n">module</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="vm">__name__</span><span class="si">}</span><span class="s1">.</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+
+        <span class="c1"># Find all plugin classes in the module</span>
+        <span class="k">for</span> <span class="n">attr_name</span> <span class="ow">in</span> <span class="nb">dir</span><span class="p">(</span><span class="n">module</span><span class="p">):</span>
+            <span class="n">attr</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">attr_name</span><span class="p">)</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">attr</span><span class="p">,</span> <span class="nb">type</span><span class="p">)</span> <span class="ow">and</span>
+                <span class="nb">issubclass</span><span class="p">(</span><span class="n">attr</span><span class="p">,</span> <span class="n">PizzaPlugin</span><span class="p">)</span> <span class="ow">and</span>
+                <span class="n">attr</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">PizzaPlugin</span><span class="p">):</span>
+                <span class="n">plugins</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">attr</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">plugins</span>
+
+<span class="c1"># plugins/italian_classics.py</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.</span><span class="w"> </span><span class="kn">import</span> <span class="n">PizzaPlugin</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..domain.entities.pizza</span><span class="w"> </span><span class="kn">import</span> <span class="n">Pizza</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">MargheritaPlugin</span><span class="p">(</span><span class="n">PizzaPlugin</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">"Margherita"</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_pizza</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Pizza</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">Pizza</span><span class="p">(</span>
+            <span class="nb">id</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">()),</span>
+            <span class="n">name</span><span class="o">=</span><span class="s2">"Margherita"</span><span class="p">,</span>
+            <span class="n">price</span><span class="o">=</span><span class="mf">12.99</span><span class="p">,</span>
+            <span class="n">ingredients</span><span class="o">=</span><span class="p">[</span><span class="s2">"tomato"</span><span class="p">,</span> <span class="s2">"mozzarella"</span><span class="p">,</span> <span class="s2">"basil"</span><span class="p">]</span>
+        <span class="p">)</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">QuattroStagioniPlugin</span><span class="p">(</span><span class="n">PizzaPlugin</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">"Quattro Stagioni"</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_pizza</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Pizza</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">Pizza</span><span class="p">(</span>
+            <span class="nb">id</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">()),</span>
+            <span class="n">name</span><span class="o">=</span><span class="s2">"Quattro Stagioni"</span><span class="p">,</span>
+            <span class="n">price</span><span class="o">=</span><span class="mf">16.99</span><span class="p">,</span>
+            <span class="n">ingredients</span><span class="o">=</span><span class="p">[</span><span class="s2">"tomato"</span><span class="p">,</span> <span class="s2">"mozzarella"</span><span class="p">,</span> <span class="s2">"ham"</span><span class="p">,</span> <span class="s2">"mushrooms"</span><span class="p">,</span> <span class="s2">"artichokes"</span><span class="p">,</span> <span class="s2">"olives"</span><span class="p">]</span>
+        <span class="p">)</span>
+
+<span class="c1"># plugins/american_style.py</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.</span><span class="w"> </span><span class="kn">import</span> <span class="n">PizzaPlugin</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..domain.entities.pizza</span><span class="w"> </span><span class="kn">import</span> <span class="n">Pizza</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">PepperoniPlugin</span><span class="p">(</span><span class="n">PizzaPlugin</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">"Pepperoni"</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_pizza</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Pizza</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">Pizza</span><span class="p">(</span>
+            <span class="nb">id</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">()),</span>
+            <span class="n">name</span><span class="o">=</span><span class="s2">"Pepperoni"</span><span class="p">,</span>
+            <span class="n">price</span><span class="o">=</span><span class="mf">14.99</span><span class="p">,</span>
+            <span class="n">ingredients</span><span class="o">=</span><span class="p">[</span><span class="s2">"tomato"</span><span class="p">,</span> <span class="s2">"mozzarella"</span><span class="p">,</span> <span class="s2">"pepperoni"</span><span class="p">]</span>
+        <span class="p">)</span>
+
+<span class="c1"># Usage:</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mario_pizzeria.plugins</span><span class="w"> </span><span class="kn">import</span> <span class="n">discover_plugins</span>
+
+<span class="c1"># Automatically discover all pizza plugins</span>
+<span class="n">available_plugins</span> <span class="o">=</span> <span class="n">discover_plugins</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">plugin_class</span> <span class="ow">in</span> <span class="n">available_plugins</span><span class="p">:</span>
+    <span class="n">plugin</span> <span class="o">=</span> <span class="n">plugin_class</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Available: </span><span class="si">{</span><span class="n">plugin</span><span class="o">.</span><span class="n">get_name</span><span class="p">()</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="n">pizza</span> <span class="o">=</span> <span class="n">plugin</span><span class="o">.</span><span class="n">create_pizza</span><span class="p">()</span>
+</code></pre></div>
+<h3 id="configuration-modules">Configuration Modules<a class="headerlink" href="#configuration-modules" title="Permanent link">¶</a></h3>
+<p>Organize configuration in modules:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># config/__init__.py</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.database</span><span class="w"> </span><span class="kn">import</span> <span class="n">DatabaseConfig</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.api</span><span class="w"> </span><span class="kn">import</span> <span class="n">ApiConfig</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.logging</span><span class="w"> </span><span class="kn">import</span> <span class="n">LoggingConfig</span>
+
+<span class="c1"># config/database.py</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span>
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">DatabaseConfig</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Database configuration settings."""</span>
+    <span class="n">host</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"localhost"</span>
+    <span class="n">port</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">27017</span>
+    <span class="n">database</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"mario_pizzeria"</span>
+    <span class="n">username</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">password</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">connection_timeout</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">30</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">connection_string</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Generate MongoDB connection string."""</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">username</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">password</span><span class="p">:</span>
+            <span class="k">return</span> <span class="sa">f</span><span class="s2">"mongodb://</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">username</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">password</span><span class="si">}</span><span class="s2">@</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">host</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">port</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">database</span><span class="si">}</span><span class="s2">"</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">"mongodb://</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">host</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">port</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">database</span><span class="si">}</span><span class="s2">"</span>
+
+<span class="c1"># config/api.py</span>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ApiConfig</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""API configuration settings."""</span>
+    <span class="n">host</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"0.0.0.0"</span>
+    <span class="n">port</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">8000</span>
+    <span class="n">debug</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">cors_origins</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">api_prefix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"/api/v1"</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cors_origins</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cors_origins</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"http://localhost:3000"</span><span class="p">]</span>
+
+<span class="c1"># config/logging.py</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span>
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">LoggingConfig</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Logging configuration settings."""</span>
+    <span class="n">level</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"INFO"</span>
+    <span class="nb">format</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"</span><span class="si">%(asctime)s</span><span class="s2"> - </span><span class="si">%(name)s</span><span class="s2"> - </span><span class="si">%(levelname)s</span><span class="s2"> - </span><span class="si">%(message)s</span><span class="s2">"</span>
+    <span class="n">handlers</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">handlers</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">handlers</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"console"</span><span class="p">,</span> <span class="s2">"file"</span><span class="p">]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_level</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Convert string level to logging constant."""</span>
+        <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">logging</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">level</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span> <span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
+
+<span class="c1"># Usage:</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mario_pizzeria.config</span><span class="w"> </span><span class="kn">import</span> <span class="n">DatabaseConfig</span><span class="p">,</span> <span class="n">ApiConfig</span><span class="p">,</span> <span class="n">LoggingConfig</span>
+
+<span class="n">db_config</span> <span class="o">=</span> <span class="n">DatabaseConfig</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s2">"production-mongo"</span><span class="p">,</span> <span class="n">database</span><span class="o">=</span><span class="s2">"pizzeria_prod"</span><span class="p">)</span>
+<span class="n">api_config</span> <span class="o">=</span> <span class="n">ApiConfig</span><span class="p">(</span><span class="n">port</span><span class="o">=</span><span class="mi">8080</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">log_config</span> <span class="o">=</span> <span class="n">LoggingConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="s2">"WARNING"</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Database: </span><span class="si">{</span><span class="n">db_config</span><span class="o">.</span><span class="n">connection_string</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"API will run on: </span><span class="si">{</span><span class="n">api_config</span><span class="o">.</span><span class="n">host</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">api_config</span><span class="o">.</span><span class="n">port</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Log level: </span><span class="si">{</span><span class="n">log_config</span><span class="o">.</span><span class="n">get_level</span><span class="p">()</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</code></pre></div>
+<h2 id="testing-modular-code">🧪 Testing Modular Code<a class="headerlink" href="#testing-modular-code" title="Permanent link">¶</a></h2>
+<p>Organize tests to mirror your module structure:</p>
+<div class="highlight"><pre><span></span><code>tests/
+├── __init__.py
+├── conftest.py              # Shared test fixtures
+├── unit/                    # Unit tests
+│   ├── __init__.py
+│   ├── domain/
+│   │   ├── __init__.py
+│   │   ├── test_pizza.py
+│   │   └── test_customer.py
+│   ├── application/
+│   │   ├── __init__.py
+│   │   └── test_pizza_service.py
+│   └── infrastructure/
+│       ├── __init__.py
+│       └── test_pizza_repository.py
+├── integration/             # Integration tests
+│   ├── __init__.py
+│   ├── test_api_endpoints.py
+│   └── test_database_integration.py
+└── fixtures/               # Test data
+    ├── __init__.py
+    ├── pizza_fixtures.py
+    └── customer_fixtures.py
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1"># tests/conftest.py - Shared fixtures</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mario_pizzeria.domain.entities.pizza</span><span class="w"> </span><span class="kn">import</span> <span class="n">Pizza</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mario_pizzeria.infrastructure.repositories.in_memory_pizza_repository</span><span class="w"> </span><span class="kn">import</span> <span class="n">InMemoryPizzaRepository</span>
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">sample_pizza</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Pizza</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Create a sample pizza for testing."""</span>
+    <span class="k">return</span> <span class="n">Pizza</span><span class="p">(</span>
+        <span class="nb">id</span><span class="o">=</span><span class="s2">"test-pizza-1"</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">"Test Margherita"</span><span class="p">,</span>
+        <span class="n">price</span><span class="o">=</span><span class="mf">12.99</span><span class="p">,</span>
+        <span class="n">ingredients</span><span class="o">=</span><span class="p">[</span><span class="s2">"tomato"</span><span class="p">,</span> <span class="s2">"mozzarella"</span><span class="p">,</span> <span class="s2">"basil"</span><span class="p">]</span>
+    <span class="p">)</span>
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">pizza_repository</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">InMemoryPizzaRepository</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Create an in-memory pizza repository for testing."""</span>
+    <span class="k">return</span> <span class="n">InMemoryPizzaRepository</span><span class="p">()</span>
+
+<span class="c1"># tests/unit/domain/test_pizza.py</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mario_pizzeria.domain.entities.pizza</span><span class="w"> </span><span class="kn">import</span> <span class="n">Pizza</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">TestPizza</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_pizza_creation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sample_pizza</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Test pizza entity creation."""</span>
+        <span class="k">assert</span> <span class="n">sample_pizza</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">"Test Margherita"</span>
+        <span class="k">assert</span> <span class="n">sample_pizza</span><span class="o">.</span><span class="n">price</span> <span class="o">==</span> <span class="mf">12.99</span>
+        <span class="k">assert</span> <span class="s2">"tomato"</span> <span class="ow">in</span> <span class="n">sample_pizza</span><span class="o">.</span><span class="n">ingredients</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_add_ingredient</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sample_pizza</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Test adding ingredient to pizza."""</span>
+        <span class="n">sample_pizza</span><span class="o">.</span><span class="n">add_ingredient</span><span class="p">(</span><span class="s2">"oregano"</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="s2">"oregano"</span> <span class="ow">in</span> <span class="n">sample_pizza</span><span class="o">.</span><span class="n">ingredients</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_calculate_cost</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sample_pizza</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Test pizza cost calculation."""</span>
+        <span class="n">cost</span> <span class="o">=</span> <span class="n">sample_pizza</span><span class="o">.</span><span class="n">calculate_cost</span><span class="p">()</span>
+        <span class="n">expected_cost</span> <span class="o">=</span> <span class="mf">8.0</span> <span class="o">+</span> <span class="p">(</span><span class="mi">3</span> <span class="o">*</span> <span class="mf">0.50</span><span class="p">)</span>  <span class="c1"># base + (3 ingredients * 0.50)</span>
+        <span class="k">assert</span> <span class="n">cost</span> <span class="o">==</span> <span class="n">expected_cost</span>
+
+<span class="c1"># tests/fixtures/pizza_fixtures.py</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mario_pizzeria.domain.entities.pizza</span><span class="w"> </span><span class="kn">import</span> <span class="n">Pizza</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">PizzaFixtures</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Factory for creating test pizza data."""</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_margherita</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Pizza</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">Pizza</span><span class="p">(</span>
+            <span class="nb">id</span><span class="o">=</span><span class="s2">"margherita-1"</span><span class="p">,</span>
+            <span class="n">name</span><span class="o">=</span><span class="s2">"Margherita"</span><span class="p">,</span>
+            <span class="n">price</span><span class="o">=</span><span class="mf">12.99</span><span class="p">,</span>
+            <span class="n">ingredients</span><span class="o">=</span><span class="p">[</span><span class="s2">"tomato"</span><span class="p">,</span> <span class="s2">"mozzarella"</span><span class="p">,</span> <span class="s2">"basil"</span><span class="p">]</span>
+        <span class="p">)</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_pizza_list</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Pizza</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="p">[</span>
+            <span class="n">PizzaFixtures</span><span class="o">.</span><span class="n">create_margherita</span><span class="p">(),</span>
+            <span class="n">Pizza</span><span class="p">(</span><span class="s2">"pepperoni-1"</span><span class="p">,</span> <span class="s2">"Pepperoni"</span><span class="p">,</span> <span class="mf">14.99</span><span class="p">,</span> <span class="p">[</span><span class="s2">"tomato"</span><span class="p">,</span> <span class="s2">"mozzarella"</span><span class="p">,</span> <span class="s2">"pepperoni"</span><span class="p">]),</span>
+            <span class="n">Pizza</span><span class="p">(</span><span class="s2">"hawaiian-1"</span><span class="p">,</span> <span class="s2">"Hawaiian"</span><span class="p">,</span> <span class="mf">13.49</span><span class="p">,</span> <span class="p">[</span><span class="s2">"tomato"</span><span class="p">,</span> <span class="s2">"mozzarella"</span><span class="p">,</span> <span class="s2">"ham"</span><span class="p">,</span> <span class="s2">"pineapple"</span><span class="p">])</span>
+        <span class="p">]</span>
+</code></pre></div>
+<h2 id="best-practices-for-modular-code">🚀 Best Practices for Modular Code<a class="headerlink" href="#best-practices-for-modular-code" title="Permanent link">¶</a></h2>
+<h3 id="1-use-meaningful-module-names">1. Use Meaningful Module Names<a class="headerlink" href="#1-use-meaningful-module-names" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># ✅ Good - clear, descriptive names:</span>
+<span class="n">pizza_service</span><span class="o">.</span><span class="n">py</span>
+<span class="n">customer_repository</span><span class="o">.</span><span class="n">py</span>
+<span class="n">order_validation</span><span class="o">.</span><span class="n">py</span>
+<span class="n">payment_processing</span><span class="o">.</span><span class="n">py</span>
+
+<span class="c1"># ❌ Bad - vague or abbreviated names:</span>
+<span class="n">util</span><span class="o">.</span><span class="n">py</span>
+<span class="n">helper</span><span class="o">.</span><span class="n">py</span>
+<span class="n">stuff</span><span class="o">.</span><span class="n">py</span>
+<span class="n">ps</span><span class="o">.</span><span class="n">py</span> <span class="p">(</span><span class="n">pizza</span> <span class="n">service</span><span class="err">?</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="2-keep-modules-focused-and-small">2. Keep Modules Focused and Small<a class="headerlink" href="#2-keep-modules-focused-and-small" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># ✅ Good - focused pizza entity module (50-100 lines):</span>
+<span class="c1"># domain/entities/pizza.py</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Pizza</span><span class="p">:</span>
+    <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">price</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">ingredients</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+    <span class="n">created_at</span><span class="p">:</span> <span class="n">datetime</span>
+    <span class="n">is_available</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_ingredient</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingredient</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">ingredient</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ingredients</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ingredients</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ingredient</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">remove_ingredient</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingredient</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">ingredient</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ingredients</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ingredients</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">ingredient</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">calculate_cost</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="n">base_cost</span> <span class="o">=</span> <span class="mf">8.0</span>
+        <span class="k">return</span> <span class="n">base_cost</span> <span class="o">+</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ingredients</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.50</span><span class="p">)</span>
+
+<span class="c1"># ❌ Bad - trying to do everything in one module (1000+ lines)</span>
+</code></pre></div>
+<h3 id="3-use-dependency-injection-for-module-coupling">3. Use Dependency Injection for Module Coupling<a class="headerlink" href="#3-use-dependency-injection-for-module-coupling" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># ✅ Good - dependency injection reduces coupling:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">PizzaService</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                 <span class="n">repository</span><span class="p">:</span> <span class="n">PizzaRepository</span><span class="p">,</span>
+                 <span class="n">validator</span><span class="p">:</span> <span class="n">PizzaValidator</span><span class="p">,</span>
+                 <span class="n">notifier</span><span class="p">:</span> <span class="n">NotificationService</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_repository</span> <span class="o">=</span> <span class="n">repository</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_validator</span> <span class="o">=</span> <span class="n">validator</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_notifier</span> <span class="o">=</span> <span class="n">notifier</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">create_pizza</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pizza_data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Pizza</span><span class="p">:</span>
+        <span class="c1"># Use injected dependencies</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_validator</span><span class="o">.</span><span class="n">is_valid</span><span class="p">(</span><span class="n">pizza_data</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="s2">"Invalid pizza data"</span><span class="p">)</span>
+
+        <span class="n">pizza</span> <span class="o">=</span> <span class="n">Pizza</span><span class="p">(</span><span class="o">**</span><span class="n">pizza_data</span><span class="p">)</span>
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_repository</span><span class="o">.</span><span class="n">save_async</span><span class="p">(</span><span class="n">pizza</span><span class="p">)</span>
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_notifier</span><span class="o">.</span><span class="n">notify_pizza_created</span><span class="p">(</span><span class="n">pizza</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">pizza</span>
+
+<span class="c1"># ❌ Bad - tight coupling with direct imports:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">PizzaService</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_repository</span> <span class="o">=</span> <span class="n">MongoPizzaRepository</span><span class="p">()</span>  <span class="c1"># Tightly coupled</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_validator</span> <span class="o">=</span> <span class="n">PizzaValidator</span><span class="p">()</span>         <span class="c1"># Hard to test</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_notifier</span> <span class="o">=</span> <span class="n">EmailNotifier</span><span class="p">()</span>          <span class="c1"># Can't swap implementations</span>
+</code></pre></div>
+<h3 id="4-design-clear-module-interfaces">4. Design Clear Module Interfaces<a class="headerlink" href="#4-design-clear-module-interfaces" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># ✅ Good - clear, well-defined interface:</span>
+<span class="c1"># repositories/pizza_repository.py</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..domain.entities.pizza</span><span class="w"> </span><span class="kn">import</span> <span class="n">Pizza</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">PizzaRepository</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Interface for pizza data access operations."""</span>
+
+    <span class="nd">@abstractmethod</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_by_id_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pizza_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Pizza</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">"""Get pizza by ID, returns None if not found."""</span>
+        <span class="k">pass</span>
+
+    <span class="nd">@abstractmethod</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_by_name_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Pizza</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">"""Get all pizzas matching the given name."""</span>
+        <span class="k">pass</span>
+
+    <span class="nd">@abstractmethod</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">save_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pizza</span><span class="p">:</span> <span class="n">Pizza</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Save pizza to storage."""</span>
+        <span class="k">pass</span>
+
+    <span class="nd">@abstractmethod</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">delete_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pizza_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Delete pizza, returns True if deleted."""</span>
+        <span class="k">pass</span>
+
+    <span class="nd">@abstractmethod</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_available_pizzas_async</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Pizza</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">"""Get all available pizzas."""</span>
+        <span class="k">pass</span>
+
+<span class="c1"># Concrete implementation:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">MongoPizzaRepository</span><span class="p">(</span><span class="n">PizzaRepository</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""MongoDB implementation of pizza repository."""</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">collection</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_collection</span> <span class="o">=</span> <span class="n">collection</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_by_id_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pizza_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Pizza</span><span class="p">]:</span>
+        <span class="c1"># MongoDB-specific implementation</span>
+        <span class="k">pass</span>
+
+    <span class="c1"># ... implement other methods</span>
+</code></pre></div>
+<h3 id="5-use-module-level-constants-and-configuration">5. Use Module-Level Constants and Configuration<a class="headerlink" href="#5-use-module-level-constants-and-configuration" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># constants/pizza_constants.py</span>
+<span class="sd">"""Constants for pizza-related operations."""</span>
+
+<span class="c1"># Pizza sizes</span>
+<span class="n">SMALL_SIZE</span> <span class="o">=</span> <span class="s2">"small"</span>
+<span class="n">MEDIUM_SIZE</span> <span class="o">=</span> <span class="s2">"medium"</span>
+<span class="n">LARGE_SIZE</span> <span class="o">=</span> <span class="s2">"large"</span>
+
+<span class="n">PIZZA_SIZES</span> <span class="o">=</span> <span class="p">[</span><span class="n">SMALL_SIZE</span><span class="p">,</span> <span class="n">MEDIUM_SIZE</span><span class="p">,</span> <span class="n">LARGE_SIZE</span><span class="p">]</span>
+
+<span class="c1"># Price multipliers by size</span>
+<span class="n">SIZE_MULTIPLIERS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="n">SMALL_SIZE</span><span class="p">:</span> <span class="mf">0.8</span><span class="p">,</span>
+    <span class="n">MEDIUM_SIZE</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
+    <span class="n">LARGE_SIZE</span><span class="p">:</span> <span class="mf">1.3</span>
+<span class="p">}</span>
+
+<span class="c1"># Ingredient categories</span>
+<span class="n">CHEESE_INGREDIENTS</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"mozzarella"</span><span class="p">,</span> <span class="s2">"parmesan"</span><span class="p">,</span> <span class="s2">"ricotta"</span><span class="p">,</span> <span class="s2">"goat cheese"</span><span class="p">]</span>
+<span class="n">MEAT_INGREDIENTS</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"pepperoni"</span><span class="p">,</span> <span class="s2">"sausage"</span><span class="p">,</span> <span class="s2">"ham"</span><span class="p">,</span> <span class="s2">"bacon"</span><span class="p">,</span> <span class="s2">"chicken"</span><span class="p">]</span>
+<span class="n">VEGETABLE_INGREDIENTS</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"mushrooms"</span><span class="p">,</span> <span class="s2">"peppers"</span><span class="p">,</span> <span class="s2">"onions"</span><span class="p">,</span> <span class="s2">"tomatoes"</span><span class="p">,</span> <span class="s2">"spinach"</span><span class="p">]</span>
+
+<span class="c1"># Business rules</span>
+<span class="n">MAX_INGREDIENTS_PER_PIZZA</span> <span class="o">=</span> <span class="mi">8</span>
+<span class="n">MIN_PIZZA_PRICE</span> <span class="o">=</span> <span class="mf">8.99</span>
+<span class="n">MAX_PIZZA_PRICE</span> <span class="o">=</span> <span class="mf">29.99</span>
+
+<span class="c1"># Usage in other modules:</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mario_pizzeria.constants.pizza_constants</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">PIZZA_SIZES</span><span class="p">,</span>
+    <span class="n">SIZE_MULTIPLIERS</span><span class="p">,</span>
+    <span class="n">MAX_INGREDIENTS_PER_PIZZA</span>
+<span class="p">)</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">PizzaValidator</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">validate_ingredients</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingredients</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">ingredients</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">MAX_INGREDIENTS_PER_PIZZA</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">validate_size</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">size</span> <span class="ow">in</span> <span class="n">PIZZA_SIZES</span>
+</code></pre></div>
+<h3 id="6-document-module-purposes-and-apis">6. Document Module Purposes and APIs<a class="headerlink" href="#6-document-module-purposes-and-apis" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># services/pizza_service.py</span>
+<span class="sd">"""</span>
+<span class="sd">Pizza Service Module</span>
+
+<span class="sd">This module provides business logic for pizza operations including creation,</span>
+<span class="sd">validation, pricing, and management. It serves as the main interface between</span>
+<span class="sd">the API layer and the domain/data layers.</span>
+
+<span class="sd">Classes:</span>
+<span class="sd">    PizzaService: Main service class for pizza operations</span>
+<span class="sd">    PizzaValidator: Validation logic for pizza data</span>
+<span class="sd">    PricingCalculator: Pricing logic for pizzas</span>
+
+<span class="sd">Dependencies:</span>
+<span class="sd">    - domain.entities.pizza: Pizza entity</span>
+<span class="sd">    - repositories.pizza_repository: Data access interface</span>
+<span class="sd">    - services.notification_service: Notification capabilities</span>
+
+<span class="sd">Example:</span>
+<span class="sd">    &gt;&gt;&gt; from mario_pizzeria.services import PizzaService</span>
+<span class="sd">    &gt;&gt;&gt; service = PizzaService(repository, validator, notifier)</span>
+<span class="sd">    &gt;&gt;&gt; pizza = await service.create_pizza({</span>
+<span class="sd">    ...     "name": "Margherita",</span>
+<span class="sd">    ...     "ingredients": ["tomato", "mozzarella", "basil"]</span>
+<span class="sd">    ... })</span>
+<span class="sd">"""</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..domain.entities.pizza</span><span class="w"> </span><span class="kn">import</span> <span class="n">Pizza</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..repositories.pizza_repository</span><span class="w"> </span><span class="kn">import</span> <span class="n">PizzaRepository</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">PizzaService</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Service class for pizza business operations.</span>
+
+<span class="sd">    This service handles pizza creation, validation, pricing calculations,</span>
+<span class="sd">    and coordinates with repositories and notification services.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        _repository: Pizza data access repository</span>
+<span class="sd">        _validator: Pizza validation service</span>
+<span class="sd">        _notifier: Notification service for pizza events</span>
+<span class="sd">    """</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                 <span class="n">repository</span><span class="p">:</span> <span class="n">PizzaRepository</span><span class="p">,</span>
+                 <span class="n">validator</span><span class="p">:</span> <span class="s1">'PizzaValidator'</span><span class="p">,</span>
+                 <span class="n">notifier</span><span class="p">:</span> <span class="s1">'NotificationService'</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Initialize the pizza service.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            repository: Repository for pizza data access</span>
+<span class="sd">            validator: Service for validating pizza data</span>
+<span class="sd">            notifier: Service for sending notifications</span>
+<span class="sd">        """</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_repository</span> <span class="o">=</span> <span class="n">repository</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_validator</span> <span class="o">=</span> <span class="n">validator</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_notifier</span> <span class="o">=</span> <span class="n">notifier</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">create_pizza</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pizza_data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Pizza</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Create a new pizza with validation and notification.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            pizza_data: Dictionary containing pizza information with keys:</span>
+<span class="sd">                - name (str): Pizza name</span>
+<span class="sd">                - price (float): Pizza price</span>
+<span class="sd">                - ingredients (List[str]): List of ingredients</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Pizza: The created pizza entity</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValidationError: If pizza data is invalid</span>
+<span class="sd">            RepositoryError: If save operation fails</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; pizza_data = {</span>
+<span class="sd">            ...     "name": "Margherita",</span>
+<span class="sd">            ...     "price": 12.99,</span>
+<span class="sd">            ...     "ingredients": ["tomato", "mozzarella", "basil"]</span>
+<span class="sd">            ... }</span>
+<span class="sd">            &gt;&gt;&gt; pizza = await service.create_pizza(pizza_data)</span>
+<span class="sd">        """</span>
+        <span class="c1"># Implementation here...</span>
+        <span class="k">pass</span>
+</code></pre></div>
+<h2 id="related-documentation">🔗 Related Documentation<a class="headerlink" href="#related-documentation" title="Permanent link">¶</a></h2>
+<ul>
+<li><a href="../python_object_oriented/">Python Object-Oriented Programming</a> - Classes and inheritance in modular design</li>
+<li><a href="../python_type_hints/">Python Type Hints Reference</a> - Type safety across modules</li>
+<li><a href="../python_generic_types/">Python Generic Types Reference</a> - Generic programming for reusable modules</li>
+<li><a href="../../features/dependency-injection/">Dependency Injection</a> - Managing dependencies between modules</li>
+<li><a href="../../features/cqrs-mediation/">CQRS &amp; Mediation</a> - Organizing commands and queries in modules</li>
+</ul>
+<h2 id="further-reading">📚 Further Reading<a class="headerlink" href="#further-reading" title="Permanent link">¶</a></h2>
+<ul>
+<li><a href="https://peps.python.org/pep-0008/">PEP 8 - Style Guide for Python Code</a></li>
+<li><a href="https://docs.python.org/3/tutorial/modules.html">Python Module Documentation</a></li>
+<li><a href="https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html">Clean Architecture by Robert Martin</a></li>
+<li><a href="https://docs.python.org/3/library/pkgutil.html">Python Package Discovery</a></li>
+</ul>
+</article>
+</div>
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+</div>
+<button class="md-top md-icon" data-md-component="top" hidden="" type="button">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"></path></svg>
+  Back to top
+</button>
+</main>
+<footer class="md-footer">
+<div class="md-footer-meta md-typeset">
+<div class="md-footer-meta__inner md-grid">
+<div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" rel="noopener" target="_blank">
+      Material for MkDocs
+    </a>
+</div>
+<div class="md-social">
+<a class="md-social__link" href="https://github.com/bvandewe/pyneuro" rel="noopener" target="_blank" title="github.com">
+<svg viewbox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><!--! Font Awesome Free 7.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"></path></svg>
+</a>
+</div>
+</div>
+</div>
+</footer>
+</div>
+<div class="md-dialog" data-md-component="dialog">
+<div class="md-dialog__inner md-typeset"></div>
+</div>
+<script id="__config" type="application/json">{"base": "../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.expand", "navigation.top", "search.highlight", "search.share"], "search": "../../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+<script src="../../assets/javascripts/bundle.f55a23d4.min.js"></script>
+</body>
+</html>

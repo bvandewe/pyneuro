@@ -9,7 +9,7 @@
 <link href="../python_generic_types/" rel="next"/>
 <link href="../../assets/images/favicon.png" rel="icon"/>
 <meta content="mkdocs-1.6.1, mkdocs-material-9.6.20" name="generator"/>
-<title>Python Type hints - Neuroglia Python Framework</title>
+<title>Python Type Hints - Neuroglia Python Framework</title>
 <link href="../../assets/stylesheets/main.e53b48f4.min.css" rel="stylesheet"/>
 <link href="../../assets/stylesheets/palette.06af60db.min.css" rel="stylesheet"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
@@ -22,6 +22,9 @@
 <input autocomplete="off" class="md-toggle" data-md-toggle="search" id="__search" type="checkbox"/>
 <label class="md-overlay" for="__drawer"></label>
 <div data-md-component="skip">
+<a class="md-skip" href="#python-type-hints-reference">
+          Skip to content
+        </a>
 </div>
 <div data-md-component="announce">
 </div>
@@ -43,7 +46,7 @@
 <div class="md-header__topic" data-md-component="header-topic">
 <span class="md-ellipsis">
             
-              Python Type hints
+              Python Type Hints
             
           </span>
 </div>
@@ -586,17 +589,295 @@
 <ul class="md-nav__list" data-md-scrollfix="">
 <li class="md-nav__item md-nav__item--active">
 <input class="md-nav__toggle md-toggle" id="__toc" type="checkbox"/>
+<label class="md-nav__link md-nav__link--active" for="__toc">
+<span class="md-ellipsis">
+    Python Type Hints
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
 <a class="md-nav__link md-nav__link--active" href="./">
 <span class="md-ellipsis">
-    Python Type hints
+    Python Type Hints
     
   </span>
 </a>
+<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#what-are-type-hints">
+<span class="md-ellipsis">
+      🎯 What Are Type Hints?
+    </span>
+</a>
+<nav aria-label="🎯 What Are Type Hints?" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#before-and-after-type-hints">
+<span class="md-ellipsis">
+      Before and After Type Hints
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#basic-type-annotations">
+<span class="md-ellipsis">
+      🔧 Basic Type Annotations
+    </span>
+</a>
+<nav aria-label="🔧 Basic Type Annotations" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#primitive-types">
+<span class="md-ellipsis">
+      Primitive Types
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#collection-types">
+<span class="md-ellipsis">
+      Collection Types
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#advanced-type-hints">
+<span class="md-ellipsis">
+      🎨 Advanced Type Hints
+    </span>
+</a>
+<nav aria-label="🎨 Advanced Type Hints" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#optional-types">
+<span class="md-ellipsis">
+      Optional Types
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#union-types">
+<span class="md-ellipsis">
+      Union Types
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#callable-types">
+<span class="md-ellipsis">
+      Callable Types
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#type-hints-in-neuroglia-framework">
+<span class="md-ellipsis">
+      🏗️ Type Hints in Neuroglia Framework
+    </span>
+</a>
+<nav aria-label="🏗️ Type Hints in Neuroglia Framework" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#entity-and-repository-patterns">
+<span class="md-ellipsis">
+      Entity and Repository Patterns
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#cqrs-commands-and-queries">
+<span class="md-ellipsis">
+      CQRS Commands and Queries
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#api-controllers-with-type-safety">
+<span class="md-ellipsis">
+      API Controllers with Type Safety
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#type-hints-in-testing">
+<span class="md-ellipsis">
+      🧪 Type Hints in Testing
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#type-checking-tools">
+<span class="md-ellipsis">
+      🎯 Type Checking Tools
+    </span>
+</a>
+<nav aria-label="🎯 Type Checking Tools" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#using-mypy">
+<span class="md-ellipsis">
+      Using mypy
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#ide-support">
+<span class="md-ellipsis">
+      IDE Support
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#best-practices">
+<span class="md-ellipsis">
+      🚀 Best Practices
+    </span>
+</a>
+<nav aria-label="🚀 Best Practices" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#1-start-simple-add-complexity-gradually">
+<span class="md-ellipsis">
+      1. Start Simple, Add Complexity Gradually
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#2-use-type-aliases-for-complex-types">
+<span class="md-ellipsis">
+      2. Use Type Aliases for Complex Types
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#3-document-complex-types">
+<span class="md-ellipsis">
+      3. Document Complex Types
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#4-handle-optional-values-explicitly">
+<span class="md-ellipsis">
+      4. Handle Optional Values Explicitly
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#5-use-protocols-for-duck-typing">
+<span class="md-ellipsis">
+      5. Use Protocols for Duck Typing
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#common-pitfalls-to-avoid">
+<span class="md-ellipsis">
+      ❌ Common Pitfalls to Avoid
+    </span>
+</a>
+<nav aria-label="❌ Common Pitfalls to Avoid" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#1-overusing-any">
+<span class="md-ellipsis">
+      1. Overusing Any
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#2-mixing-union-and-optional-incorrectly">
+<span class="md-ellipsis">
+      2. Mixing Union and Optional Incorrectly
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#3-not-using-forward-references">
+<span class="md-ellipsis">
+      3. Not Using Forward References
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#related-documentation">
+<span class="md-ellipsis">
+      🔗 Related Documentation
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#further-reading">
+<span class="md-ellipsis">
+      📚 Further Reading
+    </span>
+</a>
+</li>
+</ul>
+</nav>
 </li>
 <li class="md-nav__item">
 <a class="md-nav__link" href="../python_generic_types/">
 <span class="md-ellipsis">
     Python Generic Types
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../python_modular_code/">
+<span class="md-ellipsis">
+    Python Modular Code
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../python_object_oriented/">
+<span class="md-ellipsis">
+    Python Object-Oriented Programming
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../source_code_naming_convention/">
+<span class="md-ellipsis">
+    Source Code Naming Conventions
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../12-factor-app/">
+<span class="md-ellipsis">
+    12-Factor App
     
   </span>
 </a>
@@ -613,13 +894,996 @@
 <div class="md-sidebar__scrollwrap">
 <div class="md-sidebar__inner">
 <nav aria-label="Table of contents" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#what-are-type-hints">
+<span class="md-ellipsis">
+      🎯 What Are Type Hints?
+    </span>
+</a>
+<nav aria-label="🎯 What Are Type Hints?" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#before-and-after-type-hints">
+<span class="md-ellipsis">
+      Before and After Type Hints
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#basic-type-annotations">
+<span class="md-ellipsis">
+      🔧 Basic Type Annotations
+    </span>
+</a>
+<nav aria-label="🔧 Basic Type Annotations" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#primitive-types">
+<span class="md-ellipsis">
+      Primitive Types
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#collection-types">
+<span class="md-ellipsis">
+      Collection Types
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#advanced-type-hints">
+<span class="md-ellipsis">
+      🎨 Advanced Type Hints
+    </span>
+</a>
+<nav aria-label="🎨 Advanced Type Hints" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#optional-types">
+<span class="md-ellipsis">
+      Optional Types
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#union-types">
+<span class="md-ellipsis">
+      Union Types
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#callable-types">
+<span class="md-ellipsis">
+      Callable Types
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#type-hints-in-neuroglia-framework">
+<span class="md-ellipsis">
+      🏗️ Type Hints in Neuroglia Framework
+    </span>
+</a>
+<nav aria-label="🏗️ Type Hints in Neuroglia Framework" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#entity-and-repository-patterns">
+<span class="md-ellipsis">
+      Entity and Repository Patterns
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#cqrs-commands-and-queries">
+<span class="md-ellipsis">
+      CQRS Commands and Queries
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#api-controllers-with-type-safety">
+<span class="md-ellipsis">
+      API Controllers with Type Safety
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#type-hints-in-testing">
+<span class="md-ellipsis">
+      🧪 Type Hints in Testing
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#type-checking-tools">
+<span class="md-ellipsis">
+      🎯 Type Checking Tools
+    </span>
+</a>
+<nav aria-label="🎯 Type Checking Tools" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#using-mypy">
+<span class="md-ellipsis">
+      Using mypy
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#ide-support">
+<span class="md-ellipsis">
+      IDE Support
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#best-practices">
+<span class="md-ellipsis">
+      🚀 Best Practices
+    </span>
+</a>
+<nav aria-label="🚀 Best Practices" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#1-start-simple-add-complexity-gradually">
+<span class="md-ellipsis">
+      1. Start Simple, Add Complexity Gradually
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#2-use-type-aliases-for-complex-types">
+<span class="md-ellipsis">
+      2. Use Type Aliases for Complex Types
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#3-document-complex-types">
+<span class="md-ellipsis">
+      3. Document Complex Types
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#4-handle-optional-values-explicitly">
+<span class="md-ellipsis">
+      4. Handle Optional Values Explicitly
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#5-use-protocols-for-duck-typing">
+<span class="md-ellipsis">
+      5. Use Protocols for Duck Typing
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#common-pitfalls-to-avoid">
+<span class="md-ellipsis">
+      ❌ Common Pitfalls to Avoid
+    </span>
+</a>
+<nav aria-label="❌ Common Pitfalls to Avoid" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#1-overusing-any">
+<span class="md-ellipsis">
+      1. Overusing Any
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#2-mixing-union-and-optional-incorrectly">
+<span class="md-ellipsis">
+      2. Mixing Union and Optional Incorrectly
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#3-not-using-forward-references">
+<span class="md-ellipsis">
+      3. Not Using Forward References
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#related-documentation">
+<span class="md-ellipsis">
+      🔗 Related Documentation
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#further-reading">
+<span class="md-ellipsis">
+      📚 Further Reading
+    </span>
+</a>
+</li>
+</ul>
 </nav>
 </div>
 </div>
 </div>
 <div class="md-content" data-md-component="content">
 <article class="md-content__inner md-typeset">
-<h1>Python Type hints</h1>
+<h1 id="python-type-hints-reference">🏷️ Python Type Hints Reference<a class="headerlink" href="#python-type-hints-reference" title="Permanent link">¶</a></h1>
+<p>Type hints are essential for understanding and working with the Neuroglia framework. They provide clarity, enable better IDE support, and help catch errors before runtime.</p>
+<h2 id="what-are-type-hints">🎯 What Are Type Hints?<a class="headerlink" href="#what-are-type-hints" title="Permanent link">¶</a></h2>
+<p>Type hints are optional annotations that specify what types of values functions, variables, and class attributes should have. They make your code more readable and help tools understand your intentions.</p>
+<h3 id="before-and-after-type-hints">Before and After Type Hints<a class="headerlink" href="#before-and-after-type-hints" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Without type hints - unclear what types are expected:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">process_order</span><span class="p">(</span><span class="n">customer</span><span class="p">,</span> <span class="n">items</span><span class="p">,</span> <span class="n">discount</span><span class="p">):</span>
+    <span class="n">total</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">items</span><span class="p">:</span>
+        <span class="n">total</span> <span class="o">+=</span> <span class="n">item</span><span class="p">[</span><span class="s2">"price"</span><span class="p">]</span> <span class="o">*</span> <span class="n">item</span><span class="p">[</span><span class="s2">"quantity"</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">discount</span><span class="p">:</span>
+        <span class="n">total</span> <span class="o">*=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">discount</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">"customer"</span><span class="p">:</span> <span class="n">customer</span><span class="p">,</span>
+        <span class="s2">"total"</span><span class="p">:</span> <span class="n">total</span><span class="p">,</span>
+        <span class="s2">"items"</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">items</span><span class="p">)</span>
+    <span class="p">}</span>
+
+<span class="c1"># With type hints - crystal clear what's expected:</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Optional</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">process_order</span><span class="p">(</span>
+    <span class="n">customer</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">items</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]],</span>
+    <span class="n">discount</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">any</span><span class="p">]:</span>
+    <span class="n">total</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">items</span><span class="p">:</span>
+        <span class="n">total</span> <span class="o">+=</span> <span class="n">item</span><span class="p">[</span><span class="s2">"price"</span><span class="p">]</span> <span class="o">*</span> <span class="n">item</span><span class="p">[</span><span class="s2">"quantity"</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">discount</span><span class="p">:</span>
+        <span class="n">total</span> <span class="o">*=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">discount</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">"customer"</span><span class="p">:</span> <span class="n">customer</span><span class="p">,</span>
+        <span class="s2">"total"</span><span class="p">:</span> <span class="n">total</span><span class="p">,</span>
+        <span class="s2">"items"</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">items</span><span class="p">)</span>
+    <span class="p">}</span>
+</code></pre></div>
+<h2 id="basic-type-annotations">🔧 Basic Type Annotations<a class="headerlink" href="#basic-type-annotations" title="Permanent link">¶</a></h2>
+<h3 id="primitive-types">Primitive Types<a class="headerlink" href="#primitive-types" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Basic types:</span>
+<span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"Mario"</span>
+<span class="n">age</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">25</span>
+<span class="n">price</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">12.99</span>
+<span class="n">is_available</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
+
+<span class="c1"># Function parameters and return types:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">calculate_tax</span><span class="p">(</span><span class="n">amount</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">rate</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">amount</span> <span class="o">*</span> <span class="n">rate</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">greet_customer</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">"Welcome to Mario's Pizzeria, </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">!"</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">is_pizza_large</span><span class="p">(</span><span class="n">diameter</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">diameter</span> <span class="o">&gt;=</span> <span class="mi">12</span>
+</code></pre></div>
+<h3 id="collection-types">Collection Types<a class="headerlink" href="#collection-types" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Set</span><span class="p">,</span> <span class="n">Tuple</span>
+
+<span class="c1"># Lists - ordered collections of the same type:</span>
+<span class="n">pizza_names</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"Margherita"</span><span class="p">,</span> <span class="s2">"Pepperoni"</span><span class="p">,</span> <span class="s2">"Hawaiian"</span><span class="p">]</span>
+<span class="n">prices</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mf">12.99</span><span class="p">,</span> <span class="mf">14.99</span><span class="p">,</span> <span class="mf">13.49</span><span class="p">]</span>
+
+<span class="c1"># Dictionaries - key-value pairs:</span>
+<span class="n">pizza_menu</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"Margherita"</span><span class="p">:</span> <span class="mf">12.99</span><span class="p">,</span>
+    <span class="s2">"Pepperoni"</span><span class="p">:</span> <span class="mf">14.99</span><span class="p">,</span>
+    <span class="s2">"Hawaiian"</span><span class="p">:</span> <span class="mf">13.49</span>
+<span class="p">}</span>
+
+<span class="c1"># Sets - unique collections:</span>
+<span class="n">available_toppings</span><span class="p">:</span> <span class="n">Set</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"cheese"</span><span class="p">,</span> <span class="s2">"pepperoni"</span><span class="p">,</span> <span class="s2">"mushrooms"</span><span class="p">,</span> <span class="s2">"olives"</span><span class="p">}</span>
+
+<span class="c1"># Tuples - fixed-size collections:</span>
+<span class="n">location</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mf">40.7128</span><span class="p">,</span> <span class="o">-</span><span class="mf">74.0060</span><span class="p">)</span>  <span class="c1"># lat, lng</span>
+<span class="n">pizza_info</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="s2">"Margherita"</span><span class="p">,</span>
+    <span class="mf">12.99</span><span class="p">,</span>
+    <span class="p">[</span><span class="s2">"tomato"</span><span class="p">,</span> <span class="s2">"mozzarella"</span><span class="p">,</span> <span class="s2">"basil"</span><span class="p">]</span>
+<span class="p">)</span>
+
+<span class="c1"># Functions working with collections:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_most_expensive_pizza</span><span class="p">(</span><span class="n">menu</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">menu</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">menu</span><span class="o">.</span><span class="n">get</span><span class="p">)</span>
+    <span class="n">price</span> <span class="o">=</span> <span class="n">menu</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">name</span><span class="p">,</span> <span class="n">price</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">add_topping</span><span class="p">(</span><span class="n">toppings</span><span class="p">:</span> <span class="n">Set</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">new_topping</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Set</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+    <span class="n">toppings</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">new_topping</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">toppings</span>
+</code></pre></div>
+<h2 id="advanced-type-hints">🎨 Advanced Type Hints<a class="headerlink" href="#advanced-type-hints" title="Permanent link">¶</a></h2>
+<h3 id="optional-types">Optional Types<a class="headerlink" href="#optional-types" title="Permanent link">¶</a></h3>
+<p>When a value might be <code>None</code>, use <code>Optional</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span>
+
+<span class="c1"># Optional parameters:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">find_pizza_by_name</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">menu</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">"""Returns the price if pizza exists, None otherwise."""</span>
+    <span class="k">return</span> <span class="n">menu</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+
+<span class="c1"># Optional attributes:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Customer</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">email</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">email</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">email</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">phone</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+
+<span class="c1"># Functions that might return None:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_customer_discount</span><span class="p">(</span><span class="n">customer_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
+    <span class="c1"># Database lookup logic here</span>
+    <span class="k">if</span> <span class="n">customer_exists</span><span class="p">(</span><span class="n">customer_id</span><span class="p">):</span>
+        <span class="k">return</span> <span class="mf">0.10</span>  <span class="c1"># 10% discount</span>
+    <span class="k">return</span> <span class="kc">None</span>
+
+<span class="c1"># Using optional values safely:</span>
+<span class="n">discount</span> <span class="o">=</span> <span class="n">get_customer_discount</span><span class="p">(</span><span class="s2">"12345"</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">discount</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">discounted_price</span> <span class="o">=</span> <span class="n">original_price</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">discount</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">discounted_price</span> <span class="o">=</span> <span class="n">original_price</span>
+</code></pre></div>
+<h3 id="union-types">Union Types<a class="headerlink" href="#union-types" title="Permanent link">¶</a></h3>
+<p>When a value can be one of several types:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Union</span>
+
+<span class="c1"># A value that can be string or number:</span>
+<span class="n">PizzaId</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">get_pizza_details</span><span class="p">(</span><span class="n">pizza_id</span><span class="p">:</span> <span class="n">PizzaId</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">any</span><span class="p">]:</span>
+    <span class="c1"># Convert to string for consistent handling:</span>
+    <span class="n">id_str</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">pizza_id</span><span class="p">)</span>
+    <span class="c1"># ... lookup logic</span>
+    <span class="k">return</span> <span class="n">pizza_details</span>
+
+<span class="c1"># Multiple possible return types:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">process_payment</span><span class="p">(</span><span class="n">amount</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">any</span><span class="p">]]:</span>
+    <span class="k">if</span> <span class="n">amount</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">"Invalid amount"</span>  <span class="c1"># Error message</span>
+
+    <span class="c1"># Process payment...</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">"transaction_id"</span><span class="p">:</span> <span class="s2">"TXN123"</span><span class="p">,</span>
+        <span class="s2">"amount"</span><span class="p">:</span> <span class="n">amount</span><span class="p">,</span>
+        <span class="s2">"status"</span><span class="p">:</span> <span class="s2">"completed"</span>
+    <span class="p">}</span>
+
+<span class="c1"># Modern Python 3.10+ syntax (preferred):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">process_payment_modern</span><span class="p">(</span><span class="n">amount</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">any</span><span class="p">]:</span>
+    <span class="c1"># Same logic as above</span>
+    <span class="k">pass</span>
+</code></pre></div>
+<h3 id="callable-types">Callable Types<a class="headerlink" href="#callable-types" title="Permanent link">¶</a></h3>
+<p>For functions as parameters or return values:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span>
+
+<span class="c1"># Function that takes a function as parameter:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">apply_discount</span><span class="p">(</span>
+    <span class="n">price</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">discount_function</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">float</span><span class="p">],</span> <span class="nb">float</span><span class="p">]</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">discount_function</span><span class="p">(</span><span class="n">price</span><span class="p">)</span>
+
+<span class="c1"># Different discount strategies:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">student_discount</span><span class="p">(</span><span class="n">price</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">price</span> <span class="o">*</span> <span class="mf">0.9</span>  <span class="c1"># 10% off</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">loyalty_discount</span><span class="p">(</span><span class="n">price</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">price</span> <span class="o">*</span> <span class="mf">0.85</span>  <span class="c1"># 15% off</span>
+
+<span class="c1"># Usage:</span>
+<span class="n">original_price</span> <span class="o">=</span> <span class="mf">12.99</span>
+<span class="n">student_price</span> <span class="o">=</span> <span class="n">apply_discount</span><span class="p">(</span><span class="n">original_price</span><span class="p">,</span> <span class="n">student_discount</span><span class="p">)</span>
+<span class="n">loyalty_price</span> <span class="o">=</span> <span class="n">apply_discount</span><span class="p">(</span><span class="n">original_price</span><span class="p">,</span> <span class="n">loyalty_discount</span><span class="p">)</span>
+
+<span class="c1"># More complex callable signatures:</span>
+<span class="n">ProcessorFunction</span> <span class="o">=</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">any</span><span class="p">]]</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">process_pizza_order</span><span class="p">(</span>
+    <span class="n">pizza_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">toppings</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+    <span class="n">processor</span><span class="p">:</span> <span class="n">ProcessorFunction</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">any</span><span class="p">]:</span>
+    <span class="k">return</span> <span class="n">processor</span><span class="p">(</span><span class="n">pizza_name</span><span class="p">,</span> <span class="n">toppings</span><span class="p">)</span>
+</code></pre></div>
+<h2 id="type-hints-in-neuroglia-framework">🏗️ Type Hints in Neuroglia Framework<a class="headerlink" href="#type-hints-in-neuroglia-framework" title="Permanent link">¶</a></h2>
+<h3 id="entity-and-repository-patterns">Entity and Repository Patterns<a class="headerlink" href="#entity-and-repository-patterns" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Generic</span><span class="p">,</span> <span class="n">TypeVar</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Protocol</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
+
+<span class="c1"># Domain entities with type hints:</span>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Pizza</span><span class="p">:</span>
+    <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">price</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">ingredients</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+    <span class="n">is_available</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Customer</span><span class="p">:</span>
+    <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">email</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">phone</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">loyalty_points</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+
+<span class="c1"># Repository with clear type signatures:</span>
+<span class="n">TEntity</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s1">'TEntity'</span><span class="p">)</span>
+<span class="n">TId</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s1">'TId'</span><span class="p">)</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Repository</span><span class="p">(</span><span class="n">Generic</span><span class="p">[</span><span class="n">TEntity</span><span class="p">,</span> <span class="n">TId</span><span class="p">],</span> <span class="n">Protocol</span><span class="p">):</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_by_id_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span> <span class="n">TId</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">TEntity</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">"""Get entity by ID, returns None if not found."""</span>
+        <span class="o">...</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">save_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity</span><span class="p">:</span> <span class="n">TEntity</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Save entity to storage."""</span>
+        <span class="o">...</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">delete_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span> <span class="n">TId</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Delete entity, returns True if deleted."""</span>
+        <span class="o">...</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_all_async</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">TEntity</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">"""Get all entities."""</span>
+        <span class="o">...</span>
+
+<span class="c1"># Concrete implementation:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">PizzaRepository</span><span class="p">(</span><span class="n">Repository</span><span class="p">[</span><span class="n">Pizza</span><span class="p">,</span> <span class="nb">str</span><span class="p">]):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_pizzas</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Pizza</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_by_id_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Pizza</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pizzas</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">save_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pizza</span><span class="p">:</span> <span class="n">Pizza</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_pizzas</span><span class="p">[</span><span class="n">pizza</span><span class="o">.</span><span class="n">id</span><span class="p">]</span> <span class="o">=</span> <span class="n">pizza</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">delete_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">id</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pizzas</span><span class="p">:</span>
+            <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pizzas</span><span class="p">[</span><span class="nb">id</span><span class="p">]</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_all_async</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Pizza</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_pizzas</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+</code></pre></div>
+<h3 id="cqrs-commands-and-queries">CQRS Commands and Queries<a class="headerlink" href="#cqrs-commands-and-queries" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Generic</span><span class="p">,</span> <span class="n">TypeVar</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
+
+<span class="n">TResult</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s1">'TResult'</span><span class="p">)</span>
+
+<span class="c1"># Base command and query types:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Command</span><span class="p">(</span><span class="n">Generic</span><span class="p">[</span><span class="n">TResult</span><span class="p">]):</span>
+<span class="w">    </span><span class="sd">"""Base class for commands with typed results."""</span>
+    <span class="k">pass</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Query</span><span class="p">(</span><span class="n">Generic</span><span class="p">[</span><span class="n">TResult</span><span class="p">]):</span>
+<span class="w">    </span><span class="sd">"""Base class for queries with typed results."""</span>
+    <span class="k">pass</span>
+
+<span class="c1"># Specific commands with clear return types:</span>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">CreatePizzaCommand</span><span class="p">(</span><span class="n">Command</span><span class="p">[</span><span class="n">Pizza</span><span class="p">]):</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">price</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">ingredients</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">UpdatePizzaPriceCommand</span><span class="p">(</span><span class="n">Command</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="n">Pizza</span><span class="p">]]):</span>
+    <span class="n">pizza_id</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">new_price</span><span class="p">:</span> <span class="nb">float</span>
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">DeletePizzaCommand</span><span class="p">(</span><span class="n">Command</span><span class="p">[</span><span class="nb">bool</span><span class="p">]):</span>
+    <span class="n">pizza_id</span><span class="p">:</span> <span class="nb">str</span>
+
+<span class="c1"># Queries with different return types:</span>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">GetPizzaByIdQuery</span><span class="p">(</span><span class="n">Query</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="n">Pizza</span><span class="p">]]):</span>
+    <span class="n">pizza_id</span><span class="p">:</span> <span class="nb">str</span>
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">GetAvailablePizzasQuery</span><span class="p">(</span><span class="n">Query</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Pizza</span><span class="p">]]):</span>
+    <span class="k">pass</span>
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">GetPizzasByPriceRangeQuery</span><span class="p">(</span><span class="n">Query</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Pizza</span><span class="p">]]):</span>
+    <span class="n">min_price</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">max_price</span><span class="p">:</span> <span class="nb">float</span>
+
+<span class="c1"># Handler interfaces with type safety:</span>
+<span class="n">TRequest</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s1">'TRequest'</span><span class="p">)</span>
+<span class="n">TResponse</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s1">'TResponse'</span><span class="p">)</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Handler</span><span class="p">(</span><span class="n">Generic</span><span class="p">[</span><span class="n">TRequest</span><span class="p">,</span> <span class="n">TResponse</span><span class="p">],</span> <span class="n">Protocol</span><span class="p">):</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">handle_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">TRequest</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TResponse</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Handle the request and return typed response."""</span>
+        <span class="o">...</span>
+
+<span class="c1"># Concrete handlers:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">CreatePizzaHandler</span><span class="p">(</span><span class="n">Handler</span><span class="p">[</span><span class="n">CreatePizzaCommand</span><span class="p">,</span> <span class="n">Pizza</span><span class="p">]):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">repository</span><span class="p">:</span> <span class="n">PizzaRepository</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_repository</span> <span class="o">=</span> <span class="n">repository</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">handle_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command</span><span class="p">:</span> <span class="n">CreatePizzaCommand</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Pizza</span><span class="p">:</span>
+        <span class="n">pizza</span> <span class="o">=</span> <span class="n">Pizza</span><span class="p">(</span>
+            <span class="nb">id</span><span class="o">=</span><span class="n">generate_id</span><span class="p">(),</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">command</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+            <span class="n">price</span><span class="o">=</span><span class="n">command</span><span class="o">.</span><span class="n">price</span><span class="p">,</span>
+            <span class="n">ingredients</span><span class="o">=</span><span class="n">command</span><span class="o">.</span><span class="n">ingredients</span>
+        <span class="p">)</span>
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_repository</span><span class="o">.</span><span class="n">save_async</span><span class="p">(</span><span class="n">pizza</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">pizza</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">GetPizzaByIdHandler</span><span class="p">(</span><span class="n">Handler</span><span class="p">[</span><span class="n">GetPizzaByIdQuery</span><span class="p">,</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Pizza</span><span class="p">]]):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">repository</span><span class="p">:</span> <span class="n">PizzaRepository</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_repository</span> <span class="o">=</span> <span class="n">repository</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">handle_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">:</span> <span class="n">GetPizzaByIdQuery</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Pizza</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_repository</span><span class="o">.</span><span class="n">get_by_id_async</span><span class="p">(</span><span class="n">query</span><span class="o">.</span><span class="n">pizza_id</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="api-controllers-with-type-safety">API Controllers with Type Safety<a class="headerlink" href="#api-controllers-with-type-safety" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">fastapi</span><span class="w"> </span><span class="kn">import</span> <span class="n">HTTPException</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.mvc</span><span class="w"> </span><span class="kn">import</span> <span class="n">ControllerBase</span>
+
+<span class="c1"># DTOs with type hints:</span>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">PizzaDto</span><span class="p">:</span>
+    <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">price</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">ingredients</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+    <span class="n">is_available</span><span class="p">:</span> <span class="nb">bool</span>
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">CreatePizzaDto</span><span class="p">:</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">price</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">ingredients</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">UpdatePizzaPriceDto</span><span class="p">:</span>
+    <span class="n">new_price</span><span class="p">:</span> <span class="nb">float</span>
+
+<span class="c1"># Controller with clear type signatures:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">PizzaController</span><span class="p">(</span><span class="n">ControllerBase</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mediator</span><span class="p">,</span> <span class="n">mapper</span><span class="p">,</span> <span class="n">service_provider</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">service_provider</span><span class="p">,</span> <span class="n">mapper</span><span class="p">,</span> <span class="n">mediator</span><span class="p">)</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_pizza</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pizza_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">PizzaDto</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">"""Get a pizza by ID."""</span>
+        <span class="n">query</span> <span class="o">=</span> <span class="n">GetPizzaByIdQuery</span><span class="p">(</span><span class="n">pizza_id</span><span class="o">=</span><span class="n">pizza_id</span><span class="p">)</span>
+        <span class="n">pizza</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">mediator</span><span class="o">.</span><span class="n">execute_async</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">pizza</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">mapper</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">pizza</span><span class="p">,</span> <span class="n">PizzaDto</span><span class="p">)</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">create_pizza</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">create_dto</span><span class="p">:</span> <span class="n">CreatePizzaDto</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PizzaDto</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Create a new pizza."""</span>
+        <span class="n">command</span> <span class="o">=</span> <span class="n">CreatePizzaCommand</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">create_dto</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+            <span class="n">price</span><span class="o">=</span><span class="n">create_dto</span><span class="o">.</span><span class="n">price</span><span class="p">,</span>
+            <span class="n">ingredients</span><span class="o">=</span><span class="n">create_dto</span><span class="o">.</span><span class="n">ingredients</span>
+        <span class="p">)</span>
+
+        <span class="n">pizza</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">mediator</span><span class="o">.</span><span class="n">execute_async</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">mapper</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">pizza</span><span class="p">,</span> <span class="n">PizzaDto</span><span class="p">)</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_all_pizzas</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">PizzaDto</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">"""Get all available pizzas."""</span>
+        <span class="n">query</span> <span class="o">=</span> <span class="n">GetAvailablePizzasQuery</span><span class="p">()</span>
+        <span class="n">pizzas</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">mediator</span><span class="o">.</span><span class="n">execute_async</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">mapper</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">pizza</span><span class="p">,</span> <span class="n">PizzaDto</span><span class="p">)</span> <span class="k">for</span> <span class="n">pizza</span> <span class="ow">in</span> <span class="n">pizzas</span><span class="p">]</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">update_pizza_price</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">pizza_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">update_dto</span><span class="p">:</span> <span class="n">UpdatePizzaPriceDto</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">PizzaDto</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">"""Update pizza price."""</span>
+        <span class="n">command</span> <span class="o">=</span> <span class="n">UpdatePizzaPriceCommand</span><span class="p">(</span>
+            <span class="n">pizza_id</span><span class="o">=</span><span class="n">pizza_id</span><span class="p">,</span>
+            <span class="n">new_price</span><span class="o">=</span><span class="n">update_dto</span><span class="o">.</span><span class="n">new_price</span>
+        <span class="p">)</span>
+
+        <span class="n">updated_pizza</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">mediator</span><span class="o">.</span><span class="n">execute_async</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">updated_pizza</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">mapper</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">updated_pizza</span><span class="p">,</span> <span class="n">PizzaDto</span><span class="p">)</span>
+</code></pre></div>
+<h2 id="type-hints-in-testing">🧪 Type Hints in Testing<a class="headerlink" href="#type-hints-in-testing" title="Permanent link">¶</a></h2>
+<p>Type hints make tests more reliable and easier to understand:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">unittest.mock</span><span class="w"> </span><span class="kn">import</span> <span class="n">Mock</span><span class="p">,</span> <span class="n">AsyncMock</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">TestPizzaRepository</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setup_method</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Setup test fixtures with proper types."""</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">repository</span><span class="p">:</span> <span class="n">PizzaRepository</span> <span class="o">=</span> <span class="n">PizzaRepository</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sample_pizza</span><span class="p">:</span> <span class="n">Pizza</span> <span class="o">=</span> <span class="n">Pizza</span><span class="p">(</span>
+            <span class="nb">id</span><span class="o">=</span><span class="s2">"1"</span><span class="p">,</span>
+            <span class="n">name</span><span class="o">=</span><span class="s2">"Margherita"</span><span class="p">,</span>
+            <span class="n">price</span><span class="o">=</span><span class="mf">12.99</span><span class="p">,</span>
+            <span class="n">ingredients</span><span class="o">=</span><span class="p">[</span><span class="s2">"tomato"</span><span class="p">,</span> <span class="s2">"mozzarella"</span><span class="p">,</span> <span class="s2">"basil"</span><span class="p">]</span>
+        <span class="p">)</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">test_save_and_retrieve_pizza</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Test saving and retrieving a pizza."""</span>
+        <span class="c1"># Save pizza</span>
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">repository</span><span class="o">.</span><span class="n">save_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sample_pizza</span><span class="p">)</span>
+
+        <span class="c1"># Retrieve pizza</span>
+        <span class="n">retrieved_pizza</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Pizza</span><span class="p">]</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">repository</span><span class="o">.</span><span class="n">get_by_id_async</span><span class="p">(</span><span class="s2">"1"</span><span class="p">)</span>
+
+        <span class="c1"># Assertions with type safety</span>
+        <span class="k">assert</span> <span class="n">retrieved_pizza</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="k">assert</span> <span class="n">retrieved_pizza</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">"Margherita"</span>
+        <span class="k">assert</span> <span class="n">retrieved_pizza</span><span class="o">.</span><span class="n">price</span> <span class="o">==</span> <span class="mf">12.99</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">test_get_nonexistent_pizza</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Test retrieving a pizza that doesn't exist."""</span>
+        <span class="n">result</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Pizza</span><span class="p">]</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">repository</span><span class="o">.</span><span class="n">get_by_id_async</span><span class="p">(</span><span class="s2">"999"</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="n">result</span> <span class="ow">is</span> <span class="kc">None</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">test_get_all_pizzas</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Test getting all pizzas."""</span>
+        <span class="n">pizzas</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Pizza</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">Pizza</span><span class="p">(</span><span class="s2">"1"</span><span class="p">,</span> <span class="s2">"Margherita"</span><span class="p">,</span> <span class="mf">12.99</span><span class="p">,</span> <span class="p">[</span><span class="s2">"tomato"</span><span class="p">,</span> <span class="s2">"mozzarella"</span><span class="p">]),</span>
+            <span class="n">Pizza</span><span class="p">(</span><span class="s2">"2"</span><span class="p">,</span> <span class="s2">"Pepperoni"</span><span class="p">,</span> <span class="mf">14.99</span><span class="p">,</span> <span class="p">[</span><span class="s2">"tomato"</span><span class="p">,</span> <span class="s2">"mozzarella"</span><span class="p">,</span> <span class="s2">"pepperoni"</span><span class="p">])</span>
+        <span class="p">]</span>
+
+        <span class="k">for</span> <span class="n">pizza</span> <span class="ow">in</span> <span class="n">pizzas</span><span class="p">:</span>
+            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">repository</span><span class="o">.</span><span class="n">save_async</span><span class="p">(</span><span class="n">pizza</span><span class="p">)</span>
+
+        <span class="n">all_pizzas</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Pizza</span><span class="p">]</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">repository</span><span class="o">.</span><span class="n">get_all_async</span><span class="p">()</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">all_pizzas</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span>
+
+<span class="c1"># Mock with proper type hints:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">TestPizzaHandler</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setup_method</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Setup mocks with proper type hints."""</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mock_repository</span><span class="p">:</span> <span class="n">Mock</span> <span class="o">=</span> <span class="n">Mock</span><span class="p">(</span><span class="n">spec</span><span class="o">=</span><span class="n">PizzaRepository</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">handler</span><span class="p">:</span> <span class="n">CreatePizzaHandler</span> <span class="o">=</span> <span class="n">CreatePizzaHandler</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mock_repository</span><span class="p">)</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">test_create_pizza_success</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Test successful pizza creation."""</span>
+        <span class="c1"># Setup mock</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mock_repository</span><span class="o">.</span><span class="n">save_async</span> <span class="o">=</span> <span class="n">AsyncMock</span><span class="p">()</span>
+
+        <span class="c1"># Create command</span>
+        <span class="n">command</span><span class="p">:</span> <span class="n">CreatePizzaCommand</span> <span class="o">=</span> <span class="n">CreatePizzaCommand</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="s2">"Test Pizza"</span><span class="p">,</span>
+            <span class="n">price</span><span class="o">=</span><span class="mf">15.99</span><span class="p">,</span>
+            <span class="n">ingredients</span><span class="o">=</span><span class="p">[</span><span class="s2">"cheese"</span><span class="p">,</span> <span class="s2">"tomato"</span><span class="p">]</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Execute handler</span>
+        <span class="n">result</span><span class="p">:</span> <span class="n">Pizza</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">handler</span><span class="o">.</span><span class="n">handle_async</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
+
+        <span class="c1"># Verify results</span>
+        <span class="k">assert</span> <span class="n">result</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">"Test Pizza"</span>
+        <span class="k">assert</span> <span class="n">result</span><span class="o">.</span><span class="n">price</span> <span class="o">==</span> <span class="mf">15.99</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mock_repository</span><span class="o">.</span><span class="n">save_async</span><span class="o">.</span><span class="n">assert_called_once</span><span class="p">()</span>
+</code></pre></div>
+<h2 id="type-checking-tools">🎯 Type Checking Tools<a class="headerlink" href="#type-checking-tools" title="Permanent link">¶</a></h2>
+<h3 id="using-mypy">Using mypy<a class="headerlink" href="#using-mypy" title="Permanent link">¶</a></h3>
+<p>Add type checking to your development workflow:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Install mypy</span>
+pip<span class="w"> </span>install<span class="w"> </span>mypy
+
+<span class="c1"># Check types in your code</span>
+mypy<span class="w"> </span>src/
+
+<span class="c1"># Configuration in mypy.ini:</span>
+<span class="o">[</span>mypy<span class="o">]</span>
+<span class="nv">python_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">3</span>.9
+<span class="nv">warn_return_any</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>True
+<span class="nv">warn_unused_configs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>True
+<span class="nv">disallow_untyped_defs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>True
+</code></pre></div>
+<p>Example mypy output:</p>
+<div class="highlight"><pre><span></span><code>src/api/controllers/pizza_controller.py:15: error: Function is missing a return type annotation
+src/application/handlers/pizza_handler.py:23: error: Argument 1 to "save_async" has incompatible type "str"; expected "Pizza"
+</code></pre></div>
+<h3 id="ide-support">IDE Support<a class="headerlink" href="#ide-support" title="Permanent link">¶</a></h3>
+<p>Modern IDEs use type hints to provide:</p>
+<ul>
+<li><strong>Autocomplete</strong>: Suggests methods and attributes</li>
+<li><strong>Error Detection</strong>: Highlights type mismatches</li>
+<li><strong>Refactoring</strong>: Safely rename and move code</li>
+<li><strong>Documentation</strong>: Shows parameter and return types</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="c1"># IDE will show you available methods on pizzas:</span>
+<span class="n">pizzas</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Pizza</span><span class="p">]</span> <span class="o">=</span> <span class="k">await</span> <span class="n">repository</span><span class="o">.</span><span class="n">get_all_async</span><span class="p">()</span>
+<span class="c1"># When you type "pizzas." IDE shows: append, clear, copy, count, etc.</span>
+
+<span class="c1"># IDE catches type errors immediately:</span>
+<span class="n">pizza</span><span class="p">:</span> <span class="n">Pizza</span> <span class="o">=</span> <span class="n">Pizza</span><span class="p">(</span><span class="s2">"1"</span><span class="p">,</span> <span class="s2">"Margherita"</span><span class="p">,</span> <span class="mf">12.99</span><span class="p">,</span> <span class="p">[</span><span class="s2">"tomato"</span><span class="p">])</span>
+<span class="n">pizza</span><span class="o">.</span><span class="n">price</span> <span class="o">=</span> <span class="s2">"expensive"</span>  <span class="c1"># IDE warns: Cannot assign str to float</span>
+</code></pre></div>
+<h2 id="best-practices">🚀 Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">¶</a></h2>
+<h3 id="1-start-simple-add-complexity-gradually">1. Start Simple, Add Complexity Gradually<a class="headerlink" href="#1-start-simple-add-complexity-gradually" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Start with basic types:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">calculate_total</span><span class="p">(</span><span class="n">price</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">quantity</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">price</span> <span class="o">*</span> <span class="n">quantity</span>
+
+<span class="c1"># Add more specific types as needed:</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">decimal</span><span class="w"> </span><span class="kn">import</span> <span class="n">Decimal</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">calculate_total_precise</span><span class="p">(</span><span class="n">price</span><span class="p">:</span> <span class="n">Decimal</span><span class="p">,</span> <span class="n">quantity</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Decimal</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">price</span> <span class="o">*</span> <span class="n">quantity</span>
+
+<span class="c1"># Use generics for reusable components:</span>
+<span class="n">T</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s1">'T'</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">get_or_default</span><span class="p">(</span><span class="n">items</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">T</span><span class="p">],</span> <span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">default</span><span class="p">:</span> <span class="n">T</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">T</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">items</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="k">if</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">index</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">items</span><span class="p">)</span> <span class="k">else</span> <span class="n">default</span>
+</code></pre></div>
+<h3 id="2-use-type-aliases-for-complex-types">2. Use Type Aliases for Complex Types<a class="headerlink" href="#2-use-type-aliases-for-complex-types" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">TypeAlias</span>
+
+<span class="c1"># Create aliases for readability:</span>
+<span class="n">PizzaMenu</span><span class="p">:</span> <span class="n">TypeAlias</span> <span class="o">=</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span>
+<span class="n">OrderItem</span><span class="p">:</span> <span class="n">TypeAlias</span> <span class="o">=</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span>  <span class="c1"># (pizza_name, quantity)</span>
+<span class="n">CustomerOrder</span><span class="p">:</span> <span class="n">TypeAlias</span> <span class="o">=</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">OrderItem</span><span class="p">]]</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">process_orders</span><span class="p">(</span><span class="n">orders</span><span class="p">:</span> <span class="n">CustomerOrder</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">"""Process customer orders and return totals."""</span>
+    <span class="n">totals</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">for</span> <span class="n">customer_id</span><span class="p">,</span> <span class="n">items</span> <span class="ow">in</span> <span class="n">orders</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">total</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="k">for</span> <span class="n">pizza_name</span><span class="p">,</span> <span class="n">quantity</span> <span class="ow">in</span> <span class="n">items</span><span class="p">:</span>
+            <span class="c1"># ... calculation logic</span>
+            <span class="k">pass</span>
+        <span class="n">totals</span><span class="p">[</span><span class="n">customer_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">total</span>
+
+    <span class="k">return</span> <span class="n">totals</span>
+</code></pre></div>
+<h3 id="3-document-complex-types">3. Document Complex Types<a class="headerlink" href="#3-document-complex-types" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">NewType</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span>
+
+<span class="c1"># Create semantic types:</span>
+<span class="n">CustomerId</span> <span class="o">=</span> <span class="n">NewType</span><span class="p">(</span><span class="s1">'CustomerId'</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
+<span class="n">PizzaId</span> <span class="o">=</span> <span class="n">NewType</span><span class="p">(</span><span class="s1">'PizzaId'</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
+<span class="n">Price</span> <span class="o">=</span> <span class="n">NewType</span><span class="p">(</span><span class="s1">'Price'</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">OrderService</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Service for processing pizza orders."""</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">calculate_order_total</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">customer_id</span><span class="p">:</span> <span class="n">CustomerId</span><span class="p">,</span>
+        <span class="n">items</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">PizzaId</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span>  <span class="c1"># pizza_id -&gt; quantity</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Price</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Calculate total price for a customer's order.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            customer_id: Unique identifier for the customer</span>
+<span class="sd">            items: Dictionary mapping pizza IDs to quantities</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Total price for the order</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: If any pizza ID is not found</span>
+<span class="sd">        """</span>
+        <span class="c1"># Implementation here...</span>
+        <span class="k">pass</span>
+</code></pre></div>
+<h3 id="4-handle-optional-values-explicitly">4. Handle Optional Values Explicitly<a class="headerlink" href="#4-handle-optional-values-explicitly" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span>
+
+<span class="c1"># Be explicit about None handling:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_customer_name</span><span class="p">(</span><span class="n">customer_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">"""Get customer name, returns None if not found."""</span>
+    <span class="c1"># Database lookup...</span>
+    <span class="k">return</span> <span class="n">customer_name</span> <span class="k">if</span> <span class="n">found</span> <span class="k">else</span> <span class="kc">None</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">format_greeting</span><span class="p">(</span><span class="n">customer_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Create personalized greeting."""</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">get_customer_name</span><span class="p">(</span><span class="n">customer_id</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">"Hello, </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">!"</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">"Hello, valued customer!"</span>
+
+<span class="c1"># Or use walrus operator (Python 3.8+):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">format_greeting_modern</span><span class="p">(</span><span class="n">customer_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Create personalized greeting using walrus operator."""</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">name</span> <span class="o">:=</span> <span class="n">get_customer_name</span><span class="p">(</span><span class="n">customer_id</span><span class="p">))</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">"Hello, </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">!"</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">"Hello, valued customer!"</span>
+</code></pre></div>
+<h3 id="5-use-protocols-for-duck-typing">5. Use Protocols for Duck Typing<a class="headerlink" href="#5-use-protocols-for-duck-typing" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Protocol</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Serializable</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Protocol for objects that can be serialized."""</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">"""Convert object to dictionary representation."""</span>
+        <span class="o">...</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Jsonifiable</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Protocol for objects that can be converted to JSON."""</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">to_json</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Convert object to JSON string."""</span>
+        <span class="o">...</span>
+
+<span class="c1"># Function that works with any serializable object:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">save_to_database</span><span class="p">(</span><span class="n">obj</span><span class="p">:</span> <span class="n">Serializable</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Save any serializable object to database."""</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">obj</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+    <span class="c1"># Database save logic...</span>
+
+<span class="c1"># Both Pizza and Customer can implement Serializable:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Pizza</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">any</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">"id"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+            <span class="s2">"name"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+            <span class="s2">"price"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">price</span><span class="p">,</span>
+            <span class="s2">"ingredients"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">ingredients</span>
+        <span class="p">}</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Customer</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">any</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">"id"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+            <span class="s2">"name"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+            <span class="s2">"email"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">email</span>
+        <span class="p">}</span>
+
+<span class="c1"># Both work with save_to_database:</span>
+<span class="n">pizza</span> <span class="o">=</span> <span class="n">Pizza</span><span class="p">(</span><span class="s2">"1"</span><span class="p">,</span> <span class="s2">"Margherita"</span><span class="p">,</span> <span class="mf">12.99</span><span class="p">,</span> <span class="p">[</span><span class="s2">"tomato"</span><span class="p">,</span> <span class="s2">"mozzarella"</span><span class="p">])</span>
+<span class="n">customer</span> <span class="o">=</span> <span class="n">Customer</span><span class="p">(</span><span class="s2">"c1"</span><span class="p">,</span> <span class="s2">"Mario"</span><span class="p">,</span> <span class="s2">"mario@pizzeria.com"</span><span class="p">)</span>
+
+<span class="n">save_to_database</span><span class="p">(</span><span class="n">pizza</span><span class="p">)</span>     <span class="c1"># ✅ Works</span>
+<span class="n">save_to_database</span><span class="p">(</span><span class="n">customer</span><span class="p">)</span>  <span class="c1"># ✅ Works</span>
+</code></pre></div>
+<h2 id="common-pitfalls-to-avoid">❌ Common Pitfalls to Avoid<a class="headerlink" href="#common-pitfalls-to-avoid" title="Permanent link">¶</a></h2>
+<h3 id="1-overusing-any">1. Overusing <code>Any</code><a class="headerlink" href="#1-overusing-any" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span>
+
+<span class="c1"># ❌ Avoid - defeats the purpose of type hints:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">process_data</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">data</span><span class="o">.</span><span class="n">some_method</span><span class="p">()</span>
+
+<span class="c1"># ✅ Better - be specific:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">process_pizza_data</span><span class="p">(</span><span class="n">pizza</span><span class="p">:</span> <span class="n">Pizza</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PizzaDto</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">PizzaDto</span><span class="p">(</span>
+        <span class="nb">id</span><span class="o">=</span><span class="n">pizza</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="n">pizza</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+        <span class="n">price</span><span class="o">=</span><span class="n">pizza</span><span class="o">.</span><span class="n">price</span><span class="p">,</span>
+        <span class="n">ingredients</span><span class="o">=</span><span class="n">pizza</span><span class="o">.</span><span class="n">ingredients</span><span class="p">,</span>
+        <span class="n">is_available</span><span class="o">=</span><span class="n">pizza</span><span class="o">.</span><span class="n">is_available</span>
+    <span class="p">)</span>
+
+<span class="c1"># ✅ Or use generics if truly generic:</span>
+<span class="n">T</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s1">'T'</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">process_data</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="n">T</span><span class="p">,</span> <span class="n">processor</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">T</span><span class="p">],</span> <span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">processor</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="2-mixing-union-and-optional-incorrectly">2. Mixing Union and Optional Incorrectly<a class="headerlink" href="#2-mixing-union-and-optional-incorrectly" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># ❌ Wrong - Optional[T] is equivalent to Union[T, None]:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_pizza</span><span class="p">(</span><span class="nb">id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">Pizza</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>  <span class="c1"># Redundant</span>
+    <span class="k">pass</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">get_pizza_wrong</span><span class="p">(</span><span class="nb">id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Pizza</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>  <span class="c1"># Error!</span>
+    <span class="k">pass</span>
+
+<span class="c1"># ✅ Correct usage:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_pizza</span><span class="p">(</span><span class="nb">id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Pizza</span><span class="p">]:</span>  <span class="c1"># Returns Pizza or None</span>
+    <span class="k">pass</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">get_pizza_or_error</span><span class="p">(</span><span class="nb">id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">Pizza</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>  <span class="c1"># Returns Pizza or error message</span>
+    <span class="k">pass</span>
+</code></pre></div>
+<h3 id="3-not-using-forward-references">3. Not Using Forward References<a class="headerlink" href="#3-not-using-forward-references" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># ❌ This might cause issues if Order references Customer and vice versa:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Customer</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">orders</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Order</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># Error: Order not defined yet</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Order</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">customer</span><span class="p">:</span> <span class="n">Customer</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">customer</span> <span class="o">=</span> <span class="n">customer</span>
+
+<span class="c1"># ✅ Use string forward references:</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">TYPE_CHECKING</span>
+
+<span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">.order</span><span class="w"> </span><span class="kn">import</span> <span class="n">Order</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Customer</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">orders</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="s1">'Order'</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># Forward reference</span>
+
+<span class="c1"># ✅ Or use `from __future__ import annotations` (Python 3.7+):</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Customer</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">orders</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Order</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># Works without quotes</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Order</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">customer</span><span class="p">:</span> <span class="n">Customer</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">customer</span> <span class="o">=</span> <span class="n">customer</span>
+</code></pre></div>
+<h2 id="related-documentation">🔗 Related Documentation<a class="headerlink" href="#related-documentation" title="Permanent link">¶</a></h2>
+<ul>
+<li><a href="../python_generic_types/">Python Generic Types Reference</a> - Deep dive into generics and type variables</li>
+<li><a href="../python_object_oriented/">Python Object-Oriented Programming</a> - Classes, inheritance, and composition</li>
+<li><a href="../python_modular_code/">Python Modular Code</a> - Module organization and import patterns</li>
+<li><a href="../../features/cqrs-mediation/">CQRS &amp; Mediation</a> - Type-safe command/query patterns</li>
+<li><a href="../../features/mvc-controllers/">MVC Controllers</a> - Type-safe API development</li>
+</ul>
+<h2 id="further-reading">📚 Further Reading<a class="headerlink" href="#further-reading" title="Permanent link">¶</a></h2>
+<ul>
+<li><a href="https://peps.python.org/pep-0484/">PEP 484 - Type Hints</a></li>
+<li><a href="https://peps.python.org/pep-0526/">PEP 526 - Variable Annotations</a></li>
+<li><a href="https://docs.python.org/3/library/typing.html">Python typing module documentation</a></li>
+<li><a href="https://mypy.readthedocs.io/">mypy documentation</a></li>
+<li><a href="https://realpython.com/python-type-checking/">Real Python: Type Checking</a></li>
+</ul>
 </article>
 </div>
 <script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
