@@ -2,6 +2,14 @@
 
 A lightweight, opinionated Python framework built on [FastAPI](https://fastapi.tiangolo.com/) that enforces clean architecture principles and provides comprehensive tooling for building production-ready microservices.
 
+## 🎯 Perfect For
+
+- **Microservices**: Clean architecture for scalable service development
+- **Event-Driven Systems**: Built-in CloudEvents and domain event support
+- **API Development**: FastAPI-based with automatic OpenAPI documentation
+- **Domain-Driven Design**: Enforce DDD patterns and bounded contexts
+- **Clean Code**: Opinionated structure that promotes maintainable code
+
 ## 🚀 What's Included
 
 ### 🏗️ **Framework Core**
@@ -47,38 +55,9 @@ Visit `http://localhost:8000/docs` to explore the auto-generated API documentati
 
 - **[Getting Started](getting-started.md)** - Step-by-step tutorial building your first application
 - **[Mario's Pizzeria](mario-pizzeria.md)** - Complete bounded context with visual architecture diagrams
-- **[Patterns](patterns.md)** - Software design patterns and best practices
+- **[Patterns](patterns/)** - Software design patterns and best practices
 - **[Features](features/)** - Deep dive into framework capabilities
 - **[Guides](guides/)** - How-to procedures and troubleshooting
-
-## 🎯 Perfect For
-
-- **Microservices**: Clean architecture for scalable service development
-- **Event-Driven Systems**: Built-in CloudEvents and domain event support
-- **API Development**: FastAPI-based with automatic OpenAPI documentation
-- **Domain-Driven Design**: Enforce DDD patterns and bounded contexts
-- **Clean Code**: Opinionated structure that promotes maintainable code
-
-## 🔧 Architecture Overview
-
-Neuroglia enforces a four-layer clean architecture:
-
-```
-📁 Your Application
-├── 🌐 api/          # Controllers, DTOs, Routes
-├── 💼 application/  # Commands, Queries, Handlers
-├── 🏛️ domain/       # Entities, Business Rules
-└── 🔌 integration/ # Repositories, External APIs
-```
-
-**Dependency Rule**: Dependencies only flow inward (API → Application → Domain ← Integration)
-
-## 🚀 Next Steps
-
-1. **Start Learning**: Follow the [Getting Started Guide](getting-started.md)
-2. **See It In Action**: Explore [Mario's Pizzeria](mario-pizzeria.md) sample
-3. **Understand Patterns**: Review [common patterns](patterns.md) used throughout
-4. **Deep Dive**: Explore specific [framework features](features/)
 
 ---
 
