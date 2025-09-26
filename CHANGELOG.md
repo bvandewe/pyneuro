@@ -9,6 +9,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Configurable Type Discovery**: Enhanced serialization with flexible domain module scanning
+
+  - **TypeRegistry**: Centralized type discovery using framework's TypeFinder and ModuleLoader utilities
+  - **Configurable JsonSerializer**: Applications can specify which modules to scan for enums and value types
+  - **Multiple Configuration Methods**: Direct configuration, post-configuration registration, and TypeRegistry access
+  - **Dynamic Type Discovery**: Runtime module scanning for advanced scenarios and microservice architectures
+  - **Performance Optimized**: Type caching and efficient module scanning with fallback strategies
+  - **Framework Agnostic**: No hardcoded domain patterns, fully configurable for any project structure
+  - **Generic FileSystemRepository**: Complete repository pattern using framework's JsonSerializer for persistence
+  - **Enhanced Mario Pizzeria**: Updated sample application demonstrating configurable type discovery patterns
+
 - **Reference Documentation**: Comprehensive Python language and framework reference guides
 
   - **Source Code Naming Conventions**: Complete guide to consistent naming across all architectural layers

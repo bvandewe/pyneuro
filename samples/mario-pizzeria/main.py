@@ -5,8 +5,8 @@ Mario's Pizzeria - Main Application Entry Point
 This is the complete sample application demonstrating all major Neuroglia framework features.
 """
 
-import sys
 import logging
+import sys
 from pathlib import Path
 from typing import Optional
 
@@ -17,25 +17,27 @@ logging.basicConfig(level=logging.DEBUG)
 project_root = Path(__file__).parent.parent.parent.parent
 sys.path.insert(0, str(project_root / "src"))
 
-# Framework imports (must be after path manipulation)
-# pylint: disable=wrong-import-position
-from neuroglia.hosting.enhanced_web_application_builder import EnhancedWebApplicationBuilder
-from neuroglia.mediation import Mediator
-from neuroglia.mapping import Mapper
-
 # Domain repository interfaces
 from domain.repositories import (
-    IOrderRepository,
-    IPizzaRepository,
     ICustomerRepository,
     IKitchenRepository,
+    IOrderRepository,
+    IPizzaRepository,
 )
 from integration.repositories import (
-    FileOrderRepository,
-    FilePizzaRepository,
     FileCustomerRepository,
     FileKitchenRepository,
+    FileOrderRepository,
+    FilePizzaRepository,
 )
+
+# Framework imports (must be after path manipulation)
+# pylint: disable=wrong-import-position
+from neuroglia.hosting.enhanced_web_application_builder import (
+    EnhancedWebApplicationBuilder,
+)
+from neuroglia.mapping import Mapper
+from neuroglia.mediation import Mediator
 
 
 def create_pizzeria_app(data_dir: Optional[str] = None, port: int = 8000):
@@ -62,11 +64,7 @@ def create_pizzeria_app(data_dir: Optional[str] = None, port: int = 8000):
     # Create enhanced web application builder
     builder = EnhancedWebApplicationBuilder()
 
-    # Register repositories with file-based implementations
-    builder.services.add_singleton(
-        IOrderRepository,
-        implementation_factory=lambda _: FileOrderRepository(str(data_dir_path / "orders")),
-    )
+    # Register repositories with file-based implementations using generic FileSystemRepository pattern
     builder.services.add_singleton(
         IPizzaRepository,
         implementation_factory=lambda _: FilePizzaRepository(str(data_dir_path / "menu")),
@@ -76,6 +74,10 @@ def create_pizzeria_app(data_dir: Optional[str] = None, port: int = 8000):
         implementation_factory=lambda _: FileCustomerRepository(str(data_dir_path / "customers")),
     )
     builder.services.add_singleton(
+        IOrderRepository,
+        implementation_factory=lambda _: FileOrderRepository(str(data_dir_path / "orders")),
+    )
+    builder.services.add_singleton(
         IKitchenRepository,
         implementation_factory=lambda _: FileKitchenRepository(str(data_dir_path / "kitchen")),
     )
@@ -83,13 +85,20 @@ def create_pizzeria_app(data_dir: Optional[str] = None, port: int = 8000):
     # Configure mediator with auto-discovery from command and query modules
     Mediator.configure(builder, ["application.commands", "application.queries"])
 
-    # Configure auto-mapper
-    Mapper.configure(builder, ["api.dtos", "domain.entities"])
+    # Configure auto-mapper with custom profile
+    Mapper.configure(builder, ["application.mapping", "api.dtos", "domain.entities"])
 
-    # Configure JSON serialization
+    # Configure JSON serialization with type discovery
     from neuroglia.serialization.json import JsonSerializer
 
-    JsonSerializer.configure(builder)
+    # Configure JsonSerializer with domain modules for enum discovery
+    JsonSerializer.configure(
+        builder,
+        type_modules=[
+            "domain.entities.enums",  # Mario Pizzeria enum types
+            "domain.entities",  # Also scan entities module for embedded enums
+        ],
+    )
 
     # Build the service provider (not the full app yet)
     service_provider = builder.services.build()
@@ -165,9 +174,7 @@ def create_pizzeria_app(data_dir: Optional[str] = None, port: int = 8000):
                         "customer_name": "Mario Rossi",
                         "customer_phone": "+1-555-0123",
                         "customer_address": "123 Pizza Street, Little Italy",
-                        "pizzas": [
-                            {"name": "Margherita", "size": "large", "toppings": ["extra cheese"]}
-                        ],
+                        "pizzas": [{"name": "Margherita", "size": "large", "toppings": ["extra cheese"]}],
                         "payment_method": "credit_card",
                     },
                 },
