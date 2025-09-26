@@ -1,6 +1,8 @@
 # 🎯 Resource Oriented Architecture (ROA)
 
-Resource Oriented Architecture is a powerful pattern for building systems that manage resources through their lifecycle, similar to how Kubernetes manages cluster resources. Neuroglia provides comprehensive support for ROA patterns including watchers, controllers, and reconciliation loops.
+Resource Oriented Architecture is a powerful pattern for building systems that manage resources through their lifecycle,
+similar to how Kubernetes manages cluster resources. Neuroglia provides comprehensive support for ROA patterns including
+watchers, controllers, and reconciliation loops.
 
 ## 🎯 Overview
 
@@ -21,30 +23,30 @@ graph TB
         B[Resource Storage]
         C[Resource Events]
     end
-    
+
     subgraph "👀 Observation Layer"
         D[Watcher] --> E[Event Stream]
         F[Poller] --> G[Change Detection]
     end
-    
+
     subgraph "🎮 Control Layer"
         H[Controller] --> I[Business Logic]
         I --> J[State Transitions]
         I --> K[Action Execution]
     end
-    
+
     subgraph "🔄 Reconciliation Layer"
         L[Reconciliation Loop] --> M[Drift Detection]
         M --> N[Corrective Actions]
         N --> O[State Restoration]
     end
-    
+
     subgraph "🛡️ Safety Layer"
         P[Error Handling] --> Q[Retry Logic]
         Q --> R[Circuit Breaker]
         R --> S[Timeout Management]
     end
-    
+
     A --> B
     B --> C
     C --> D
@@ -53,7 +55,7 @@ graph TB
     G --> H
     H --> L
     L --> P
-    
+
     style A fill:#e3f2fd
     style H fill:#f3e5f5
     style L fill:#e8f5e8
@@ -86,10 +88,10 @@ class LabInstanceWatcher:
         while self.is_running:
             # Poll for changes since last known version
             changes = self.storage.list_resources(since_version=self.last_resource_version)
-            
+
             for resource in changes:
                 await self._handle_resource_change(resource)
-            
+
             await asyncio.sleep(self.poll_interval)
 ```
 
@@ -101,7 +103,7 @@ Controllers respond to resource changes with business logic:
 class LabInstanceController:
     async def handle_resource_event(self, resource: LabInstanceResource):
         current_state = resource.status.get('state')
-        
+
         if current_state == ResourceState.PENDING.value:
             await self._start_provisioning(resource)
         elif current_state == ResourceState.PROVISIONING.value:
@@ -118,7 +120,7 @@ class LabInstanceScheduler:
         while self.is_running:
             await self._reconcile_all_resources()
             await asyncio.sleep(self.reconcile_interval)
-    
+
     async def _reconcile_resource(self, resource):
         # Check for stuck states, timeouts, and drift
         # Take corrective actions as needed
@@ -197,7 +199,7 @@ async def main():
     # Start all components concurrently
     watcher_task = asyncio.create_task(watcher.start_watching())
     scheduler_task = asyncio.create_task(scheduler.start_reconciliation())
-    
+
     # Controllers are event-driven (no separate task needed)
     watcher.add_event_handler(controller.handle_resource_event)
 ```
@@ -236,7 +238,7 @@ Reconcilers verify that actual state matches desired state:
 async def check_drift(self, resource):
     actual_state = await self.get_actual_infrastructure_state(resource)
     desired_state = resource.spec
-    
+
     if actual_state != desired_state:
         await self.correct_drift(resource, actual_state, desired_state)
 ```

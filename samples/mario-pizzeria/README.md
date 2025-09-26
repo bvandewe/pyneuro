@@ -21,7 +21,7 @@ mario-pizzeria/
 ├── api/                     # 🌐 API Layer
 │   ├── controllers/         # RESTful endpoints
 │   └── dtos/               # Data transfer objects
-├── application/            # 💼 Application Layer  
+├── application/            # 💼 Application Layer
 │   ├── commands/           # Write operations
 │   ├── queries/            # Read operations
 │   └── handlers/           # Command/Query handlers
@@ -36,24 +36,28 @@ mario-pizzeria/
 ## 🚀 Features
 
 ### Order Management
+
 - Place new pizza orders with customer information
 - Track order status through the complete lifecycle
 - Support for multiple pizzas per order
 - Automatic pricing calculations
 
 ### Kitchen Operations
+
 - View kitchen status and capacity
 - Start cooking orders
 - Complete orders when ready
 - Queue management for busy periods
 
 ### Menu System
+
 - Predefined pizza types with base prices
 - Configurable toppings with additional costs
 - Size variations (small, medium, large)
 - Real-time pricing calculations
 
 ### Customer Management
+
 - Customer information tracking
 - Order history
 - Contact details management
@@ -85,7 +89,7 @@ curl -X POST "http://localhost:8000/orders" \
   -H "Content-Type: application/json" \
   -d '{
     "customer_name": "Mario Rossi",
-    "customer_phone": "+1-555-0123", 
+    "customer_phone": "+1-555-0123",
     "customer_address": "123 Pizza Street, Little Italy",
     "pizzas": [
       {
@@ -119,7 +123,7 @@ curl "http://localhost:8000/kitchen/status"
 ## 📊 Order Lifecycle
 
 1. **Placed** → Order received and validated
-2. **Cooking** → Kitchen starts preparation  
+2. **Cooking** → Kitchen starts preparation
 3. **Ready** → Pizza is ready for pickup/delivery
 4. **Delivered** → Order completed successfully
 5. **Cancelled** → Order cancelled (if needed)
@@ -184,31 +188,37 @@ pytest tests/integration/mario_pizzeria/ -v  # Integration tests
 ### Core Entities
 
 #### Order
+
 - **Properties**: ID, Customer, Pizzas, Status, Total, Timestamps
 - **Business Logic**: Status transitions, pricing calculations
 - **Events**: OrderPlaced, CookingStarted, OrderReady, OrderDelivered
 
-#### Pizza  
+#### Pizza
+
 - **Properties**: Name, Size, Toppings, Price
 - **Business Logic**: Price calculation based on size and toppings
 - **Validation**: Valid sizes and available toppings
 
 #### Customer
+
 - **Properties**: ID, Name, Phone, Address, Order History
 - **Business Logic**: Contact validation, order tracking
 
 #### Kitchen
+
 - **Properties**: Capacity, Current Load, Queue
 - **Business Logic**: Capacity management, queue processing
 
 ## 🔄 CQRS Implementation
 
 ### Commands (Write Operations)
+
 - `PlaceOrderCommand` - Create new orders
 - `StartCookingCommand` - Begin order preparation
 - `CompleteOrderCommand` - Mark orders as ready
 
-### Queries (Read Operations)  
+### Queries (Read Operations)
+
 - `GetOrderByIdQuery` - Retrieve specific orders
 - `GetMenuQuery` - Get available menu items
 - `GetKitchenStatusQuery` - Check kitchen capacity
@@ -219,26 +229,31 @@ pytest tests/integration/mario_pizzeria/ -v  # Integration tests
 This sample demonstrates:
 
 1. **Clean Architecture Principles**
+
    - Layer separation and dependency inversion
    - Domain-driven design patterns
    - Testable and maintainable code structure
 
 2. **CQRS and Mediator Patterns**
+
    - Command and query separation
    - Handler-based request processing
    - Cross-cutting concerns with behaviors
 
 3. **Domain Events and Event-Driven Architecture**
+
    - Business event modeling
    - Event handlers for side effects
    - Workflow coordination through events
 
 4. **Repository Pattern and Data Access**
+
    - Interface-based data access
    - Pluggable storage implementations
    - File-based persistence for simplicity
 
 5. **Dependency Injection and IoC**
+
    - Service registration and lifetime management
    - Constructor injection patterns
    - Testable service dependencies

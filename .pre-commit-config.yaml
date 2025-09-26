@@ -19,6 +19,7 @@ repos:
       - id: isort
         name: isort (python)
         args: ["--profile", "black"]
+
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.5.0
     hooks:
@@ -28,24 +29,28 @@ repos:
         args: ['--allow-multiple-documents']
         exclude: mkdocs\.yml  # Skip YAML check for mkdocs.yml due to Python tags
       - id: check-added-large-files
+
   - repo: https://github.com/psf/black
     rev: 23.10.1
     hooks:
       - id: black
         language_version: python3
-        args: [--line-length=100]
+        args: [--line-length=300]
+
   - repo: https://github.com/pre-commit/mirrors-prettier
     rev: v3.0.3
     hooks:
       - id: prettier
         files: \.(md|markdown)$
         args: [--prose-wrap=preserve, --print-width=120]
+
   - repo: https://github.com/igorshubovych/markdownlint-cli
     rev: v0.37.0
     hooks:
       - id: markdownlint
         args: [--fix]
         files: \.(md|markdown)$
+
   # - repo: https://github.com/pycqa/flake8
   #   rev: 6.1.0
   #   hooks:

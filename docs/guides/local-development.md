@@ -491,7 +491,7 @@ Your development environment is now ready! Continue with:
 
 ## 🔗 Related Documentation
 
-- **[Dependency Injection Setup](../features/dependency-injection.md)** - Advanced DI configuration
+- **[Dependency Injection Setup](../patterns/dependency-injection.md)** - Advanced DI configuration
 - **[Testing Strategies](testing-setup.md)** - Comprehensive testing approaches
 - **[Project Structure](project-setup.md)** - Detailed project organization
 

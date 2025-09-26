@@ -56,6 +56,7 @@ This demo shows:
 The demonstration clearly showed the **Resource Oriented Architecture (ROA)** patterns in action:
 
 ### 🔍 Watcher Pattern Execution
+
 ```
 👀 LabInstance Watcher started
 🔍 Watcher detected change: student-labs/python-basics-lab -> pending
@@ -64,12 +65,14 @@ The demonstration clearly showed the **Resource Oriented Architecture (ROA)** pa
 ```
 
 **How the Watcher Executes:**
+
 1. **Polling Loop**: Runs every 2 seconds checking for resource changes
 2. **Change Detection**: Compares resource versions to detect modifications
 3. **Event Notification**: Immediately notifies controllers when changes occur
 4. **Continuous Monitoring**: Never stops watching until explicitly terminated
 
 ### 🎮 Controller Pattern Execution
+
 ```
 🎮 Controller processing: student-labs/python-basics-lab (state: pending)
 🚀 Starting provisioning for: student-labs/python-basics-lab
@@ -78,12 +81,14 @@ The demonstration clearly showed the **Resource Oriented Architecture (ROA)** pa
 ```
 
 **How the Controller Executes:**
+
 1. **Event Handling**: Receives notifications from watchers immediately
 2. **State Machine Logic**: Processes resources based on current state
 3. **Business Actions**: Executes appropriate business logic (start provisioning, check status, etc.)
 4. **Resource Updates**: Modifies resource state based on business rules
 
 ### 🔄 Reconciliation Loop Execution
+
 ```
 🔄 LabInstance Scheduler started reconciliation
 🔄 Reconciling 2 lab instances
@@ -92,6 +97,7 @@ The demonstration clearly showed the **Resource Oriented Architecture (ROA)** pa
 ```
 
 **How the Reconciliation Loop Executes:**
+
 1. **Periodic Scanning**: Runs every 10 seconds examining all resources
 2. **Drift Detection**: Identifies resources that don't match desired state
 3. **Corrective Actions**: Takes action to fix inconsistencies (timeout handling, cleanup, etc.)
@@ -117,10 +123,12 @@ From the logs, you can see the exact timing:
 ## 🔧 Import Resolution Status
 
 ### ✅ Working Demonstrations
+
 - **`run_watcher_demo.py`** - Fully functional standalone demo
 - **`simple_demo.py`** - Basic patterns without framework dependencies
 
 ### 🚧 Import Issues Resolved
+
 The complex demonstration (`demo_watcher_reconciliation.py`) had import issues because:
 
 1. **Module Path Resolution**: Python couldn't find the `samples` module
@@ -130,6 +138,7 @@ The complex demonstration (`demo_watcher_reconciliation.py`) had import issues b
 ### 🛠️ Solutions Applied
 
 #### For Standalone Demos (✅ Working)
+
 ```python
 # All dependencies are self-contained
 # No external framework imports
@@ -137,6 +146,7 @@ The complex demonstration (`demo_watcher_reconciliation.py`) had import issues b
 ```
 
 #### For Framework Integration Demos (🔧 Fixed)
+
 ```python
 # Added proper __init__.py files throughout package structure
 # Simplified command classes with mock implementations
@@ -146,23 +156,29 @@ The complex demonstration (`demo_watcher_reconciliation.py`) had import issues b
 ## 🎯 Key Patterns You Observed
 
 ### 1. **Asynchronous Execution**
+
 All three components run concurrently:
+
 - Watcher polling every 2 seconds
 - Controller responding to events immediately
 - Reconciler scanning every 10 seconds
 
 ### 2. **Event-Driven Architecture**
+
 ```
 Resource Change → Watcher Detection → Controller Response → Resource Update
 ```
 
 ### 3. **State Machine Progression**
+
 ```
 PENDING → PROVISIONING → READY → (timeout) → FAILED
 ```
 
 ### 4. **Reconciliation Safety**
+
 The reconciler acts as a safety net:
+
 - Detects stuck states (provisioning timeout)
 - Enforces business rules (lab expiration)
 - Provides eventual consistency
@@ -170,18 +186,21 @@ The reconciler acts as a safety net:
 ## 🚀 Running the Demonstrations
 
 ### Option 1: Full Working Demo
+
 ```bash
 cd samples/lab-resource-manager
 python run_watcher_demo.py
 ```
 
 ### Option 2: Simple Patterns Demo
+
 ```bash
 cd samples/lab-resource-manager
 python simple_demo.py
 ```
 
 ### Option 3: Framework Integration (Fixed Imports)
+
 ```bash
 cd samples
 python run_complex_demo.py

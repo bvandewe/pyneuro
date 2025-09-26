@@ -1,6 +1,8 @@
 # 🚀 API Gateway Sample Application
 
-The API Gateway sample demonstrates how to build a modern microservice gateway using the Neuroglia framework. This application showcases advanced patterns including OAuth2 authentication, external service integration, background task processing, and cloud event handling.
+The API Gateway sample demonstrates how to build a modern microservice gateway using the Neuroglia framework. This
+application showcases advanced patterns including OAuth2 authentication, external service integration, background task
+processing, and cloud event handling.
 
 ## 🎯 What You'll Learn
 
@@ -21,12 +23,12 @@ graph TB
         B --> C[Command/Query Handlers]
         C --> D[Domain Models]
         C --> E[Integration Services]
-        
+
         F[OAuth2 Middleware] --> A
         G[Cloud Event Middleware] --> A
         H[Exception Handling] --> A
     end
-    
+
     subgraph "External Dependencies"
         I[Keycloak OAuth2]
         J[Redis Cache]
@@ -34,7 +36,7 @@ graph TB
         L[External APIs]
         M[Background Tasks]
     end
-    
+
     E --> I
     E --> J
     E --> K
@@ -57,8 +59,8 @@ The API Gateway follows a **distributed microservice pattern** where:
 # JWT token validation with Keycloak
 @post("/item", response_model=ItemPromptCommandResponseDto)
 async def create_new_item_prompt(
-    self, 
-    command_dto: CreateNewItemPromptCommandDto, 
+    self,
+    command_dto: CreateNewItemPromptCommandDto,
     key: str = Depends(validate_mosaic_authentication)
 ) -> Any:
     # Protected endpoint with API key validation
@@ -96,8 +98,8 @@ BackgroundTaskScheduler.configure(builder, ["application.tasks"])
 
 # Redis-backed job queue
 background_job_store: dict[str, str | int] = {
-    "redis_host": "redis47", 
-    "redis_port": 6379, 
+    "redis_host": "redis47",
+    "redis_port": 6379,
     "redis_db": 0
 }
 ```
@@ -121,12 +123,12 @@ class AiGatewaySettings(ApplicationSettings):
     jwt_authority: str = "http://keycloak47/realms/mozart"
     jwt_audience: str = "ai-gateways"
     required_scope: str = "api"
-    
+
     # External Service Settings
     s3_endpoint: str                    # MinIO storage
     connection_strings: dict[str, str]  # Redis, databases
     mosaic_api_keys: list[str]         # API authentication
-    
+
     # Background Processing
     background_job_store: dict[str, str | int]
     redis_max_connections: int = 10
@@ -164,13 +166,13 @@ class TestPromptController:
             mapper=self.mock_mapper,
             mediator=self.mock_mediator
         )
-    
+
     @pytest.mark.asyncio
     async def test_create_prompt_success(self):
         # Test successful prompt creation
         command_dto = CreateNewItemPromptCommandDto(content="test")
         result = await self.controller.create_new_item_prompt(command_dto, "valid-key")
-        
+
         assert result.status == "created"
         self.mock_mediator.execute_async.assert_called_once()
 ```
@@ -188,7 +190,7 @@ class TestApiGatewayIntegration:
             json={"content": "test prompt"},
             headers={"Authorization": "Bearer valid-token"}
         )
-        
+
         assert response.status_code == 201
         assert "id" in response.json()
 ```
@@ -262,7 +264,7 @@ class MinioStorageManager:
 class AsyncStringCacheRepository:
     async def get_async(self, key: str) -> Optional[str]:
         return await self.redis_client.get(key)
-    
+
     async def set_async(self, key: str, value: str, ttl: int = None):
         await self.redis_client.set(key, value, ex=ttl)
 ```
@@ -330,8 +332,8 @@ curl -X POST http://localhost:8000/api/prompts/item \
 
 ## 🔗 Related Documentation
 
-- [CQRS & Mediation](../features/cqrs-mediation.md) - Command/Query patterns
-- [Dependency Injection](../features/dependency-injection.md) - Service configuration
+- [CQRS & Mediation](../patterns/cqrs.md) - Command/Query patterns
+- [Dependency Injection](../patterns/dependency-injection.md) - Service configuration
 - [Data Access](../features/data-access.md) - Repository patterns
 - [OpenBank Sample](openbank.md) - Event sourcing comparison
 - [Desktop Controller Sample](desktop_controller.md) - Background services
@@ -342,13 +344,13 @@ The API Gateway and OpenBank samples demonstrate different architectural pattern
 
 ### Architecture Patterns
 
-| Aspect | API Gateway | OpenBank |
-|--------|-------------|----------|
-| **Primary Pattern** | Microservice Gateway | Event Sourcing + DDD |
-| **Data Persistence** | Multi-store (Redis, MinIO, MongoDB) | Event Store + Read Models |
-| **State Management** | Stateless with caching | Event-sourced aggregates |
-| **External Integration** | Multiple external APIs | Focused domain model |
-| **Background Processing** | Async task queues | Event-driven projections |
+| Aspect                    | API Gateway                         | OpenBank                  |
+| ------------------------- | ----------------------------------- | ------------------------- |
+| **Primary Pattern**       | Microservice Gateway                | Event Sourcing + DDD      |
+| **Data Persistence**      | Multi-store (Redis, MinIO, MongoDB) | Event Store + Read Models |
+| **State Management**      | Stateless with caching              | Event-sourced aggregates  |
+| **External Integration**  | Multiple external APIs              | Focused domain model      |
+| **Background Processing** | Async task queues                   | Event-driven projections  |
 
 ### Domain Complexity
 
@@ -375,7 +377,7 @@ class BankAccountV1(AggregateRoot[str]):
         if transaction_type == BankTransactionTypeV1.DEBIT:
             if self.state.balance + amount < -self.state.overdraft_limit:
                 raise InsufficientFundsException()
-        
+
         # Event sourcing
         self.raise_event(BankAccountTransactionRecordedDomainEventV1(...))
 ```
@@ -404,15 +406,15 @@ ESEventStore.configure(builder, EventStoreOptions(database_name, consumer_group)
 
 # Write model: Event sourcing
 DataAccessLayer.WriteModel.configure(
-    builder, 
-    ["samples.openbank.domain.models"], 
+    builder,
+    ["samples.openbank.domain.models"],
     lambda builder_, entity_type, key_type: EventSourcingRepository.configure(...)
 )
 
 # Read model: Projections
 DataAccessLayer.ReadModel.configure(
     builder,
-    ["samples.openbank.integration.models"], 
+    ["samples.openbank.integration.models"],
     lambda builder_, entity_type, key_type: MongoRepository.configure(...)
 )
 ```
@@ -512,7 +514,7 @@ class TestApiGatewayIntegration:
     async def test_full_prompt_workflow(self, test_client, mock_external_services):
         # Test complete workflow including external services
         response = await test_client.post("/api/prompts/item", json=prompt_data)
-        
+
         # Verify external service calls
         mock_external_services.genai_client.process_prompt.assert_called_once()
         mock_external_services.storage_manager.upload.assert_called_once()
@@ -526,7 +528,7 @@ class TestBankAccountAggregate:
         # Pure domain logic testing
         account = BankAccountV1("123", owner, Decimal("1000"))
         account.record_transaction(Decimal("-100"), BankTransactionTypeV1.DEBIT)
-        
+
         # Verify business rules and events
         assert account.state.balance == Decimal("900")
         events = account.get_uncommitted_events()
@@ -555,14 +557,14 @@ class TestBankAccountAggregate:
 
 ### Framework Features Utilized
 
-| Feature | API Gateway Usage | OpenBank Usage |
-|---------|------------------|----------------|
-| **CQRS/Mediation** | Service orchestration | Domain command/query separation |
-| **Dependency Injection** | External service clients | Repository abstractions |
-| **Event Handling** | Integration events | Domain events + projections |
-| **Data Access** | Multi-repository pattern | Event sourcing + read models |
-| **Background Processing** | Async task queues | Event-driven handlers |
-| **Mapping** | DTO transformations | Domain-to-DTO mapping |
-| **Validation** | API contract validation | Business rule enforcement |
+| Feature                   | API Gateway Usage        | OpenBank Usage                  |
+| ------------------------- | ------------------------ | ------------------------------- |
+| **CQRS/Mediation**        | Service orchestration    | Domain command/query separation |
+| **Dependency Injection**  | External service clients | Repository abstractions         |
+| **Event Handling**        | Integration events       | Domain events + projections     |
+| **Data Access**           | Multi-repository pattern | Event sourcing + read models    |
+| **Background Processing** | Async task queues        | Event-driven handlers           |
+| **Mapping**               | DTO transformations      | Domain-to-DTO mapping           |
+| **Validation**            | API contract validation  | Business rule enforcement       |
 
 Both samples showcase different strengths of the Neuroglia framework, demonstrating its flexibility in supporting various architectural patterns while maintaining clean architecture principles.

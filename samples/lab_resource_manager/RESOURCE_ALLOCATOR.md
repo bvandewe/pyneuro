@@ -1,6 +1,8 @@
 # ResourceAllocator Service
 
-The ResourceAllocator service provides resource allocation and availability checking for lab instances in the Resource Oriented Architecture (ROA) sample. It manages CPU, memory, and other resource limits for containers, ensuring efficient resource utilization and preventing over-allocation.
+The ResourceAllocator service provides resource allocation and availability checking for lab instances in the
+Resource Oriented Architecture (ROA) sample. It manages CPU, memory, and other resource limits for containers,
+ensuring efficient resource utilization and preventing over-allocation.
 
 ## 🎯 Overview
 
@@ -82,6 +84,7 @@ ResourceAllocator(total_cpu: float = 32.0, total_memory_gb: int = 128)
 ```
 
 **Parameters:**
+
 - `total_cpu`: Total CPU cores available for allocation
 - `total_memory_gb`: Total memory in GB available for allocation
 
@@ -92,12 +95,15 @@ ResourceAllocator(total_cpu: float = 32.0, total_memory_gb: int = 128)
 Checks if the requested resources are available for allocation.
 
 **Parameters:**
+
 - `resource_limits`: Dictionary with resource requirements (e.g., `{"cpu": "2", "memory": "4Gi"}`)
 
 **Returns:**
+
 - `True` if resources are available, `False` otherwise
 
 **Example:**
+
 ```python
 available = await allocator.check_availability({"cpu": "2", "memory": "4Gi"})
 if available:
@@ -109,15 +115,19 @@ if available:
 Allocates resources for a lab instance.
 
 **Parameters:**
+
 - `resource_limits`: Dictionary with resource requirements
 
 **Returns:**
+
 - Allocation dictionary that can be stored in resource status
 
 **Raises:**
+
 - `ValueError`: If resources are not available or limits are invalid
 
 **Example:**
+
 ```python
 allocation = await allocator.allocate_resources({"cpu": "2", "memory": "4Gi"})
 print(f"Allocated: {allocation['allocation_id']}")
@@ -128,9 +138,11 @@ print(f"Allocated: {allocation['allocation_id']}")
 Releases previously allocated resources.
 
 **Parameters:**
+
 - `allocation_data`: Allocation dictionary returned by `allocate_resources`
 
 **Example:**
+
 ```python
 await allocator.release_resources(allocation)
 print("Resources released")
@@ -143,6 +155,7 @@ print("Resources released")
 Returns current resource usage statistics.
 
 **Returns:**
+
 ```python
 {
     "total_cpu": 8.0,
@@ -221,7 +234,7 @@ async def _reconcile_pending_phase(self, resource: LabInstanceRequest) -> Reconc
 async def _transition_to_provisioning(self, resource: LabInstanceRequest) -> None:
     # Allocate resources
     allocation = await self.resource_allocator.allocate_resources(resource.spec.resource_limits)
-    
+
     # Store allocation in resource status
     resource.status.resource_allocation = allocation
 ```

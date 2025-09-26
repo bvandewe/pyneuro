@@ -1,30 +1,10 @@
 # 🚀 Framework Features
 
-The Neuroglia Python framework provides a comprehensive set of features designed to support modern microservice development with clean architecture principles. Each feature is designed to work seamlessly together while maintaining loose coupling and high testability.
+The Neuroglia Python framework provides a comprehensive set of features designed to support modern microservice
+development with clean architecture principles. Each feature is designed to work seamlessly together while maintaining
+loose coupling and high testability.
 
 ## 🎯 Core Architecture Features
-
-### [🔧 Dependency Injection](dependency-injection.md)
-
-Comprehensive IoC container with lifecycle management, service registration, and automatic resolution. Supports singleton, scoped, and transient lifetimes with built-in service discovery patterns.
-
-**Key Capabilities:**
-
-- Service registration with multiple lifetimes
-- Constructor injection patterns
-- Service provider resolution
-- Automatic service discovery
-
-### [📡 CQRS & Mediation](cqrs-mediation.md)
-
-Command Query Responsibility Segregation with a powerful mediator pattern that decouples request handling from business logic. Enables clean separation between read and write operations.
-
-**Key Capabilities:**
-
-- Command and query separation
-- Pipeline behaviors for cross-cutting concerns
-- Request/response mediation
-- Asynchronous processing support
 
 ### [🌐 MVC Controllers](mvc-controllers.md)
 
@@ -49,17 +29,6 @@ Flexible data access patterns supporting multiple storage backends including Mon
 - Transaction support
 
 ## 🔄 Event & Integration Features
-
-### [📨 Event Sourcing](event-sourcing.md)
-
-Complete event sourcing implementation with event stores, projections, and replay capabilities. Supports CloudEvents standard for interoperability.
-
-**Key Capabilities:**
-
-- Event store implementation
-- Event replay and projections
-- CloudEvents integration
-- Snapshot support
 
 ### [📊 Mermaid Diagrams](mermaid-diagrams.md)
 
@@ -106,17 +75,6 @@ Advanced object-to-object mapping with convention-based property matching, custo
 - Custom mapping configurations
 - Type conversion and validation
 - Mapping profiles and reusable configurations
-
-### [🔄 Reactive Programming](reactive-programming.md)
-
-Reactive programming capabilities using Observable patterns with RxPY integration for building event-driven, responsive applications.
-
-**Key Capabilities:**
-
-- Observable streams and event processing
-- AsyncRx integration for async/await patterns
-- Background service integration
-- Real-time data flow management
 
 ## 🚀 Enhanced Integration Features
 
@@ -201,44 +159,45 @@ graph TB
     end
 
     subgraph "💼 Application Layer"
-        CQRS[CQRS & Mediation]
         Watcher[Watcher Patterns]
+        Validation[Model Validation]
     end
 
     subgraph "🏛️ Domain Layer"
-        Events[Event Sourcing]
         Resources[Resource Patterns]
+        Mapping[Object Mapping]
     end
 
     subgraph "🔌 Infrastructure Layer"
-        DI[Dependency Injection]
         Data[Data Access]
         Diagrams[Mermaid Diagrams]
+        Redis[Redis Cache]
+        HTTP[HTTP Client]
+        Background[Background Tasks]
     end
 
-    MVC --> CQRS
-    CQRS --> Events
-    CQRS --> Data
-    Watcher --> Events
+    MVC --> Watcher
+    MVC --> Data
     Watcher --> Resources
+    Mapping --> Data
 
-    DI -.-> MVC
-    DI -.-> CQRS
-    DI -.-> Data
+    Redis -.-> Data
+    HTTP -.-> MVC
+    Background -.-> Watcher
 
     style MVC fill:#e3f2fd
-    style CQRS fill:#f3e5f5
-    style Events fill:#e8f5e8
-    style DI fill:#fff3e0
+    style Watcher fill:#f3e5f5
+    style Resources fill:#e8f5e8
+    style Data fill:#fff3e0
 ```
 
 ## 🚀 Getting Started
 
-1. **Start with [Dependency Injection](dependency-injection.md)** - Foundation for all other features
-2. **Add [CQRS & Mediation](cqrs-mediation.md)** - Core application patterns
-3. **Implement [MVC Controllers](mvc-controllers.md)** - API layer development
-4. **Choose [Data Access](data-access.md)** - Persistence strategy
-5. **Enhance with specialized features** - Event sourcing, watchers, etc.
+1. **Start with [📖 Architecture Patterns](../patterns/)** - Foundation patterns (DI, CQRS, etc.)
+2. **Implement [MVC Controllers](mvc-controllers.md)** - API layer development
+3. **Choose [Data Access](data-access.md)** - Persistence strategy
+4. **Add [Object Mapping](object-mapping.md)** - Data transformation
+5. **Enhance with specialized features** - Caching, validation, watchers, etc.
 
 ## 📚 Related Documentation
 

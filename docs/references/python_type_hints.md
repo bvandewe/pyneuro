@@ -812,7 +812,7 @@ class Order:
 - [Python Generic Types Reference](python_generic_types.md) - Deep dive into generics and type variables
 - [Python Object-Oriented Programming](python_object_oriented.md) - Classes, inheritance, and composition
 - [Python Modular Code](python_modular_code.md) - Module organization and import patterns
-- [CQRS & Mediation](../features/cqrs-mediation.md) - Type-safe command/query patterns
+- [CQRS & Mediation](../patterns/cqrs.md) - Type-safe command/query patterns
 - [MVC Controllers](../features/mvc-controllers.md) - Type-safe API development
 
 ## 📚 Further Reading

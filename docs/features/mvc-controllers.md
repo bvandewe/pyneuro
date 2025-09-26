@@ -467,6 +467,8 @@ class ReportsController(ControllerBase):
 ### Request Validation and DTOs
 
 Comprehensive validation for pizzeria data:
+
+```python
 """Get users with filtering and pagination"""
 
         query = GetUsersQuery(
@@ -478,8 +480,7 @@ Comprehensive validation for pizzeria data:
 
         result = await self.mediator.execute_async(query)
         return self.process(result)
-
-````
+```
 
 ### Request Body Validation
 
@@ -513,7 +514,7 @@ class UsersController(ControllerBase):
         command = self.mapper.map(create_user_dto, CreateUserCommand)
         result = await self.mediator.execute_async(command)
         return self.process(result)
-````
+```
 
 ### File Uploads
 
@@ -685,6 +686,8 @@ app.add_middleware(ExceptionHandlingMiddleware, service_provider=app.services)
 ```
 
 ## 🔐 Authentication & Authorization
+
+For comprehensive OAuth 2.0, OpenID Connect, and JWT implementation with controllers, see the **[OAuth, OIDC & JWT Reference](../references/oauth-oidc-jwt.md)**.
 
 ### Dependency Injection for Auth
 

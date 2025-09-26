@@ -34,7 +34,7 @@ sequenceDiagram
     participant H as Handler
     participant R as Repository
     participant D as Database
-    
+
     C->>M: Send Command
     M->>H: Route to Handler
     H->>R: Query/Save Data
@@ -57,26 +57,26 @@ classDiagram
         +Mapper mapper
         +process(result) Response
     }
-    
+
     class CommandHandler {
         <<abstract>>
         +handle_async(command) OperationResult
     }
-    
+
     class Entity {
         +str id
         +datetime created_at
         +raise_event(event)
         +get_uncommitted_events()
     }
-    
+
     class Repository {
         <<interface>>
         +save_async(entity)
         +get_by_id_async(id)
         +delete_async(id)
     }
-    
+
     Controller --> CommandHandler : uses
     CommandHandler --> Entity : manipulates
     CommandHandler --> Repository : persists through
@@ -93,35 +93,35 @@ graph TB
         B[DTOs]
         C[Middleware]
     end
-    
+
     subgraph "💼 Application Layer"
         D[Commands/Queries]
         E[Handlers]
         F[Services]
         G[Mediator]
     end
-    
+
     subgraph "🏛️ Domain Layer"
         H[Entities]
         I[Value Objects]
         J[Domain Events]
         K[Business Rules]
     end
-    
+
     subgraph "🔌 Integration Layer"
         L[Repositories]
         M[External APIs]
         N[Database]
         O[Event Bus]
     end
-    
+
     A --> G
     G --> E
     E --> H
     E --> L
     L --> N
     E --> O
-    
+
     style A fill:#e1f5fe
     style G fill:#f3e5f5
     style H fill:#e8f5e8
@@ -142,7 +142,7 @@ stateDiagram-v2
     Approved --> Published : publish()
     Published --> Archived : archive()
     Archived --> [*]
-    
+
     state Submitted {
         [*] --> PendingReview
         PendingReview --> InReview : assign_reviewer()
@@ -183,11 +183,11 @@ graph TD
     C --> D[Business Logic]
     D --> E[Data Access]
     E --> F[Response]
-    
+
     classDef apiStyle fill:#e3f2fd,stroke:#1976d2,stroke-width:2px
     classDef processStyle fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
     classDef dataStyle fill:#e8f5e8,stroke:#388e3c,stroke-width:2px
-    
+
     class A,F apiStyle
     class B,C,D processStyle
     class E dataStyle
@@ -214,8 +214,8 @@ When adding Mermaid diagrams to documentation:
 
 ## 🔗 Related Documentation
 
-- [CQRS & Mediation](../features/cqrs-mediation.md)
-- [Dependency Injection](../features/dependency-injection.md)
+- [CQRS & Mediation](../patterns/cqrs.md)
+- [Dependency Injection](../patterns/dependency-injection.md)
 - [Sample Applications](../samples/openbank.md)
 
 ## 📚 External Resources

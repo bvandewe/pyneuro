@@ -93,6 +93,7 @@ In just 3 minutes, you've created:
 - ✅ A working FastAPI application with Neuroglia
 - ✅ Automatic API documentation (Swagger UI)
 - ✅ Controller-based routing with clean architecture
+- ✅ Automatic module discovery
 - ✅ Dependency injection container setup
 
 ## 🔄 Next Steps
@@ -109,7 +110,7 @@ Now that you have the basics working:
 This hello world example demonstrates:
 
 - **[Controller Pattern](../patterns/clean-architecture.md#api-layer)** - Web request handling
-- **[Dependency Injection](../features/dependency-injection.md)** - Service container setup
+- **[Dependency Injection](../patterns/dependency-injection.md)** - Service container setup
 - **[WebApplicationBuilder](../features/mvc-controllers.md)** - Application bootstrapping
 
 ---

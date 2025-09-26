@@ -8,11 +8,10 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum
-from typing import Any, Dict, Generic, List, Optional, TypeVar
+from typing import Any, Generic, Optional, TypeVar
 from uuid import uuid4
 
 from neuroglia.data.abstractions import Entity
-
 
 # Type variables for resource generics
 TResourceSpec = TypeVar("TResourceSpec", bound="ResourceSpec")
@@ -23,24 +22,24 @@ TState = TypeVar("TState", bound=Enum)
 @dataclass
 class ResourceMetadata:
     """Metadata for a resource, similar to Kubernetes metadata."""
-    
+
     name: str
     namespace: str = "default"
     uid: str = field(default_factory=lambda: str(uuid4()))
     creation_timestamp: datetime = field(default_factory=datetime.now)
-    labels: Dict[str, str] = field(default_factory=dict)
-    annotations: Dict[str, str] = field(default_factory=dict)
+    labels: dict[str, str] = field(default_factory=dict)
+    annotations: dict[str, str] = field(default_factory=dict)
     generation: int = 0
     resource_version: str = "1"
-    
+
     def add_label(self, key: str, value: str) -> None:
         """Add a label to the resource metadata."""
         self.labels[key] = value
-    
+
     def add_annotation(self, key: str, value: str) -> None:
         """Add an annotation to the resource metadata."""
         self.annotations[key] = value
-    
+
     def increment_generation(self) -> None:
         """Increment the generation when spec changes."""
         self.generation += 1
@@ -49,20 +48,20 @@ class ResourceMetadata:
 
 class ResourceSpec(ABC):
     """Base class for resource specifications (desired state)."""
-    
+
     @abstractmethod
-    def validate(self) -> List[str]:
+    def validate(self) -> list[str]:
         """Validate the resource specification. Returns list of validation errors."""
         raise NotImplementedError()
 
 
 class ResourceStatus(ABC):
     """Base class for resource status (current state)."""
-    
+
     def __init__(self):
         self.observed_generation: int = 0
         self.last_updated: datetime = datetime.now()
-        
+
     def update_observed_generation(self, generation: int) -> None:
         """Update the observed generation when status is reconciled."""
         self.observed_generation = generation
@@ -72,33 +71,33 @@ class ResourceStatus(ABC):
 @dataclass
 class StateTransition(Generic[TState]):
     """Represents a state transition in a state machine."""
-    
+
     from_state: TState
     to_state: TState
     condition: Optional[str] = None
     action: Optional[str] = None
-    
+
     def __str__(self) -> str:
         return f"{self.from_state} -> {self.to_state}"
 
 
 class StateMachine(Generic[TState], ABC):
     """Abstract base class for resource state machines."""
-    
-    def __init__(self, initial_state: TState, transitions: Dict[TState, List[TState]]):
+
+    def __init__(self, initial_state: TState, transitions: dict[TState, list[TState]]):
         self.initial_state = initial_state
         self.transitions = transitions
-        
+
     @abstractmethod
     def can_transition_to(self, current: TState, target: TState) -> bool:
         """Check if transition from current to target state is valid."""
         raise NotImplementedError()
-        
+
     @abstractmethod
-    def get_valid_transitions(self, current: TState) -> List[TState]:
+    def get_valid_transitions(self, current: TState) -> list[TState]:
         """Get all valid transitions from the current state."""
         raise NotImplementedError()
-        
+
     def is_terminal_state(self, state: TState) -> bool:
         """Check if the state is terminal (no outgoing transitions)."""
         return len(self.transitions.get(state, [])) == 0
@@ -106,14 +105,16 @@ class StateMachine(Generic[TState], ABC):
 
 class Resource(Generic[TResourceSpec, TResourceStatus], Entity[str], ABC):
     """Base class for all resources with spec, status, and state machine."""
-    
-    def __init__(self,
-                 api_version: str,
-                 kind: str,
-                 metadata: ResourceMetadata,
-                 spec: TResourceSpec,
-                 status: Optional[TResourceStatus] = None,
-                 state_machine: Optional[StateMachine] = None):
+
+    def __init__(
+        self,
+        api_version: str,
+        kind: str,
+        metadata: ResourceMetadata,
+        spec: TResourceSpec,
+        status: Optional[TResourceStatus] = None,
+        state_machine: Optional[StateMachine] = None,
+    ):
         super().__init__()
         self.api_version = api_version
         self.kind = kind
@@ -121,39 +122,39 @@ class Resource(Generic[TResourceSpec, TResourceStatus], Entity[str], ABC):
         self.spec = spec
         self.status = status
         self.state_machine = state_machine
-        
+
         # Use metadata.uid as the entity ID
         self.id = metadata.uid
-    
-    def validate_spec(self) -> List[str]:
+
+    def validate_spec(self) -> list[str]:
         """Validate the resource specification."""
         return self.spec.validate() if self.spec else []
-    
+
     def needs_reconciliation(self) -> bool:
         """Check if resource needs reconciliation (spec changed)."""
         if not self.status:
             return True
         return self.metadata.generation > self.status.observed_generation
-    
+
     def update_spec(self, new_spec: TResourceSpec) -> None:
         """Update the resource specification and increment generation."""
         self.spec = new_spec
         self.metadata.increment_generation()
-    
-    def to_dict(self) -> Dict[str, Any]:
+
+    def to_dict(self) -> dict[str, Any]:
         """Convert resource to dictionary representation."""
         return {
             "apiVersion": self.api_version,
             "kind": self.kind,
             "metadata": self.metadata.__dict__,
             "spec": self.spec.__dict__ if self.spec else None,
-            "status": self.status.__dict__ if self.status else None
+            "status": self.status.__dict__ if self.status else None,
         }
 
 
 class ResourceEvent(ABC):
     """Base class for resource-related events."""
-    
+
     def __init__(self, resource_uid: str, event_time: Optional[datetime] = None):
         self.resource_uid = resource_uid
         self.event_time = event_time or datetime.now()
@@ -161,12 +162,12 @@ class ResourceEvent(ABC):
 
 class ResourceController(Generic[TResourceSpec, TResourceStatus], ABC):
     """Abstract base class for resource controllers."""
-    
+
     @abstractmethod
     async def reconcile(self, resource: Resource[TResourceSpec, TResourceStatus]) -> None:
         """Reconcile the resource to its desired state."""
         raise NotImplementedError()
-    
+
     @abstractmethod
     async def finalize(self, resource: Resource[TResourceSpec, TResourceStatus]) -> bool:
         """Finalize resource cleanup. Returns True if cleanup is complete."""
@@ -175,14 +176,12 @@ class ResourceController(Generic[TResourceSpec, TResourceStatus], ABC):
 
 class ResourceWatcher(Generic[TResourceSpec, TResourceStatus], ABC):
     """Abstract base class for resource watchers."""
-    
+
     @abstractmethod
-    async def watch(self, 
-                   namespace: Optional[str] = None,
-                   label_selector: Optional[Dict[str, str]] = None) -> None:
+    async def watch(self, namespace: Optional[str] = None, label_selector: Optional[dict[str, str]] = None) -> None:
         """Start watching for resource changes."""
         raise NotImplementedError()
-    
+
     @abstractmethod
     async def stop_watching(self) -> None:
         """Stop watching for resource changes."""
