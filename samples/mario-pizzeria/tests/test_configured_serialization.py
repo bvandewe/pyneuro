@@ -1,19 +1,20 @@
 #!/usr/bin/env python3
 """
-Example showing how to configure JsonSerializer with TypeRegistry for enum discovery
+Test showing how to configure JsonSerializer with TypeRegistry for enum discovery
+in Mario Pizzeria domain context
 """
 
 import asyncio
 import sys
 from pathlib import Path
 
-# Add the project root to Python path
-project_root = Path(__file__).parent.parent.parent.parent
-sys.path.insert(0, str(project_root / "src"))
-sys.path.insert(0, str(Path(__file__).parent))
-
 from neuroglia.core.type_registry import get_type_registry, register_types_modules
 from neuroglia.serialization.json import JsonSerializer
+
+# Add the project root to Python path
+project_root = Path(__file__).parent.parent.parent.parent.parent
+sys.path.insert(0, str(project_root / "src"))
+sys.path.insert(0, str(Path(__file__).parent.parent))
 
 
 async def test_configured_serialization():
@@ -28,7 +29,6 @@ async def test_configured_serialization():
         # Register the modules where our enums are located
         type_modules = [
             "domain.entities.enums",  # Mario Pizzeria enum location
-            "test_flexible_discovery",  # Our test enums location
         ]
 
         # Register modules globally
@@ -43,8 +43,8 @@ async def test_configured_serialization():
         cached_enums = type_registry.get_cached_enum_types()
         print(f"✅ Discovered enum types: {list(cached_enums.keys())}")
 
-        # Test 1: Mario Pizzeria enums
-        print(f"\n📋 Step 2: Testing Mario Pizzeria enum deserialization...")
+        # Test Mario Pizzeria enums
+        print("\n📋 Step 2: Testing Mario Pizzeria enum deserialization...")
         from decimal import Decimal
 
         from domain.entities import Pizza, PizzaSize
@@ -62,36 +62,15 @@ async def test_configured_serialization():
         deserialized_pizza = serializer.deserialize_from_text(json_text, Pizza)
         print(f"✅ Deserialized Pizza size: {deserialized_pizza.size} (type: {type(deserialized_pizza.size)})")
 
-        # Test 2: Local test enums
-        print(f"\n📋 Step 3: Testing local enum deserialization...")
-        from test_flexible_discovery import OrderStatus, Priority, TestOrder
-
-        original_order = TestOrder("order-456", Decimal("299.99"), OrderStatus.PENDING, Priority.URGENT)
-
-        json_text = serializer.serialize_to_text(original_order)
-        print(f"✅ Serialized Order: {json_text}")
-
-        deserialized_order = serializer.deserialize_from_text(json_text, TestOrder)
-        print(f"✅ Deserialized Order status: {deserialized_order.status} (type: {type(deserialized_order.status)})")
-        print(f"✅ Deserialized Order priority: {deserialized_order.priority} (type: {type(deserialized_order.priority)})")
-
         # Validation
         validations = [
             (
                 "Pizza Size",
                 deserialized_pizza.size == PizzaSize.LARGE and isinstance(deserialized_pizza.size, PizzaSize),
             ),
-            (
-                "Order Status",
-                deserialized_order.status == OrderStatus.PENDING and isinstance(deserialized_order.status, OrderStatus),
-            ),
-            (
-                "Order Priority",
-                deserialized_order.priority == Priority.URGENT and isinstance(deserialized_order.priority, Priority),
-            ),
         ]
 
-        print(f"\n📊 Validation Results:")
+        print("\n📊 Validation Results:")
         all_passed = True
         for field, result in validations:
             status = "✅" if result else "❌"
@@ -100,9 +79,9 @@ async def test_configured_serialization():
                 all_passed = False
 
         if all_passed:
-            print(f"\n🎉 All configured type discovery tests passed!")
+            print("\n🎉 All configured type discovery tests passed!")
         else:
-            print(f"\n❌ Some tests failed.")
+            print("\n❌ Some tests failed.")
 
         print("=" * 65)
 

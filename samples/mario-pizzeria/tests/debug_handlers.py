@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Debug script to test QueryHandler discovery"""
+"""Debug script to test QueryHandler discovery in Mario Pizzeria"""
 
 import sys
 from pathlib import Path
@@ -9,14 +9,15 @@ project_root = Path(__file__).parent.parent.parent.parent.parent
 sys.path.insert(0, str(project_root / "src"))
 
 # Add current directory to path
-sys.path.insert(0, str(Path(__file__).parent))
+sys.path.insert(0, str(Path(__file__).parent.parent))
 
-print("Testing QueryHandler discovery...")
+print("Testing Mario Pizzeria QueryHandler discovery...")
 
 try:
-    from neuroglia.core import ModuleLoader, TypeFinder
-    from neuroglia.mediation.mediator import QueryHandler, CommandHandler
     import inspect
+
+    from neuroglia.core import ModuleLoader, TypeFinder
+    from neuroglia.mediation.mediator import CommandHandler, QueryHandler
 
     # Load the queries module
     print("Loading application.queries module...")
@@ -37,12 +38,7 @@ try:
 
     # Test the exact predicate used in mediation (FIXED VERSION)
     print("\nTesting QueryHandler predicate...")
-    predicate = lambda cls: (
-        inspect.isclass(cls)
-        and (not hasattr(cls, "__parameters__") or len(cls.__parameters__) < 1)
-        and issubclass(cls, QueryHandler)
-        and cls != QueryHandler
-    )
+    predicate = lambda cls: (inspect.isclass(cls) and (not hasattr(cls, "__parameters__") or len(cls.__parameters__) < 1) and issubclass(cls, QueryHandler) and cls != QueryHandler)
 
     query_handlers = TypeFinder.get_types(queries_module, predicate, include_sub_modules=True)
     print(f"QueryHandlers found: {query_handlers}")
@@ -50,16 +46,9 @@ try:
     # Test command predicate for comparison
     print("\nLoading application.commands module...")
     commands_module = ModuleLoader.load("application.commands")
-    command_predicate = lambda cls: (
-        inspect.isclass(cls)
-        and (not hasattr(cls, "__parameters__") or len(cls.__parameters__) < 1)
-        and issubclass(cls, CommandHandler)
-        and cls != CommandHandler
-    )
+    command_predicate = lambda cls: (inspect.isclass(cls) and (not hasattr(cls, "__parameters__") or len(cls.__parameters__) < 1) and issubclass(cls, CommandHandler) and cls != CommandHandler)
 
-    command_handlers = TypeFinder.get_types(
-        commands_module, command_predicate, include_sub_modules=True
-    )
+    command_handlers = TypeFinder.get_types(commands_module, command_predicate, include_sub_modules=True)
     print(f"CommandHandlers found: {command_handlers}")
 
 except Exception as e:

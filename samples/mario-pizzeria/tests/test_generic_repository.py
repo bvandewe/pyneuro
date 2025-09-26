@@ -8,16 +8,16 @@ import sys
 from pathlib import Path
 
 # Add the project root to Python path so we can import neuroglia
-project_root = Path(__file__).parent.parent.parent.parent
+project_root = Path(__file__).parent.parent.parent.parent.parent
 sys.path.insert(0, str(project_root / "src"))
 
 # Add mario-pizzeria to path for domain imports
-sys.path.insert(0, str(Path(__file__).parent))
+sys.path.insert(0, str(Path(__file__).parent.parent))
 
 
 async def test_generic_repository():
     """Test the generic FileSystemRepository implementation"""
-    print("🧪 Testing Generic FileSystemRepository Implementation")
+    print("🧪 Testing Mario Pizzeria Generic FileSystemRepository Implementation")
     print("=" * 60)
 
     try:
@@ -43,7 +43,7 @@ async def test_generic_repository():
             print(f"   - {pizza.name} ({pizza.size.value}) - ${pizza.total_price}")
 
         # Test getting pizza by name
-        print(f"\n🔍 Testing get_by_name_async('Margherita')...")
+        print("\n🔍 Testing get_by_name_async('Margherita')...")
         margherita = await pizza_repo.get_by_name_async("Margherita")
         if margherita:
             print(f"✅ Found Margherita: {margherita.name}, Size: {margherita.size.value}, Price: ${margherita.total_price}")
@@ -52,14 +52,14 @@ async def test_generic_repository():
             print("❌ Margherita not found")
 
         # Test getting pizzas by size
-        print(f"\n📏 Testing get_by_size_async(PizzaSize.LARGE)...")
+        print("\n📏 Testing get_by_size_async(PizzaSize.LARGE)...")
         large_pizzas = await pizza_repo.get_by_size_async(PizzaSize.LARGE)
         print(f"✅ Found {len(large_pizzas)} large pizzas:")
         for pizza in large_pizzas:
             print(f"   - {pizza.name}")
 
         # Test creating a new pizza
-        print(f"\n➕ Testing add_async() with new pizza...")
+        print("\n➕ Testing add_async() with new pizza...")
         hawaiian = Pizza("Hawaiian", Decimal("18.99"), PizzaSize.LARGE, "Ham and pineapple pizza")
         hawaiian.toppings = ["tomato sauce", "mozzarella", "ham", "pineapple"]
 
@@ -67,7 +67,7 @@ async def test_generic_repository():
         print(f"✅ Added Hawaiian pizza with ID: {hawaiian.id}")
 
         # Verify the new pizza was added
-        print(f"\n🔍 Testing get_async() with new pizza ID...")
+        print("\n🔍 Testing get_async() with new pizza ID...")
         retrieved_hawaiian = await pizza_repo.get_async(hawaiian.id)
         if retrieved_hawaiian:
             print(f"✅ Retrieved Hawaiian: {retrieved_hawaiian.name}, Price: ${retrieved_hawaiian.total_price}")
@@ -75,14 +75,14 @@ async def test_generic_repository():
             print(f"❌ Could not retrieve Hawaiian pizza with ID: {hawaiian.id}")
 
         # Test search by toppings
-        print(f"\n🔍 Testing search_by_toppings_async(['pineapple'])...")
+        print("\n🔍 Testing search_by_toppings_async(['pineapple'])...")
         pineapple_pizzas = await pizza_repo.search_by_toppings_async(["pineapple"])
         print(f"✅ Found {len(pineapple_pizzas)} pizzas with pineapple:")
         for pizza in pineapple_pizzas:
             print(f"   - {pizza.name}")
 
         # Test the file structure created by FileSystemRepository
-        print(f"\n📁 Checking file structure created by FileSystemRepository...")
+        print("\n📁 Checking file structure created by FileSystemRepository...")
         menu_dir = test_data_dir / "menu"
         if menu_dir.exists():
             print(f"✅ Menu directory created: {menu_dir}")
@@ -91,7 +91,7 @@ async def test_generic_repository():
                 if file.is_file():
                     print(f"   📄 {file.relative_to(menu_dir)}")
 
-        print(f"\n🎉 All tests completed successfully!")
+        print("\n🎉 All tests completed successfully!")
         print("=" * 60)
 
     except Exception as e:

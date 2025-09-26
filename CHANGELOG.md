@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.0] - 2025-09-26
+
 ### Added
 
 - **Configurable Type Discovery**: Enhanced serialization with flexible domain module scanning
@@ -19,6 +21,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - **Framework Agnostic**: No hardcoded domain patterns, fully configurable for any project structure
   - **Generic FileSystemRepository**: Complete repository pattern using framework's JsonSerializer for persistence
   - **Enhanced Mario Pizzeria**: Updated sample application demonstrating configurable type discovery patterns
+
+- **Framework Configuration Examples**: Comprehensive JsonSerializer and TypeRegistry configuration patterns
+
+  - **Documentation Examples**: Complete markdown guide with configuration patterns for different project structures
+  - **Reusable Configuration Functions**: Python module with preset configurations for DDD, flat, and microservice architectures
+  - **Project Structure Support**: Examples for domain-driven design, flat structure, and microservice patterns
+  - **Dynamic Discovery Patterns**: Advanced configuration examples for runtime type discovery
+  - **Performance Best Practices**: Guidance on efficient type registration and caching strategies
 
 - **Reference Documentation**: Comprehensive Python language and framework reference guides
 
@@ -551,6 +561,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `test_documentation_report.py` - Coverage analysis and documentation
 
 ### Changed
+
+- **Sample Code Organization**: Reorganized test files and examples for better maintainability
+
+  - **Mario Pizzeria Tests**: Moved domain-specific tests to `samples/mario-pizzeria/tests/` directory
+  - **Framework Tests**: Relocated generic tests to `tests/cases/` for proper framework testing
+  - **Configuration Examples**: Moved configuration patterns to `docs/examples/` for reusability
+  - **Import Path Updates**: Fixed all import statements for relocated test files
+  - **Directory Cleanup**: Removed temporary test data and organized file structure
+  - **Documentation Integration**: Added examples section to MkDocs navigation
 
 - **Import Resolution**: Fixed circular import issues throughout the framework
 
