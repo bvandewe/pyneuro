@@ -2,15 +2,20 @@
 
 from datetime import datetime, timezone
 from decimal import Decimal
-from typing import List, Optional
+from typing import Optional
 from uuid import uuid4
 
+from api.dtos import OrderDto
+
 from neuroglia.data.abstractions import Entity
+from neuroglia.mapping.mapper import map_from, map_to
 
 from .enums import OrderStatus
 from .pizza import Pizza
 
 
+@map_from(OrderDto)
+@map_to(OrderDto)
 class Order(Entity[str]):
     """Order entity with pizzas and status management"""
 
@@ -18,7 +23,7 @@ class Order(Entity[str]):
         super().__init__()
         self.id = str(uuid4())
         self.customer_id = customer_id
-        self.pizzas: List[Pizza] = []
+        self.pizzas: list[Pizza] = []
         self.status = OrderStatus.PENDING
         self.order_time = datetime.now(timezone.utc)
         self.confirmed_time: Optional[datetime] = None

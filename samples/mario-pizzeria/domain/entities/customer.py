@@ -3,15 +3,18 @@
 from typing import Optional
 from uuid import uuid4
 
+from api.dtos import CustomerDto
+
 from neuroglia.data.abstractions import Entity
+from neuroglia.mapping.mapper import map_from, map_to
 
 
+@map_from(CustomerDto)
+@map_to(CustomerDto)
 class Customer(Entity[str]):
     """Customer entity with contact information"""
 
-    def __init__(
-        self, name: str, email: str, phone: Optional[str] = None, address: Optional[str] = None
-    ):
+    def __init__(self, name: str, email: str, phone: Optional[str] = None, address: Optional[str] = None):
         super().__init__()
         self.id = str(uuid4())
         self.name = name
@@ -19,9 +22,7 @@ class Customer(Entity[str]):
         self.phone = phone
         self.address = address
 
-    def update_contact_info(
-        self, phone: Optional[str] = None, address: Optional[str] = None
-    ) -> None:
+    def update_contact_info(self, phone: Optional[str] = None, address: Optional[str] = None) -> None:
         """Update customer contact information"""
         if phone is not None:
             self.phone = phone

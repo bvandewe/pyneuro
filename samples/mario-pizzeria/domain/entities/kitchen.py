@@ -1,17 +1,21 @@
 """Kitchen entity for Mario's Pizzeria domain"""
 
-from typing import List
+
+from api.dtos import KitchenStatusDto
 
 from neuroglia.data.abstractions import Entity
+from neuroglia.mapping.mapper import map_from, map_to
 
 
+@map_from(KitchenStatusDto)
+@map_to(KitchenStatusDto)
 class Kitchen(Entity[str]):
     """Kitchen state and capacity management"""
 
     def __init__(self, max_concurrent_orders: int = 3):
         super().__init__()
         self.id = "kitchen"  # Singleton kitchen
-        self.active_orders: List[str] = []  # Order IDs currently being prepared
+        self.active_orders: list[str] = []  # Order IDs currently being prepared
         self.max_concurrent_orders = max_concurrent_orders
         self.total_orders_processed = 0
 

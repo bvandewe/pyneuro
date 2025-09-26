@@ -1,27 +1,30 @@
 """Pizza entity for Mario's Pizzeria domain"""
 
 from decimal import Decimal
-from typing import List, Optional
+from typing import Optional
 from uuid import uuid4
 
+from api.dtos import PizzaDto
+
 from neuroglia.data.abstractions import Entity
+from neuroglia.mapping.mapper import map_from, map_to
 
 from .enums import PizzaSize
 
 
+@map_from(PizzaDto)
+@map_to(PizzaDto)
 class Pizza(Entity[str]):
     """Pizza entity with pricing and toppings"""
 
-    def __init__(
-        self, name: str, base_price: Decimal, size: PizzaSize, description: Optional[str] = None
-    ):
+    def __init__(self, name: str, base_price: Decimal, size: PizzaSize, description: Optional[str] = None):
         super().__init__()
         self.id = str(uuid4())
         self.name = name
         self.base_price = base_price
         self.size = size
         self.description = description or ""
-        self.toppings: List[str] = []
+        self.toppings: list[str] = []
 
     @property
     def size_multiplier(self) -> Decimal:
