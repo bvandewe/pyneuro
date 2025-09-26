@@ -2,24 +2,34 @@
 Integration tests for Mario's Pizzeria API controllers
 """
 
-import pytest
-import tempfile
-import shutil
 import json
+import os
+import shutil
+import sys
+import tempfile
 from pathlib import Path
+
+import pytest
 from fastapi.testclient import TestClient
 
-import sys
+# Get absolute paths
+current_dir = Path(__file__).parent
+root_dir = current_dir.parent.parent.parent
+src_dir = root_dir / "src"
+samples_dir = root_dir / "samples" / "mario-pizzeria"
 
-# Add project root to path
-project_root = Path(__file__).parent.parent.parent.parent.parent / "src"
-sys.path.insert(0, str(project_root))
+# Add to Python path
+sys.path.insert(0, str(src_dir))
+sys.path.insert(0, str(samples_dir))
 
-# Add samples to path
-samples_root = Path(__file__).parent.parent.parent.parent.parent / "samples" / "mario-pizzeria"
-sys.path.insert(0, str(samples_root))
+# Change to samples directory for import
+original_cwd = os.getcwd()
+os.chdir(str(samples_dir))
 
-from main import create_pizzeria_app
+try:
+    from main import create_pizzeria_app
+finally:
+    os.chdir(original_cwd)
 
 
 @pytest.fixture
@@ -86,9 +96,11 @@ class TestOrdersController:
         }
 
         # Act
-        response = test_client.post("/orders", json=order_data)
+        response = test_client.post("/api/orders/", json=order_data)
 
         # Assert
+        print(f"Response status: {response.status_code}")
+        print(f"Response content: {response.text}")
         assert response.status_code == 201
         data = response.json()
         assert "id" in data

@@ -2,12 +2,16 @@
 
 from dataclasses import dataclass
 
-from neuroglia.mediation import Command, CommandHandler
+from api.dtos import OrderDto, PizzaDto
+from domain.repositories import (
+    ICustomerRepository,
+    IKitchenRepository,
+    IOrderRepository,
+)
+
 from neuroglia.core import OperationResult
 from neuroglia.mapping import Mapper
-
-from api.dtos import OrderDto
-from domain.repositories import IOrderRepository, IKitchenRepository
+from neuroglia.mediation import Command, CommandHandler
 
 
 @dataclass
@@ -24,10 +28,12 @@ class StartCookingCommandHandler(CommandHandler[StartCookingCommand, OperationRe
         self,
         order_repository: IOrderRepository,
         kitchen_repository: IKitchenRepository,
+        customer_repository: ICustomerRepository,
         mapper: Mapper,
     ):
         self.order_repository = order_repository
         self.kitchen_repository = kitchen_repository
+        self.customer_repository = customer_repository
         self.mapper = mapper
 
     async def handle_async(self, request: StartCookingCommand) -> OperationResult[OrderDto]:
@@ -41,19 +47,37 @@ class StartCookingCommandHandler(CommandHandler[StartCookingCommand, OperationRe
             kitchen = await self.kitchen_repository.get_kitchen_state_async()
 
             # Check kitchen capacity
-            if kitchen.is_busy:
+            if kitchen.is_at_capacity:
                 return self.bad_request("Kitchen is at capacity")
 
             # Start cooking order
             order.start_cooking()
-            kitchen.start_cooking_order(order.id)
+            kitchen.start_order(order.id)
 
             # Save changes
             await self.order_repository.update_async(order)
             await self.kitchen_repository.update_kitchen_state_async(kitchen)
 
-            # Map to DTO and return
-            order_dto = self.mapper.map(order, OrderDto)
+            # Get customer details for DTO
+            customer = await self.customer_repository.get_async(order.customer_id)
+
+            # Create OrderDto manually
+            order_dto = OrderDto(
+                id=order.id,
+                customer_name=customer.name if customer else "Unknown",
+                customer_phone=customer.phone if customer else "Unknown",
+                customer_address=customer.address if customer else "Unknown",
+                pizzas=[self.mapper.map(pizza, PizzaDto) for pizza in order.pizzas],
+                status=order.status.value,
+                order_time=order.order_time,
+                confirmed_time=order.confirmed_time,
+                cooking_started_time=order.cooking_started_time,
+                actual_ready_time=order.actual_ready_time,
+                estimated_ready_time=order.estimated_ready_time,
+                notes=order.notes,
+                total_amount=order.total_amount,
+                pizza_count=order.pizza_count,
+            )
             return self.ok(order_dto)
 
         except ValueError as e:
