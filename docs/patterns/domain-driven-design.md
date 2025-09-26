@@ -1,9 +1,8 @@
 # 🏛️ Domain Driven Design Pattern
 
-Domain Driven Design (DDD) forms the architectural foundation of the Neuroglia framework, providing core
-abstractions and patterns that enable rich, expressive domain models while maintaining clean separation of concerns.
-This pattern serves as the primary reference for understanding how domain logic flows through the API, Application,
-Domain, and Integration layers.
+Domain Driven Design (DDD) forms the architectural foundation of the Neuroglia framework, providing core abstractions and patterns that enable rich, expressive domain models while maintaining clean separation of concerns.
+
+This pattern serves as the primary reference for understanding how domain logic flows through the API, Application, Domain, and Integration layers.
 
 ## 🎯 Pattern Overview
 
@@ -182,6 +181,523 @@ class PaymentProcessedEvent(DomainEvent[str]):
         self.transaction_id = transaction_id
         self.processed_at = datetime.now()
 ```
+
+## 🏗️ Framework Data Abstractions
+
+### Core Base Classes
+
+The Neuroglia framework provides a comprehensive set of base abstractions that form the foundation of domain-driven design. These abstractions enforce patterns while providing flexibility for different architectural approaches.
+
+```python
+# /src/neuroglia/data/abstractions.py
+from abc import ABC
+from datetime import datetime
+from typing import Generic, List, Type, TypeVar
+
+TKey = TypeVar("TKey")
+"""Represents the generic argument used to specify the type of key to use"""
+
+class Identifiable(Generic[TKey], ABC):
+    """Defines the fundamentals of an object that can be identified based on a unique identifier"""
+    id: TKey
+
+class Entity(Generic[TKey], Identifiable[TKey], ABC):
+    """Represents the abstract class inherited by all entities in the application"""
+
+    def __init__(self) -> None:
+        super().__init__()
+        self.created_at = datetime.now()
+
+    created_at: datetime
+    last_modified: datetime
+
+class VersionedState(ABC):
+    """Represents the abstract class inherited by all versioned states"""
+
+    def __init__(self):
+        self.state_version = 0
+
+    state_version: int = 0
+
+class AggregateState(Generic[TKey], Identifiable[TKey], VersionedState, ABC):
+    """Represents the abstract class inherited by all aggregate root states"""
+
+    def __init__(self):
+        super().__init__()
+
+    id: TKey
+    created_at: datetime
+    last_modified: datetime
+
+class DomainEvent(Generic[TKey], ABC):
+    """Represents the base class inherited by all domain events"""
+
+    def __init__(self, aggregate_id: TKey):
+        self.created_at = datetime.now()
+        self.aggregate_id = aggregate_id
+
+    created_at: datetime
+    aggregate_id: TKey
+    aggregate_version: int
+
+class AggregateRoot(Generic[TState, TKey], Entity[TKey], ABC):
+    """Represents the base class for all aggregate roots"""
+
+    _pending_events: List[DomainEvent]
+
+    def __init__(self):
+        self.state = object.__new__(self.__orig_bases__[0].__args__[0])
+        self.state.__init__()
+        self._pending_events = list[DomainEvent]()
+
+    def id(self):
+        return self.state.id
+
+    state: TState
+
+    def register_event(self, e: TEvent) -> TEvent:
+        """Registers the specified domain event"""
+        if not hasattr(self, "_pending_events"):
+            self._pending_events = list[DomainEvent]()
+        self._pending_events.append(e)
+        e.aggregate_version = self.state.state_version + len(self._pending_events)
+        return e
+
+    def clear_pending_events(self):
+        """Clears all pending domain events"""
+        self._pending_events.clear()
+```
+
+## ⚡ Domain Event Application Mechanism
+
+### Understanding `self.state.on()` and `self.register_event()`
+
+The framework implements a sophisticated event sourcing pattern where domain events serve dual purposes:
+
+1. **State Application**: Events modify aggregate state through the `state.on()` method
+2. **Event Registration**: Events are registered for persistence and external handling via `register_event()`
+
+### Event Flow Architecture
+
+```mermaid
+graph TB
+    subgraph "🎯 Business Operation"
+        A[Business Method Called]
+        B[Validate Business Rules]
+        C[Create Domain Event]
+    end
+
+    subgraph "⚡ Event Processing Pipeline"
+        D[state.on event]
+        E[register_event event]
+        F[Update State Version]
+        G[Add to Pending Events]
+    end
+
+    subgraph "💾 Persistence & Distribution"
+        H[Repository Save]
+        I[Event Store Append]
+        J[Event Bus Publish]
+        K[Integration Events]
+    end
+
+    A --> B
+    B --> C
+    C --> D
+    C --> E
+    D --> F
+    E --> G
+    F --> H
+    G --> I
+    I --> J
+    J --> K
+
+    style D fill:#e8f5e8
+    style E fill:#fff3e0
+    style I fill:#e3f2fd
+```
+
+### Event Application Pattern with Multiple Dispatch
+
+```python
+from multipledispatch import dispatch
+from neuroglia.data.abstractions import AggregateRoot, AggregateState
+
+class BankAccountState(AggregateState[str]):
+    """Aggregate state with event handlers using multiple dispatch"""
+
+    def __init__(self):
+        super().__init__()
+        self.account_number: Optional[str] = None
+        self.owner_name: Optional[str] = None
+        self.balance: Decimal = Decimal("0.00")
+        self.account_type: Optional[str] = None
+        self.is_active: bool = True
+
+    @dispatch(AccountCreatedEvent)
+    def on(self, event: AccountCreatedEvent):
+        """Apply account created event to state"""
+        self.id = event.aggregate_id
+        self.created_at = event.created_at
+        self.account_number = event.account_number
+        self.owner_name = event.owner_name
+        self.balance = event.initial_balance
+        self.account_type = event.account_type
+        self.is_active = True
+
+    @dispatch(MoneyDepositedEvent)
+    def on(self, event: MoneyDepositedEvent):
+        """Apply money deposited event to state"""
+        self.balance = event.new_balance
+        self.last_modified = event.created_at
+
+    @dispatch(MoneyWithdrawnEvent)
+    def on(self, event: MoneyWithdrawnEvent):
+        """Apply money withdrawn event to state"""
+        self.balance = event.new_balance
+        self.last_modified = event.created_at
+
+class BankAccountAggregate(AggregateRoot[BankAccountState, str]):
+    """Aggregate root demonstrating event application pattern"""
+
+    def create_account(self, account_number: str, owner_name: str,
+                      initial_balance: Decimal, account_type: str):
+        """Business operation that applies events to state"""
+
+        # 1. Business rule validation
+        if initial_balance < 0:
+            raise ValueError("Initial balance cannot be negative")
+        if account_type not in ["checking", "savings", "business"]:
+            raise ValueError("Invalid account type")
+
+        # 2. Create domain event
+        event = AccountCreatedEvent(
+            aggregate_id=self.state.id,
+            account_number=account_number,
+            owner_name=owner_name,
+            initial_balance=initial_balance,
+            account_type=account_type,
+        )
+
+        # 3. Apply event to state AND register for persistence
+        self.state.on(event)  # Updates aggregate state immediately
+        self.register_event(event)  # Adds to pending events for persistence
+
+    def deposit_money(self, amount: Decimal, transaction_id: str):
+        """Deposit operation with event-driven state changes"""
+
+        # Business validation
+        if amount <= 0:
+            raise ValueError("Deposit amount must be positive")
+        if not self.state.is_active:
+            raise ValueError("Cannot deposit to inactive account")
+
+        # Calculate new balance
+        new_balance = self.state.balance + amount
+
+        # Create and apply event
+        event = MoneyDepositedEvent(
+            aggregate_id=self.state.id,
+            amount=amount,
+            new_balance=new_balance,
+            transaction_id=transaction_id,
+        )
+
+        self.state.on(event)  # State update via event
+        self.register_event(event)  # Event registration
+```
+
+### Data Flow Breakdown
+
+#### 1. **Event Creation & Application**
+
+```python
+# Business method creates event
+event = MoneyDepositedEvent(aggregate_id=self.id, amount=100.00, ...)
+
+# State application - Uses @dispatch to find the right handler
+self.state.on(event)  # Calls BankAccountState.on(MoneyDepositedEvent)
+
+# Event registration - Adds to pending events collection
+self.register_event(event)  # Adds to _pending_events list
+```
+
+#### 2. **Multiple Dispatch Resolution**
+
+The `@dispatch` decorator from the `multipledispatch` library enables **method overloading** based on argument types:
+
+```python
+@dispatch(AccountCreatedEvent)
+def on(self, event: AccountCreatedEvent):
+    # Handles AccountCreatedEvent specifically
+    self.balance = event.initial_balance
+
+@dispatch(MoneyDepositedEvent)
+def on(self, event: MoneyDepositedEvent):
+    # Handles MoneyDepositedEvent specifically
+    self.balance = event.new_balance
+
+# Python's multiple dispatch automatically routes:
+# state.on(AccountCreatedEvent) -> First method
+# state.on(MoneyDepositedEvent) -> Second method
+```
+
+#### 3. **Event Versioning & Persistence**
+
+```python
+def register_event(self, e: TEvent) -> TEvent:
+    """Framework method that handles event registration"""
+
+    # Add to pending events collection
+    self._pending_events.append(e)
+
+    # Set event version based on current state + pending events
+    e.aggregate_version = self.state.state_version + len(self._pending_events)
+
+    return e
+```
+
+#### 4. **Repository Integration**
+
+When the aggregate is saved through a repository:
+
+```python
+# In CommandHandler or Application Service
+async def handle_async(self, command: DepositMoneyCommand):
+
+    # Load aggregate
+    account = await self.repository.get_by_id_async(command.account_id)
+
+    # Execute business operation (applies events)
+    account.deposit_money(command.amount, command.transaction_id)
+
+    # Save aggregate (persists events and updates state)
+    await self.repository.save_async(account)
+    #                                  ↑
+    # Repository implementation will:
+    # 1. Append events to event store
+    # 2. Update read model/snapshot
+    # 3. Publish events to event bus
+    # 4. Clear pending events
+```
+
+### Event Sourcing vs. Traditional State Management
+
+#### **Traditional Approach** ❌
+
+```python
+def deposit_money(self, amount: Decimal):
+    # Direct state mutation
+    self.balance += amount
+    self.last_modified = datetime.now()
+    # Lost: WHY the balance changed, WHEN exactly, by WHOM
+```
+
+#### **Event Sourcing Approach** ✅
+
+```python
+def deposit_money(self, amount: Decimal, transaction_id: str):
+    # Create event with full context
+    event = MoneyDepositedEvent(
+        aggregate_id=self.id,
+        amount=amount,
+        new_balance=self.balance + amount,
+        transaction_id=transaction_id
+    )
+
+    # Apply event to state (predictable, testable)
+    self.state.on(event)
+
+    # Register for persistence (audit trail, replay capability)
+    self.register_event(event)
+```
+
+### Benefits of the Framework's Event Pattern
+
+1. **🔄 Replay Capability**: States can be reconstructed from events
+2. **📋 Complete Audit Trail**: Every state change is captured with context
+3. **🧪 Testability**: Events are pure data, easy to test
+4. **🎯 Consistency**: All state changes go through the same event pipeline
+5. **🔌 Integration**: Events naturally publish to external systems
+6. **📈 Temporal Queries**: Query state at any point in time
+7. **🛡️ Immutability**: Events are immutable, ensuring data integrity
+
+## 🏦 Complete Real-World Example: OpenBank
+
+### Full Domain Model Implementation
+
+Here's a complete example from the OpenBank sample showing the full data abstraction pattern:
+
+```python
+# Domain Events
+@dataclass
+class BankAccountCreatedDomainEventV1(DomainEvent[str]):
+    """Event raised when a bank account is created"""
+    owner_id: str
+    overdraft_limit: Decimal
+
+@dataclass
+class BankAccountTransactionRecordedDomainEventV1(DomainEvent[str]):
+    """Event raised when a transaction is recorded"""
+    transaction: BankTransactionV1
+
+# Aggregate State with Event Handlers
+@map_to(BankAccountDto)
+class BankAccountStateV1(AggregateState[str]):
+    """Bank account state with multiple dispatch event handlers"""
+
+    def __init__(self):
+        super().__init__()
+        self.transactions: List[BankTransactionV1] = []
+        self.balance: Decimal = Decimal("0.00")
+        self.overdraft_limit: Decimal = Decimal("0.00")
+        self.owner_id: str = ""
+
+    @dispatch(BankAccountCreatedDomainEventV1)
+    def on(self, event: BankAccountCreatedDomainEventV1):
+        """Apply account creation event"""
+        self.id = event.aggregate_id
+        self.created_at = event.created_at
+        self.owner_id = event.owner_id
+        self.overdraft_limit = event.overdraft_limit
+
+    @dispatch(BankAccountTransactionRecordedDomainEventV1)
+    def on(self, event: BankAccountTransactionRecordedDomainEventV1):
+        """Apply transaction event and recompute balance"""
+        self.last_modified = event.created_at
+        self.transactions.append(event.transaction)
+        self._compute_balance()
+
+    def _compute_balance(self):
+        """Recompute balance from all transactions (event sourcing)"""
+        balance = Decimal("0.00")
+        for transaction in self.transactions:
+            if transaction.type in [BankTransactionTypeV1.DEPOSIT.value,
+                                  BankTransactionTypeV1.INTEREST.value]:
+                balance += Decimal(transaction.amount)
+            elif transaction.type == BankTransactionTypeV1.TRANSFER.value:
+                if transaction.to_account_id == self.id:
+                    balance += Decimal(transaction.amount)  # Incoming transfer
+                else:
+                    balance -= Decimal(transaction.amount)  # Outgoing transfer
+            else:  # Withdrawal
+                balance -= Decimal(transaction.amount)
+        self.balance = balance
+
+# Aggregate Root with Business Logic
+class BankAccount(AggregateRoot[BankAccountStateV1, str]):
+    """Bank account aggregate implementing banking business rules"""
+
+    def __init__(self, owner: Person, overdraft_limit: Decimal = Decimal("0.00")):
+        super().__init__()
+
+        # Create account through event application
+        event = BankAccountCreatedDomainEventV1(
+            aggregate_id=str(uuid.uuid4()).replace('-', ''),
+            owner_id=owner.id(),
+            overdraft_limit=overdraft_limit
+        )
+
+        # Apply event to state AND register for persistence
+        self.state.on(event)
+        self.register_event(event)
+
+    def get_available_balance(self) -> Decimal:
+        """Calculate available balance including overdraft"""
+        return self.state.balance + self.state.overdraft_limit
+
+    def try_add_transaction(self, transaction: BankTransactionV1) -> bool:
+        """Attempt to add transaction with business rule validation"""
+
+        # Business rule: Check if transaction would cause overdraft
+        if (transaction.type not in [BankTransactionTypeV1.DEPOSIT,
+                                   BankTransactionTypeV1.INTEREST] and
+            not (transaction.type == BankTransactionTypeV1.TRANSFER and
+                 transaction.to_account_id == self.id()) and
+            transaction.amount > self.get_available_balance()):
+            return False  # Transaction rejected
+
+        # Create and apply transaction event
+        event = BankAccountTransactionRecordedDomainEventV1(
+            aggregate_id=self.id(),
+            transaction=transaction
+        )
+
+        # Event application pattern
+        self.state.on(event)  # Updates state via multiple dispatch
+        self.register_event(event)  # Registers for persistence
+
+        return True  # Transaction accepted
+```
+
+### Event Sourcing Aggregation Process
+
+The framework includes an `Aggregator` class that reconstructs aggregate state from events:
+
+```python
+# /src/neuroglia/data/infrastructure/event_sourcing/abstractions.py
+class Aggregator:
+    """Reconstructs aggregates from event streams"""
+
+    def aggregate(self, events: List[EventRecord], aggregate_type: Type) -> AggregateRoot:
+        """Rebuild aggregate state from historical events"""
+
+        # 1. Create empty aggregate instance
+        aggregate: AggregateRoot = object.__new__(aggregate_type)
+        aggregate.state = aggregate.__orig_bases__[0].__args__[0]()
+
+        # 2. Replay all events in sequence
+        for event_record in events:
+            # Apply each event to state using multiple dispatch
+            aggregate.state.on(event_record.data)
+
+            # Update state version to match event version
+            aggregate.state.state_version = event_record.data.aggregate_version
+
+        return aggregate
+```
+
+### Complete Data Flow Example
+
+```python
+# Application Service using the pattern
+class CreateBankAccountHandler(CommandHandler[CreateBankAccountCommand, OperationResult[BankAccountDto]]):
+
+    async def handle_async(self, command: CreateBankAccountCommand) -> OperationResult[BankAccountDto]:
+
+        # 1. Load related aggregate (Person)
+        owner = await self.person_repository.get_by_id_async(command.owner_id)
+
+        # 2. Create new aggregate (triggers events)
+        account = BankAccount(owner, command.overdraft_limit)
+        #                     ↑
+        # This constructor:
+        # - Creates BankAccountCreatedDomainEventV1
+        # - Calls self.state.on(event) → Updates state via @dispatch
+        # - Calls self.register_event(event) → Adds to _pending_events
+
+        # 3. Save aggregate (persists events and publishes)
+        saved_account = await self.repository.add_async(account)
+        #                                                   ↑
+        # Repository implementation:
+        # - Appends events from _pending_events to event store
+        # - Publishes events to event bus for integration
+        # - Updates read models/projections
+        # - Clears _pending_events
+
+        # 4. Return DTO mapped from aggregate state
+        return self.created(self.mapper.map(saved_account.state, BankAccountDto))
+```
+
+### Key Insights from the OpenBank Example
+
+1. **🎯 Business Logic in Aggregates**: All banking rules are enforced in the aggregate
+2. **📝 Events as Facts**: Each event represents a business fact that occurred
+3. **🔄 State from Events**: Balance is computed from transaction events, not stored directly
+4. **🛡️ Consistency Boundaries**: Account aggregate ensures transaction consistency
+5. **🔌 Automatic Integration**: Events automatically trigger downstream processing
+6. **📊 Audit Trail**: Complete transaction history is preserved in events
+7. **🧪 Testable**: Business logic can be tested by verifying events produced
 
 ### 3. Aggregate Root
 
@@ -892,10 +1408,10 @@ flowchart TB
     end
 
     subgraph "🔄 Migration Steps"
-        Step1["1. Extract Business Logic<br/>Move logic from services to entities"]
-        Step2["2. Identify Aggregates<br/>Define consistency boundaries"]
-        Step3["3. Add Domain Events<br/>Capture business occurrences"]
-        Step4["4. Implement Event Sourcing<br/>Optional advanced pattern"]
+        Step1["1: Extract Business Logic<br/>Move logic from services to entities"]
+        Step2["2: Identify Aggregates<br/>Define consistency boundaries"]
+        Step3["3: Add Domain Events<br/>Capture business occurrences"]
+        Step4["4: Implement Event Sourcing<br/>Optional advanced pattern"]
     end
 
     CRUD --> Step1
@@ -912,6 +1428,266 @@ flowchart TB
     style Step3 fill:#fff3e0
     style Step4 fill:#f3e5f5
 ```
+
+## 🧪 Testing Domain Abstractions
+
+### Testing Event-Driven Aggregates
+
+The event-driven pattern makes domain logic highly testable through event verification:
+
+```python
+import pytest
+from decimal import Decimal
+from samples.openbank.domain.models.bank_account import BankAccount, Person
+from samples.openbank.domain.models.bank_transaction import BankTransactionV1, BankTransactionTypeV1
+from samples.openbank.domain.events.bank_account import BankAccountCreatedDomainEventV1
+
+class TestBankAccountAggregate:
+    """Test bank account domain logic through events"""
+
+    def test_account_creation_produces_correct_event(self):
+        """Test that account creation produces the expected domain event"""
+
+        # Arrange
+        owner = Person("John", "Doe", "US", PersonGender.MALE, date(1980, 1, 1), Address(...))
+        overdraft_limit = Decimal("500.00")
+
+        # Act
+        account = BankAccount(owner, overdraft_limit)
+
+        # Assert - Verify event was registered
+        assert len(account._pending_events) == 1
+
+        # Assert - Verify event type and data
+        created_event = account._pending_events[0]
+        assert isinstance(created_event, BankAccountCreatedDomainEventV1)
+        assert created_event.owner_id == owner.id()
+        assert created_event.overdraft_limit == overdraft_limit
+
+        # Assert - Verify state was updated correctly
+        assert account.state.owner_id == owner.id()
+        assert account.state.overdraft_limit == overdraft_limit
+        assert account.state.balance == Decimal("0.00")
+
+    def test_successful_transaction_updates_state_and_registers_event(self):
+        """Test transaction processing with event verification"""
+
+        # Arrange
+        owner = Person("Jane", "Smith", "CA", PersonGender.FEMALE, date(1990, 1, 1), Address(...))
+        account = BankAccount(owner, Decimal("100.00"))
+
+        deposit_transaction = BankTransactionV1(
+            amount=Decimal("250.00"),
+            type=BankTransactionTypeV1.DEPOSIT,
+            description="Initial deposit"
+        )
+
+        # Clear creation event for clean test
+        account.clear_pending_events()
+
+        # Act
+        result = account.try_add_transaction(deposit_transaction)
+
+        # Assert - Transaction was accepted
+        assert result is True
+
+        # Assert - Event was registered
+        assert len(account._pending_events) == 1
+        transaction_event = account._pending_events[0]
+        assert transaction_event.transaction == deposit_transaction
+
+        # Assert - State was updated correctly
+        assert account.state.balance == Decimal("250.00")
+        assert len(account.state.transactions) == 1
+        assert account.state.transactions[0] == deposit_transaction
+
+    def test_overdraft_rejection_produces_no_events(self):
+        """Test business rule validation prevents invalid operations"""
+
+        # Arrange
+        owner = Person("Bob", "Wilson", "UK", PersonGender.MALE, date(1975, 6, 15), Address(...))
+        account = BankAccount(owner, Decimal("50.00"))  # Small overdraft limit
+
+        withdrawal_transaction = BankTransactionV1(
+            amount=Decimal("100.00"),  # Exceeds balance + overdraft
+            type=BankTransactionTypeV1.WITHDRAWAL,
+            description="Large withdrawal"
+        )
+
+        account.clear_pending_events()
+
+        # Act
+        result = account.try_add_transaction(withdrawal_transaction)
+
+        # Assert - Transaction was rejected
+        assert result is False
+
+        # Assert - No events were registered
+        assert len(account._pending_events) == 0
+
+        # Assert - State remains unchanged
+        assert account.state.balance == Decimal("0.00")
+        assert len(account.state.transactions) == 0
+```
+
+### Testing Event Handlers with Multiple Dispatch
+
+```python
+class TestBankAccountState:
+    """Test state event handling in isolation"""
+
+    def test_account_created_event_handler(self):
+        """Test @dispatch event handler for account creation"""
+
+        # Arrange
+        state = BankAccountStateV1()
+        event = BankAccountCreatedDomainEventV1(
+            aggregate_id="account-123",
+            owner_id="person-456",
+            overdraft_limit=Decimal("1000.00")
+        )
+
+        # Act
+        state.on(event)  # Multiple dispatch routes to correct handler
+
+        # Assert
+        assert state.id == "account-123"
+        assert state.owner_id == "person-456"
+        assert state.overdraft_limit == Decimal("1000.00")
+        assert state.created_at == event.created_at
+
+    def test_balance_computation_from_events(self):
+        """Test that balance is correctly computed from event sequence"""
+
+        # Arrange
+        state = BankAccountStateV1()
+
+        # Series of transaction events
+        events = [
+            BankAccountTransactionRecordedDomainEventV1(
+                aggregate_id="account-123",
+                transaction=BankTransactionV1(
+                    amount=Decimal("500.00"),
+                    type=BankTransactionTypeV1.DEPOSIT,
+                    description="Initial deposit"
+                )
+            ),
+            BankAccountTransactionRecordedDomainEventV1(
+                aggregate_id="account-123",
+                transaction=BankTransactionV1(
+                    amount=Decimal("150.00"),
+                    type=BankTransactionTypeV1.WITHDRAWAL,
+                    description="ATM withdrawal"
+                )
+            ),
+            BankAccountTransactionRecordedDomainEventV1(
+                aggregate_id="account-123",
+                transaction=BankTransactionV1(
+                    amount=Decimal("25.00"),
+                    type=BankTransactionTypeV1.INTEREST,
+                    description="Monthly interest"
+                )
+            )
+        ]
+
+        # Act - Apply events in sequence
+        for event in events:
+            state.on(event)
+
+        # Assert - Balance computed correctly
+        expected_balance = Decimal("500.00") - Decimal("150.00") + Decimal("25.00")
+        assert state.balance == expected_balance
+        assert len(state.transactions) == 3
+```
+
+### Integration Testing with Event Store
+
+```python
+class TestBankAccountIntegration:
+    """Integration tests with event sourcing infrastructure"""
+
+    @pytest.mark.asyncio
+    async def test_aggregate_reconstruction_from_events(self):
+        """Test that aggregates can be rebuilt from event streams"""
+
+        # Arrange - Create and save aggregate with multiple operations
+        owner = Person("Alice", "Johnson", "US", PersonGender.FEMALE, date(1985, 3, 20), Address(...))
+        account = BankAccount(owner, Decimal("200.00"))
+
+        account.try_add_transaction(BankTransactionV1(
+            amount=Decimal("1000.00"),
+            type=BankTransactionTypeV1.DEPOSIT,
+            description="Salary deposit"
+        ))
+
+        account.try_add_transaction(BankTransactionV1(
+            amount=Decimal("300.00"),
+            type=BankTransactionTypeV1.WITHDRAWAL,
+            description="Rent payment"
+        ))
+
+        # Save to repository (persists events)
+        await self.repository.add_async(account)
+        account_id = account.id()
+
+        # Act - Load aggregate from event store
+        reconstructed_account = await self.repository.get_by_id_async(account_id)
+
+        # Assert - State matches original
+        assert reconstructed_account.state.balance == Decimal("700.00")  # 1000 - 300
+        assert len(reconstructed_account.state.transactions) == 2
+        assert reconstructed_account.state.owner_id == owner.id()
+        assert reconstructed_account.state.overdraft_limit == Decimal("200.00")
+```
+
+### Testing Domain Event Publishing
+
+```python
+class TestDomainEventIntegration:
+    """Test domain event publishing and handling"""
+
+    @pytest.mark.asyncio
+    async def test_domain_events_trigger_integration_events(self):
+        """Test that domain events are properly published as integration events"""
+
+        # Arrange
+        mock_event_bus = Mock(spec=EventBus)
+        handler = BankAccountDomainEventHandler(
+            mediator=self.mediator,
+            mapper=self.mapper,
+            write_models=self.write_repository,
+            read_models=self.read_repository,
+            cloud_event_bus=mock_event_bus,
+            cloud_event_publishing_options=CloudEventPublishingOptions()
+        )
+
+        domain_event = BankAccountCreatedDomainEventV1(
+            aggregate_id="account-789",
+            owner_id="person-123",
+            overdraft_limit=Decimal("500.00")
+        )
+
+        # Act
+        await handler.handle_async(domain_event)
+
+        # Assert - Cloud event was published
+        mock_event_bus.publish_async.assert_called_once()
+        published_event = mock_event_bus.publish_async.call_args[0][0]
+
+        assert published_event.type == "bank-account.created.v1"
+        assert published_event.source == "openbank.accounts"
+        assert "account-789" in published_event.data
+```
+
+### Key Testing Benefits
+
+1. **🎯 Clear Expectations**: Events make the expected behavior explicit
+2. **🔍 Easy Verification**: Test what events are produced, not internal state
+3. **🧪 Isolated Testing**: Test domain logic without infrastructure dependencies
+4. **📝 Living Documentation**: Tests serve as examples of domain behavior
+5. **🛡️ Regression Protection**: Changes that break domain rules fail tests immediately
+6. **🔄 Event Replay Testing**: Verify aggregates can be reconstructed from events
+7. **⚡ Fast Execution**: Pure domain tests run quickly without I/O
 
 ## 🔗 Related Patterns
 
