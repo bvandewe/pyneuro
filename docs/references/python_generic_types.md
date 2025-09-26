@@ -520,7 +520,7 @@ def sort_and_print(items: List[T]) -> None:
 
 - [Python Type Hints Reference](python_type_hints.md) - Understanding type annotations
 - [Python Object-Oriented Programming](python_object_oriented.md) - Classes and inheritance patterns
-- [CQRS & Mediation](../features/cqrs-mediation.md) - How generics enable the command/query pattern
+- [CQRS & Mediation](../patterns/cqrs.md) - How generics enable the command/query pattern
 - [Data Access](../features/data-access.md) - Generic repository implementations
 
 ## 📚 Further Reading

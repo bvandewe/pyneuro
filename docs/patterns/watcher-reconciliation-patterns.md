@@ -10,6 +10,7 @@ The ROA implementation uses two complementary patterns:
 2. **Reconciliation Loop**: Continuously ensures actual state matches desired state
 
 These patterns work together to provide:
+
 - **Declarative Management**: Specify desired state, controllers make it happen
 - **Event-Driven Processing**: React to changes as they occur
 - **Self-Healing**: Automatically correct drift from desired state
@@ -29,23 +30,23 @@ class ResourceWatcherBase(Generic[TResourceSpec, TResourceStatus]):
     4. Emits events for detected changes
     5. Updates cache with current state
     """
-    
+
     async def _watch_loop(self, namespace=None, label_selector=None):
         while self._watching:
             # 1. Get current resources
             current_resources = await self._list_resources(namespace, label_selector)
             current_resource_map = {r.id: r for r in current_resources}
-            
+
             # 2. Detect changes
             changes = self._detect_changes(current_resource_map)
-            
+
             # 3. Process each change
             for change in changes:
                 await self._process_change(change)
-            
+
             # 4. Update cache
             self._resource_cache = current_resource_map
-            
+
             # 5. Wait before next poll
             await asyncio.sleep(self.watch_interval)
 ```
@@ -59,27 +60,27 @@ def _detect_changes(self, current_resources):
     changes = []
     current_ids = set(current_resources.keys())
     cached_ids = set(self._resource_cache.keys())
-    
+
     # 1. CREATED: New resources that weren't in cache
     for resource_id in current_ids - cached_ids:
         changes.append(ResourceChangeEvent(
             change_type=ResourceChangeType.CREATED,
             resource=current_resources[resource_id]
         ))
-    
+
     # 2. DELETED: Cached resources no longer present
     for resource_id in cached_ids - current_ids:
         changes.append(ResourceChangeEvent(
             change_type=ResourceChangeType.DELETED,
             resource=self._resource_cache[resource_id]
         ))
-    
+
     # 3. UPDATED: Spec changed (generation increment)
     # 4. STATUS_UPDATED: Status changed (observed generation, etc.)
     for resource_id in current_ids & cached_ids:
         current = current_resources[resource_id]
         cached = self._resource_cache[resource_id]
-        
+
         if current.metadata.generation > cached.metadata.generation:
             # Spec was updated
             changes.append(ResourceChangeEvent(
@@ -94,7 +95,7 @@ def _detect_changes(self, current_resources):
                 resource=current,
                 old_resource=cached
             ))
-    
+
     return changes
 ```
 
@@ -110,13 +111,13 @@ async def _process_change(self, change):
             await handler(change)
         else:
             handler(change)
-    
+
     # 2. Publish CloudEvent
     await self._publish_change_event(change)
 
 async def _publish_change_event(self, change):
     event_type = f"{resource.kind.lower()}.{change.change_type.value.lower()}"
-    
+
     event = CloudEvent(
         source=f"watcher/{resource.kind.lower()}",
         type=event_type,  # e.g., "labinstancerequest.created"
@@ -130,7 +131,7 @@ async def _publish_change_event(self, change):
             "observedGeneration": resource.status.observed_generation
         }
     )
-    
+
     await self.event_publisher.publish_async(event)
 ```
 
@@ -148,18 +149,18 @@ class ResourceControllerBase(Generic[TResourceSpec, TResourceStatus]):
     4. Update resource status
     5. Emit reconciliation events
     """
-    
+
     async def reconcile(self, resource):
         # 1. Check if reconciliation is needed
         if not resource.needs_reconciliation():
             return
-        
+
         # 2. Execute reconciliation with timeout
         result = await asyncio.wait_for(
             self._do_reconcile(resource),
             timeout=self._reconciliation_timeout.total_seconds()
         )
-        
+
         # 3. Handle result (success, failure, requeue)
         await self._handle_reconciliation_result(resource, result)
 ```
@@ -184,7 +185,7 @@ async def _do_reconcile(self, resource):
         else:
             # Not time to start yet, check again in 30 seconds
             return ReconciliationResult.requeue_after(timedelta(seconds=30))
-    
+
     elif resource.status.phase == LabInstancePhase.RUNNING:
         if resource.is_expired():
             await self._stop_lab_instance(resource)
@@ -206,17 +207,17 @@ class LabInstanceWatcher(ResourceWatcherBase[LabInstanceRequestSpec, LabInstance
         super().__init__(event_publisher)
         self.repository = repository
         self.controller = controller
-        
+
         # Register controller as change handler
         self.add_change_handler(self._handle_resource_change)
-    
+
     async def _list_resources(self, namespace=None, label_selector=None):
         return await self.repository.list_async(namespace=namespace)
-    
+
     async def _handle_resource_change(self, change):
         """Called when resource changes are detected."""
         resource = change.resource
-        
+
         if change.change_type in [ResourceChangeType.CREATED, ResourceChangeType.UPDATED]:
             # Trigger reconciliation for created or updated resources
             await self.controller.reconcile(resource)
@@ -236,35 +237,35 @@ class LabInstanceSchedulerService(HostedService):
     3. Applies appropriate actions
     4. Updates resource status
     """
-    
+
     async def _run_scheduler_loop(self):
         while self._running:
             # Reconciliation phases
             await self._process_scheduled_instances()  # PENDING → PROVISIONING
             await self._process_running_instances()    # RUNNING monitoring
             await self._cleanup_expired_instances()    # TIMEOUT/CLEANUP
-            
+
             await asyncio.sleep(self._scheduler_interval)
-    
+
     async def _process_scheduled_instances(self):
         """Reconcile PENDING resources that should be started."""
         pending_instances = await self.repository.find_by_phase_async(LabInstancePhase.PENDING)
-        
+
         for instance in pending_instances:
             if instance.should_start_now():
                 # Move toward desired state: PENDING → PROVISIONING → RUNNING
                 await self._start_lab_instance(instance)
-    
+
     async def _process_running_instances(self):
         """Reconcile RUNNING resources for completion/errors."""
         running_instances = await self.repository.find_by_phase_async(LabInstancePhase.RUNNING)
-        
+
         for instance in running_instances:
             # Check actual container state vs desired state
             container_status = await self.container_service.get_container_status_async(
                 instance.status.container_id
             )
-            
+
             if container_status == "stopped":
                 # Actual state differs from desired, reconcile
                 await self._complete_lab_instance(instance)
@@ -278,31 +279,31 @@ class LabInstanceSchedulerService(HostedService):
 ```python
 class LabInstanceEventHandler:
     """Handle resource events and trigger reconciliation."""
-    
+
     async def handle_lab_instance_created(self, event):
         """When a lab instance is created, ensure it's properly scheduled."""
         resource_id = event.data["resourceUid"]
         resource = await self.repository.get_by_id_async(resource_id)
-        
+
         if resource and resource.status.phase == LabInstancePhase.PENDING:
             # Ensure resource is in scheduling queue
             await self.controller.reconcile(resource)
-    
+
     async def handle_lab_instance_updated(self, event):
         """When a lab instance is updated, re-reconcile."""
         resource_id = event.data["resourceUid"]
         resource = await self.repository.get_by_id_async(resource_id)
-        
+
         if resource:
             await self.controller.reconcile(resource)
-    
+
     async def handle_container_event(self, event):
         """When container state changes, update resource status."""
         container_id = event.data["containerId"]
-        
+
         # Find resource with this container
         instances = await self.repository.find_by_container_id_async(container_id)
-        
+
         for instance in instances:
             # Reconcile to reflect new container state
             await self.controller.reconcile(instance)
@@ -341,6 +342,7 @@ await repository.save_async(lab_instance)
 Both patterns provide rich observability:
 
 ### Watcher Metrics
+
 ```python
 watcher_metrics = {
     "is_watching": watcher.is_watching(),
@@ -352,6 +354,7 @@ watcher_metrics = {
 ```
 
 ### Controller Metrics
+
 ```python
 controller_metrics = {
     "reconciliations_total": controller.reconciliation_count,
@@ -363,6 +366,7 @@ controller_metrics = {
 ```
 
 ### Scheduler Metrics
+
 ```python
 scheduler_metrics = {
     "running": scheduler._running,
@@ -378,6 +382,7 @@ scheduler_metrics = {
 ## ⚙️ Configuration and Tuning
 
 ### Watcher Configuration
+
 ```python
 watcher = LabInstanceWatcher(
     repository=repository,
@@ -388,6 +393,7 @@ watcher = LabInstanceWatcher(
 ```
 
 ### Controller Configuration
+
 ```python
 controller = LabInstanceController(
     service_provider=service_provider,
@@ -398,6 +404,7 @@ controller._max_retry_attempts = 5
 ```
 
 ### Scheduler Configuration
+
 ```python
 scheduler = LabInstanceSchedulerService(
     repository=repository,

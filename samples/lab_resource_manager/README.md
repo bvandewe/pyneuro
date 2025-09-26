@@ -1,10 +1,13 @@
 # Lab Resource Manager - ROA Sample Application
 
-This sample application demonstrates the **Resource Oriented Architecture (ROA)** patterns implemented in the Neuroglia framework. It manages lab instance resources using Kubernetes-inspired declarative specifications, state machines, and event-driven controllers.
+This sample application demonstrates the **Resource Oriented Architecture (ROA)** patterns implemented in the
+Neuroglia framework. It manages lab instance resources using Kubernetes-inspired declarative specifications,
+state machines, and event-driven controllers.
 
 ## 🎯 What This Sample Demonstrates
 
 ### Resource Oriented Architecture Patterns
+
 - **Declarative Resources**: Resources defined by `spec` (desired state) and `status` (current state)
 - **State Machines**: Lifecycle management with validated transitions
 - **Resource Controllers**: Reconciliation loops for maintaining desired state
@@ -12,6 +15,7 @@ This sample application demonstrates the **Resource Oriented Architecture (ROA)*
 - **Multi-format Serialization**: YAML, XML, and JSON support
 
 ### Integration with Traditional Neuroglia Patterns
+
 - **CQRS Commands/Queries**: Traditional command and query handlers adapted for resources
 - **Dependency Injection**: Full DI container integration
 - **Event Bus**: CloudEvents integration for resource changes
@@ -59,18 +63,21 @@ This sample application demonstrates the **Resource Oriented Architecture (ROA)*
 ## 🚀 Key Features
 
 ### Resource Management
+
 - **LabInstanceRequest**: Complete lab instance lifecycle management
 - **Declarative Specs**: Define desired lab configuration
 - **Status Tracking**: Real-time status updates and phase transitions
 - **State Validation**: Automatic validation of state transitions
 
 ### Concurrent Execution
+
 - **Background Scheduler**: Monitors and processes scheduled lab instances
 - **Container Management**: Creates, starts, monitors, and cleans up containers
 - **Timeout Handling**: Automatic cleanup of expired instances
 - **Error Recovery**: Graceful handling of failures with proper state transitions
 
 ### Event-Driven Architecture
+
 - **Resource Events**: CloudEvents for all resource state changes
 - **Controller Reconciliation**: Automatic reconciliation of desired vs actual state
 - **Change Detection**: Watchers monitor resource modifications
@@ -211,6 +218,7 @@ curl "http://localhost:8000/api/lab-instances/?student_email=student@university.
 ### Resource Repository Pattern
 
 The `LabInstanceResourceRepository` provides:
+
 - Multi-format serialization (YAML/JSON/XML)
 - Query methods specific to lab instances
 - Storage backend abstraction
@@ -219,6 +227,7 @@ The `LabInstanceResourceRepository` provides:
 ### Background Scheduling
 
 The `LabInstanceSchedulerService` handles:
+
 - Monitoring scheduled lab instances
 - Container lifecycle management
 - Timeout and cleanup operations
@@ -227,6 +236,7 @@ The `LabInstanceSchedulerService` handles:
 ### API Integration
 
 Controllers follow traditional Neuroglia patterns but operate on resources:
+
 - CQRS command/query execution through mediator
 - Automatic DTO mapping
 - RESTful resource endpoints
@@ -235,6 +245,7 @@ Controllers follow traditional Neuroglia patterns but operate on resources:
 ### State Machine Integration
 
 Resources automatically:
+
 - Validate state transitions
 - Track transition history
 - Raise domain events for changes

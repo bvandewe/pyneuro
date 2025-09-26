@@ -1,6 +1,8 @@
 # 🏭 The Twelve-Factor App with Neuroglia
 
-The [Twelve-Factor App](https://12factor.net/) is a methodology for building software-as-a-service applications that are portable, scalable, and maintainable. The Neuroglia framework was designed from the ground up to support and enforce these principles, making it easy to build cloud-native applications that follow best practices.
+The [Twelve-Factor App](https://12factor.net/) is a methodology for building software-as-a-service applications that
+are portable, scalable, and maintainable. The Neuroglia framework was designed from the ground up to support and
+enforce these principles, making it easy to build cloud-native applications that follow best practices.
 
 ## 🎯 What You'll Learn
 
@@ -1482,8 +1484,8 @@ The framework's opinionated architecture guides you toward 12-factor compliance 
 ## 🔗 Related Documentation
 
 - [Getting Started](../getting-started.md) - Framework setup and basic usage
-- [Dependency Injection](../features/dependency-injection.md) - Service container and lifetime management
-- [CQRS & Mediation](../features/cqrs-mediation.md) - Command and query patterns
+- [Dependency Injection](../patterns/dependency-injection.md) - Service container and lifetime management
+- [CQRS & Mediation](../patterns/cqrs.md) - Command and query patterns
 - [MVC Controllers](../features/mvc-controllers.md) - HTTP API development
 - [Data Access](../features/data-access.md) - Repository pattern and backing services
 - [OpenBank Sample](../samples/openbank.md) - Complete 12-factor application example

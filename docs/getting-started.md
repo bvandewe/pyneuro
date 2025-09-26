@@ -92,15 +92,17 @@ Build a complete pizza ordering system that demonstrates clean architecture, CQR
 
 **What you'll get**: Full-stack application with REST API, web UI, authentication, persistence, events
 
+For authentication implementation, see the **[OAuth, OIDC & JWT Reference](references/oauth-oidc-jwt.md)**.
+
 ## 🔍 Framework Features Overview
 
 | Feature                                                      | Purpose                                          | When to Use                                         |
 | ------------------------------------------------------------ | ------------------------------------------------ | --------------------------------------------------- |
-| **[Dependency Injection](features/dependency-injection.md)** | Service container and lifetime management        | All applications - foundation for testability       |
-| **[CQRS & Mediation](features/cqrs-mediation.md)**           | Command/Query separation with pipeline behaviors | Complex business logic, cross-cutting concerns      |
+| **[Dependency Injection](patterns/dependency-injection.md)** | Service container and lifetime management        | All applications - foundation for testability       |
+| **[CQRS & Mediation](patterns/cqrs.md)**                     | Command/Query separation with pipeline behaviors | Complex business logic, cross-cutting concerns      |
 | **[MVC Controllers](features/mvc-controllers.md)**           | REST API development with FastAPI integration    | Web APIs, microservices, external interfaces        |
 | **[Data Access](features/data-access.md)**                   | Repository pattern with MongoDB, file storage    | Persistence, data abstraction, testing              |
-| **[Event Sourcing](features/event-sourcing.md)**             | Event-driven architecture with domain events     | Complex domains, audit trails, eventual consistency |
+| **[Event Sourcing](patterns/event-sourcing.md)**             | Event-driven architecture with domain events     | Complex domains, audit trails, eventual consistency |
 
 ## 📚 Documentation Structure
 

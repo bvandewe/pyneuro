@@ -35,14 +35,14 @@ PyNeuroctl command-line interface for managing, testing, and deploying your appl
 
 ## 🚀 Quick Start
 
-Get started with Neuroglia in minutes:
+**Coming soon**: Get started with Neuroglia in minutes:
 
 ```bash
 # Install the framework
 pip install neuroglia
 
 # Create your first app
-pyneuroctl new myapp --template pizzeria
+pyneuroctl new myapp --template minimal
 cd myapp
 
 # Run the application
@@ -65,6 +65,7 @@ Visit `http://localhost:8000/docs` to explore the auto-generated API documentati
 - **[12-Factor App Compliance](references/12-factor-app.md)** - How Neuroglia meets cloud-native application standards
 - **[Python Type Hints](references/python_type_hints.md)** - Advanced typing patterns for better code clarity
 - **[Python Generic Types](references/python_generic_types.md)** - Generic type usage in framework components
+- OAuth OIDC
 
 ---
 

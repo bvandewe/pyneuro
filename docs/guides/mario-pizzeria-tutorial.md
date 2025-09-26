@@ -475,7 +475,7 @@ def require_scope(required_scope: str):
 **src/web/static/index.html**
 
 ```html
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -739,7 +739,7 @@ if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)
 ```
 
-## 🎉 You're Done!
+## 🎉 You're Done
 
 Run your pizzeria:
 
@@ -756,13 +756,13 @@ Visit your application:
 
 ## 🔍 What You've Built
 
-✅ **Complete Web Application** with UI and API  
-✅ **Clean Architecture** with domain, application, and infrastructure layers  
-✅ **CQRS Pattern** with commands and queries  
-✅ **Event-Driven Design** with domain events  
-✅ **File-Based Persistence** using the repository pattern  
-✅ **OAuth Authentication** for secure endpoints  
-✅ **Enhanced Web Application Builder** with multi-app support  
+✅ **Complete Web Application** with UI and API
+✅ **Clean Architecture** with domain, application, and infrastructure layers
+✅ **CQRS Pattern** with commands and queries
+✅ **Event-Driven Design** with domain events
+✅ **File-Based Persistence** using the repository pattern
+✅ **OAuth Authentication** for secure endpoints
+✅ **Enhanced Web Application Builder** with multi-app support
 ✅ **Automatic API Documentation** with Swagger UI
 
 ## 🚀 Next Steps
@@ -772,12 +772,12 @@ Now that you've built a complete application, explore advanced Neuroglia feature
 ### 🏛️ Architecture Deep Dives
 
 - Clean architecture principles and layer separation
-- **[CQRS & Mediation](../features/cqrs-mediation.md)** - Advanced command/query patterns and pipeline behaviors
-- **[Dependency Injection](../features/dependency-injection.md)** - Advanced DI patterns and service lifetimes
+- **[CQRS & Mediation](../patterns/cqrs.md)** - Advanced command/query patterns and pipeline behaviors
+- **[Dependency Injection](../patterns/dependency-injection.md)** - Advanced DI patterns and service lifetimes
 
 ### 🚀 Advanced Features
 
-- **[Event Sourcing](../features/event-sourcing.md)** - Complete event-driven architecture with event stores
+- **[Event Sourcing](../patterns/event-sourcing.md)** - Complete event-driven architecture with event stores
 - **[Data Access](../features/data-access.md)** - MongoDB and other persistence options beyond file storage
 - **[MVC Controllers](../features/mvc-controllers.md)** - Advanced controller patterns and API design
 

@@ -7,16 +7,19 @@ The Neuroglia Python Framework documentation now has full Mermaid diagram suppor
 ### 📋 What Was Configured
 
 1. **MkDocs Configuration (`mkdocs.yml`)**:
+
    - Added `mkdocs-mermaid2-plugin` to plugins section
    - Configured `pymdownx.superfences` with custom Mermaid fence support
    - Added Mermaid theme configuration with auto dark/light mode
    - Set primary colors to match Material theme (#1976d2)
 
 2. **Dependencies (`pyproject.toml`)**:
+
    - Added `mkdocs-mermaid2-plugin >= 1.1.1` dependency
    - Updated Poetry lock file with new dependencies
 
 3. **Documentation Files**:
+
    - Created comprehensive Mermaid documentation (`docs/features/mermaid-diagrams.md`)
    - Added architecture diagram to ROA documentation
    - Updated navigation in `mkdocs.yml` to include Mermaid documentation
@@ -28,6 +31,7 @@ The Neuroglia Python Framework documentation now has full Mermaid diagram suppor
 ### 🔧 Technical Details
 
 #### Mermaid Plugin Configuration
+
 ```yaml
 plugins:
   - search
@@ -35,15 +39,16 @@ plugins:
       arguments:
         theme: auto
         themeVariables:
-          primaryColor: '#1976d2'
-          primaryTextColor: '#ffffff'
-          primaryBorderColor: '#1976d2'
-          lineColor: '#1976d2'
-          secondaryColor: '#f5f5f5'
-          tertiaryColor: '#ffffff'
+          primaryColor: "#1976d2"
+          primaryTextColor: "#ffffff"
+          primaryBorderColor: "#1976d2"
+          lineColor: "#1976d2"
+          secondaryColor: "#f5f5f5"
+          tertiaryColor: "#ffffff"
 ```
 
 #### Superfences Configuration
+
 ```yaml
 markdown_extensions:
   - pymdownx.superfences:
@@ -65,6 +70,7 @@ markdown_extensions:
 ### 🚀 Usage Examples
 
 #### Basic Flowchart
+
 ````markdown
 ```mermaid
 graph TD
@@ -77,6 +83,7 @@ graph TD
 ````
 
 #### Sequence Diagram
+
 ````markdown
 ```mermaid
 sequenceDiagram
@@ -84,7 +91,7 @@ sequenceDiagram
     participant API
     participant Service
     participant Database
-    
+
     Client->>API: Request
     API->>Service: Process
     Service->>Database: Query
@@ -95,6 +102,7 @@ sequenceDiagram
 ````
 
 #### Architecture Diagram
+
 ````markdown
 ```mermaid
 graph TB
@@ -102,17 +110,17 @@ graph TB
         A[Controllers]
         B[DTOs]
     end
-    
+
     subgraph "Application Layer"
         C[Commands/Queries]
         D[Handlers]
     end
-    
+
     subgraph "Domain Layer"
         E[Entities]
         F[Value Objects]
     end
-    
+
     A --> C
     C --> D
     D --> E
@@ -122,18 +130,21 @@ graph TB
 ### 🛠️ Build Commands
 
 #### Development Server
+
 ```bash
 poetry run mkdocs serve
 # Serves on http://127.0.0.1:8000 with live reload
 ```
 
 #### Production Build
+
 ```bash
 ./build_docs.sh
 # Automated build with validation and reporting
 ```
 
 #### Manual Build
+
 ```bash
 poetry run mkdocs build --clean
 # Builds to ./site directory
@@ -142,6 +153,7 @@ poetry run mkdocs build --clean
 ### 📁 Generated Files
 
 The documentation build generates:
+
 - **HTML Files**: 18 static HTML files in `./site/`
 - **Mermaid Content**: All diagrams converted to interactive SVG
 - **Theme Support**: Automatic dark/light mode switching

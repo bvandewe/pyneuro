@@ -2,7 +2,9 @@
 
 ## Framework Overview
 
-Neuroglia is a lightweight, opinionated Python framework built on FastAPI that enforces clean architecture principles and provides comprehensive tooling for building maintainable microservices. The framework emphasizes CQRS, event-driven architecture, dependency injection, and domain-driven design patterns.
+Neuroglia is a lightweight, opinionated Python framework built on FastAPI that enforces clean architecture
+principles and provides comprehensive tooling for building maintainable microservices. The framework emphasizes
+CQRS, event-driven architecture, dependency injection, and domain-driven design patterns.
 
 ## Architecture Layers
 
@@ -630,21 +632,21 @@ When using this framework in VS Code with Copilot:
 
 **CRITICAL: When making ANY code changes, ALWAYS ensure tests are created or updated:**
 
-#### For New Framework Code (src/neuroglia/):
+#### For New Framework Code (src/neuroglia/)
 
 - **Automatically create** `tests/cases/test_{module}.py` for any new framework module
 - **Include comprehensive unit tests** covering all public methods and edge cases
 - **Mock all external dependencies** and test error scenarios
 - **Use async test patterns** for all async framework methods
 
-#### For New Application Code:
+#### For New Application Code
 
 - **Controllers**: Create `tests/integration/test_{entity}_controller.py` with full API endpoint testing
 - **Handlers**: Create `tests/cases/test_{action}_{entity}_handler.py` with success/failure scenarios
 - **Entities**: Create `tests/cases/test_{entity}.py` with business rule validation
 - **Repositories**: Create both unit and integration tests for data access
 
-#### Test Creation Rules:
+#### Test Creation Rules
 
 1. **Never suggest code changes without corresponding test updates**
 2. **Always check if tests exist before modifying code**
@@ -654,7 +656,7 @@ When using this framework in VS Code with Copilot:
 6. **Include both positive and negative test cases**
 7. **Ensure 90%+ test coverage for all new code**
 
-#### Test Templates to Use:
+#### Test Templates to Use
 
 - Use the test patterns defined in "Testing Patterns & Automated Test Maintenance"
 - Follow AAA (Arrange, Act, Assert) pattern

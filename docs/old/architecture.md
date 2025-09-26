@@ -1,7 +1,10 @@
 # 🏗️ Architecture Guide
 
+<!-- markdownlint-disable MD046 -->
+
 !!! danger "⚠️ Deprecated"
-This page is deprecated and will be removed in a future version. The content has been migrated to more focused sections:
+
+    This page is deprecated and will be removed in a future version. The content has been migrated to more focused sections:
 
     - **[Clean Architecture Pattern](patterns/clean-architecture.md)** - Four-layer separation and dependency rules
     - **[CQRS Pattern](patterns/cqrs.md)** - Command Query Responsibility Segregation
@@ -109,7 +112,7 @@ class PlaceOrderDto(BaseModel):
 
 **Architecture Benefits**:
 
-- - **Framework Independence**: Pure business logic with no external dependencies
+- **Framework Independence**: Pure business logic with no external dependencies
 
 ### 🔌 Integration Layer: External Systems
 
@@ -596,8 +599,8 @@ def configure_pizzeria_services(builder: WebApplicationBuilder):
 ## 🔗 Related Documentation
 
 - [Getting Started Guide](getting-started.md) - Complete Mario's Pizzeria tutorial
-- [CQRS & Mediation](features/cqrs-mediation.md) - Command and query patterns in depth
-- [Dependency Injection](features/dependency-injection.md) - Service registration and DI patterns
+- [CQRS & Mediation](../patterns/cqrs.md) - Command and query patterns in depth
+- [Dependency Injection](../patterns/dependency-injection.md) - Service registration and DI patterns
 - [MVC Controllers](features/mvc-controllers.md) - API layer implementation details
 - [Data Access](features/data-access.md) - Repository patterns and data persistence
 - [Source Code Naming Conventions](references/source_code_naming_convention.md) - Consistent naming across all architectural layers
@@ -605,7 +608,9 @@ def configure_pizzeria_services(builder: WebApplicationBuilder):
 
 ---
 
-_This architecture guide demonstrates clean architecture principles using Mario's Pizzeria as a comprehensive example. The layered approach shown here scales from simple applications to complex enterprise systems while maintaining clear separation of concerns and testability._
+_This architecture guide demonstrates clean architecture principles using Mario's Pizzeria as a comprehensive
+example. The layered approach shown here scales from simple applications to complex enterprise systems while
+maintaining clear separation of concerns and testability._
 
 ### 💼 Application Layer: Pizza Business Workflow
 

@@ -1,6 +1,8 @@
 # 🏷️ Source Code Naming Conventions
 
-Consistent naming conventions are crucial for maintainable, readable, and professional codebases. The Neuroglia framework follows Python's established conventions while adding domain-specific patterns for clean architecture. This reference provides comprehensive guidelines for naming across all layers of your application.
+Consistent naming conventions are crucial for maintainable, readable, and professional codebases. The Neuroglia framework
+follows Python's established conventions while adding domain-specific patterns for clean architecture. This reference
+provides comprehensive guidelines for naming across all layers of your application.
 
 ## 🎯 What You'll Learn
 
@@ -1052,5 +1054,5 @@ This example demonstrates how naming conventions create a clear, navigable codeb
 - [Python Type Hints](python_type_hints.md) - Advanced typing patterns for better code clarity
 - [Python Generic Types](python_generic_types.md) - Generic type usage in framework components
 - [Python Object-Oriented Programming](python_object_oriented.md) - OOP principles and class design
-- [CQRS & Mediation](../features/cqrs-mediation.md) - Command and query pattern implementation
-- [Dependency Injection](../features/dependency-injection.md) - Service registration and naming patterns
+- [CQRS & Mediation](../patterns/cqrs.md) - Command and query pattern implementation
+- [Dependency Injection](../patterns/dependency-injection.md) - Service registration and naming patterns

@@ -735,7 +735,7 @@ The OpenBank sample demonstrates:
 ## 🔗 Related Documentation
 
 - [Getting Started](../getting-started.md) - Basic Neuroglia concepts
-- [Event Sourcing](../features/event-sourcing.md) - Event sourcing patterns
-- [CQRS & Mediation](../features/cqrs-mediation.md) - Command and query patterns
+- [Event Sourcing](../patterns/event-sourcing.md) - Event sourcing patterns
+- [CQRS & Mediation](../patterns/cqrs.md) - Command and query patterns
 - [Event Handling](../features/event-handling.md) - Event-driven architecture
 - [Source Code Naming Conventions](../references/source_code_naming_convention.md) - Naming patterns used throughout this sample

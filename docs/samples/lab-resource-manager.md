@@ -367,7 +367,7 @@ pytest samples/lab-resource-manager/tests/test_reconciler.py
 - **[🎯 Resource Oriented Architecture](../features/resource-oriented-architecture.md)** - Core ROA concepts
 - **[🏗️ Watcher & Reconciliation Patterns](../features/watcher-reconciliation-patterns.md)** - Detailed patterns
 - **[⚡ Execution Flow](../features/watcher-reconciliation-execution.md)** - Component coordination
-- **[🎯 CQRS & Mediation](../features/cqrs-mediation.md)** - Command/Query handling
+- **[🎯 CQRS & Mediation](../patterns/cqrs.md)** - Command/Query handling
 - **[🗄️ Data Access](../features/data-access.md)** - Storage patterns
 - **[📋 Source Code Naming Conventions](../references/source_code_naming_convention.md)** - Consistent naming patterns used in this sample
 
