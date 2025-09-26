@@ -1,0 +1,1380 @@
+
+<!DOCTYPE html>
+
+<html class="no-js" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<link href="../serialization/" rel="prev"/>
+<link href="../object-mapping/" rel="next"/>
+<link href="../../assets/images/favicon.png" rel="icon"/>
+<meta content="mkdocs-1.6.1, mkdocs-material-9.6.20" name="generator"/>
+<title>Configurable Type Discovery - Neuroglia Python Framework</title>
+<link href="../../assets/stylesheets/main.e53b48f4.min.css" rel="stylesheet"/>
+<link href="../../assets/stylesheets/palette.06af60db.min.css" rel="stylesheet"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback" rel="stylesheet"/>
+<style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+<script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+</head>
+<body data-md-color-accent="blue" data-md-color-primary="blue" data-md-color-scheme="default" dir="ltr">
+<input autocomplete="off" class="md-toggle" data-md-toggle="drawer" id="__drawer" type="checkbox"/>
+<input autocomplete="off" class="md-toggle" data-md-toggle="search" id="__search" type="checkbox"/>
+<label class="md-overlay" for="__drawer"></label>
+<div data-md-component="skip">
+<a class="md-skip" href="#configurable-type-discovery">
+          Skip to content
+        </a>
+</div>
+<div data-md-component="announce">
+</div>
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+<nav aria-label="Header" class="md-header__inner md-grid">
+<a aria-label="Neuroglia Python Framework" class="md-header__button md-logo" data-md-component="logo" href="../.." title="Neuroglia Python Framework">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+</a>
+<label class="md-header__button md-icon" for="__drawer">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+</label>
+<div class="md-header__title" data-md-component="header-title">
+<div class="md-header__ellipsis">
+<div class="md-header__topic">
+<span class="md-ellipsis">
+            Neuroglia Python Framework
+          </span>
+</div>
+<div class="md-header__topic" data-md-component="header-topic">
+<span class="md-ellipsis">
+            
+              Configurable Type Discovery
+            
+          </span>
+</div>
+</div>
+</div>
+<form class="md-header__option" data-md-component="palette">
+<input aria-label="Switch to dark mode" class="md-option" data-md-color-accent="blue" data-md-color-media="" data-md-color-primary="blue" data-md-color-scheme="default" id="__palette_0" name="__palette" type="radio"/>
+<label class="md-header__button md-icon" for="__palette_1" hidden="" title="Switch to dark mode">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+</label>
+<input aria-label="Switch to light mode" class="md-option" data-md-color-accent="blue" data-md-color-media="" data-md-color-primary="blue" data-md-color-scheme="slate" id="__palette_1" name="__palette" type="radio"/>
+<label class="md-header__button md-icon" for="__palette_0" hidden="" title="Switch to light mode">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+</label>
+</form>
+<script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+<label class="md-header__button md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+</label>
+<div class="md-search" data-md-component="search" role="dialog">
+<label class="md-search__overlay" for="__search"></label>
+<div class="md-search__inner" role="search">
+<form class="md-search__form" name="search">
+<input aria-label="Search" autocapitalize="off" autocomplete="off" autocorrect="off" class="md-search__input" data-md-component="search-query" name="query" placeholder="Search" required="" spellcheck="false" type="text"/>
+<label class="md-search__icon md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+</label>
+<nav aria-label="Search" class="md-search__options">
+<a aria-label="Share" class="md-search__icon md-icon" data-clipboard="" data-clipboard-text="" data-md-component="search-share" href="javascript:void(0)" tabindex="-1" title="Share">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"></path></svg>
+</a>
+<button aria-label="Clear" class="md-search__icon md-icon" tabindex="-1" title="Clear" type="reset">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+</button>
+</nav>
+</form>
+<div class="md-search__output">
+<div class="md-search__scrollwrap" data-md-scrollfix="" tabindex="0">
+<div class="md-search-result" data-md-component="search-result">
+<div class="md-search-result__meta">
+            Initializing search
+          </div>
+<ol class="md-search-result__list" role="presentation"></ol>
+</div>
+</div>
+</div>
+</div>
+</div>
+</nav>
+<nav aria-label="Tabs" class="md-tabs" data-md-component="tabs">
+<div class="md-grid">
+<ul class="md-tabs__list">
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../..">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../getting-started/">
+          
+  
+  
+  Getting Started
+
+        </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../mario-pizzeria/">
+          
+  
+  
+  Mario's Pizzeria
+
+        </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../patterns/">
+          
+  
+  
+  Patterns
+
+        </a>
+</li>
+<li class="md-tabs__item md-tabs__item--active">
+<a class="md-tabs__link" href="../">
+          
+  
+  
+  Features
+
+        </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../guides/">
+          
+  
+  
+  Guides
+
+        </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../samples/">
+          
+  
+  
+  Samples
+
+        </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../references/oauth-oidc-jwt/">
+          
+  
+  
+  References
+
+        </a>
+</li>
+</ul>
+</div>
+</nav>
+</header>
+<div class="md-container" data-md-component="container">
+<main class="md-main" data-md-component="main">
+<div class="md-main__inner md-grid">
+<div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="Navigation" class="md-nav md-nav--primary md-nav--lifted" data-md-level="0">
+<label class="md-nav__title" for="__drawer">
+<a aria-label="Neuroglia Python Framework" class="md-nav__button md-logo" data-md-component="logo" href="../.." title="Neuroglia Python Framework">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+</a>
+    Neuroglia Python Framework
+  </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../..">
+<span class="md-ellipsis">
+    Home
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_2" type="checkbox"/>
+<label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+<span class="md-ellipsis">
+    Getting Started
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_2_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_2">
+<span class="md-nav__icon md-icon"></span>
+            Getting Started
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../getting-started/">
+<span class="md-ellipsis">
+    Overview
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../guides/3-min-bootstrap/">
+<span class="md-ellipsis">
+    3-Minute Bootstrap
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../guides/local-development/">
+<span class="md-ellipsis">
+    Local Development Setup
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../guides/mario-pizzeria-tutorial/">
+<span class="md-ellipsis">
+    Mario's Pizzeria Tutorial
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_3" type="checkbox"/>
+<label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+<span class="md-ellipsis">
+    Mario's Pizzeria
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_3_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_3">
+<span class="md-nav__icon md-icon"></span>
+            Mario's Pizzeria
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../mario-pizzeria/">
+<span class="md-ellipsis">
+    Case Study Overview
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../mario-pizzeria/business-analysis/">
+<span class="md-ellipsis">
+    Business Analysis
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../mario-pizzeria/technical-architecture/">
+<span class="md-ellipsis">
+    Technical Architecture
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../mario-pizzeria/domain-design/">
+<span class="md-ellipsis">
+    Domain Design
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../mario-pizzeria/implementation-guide/">
+<span class="md-ellipsis">
+    Implementation Guide
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../mario-pizzeria/testing-deployment/">
+<span class="md-ellipsis">
+    Testing &amp; Deployment
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_4" type="checkbox"/>
+<label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+<span class="md-ellipsis">
+    Patterns
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_4_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_4">
+<span class="md-nav__icon md-icon"></span>
+            Patterns
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../patterns/">
+<span class="md-ellipsis">
+    Overview
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../patterns/clean-architecture/">
+<span class="md-ellipsis">
+    Clean Architecture
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../patterns/domain-driven-design/">
+<span class="md-ellipsis">
+    Domain Driven Design
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../patterns/dependency-injection/">
+<span class="md-ellipsis">
+    Dependency Injection
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../patterns/cqrs/">
+<span class="md-ellipsis">
+    CQRS &amp; Mediation
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../patterns/event-driven/">
+<span class="md-ellipsis">
+    Event-Driven
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../patterns/event-sourcing/">
+<span class="md-ellipsis">
+    Event Sourcing
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../patterns/reactive-programming/">
+<span class="md-ellipsis">
+    Reactive Programming
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../patterns/repository/">
+<span class="md-ellipsis">
+    Repository
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../patterns/resource-oriented-architecture/">
+<span class="md-ellipsis">
+    Resource-Oriented Architecture
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../patterns/watcher-reconciliation-patterns/">
+<span class="md-ellipsis">
+    Watcher &amp; Reconciliation Patterns
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../patterns/watcher-reconciliation-execution/">
+<span class="md-ellipsis">
+    Watcher &amp; Reconciliation Execution
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+<input checked="" class="md-nav__toggle md-toggle" id="__nav_5" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+<span class="md-ellipsis">
+    Features
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="true" aria-labelledby="__nav_5_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_5">
+<span class="md-nav__icon md-icon"></span>
+            Features
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../">
+<span class="md-ellipsis">
+    Overview
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../mvc-controllers/">
+<span class="md-ellipsis">
+    MVC Controllers
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../data-access/">
+<span class="md-ellipsis">
+    Data Access
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../serialization/">
+<span class="md-ellipsis">
+    Serialization
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--active">
+<input class="md-nav__toggle md-toggle" id="__toc" type="checkbox"/>
+<label class="md-nav__link md-nav__link--active" for="__toc">
+<span class="md-ellipsis">
+    Configurable Type Discovery
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<a class="md-nav__link md-nav__link--active" href="./">
+<span class="md-ellipsis">
+    Configurable Type Discovery
+    
+  </span>
+</a>
+<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#overview">
+<span class="md-ellipsis">
+      🎯 Overview
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#core-components">
+<span class="md-ellipsis">
+      🏗️ Core Components
+    </span>
+</a>
+<nav aria-label="🏗️ Core Components" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#typeregistry">
+<span class="md-ellipsis">
+      TypeRegistry
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#enhanced-jsonserializer">
+<span class="md-ellipsis">
+      Enhanced JsonSerializer
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#configuration-methods">
+<span class="md-ellipsis">
+      🚀 Configuration Methods
+    </span>
+</a>
+<nav aria-label="🚀 Configuration Methods" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#method-1-direct-configuration">
+<span class="md-ellipsis">
+      Method 1: Direct Configuration
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#method-2-post-configuration-registration">
+<span class="md-ellipsis">
+      Method 2: Post-Configuration Registration
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#method-3-direct-typeregistry-access">
+<span class="md-ellipsis">
+      Method 3: Direct TypeRegistry Access
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#usage-examples">
+<span class="md-ellipsis">
+      🧪 Usage Examples
+    </span>
+</a>
+<nav aria-label="🧪 Usage Examples" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#mario-pizzeria-configuration">
+<span class="md-ellipsis">
+      Mario Pizzeria Configuration
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#microservice-configuration">
+<span class="md-ellipsis">
+      Microservice Configuration
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#flat-project-structure">
+<span class="md-ellipsis">
+      Flat Project Structure
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#dynamic-type-discovery">
+<span class="md-ellipsis">
+      🔧 Dynamic Type Discovery
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#best-practices">
+<span class="md-ellipsis">
+      💡 Best Practices
+    </span>
+</a>
+<nav aria-label="💡 Best Practices" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#1-specific-module-registration">
+<span class="md-ellipsis">
+      1. Specific Module Registration
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#2-layer-appropriate-registration">
+<span class="md-ellipsis">
+      2. Layer-Appropriate Registration
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#3-performance-optimization">
+<span class="md-ellipsis">
+      3. Performance Optimization
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#4-modular-configuration">
+<span class="md-ellipsis">
+      4. Modular Configuration
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#related-documentation">
+<span class="md-ellipsis">
+      🔗 Related Documentation
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#testing-configuration">
+<span class="md-ellipsis">
+      🧪 Testing Configuration
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../object-mapping/">
+<span class="md-ellipsis">
+    Object Mapping
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../background-task-scheduling/">
+<span class="md-ellipsis">
+    Background Task Scheduling
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../redis-cache-repository/">
+<span class="md-ellipsis">
+    Redis Cache Repository
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../http-service-client/">
+<span class="md-ellipsis">
+    HTTP Service Client
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../case-conversion-utilities/">
+<span class="md-ellipsis">
+    Case Conversion Utilities
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../enhanced-model-validation/">
+<span class="md-ellipsis">
+    Enhanced Model Validation
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../mermaid-diagrams/">
+<span class="md-ellipsis">
+    Mermaid Diagrams
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_6" type="checkbox"/>
+<label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+<span class="md-ellipsis">
+    Guides
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_6_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_6">
+<span class="md-nav__icon md-icon"></span>
+            Guides
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../guides/">
+<span class="md-ellipsis">
+    Overview
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../guides/project-setup/">
+<span class="md-ellipsis">
+    Project Setup
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../guides/testing-setup/">
+<span class="md-ellipsis">
+    Testing Setup
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_7" type="checkbox"/>
+<label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+<span class="md-ellipsis">
+    Samples
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_7_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_7">
+<span class="md-nav__icon md-icon"></span>
+            Samples
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../samples/">
+<span class="md-ellipsis">
+    Overview
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../samples/openbank/">
+<span class="md-ellipsis">
+    OpenBank
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../samples/api_gateway/">
+<span class="md-ellipsis">
+    API Gateway
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../samples/desktop_controller/">
+<span class="md-ellipsis">
+    Desktop Controller
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_8" type="checkbox"/>
+<label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+<span class="md-ellipsis">
+    References
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_8_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_8">
+<span class="md-nav__icon md-icon"></span>
+            References
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../references/oauth-oidc-jwt/">
+<span class="md-ellipsis">
+    OAuth, OIDC &amp; JWT
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../references/source_code_naming_convention/">
+<span class="md-ellipsis">
+    Source Code Naming Conventions
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../references/12-factor-app/">
+<span class="md-ellipsis">
+    12-Factor App
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../references/python_type_hints/">
+<span class="md-ellipsis">
+    Python Type Hints
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../references/python_modular_code/">
+<span class="md-ellipsis">
+    Python Modular Code
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../references/python_object_oriented/">
+<span class="md-ellipsis">
+    Python Object-Oriented Programming
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../references/python_generic_types/">
+<span class="md-ellipsis">
+    Python Generic Types
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#overview">
+<span class="md-ellipsis">
+      🎯 Overview
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#core-components">
+<span class="md-ellipsis">
+      🏗️ Core Components
+    </span>
+</a>
+<nav aria-label="🏗️ Core Components" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#typeregistry">
+<span class="md-ellipsis">
+      TypeRegistry
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#enhanced-jsonserializer">
+<span class="md-ellipsis">
+      Enhanced JsonSerializer
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#configuration-methods">
+<span class="md-ellipsis">
+      🚀 Configuration Methods
+    </span>
+</a>
+<nav aria-label="🚀 Configuration Methods" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#method-1-direct-configuration">
+<span class="md-ellipsis">
+      Method 1: Direct Configuration
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#method-2-post-configuration-registration">
+<span class="md-ellipsis">
+      Method 2: Post-Configuration Registration
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#method-3-direct-typeregistry-access">
+<span class="md-ellipsis">
+      Method 3: Direct TypeRegistry Access
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#usage-examples">
+<span class="md-ellipsis">
+      🧪 Usage Examples
+    </span>
+</a>
+<nav aria-label="🧪 Usage Examples" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#mario-pizzeria-configuration">
+<span class="md-ellipsis">
+      Mario Pizzeria Configuration
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#microservice-configuration">
+<span class="md-ellipsis">
+      Microservice Configuration
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#flat-project-structure">
+<span class="md-ellipsis">
+      Flat Project Structure
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#dynamic-type-discovery">
+<span class="md-ellipsis">
+      🔧 Dynamic Type Discovery
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#best-practices">
+<span class="md-ellipsis">
+      💡 Best Practices
+    </span>
+</a>
+<nav aria-label="💡 Best Practices" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#1-specific-module-registration">
+<span class="md-ellipsis">
+      1. Specific Module Registration
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#2-layer-appropriate-registration">
+<span class="md-ellipsis">
+      2. Layer-Appropriate Registration
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#3-performance-optimization">
+<span class="md-ellipsis">
+      3. Performance Optimization
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#4-modular-configuration">
+<span class="md-ellipsis">
+      4. Modular Configuration
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#related-documentation">
+<span class="md-ellipsis">
+      🔗 Related Documentation
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#testing-configuration">
+<span class="md-ellipsis">
+      🧪 Testing Configuration
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div class="md-content" data-md-component="content">
+<article class="md-content__inner md-typeset">
+<h1 id="configurable-type-discovery">🎯 Configurable Type Discovery<a class="headerlink" href="#configurable-type-discovery" title="Permanent link">¶</a></h1>
+<p>The Neuroglia framework provides a flexible TypeRegistry system that allows applications to configure which modules should be scanned for domain types (enums, value objects, etc.) without hardcoding patterns in the framework itself.</p>
+<h2 id="overview">🎯 Overview<a class="headerlink" href="#overview" title="Permanent link">¶</a></h2>
+<p>The TypeRegistry replaces hardcoded domain structure assumptions with a clean, configurable approach:</p>
+<ul>
+<li><strong>Framework Agnostic</strong>: No domain-specific knowledge in framework code</li>
+<li><strong>Configurable</strong>: Applications specify their exact module structure</li>
+<li><strong>Performance Optimized</strong>: Only scans registered modules instead of trying dozens of patterns</li>
+<li><strong>Extensible</strong>: Supports dynamic type discovery and multiple configuration methods</li>
+</ul>
+<h2 id="core-components">🏗️ Core Components<a class="headerlink" href="#core-components" title="Permanent link">¶</a></h2>
+<h3 id="typeregistry">TypeRegistry<a class="headerlink" href="#typeregistry" title="Permanent link">¶</a></h3>
+<p>The <code>TypeRegistry</code> provides centralized type discovery using the framework's existing utilities:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.core.type_registry</span><span class="w"> </span><span class="kn">import</span> <span class="n">TypeRegistry</span><span class="p">,</span> <span class="n">get_type_registry</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.core.type_finder</span><span class="w"> </span><span class="kn">import</span> <span class="n">TypeFinder</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.core.module_loader</span><span class="w"> </span><span class="kn">import</span> <span class="n">ModuleLoader</span>
+
+<span class="c1"># Get the global type registry instance</span>
+<span class="n">registry</span> <span class="o">=</span> <span class="n">get_type_registry</span><span class="p">()</span>
+
+<span class="c1"># Register modules for type discovery</span>
+<span class="n">registry</span><span class="o">.</span><span class="n">register_modules</span><span class="p">([</span>
+    <span class="s2">"domain.entities.enums"</span><span class="p">,</span>
+    <span class="s2">"domain.value_objects"</span><span class="p">,</span>
+    <span class="s2">"shared.types"</span>
+<span class="p">])</span>
+
+<span class="c1"># Find enum for a value</span>
+<span class="n">pizza_size_enum</span> <span class="o">=</span> <span class="n">registry</span><span class="o">.</span><span class="n">find_enum_for_value</span><span class="p">(</span><span class="s2">"LARGE"</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="enhanced-jsonserializer">Enhanced JsonSerializer<a class="headerlink" href="#enhanced-jsonserializer" title="Permanent link">¶</a></h3>
+<p>The <code>JsonSerializer</code> now accepts configurable type modules:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.serialization.json</span><span class="w"> </span><span class="kn">import</span> <span class="n">JsonSerializer</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.hosting.enhanced_web_application_builder</span><span class="w"> </span><span class="kn">import</span> <span class="n">EnhancedWebApplicationBuilder</span>
+
+<span class="n">builder</span> <span class="o">=</span> <span class="n">EnhancedWebApplicationBuilder</span><span class="p">()</span>
+
+<span class="c1"># Configure with specific type modules</span>
+<span class="n">JsonSerializer</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="n">type_modules</span><span class="o">=</span><span class="p">[</span>
+    <span class="s2">"domain.entities.enums"</span><span class="p">,</span>      <span class="c1"># Main enum module</span>
+    <span class="s2">"domain.entities"</span><span class="p">,</span>            <span class="c1"># Entity module (for embedded enums)</span>
+    <span class="s2">"domain.value_objects"</span><span class="p">,</span>       <span class="c1"># Value objects with enums</span>
+<span class="p">])</span>
+</code></pre></div>
+<h2 id="configuration-methods">🚀 Configuration Methods<a class="headerlink" href="#configuration-methods" title="Permanent link">¶</a></h2>
+<h3 id="method-1-direct-configuration">Method 1: Direct Configuration<a class="headerlink" href="#method-1-direct-configuration" title="Permanent link">¶</a></h3>
+<p>Configure type modules during JsonSerializer setup:</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">configure_application</span><span class="p">():</span>
+    <span class="n">builder</span> <span class="o">=</span> <span class="n">EnhancedWebApplicationBuilder</span><span class="p">()</span>
+
+    <span class="c1"># Configure JsonSerializer with your domain modules</span>
+    <span class="n">JsonSerializer</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="n">type_modules</span><span class="o">=</span><span class="p">[</span>
+        <span class="s2">"myapp.domain.enums"</span><span class="p">,</span>         <span class="c1"># Primary enumerations</span>
+        <span class="s2">"myapp.domain.entities"</span><span class="p">,</span>      <span class="c1"># Domain entities</span>
+        <span class="s2">"myapp.domain.value_objects"</span><span class="p">,</span> <span class="c1"># Value objects</span>
+        <span class="s2">"myapp.shared.types"</span><span class="p">,</span>         <span class="c1"># Shared types</span>
+        <span class="s2">"myapp.integration.external"</span>  <span class="c1"># External API types</span>
+    <span class="p">])</span>
+
+    <span class="k">return</span> <span class="n">builder</span>
+</code></pre></div>
+<h3 id="method-2-post-configuration-registration">Method 2: Post-Configuration Registration<a class="headerlink" href="#method-2-post-configuration-registration" title="Permanent link">¶</a></h3>
+<p>Register modules after initial configuration:</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">configure_with_registration</span><span class="p">():</span>
+    <span class="n">builder</span> <span class="o">=</span> <span class="n">EnhancedWebApplicationBuilder</span><span class="p">()</span>
+
+    <span class="c1"># Basic configuration</span>
+    <span class="n">JsonSerializer</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">)</span>
+
+    <span class="c1"># Register additional type modules</span>
+    <span class="n">JsonSerializer</span><span class="o">.</span><span class="n">register_type_modules</span><span class="p">([</span>
+        <span class="s2">"myapp.domain.aggregates"</span><span class="p">,</span>
+        <span class="s2">"myapp.domain.value_objects"</span><span class="p">,</span>
+        <span class="s2">"myapp.shared.enums"</span>
+    <span class="p">])</span>
+
+    <span class="k">return</span> <span class="n">builder</span>
+</code></pre></div>
+<h3 id="method-3-direct-typeregistry-access">Method 3: Direct TypeRegistry Access<a class="headerlink" href="#method-3-direct-typeregistry-access" title="Permanent link">¶</a></h3>
+<p>Configure the TypeRegistry directly for advanced scenarios:</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">configure_advanced</span><span class="p">():</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.core.type_registry</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_type_registry</span>
+
+    <span class="c1"># Get the global registry</span>
+    <span class="n">registry</span> <span class="o">=</span> <span class="n">get_type_registry</span><span class="p">()</span>
+
+    <span class="c1"># Register core domain modules</span>
+    <span class="n">registry</span><span class="o">.</span><span class="n">register_modules</span><span class="p">([</span>
+        <span class="s2">"orders.domain.entities"</span><span class="p">,</span>
+        <span class="s2">"orders.domain.enums"</span>
+    <span class="p">])</span>
+
+    <span class="c1"># Register shared library types</span>
+    <span class="n">registry</span><span class="o">.</span><span class="n">register_modules</span><span class="p">([</span>
+        <span class="s2">"shared_lib.common.enums"</span><span class="p">,</span>
+        <span class="s2">"payment_gateway.types"</span>
+    <span class="p">])</span>
+
+    <span class="c1"># Standard JsonSerializer configuration</span>
+    <span class="n">builder</span> <span class="o">=</span> <span class="n">EnhancedWebApplicationBuilder</span><span class="p">()</span>
+    <span class="n">JsonSerializer</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">builder</span>
+</code></pre></div>
+<h2 id="usage-examples">🧪 Usage Examples<a class="headerlink" href="#usage-examples" title="Permanent link">¶</a></h2>
+<h3 id="mario-pizzeria-configuration">Mario Pizzeria Configuration<a class="headerlink" href="#mario-pizzeria-configuration" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.serialization.json</span><span class="w"> </span><span class="kn">import</span> <span class="n">JsonSerializer</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.hosting.enhanced_web_application_builder</span><span class="w"> </span><span class="kn">import</span> <span class="n">EnhancedWebApplicationBuilder</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">configure_mario_pizzeria</span><span class="p">():</span>
+    <span class="n">builder</span> <span class="o">=</span> <span class="n">EnhancedWebApplicationBuilder</span><span class="p">()</span>
+
+    <span class="c1"># Configure with Mario Pizzeria's domain structure</span>
+    <span class="n">JsonSerializer</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="n">type_modules</span><span class="o">=</span><span class="p">[</span>
+        <span class="s2">"domain.entities.enums"</span><span class="p">,</span>      <span class="c1"># PizzaSize, OrderStatus, Priority</span>
+        <span class="s2">"domain.entities"</span><span class="p">,</span>            <span class="c1"># Pizza, Order entities</span>
+        <span class="s2">"domain.value_objects"</span><span class="p">,</span>       <span class="c1"># Money, Address value objects</span>
+    <span class="p">])</span>
+
+    <span class="k">return</span> <span class="n">builder</span>
+</code></pre></div>
+<h3 id="microservice-configuration">Microservice Configuration<a class="headerlink" href="#microservice-configuration" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">configure_microservice</span><span class="p">():</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.core.type_registry</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_type_registry</span>
+
+    <span class="n">registry</span> <span class="o">=</span> <span class="n">get_type_registry</span><span class="p">()</span>
+
+    <span class="c1"># Register internal domain types</span>
+    <span class="n">registry</span><span class="o">.</span><span class="n">register_modules</span><span class="p">([</span>
+        <span class="s2">"orders.domain.entities"</span><span class="p">,</span>
+        <span class="s2">"orders.domain.enums"</span>
+    <span class="p">])</span>
+
+    <span class="c1"># Register external service types we need to deserialize</span>
+    <span class="n">registry</span><span class="o">.</span><span class="n">register_modules</span><span class="p">([</span>
+        <span class="s2">"payment_service.models"</span><span class="p">,</span>
+        <span class="s2">"inventory_service.types"</span><span class="p">,</span>
+        <span class="s2">"shared_contracts.events"</span>
+    <span class="p">])</span>
+
+    <span class="n">builder</span> <span class="o">=</span> <span class="n">EnhancedWebApplicationBuilder</span><span class="p">()</span>
+    <span class="n">JsonSerializer</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">builder</span>
+</code></pre></div>
+<h3 id="flat-project-structure">Flat Project Structure<a class="headerlink" href="#flat-project-structure" title="Permanent link">¶</a></h3>
+<p>For projects with simple, flat module structure:</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">configure_flat_structure</span><span class="p">():</span>
+    <span class="n">builder</span> <span class="o">=</span> <span class="n">EnhancedWebApplicationBuilder</span><span class="p">()</span>
+
+    <span class="c1"># Simple flat structure: models.py, enums.py, types.py</span>
+    <span class="n">JsonSerializer</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="n">type_modules</span><span class="o">=</span><span class="p">[</span>
+        <span class="s2">"models"</span><span class="p">,</span>        <span class="c1"># Main model types</span>
+        <span class="s2">"enums"</span><span class="p">,</span>         <span class="c1"># All enumerations</span>
+        <span class="s2">"types"</span><span class="p">,</span>         <span class="c1"># Custom types</span>
+        <span class="s2">"constants"</span>      <span class="c1"># Constants and lookups</span>
+    <span class="p">])</span>
+
+    <span class="k">return</span> <span class="n">builder</span>
+</code></pre></div>
+<h2 id="dynamic-type-discovery">🔧 Dynamic Type Discovery<a class="headerlink" href="#dynamic-type-discovery" title="Permanent link">¶</a></h2>
+<p>For advanced scenarios, you can dynamically discover and register types:</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">dynamic_type_discovery</span><span class="p">():</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.core.type_registry</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_type_registry</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.core.type_finder</span><span class="w"> </span><span class="kn">import</span> <span class="n">TypeFinder</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.core.module_loader</span><span class="w"> </span><span class="kn">import</span> <span class="n">ModuleLoader</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">enum</span><span class="w"> </span><span class="kn">import</span> <span class="n">Enum</span>
+
+    <span class="n">registry</span> <span class="o">=</span> <span class="n">get_type_registry</span><span class="p">()</span>
+
+    <span class="c1"># Discover all enum types in base modules</span>
+    <span class="n">base_modules</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"myapp.domain"</span><span class="p">,</span> <span class="s2">"myapp.shared"</span><span class="p">]</span>
+
+    <span class="k">for</span> <span class="n">base_module_name</span> <span class="ow">in</span> <span class="n">base_modules</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">base_module</span> <span class="o">=</span> <span class="n">ModuleLoader</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">base_module_name</span><span class="p">)</span>
+
+            <span class="c1"># Find all enum types</span>
+            <span class="n">enum_types</span> <span class="o">=</span> <span class="n">TypeFinder</span><span class="o">.</span><span class="n">get_types</span><span class="p">(</span>
+                <span class="n">base_module</span><span class="p">,</span>
+                <span class="n">predicate</span><span class="o">=</span><span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="nb">type</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">Enum</span><span class="p">)</span> <span class="ow">and</span> <span class="n">t</span> <span class="o">!=</span> <span class="n">Enum</span><span class="p">,</span>
+                <span class="n">include_sub_modules</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">include_sub_packages</span><span class="o">=</span><span class="kc">True</span>
+            <span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">enum_types</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Discovered </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">enum_types</span><span class="p">)</span><span class="si">}</span><span class="s2"> enum types in </span><span class="si">{</span><span class="n">base_module_name</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+                <span class="c1"># Types are automatically cached when accessed</span>
+
+        <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Module </span><span class="si">{</span><span class="n">base_module_name</span><span class="si">}</span><span class="s2"> not available"</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">registry</span>
+</code></pre></div>
+<h2 id="best-practices">💡 Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">¶</a></h2>
+<h3 id="1-specific-module-registration">1. Specific Module Registration<a class="headerlink" href="#1-specific-module-registration" title="Permanent link">¶</a></h3>
+<p>Register only the modules that contain types you need:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Good: Specific modules</span>
+<span class="n">JsonSerializer</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="n">type_modules</span><span class="o">=</span><span class="p">[</span>
+    <span class="s2">"domain.entities.enums"</span><span class="p">,</span>      <span class="c1"># Specific enum module</span>
+    <span class="s2">"domain.value_objects"</span>        <span class="c1"># Specific value object module</span>
+<span class="p">])</span>
+
+<span class="c1"># Avoid: Too broad</span>
+<span class="n">JsonSerializer</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="n">type_modules</span><span class="o">=</span><span class="p">[</span>
+    <span class="s2">"domain"</span><span class="p">,</span>                     <span class="c1"># Too broad, includes everything</span>
+    <span class="s2">"application"</span>                 <span class="c1"># Application layer shouldn't have enums</span>
+<span class="p">])</span>
+</code></pre></div>
+<h3 id="2-layer-appropriate-registration">2. Layer-Appropriate Registration<a class="headerlink" href="#2-layer-appropriate-registration" title="Permanent link">¶</a></h3>
+<p>Only register modules from appropriate architectural layers:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Good: Domain and integration layers</span>
+<span class="n">JsonSerializer</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="n">type_modules</span><span class="o">=</span><span class="p">[</span>
+    <span class="s2">"domain.entities.enums"</span><span class="p">,</span>         <span class="c1"># Domain layer</span>
+    <span class="s2">"domain.value_objects"</span><span class="p">,</span>          <span class="c1"># Domain layer</span>
+    <span class="s2">"integration.external_types"</span>     <span class="c1"># Integration layer for external APIs</span>
+<span class="p">])</span>
+
+<span class="c1"># Avoid: Application layer</span>
+<span class="n">JsonSerializer</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="n">type_modules</span><span class="o">=</span><span class="p">[</span>
+    <span class="s2">"application.commands"</span><span class="p">,</span>          <span class="c1"># Commands shouldn't have enums</span>
+    <span class="s2">"application.handlers"</span>           <span class="c1"># Handlers shouldn't have enums</span>
+<span class="p">])</span>
+</code></pre></div>
+<h3 id="3-performance-optimization">3. Performance Optimization<a class="headerlink" href="#3-performance-optimization" title="Permanent link">¶</a></h3>
+<p>Register modules in order of frequency of use:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Most frequently used enums first</span>
+<span class="n">JsonSerializer</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="n">type_modules</span><span class="o">=</span><span class="p">[</span>
+    <span class="s2">"domain.entities.enums"</span><span class="p">,</span>      <span class="c1"># Most common: PizzaSize, OrderStatus</span>
+    <span class="s2">"domain.value_objects"</span><span class="p">,</span>       <span class="c1"># Less common: specialized enums</span>
+    <span class="s2">"shared.constants"</span>            <span class="c1"># Least common: system constants</span>
+<span class="p">])</span>
+</code></pre></div>
+<h3 id="4-modular-configuration">4. Modular Configuration<a class="headerlink" href="#4-modular-configuration" title="Permanent link">¶</a></h3>
+<p>For large applications, organize configuration by feature:</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">configure_order_types</span><span class="p">():</span>
+    <span class="k">return</span> <span class="p">[</span>
+        <span class="s2">"orders.domain.enums"</span><span class="p">,</span>
+        <span class="s2">"orders.domain.entities"</span><span class="p">,</span>
+        <span class="s2">"orders.integration.payment_types"</span>
+    <span class="p">]</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">configure_inventory_types</span><span class="p">():</span>
+    <span class="k">return</span> <span class="p">[</span>
+        <span class="s2">"inventory.domain.enums"</span><span class="p">,</span>
+        <span class="s2">"inventory.domain.entities"</span><span class="p">,</span>
+        <span class="s2">"inventory.integration.supplier_types"</span>
+    <span class="p">]</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">configure_application</span><span class="p">():</span>
+    <span class="n">builder</span> <span class="o">=</span> <span class="n">EnhancedWebApplicationBuilder</span><span class="p">()</span>
+
+    <span class="n">all_type_modules</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">configure_order_types</span><span class="p">()</span> <span class="o">+</span>
+        <span class="n">configure_inventory_types</span><span class="p">()</span> <span class="o">+</span>
+        <span class="p">[</span><span class="s2">"shared.common.enums"</span><span class="p">]</span>
+    <span class="p">)</span>
+
+    <span class="n">JsonSerializer</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="n">type_modules</span><span class="o">=</span><span class="n">all_type_modules</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">builder</span>
+</code></pre></div>
+<h2 id="related-documentation">🔗 Related Documentation<a class="headerlink" href="#related-documentation" title="Permanent link">¶</a></h2>
+<ul>
+<li><a href="../data-access/">Data Access</a> - Repository patterns and serialization</li>
+<li><a href="../../getting-started/#domain-driven-design">Domain-Driven Design</a> - Domain layer organization</li>
+<li><a href="dependency-injection.md">Dependency Injection</a> - Service configuration patterns</li>
+</ul>
+<h2 id="testing-configuration">🧪 Testing Configuration<a class="headerlink" href="#testing-configuration" title="Permanent link">¶</a></h2>
+<p>Test your type configuration with different scenarios:</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_configured_serialization</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">"""Test that configured types are discovered correctly"""</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.core.type_registry</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_type_registry</span>
+
+    <span class="n">registry</span> <span class="o">=</span> <span class="n">get_type_registry</span><span class="p">()</span>
+    <span class="n">registry</span><span class="o">.</span><span class="n">register_modules</span><span class="p">([</span><span class="s2">"domain.entities.enums"</span><span class="p">])</span>
+
+    <span class="c1"># Test enum discovery</span>
+    <span class="n">pizza_size_enum</span> <span class="o">=</span> <span class="n">registry</span><span class="o">.</span><span class="n">find_enum_for_value</span><span class="p">(</span><span class="s2">"LARGE"</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">pizza_size_enum</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+    <span class="k">assert</span> <span class="n">pizza_size_enum</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"PizzaSize"</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"✅ Configured type discovery working correctly"</span><span class="p">)</span>
+</code></pre></div>
+<p>The configurable TypeRegistry approach ensures your application can specify exactly which modules contain domain types, making the framework truly generic while maintaining intelligent type inference capabilities.</p>
+</article>
+</div>
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+</div>
+<button class="md-top md-icon" data-md-component="top" hidden="" type="button">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"></path></svg>
+  Back to top
+</button>
+</main>
+<footer class="md-footer">
+<div class="md-footer-meta md-typeset">
+<div class="md-footer-meta__inner md-grid">
+<div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" rel="noopener" target="_blank">
+      Material for MkDocs
+    </a>
+</div>
+<div class="md-social">
+<a class="md-social__link" href="https://github.com/bvandewe/pyneuro" rel="noopener" target="_blank" title="github.com">
+<svg viewbox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><!--! Font Awesome Free 7.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"></path></svg>
+</a>
+</div>
+</div>
+</div>
+</footer>
+</div>
+<div class="md-dialog" data-md-component="dialog">
+<div class="md-dialog__inner md-typeset"></div>
+</div>
+<script id="__config" type="application/json">{"base": "../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.expand", "navigation.top", "search.highlight", "search.share"], "search": "../../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+<script src="../../assets/javascripts/bundle.f55a23d4.min.js"></script>
+</body>
+</html>
