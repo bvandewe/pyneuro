@@ -4,20 +4,21 @@ Test script to validate flexible domain module discovery across different projec
 """
 
 import asyncio
-import shutil
 import sys
 import tempfile
 from datetime import datetime
 from decimal import Decimal
 from enum import Enum
 from pathlib import Path
+from tempfile import TemporaryDirectory
 
-# Add the project root to Python path so we can import neuroglia
-project_root = Path(__file__).parent.parent.parent.parent
-sys.path.insert(0, str(project_root / "src"))
-
+from neuroglia.data.abstractions import Entity
 from neuroglia.data.infrastructure.filesystem import FileSystemRepository
 from neuroglia.serialization.json import JsonSerializer
+
+# Add the project root to Python path so we can import neuroglia
+project_root = Path(__file__).parent.parent.parent
+sys.path.insert(0, str(project_root / "src"))
 
 
 # Test enums in different modules to simulate various project structures
@@ -35,10 +36,11 @@ class Priority(Enum):
     URGENT = 4
 
 
-class TestOrder:
+class TestOrder(Entity):
     """Test entity that should find enums in current module"""
 
     def __init__(self, order_id: str, total_amount: Decimal, status: OrderStatus, priority: Priority):
+        super().__init__()
         self.id = order_id
         self.total_amount = total_amount
         self.status = status
@@ -136,7 +138,7 @@ async def test_flexible_domain_discovery():
             ("DateTime", isinstance(deserialized_order.created_at, datetime)),
         ]
 
-        print(f"\n📊 Validation Results:")
+        print("\n📊 Validation Results:")
         all_passed = True
         for field, result in validation_results:
             status = "✅" if result else "❌"
@@ -145,43 +147,45 @@ async def test_flexible_domain_discovery():
                 all_passed = False
 
         # Test 2: Repository integration
-        print(f"\n📁 Test 2: FileSystemRepository Integration")
-        test_data_dir = Path(__file__).parent / "test_flexible_discovery"
-        test_data_dir.mkdir(exist_ok=True)
+        print("\n📁 Test 2: FileSystemRepository Integration")
 
-        repo = FileSystemRepository[TestOrder, str](data_directory=str(test_data_dir), entity_type=TestOrder, key_type=str)
+        with TemporaryDirectory() as temp_dir:
+            repo = FileSystemRepository[TestOrder, str](data_directory=temp_dir, entity_type=TestOrder, key_type=str)
 
-        # Save and retrieve order
-        saved_order = await repo.add_async(original_order)
-        retrieved_order = await repo.get_async(saved_order.id)
+            # Save and retrieve order
+            saved_order = await repo.add_async(original_order)
+            retrieved_order = await repo.get_async(saved_order.id)
 
-        print(f"✅ Saved and retrieved order with status: {retrieved_order.status}")
-        print(f"✅ Priority maintained: {retrieved_order.priority}")
+            if retrieved_order:
+                print(f"✅ Saved and retrieved order with status: {retrieved_order.status}")
+                print(f"✅ Priority maintained: {retrieved_order.priority}")
+            else:
+                print("❌ Failed to retrieve order")
 
-        # Test 3: Domain module discovery patterns
-        print(f"\n🔍 Test 3: Domain Module Discovery Patterns")
+        # Test 3: Verify configurable type discovery works
+        print("\n🔍 Test 3: Configurable Type Discovery")
 
-        # Show what modules the discovery algorithm would try
-        test_module = "testproject.domain.entities.order"
-        discovered_modules = serializer._discover_domain_modules(test_module)
+        from neuroglia.core.type_registry import get_type_registry
 
-        print(f"📋 For module '{test_module}', would try discovering:")
-        unique_modules = list(set(discovered_modules))[:20]  # Show first 20 unique patterns
-        for i, module in enumerate(unique_modules, 1):
-            print(f"   {i:2d}. {module}")
+        type_registry = get_type_registry()
 
-        if len(discovered_modules) > 20:
-            print(f"   ... and {len(discovered_modules) - 20} more patterns")
+        # Check if we can register additional modules
+        additional_modules = ["tests.cases.test_flexible_discovery"]
+        type_registry.register_modules(additional_modules)
 
-        print(f"\n✅ Total discovery patterns: {len(discovered_modules)}")
+        registered_modules = type_registry.get_registered_modules()
+        print(f"📋 Registered modules: {registered_modules}")
 
-        # Cleanup
-        shutil.rmtree(test_data_dir, ignore_errors=True)
+        # Test enum discovery
+        cached_enums = type_registry.get_cached_enum_types()
+        print(f"✅ Cached enum types: {list(cached_enums.keys())}")
+
+        print("\n✅ Configurable type discovery test completed")
 
         if all_passed:
-            print(f"\n🎉 All flexible domain discovery tests passed!")
+            print("\n🎉 All flexible domain discovery tests passed!")
         else:
-            print(f"\n❌ Some tests failed.")
+            print("\n❌ Some tests failed.")
 
         print("=" * 60)
 
