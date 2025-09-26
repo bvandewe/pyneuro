@@ -6,31 +6,35 @@ Provides concrete implementations for various data storage backends.
 
 # Import what's available - some may be optional dependencies
 try:
-    from .mongo import MongoRepository, MongoQueryProvider
+    from .mongo import MongoQueryProvider, MongoRepository
+
     __all__ = ["MongoRepository", "MongoQueryProvider"]
 except ImportError:
     __all__ = []
 
 try:
     from .memory import MemoryRepository
+
     __all__.append("MemoryRepository")
 except ImportError:
     pass
 
 try:
     from .event_sourcing import (
-        EventStore,
-        EventSourcingRepository,
         AggregateRoot,
+        EventSourcingRepository,
+        EventStore,
+        EventStream,
         Snapshot,
-        EventStream
     )
-    __all__.extend([
-        "EventStore",
-        "EventSourcingRepository", 
-        "AggregateRoot",
-        "Snapshot",
-        "EventStream"
-    ])
+
+    __all__.extend(["EventStore", "EventSourcingRepository", "AggregateRoot", "Snapshot", "EventStream"])
+except ImportError:
+    pass
+
+try:
+    from .filesystem import FileSystemRepository
+
+    __all__.append("FileSystemRepository")
 except ImportError:
     pass

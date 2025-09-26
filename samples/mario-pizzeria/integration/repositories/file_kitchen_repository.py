@@ -1,80 +1,40 @@
-"""File-based implementation of kitchen repository"""
+"""File-based implementation of kitchen repository using generic FileSystemRepository"""
 
-import json
-from pathlib import Path
 from typing import Optional
 
 from domain.entities import Kitchen
 from domain.repositories import IKitchenRepository
 
+from neuroglia.data.infrastructure.filesystem import FileSystemRepository
 
-class FileKitchenRepository(IKitchenRepository):
-    """File-based implementation of kitchen repository"""
 
-    def __init__(self, data_directory: str = "data/kitchen"):
-        self.data_directory = Path(data_directory)
-        self.data_directory.mkdir(parents=True, exist_ok=True)
-        self.kitchen_file = self.data_directory / "status.json"
-        self._ensure_kitchen_exists()
+class FileKitchenRepository(FileSystemRepository[Kitchen, str], IKitchenRepository):
+    """File-based implementation of kitchen repository using generic FileSystemRepository"""
 
-    def _ensure_kitchen_exists(self):
-        """Ensure kitchen state file exists"""
-        if not self.kitchen_file.exists():
-            default_kitchen = {
-                "id": "kitchen",
-                "active_orders": [],
-                "max_concurrent_orders": 3,
-                "total_orders_processed": 0,
-            }
-            with open(self.kitchen_file, "w") as f:
-                json.dump(default_kitchen, f, indent=2)
+    def __init__(self, data_directory: str = "data"):
+        super().__init__(data_directory=data_directory, entity_type=Kitchen, key_type=str)
 
-    async def get_async(self, id: str) -> Optional[Kitchen]:
-        """Get kitchen by ID"""
-        return await self.get_kitchen_state_async()
+    async def get_kitchen_async(self) -> Optional[Kitchen]:
+        """Get the kitchen instance (singleton)"""
+        kitchen = await self.get_async("kitchen")
+        if kitchen is None:
+            # Create default kitchen
+            kitchen = Kitchen(max_concurrent_orders=5)
+            kitchen.id = "kitchen"  # Ensure singleton ID
+            kitchen = await self.add_async(kitchen)
+        return kitchen
 
-    async def add_async(self, entity: Kitchen) -> Kitchen:
-        """Add kitchen state"""
-        return await self.save_async(entity)
-
-    async def save_async(self, entity: Kitchen) -> Kitchen:
-        """Save kitchen state"""
-        return await self.update_kitchen_state_async(entity)
-
-    async def update_async(self, entity: Kitchen) -> Kitchen:
-        """Update kitchen state"""
-        return await self.update_kitchen_state_async(entity)
-
-    async def remove_async(self, id: str) -> None:
-        """Not supported for singleton kitchen"""
-        raise NotImplementedError("Cannot remove singleton kitchen")
-
-    async def contains_async(self, id: str) -> bool:
-        """Check if kitchen exists"""
-        return id == "kitchen"
+    async def save_kitchen_async(self, kitchen: Kitchen) -> Kitchen:
+        """Save the kitchen state"""
+        return await self.update_async(kitchen)
 
     async def get_kitchen_state_async(self) -> Kitchen:
-        """Get current kitchen state"""
-        with open(self.kitchen_file, "r") as f:
-            data = json.load(f)
-
-        kitchen = Kitchen(max_concurrent_orders=data.get("max_concurrent_orders", 3))
-        kitchen.id = data["id"]
-        kitchen.active_orders = data.get("active_orders", [])
-        kitchen.total_orders_processed = data.get("total_orders_processed", 0)
-
+        """Get the current kitchen state (singleton)"""
+        kitchen = await self.get_kitchen_async()
+        if kitchen is None:
+            raise RuntimeError("Kitchen not found")
         return kitchen
 
     async def update_kitchen_state_async(self, kitchen: Kitchen) -> Kitchen:
-        """Update kitchen state"""
-        data = {
-            "id": kitchen.id,
-            "active_orders": kitchen.active_orders,
-            "max_concurrent_orders": kitchen.max_concurrent_orders,
-            "total_orders_processed": kitchen.total_orders_processed,
-        }
-
-        with open(self.kitchen_file, "w") as f:
-            json.dump(data, f, indent=2)
-
-        return kitchen
+        """Update the kitchen state"""
+        return await self.update_async(kitchen)
