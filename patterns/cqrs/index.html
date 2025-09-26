@@ -5,11 +5,11 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width,initial-scale=1" name="viewport"/>
-<link href="../clean-architecture/" rel="prev"/>
+<link href="../dependency-injection/" rel="prev"/>
 <link href="../event-driven/" rel="next"/>
 <link href="../../assets/images/favicon.png" rel="icon"/>
 <meta content="mkdocs-1.6.1, mkdocs-material-9.6.20" name="generator"/>
-<title>CQRS - Neuroglia Python Framework</title>
+<title>CQRS &amp; Mediation - Neuroglia Python Framework</title>
 <link href="../../assets/stylesheets/main.e53b48f4.min.css" rel="stylesheet"/>
 <link href="../../assets/stylesheets/palette.06af60db.min.css" rel="stylesheet"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
@@ -22,7 +22,7 @@
 <input autocomplete="off" class="md-toggle" data-md-toggle="search" id="__search" type="checkbox"/>
 <label class="md-overlay" for="__drawer"></label>
 <div data-md-component="skip">
-<a class="md-skip" href="#cqrs-pattern">
+<a class="md-skip" href="#cqrs-mediation-pattern">
           Skip to content
         </a>
 </div>
@@ -46,7 +46,7 @@
 <div class="md-header__topic" data-md-component="header-topic">
 <span class="md-ellipsis">
             
-              CQRS
+              CQRS &amp; Mediation
             
           </span>
 </div>
@@ -122,14 +122,12 @@
 </li>
 <li class="md-tabs__item">
 <a class="md-tabs__link" href="../../mario-pizzeria/">
-        
+          
   
   
-    
-  
-  Mario Pizzeria
+  Mario's Pizzeria
 
-      </a>
+        </a>
 </li>
 <li class="md-tabs__item md-tabs__item--active">
 <a class="md-tabs__link" href="../">
@@ -168,7 +166,7 @@
         </a>
 </li>
 <li class="md-tabs__item">
-<a class="md-tabs__link" href="../../references/source_code_naming_convention/">
+<a class="md-tabs__link" href="../../references/oauth-oidc-jwt/">
           
   
   
@@ -252,13 +250,71 @@
 </ul>
 </nav>
 </li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_3" type="checkbox"/>
+<label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+<span class="md-ellipsis">
+    Mario's Pizzeria
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_3_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_3">
+<span class="md-nav__icon md-icon"></span>
+            Mario's Pizzeria
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
 <li class="md-nav__item">
 <a class="md-nav__link" href="../../mario-pizzeria/">
 <span class="md-ellipsis">
-    Mario Pizzeria
+    Case Study Overview
     
   </span>
 </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../mario-pizzeria/business-analysis/">
+<span class="md-ellipsis">
+    Business Analysis
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../mario-pizzeria/technical-architecture/">
+<span class="md-ellipsis">
+    Technical Architecture
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../mario-pizzeria/domain-design/">
+<span class="md-ellipsis">
+    Domain Design
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../mario-pizzeria/implementation-guide/">
+<span class="md-ellipsis">
+    Implementation Guide
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../mario-pizzeria/testing-deployment/">
+<span class="md-ellipsis">
+    Testing &amp; Deployment
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
 </li>
 <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
 <input checked="" class="md-nav__toggle md-toggle" id="__nav_4" type="checkbox"/>
@@ -291,18 +347,34 @@
   </span>
 </a>
 </li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../domain-driven-design/">
+<span class="md-ellipsis">
+    Domain Driven Design
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../dependency-injection/">
+<span class="md-ellipsis">
+    Dependency Injection
+    
+  </span>
+</a>
+</li>
 <li class="md-nav__item md-nav__item--active">
 <input class="md-nav__toggle md-toggle" id="__toc" type="checkbox"/>
 <label class="md-nav__link md-nav__link--active" for="__toc">
 <span class="md-ellipsis">
-    CQRS
+    CQRS &amp; Mediation
     
   </span>
 <span class="md-nav__icon md-icon"></span>
 </label>
 <a class="md-nav__link md-nav__link--active" href="./">
 <span class="md-ellipsis">
-    CQRS
+    CQRS &amp; Mediation
     
   </span>
 </a>
@@ -318,6 +390,24 @@
       🎯 Overview
     </span>
 </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#mediation-pattern-integration">
+<span class="md-ellipsis">
+      🎭 Mediation Pattern Integration
+    </span>
+</a>
+<nav aria-label="🎭 Mediation Pattern Integration" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#mediator-architecture">
+<span class="md-ellipsis">
+      Mediator Architecture
+    </span>
+</a>
+</li>
+</ul>
+</nav>
 </li>
 <li class="md-nav__item">
 <a class="md-nav__link" href="#benefits">
@@ -418,6 +508,177 @@
     </span>
 </a>
 </li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#handler-implementation-patterns">
+<span class="md-ellipsis">
+      🎪 Handler Implementation Patterns
+    </span>
+</a>
+<nav aria-label="🎪 Handler Implementation Patterns" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#command-handlers-with-business-logic">
+<span class="md-ellipsis">
+      Command Handlers with Business Logic
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#query-handlers-with-caching">
+<span class="md-ellipsis">
+      Query Handlers with Caching
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#event-handlers-for-side-effects">
+<span class="md-ellipsis">
+      Event Handlers for Side Effects
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#pipeline-behaviors">
+<span class="md-ellipsis">
+      🛡️ Pipeline Behaviors
+    </span>
+</a>
+<nav aria-label="🛡️ Pipeline Behaviors" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#validation-behavior">
+<span class="md-ellipsis">
+      Validation Behavior
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#caching-behavior">
+<span class="md-ellipsis">
+      Caching Behavior
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#transaction-behavior">
+<span class="md-ellipsis">
+      Transaction Behavior
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#framework-integration">
+<span class="md-ellipsis">
+      🚀 Framework Integration
+    </span>
+</a>
+<nav aria-label="🚀 Framework Integration" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#service-registration">
+<span class="md-ellipsis">
+      Service Registration
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#controller-integration_1">
+<span class="md-ellipsis">
+      Controller Integration
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#testing-patterns">
+<span class="md-ellipsis">
+      🧪 Testing Patterns
+    </span>
+</a>
+<nav aria-label="🧪 Testing Patterns" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#command-handler-testing">
+<span class="md-ellipsis">
+      Command Handler Testing
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#integration-testing">
+<span class="md-ellipsis">
+      Integration Testing
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#pattern-benefits">
+<span class="md-ellipsis">
+      🎯 Pattern Benefits
+    </span>
+</a>
+<nav aria-label="🎯 Pattern Benefits" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#cqrs-with-mediation-advantages">
+<span class="md-ellipsis">
+      CQRS with Mediation Advantages
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#when-to-use">
+<span class="md-ellipsis">
+      When to Use
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#when-not-to-use">
+<span class="md-ellipsis">
+      When Not to Use
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#related-patterns_1">
+<span class="md-ellipsis">
+      🔗 Related Patterns
+    </span>
+</a>
+<nav aria-label="🔗 Related Patterns" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#complementary-patterns">
+<span class="md-ellipsis">
+      Complementary Patterns
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#integration-examples">
+<span class="md-ellipsis">
+      Integration Examples
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
 </ul>
 </nav>
 </li>
@@ -425,6 +686,22 @@
 <a class="md-nav__link" href="../event-driven/">
 <span class="md-ellipsis">
     Event-Driven
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../event-sourcing/">
+<span class="md-ellipsis">
+    Event Sourcing
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../reactive-programming/">
+<span class="md-ellipsis">
+    Reactive Programming
     
   </span>
 </a>
@@ -488,22 +765,6 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../features/dependency-injection/">
-<span class="md-ellipsis">
-    Dependency Injection
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../../features/cqrs-mediation/">
-<span class="md-ellipsis">
-    CQRS &amp; Mediation
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
 <a class="md-nav__link" href="../../features/mvc-controllers/">
 <span class="md-ellipsis">
     MVC Controllers
@@ -520,14 +781,6 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../features/event-sourcing/">
-<span class="md-ellipsis">
-    Event Sourcing
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
 <a class="md-nav__link" href="../../features/serialization/">
 <span class="md-ellipsis">
     Serialization
@@ -539,14 +792,6 @@
 <a class="md-nav__link" href="../../features/object-mapping/">
 <span class="md-ellipsis">
     Object Mapping
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../../features/reactive-programming/">
-<span class="md-ellipsis">
-    Reactive Programming
     
   </span>
 </a>
@@ -710,6 +955,14 @@
           </label>
 <ul class="md-nav__list" data-md-scrollfix="">
 <li class="md-nav__item">
+<a class="md-nav__link" href="../../references/oauth-oidc-jwt/">
+<span class="md-ellipsis">
+    OAuth, OIDC &amp; JWT
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
 <a class="md-nav__link" href="../../references/source_code_naming_convention/">
 <span class="md-ellipsis">
     Source Code Naming Conventions
@@ -734,14 +987,6 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../references/python_generic_types/">
-<span class="md-ellipsis">
-    Python Generic Types
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
 <a class="md-nav__link" href="../../references/python_modular_code/">
 <span class="md-ellipsis">
     Python Modular Code
@@ -753,6 +998,14 @@
 <a class="md-nav__link" href="../../references/python_object_oriented/">
 <span class="md-ellipsis">
     Python Object-Oriented Programming
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../references/python_generic_types/">
+<span class="md-ellipsis">
+    Python Generic Types
     
   </span>
 </a>
@@ -780,6 +1033,24 @@
       🎯 Overview
     </span>
 </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#mediation-pattern-integration">
+<span class="md-ellipsis">
+      🎭 Mediation Pattern Integration
+    </span>
+</a>
+<nav aria-label="🎭 Mediation Pattern Integration" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#mediator-architecture">
+<span class="md-ellipsis">
+      Mediator Architecture
+    </span>
+</a>
+</li>
+</ul>
+</nav>
 </li>
 <li class="md-nav__item">
 <a class="md-nav__link" href="#benefits">
@@ -880,6 +1151,177 @@
     </span>
 </a>
 </li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#handler-implementation-patterns">
+<span class="md-ellipsis">
+      🎪 Handler Implementation Patterns
+    </span>
+</a>
+<nav aria-label="🎪 Handler Implementation Patterns" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#command-handlers-with-business-logic">
+<span class="md-ellipsis">
+      Command Handlers with Business Logic
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#query-handlers-with-caching">
+<span class="md-ellipsis">
+      Query Handlers with Caching
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#event-handlers-for-side-effects">
+<span class="md-ellipsis">
+      Event Handlers for Side Effects
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#pipeline-behaviors">
+<span class="md-ellipsis">
+      🛡️ Pipeline Behaviors
+    </span>
+</a>
+<nav aria-label="🛡️ Pipeline Behaviors" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#validation-behavior">
+<span class="md-ellipsis">
+      Validation Behavior
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#caching-behavior">
+<span class="md-ellipsis">
+      Caching Behavior
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#transaction-behavior">
+<span class="md-ellipsis">
+      Transaction Behavior
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#framework-integration">
+<span class="md-ellipsis">
+      🚀 Framework Integration
+    </span>
+</a>
+<nav aria-label="🚀 Framework Integration" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#service-registration">
+<span class="md-ellipsis">
+      Service Registration
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#controller-integration_1">
+<span class="md-ellipsis">
+      Controller Integration
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#testing-patterns">
+<span class="md-ellipsis">
+      🧪 Testing Patterns
+    </span>
+</a>
+<nav aria-label="🧪 Testing Patterns" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#command-handler-testing">
+<span class="md-ellipsis">
+      Command Handler Testing
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#integration-testing">
+<span class="md-ellipsis">
+      Integration Testing
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#pattern-benefits">
+<span class="md-ellipsis">
+      🎯 Pattern Benefits
+    </span>
+</a>
+<nav aria-label="🎯 Pattern Benefits" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#cqrs-with-mediation-advantages">
+<span class="md-ellipsis">
+      CQRS with Mediation Advantages
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#when-to-use">
+<span class="md-ellipsis">
+      When to Use
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#when-not-to-use">
+<span class="md-ellipsis">
+      When Not to Use
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#related-patterns_1">
+<span class="md-ellipsis">
+      🔗 Related Patterns
+    </span>
+</a>
+<nav aria-label="🔗 Related Patterns" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#complementary-patterns">
+<span class="md-ellipsis">
+      Complementary Patterns
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#integration-examples">
+<span class="md-ellipsis">
+      Integration Examples
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
 </ul>
 </nav>
 </div>
@@ -887,12 +1329,11 @@
 </div>
 <div class="md-content" data-md-component="content">
 <article class="md-content__inner md-typeset">
-<h1 id="cqrs-pattern">🎯 CQRS Pattern<a class="headerlink" href="#cqrs-pattern" title="Permanent link">¶</a></h1>
-<div class="admonition warning">
-<p class="admonition-title">🚧 Under Construction</p>
-</div>
-<p>This page is currently being developed with comprehensive examples from Mario's Pizzeria. More detailed implementations and code samples are being added.</p>
-<p>Command Query Responsibility Segregation (CQRS) separates read and write operations into distinct models, enabling optimized data access patterns and scalable architecture.</p>
+<h1 id="cqrs-mediation-pattern">🎯 CQRS &amp; Mediation Pattern<a class="headerlink" href="#cqrs-mediation-pattern" title="Permanent link">¶</a></h1>
+<p>Command Query Responsibility Segregation (CQRS) with Mediation separates read and write operations into distinct
+models while using a mediator to decouple application logic and promote clean separation between commands, queries,
+and their handlers. This pattern combines the scalability benefits of CQRS with the architectural benefits of the
+mediator pattern.</p>
 <h2 id="overview">🎯 Overview<a class="headerlink" href="#overview" title="Permanent link">¶</a></h2>
 <p>CQRS divides your application's operations into two distinct paths: <strong>Commands</strong> for writes (state changes) and <strong>Queries</strong> for reads (data retrieval). Mario's Pizzeria demonstrates this pattern through its order management and menu systems.</p>
 <pre class="mermaid"><code>flowchart TD
@@ -937,6 +1378,52 @@
 
     WriteDB -.-&gt;|"🔄 Sync"| ReadDB
     EventStore -.-&gt;|"📈 Project"| ReadDB</code></pre>
+<h2 id="mediation-pattern-integration">🎭 Mediation Pattern Integration<a class="headerlink" href="#mediation-pattern-integration" title="Permanent link">¶</a></h2>
+<p>The mediation layer provides centralized request routing and cross-cutting concerns:</p>
+<ul>
+<li><strong>Mediator</strong>: Central dispatcher that routes commands, queries, and events to appropriate handlers</li>
+<li><strong>Pipeline Behaviors</strong>: Cross-cutting concerns like validation, logging, caching, and transactions</li>
+<li><strong>Handler Discovery</strong>: Automatic registration and resolution of command/query handlers</li>
+<li><strong>Event Publishing</strong>: Automatic dispatch of domain events to registered event handlers</li>
+</ul>
+<h3 id="mediator-architecture">Mediator Architecture<a class="headerlink" href="#mediator-architecture" title="Permanent link">¶</a></h3>
+<pre class="mermaid"><code>flowchart TD
+    Controller[🎮 Controller]
+    Mediator[🎭 Mediator]
+
+    subgraph "📋 Pipeline Behaviors"
+        Validation[✅ Validation]
+        Logging[📝 Logging]
+        Caching[💾 Caching]
+        Transaction[🔄 Transaction]
+    end
+
+    subgraph "🎯 Handlers"
+        CommandHandler[📝 Command Handler]
+        QueryHandler[📖 Query Handler]
+        EventHandler[📡 Event Handler]
+    end
+
+    subgraph "💾 Infrastructure"
+        Database[(🗄️ Database)]
+        EventStore[(📚 Event Store)]
+        Cache[(⚡ Cache)]
+    end
+
+    Controller --&gt; Mediator
+    Mediator --&gt; Validation
+    Validation --&gt; Logging
+    Logging --&gt; Caching
+    Caching --&gt; Transaction
+
+    Transaction --&gt; CommandHandler
+    Transaction --&gt; QueryHandler
+    CommandHandler --&gt; EventHandler
+
+    CommandHandler --&gt; Database
+    QueryHandler --&gt; Database
+    EventHandler --&gt; EventStore
+    QueryHandler --&gt; Cache</code></pre>
 <h2 id="benefits">✅ Benefits<a class="headerlink" href="#benefits" title="Permanent link">¶</a></h2>
 <h3 id="1-optimized-performance">1. <strong>Optimized Performance</strong><a class="headerlink" href="#1-optimized-performance" title="Permanent link">¶</a></h3>
 <p>Different models for reads and writes enable performance optimization:</p>
@@ -1201,8 +1688,558 @@
 <li><strong><a href="../event-driven/">Event-Driven Pattern</a></strong> - Commands often produce events</li>
 <li><strong><a href="../repository/">Repository Pattern</a></strong> - Separate repositories for reads and writes</li>
 </ul>
+<h2 id="handler-implementation-patterns">🎪 Handler Implementation Patterns<a class="headerlink" href="#handler-implementation-patterns" title="Permanent link">¶</a></h2>
+<h3 id="command-handlers-with-business-logic">Command Handlers with Business Logic<a class="headerlink" href="#command-handlers-with-business-logic" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.mediation.mediator</span><span class="w"> </span><span class="kn">import</span> <span class="n">CommandHandler</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.mapping.mapper</span><span class="w"> </span><span class="kn">import</span> <span class="n">Mapper</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.data.abstractions</span><span class="w"> </span><span class="kn">import</span> <span class="n">Repository</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">decimal</span><span class="w"> </span><span class="kn">import</span> <span class="n">Decimal</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">PlaceOrderCommandHandler</span><span class="p">(</span><span class="n">CommandHandler</span><span class="p">[</span><span class="n">PlaceOrderCommand</span><span class="p">,</span> <span class="n">OperationResult</span><span class="p">]):</span>
+<span class="w">    </span><span class="sd">"""Handles pizza order placement with full business logic"""</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                 <span class="n">order_repository</span><span class="p">:</span> <span class="n">Repository</span><span class="p">[</span><span class="n">Order</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span>
+                 <span class="n">pizza_repository</span><span class="p">:</span> <span class="n">Repository</span><span class="p">[</span><span class="n">Pizza</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span>
+                 <span class="n">mapper</span><span class="p">:</span> <span class="n">Mapper</span><span class="p">,</span>
+                 <span class="n">payment_service</span><span class="p">:</span> <span class="n">IPaymentService</span><span class="p">,</span>
+                 <span class="n">notification_service</span><span class="p">:</span> <span class="n">INotificationService</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">order_repository</span> <span class="o">=</span> <span class="n">order_repository</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pizza_repository</span> <span class="o">=</span> <span class="n">pizza_repository</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mapper</span> <span class="o">=</span> <span class="n">mapper</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">payment_service</span> <span class="o">=</span> <span class="n">payment_service</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">notification_service</span> <span class="o">=</span> <span class="n">notification_service</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">handle_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command</span><span class="p">:</span> <span class="n">PlaceOrderCommand</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">OperationResult</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># 1. Validate pizza availability</span>
+            <span class="n">pizza_ids</span> <span class="o">=</span> <span class="p">[</span><span class="n">item</span><span class="o">.</span><span class="n">pizza_id</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">command</span><span class="o">.</span><span class="n">pizza_items</span><span class="p">]</span>
+            <span class="n">available_pizzas</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">pizza_repository</span><span class="o">.</span><span class="n">get_by_ids_async</span><span class="p">(</span><span class="n">pizza_ids</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">available_pizzas</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">pizza_ids</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">bad_request</span><span class="p">(</span><span class="s2">"One or more pizzas are not available"</span><span class="p">)</span>
+
+            <span class="c1"># 2. Calculate total with size and topping modifications</span>
+            <span class="n">total_amount</span> <span class="o">=</span> <span class="n">Decimal</span><span class="p">(</span><span class="s2">"0"</span><span class="p">)</span>
+            <span class="n">order_pizzas</span> <span class="o">=</span> <span class="p">[]</span>
+
+            <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">command</span><span class="o">.</span><span class="n">pizza_items</span><span class="p">:</span>
+                <span class="n">base_pizza</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">available_pizzas</span> <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">item</span><span class="o">.</span><span class="n">pizza_id</span><span class="p">)</span>
+
+                <span class="n">customized_pizza</span> <span class="o">=</span> <span class="n">Pizza</span><span class="p">(</span>
+                    <span class="n">name</span><span class="o">=</span><span class="n">base_pizza</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                    <span class="n">size</span><span class="o">=</span><span class="n">item</span><span class="o">.</span><span class="n">size</span><span class="p">,</span>
+                    <span class="n">base_price</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_calculate_size_price</span><span class="p">(</span><span class="n">base_pizza</span><span class="o">.</span><span class="n">base_price</span><span class="p">,</span> <span class="n">item</span><span class="o">.</span><span class="n">size</span><span class="p">),</span>
+                    <span class="n">toppings</span><span class="o">=</span><span class="n">item</span><span class="o">.</span><span class="n">toppings</span><span class="p">,</span>
+                    <span class="n">special_instructions</span><span class="o">=</span><span class="n">item</span><span class="o">.</span><span class="n">special_instructions</span>
+                <span class="p">)</span>
+
+                <span class="n">order_pizzas</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">customized_pizza</span><span class="p">)</span>
+                <span class="n">total_amount</span> <span class="o">+=</span> <span class="n">customized_pizza</span><span class="o">.</span><span class="n">total_price</span>
+
+            <span class="c1"># 3. Create order domain entity</span>
+            <span class="n">order</span> <span class="o">=</span> <span class="n">Order</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+                <span class="n">customer_name</span><span class="o">=</span><span class="n">command</span><span class="o">.</span><span class="n">customer_name</span><span class="p">,</span>
+                <span class="n">customer_phone</span><span class="o">=</span><span class="n">command</span><span class="o">.</span><span class="n">customer_phone</span><span class="p">,</span>
+                <span class="n">customer_address</span><span class="o">=</span><span class="n">command</span><span class="o">.</span><span class="n">customer_address</span><span class="p">,</span>
+                <span class="n">pizzas</span><span class="o">=</span><span class="n">order_pizzas</span><span class="p">,</span>
+                <span class="n">payment_method</span><span class="o">=</span><span class="n">command</span><span class="o">.</span><span class="n">payment_method</span>
+            <span class="p">)</span>
+
+            <span class="c1"># 4. Persist order (domain events will be published automatically)</span>
+            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">order_repository</span><span class="o">.</span><span class="n">save_async</span><span class="p">(</span><span class="n">order</span><span class="p">)</span>
+
+            <span class="c1"># 5. Return success result</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">created</span><span class="p">({</span>
+                <span class="s2">"order_id"</span><span class="p">:</span> <span class="n">order</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                <span class="s2">"total_amount"</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">total_amount</span><span class="p">),</span>
+                <span class="s2">"estimated_ready_time"</span><span class="p">:</span> <span class="n">order</span><span class="o">.</span><span class="n">estimated_ready_time</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span>
+            <span class="p">})</span>
+
+        <span class="k">except</span> <span class="n">PaymentDeclinedException</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">bad_request</span><span class="p">(</span><span class="s2">"Payment was declined. Please try a different payment method."</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">KitchenOverloadedException</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">service_unavailable</span><span class="p">(</span><span class="s2">"Kitchen is at capacity. Estimated wait time is 45 minutes."</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">ex</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">internal_server_error</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Failed to place order: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">ex</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_calculate_size_price</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">base_price</span><span class="p">:</span> <span class="n">Decimal</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Decimal</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Calculate price based on pizza size"""</span>
+        <span class="n">multipliers</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"small"</span><span class="p">:</span> <span class="n">Decimal</span><span class="p">(</span><span class="s2">"0.8"</span><span class="p">),</span> <span class="s2">"medium"</span><span class="p">:</span> <span class="n">Decimal</span><span class="p">(</span><span class="s2">"1.0"</span><span class="p">),</span> <span class="s2">"large"</span><span class="p">:</span> <span class="n">Decimal</span><span class="p">(</span><span class="s2">"1.3"</span><span class="p">)}</span>
+        <span class="k">return</span> <span class="n">base_price</span> <span class="o">*</span> <span class="n">multipliers</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">size</span><span class="p">,</span> <span class="n">Decimal</span><span class="p">(</span><span class="s2">"1.0"</span><span class="p">))</span>
+</code></pre></div>
+<h3 id="query-handlers-with-caching">Query Handlers with Caching<a class="headerlink" href="#query-handlers-with-caching" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.mediation.mediator</span><span class="w"> </span><span class="kn">import</span> <span class="n">QueryHandler</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">GetMenuQueryHandler</span><span class="p">(</span><span class="n">QueryHandler</span><span class="p">[</span><span class="n">GetMenuQuery</span><span class="p">,</span> <span class="n">OperationResult</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">dict</span><span class="p">]]]):</span>
+<span class="w">    </span><span class="sd">"""Handles menu retrieval queries with caching optimization"""</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                 <span class="n">pizza_repository</span><span class="p">:</span> <span class="n">Repository</span><span class="p">[</span><span class="n">Pizza</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span>
+                 <span class="n">cache_service</span><span class="p">:</span> <span class="n">ICacheService</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pizza_repository</span> <span class="o">=</span> <span class="n">pizza_repository</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cache_service</span> <span class="o">=</span> <span class="n">cache_service</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">handle_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">:</span> <span class="n">GetMenuQuery</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">OperationResult</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">dict</span><span class="p">]]:</span>
+        <span class="c1"># Check cache first for performance</span>
+        <span class="n">cache_key</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"menu:</span><span class="si">{</span><span class="n">query</span><span class="o">.</span><span class="n">category</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">query</span><span class="o">.</span><span class="n">include_seasonal</span><span class="si">}</span><span class="s2">"</span>
+        <span class="n">cached_menu</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">cache_service</span><span class="o">.</span><span class="n">get_async</span><span class="p">(</span><span class="n">cache_key</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">cached_menu</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">ok</span><span class="p">(</span><span class="n">cached_menu</span><span class="p">)</span>
+
+        <span class="c1"># Fetch from repository</span>
+        <span class="n">pizzas</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">pizza_repository</span><span class="o">.</span><span class="n">get_all_async</span><span class="p">()</span>
+
+        <span class="c1"># Apply filters</span>
+        <span class="k">if</span> <span class="n">query</span><span class="o">.</span><span class="n">category</span><span class="p">:</span>
+            <span class="n">pizzas</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">pizzas</span> <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">category</span> <span class="o">==</span> <span class="n">query</span><span class="o">.</span><span class="n">category</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">query</span><span class="o">.</span><span class="n">include_seasonal</span><span class="p">:</span>
+            <span class="n">pizzas</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">pizzas</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">p</span><span class="o">.</span><span class="n">is_seasonal</span><span class="p">]</span>
+
+        <span class="c1"># Build optimized menu response</span>
+        <span class="n">menu_items</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">pizza</span> <span class="ow">in</span> <span class="n">pizzas</span><span class="p">:</span>
+            <span class="n">menu_items</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+                <span class="s2">"id"</span><span class="p">:</span> <span class="n">pizza</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                <span class="s2">"name"</span><span class="p">:</span> <span class="n">pizza</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                <span class="s2">"description"</span><span class="p">:</span> <span class="n">pizza</span><span class="o">.</span><span class="n">description</span><span class="p">,</span>
+                <span class="s2">"base_price"</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">pizza</span><span class="o">.</span><span class="n">base_price</span><span class="p">),</span>
+                <span class="s2">"category"</span><span class="p">:</span> <span class="n">pizza</span><span class="o">.</span><span class="n">category</span><span class="p">,</span>
+                <span class="s2">"preparation_time_minutes"</span><span class="p">:</span> <span class="n">pizza</span><span class="o">.</span><span class="n">preparation_time_minutes</span><span class="p">,</span>
+                <span class="s2">"available_sizes"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"small"</span><span class="p">,</span> <span class="s2">"medium"</span><span class="p">,</span> <span class="s2">"large"</span><span class="p">],</span>
+                <span class="s2">"available_toppings"</span><span class="p">:</span> <span class="n">pizza</span><span class="o">.</span><span class="n">available_toppings</span><span class="p">,</span>
+                <span class="s2">"is_seasonal"</span><span class="p">:</span> <span class="n">pizza</span><span class="o">.</span><span class="n">is_seasonal</span>
+            <span class="p">})</span>
+
+        <span class="c1"># Cache for 15 minutes</span>
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">cache_service</span><span class="o">.</span><span class="n">set_async</span><span class="p">(</span><span class="n">cache_key</span><span class="p">,</span> <span class="n">menu_items</span><span class="p">,</span> <span class="n">expire_minutes</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">ok</span><span class="p">(</span><span class="n">menu_items</span><span class="p">)</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">GetKitchenQueueQueryHandler</span><span class="p">(</span><span class="n">QueryHandler</span><span class="p">[</span><span class="n">GetKitchenQueueQuery</span><span class="p">,</span> <span class="n">OperationResult</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">dict</span><span class="p">]]]):</span>
+<span class="w">    </span><span class="sd">"""Handles kitchen queue queries for staff dashboard"""</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">order_repository</span><span class="p">:</span> <span class="n">Repository</span><span class="p">[</span><span class="n">Order</span><span class="p">,</span> <span class="nb">str</span><span class="p">]):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">order_repository</span> <span class="o">=</span> <span class="n">order_repository</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">handle_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">:</span> <span class="n">GetKitchenQueueQuery</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">OperationResult</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">dict</span><span class="p">]]:</span>
+        <span class="c1"># Get orders by status</span>
+        <span class="n">orders</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">order_repository</span><span class="o">.</span><span class="n">get_by_status_async</span><span class="p">(</span><span class="n">query</span><span class="o">.</span><span class="n">status</span><span class="p">)</span>
+
+        <span class="c1"># Sort by order time (FIFO)</span>
+        <span class="n">orders</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">o</span><span class="p">:</span> <span class="n">o</span><span class="o">.</span><span class="n">order_time</span><span class="p">)</span>
+
+        <span class="c1"># Build optimized queue response</span>
+        <span class="n">queue_items</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">order</span> <span class="ow">in</span> <span class="n">orders</span><span class="p">:</span>
+            <span class="n">queue_items</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+                <span class="s2">"order_id"</span><span class="p">:</span> <span class="n">order</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                <span class="s2">"customer_name"</span><span class="p">:</span> <span class="n">order</span><span class="o">.</span><span class="n">customer_name</span><span class="p">,</span>
+                <span class="s2">"order_time"</span><span class="p">:</span> <span class="n">order</span><span class="o">.</span><span class="n">order_time</span><span class="o">.</span><span class="n">isoformat</span><span class="p">(),</span>
+                <span class="s2">"estimated_ready_time"</span><span class="p">:</span> <span class="n">order</span><span class="o">.</span><span class="n">estimated_ready_time</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span> <span class="k">if</span> <span class="n">order</span><span class="o">.</span><span class="n">estimated_ready_time</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+                <span class="s2">"pizza_count"</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">order</span><span class="o">.</span><span class="n">pizzas</span><span class="p">),</span>
+                <span class="s2">"total_prep_time"</span><span class="p">:</span> <span class="nb">sum</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">preparation_time_minutes</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">order</span><span class="o">.</span><span class="n">pizzas</span><span class="p">),</span>
+                <span class="s2">"special_instructions"</span><span class="p">:</span> <span class="p">[</span><span class="n">p</span><span class="o">.</span><span class="n">special_instructions</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">order</span><span class="o">.</span><span class="n">pizzas</span> <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">special_instructions</span><span class="p">]</span>
+            <span class="p">})</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">ok</span><span class="p">(</span><span class="n">queue_items</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="event-handlers-for-side-effects">Event Handlers for Side Effects<a class="headerlink" href="#event-handlers-for-side-effects" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.mediation.mediator</span><span class="w"> </span><span class="kn">import</span> <span class="n">EventHandler</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">OrderPlacedEventHandler</span><span class="p">(</span><span class="n">EventHandler</span><span class="p">[</span><span class="n">OrderPlacedEvent</span><span class="p">]):</span>
+<span class="w">    </span><span class="sd">"""Handles order placed events - sends notifications and analytics"""</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                 <span class="n">notification_service</span><span class="p">:</span> <span class="n">INotificationService</span><span class="p">,</span>
+                 <span class="n">analytics_service</span><span class="p">:</span> <span class="n">IAnalyticsService</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">notification_service</span> <span class="o">=</span> <span class="n">notification_service</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">analytics_service</span> <span class="o">=</span> <span class="n">analytics_service</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">handle_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">OrderPlacedEvent</span><span class="p">):</span>
+        <span class="c1"># Send SMS confirmation to customer</span>
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">notification_service</span><span class="o">.</span><span class="n">send_sms</span><span class="p">(</span>
+            <span class="n">phone</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">customer_phone</span><span class="p">,</span>
+            <span class="n">message</span><span class="o">=</span><span class="sa">f</span><span class="s2">"Order </span><span class="si">{</span><span class="n">event</span><span class="o">.</span><span class="n">order_id</span><span class="p">[:</span><span class="mi">8</span><span class="p">]</span><span class="si">}</span><span class="s2"> confirmed! "</span>
+                   <span class="sa">f</span><span class="s2">"Total: $</span><span class="si">{</span><span class="n">event</span><span class="o">.</span><span class="n">total_amount</span><span class="si">}</span><span class="s2">. "</span>
+                   <span class="sa">f</span><span class="s2">"Ready by: </span><span class="si">{</span><span class="n">event</span><span class="o">.</span><span class="n">estimated_ready_time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">'%H:%M'</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Notify kitchen staff</span>
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">notification_service</span><span class="o">.</span><span class="n">notify_kitchen_staff</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">"New order </span><span class="si">{</span><span class="n">event</span><span class="o">.</span><span class="n">order_id</span><span class="p">[:</span><span class="mi">8</span><span class="p">]</span><span class="si">}</span><span class="s2"> from </span><span class="si">{</span><span class="n">event</span><span class="o">.</span><span class="n">customer_name</span><span class="si">}</span><span class="s2">"</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Track order analytics</span>
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">analytics_service</span><span class="o">.</span><span class="n">track_order_placed</span><span class="p">(</span>
+            <span class="n">order_id</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">order_id</span><span class="p">,</span>
+            <span class="n">amount</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">total_amount</span><span class="p">,</span>
+            <span class="n">customer_type</span><span class="o">=</span><span class="s2">"returning"</span> <span class="k">if</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_returning_customer</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">customer_phone</span><span class="p">)</span> <span class="k">else</span> <span class="s2">"new"</span>
+        <span class="p">)</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">PizzaReadyEventHandler</span><span class="p">(</span><span class="n">EventHandler</span><span class="p">[</span><span class="n">PizzaReadyEvent</span><span class="p">]):</span>
+<span class="w">    </span><span class="sd">"""Handles pizza ready events - manages completion tracking"""</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                 <span class="n">order_service</span><span class="p">:</span> <span class="n">IOrderService</span><span class="p">,</span>
+                 <span class="n">performance_service</span><span class="p">:</span> <span class="n">IPerformanceService</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">order_service</span> <span class="o">=</span> <span class="n">order_service</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">performance_service</span> <span class="o">=</span> <span class="n">performance_service</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">handle_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">PizzaReadyEvent</span><span class="p">):</span>
+        <span class="c1"># Check if entire order is complete</span>
+        <span class="n">order_complete</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">order_service</span><span class="o">.</span><span class="n">check_if_order_complete</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">order_id</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">order_complete</span><span class="p">:</span>
+            <span class="c1"># Mark order as ready and notify customer</span>
+            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">order_service</span><span class="o">.</span><span class="n">mark_order_ready</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">order_id</span><span class="p">)</span>
+
+        <span class="c1"># Track pizza cooking performance</span>
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">performance_service</span><span class="o">.</span><span class="n">track_pizza_completion</span><span class="p">(</span>
+            <span class="n">order_id</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">order_id</span><span class="p">,</span>
+            <span class="n">pizza_index</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">pizza_index</span><span class="p">,</span>
+            <span class="n">actual_time</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">actual_cooking_time_minutes</span><span class="p">,</span>
+            <span class="n">completed_at</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">completed_at</span>
+        <span class="p">)</span>
+</code></pre></div>
+<h2 id="pipeline-behaviors">🛡️ Pipeline Behaviors<a class="headerlink" href="#pipeline-behaviors" title="Permanent link">¶</a></h2>
+<h3 id="validation-behavior">Validation Behavior<a class="headerlink" href="#validation-behavior" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.mediation.mediator</span><span class="w"> </span><span class="kn">import</span> <span class="n">PipelineBehavior</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">OrderValidationBehavior</span><span class="p">(</span><span class="n">PipelineBehavior</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Validates pizza orders before processing"""</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">handle_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">next_handler</span><span class="p">):</span>
+        <span class="c1"># Only validate order commands</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">PlaceOrderCommand</span><span class="p">):</span>
+            <span class="c1"># Business rule: minimum order amount</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">request</span><span class="o">.</span><span class="n">pizza_items</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">OperationResult</span><span class="o">.</span><span class="n">validation_error</span><span class="p">(</span><span class="s2">"Order must contain at least one pizza"</span><span class="p">)</span>
+
+            <span class="c1"># Business rule: validate customer info</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">request</span><span class="o">.</span><span class="n">customer_phone</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">customer_phone</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">OperationResult</span><span class="o">.</span><span class="n">validation_error</span><span class="p">(</span><span class="s2">"Valid phone number required"</span><span class="p">)</span>
+
+            <span class="c1"># Business rule: validate business hours</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_within_business_hours</span><span class="p">():</span>
+                <span class="k">return</span> <span class="n">OperationResult</span><span class="o">.</span><span class="n">validation_error</span><span class="p">(</span><span class="s2">"Sorry, we're closed! Kitchen hours are 11 AM - 10 PM"</span><span class="p">)</span>
+
+        <span class="c1"># Continue to next behavior/handler</span>
+        <span class="k">return</span> <span class="k">await</span> <span class="n">next_handler</span><span class="p">()</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_is_within_business_hours</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Check if current time is within business hours"""</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
+        <span class="n">current_hour</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">hour</span>
+        <span class="k">return</span> <span class="mi">11</span> <span class="o">&lt;=</span> <span class="n">current_hour</span> <span class="o">&lt;=</span> <span class="mi">22</span>  <span class="c1"># 11 AM to 10 PM</span>
+</code></pre></div>
+<h3 id="caching-behavior">Caching Behavior<a class="headerlink" href="#caching-behavior" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">QueryCachingBehavior</span><span class="p">(</span><span class="n">PipelineBehavior</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Caches query results based on query type and parameters"""</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cache_service</span><span class="p">:</span> <span class="n">ICacheService</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cache_service</span> <span class="o">=</span> <span class="n">cache_service</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">handle_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">next_handler</span><span class="p">):</span>
+        <span class="c1"># Only cache queries, not commands</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">Query</span><span class="p">):</span>
+            <span class="k">return</span> <span class="k">await</span> <span class="n">next_handler</span><span class="p">()</span>
+
+        <span class="c1"># Generate cache key</span>
+        <span class="n">cache_key</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generate_cache_key</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+
+        <span class="c1"># Try to get from cache first</span>
+        <span class="n">cached_result</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">cache_service</span><span class="o">.</span><span class="n">get_async</span><span class="p">(</span><span class="n">cache_key</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">cached_result</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">cached_result</span>
+
+        <span class="c1"># Execute query</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">next_handler</span><span class="p">()</span>
+
+        <span class="c1"># Cache successful results</span>
+        <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">is_success</span><span class="p">:</span>
+            <span class="c1"># Different TTL based on query type</span>
+            <span class="n">ttl_minutes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_cache_ttl</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">request</span><span class="p">))</span>
+            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">cache_service</span><span class="o">.</span><span class="n">set_async</span><span class="p">(</span><span class="n">cache_key</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span> <span class="n">expire_minutes</span><span class="o">=</span><span class="n">ttl_minutes</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">result</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_generate_cache_key</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">Query</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Generate cache key from request"""</span>
+        <span class="n">request_type</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="n">request</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span>
+        <span class="n">request_data</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">)</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">"query:</span><span class="si">{</span><span class="n">request_type</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="nb">hash</span><span class="p">(</span><span class="n">request_data</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_cache_ttl</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query_type</span><span class="p">:</span> <span class="n">Type</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Get cache TTL based on query type"""</span>
+        <span class="n">cache_strategies</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">GetMenuQuery</span><span class="p">:</span> <span class="mi">30</span><span class="p">,</span>           <span class="c1"># Menu changes infrequently</span>
+            <span class="n">GetOrderStatusQuery</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>     <span class="c1"># Order status changes frequently</span>
+            <span class="n">GetKitchenQueueQuery</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>    <span class="c1"># Kitchen queue changes regularly</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">cache_strategies</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">query_type</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>  <span class="c1"># Default 5 minutes</span>
+</code></pre></div>
+<h3 id="transaction-behavior">Transaction Behavior<a class="headerlink" href="#transaction-behavior" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">OrderTransactionBehavior</span><span class="p">(</span><span class="n">PipelineBehavior</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Wraps order commands in database transactions"""</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">unit_of_work</span><span class="p">:</span> <span class="n">IUnitOfWork</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">unit_of_work</span> <span class="o">=</span> <span class="n">unit_of_work</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">handle_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">next_handler</span><span class="p">):</span>
+        <span class="c1"># Only apply transactions to commands that modify data</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="p">(</span><span class="n">PlaceOrderCommand</span><span class="p">,</span> <span class="n">StartCookingCommand</span><span class="p">,</span> <span class="n">ProcessPaymentCommand</span><span class="p">)):</span>
+            <span class="k">return</span> <span class="k">await</span> <span class="n">next_handler</span><span class="p">()</span>
+
+        <span class="k">async</span> <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">unit_of_work</span><span class="o">.</span><span class="n">begin_transaction</span><span class="p">():</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">next_handler</span><span class="p">()</span>
+
+                <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">is_success</span><span class="p">:</span>
+                    <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">unit_of_work</span><span class="o">.</span><span class="n">commit_async</span><span class="p">()</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">unit_of_work</span><span class="o">.</span><span class="n">rollback_async</span><span class="p">()</span>
+
+                <span class="k">return</span> <span class="n">result</span>
+            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">unit_of_work</span><span class="o">.</span><span class="n">rollback_async</span><span class="p">()</span>
+                <span class="k">raise</span>
+</code></pre></div>
+<h2 id="framework-integration">🚀 Framework Integration<a class="headerlink" href="#framework-integration" title="Permanent link">¶</a></h2>
+<h3 id="service-registration">Service Registration<a class="headerlink" href="#service-registration" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.hosting.web</span><span class="w"> </span><span class="kn">import</span> <span class="n">WebApplicationBuilder</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.mediation.mediator</span><span class="w"> </span><span class="kn">import</span> <span class="n">Mediator</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">configure_cqrs_services</span><span class="p">(</span><span class="n">builder</span><span class="p">:</span> <span class="n">WebApplicationBuilder</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Configure CQRS with mediator services"""</span>
+
+    <span class="c1"># Configure mediator with handler modules</span>
+    <span class="n">Mediator</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="p">[</span>
+        <span class="s2">"src.application.commands"</span><span class="p">,</span>  <span class="c1"># Command handlers</span>
+        <span class="s2">"src.application.queries"</span><span class="p">,</span>   <span class="c1"># Query handlers</span>
+        <span class="s2">"src.application.events"</span>     <span class="c1"># Event handlers</span>
+    <span class="p">])</span>
+
+    <span class="c1"># Register pipeline behaviors</span>
+    <span class="n">builder</span><span class="o">.</span><span class="n">services</span><span class="o">.</span><span class="n">add_pipeline_behavior</span><span class="p">(</span><span class="n">OrderValidationBehavior</span><span class="p">)</span>
+    <span class="n">builder</span><span class="o">.</span><span class="n">services</span><span class="o">.</span><span class="n">add_pipeline_behavior</span><span class="p">(</span><span class="n">QueryCachingBehavior</span><span class="p">)</span>
+    <span class="n">builder</span><span class="o">.</span><span class="n">services</span><span class="o">.</span><span class="n">add_pipeline_behavior</span><span class="p">(</span><span class="n">OrderTransactionBehavior</span><span class="p">)</span>
+
+    <span class="c1"># Register infrastructure services</span>
+    <span class="n">builder</span><span class="o">.</span><span class="n">services</span><span class="o">.</span><span class="n">add_scoped</span><span class="p">(</span><span class="n">Repository</span><span class="p">[</span><span class="n">Order</span><span class="p">,</span> <span class="nb">str</span><span class="p">])</span>
+    <span class="n">builder</span><span class="o">.</span><span class="n">services</span><span class="o">.</span><span class="n">add_scoped</span><span class="p">(</span><span class="n">Repository</span><span class="p">[</span><span class="n">Pizza</span><span class="p">,</span> <span class="nb">str</span><span class="p">])</span>
+    <span class="n">builder</span><span class="o">.</span><span class="n">services</span><span class="o">.</span><span class="n">add_singleton</span><span class="p">(</span><span class="n">ICacheService</span><span class="p">)</span>
+    <span class="n">builder</span><span class="o">.</span><span class="n">services</span><span class="o">.</span><span class="n">add_scoped</span><span class="p">(</span><span class="n">INotificationService</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">create_pizzeria_app</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">"""Create pizzeria application with CQRS"""</span>
+    <span class="n">builder</span> <span class="o">=</span> <span class="n">WebApplicationBuilder</span><span class="p">()</span>
+
+    <span class="c1"># Configure CQRS services</span>
+    <span class="n">configure_cqrs_services</span><span class="p">(</span><span class="n">builder</span><span class="p">)</span>
+
+    <span class="c1"># Build application</span>
+    <span class="n">app</span> <span class="o">=</span> <span class="n">builder</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">app</span>
+</code></pre></div>
+<h3 id="controller-integration_1">Controller Integration<a class="headerlink" href="#controller-integration_1" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.mvc.controller_base</span><span class="w"> </span><span class="kn">import</span> <span class="n">ControllerBase</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">classy_fastapi.decorators</span><span class="w"> </span><span class="kn">import</span> <span class="n">get</span><span class="p">,</span> <span class="n">post</span><span class="p">,</span> <span class="n">put</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">OrdersController</span><span class="p">(</span><span class="n">ControllerBase</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Pizza orders API controller using CQRS with mediation"""</span>
+
+    <span class="nd">@post</span><span class="p">(</span><span class="s2">"/"</span><span class="p">,</span> <span class="n">response_model</span><span class="o">=</span><span class="nb">dict</span><span class="p">,</span> <span class="n">status_code</span><span class="o">=</span><span class="mi">201</span><span class="p">)</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">place_order</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">order_request</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+        <span class="c1"># Create command from request</span>
+        <span class="n">command</span> <span class="o">=</span> <span class="n">PlaceOrderCommand</span><span class="p">(</span>
+            <span class="n">customer_name</span><span class="o">=</span><span class="n">order_request</span><span class="p">[</span><span class="s2">"customer_name"</span><span class="p">],</span>
+            <span class="n">customer_phone</span><span class="o">=</span><span class="n">order_request</span><span class="p">[</span><span class="s2">"customer_phone"</span><span class="p">],</span>
+            <span class="n">customer_address</span><span class="o">=</span><span class="n">order_request</span><span class="p">[</span><span class="s2">"customer_address"</span><span class="p">],</span>
+            <span class="n">pizza_items</span><span class="o">=</span><span class="p">[</span><span class="n">PizzaItem</span><span class="p">(</span><span class="o">**</span><span class="n">item</span><span class="p">)</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">order_request</span><span class="p">[</span><span class="s2">"pizza_items"</span><span class="p">]],</span>
+            <span class="n">payment_method</span><span class="o">=</span><span class="n">order_request</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"payment_method"</span><span class="p">,</span> <span class="s2">"cash"</span><span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Execute through mediator (with pipeline behaviors)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">mediator</span><span class="o">.</span><span class="n">execute_async</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
+
+        <span class="c1"># Process result and return</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+
+    <span class="nd">@get</span><span class="p">(</span><span class="s2">"/</span><span class="si">{order_id}</span><span class="s2">/status"</span><span class="p">,</span> <span class="n">response_model</span><span class="o">=</span><span class="nb">dict</span><span class="p">)</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_order_status</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">order_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+        <span class="c1"># Create query</span>
+        <span class="n">query</span> <span class="o">=</span> <span class="n">GetOrderStatusQuery</span><span class="p">(</span><span class="n">order_id</span><span class="o">=</span><span class="n">order_id</span><span class="p">)</span>
+
+        <span class="c1"># Execute through mediator (with caching behavior)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">mediator</span><span class="o">.</span><span class="n">execute_async</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+
+        <span class="c1"># Process result and return</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+
+    <span class="nd">@put</span><span class="p">(</span><span class="s2">"/</span><span class="si">{order_id}</span><span class="s2">/cook"</span><span class="p">,</span> <span class="n">response_model</span><span class="o">=</span><span class="nb">dict</span><span class="p">)</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">start_cooking</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">order_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">cooking_request</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+        <span class="c1"># Create command</span>
+        <span class="n">command</span> <span class="o">=</span> <span class="n">StartCookingCommand</span><span class="p">(</span>
+            <span class="n">order_id</span><span class="o">=</span><span class="n">order_id</span><span class="p">,</span>
+            <span class="n">kitchen_staff_id</span><span class="o">=</span><span class="n">cooking_request</span><span class="p">[</span><span class="s2">"kitchen_staff_id"</span><span class="p">],</span>
+            <span class="n">estimated_cooking_time_minutes</span><span class="o">=</span><span class="n">cooking_request</span><span class="p">[</span><span class="s2">"estimated_cooking_time_minutes"</span><span class="p">]</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Execute through mediator (with transaction behavior)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">mediator</span><span class="o">.</span><span class="n">execute_async</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
+
+        <span class="c1"># Process result and return</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+</code></pre></div>
+<h2 id="testing-patterns">🧪 Testing Patterns<a class="headerlink" href="#testing-patterns" title="Permanent link">¶</a></h2>
+<h3 id="command-handler-testing">Command Handler Testing<a class="headerlink" href="#command-handler-testing" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">unittest.mock</span><span class="w"> </span><span class="kn">import</span> <span class="n">Mock</span><span class="p">,</span> <span class="n">AsyncMock</span>
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">asyncio</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">test_place_order_command_handler_success</span><span class="p">():</span>
+    <span class="c1"># Arrange</span>
+    <span class="n">mock_order_repo</span> <span class="o">=</span> <span class="n">Mock</span><span class="p">()</span>
+    <span class="n">mock_pizza_repo</span> <span class="o">=</span> <span class="n">Mock</span><span class="p">()</span>
+    <span class="n">mock_payment_service</span> <span class="o">=</span> <span class="n">Mock</span><span class="p">()</span>
+    <span class="n">mock_notification_service</span> <span class="o">=</span> <span class="n">Mock</span><span class="p">()</span>
+
+    <span class="n">handler</span> <span class="o">=</span> <span class="n">PlaceOrderCommandHandler</span><span class="p">(</span>
+        <span class="n">order_repository</span><span class="o">=</span><span class="n">mock_order_repo</span><span class="p">,</span>
+        <span class="n">pizza_repository</span><span class="o">=</span><span class="n">mock_pizza_repo</span><span class="p">,</span>
+        <span class="n">mapper</span><span class="o">=</span><span class="n">Mock</span><span class="p">(),</span>
+        <span class="n">payment_service</span><span class="o">=</span><span class="n">mock_payment_service</span><span class="p">,</span>
+        <span class="n">notification_service</span><span class="o">=</span><span class="n">mock_notification_service</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Mock pizza availability</span>
+    <span class="n">margherita</span> <span class="o">=</span> <span class="n">Pizza</span><span class="p">(</span><span class="s2">"margherita"</span><span class="p">,</span> <span class="s2">"Margherita"</span><span class="p">,</span> <span class="s2">"medium"</span><span class="p">,</span> <span class="n">Decimal</span><span class="p">(</span><span class="s2">"12.99"</span><span class="p">),</span> <span class="p">[],</span> <span class="mi">15</span><span class="p">)</span>
+    <span class="n">mock_pizza_repo</span><span class="o">.</span><span class="n">get_by_ids_async</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">[</span><span class="n">margherita</span><span class="p">]</span>
+
+    <span class="n">command</span> <span class="o">=</span> <span class="n">PlaceOrderCommand</span><span class="p">(</span>
+        <span class="n">customer_name</span><span class="o">=</span><span class="s2">"John Doe"</span><span class="p">,</span>
+        <span class="n">customer_phone</span><span class="o">=</span><span class="s2">"555-0123"</span><span class="p">,</span>
+        <span class="n">customer_address</span><span class="o">=</span><span class="s2">"123 Pizza St"</span><span class="p">,</span>
+        <span class="n">pizza_items</span><span class="o">=</span><span class="p">[</span><span class="n">PizzaItem</span><span class="p">(</span><span class="n">pizza_id</span><span class="o">=</span><span class="s2">"margherita"</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="s2">"large"</span><span class="p">,</span> <span class="n">toppings</span><span class="o">=</span><span class="p">[</span><span class="s2">"extra_cheese"</span><span class="p">])],</span>
+        <span class="n">payment_method</span><span class="o">=</span><span class="s2">"cash"</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Act</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">handler</span><span class="o">.</span><span class="n">handle_async</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
+
+    <span class="c1"># Assert</span>
+    <span class="k">assert</span> <span class="n">result</span><span class="o">.</span><span class="n">is_success</span>
+    <span class="k">assert</span> <span class="s2">"order_id"</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">data</span>
+    <span class="k">assert</span> <span class="s2">"total_amount"</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">data</span>
+    <span class="n">mock_order_repo</span><span class="o">.</span><span class="n">save_async</span><span class="o">.</span><span class="n">assert_called_once</span><span class="p">()</span>
+    <span class="n">mock_notification_service</span><span class="o">.</span><span class="n">send_order_confirmation</span><span class="o">.</span><span class="n">assert_called_once</span><span class="p">()</span>
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">asyncio</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">test_place_order_command_handler_validation_failure</span><span class="p">():</span>
+    <span class="c1"># Arrange</span>
+    <span class="n">handler</span> <span class="o">=</span> <span class="n">PlaceOrderCommandHandler</span><span class="p">(</span><span class="n">Mock</span><span class="p">(),</span> <span class="n">Mock</span><span class="p">(),</span> <span class="n">Mock</span><span class="p">(),</span> <span class="n">Mock</span><span class="p">(),</span> <span class="n">Mock</span><span class="p">())</span>
+
+    <span class="n">command</span> <span class="o">=</span> <span class="n">PlaceOrderCommand</span><span class="p">(</span>
+        <span class="n">customer_name</span><span class="o">=</span><span class="s2">"John Doe"</span><span class="p">,</span>
+        <span class="n">customer_phone</span><span class="o">=</span><span class="s2">"555-0123"</span><span class="p">,</span>
+        <span class="n">customer_address</span><span class="o">=</span><span class="s2">"123 Pizza St"</span><span class="p">,</span>
+        <span class="n">pizza_items</span><span class="o">=</span><span class="p">[],</span>  <span class="c1"># Empty items should fail validation</span>
+        <span class="n">payment_method</span><span class="o">=</span><span class="s2">"cash"</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Act</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">handler</span><span class="o">.</span><span class="n">handle_async</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
+
+    <span class="c1"># Assert</span>
+    <span class="k">assert</span> <span class="ow">not</span> <span class="n">result</span><span class="o">.</span><span class="n">is_success</span>
+    <span class="k">assert</span> <span class="s2">"at least one pizza"</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">error_message</span>
+</code></pre></div>
+<h3 id="integration-testing">Integration Testing<a class="headerlink" href="#integration-testing" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">integration</span>
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">asyncio</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">test_complete_order_workflow</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">"""Test the complete order placement and cooking workflow through mediator"""</span>
+
+    <span class="c1"># Arrange - use test client with real mediator</span>
+    <span class="n">test_client</span> <span class="o">=</span> <span class="n">TestClient</span><span class="p">(</span><span class="n">create_pizzeria_app</span><span class="p">())</span>
+
+    <span class="c1"># Create order</span>
+    <span class="n">order_data</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">"customer_name"</span><span class="p">:</span> <span class="s2">"John Doe"</span><span class="p">,</span>
+        <span class="s2">"customer_phone"</span><span class="p">:</span> <span class="s2">"555-0123"</span><span class="p">,</span>
+        <span class="s2">"customer_address"</span><span class="p">:</span> <span class="s2">"123 Pizza St"</span><span class="p">,</span>
+        <span class="s2">"pizza_items"</span><span class="p">:</span> <span class="p">[</span>
+            <span class="p">{</span>
+                <span class="s2">"pizza_id"</span><span class="p">:</span> <span class="s2">"margherita"</span><span class="p">,</span>
+                <span class="s2">"size"</span><span class="p">:</span> <span class="s2">"large"</span><span class="p">,</span>
+                <span class="s2">"toppings"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"extra_cheese"</span><span class="p">],</span>
+                <span class="s2">"special_instructions"</span><span class="p">:</span> <span class="s2">"Extra crispy"</span>
+            <span class="p">}</span>
+        <span class="p">],</span>
+        <span class="s2">"payment_method"</span><span class="p">:</span> <span class="s2">"cash"</span>
+    <span class="p">}</span>
+
+    <span class="c1"># Act &amp; Assert - Place order</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">test_client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">"/api/orders"</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">order_data</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">201</span>
+
+    <span class="n">order_result</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+    <span class="n">order_id</span> <span class="o">=</span> <span class="n">order_result</span><span class="p">[</span><span class="s2">"order_id"</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="s2">"total_amount"</span> <span class="ow">in</span> <span class="n">order_result</span>
+    <span class="k">assert</span> <span class="s2">"estimated_ready_time"</span> <span class="ow">in</span> <span class="n">order_result</span>
+
+    <span class="c1"># Act &amp; Assert - Check order status (should use cache)</span>
+    <span class="n">status_response</span> <span class="o">=</span> <span class="n">test_client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="sa">f</span><span class="s2">"/api/orders/</span><span class="si">{</span><span class="n">order_id</span><span class="si">}</span><span class="s2">/status"</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">status_response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span>
+
+    <span class="n">status_data</span> <span class="o">=</span> <span class="n">status_response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="n">status_data</span><span class="p">[</span><span class="s2">"status"</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"pending"</span>
+    <span class="k">assert</span> <span class="n">status_data</span><span class="p">[</span><span class="s2">"customer_name"</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"John Doe"</span>
+</code></pre></div>
+<h2 id="pattern-benefits">🎯 Pattern Benefits<a class="headerlink" href="#pattern-benefits" title="Permanent link">¶</a></h2>
+<h3 id="cqrs-with-mediation-advantages">CQRS with Mediation Advantages<a class="headerlink" href="#cqrs-with-mediation-advantages" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>Decoupled Architecture</strong>: Mediator eliminates direct dependencies between controllers and business logic</li>
+<li><strong>Cross-Cutting Concerns</strong>: Pipeline behaviors handle validation, caching, logging, and transactions consistently</li>
+<li><strong>Testability</strong>: Each handler can be unit tested in isolation without complex setup</li>
+<li><strong>Scalability</strong>: Commands and queries can scale independently with optimized read/write models</li>
+<li><strong>Event-Driven Integration</strong>: Domain events enable loose coupling between bounded contexts</li>
+<li><strong>Single Responsibility</strong>: Each handler has one clear responsibility and business purpose</li>
+</ul>
+<h3 id="when-to-use">When to Use<a class="headerlink" href="#when-to-use" title="Permanent link">¶</a></h3>
+<ul>
+<li>Applications with complex business logic requiring clear separation of concerns</li>
+<li>Systems needing different optimization strategies for reads and writes</li>
+<li>Microservices architectures requiring decoupled communication</li>
+<li>Applications with cross-cutting concerns like caching, validation, and transaction management</li>
+<li>Event-driven systems where domain events drive business processes</li>
+<li>Teams wanting to enforce consistent patterns and reduce coupling</li>
+</ul>
+<h3 id="when-not-to-use">When Not to Use<a class="headerlink" href="#when-not-to-use" title="Permanent link">¶</a></h3>
+<ul>
+<li>Simple CRUD applications with minimal business logic</li>
+<li>Systems where the overhead of commands/queries exceeds the benefits</li>
+<li>Applications with very simple read/write patterns</li>
+<li>Teams lacking experience with CQRS and mediation patterns</li>
+<li>Systems where synchronous, tightly-coupled operations are preferred</li>
+</ul>
+<h2 id="related-patterns_1">🔗 Related Patterns<a class="headerlink" href="#related-patterns_1" title="Permanent link">¶</a></h2>
+<h3 id="complementary-patterns">Complementary Patterns<a class="headerlink" href="#complementary-patterns" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong><a href="../event-sourcing/">Event Sourcing</a></strong> - Commands naturally produce events for event sourcing</li>
+<li><strong><a href="../repository/">Repository</a></strong> - Separate repositories for command and query sides</li>
+<li><strong><a href="../domain-driven-design/">Domain-Driven Design</a></strong> - Aggregates and domain events align with CQRS</li>
+<li><strong><a href="../dependency-injection/">Dependency Injection</a></strong> - Service registration for handlers and behaviors</li>
+<li><strong><a href="../clean-architecture/">Clean Architecture</a></strong> - CQRS fits naturally in the application layer</li>
+</ul>
+<h3 id="integration-examples">Integration Examples<a class="headerlink" href="#integration-examples" title="Permanent link">¶</a></h3>
+<p>CQRS with Mediation integrates well with event sourcing for write models and materialized views for read models, while the mediator handles the orchestration and cross-cutting concerns consistently across both sides.</p>
 <hr/>
-<p><em>This pattern guide demonstrates CQRS using Mario's Pizzeria's order and menu management systems. The separation of commands and queries enables optimized, scalable data access patterns.</em> 🎯</p>
+<p><strong>Next Steps</strong>: Explore <a href="../event-sourcing/">Event Sourcing</a> for event-driven write models or <a href="../repository/">Repository</a> for data access patterns that support CQRS separation.</p>
 </article>
 </div>
 <script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>

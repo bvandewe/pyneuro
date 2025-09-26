@@ -5,11 +5,11 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width,initial-scale=1" name="viewport"/>
-<link href="../../getting-started/" rel="prev"/>
-<link href="../local-development/" rel="next"/>
+<link href="../business-analysis/" rel="prev"/>
+<link href="../domain-design/" rel="next"/>
 <link href="../../assets/images/favicon.png" rel="icon"/>
 <meta content="mkdocs-1.6.1, mkdocs-material-9.6.20" name="generator"/>
-<title>3-Minute Bootstrap - Neuroglia Python Framework</title>
+<title>Technical Architecture - Neuroglia Python Framework</title>
 <link href="../../assets/stylesheets/main.e53b48f4.min.css" rel="stylesheet"/>
 <link href="../../assets/stylesheets/palette.06af60db.min.css" rel="stylesheet"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
@@ -22,7 +22,7 @@
 <input autocomplete="off" class="md-toggle" data-md-toggle="search" id="__search" type="checkbox"/>
 <label class="md-overlay" for="__drawer"></label>
 <div data-md-component="skip">
-<a class="md-skip" href="#3-minute-bootstrap-hello-world">
+<a class="md-skip" href="#marios-pizzeria-technical-architecture">
           Skip to content
         </a>
 </div>
@@ -46,7 +46,7 @@
 <div class="md-header__topic" data-md-component="header-topic">
 <span class="md-ellipsis">
             
-              3-Minute Bootstrap
+              Technical Architecture
             
           </span>
 </div>
@@ -111,7 +111,7 @@
 
       </a>
 </li>
-<li class="md-tabs__item md-tabs__item--active">
+<li class="md-tabs__item">
 <a class="md-tabs__link" href="../../getting-started/">
           
   
@@ -120,8 +120,8 @@
 
         </a>
 </li>
-<li class="md-tabs__item">
-<a class="md-tabs__link" href="../../mario-pizzeria/">
+<li class="md-tabs__item md-tabs__item--active">
+<a class="md-tabs__link" href="../">
           
   
   
@@ -148,7 +148,7 @@
         </a>
 </li>
 <li class="md-tabs__item">
-<a class="md-tabs__link" href="../">
+<a class="md-tabs__link" href="../../guides/">
           
   
   
@@ -200,16 +200,16 @@
   </span>
 </a>
 </li>
-<li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
-<input checked="" class="md-nav__toggle md-toggle" id="__nav_2" type="checkbox"/>
-<label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_2" type="checkbox"/>
+<label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
 <span class="md-ellipsis">
     Getting Started
     
   </span>
 <span class="md-nav__icon md-icon"></span>
 </label>
-<nav aria-expanded="true" aria-labelledby="__nav_2_label" class="md-nav" data-md-level="1">
+<nav aria-expanded="false" aria-labelledby="__nav_2_label" class="md-nav" data-md-level="1">
 <label class="md-nav__title" for="__nav_2">
 <span class="md-nav__icon md-icon"></span>
             Getting Started
@@ -223,18 +223,76 @@
   </span>
 </a>
 </li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../guides/3-min-bootstrap/">
+<span class="md-ellipsis">
+    3-Minute Bootstrap
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../guides/local-development/">
+<span class="md-ellipsis">
+    Local Development Setup
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../guides/mario-pizzeria-tutorial/">
+<span class="md-ellipsis">
+    Mario's Pizzeria Tutorial
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+<input checked="" class="md-nav__toggle md-toggle" id="__nav_3" type="checkbox"/>
+<label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+<span class="md-ellipsis">
+    Mario's Pizzeria
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="true" aria-labelledby="__nav_3_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_3">
+<span class="md-nav__icon md-icon"></span>
+            Mario's Pizzeria
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../">
+<span class="md-ellipsis">
+    Case Study Overview
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../business-analysis/">
+<span class="md-ellipsis">
+    Business Analysis
+    
+  </span>
+</a>
+</li>
 <li class="md-nav__item md-nav__item--active">
 <input class="md-nav__toggle md-toggle" id="__toc" type="checkbox"/>
 <label class="md-nav__link md-nav__link--active" for="__toc">
 <span class="md-ellipsis">
-    3-Minute Bootstrap
+    Technical Architecture
     
   </span>
 <span class="md-nav__icon md-icon"></span>
 </label>
 <a class="md-nav__link md-nav__link--active" href="./">
 <span class="md-ellipsis">
-    3-Minute Bootstrap
+    Technical Architecture
     
   </span>
 </a>
@@ -245,69 +303,45 @@
     </label>
 <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
 <li class="md-nav__item">
-<a class="md-nav__link" href="#quick-setup">
+<a class="md-nav__link" href="#architecture-overview">
 <span class="md-ellipsis">
-      🚀 Quick Setup
+      📋 Architecture Overview
     </span>
 </a>
-<nav aria-label="🚀 Quick Setup" class="md-nav">
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#clean-architecture-layers">
+<span class="md-ellipsis">
+      🏛️ Clean Architecture Layers
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#data-storage-strategy">
+<span class="md-ellipsis">
+      🗄️ Data Storage Strategy
+    </span>
+</a>
+<nav aria-label="🗄️ Data Storage Strategy" class="md-nav">
 <ul class="md-nav__list">
 <li class="md-nav__item">
-<a class="md-nav__link" href="#prerequisites">
+<a class="md-nav__link" href="#file-based-storage-development">
 <span class="md-ellipsis">
-      Prerequisites
+      File-Based Storage (Development)
     </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#installation">
+<a class="md-nav__link" href="#mongodb-storage-production">
 <span class="md-ellipsis">
-      Installation
-    </span>
-</a>
-</li>
-</ul>
-</nav>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#create-your-first-api">
-<span class="md-ellipsis">
-      📝 Create Your First API
+      MongoDB Storage (Production)
     </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#run-your-api">
+<a class="md-nav__link" href="#event-sourcing-advanced">
 <span class="md-ellipsis">
-      🏃‍♂️ Run Your API
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#test-your-api">
-<span class="md-ellipsis">
-      🎉 Test Your API
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#what-youve-accomplished">
-<span class="md-ellipsis">
-      ✅ What You've Accomplished
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#next-steps">
-<span class="md-ellipsis">
-      🔄 Next Steps
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#key-concepts-introduced">
-<span class="md-ellipsis">
-      🔗 Key Concepts Introduced
+      Event Sourcing (Advanced)
     </span>
 </a>
 </li>
@@ -315,65 +349,131 @@
 </nav>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../local-development/">
+<a class="md-nav__link" href="#api-endpoints">
 <span class="md-ellipsis">
-    Local Development Setup
-    
-  </span>
+      🌐 API Endpoints
+    </span>
+</a>
+<nav aria-label="🌐 API Endpoints" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#order-management">
+<span class="md-ellipsis">
+      Order Management
+    </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../mario-pizzeria-tutorial/">
+<a class="md-nav__link" href="#menu-operations">
 <span class="md-ellipsis">
-    Mario's Pizzeria Tutorial
-    
-  </span>
+      Menu Operations
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#kitchen-management">
+<span class="md-ellipsis">
+      Kitchen Management
+    </span>
 </a>
 </li>
 </ul>
 </nav>
 </li>
-<li class="md-nav__item md-nav__item--nested">
-<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_3" type="checkbox"/>
-<label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
-<span class="md-ellipsis">
-    Mario's Pizzeria
-    
-  </span>
-<span class="md-nav__icon md-icon"></span>
-</label>
-<nav aria-expanded="false" aria-labelledby="__nav_3_label" class="md-nav" data-md-level="1">
-<label class="md-nav__title" for="__nav_3">
-<span class="md-nav__icon md-icon"></span>
-            Mario's Pizzeria
-          </label>
-<ul class="md-nav__list" data-md-scrollfix="">
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../mario-pizzeria/">
+<a class="md-nav__link" href="#security-architecture">
 <span class="md-ellipsis">
-    Case Study Overview
-    
-  </span>
+      🔐 Security Architecture
+    </span>
+</a>
+<nav aria-label="🔐 Security Architecture" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#oauth-20-scopes">
+<span class="md-ellipsis">
+      OAuth 2.0 Scopes
+    </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../mario-pizzeria/business-analysis/">
+<a class="md-nav__link" href="#role-based-access-control">
 <span class="md-ellipsis">
-    Business Analysis
-    
-  </span>
+      Role-Based Access Control
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#scalability-considerations">
+<span class="md-ellipsis">
+      🚀 Scalability Considerations
+    </span>
+</a>
+<nav aria-label="🚀 Scalability Considerations" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#horizontal-scaling">
+<span class="md-ellipsis">
+      Horizontal Scaling
+    </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../mario-pizzeria/technical-architecture/">
+<a class="md-nav__link" href="#performance-optimizations">
 <span class="md-ellipsis">
-    Technical Architecture
-    
-  </span>
+      Performance Optimizations
+    </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../mario-pizzeria/domain-design/">
+<a class="md-nav__link" href="#monitoring-observability">
+<span class="md-ellipsis">
+      Monitoring &amp; Observability
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#infrastructure-requirements">
+<span class="md-ellipsis">
+      🔧 Infrastructure Requirements
+    </span>
+</a>
+<nav aria-label="🔧 Infrastructure Requirements" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#development-environment">
+<span class="md-ellipsis">
+      Development Environment
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#production-environment">
+<span class="md-ellipsis">
+      Production Environment
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#related-documentation">
+<span class="md-ellipsis">
+      🔗 Related Documentation
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../domain-design/">
 <span class="md-ellipsis">
     Domain Design
     
@@ -381,7 +481,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../mario-pizzeria/implementation-guide/">
+<a class="md-nav__link" href="../implementation-guide/">
 <span class="md-ellipsis">
     Implementation Guide
     
@@ -389,7 +489,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../mario-pizzeria/testing-deployment/">
+<a class="md-nav__link" href="../testing-deployment/">
 <span class="md-ellipsis">
     Testing &amp; Deployment
     
@@ -635,7 +735,7 @@
           </label>
 <ul class="md-nav__list" data-md-scrollfix="">
 <li class="md-nav__item">
-<a class="md-nav__link" href="../">
+<a class="md-nav__link" href="../../guides/">
 <span class="md-ellipsis">
     Overview
     
@@ -643,7 +743,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../project-setup/">
+<a class="md-nav__link" href="../../guides/project-setup/">
 <span class="md-ellipsis">
     Project Setup
     
@@ -651,7 +751,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../testing-setup/">
+<a class="md-nav__link" href="../../guides/testing-setup/">
 <span class="md-ellipsis">
     Testing Setup
     
@@ -800,24 +900,45 @@
     </label>
 <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
 <li class="md-nav__item">
-<a class="md-nav__link" href="#quick-setup">
+<a class="md-nav__link" href="#architecture-overview">
 <span class="md-ellipsis">
-      🚀 Quick Setup
-    </span>
-</a>
-<nav aria-label="🚀 Quick Setup" class="md-nav">
-<ul class="md-nav__list">
-<li class="md-nav__item">
-<a class="md-nav__link" href="#prerequisites">
-<span class="md-ellipsis">
-      Prerequisites
+      📋 Architecture Overview
     </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#installation">
+<a class="md-nav__link" href="#clean-architecture-layers">
 <span class="md-ellipsis">
-      Installation
+      🏛️ Clean Architecture Layers
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#data-storage-strategy">
+<span class="md-ellipsis">
+      🗄️ Data Storage Strategy
+    </span>
+</a>
+<nav aria-label="🗄️ Data Storage Strategy" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#file-based-storage-development">
+<span class="md-ellipsis">
+      File-Based Storage (Development)
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#mongodb-storage-production">
+<span class="md-ellipsis">
+      MongoDB Storage (Production)
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#event-sourcing-advanced">
+<span class="md-ellipsis">
+      Event Sourcing (Advanced)
     </span>
 </a>
 </li>
@@ -825,44 +946,123 @@
 </nav>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#create-your-first-api">
+<a class="md-nav__link" href="#api-endpoints">
 <span class="md-ellipsis">
-      📝 Create Your First API
+      🌐 API Endpoints
+    </span>
+</a>
+<nav aria-label="🌐 API Endpoints" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#order-management">
+<span class="md-ellipsis">
+      Order Management
     </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#run-your-api">
+<a class="md-nav__link" href="#menu-operations">
 <span class="md-ellipsis">
-      🏃‍♂️ Run Your API
+      Menu Operations
     </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#test-your-api">
+<a class="md-nav__link" href="#kitchen-management">
 <span class="md-ellipsis">
-      🎉 Test Your API
+      Kitchen Management
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#security-architecture">
+<span class="md-ellipsis">
+      🔐 Security Architecture
+    </span>
+</a>
+<nav aria-label="🔐 Security Architecture" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#oauth-20-scopes">
+<span class="md-ellipsis">
+      OAuth 2.0 Scopes
     </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#what-youve-accomplished">
+<a class="md-nav__link" href="#role-based-access-control">
 <span class="md-ellipsis">
-      ✅ What You've Accomplished
+      Role-Based Access Control
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#scalability-considerations">
+<span class="md-ellipsis">
+      🚀 Scalability Considerations
+    </span>
+</a>
+<nav aria-label="🚀 Scalability Considerations" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#horizontal-scaling">
+<span class="md-ellipsis">
+      Horizontal Scaling
     </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#next-steps">
+<a class="md-nav__link" href="#performance-optimizations">
 <span class="md-ellipsis">
-      🔄 Next Steps
+      Performance Optimizations
     </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#key-concepts-introduced">
+<a class="md-nav__link" href="#monitoring-observability">
 <span class="md-ellipsis">
-      🔗 Key Concepts Introduced
+      Monitoring &amp; Observability
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#infrastructure-requirements">
+<span class="md-ellipsis">
+      🔧 Infrastructure Requirements
+    </span>
+</a>
+<nav aria-label="🔧 Infrastructure Requirements" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#development-environment">
+<span class="md-ellipsis">
+      Development Environment
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#production-environment">
+<span class="md-ellipsis">
+      Production Environment
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#related-documentation">
+<span class="md-ellipsis">
+      🔗 Related Documentation
     </span>
 </a>
 </li>
@@ -873,107 +1073,343 @@
 </div>
 <div class="md-content" data-md-component="content">
 <article class="md-content__inner md-typeset">
-<h1 id="3-minute-bootstrap-hello-world">⚡ 3-Minute Bootstrap: Hello World<a class="headerlink" href="#3-minute-bootstrap-hello-world" title="Permanent link">¶</a></h1>
-<p>Get up and running with Neuroglia in under 3 minutes! This quick-start guide gets you from zero to a working API in the fastest way possible.</p>
-<div class="admonition info">
-<p class="admonition-title">🎯 What You'll Build</p>
-</div>
-<p>A minimal "Hello Pizzeria" API with one endpoint that demonstrates the basic framework setup.</p>
-<h2 id="quick-setup">🚀 Quick Setup<a class="headerlink" href="#quick-setup" title="Permanent link">¶</a></h2>
-<h3 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">¶</a></h3>
+<h1 id="marios-pizzeria-technical-architecture">🏗️ Mario's Pizzeria: Technical Architecture<a class="headerlink" href="#marios-pizzeria-technical-architecture" title="Permanent link">¶</a></h1>
+<blockquote>
+<p><strong>System Design Document</strong> &gt; <strong>Architecture</strong>: Clean Architecture + CQRS + Event Sourcing
+<strong>Technology Stack</strong>: FastAPI, Python, MongoDB, OAuth 2.0
+<strong>Status</strong>: Production Ready</p>
+</blockquote>
+<h2 id="architecture-overview">📋 Architecture Overview<a class="headerlink" href="#architecture-overview" title="Permanent link">¶</a></h2>
+<p>Mario's Pizzeria implements a modern, scalable architecture following clean architecture principles with CQRS (Command
+Query Responsibility Segregation) and event-driven patterns. This design ensures maintainability, testability, and
+scalability for a growing restaurant business.</p>
+<p><strong>Key Architectural Decisions</strong>:</p>
 <ul>
-<li>Python 3.8+ installed</li>
-<li>pip package manager</li>
-</ul>
-<h3 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">¶</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Create new directory</span>
-mkdir<span class="w"> </span>hello-pizzeria<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span>hello-pizzeria
-
-<span class="c1"># Install Neuroglia</span>
-pip<span class="w"> </span>install<span class="w"> </span>neuroglia-python<span class="o">[</span>web<span class="o">]</span>
-</code></pre></div>
-<h2 id="create-your-first-api">📝 Create Your First API<a class="headerlink" href="#create-your-first-api" title="Permanent link">¶</a></h2>
-<p>Create <code>main.py</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.hosting.web</span><span class="w"> </span><span class="kn">import</span> <span class="n">WebApplicationBuilder</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.mvc</span><span class="w"> </span><span class="kn">import</span> <span class="n">ControllerBase</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">classy_fastapi.decorators</span><span class="w"> </span><span class="kn">import</span> <span class="n">get</span>
-
-<span class="k">class</span><span class="w"> </span><span class="nc">HelloController</span><span class="p">(</span><span class="n">ControllerBase</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">"""Simple hello world controller"""</span>
-
-    <span class="nd">@get</span><span class="p">(</span><span class="s2">"/hello"</span><span class="p">)</span>
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">hello_world</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Say hello to Mario's Pizzeria!"""</span>
-        <span class="k">return</span> <span class="p">{</span>
-            <span class="s2">"message"</span><span class="p">:</span> <span class="s2">"Welcome to Mario's Pizzeria! 🍕"</span><span class="p">,</span>
-            <span class="s2">"status"</span><span class="p">:</span> <span class="s2">"We're open for business!"</span><span class="p">,</span>
-            <span class="s2">"framework"</span><span class="p">:</span> <span class="s2">"Neuroglia Python"</span>
-        <span class="p">}</span>
-
-<span class="k">def</span><span class="w"> </span><span class="nf">create_app</span><span class="p">():</span>
-<span class="w">    </span><span class="sd">"""Create the web application"""</span>
-    <span class="n">builder</span> <span class="o">=</span> <span class="n">WebApplicationBuilder</span><span class="p">()</span>
-
-    <span class="c1"># Add controllers</span>
-    <span class="n">services</span> <span class="o">=</span> <span class="n">builder</span><span class="o">.</span><span class="n">services</span>
-    <span class="n">services</span><span class="o">.</span><span class="n">add_controllers</span><span class="p">([</span><span class="n">HelloController</span><span class="p">])</span>
-
-    <span class="c1"># Build app</span>
-    <span class="n">app</span> <span class="o">=</span> <span class="n">builder</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
-    <span class="n">app</span><span class="o">.</span><span class="n">use_controllers</span><span class="p">()</span>
-
-    <span class="k">return</span> <span class="n">app</span>
-
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
-    <span class="kn">import</span><span class="w"> </span><span class="nn">uvicorn</span>
-    <span class="n">app</span> <span class="o">=</span> <span class="n">create_app</span><span class="p">()</span>
-    <span class="n">uvicorn</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="n">host</span><span class="o">=</span><span class="s2">"0.0.0.0"</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">8000</span><span class="p">)</span>
-</code></pre></div>
-<h2 id="run-your-api">🏃‍♂️ Run Your API<a class="headerlink" href="#run-your-api" title="Permanent link">¶</a></h2>
-<div class="highlight"><pre><span></span><code>python<span class="w"> </span>main.py
-</code></pre></div>
-<h2 id="test-your-api">🎉 Test Your API<a class="headerlink" href="#test-your-api" title="Permanent link">¶</a></h2>
-<p>Open your browser and visit:</p>
-<ul>
-<li><strong>API Endpoint</strong>: <a href="http://localhost:8000/hello">http://localhost:8000/hello</a></li>
-<li><strong>API Documentation</strong>: <a href="http://localhost:8000/docs">http://localhost:8000/docs</a></li>
-</ul>
-<p>You should see:</p>
-<div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Welcome to Mario's Pizzeria! 🍕"</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"We're open for business!"</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">"framework"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Neuroglia Python"</span>
-<span class="p">}</span>
-</code></pre></div>
-<h2 id="what-youve-accomplished">✅ What You've Accomplished<a class="headerlink" href="#what-youve-accomplished" title="Permanent link">¶</a></h2>
-<p>In just 3 minutes, you've created:</p>
-<ul>
-<li>✅ A working FastAPI application with Neuroglia</li>
-<li>✅ Automatic API documentation (Swagger UI)</li>
-<li>✅ Controller-based routing with clean architecture</li>
-<li>✅ Automatic module discovery</li>
-<li>✅ Dependency injection container setup</li>
-</ul>
-<h2 id="next-steps">🔄 Next Steps<a class="headerlink" href="#next-steps" title="Permanent link">¶</a></h2>
-<p>Now that you have the basics working:</p>
-<ol>
-<li><strong><a href="../local-development/">🛠️ Local Development Setup</a></strong> - Set up a proper development environment</li>
-<li><strong><a href="../mario-pizzeria-tutorial/">🍕 Mario's Pizzeria Tutorial</a></strong> - Build a complete application (1 hour)</li>
-<li><strong><a href="../patterns/">🎯 Architecture Patterns</a></strong> - Learn the design principles</li>
-<li><strong><a href="../features/">🚀 Framework Features</a></strong> - Explore advanced capabilities</li>
-</ol>
-<h2 id="key-concepts-introduced">🔗 Key Concepts Introduced<a class="headerlink" href="#key-concepts-introduced" title="Permanent link">¶</a></h2>
-<p>This hello world example demonstrates:</p>
-<ul>
-<li><strong><a href="../../patterns/clean-architecture/#api-layer">Controller Pattern</a></strong> - Web request handling</li>
-<li><strong><a href="../../patterns/dependency-injection/">Dependency Injection</a></strong> - Service container setup</li>
-<li><strong><a href="../../features/mvc-controllers/">WebApplicationBuilder</a></strong> - Application bootstrapping</li>
+<li><strong>Clean Architecture</strong>: Clear separation of concerns across four distinct layers</li>
+<li><strong>CQRS Pattern</strong>: Separate models for read and write operations</li>
+<li><strong>Event-Driven Design</strong>: Asynchronous processing and loose coupling</li>
+<li><strong>Repository Pattern</strong>: Abstracted data access with multiple storage options</li>
+<li><strong>Dependency Injection</strong>: Testable and maintainable service management</li>
 </ul>
 <hr/>
-<div class="admonition tip">
-<p class="admonition-title">🎯 Pro Tip</p>
-</div>
-<p>This is just the beginning! The framework includes powerful features like CQRS, event sourcing, and advanced data access patterns. Continue with the <a href="../local-development/">Local Development Setup</a> to explore more.</p>
+<h2 id="clean-architecture-layers">🏛️ Clean Architecture Layers<a class="headerlink" href="#clean-architecture-layers" title="Permanent link">¶</a></h2>
+<p>Mario's Pizzeria demonstrates the four-layer clean architecture:</p>
+<pre class="mermaid"><code>graph TB
+    %% API Layer
+    subgraph APILayer["🌐 API Layer"]
+        OrdersController["📋 OrdersController&lt;br/&gt;FastAPI&lt;br/&gt;Order management endpoints"]
+        MenuController["🍕 MenuController&lt;br/&gt;FastAPI&lt;br/&gt;Menu browsing endpoints"]
+        KitchenController["👨‍🍳 KitchenController&lt;br/&gt;FastAPI&lt;br/&gt;Kitchen status endpoints"]
+        DTOs["📄 DTOs&lt;br/&gt;Pydantic&lt;br/&gt;Request/Response models"]
+    end
+
+    %% Application Layer
+    subgraph AppLayer["💼 Application Layer"]
+        Mediator["🎯 Mediator&lt;br/&gt;CQRS&lt;br/&gt;Command/Query dispatcher"]
+        PlaceOrderHandler["📝 PlaceOrderHandler&lt;br/&gt;Command Handler&lt;br/&gt;Order placement logic"]
+        GetMenuHandler["📖 GetMenuHandler&lt;br/&gt;Query Handler&lt;br/&gt;Menu retrieval logic"]
+        KitchenHandlers["⚡ KitchenHandlers&lt;br/&gt;Event Handlers&lt;br/&gt;Kitchen workflow"]
+    end
+
+    %% Domain Layer
+    subgraph DomainLayer["🏛️ Domain Layer"]
+        OrderEntity["📋 Order&lt;br/&gt;Entity&lt;br/&gt;Order business logic"]
+        PizzaEntity["🍕 Pizza&lt;br/&gt;Entity&lt;br/&gt;Pizza with pricing"]
+        CustomerEntity["👤 Customer&lt;br/&gt;Entity&lt;br/&gt;Customer information"]
+        KitchenEntity["🏠 Kitchen&lt;br/&gt;Entity&lt;br/&gt;Kitchen capacity"]
+        DomainEvents["⚡ Domain Events&lt;br/&gt;Events&lt;br/&gt;OrderPlaced, OrderReady"]
+    end
+
+    %% Integration Layer
+    subgraph IntegrationLayer["🔌 Integration Layer"]
+        OrderRepo["💾 OrderRepository&lt;br/&gt;File/Mongo&lt;br/&gt;Order persistence"]
+        PaymentService["💳 PaymentService&lt;br/&gt;External API&lt;br/&gt;Payment processing"]
+        SMSService["📱 SMSService&lt;br/&gt;External API&lt;br/&gt;Customer notifications"]
+    end
+
+    %% API to Application connections
+    OrdersController --&gt;|Sends commands/queries| Mediator
+    MenuController --&gt;|Sends queries| Mediator
+    KitchenController --&gt;|Sends queries| Mediator
+
+    %% Application Layer connections
+    Mediator --&gt;|Routes PlaceOrderCommand| PlaceOrderHandler
+    Mediator --&gt;|Routes GetMenuQuery| GetMenuHandler
+    Mediator --&gt;|Routes events| KitchenHandlers
+
+    %% Application to Domain connections
+    PlaceOrderHandler --&gt;|Creates/manipulates| OrderEntity
+    GetMenuHandler --&gt;|Reads menu data| PizzaEntity
+
+    %% Application to Integration connections
+    PlaceOrderHandler --&gt;|Persists orders| OrderRepo
+    PlaceOrderHandler --&gt;|Processes payments| PaymentService
+    KitchenHandlers --&gt;|Sends notifications| SMSService
+
+    %% Styling
+    classDef apiLayer fill:#E3F2FD,stroke:#1976D2,stroke-width:2px
+    classDef appLayer fill:#F3E5F5,stroke:#7B1FA2,stroke-width:2px
+    classDef domainLayer fill:#E8F5E8,stroke:#388E3C,stroke-width:2px
+    classDef integrationLayer fill:#FFF3E0,stroke:#F57C00,stroke-width:2px
+
+    class OrdersController,MenuController,KitchenController,DTOs apiLayer
+    class Mediator,PlaceOrderHandler,GetMenuHandler,KitchenHandlers appLayer
+    class OrderEntity,PizzaEntity,CustomerEntity,KitchenEntity,DomainEvents domainLayer
+    class OrderRepo,PaymentService,SMSService integrationLayer</code></pre>
+<h2 id="data-storage-strategy">🗄️ Data Storage Strategy<a class="headerlink" href="#data-storage-strategy" title="Permanent link">¶</a></h2>
+<p>Mario's Pizzeria demonstrates multiple persistence approaches to support different deployment scenarios:</p>
+<h3 id="file-based-storage-development">File-Based Storage (Development)<a class="headerlink" href="#file-based-storage-development" title="Permanent link">¶</a></h3>
+<p>Perfect for development and testing environments with simple JSON persistence:</p>
+<div class="highlight"><pre><span></span><code>pizzeria_data/
+├── orders/
+│   ├── 2024-09-22/           # Orders by date
+│   │   ├── order_001.json
+│   │   ├── order_002.json
+│   │   └── order_003.json
+│   └── index.json            # Order index
+├── menu/
+│   └── pizzas.json           # Available pizzas
+├── kitchen/
+│   └── status.json           # Kitchen state
+└── customers/
+    └── customers.json        # Customer history
+</code></pre></div>
+<p><strong>Benefits</strong>: Zero configuration, version control friendly, fast local development</p>
+<h3 id="mongodb-storage-production">MongoDB Storage (Production)<a class="headerlink" href="#mongodb-storage-production" title="Permanent link">¶</a></h3>
+<p>Scalable document database for production workloads:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// Orders Collection</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="s2">"_id"</span><span class="o">:</span><span class="w"> </span><span class="s2">"order_001"</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">"customer_name"</span><span class="o">:</span><span class="w"> </span><span class="s2">"Mario Rossi"</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">"customer_phone"</span><span class="o">:</span><span class="w"> </span><span class="s2">"+1-555-0123"</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">"pizzas"</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="s2">"name"</span><span class="o">:</span><span class="w"> </span><span class="s2">"Margherita"</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">"size"</span><span class="o">:</span><span class="w"> </span><span class="s2">"large"</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">"toppings"</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"extra cheese"</span><span class="p">],</span>
+<span class="w">      </span><span class="s2">"price"</span><span class="o">:</span><span class="w"> </span><span class="mf">15.99</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">],</span>
+<span class="w">  </span><span class="s2">"total_amount"</span><span class="o">:</span><span class="w"> </span><span class="mf">15.99</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">"status"</span><span class="o">:</span><span class="w"> </span><span class="s2">"ready"</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">"order_time"</span><span class="o">:</span><span class="w"> </span><span class="s2">"2025-09-25T10:30:00Z"</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Benefits</strong>: Horizontal scaling, rich queries, built-in replication, ACID transactions</p>
+<h3 id="event-sourcing-advanced">Event Sourcing (Advanced)<a class="headerlink" href="#event-sourcing-advanced" title="Permanent link">¶</a></h3>
+<p>Complete audit trail and temporal queries using event streams:</p>
+<div class="highlight"><pre><span></span><code>Event Store:
+├── order_001_stream
+│   ├── OrderPlacedEvent
+│   ├── PaymentProcessedEvent
+│   ├── OrderConfirmedEvent
+│   ├── CookingStartedEvent
+│   └── OrderReadyEvent
+</code></pre></div>
+<p><strong>Benefits</strong>: Complete audit trail, temporal queries, replay capability, debugging</p>
+<h2 id="api-endpoints">🌐 API Endpoints<a class="headerlink" href="#api-endpoints" title="Permanent link">¶</a></h2>
+<p>Complete RESTful API designed for different client types (web, mobile, POS systems):</p>
+<h3 id="order-management">Order Management<a class="headerlink" href="#order-management" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Endpoint</th>
+<th>Description</th>
+<th>Auth Required</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>POST</code></td>
+<td><code>/orders</code></td>
+<td>Place new pizza order</td>
+<td>Customer</td>
+</tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>/orders</code></td>
+<td>List orders (with status filter)</td>
+<td>Staff</td>
+</tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>/orders/{id}</code></td>
+<td>Get specific order details</td>
+<td>Owner/Customer</td>
+</tr>
+<tr>
+<td><code>PUT</code></td>
+<td><code>/orders/{id}/status</code></td>
+<td>Update order status</td>
+<td>Kitchen</td>
+</tr>
+<tr>
+<td><code>DELETE</code></td>
+<td><code>/orders/{id}</code></td>
+<td>Cancel order</td>
+<td>Customer/Manager</td>
+</tr>
+</tbody>
+</table>
+<h3 id="menu-operations">Menu Operations<a class="headerlink" href="#menu-operations" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Endpoint</th>
+<th>Description</th>
+<th>Auth Required</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>GET</code></td>
+<td><code>/menu/pizzas</code></td>
+<td>Get available pizzas</td>
+<td>Public</td>
+</tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>/menu/pizzas/{id}</code></td>
+<td>Get pizza details</td>
+<td>Public</td>
+</tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>/menu/toppings</code></td>
+<td>Get available toppings</td>
+<td>Public</td>
+</tr>
+</tbody>
+</table>
+<h3 id="kitchen-management">Kitchen Management<a class="headerlink" href="#kitchen-management" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Endpoint</th>
+<th>Description</th>
+<th>Auth Required</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>GET</code></td>
+<td><code>/kitchen/status</code></td>
+<td>Get kitchen capacity status</td>
+<td>Staff</td>
+</tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>/kitchen/queue</code></td>
+<td>Get current cooking queue</td>
+<td>Kitchen</td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><code>/kitchen/orders/{id}/start</code></td>
+<td>Start cooking order</td>
+<td>Kitchen</td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><code>/kitchen/orders/{id}/complete</code></td>
+<td>Complete order</td>
+<td>Kitchen</td>
+</tr>
+</tbody>
+</table>
+<h2 id="security-architecture">🔐 Security Architecture<a class="headerlink" href="#security-architecture" title="Permanent link">¶</a></h2>
+<h3 id="oauth-20-scopes">OAuth 2.0 Scopes<a class="headerlink" href="#oauth-20-scopes" title="Permanent link">¶</a></h3>
+<p>Fine-grained access control using OAuth2 scopes:</p>
+<div class="highlight"><pre><span></span><code><span class="n">SCOPES</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"orders:read"</span><span class="p">:</span> <span class="s2">"Read order information"</span><span class="p">,</span>
+    <span class="s2">"orders:write"</span><span class="p">:</span> <span class="s2">"Create and modify orders"</span><span class="p">,</span>
+    <span class="s2">"kitchen:read"</span><span class="p">:</span> <span class="s2">"View kitchen status"</span><span class="p">,</span>
+    <span class="s2">"kitchen:manage"</span><span class="p">:</span> <span class="s2">"Manage kitchen operations"</span><span class="p">,</span>
+    <span class="s2">"menu:read"</span><span class="p">:</span> <span class="s2">"View menu items"</span><span class="p">,</span>
+    <span class="s2">"admin"</span><span class="p">:</span> <span class="s2">"Full administrative access"</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="role-based-access-control">Role-Based Access Control<a class="headerlink" href="#role-based-access-control" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Role</th>
+<th>Scopes</th>
+<th>Permissions</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Customer</strong></td>
+<td><code>orders:write</code>, <code>menu:read</code></td>
+<td>Place orders, view menu</td>
+</tr>
+<tr>
+<td><strong>Kitchen Staff</strong></td>
+<td><code>kitchen:manage</code>, <code>orders:read</code></td>
+<td>Manage cooking queue</td>
+</tr>
+<tr>
+<td><strong>Manager</strong></td>
+<td><code>admin</code></td>
+<td>Full system access</td>
+</tr>
+<tr>
+<td><strong>Public</strong></td>
+<td><code>menu:read</code></td>
+<td>Browse menu only</td>
+</tr>
+</tbody>
+</table>
+<h2 id="scalability-considerations">🚀 Scalability Considerations<a class="headerlink" href="#scalability-considerations" title="Permanent link">¶</a></h2>
+<h3 id="horizontal-scaling">Horizontal Scaling<a class="headerlink" href="#horizontal-scaling" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>API Layer</strong>: Stateless controllers scale horizontally behind load balancer</li>
+<li><strong>Application Layer</strong>: Event handlers can be distributed across multiple instances</li>
+<li><strong>Database Layer</strong>: MongoDB supports sharding and replica sets</li>
+<li><strong>External Services</strong>: Circuit breakers prevent cascade failures</li>
+</ul>
+<h3 id="performance-optimizations">Performance Optimizations<a class="headerlink" href="#performance-optimizations" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>Caching</strong>: Redis for frequently accessed menu items and customer data</li>
+<li><strong>Background Processing</strong>: Async event handling for notifications and reporting</li>
+<li><strong>Database Indexing</strong>: Optimized queries for order status and customer lookups</li>
+<li><strong>CDN</strong>: Static assets (images, CSS) served from edge locations</li>
+</ul>
+<h3 id="monitoring-observability">Monitoring &amp; Observability<a class="headerlink" href="#monitoring-observability" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>Health Checks</strong>: Endpoint monitoring for all critical services</li>
+<li><strong>Metrics</strong>: Custom business metrics (orders/hour, kitchen efficiency)</li>
+<li><strong>Logging</strong>: Structured logging with correlation IDs</li>
+<li><strong>Tracing</strong>: Distributed tracing for request flows</li>
+</ul>
+<h2 id="infrastructure-requirements">🔧 Infrastructure Requirements<a class="headerlink" href="#infrastructure-requirements" title="Permanent link">¶</a></h2>
+<h3 id="development-environment">Development Environment<a class="headerlink" href="#development-environment" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>Python</strong>: 3.9+ with FastAPI and Neuroglia framework</li>
+<li><strong>Storage</strong>: Local JSON files for rapid development</li>
+<li><strong>Authentication</strong>: Development OAuth server (Keycloak)</li>
+</ul>
+<h3 id="production-environment">Production Environment<a class="headerlink" href="#production-environment" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>Compute</strong>: 2+ CPU cores, 4GB RAM minimum per instance</li>
+<li><strong>Database</strong>: MongoDB cluster with replica sets</li>
+<li><strong>Caching</strong>: Redis cluster for session and menu caching</li>
+<li><strong>Load Balancer</strong>: NGINX or cloud load balancer</li>
+<li><strong>Authentication</strong>: Production OAuth provider (Auth0, Keycloak)</li>
+</ul>
+<h2 id="related-documentation">🔗 Related Documentation<a class="headerlink" href="#related-documentation" title="Permanent link">¶</a></h2>
+<ul>
+<li><a href="../business-analysis/">Business Analysis</a> - Requirements and stakeholder analysis</li>
+<li><a href="../domain-design/">Domain Design</a> - Business logic and data models</li>
+<li><a href="../implementation-guide/">Implementation Guide</a> - Development patterns and APIs</li>
+<li><a href="../testing-deployment/">Testing &amp; Deployment</a> - Quality assurance and operations</li>
+</ul>
+<hr/>
+<p><em>This technical architecture ensures Mario's Pizzeria can scale from a single location to a multi-restaurant franchise while maintaining code quality and operational excellence.</em></p>
 </article>
 </div>
 <script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>

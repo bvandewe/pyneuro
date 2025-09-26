@@ -6,7 +6,7 @@
 <meta charset="utf-8"/>
 <meta content="width=device-width,initial-scale=1" name="viewport"/>
 <link href="../patterns/watcher-reconciliation-execution/" rel="prev"/>
-<link href="dependency-injection/" rel="next"/>
+<link href="mvc-controllers/" rel="next"/>
 <link href="../assets/images/favicon.png" rel="icon"/>
 <meta content="mkdocs-1.6.1, mkdocs-material-9.6.20" name="generator"/>
 <title>Overview - Neuroglia Python Framework</title>
@@ -122,14 +122,12 @@
 </li>
 <li class="md-tabs__item">
 <a class="md-tabs__link" href="../mario-pizzeria/">
-        
+          
   
   
-    
-  
-  Mario Pizzeria
+  Mario's Pizzeria
 
-      </a>
+        </a>
 </li>
 <li class="md-tabs__item">
 <a class="md-tabs__link" href="../patterns/">
@@ -168,7 +166,7 @@
         </a>
 </li>
 <li class="md-tabs__item">
-<a class="md-tabs__link" href="../references/source_code_naming_convention/">
+<a class="md-tabs__link" href="../references/oauth-oidc-jwt/">
           
   
   
@@ -252,13 +250,71 @@
 </ul>
 </nav>
 </li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_3" type="checkbox"/>
+<label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+<span class="md-ellipsis">
+    Mario's Pizzeria
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_3_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_3">
+<span class="md-nav__icon md-icon"></span>
+            Mario's Pizzeria
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
 <li class="md-nav__item">
 <a class="md-nav__link" href="../mario-pizzeria/">
 <span class="md-ellipsis">
-    Mario Pizzeria
+    Case Study Overview
     
   </span>
 </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../mario-pizzeria/business-analysis/">
+<span class="md-ellipsis">
+    Business Analysis
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../mario-pizzeria/technical-architecture/">
+<span class="md-ellipsis">
+    Technical Architecture
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../mario-pizzeria/domain-design/">
+<span class="md-ellipsis">
+    Domain Design
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../mario-pizzeria/implementation-guide/">
+<span class="md-ellipsis">
+    Implementation Guide
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../mario-pizzeria/testing-deployment/">
+<span class="md-ellipsis">
+    Testing &amp; Deployment
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
 </li>
 <li class="md-nav__item md-nav__item--nested">
 <input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_4" type="checkbox"/>
@@ -292,9 +348,25 @@
 </a>
 </li>
 <li class="md-nav__item">
+<a class="md-nav__link" href="../patterns/domain-driven-design/">
+<span class="md-ellipsis">
+    Domain Driven Design
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../patterns/dependency-injection/">
+<span class="md-ellipsis">
+    Dependency Injection
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
 <a class="md-nav__link" href="../patterns/cqrs/">
 <span class="md-ellipsis">
-    CQRS
+    CQRS &amp; Mediation
     
   </span>
 </a>
@@ -303,6 +375,22 @@
 <a class="md-nav__link" href="../patterns/event-driven/">
 <span class="md-ellipsis">
     Event-Driven
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../patterns/event-sourcing/">
+<span class="md-ellipsis">
+    Event Sourcing
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../patterns/reactive-programming/">
+<span class="md-ellipsis">
+    Reactive Programming
     
   </span>
 </a>
@@ -387,20 +475,6 @@
 <nav aria-label="🎯 Core Architecture Features" class="md-nav">
 <ul class="md-nav__list">
 <li class="md-nav__item">
-<a class="md-nav__link" href="#dependency-injection">
-<span class="md-ellipsis">
-      🔧 Dependency Injection
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#cqrs-mediation">
-<span class="md-ellipsis">
-      📡 CQRS &amp; Mediation
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
 <a class="md-nav__link" href="#mvc-controllers">
 <span class="md-ellipsis">
       🌐 MVC Controllers
@@ -425,13 +499,6 @@
 </a>
 <nav aria-label="🔄 Event &amp; Integration Features" class="md-nav">
 <ul class="md-nav__list">
-<li class="md-nav__item">
-<a class="md-nav__link" href="#event-sourcing">
-<span class="md-ellipsis">
-      📨 Event Sourcing
-    </span>
-</a>
-</li>
 <li class="md-nav__item">
 <a class="md-nav__link" href="#mermaid-diagrams">
 <span class="md-ellipsis">
@@ -468,13 +535,6 @@
 <a class="md-nav__link" href="#object-mapping">
 <span class="md-ellipsis">
       🎯 Object Mapping
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#reactive-programming">
-<span class="md-ellipsis">
-      🔄 Reactive Programming
     </span>
 </a>
 </li>
@@ -559,22 +619,6 @@
 </nav>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="dependency-injection/">
-<span class="md-ellipsis">
-    Dependency Injection
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="cqrs-mediation/">
-<span class="md-ellipsis">
-    CQRS &amp; Mediation
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
 <a class="md-nav__link" href="mvc-controllers/">
 <span class="md-ellipsis">
     MVC Controllers
@@ -591,14 +635,6 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="event-sourcing/">
-<span class="md-ellipsis">
-    Event Sourcing
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
 <a class="md-nav__link" href="serialization/">
 <span class="md-ellipsis">
     Serialization
@@ -610,14 +646,6 @@
 <a class="md-nav__link" href="object-mapping/">
 <span class="md-ellipsis">
     Object Mapping
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="reactive-programming/">
-<span class="md-ellipsis">
-    Reactive Programming
     
   </span>
 </a>
@@ -781,6 +809,14 @@
           </label>
 <ul class="md-nav__list" data-md-scrollfix="">
 <li class="md-nav__item">
+<a class="md-nav__link" href="../references/oauth-oidc-jwt/">
+<span class="md-ellipsis">
+    OAuth, OIDC &amp; JWT
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
 <a class="md-nav__link" href="../references/source_code_naming_convention/">
 <span class="md-ellipsis">
     Source Code Naming Conventions
@@ -805,14 +841,6 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../references/python_generic_types/">
-<span class="md-ellipsis">
-    Python Generic Types
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
 <a class="md-nav__link" href="../references/python_modular_code/">
 <span class="md-ellipsis">
     Python Modular Code
@@ -824,6 +852,14 @@
 <a class="md-nav__link" href="../references/python_object_oriented/">
 <span class="md-ellipsis">
     Python Object-Oriented Programming
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../references/python_generic_types/">
+<span class="md-ellipsis">
+    Python Generic Types
     
   </span>
 </a>
@@ -854,20 +890,6 @@
 <nav aria-label="🎯 Core Architecture Features" class="md-nav">
 <ul class="md-nav__list">
 <li class="md-nav__item">
-<a class="md-nav__link" href="#dependency-injection">
-<span class="md-ellipsis">
-      🔧 Dependency Injection
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#cqrs-mediation">
-<span class="md-ellipsis">
-      📡 CQRS &amp; Mediation
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
 <a class="md-nav__link" href="#mvc-controllers">
 <span class="md-ellipsis">
       🌐 MVC Controllers
@@ -892,13 +914,6 @@
 </a>
 <nav aria-label="🔄 Event &amp; Integration Features" class="md-nav">
 <ul class="md-nav__list">
-<li class="md-nav__item">
-<a class="md-nav__link" href="#event-sourcing">
-<span class="md-ellipsis">
-      📨 Event Sourcing
-    </span>
-</a>
-</li>
 <li class="md-nav__item">
 <a class="md-nav__link" href="#mermaid-diagrams">
 <span class="md-ellipsis">
@@ -935,13 +950,6 @@
 <a class="md-nav__link" href="#object-mapping">
 <span class="md-ellipsis">
       🎯 Object Mapping
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#reactive-programming">
-<span class="md-ellipsis">
-      🔄 Reactive Programming
     </span>
 </a>
 </li>
@@ -1030,26 +1038,10 @@
 <div class="md-content" data-md-component="content">
 <article class="md-content__inner md-typeset">
 <h1 id="framework-features">🚀 Framework Features<a class="headerlink" href="#framework-features" title="Permanent link">¶</a></h1>
-<p>The Neuroglia Python framework provides a comprehensive set of features designed to support modern microservice development with clean architecture principles. Each feature is designed to work seamlessly together while maintaining loose coupling and high testability.</p>
+<p>The Neuroglia Python framework provides a comprehensive set of features designed to support modern microservice
+development with clean architecture principles. Each feature is designed to work seamlessly together while maintaining
+loose coupling and high testability.</p>
 <h2 id="core-architecture-features">🎯 Core Architecture Features<a class="headerlink" href="#core-architecture-features" title="Permanent link">¶</a></h2>
-<h3 id="dependency-injection"><a href="dependency-injection/">🔧 Dependency Injection</a><a class="headerlink" href="#dependency-injection" title="Permanent link">¶</a></h3>
-<p>Comprehensive IoC container with lifecycle management, service registration, and automatic resolution. Supports singleton, scoped, and transient lifetimes with built-in service discovery patterns.</p>
-<p><strong>Key Capabilities:</strong></p>
-<ul>
-<li>Service registration with multiple lifetimes</li>
-<li>Constructor injection patterns</li>
-<li>Service provider resolution</li>
-<li>Automatic service discovery</li>
-</ul>
-<h3 id="cqrs-mediation"><a href="cqrs-mediation/">📡 CQRS &amp; Mediation</a><a class="headerlink" href="#cqrs-mediation" title="Permanent link">¶</a></h3>
-<p>Command Query Responsibility Segregation with a powerful mediator pattern that decouples request handling from business logic. Enables clean separation between read and write operations.</p>
-<p><strong>Key Capabilities:</strong></p>
-<ul>
-<li>Command and query separation</li>
-<li>Pipeline behaviors for cross-cutting concerns</li>
-<li>Request/response mediation</li>
-<li>Asynchronous processing support</li>
-</ul>
 <h3 id="mvc-controllers"><a href="mvc-controllers/">🌐 MVC Controllers</a><a class="headerlink" href="#mvc-controllers" title="Permanent link">¶</a></h3>
 <p>FastAPI-integrated controller framework that automatically discovers and registers API endpoints. Provides consistent patterns for request handling and response formatting.</p>
 <p><strong>Key Capabilities:</strong></p>
@@ -1069,15 +1061,6 @@
 <li>Transaction support</li>
 </ul>
 <h2 id="event-integration-features">🔄 Event &amp; Integration Features<a class="headerlink" href="#event-integration-features" title="Permanent link">¶</a></h2>
-<h3 id="event-sourcing"><a href="event-sourcing/">📨 Event Sourcing</a><a class="headerlink" href="#event-sourcing" title="Permanent link">¶</a></h3>
-<p>Complete event sourcing implementation with event stores, projections, and replay capabilities. Supports CloudEvents standard for interoperability.</p>
-<p><strong>Key Capabilities:</strong></p>
-<ul>
-<li>Event store implementation</li>
-<li>Event replay and projections</li>
-<li>CloudEvents integration</li>
-<li>Snapshot support</li>
-</ul>
 <h3 id="mermaid-diagrams"><a href="mermaid-diagrams/">📊 Mermaid Diagrams</a><a class="headerlink" href="#mermaid-diagrams" title="Permanent link">¶</a></h3>
 <p>Built-in support for generating and validating Mermaid diagrams for architecture documentation. Includes diagram validation and preview capabilities.</p>
 <p><strong>Key Capabilities:</strong></p>
@@ -1114,15 +1097,6 @@
 <li>Custom mapping configurations</li>
 <li>Type conversion and validation</li>
 <li>Mapping profiles and reusable configurations</li>
-</ul>
-<h3 id="reactive-programming"><a href="reactive-programming/">🔄 Reactive Programming</a><a class="headerlink" href="#reactive-programming" title="Permanent link">¶</a></h3>
-<p>Reactive programming capabilities using Observable patterns with RxPY integration for building event-driven, responsive applications.</p>
-<p><strong>Key Capabilities:</strong></p>
-<ul>
-<li>Observable streams and event processing</li>
-<li>AsyncRx integration for async/await patterns</li>
-<li>Background service integration</li>
-<li>Real-time data flow management</li>
 </ul>
 <h2 id="enhanced-integration-features">🚀 Enhanced Integration Features<a class="headerlink" href="#enhanced-integration-features" title="Permanent link">¶</a></h2>
 <h3 id="background-task-scheduling"><a href="background-task-scheduling/">⏰ Background Task Scheduling</a><a class="headerlink" href="#background-task-scheduling" title="Permanent link">¶</a></h3>
@@ -1192,42 +1166,43 @@
     end
 
     subgraph "💼 Application Layer"
-        CQRS[CQRS &amp; Mediation]
         Watcher[Watcher Patterns]
+        Validation[Model Validation]
     end
 
     subgraph "🏛️ Domain Layer"
-        Events[Event Sourcing]
         Resources[Resource Patterns]
+        Mapping[Object Mapping]
     end
 
     subgraph "🔌 Infrastructure Layer"
-        DI[Dependency Injection]
         Data[Data Access]
         Diagrams[Mermaid Diagrams]
+        Redis[Redis Cache]
+        HTTP[HTTP Client]
+        Background[Background Tasks]
     end
 
-    MVC --&gt; CQRS
-    CQRS --&gt; Events
-    CQRS --&gt; Data
-    Watcher --&gt; Events
+    MVC --&gt; Watcher
+    MVC --&gt; Data
     Watcher --&gt; Resources
+    Mapping --&gt; Data
 
-    DI -.-&gt; MVC
-    DI -.-&gt; CQRS
-    DI -.-&gt; Data
+    Redis -.-&gt; Data
+    HTTP -.-&gt; MVC
+    Background -.-&gt; Watcher
 
     style MVC fill:#e3f2fd
-    style CQRS fill:#f3e5f5
-    style Events fill:#e8f5e8
-    style DI fill:#fff3e0</code></pre>
+    style Watcher fill:#f3e5f5
+    style Resources fill:#e8f5e8
+    style Data fill:#fff3e0</code></pre>
 <h2 id="getting-started">🚀 Getting Started<a class="headerlink" href="#getting-started" title="Permanent link">¶</a></h2>
 <ol>
-<li><strong>Start with <a href="dependency-injection/">Dependency Injection</a></strong> - Foundation for all other features</li>
-<li><strong>Add <a href="cqrs-mediation/">CQRS &amp; Mediation</a></strong> - Core application patterns</li>
+<li><strong>Start with <a href="../patterns/">📖 Architecture Patterns</a></strong> - Foundation patterns (DI, CQRS, etc.)</li>
 <li><strong>Implement <a href="mvc-controllers/">MVC Controllers</a></strong> - API layer development</li>
 <li><strong>Choose <a href="data-access/">Data Access</a></strong> - Persistence strategy</li>
-<li><strong>Enhance with specialized features</strong> - Event sourcing, watchers, etc.</li>
+<li><strong>Add <a href="object-mapping/">Object Mapping</a></strong> - Data transformation</li>
+<li><strong>Enhance with specialized features</strong> - Caching, validation, watchers, etc.</li>
 </ol>
 <h2 id="related-documentation">📚 Related Documentation<a class="headerlink" href="#related-documentation" title="Permanent link">¶</a></h2>
 <ul>
