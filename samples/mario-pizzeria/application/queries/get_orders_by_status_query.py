@@ -1,6 +1,7 @@
 """Get Orders By Status Query and Handler for Mario's Pizzeria"""
 
 from dataclasses import dataclass
+from typing import List
 
 from api.dtos import OrderDto, PizzaDto
 from domain.entities import OrderStatus
