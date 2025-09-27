@@ -3,6 +3,7 @@ import inspect
 import pkgutil
 from collections.abc import Callable
 from types import ModuleType
+from typing import Type
 
 
 class TypeFinder:
