@@ -166,15 +166,6 @@
         </a>
 </li>
 <li class="md-tabs__item">
-<a class="md-tabs__link" href="../../examples/jsonserializer-configuration/">
-          
-  
-  
-  Examples
-
-        </a>
-</li>
-<li class="md-tabs__item">
 <a class="md-tabs__link" href="../../references/oauth-oidc-jwt/">
           
   
@@ -349,6 +340,17 @@
       🚀 Step 7: Application Setup
     </span>
 </a>
+<nav aria-label="🚀 Step 7: Application Setup" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#key-implementation-features">
+<span class="md-ellipsis">
+      Key Implementation Features
+    </span>
+</a>
+</li>
+</ul>
+</nav>
 </li>
 <li class="md-nav__item">
 <a class="md-nav__link" href="#youre-done">
@@ -742,6 +744,14 @@
   </span>
 </a>
 </li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../jsonserializer-configuration/">
+<span class="md-ellipsis">
+    JsonSerializer Configuration
+    
+  </span>
+</a>
+</li>
 </ul>
 </nav>
 </li>
@@ -799,39 +809,13 @@
 <input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_8" type="checkbox"/>
 <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
 <span class="md-ellipsis">
-    Examples
+    References
     
   </span>
 <span class="md-nav__icon md-icon"></span>
 </label>
 <nav aria-expanded="false" aria-labelledby="__nav_8_label" class="md-nav" data-md-level="1">
 <label class="md-nav__title" for="__nav_8">
-<span class="md-nav__icon md-icon"></span>
-            Examples
-          </label>
-<ul class="md-nav__list" data-md-scrollfix="">
-<li class="md-nav__item">
-<a class="md-nav__link" href="../../examples/jsonserializer-configuration/">
-<span class="md-ellipsis">
-    JsonSerializer Configuration
-    
-  </span>
-</a>
-</li>
-</ul>
-</nav>
-</li>
-<li class="md-nav__item md-nav__item--nested">
-<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_9" type="checkbox"/>
-<label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
-<span class="md-ellipsis">
-    References
-    
-  </span>
-<span class="md-nav__icon md-icon"></span>
-</label>
-<nav aria-expanded="false" aria-labelledby="__nav_9_label" class="md-nav" data-md-level="1">
-<label class="md-nav__title" for="__nav_9">
 <span class="md-nav__icon md-icon"></span>
             References
           </label>
@@ -989,6 +973,17 @@
       🚀 Step 7: Application Setup
     </span>
 </a>
+<nav aria-label="🚀 Step 7: Application Setup" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#key-implementation-features">
+<span class="md-ellipsis">
+      Key Implementation Features
+    </span>
+</a>
+</li>
+</ul>
+</nav>
 </li>
 <li class="md-nav__item">
 <a class="md-nav__link" href="#youre-done">
@@ -1071,25 +1066,51 @@
 <div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>neuroglia-python<span class="o">[</span>web<span class="o">]</span>
 </code></pre></div>
 <h3 id="project-structure">Project Structure<a class="headerlink" href="#project-structure" title="Permanent link">¶</a></h3>
-<div class="highlight"><pre><span></span><code>marios-pizzeria/
-├── src/
-│   ├── main.py                    # Application entry point
-│   ├── domain/
-│   │   ├── pizza.py              # Pizza entity
-│   │   ├── order.py              # Order entity
-│   │   └── events.py             # Domain events
-│   ├── application/
-│   │   ├── commands/             # Order placement, cooking
-│   │   └── queries/              # Menu, order status
-│   ├── infrastructure/
-│   │   ├── repositories/         # File-based persistence
-│   │   └── auth.py              # OAuth configuration
-│   ├── api/
-│   │   └── controllers/         # REST endpoints
-│   ├── web/
-│   │   └── static/              # Simple HTML/CSS/JS
-│   └── data/                    # JSON files storage
-└── requirements.txt
+<p>The actual Mario's Pizzeria implementation follows clean architecture principles:</p>
+<p><strong>Source</strong>: <a href="https://github.com/bvandewe/pyneuro/tree/main/samples/mario-pizzeria"><code>samples/mario-pizzeria/</code></a></p>
+<div class="highlight"><pre><span></span><code>mario-pizzeria/
+├── main.py                       # Application entry point with DI setup
+├── api/
+│   ├── controllers/             # REST API endpoints
+│   │   ├── orders_controller.py  # Order management
+│   │   ├── menu_controller.py    # Pizza menu
+│   │   └── kitchen_controller.py # Kitchen operations
+│   └── dtos/                    # Data Transfer Objects
+│       ├── order_dtos.py        # Order request/response models
+│       ├── menu_dtos.py         # Menu item models
+│       └── kitchen_dtos.py      # Kitchen status models
+├── application/
+│   ├── commands/                # CQRS Command handlers
+│   │   ├── place_order_command.py
+│   │   ├── start_cooking_command.py
+│   │   └── complete_order_command.py
+│   ├── queries/                 # CQRS Query handlers
+│   │   ├── get_order_by_id_query.py
+│   │   ├── get_orders_by_status_query.py
+│   │   └── get_active_orders_query.py
+│   └── mapping/                 # AutoMapper profiles
+│       └── profile.py           # Entity-DTO mappings
+├── domain/
+│   ├── entities/                # Domain entities
+│   │   ├── pizza.py            # Pizza entity with pricing
+│   │   ├── order.py            # Order aggregate root
+│   │   ├── customer.py         # Customer entity
+│   │   ├── kitchen.py          # Kitchen entity
+│   │   └── enums.py            # Domain enumerations
+│   ├── events/                  # Domain events
+│   │   └── order_events.py     # Order lifecycle events
+│   └── repositories/            # Repository interfaces
+│       └── __init__.py         # Repository abstractions
+├── integration/
+│   └── repositories/           # Repository implementations
+│       ├── file_order_repository.py    # File-based order storage
+│       ├── file_pizza_repository.py    # File-based pizza storage
+│       ├── file_customer_repository.py # File-based customer storage
+│       └── file_kitchen_repository.py  # File-based kitchen storage
+└── tests/                      # Test suite
+    ├── test_api.py             # API integration tests
+    ├── test_integration.py     # Full integration tests
+    └── test_data/              # Test data storage
 </code></pre></div>
 <h2 id="step-1-domain-model">🏗️ Step 1: Domain Model<a class="headerlink" href="#step-1-domain-model" title="Permanent link">¶</a></h2>
 <p><strong>src/domain/pizza.py</strong></p>
@@ -1649,106 +1670,402 @@
 <span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span>
 </code></pre></div>
 <h2 id="step-7-application-setup">🚀 Step 7: Application Setup<a class="headerlink" href="#step-7-application-setup" title="Permanent link">¶</a></h2>
-<p><strong>src/main.py</strong></p>
-<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<p>The main application file demonstrates sophisticated multi-app architecture with dependency injection configuration.</p>
+<p><strong><a href="https://github.com/neuroglia-io/python-framework/blob/main/samples/mario-pizzeria/main.py">main.py</a></strong> <span class="code-line-ref">(lines 1-226)</span></p>
+<div class="highlight"><table class="highlighttable"><tr><th class="filename" colspan="2"><span class="filename">samples/mario-pizzeria/main.py</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">  1</span>
+<span class="normal">  2</span>
+<span class="normal">  3</span>
+<span class="normal">  4</span>
+<span class="normal">  5</span>
+<span class="normal">  6</span>
+<span class="normal">  7</span>
+<span class="normal">  8</span>
+<span class="normal">  9</span>
+<span class="normal"> 10</span>
+<span class="normal"> 11</span>
+<span class="normal"> 12</span>
+<span class="normal"> 13</span>
+<span class="normal"> 14</span>
+<span class="normal"> 15</span>
+<span class="normal"> 16</span>
+<span class="normal"> 17</span>
+<span class="normal"> 18</span>
+<span class="normal"> 19</span>
+<span class="normal"> 20</span>
+<span class="normal"> 21</span>
+<span class="normal"> 22</span>
+<span class="normal"> 23</span>
+<span class="normal"> 24</span>
+<span class="normal"> 25</span>
+<span class="normal"> 26</span>
+<span class="normal"> 27</span>
+<span class="normal"> 28</span>
+<span class="normal"> 29</span>
+<span class="normal"> 30</span>
+<span class="normal"> 31</span>
+<span class="normal"> 32</span>
+<span class="normal"> 33</span>
+<span class="normal"> 34</span>
+<span class="normal"> 35</span>
+<span class="normal"> 36</span>
+<span class="normal"> 37</span>
+<span class="normal"> 38</span>
+<span class="normal"> 39</span>
+<span class="normal"> 40</span>
+<span class="normal"> 41</span>
+<span class="normal"> 42</span>
+<span class="normal"> 43</span>
+<span class="normal"> 44</span>
+<span class="normal"> 45</span>
+<span class="normal"> 46</span>
+<span class="normal"> 47</span>
+<span class="normal"> 48</span>
+<span class="normal"> 49</span>
+<span class="normal"> 50</span>
+<span class="normal"> 51</span>
+<span class="normal"> 52</span>
+<span class="normal"> 53</span>
+<span class="normal"> 54</span>
+<span class="normal"> 55</span>
+<span class="normal"> 56</span>
+<span class="normal"> 57</span>
+<span class="normal"> 58</span>
+<span class="normal"> 59</span>
+<span class="normal"> 60</span>
+<span class="normal"> 61</span>
+<span class="normal"> 62</span>
+<span class="normal"> 63</span>
+<span class="normal"> 64</span>
+<span class="normal"> 65</span>
+<span class="normal"> 66</span>
+<span class="normal"> 67</span>
+<span class="normal"> 68</span>
+<span class="normal"> 69</span>
+<span class="normal"> 70</span>
+<span class="normal"> 71</span>
+<span class="normal"> 72</span>
+<span class="normal"> 73</span>
+<span class="normal"> 74</span>
+<span class="normal"> 75</span>
+<span class="normal"> 76</span>
+<span class="normal"> 77</span>
+<span class="normal"> 78</span>
+<span class="normal"> 79</span>
+<span class="normal"> 80</span>
+<span class="normal"> 81</span>
+<span class="normal"> 82</span>
+<span class="normal"> 83</span>
+<span class="normal"> 84</span>
+<span class="normal"> 85</span>
+<span class="normal"> 86</span>
+<span class="normal"> 87</span>
+<span class="normal"> 88</span>
+<span class="normal"> 89</span>
+<span class="normal"> 90</span>
+<span class="normal"> 91</span>
+<span class="normal"> 92</span>
+<span class="normal"> 93</span>
+<span class="normal"> 94</span>
+<span class="normal"> 95</span>
+<span class="normal"> 96</span>
+<span class="normal"> 97</span>
+<span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span>
+<span class="normal">101</span>
+<span class="normal">102</span>
+<span class="normal">103</span>
+<span class="normal">104</span>
+<span class="normal">105</span>
+<span class="normal">106</span>
+<span class="normal">107</span>
+<span class="normal">108</span>
+<span class="normal">109</span>
+<span class="normal">110</span>
+<span class="normal">111</span>
+<span class="normal">112</span>
+<span class="normal">113</span>
+<span class="normal">114</span>
+<span class="normal">115</span>
+<span class="normal">116</span>
+<span class="normal">117</span>
+<span class="normal">118</span>
+<span class="normal">119</span>
+<span class="normal">120</span>
+<span class="normal">121</span>
+<span class="normal">122</span>
+<span class="normal">123</span>
+<span class="normal">124</span>
+<span class="normal">125</span>
+<span class="normal">126</span>
+<span class="normal">127</span>
+<span class="normal">128</span>
+<span class="normal">129</span>
+<span class="normal">130</span>
+<span class="normal">131</span>
+<span class="normal">132</span>
+<span class="normal">133</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="ch">#!/usr/bin/env python3</span>
+<span class="sd">"""</span>
+<span class="sd">Mario's Pizzeria - Main Application Entry Point</span>
+
+<span class="sd">This is the complete sample application demonstrating all major Neuroglia framework features.</span>
+<span class="sd">"""</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.hosting</span><span class="w"> </span><span class="kn">import</span> <span class="n">EnhancedWebApplicationBuilder</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.mediation</span><span class="w"> </span><span class="kn">import</span> <span class="n">Mediator</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span>
+
+<span class="c1"># Set up debug logging early</span>
+<span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">)</span>
+
+<span class="c1"># Add the project root to Python path so we can import neuroglia</span>
+<span class="n">project_root</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">parent</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">project_root</span> <span class="o">/</span> <span class="s2">"src"</span><span class="p">))</span>
+
+<span class="c1"># Domain repository interfaces</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">domain.repositories</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">ICustomerRepository</span><span class="p">,</span>
+    <span class="n">IKitchenRepository</span><span class="p">,</span>
+    <span class="n">IOrderRepository</span><span class="p">,</span>
+    <span class="n">IPizzaRepository</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">integration.repositories</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">FileCustomerRepository</span><span class="p">,</span>
+    <span class="n">FileKitchenRepository</span><span class="p">,</span>
+    <span class="n">FileOrderRepository</span><span class="p">,</span>
+    <span class="n">FilePizzaRepository</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># Framework imports (must be after path manipulation)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.hosting.enhanced_web_application_builder</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">EnhancedWebApplicationBuilder</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.mapping</span><span class="w"> </span><span class="kn">import</span> <span class="n">Mapper</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.mediation</span><span class="w"> </span><span class="kn">import</span> <span class="n">Mediator</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">src.domain.pizza</span><span class="w"> </span><span class="kn">import</span> <span class="n">Pizza</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">src.domain.order</span><span class="w"> </span><span class="kn">import</span> <span class="n">Order</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">src.infrastructure.repositories.file_repository</span><span class="w"> </span><span class="kn">import</span> <span class="n">FileRepository</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">src.application.commands.place_order</span><span class="w"> </span><span class="kn">import</span> <span class="n">PlaceOrderHandler</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">src.application.queries.get_menu</span><span class="w"> </span><span class="kn">import</span> <span class="n">GetMenuHandler</span>
 
-<span class="c1"># Configure logging</span>
-<span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
-<span class="n">log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">create_pizzeria_app</span><span class="p">(</span><span class="n">data_dir</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">port</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">8000</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Create Mario's Pizzeria application with multi-app architecture.</span>
 
-<span class="k">def</span><span class="w"> </span><span class="nf">create_app</span><span class="p">():</span>
-<span class="w">    </span><span class="sd">"""Create and configure Mario's Pizzeria application"""</span>
+<span class="sd">    Creates separate apps for:</span>
+<span class="sd">    - API backend (/api prefix)</span>
+<span class="sd">    - Future UI frontend (/ prefix)</span>
+<span class="sd">    """</span>
+    <span class="c1"># Determine data directory</span>
+    <span class="n">data_dir_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">data_dir</span><span class="p">)</span> <span class="k">if</span> <span class="n">data_dir</span> <span class="k">else</span> <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s2">"data"</span>
+    <span class="n">data_dir_path</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"💾 Data stored in: </span><span class="si">{</span><span class="n">data_dir_path</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
     <span class="c1"># Create enhanced web application builder</span>
     <span class="n">builder</span> <span class="o">=</span> <span class="n">EnhancedWebApplicationBuilder</span><span class="p">()</span>
 
-    <span class="c1"># Register repositories</span>
-    <span class="n">builder</span><span class="o">.</span><span class="n">services</span><span class="o">.</span><span class="n">add_singleton</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="n">FileRepository</span><span class="p">(</span><span class="n">Pizza</span><span class="p">,</span> <span class="s2">"data"</span><span class="p">))</span>
-    <span class="n">builder</span><span class="o">.</span><span class="n">services</span><span class="o">.</span><span class="n">add_singleton</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="n">FileRepository</span><span class="p">(</span><span class="n">Order</span><span class="p">,</span> <span class="s2">"data"</span><span class="p">))</span>
-
-    <span class="c1"># Register command/query handlers</span>
-    <span class="n">builder</span><span class="o">.</span><span class="n">services</span><span class="o">.</span><span class="n">add_scoped</span><span class="p">(</span><span class="n">PlaceOrderHandler</span><span class="p">)</span>
-    <span class="n">builder</span><span class="o">.</span><span class="n">services</span><span class="o">.</span><span class="n">add_scoped</span><span class="p">(</span><span class="n">GetMenuHandler</span><span class="p">)</span>
-
-    <span class="c1"># Configure mediation</span>
-    <span class="n">Mediator</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="p">[</span><span class="s2">"src.application"</span><span class="p">])</span>
-
-    <span class="c1"># Configure object mapping</span>
-    <span class="n">Mapper</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="p">[</span><span class="s2">"src"</span><span class="p">])</span>
-
-    <span class="c1"># Add controllers with API prefix</span>
-    <span class="n">builder</span><span class="o">.</span><span class="n">add_controllers_with_prefix</span><span class="p">(</span><span class="s2">"src.api.controllers"</span><span class="p">,</span> <span class="s2">"/api"</span><span class="p">)</span>
-
-    <span class="c1"># Build the application</span>
-    <span class="n">app</span> <span class="o">=</span> <span class="n">builder</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
-
-    <span class="c1"># Add static file serving for the web UI</span>
-    <span class="kn">from</span><span class="w"> </span><span class="nn">fastapi.staticfiles</span><span class="w"> </span><span class="kn">import</span> <span class="n">StaticFiles</span>
-    <span class="n">app</span><span class="o">.</span><span class="n">mount</span><span class="p">(</span><span class="s2">"/"</span><span class="p">,</span> <span class="n">StaticFiles</span><span class="p">(</span><span class="n">directory</span><span class="o">=</span><span class="s2">"src/web/static"</span><span class="p">,</span> <span class="n">html</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s2">"static"</span><span class="p">)</span>
-
-    <span class="c1"># Add middleware for CORS (if needed)</span>
-    <span class="kn">from</span><span class="w"> </span><span class="nn">fastapi.middleware.cors</span><span class="w"> </span><span class="kn">import</span> <span class="n">CORSMiddleware</span>
-    <span class="n">app</span><span class="o">.</span><span class="n">add_middleware</span><span class="p">(</span>
-        <span class="n">CORSMiddleware</span><span class="p">,</span>
-        <span class="n">allow_origins</span><span class="o">=</span><span class="p">[</span><span class="s2">"*"</span><span class="p">],</span>
-        <span class="n">allow_credentials</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="n">allow_methods</span><span class="o">=</span><span class="p">[</span><span class="s2">"*"</span><span class="p">],</span>
-        <span class="n">allow_headers</span><span class="o">=</span><span class="p">[</span><span class="s2">"*"</span><span class="p">],</span>
+    <span class="c1"># Register repositories with file-based implementations</span>
+    <span class="n">builder</span><span class="o">.</span><span class="n">services</span><span class="o">.</span><span class="n">add_singleton</span><span class="p">(</span>
+        <span class="n">IPizzaRepository</span><span class="p">,</span>
+        <span class="n">implementation_factory</span><span class="o">=</span><span class="k">lambda</span> <span class="n">_</span><span class="p">:</span> <span class="n">FilePizzaRepository</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">data_dir_path</span> <span class="o">/</span> <span class="s2">"menu"</span><span class="p">)),</span>
+    <span class="p">)</span>
+    <span class="n">builder</span><span class="o">.</span><span class="n">services</span><span class="o">.</span><span class="n">add_singleton</span><span class="p">(</span>
+        <span class="n">ICustomerRepository</span><span class="p">,</span>
+        <span class="n">implementation_factory</span><span class="o">=</span><span class="k">lambda</span> <span class="n">_</span><span class="p">:</span> <span class="n">FileCustomerRepository</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">data_dir_path</span> <span class="o">/</span> <span class="s2">"customers"</span><span class="p">)),</span>
+    <span class="p">)</span>
+    <span class="n">builder</span><span class="o">.</span><span class="n">services</span><span class="o">.</span><span class="n">add_singleton</span><span class="p">(</span>
+        <span class="n">IOrderRepository</span><span class="p">,</span>
+        <span class="n">implementation_factory</span><span class="o">=</span><span class="k">lambda</span> <span class="n">_</span><span class="p">:</span> <span class="n">FileOrderRepository</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">data_dir_path</span> <span class="o">/</span> <span class="s2">"orders"</span><span class="p">)),</span>
+    <span class="p">)</span>
+    <span class="n">builder</span><span class="o">.</span><span class="n">services</span><span class="o">.</span><span class="n">add_singleton</span><span class="p">(</span>
+        <span class="n">IKitchenRepository</span><span class="p">,</span>
+        <span class="n">implementation_factory</span><span class="o">=</span><span class="k">lambda</span> <span class="n">_</span><span class="p">:</span> <span class="n">FileKitchenRepository</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">data_dir_path</span> <span class="o">/</span> <span class="s2">"kitchen"</span><span class="p">)),</span>
     <span class="p">)</span>
 
+    <span class="c1"># Configure mediator with auto-discovery from command and query modules</span>
+    <span class="n">Mediator</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="p">[</span><span class="s2">"application.commands"</span><span class="p">,</span> <span class="s2">"application.queries"</span><span class="p">])</span>
+
+    <span class="c1"># Configure auto-mapper with custom profile</span>
+    <span class="n">Mapper</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="p">[</span><span class="s2">"application.mapping"</span><span class="p">,</span> <span class="s2">"api.dtos"</span><span class="p">,</span> <span class="s2">"domain.entities"</span><span class="p">])</span>
+
+    <span class="c1"># Configure JSON serialization with type discovery</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.serialization.json</span><span class="w"> </span><span class="kn">import</span> <span class="n">JsonSerializer</span>
+
+    <span class="c1"># Configure JsonSerializer with domain modules for enum discovery</span>
+    <span class="n">JsonSerializer</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span>
+        <span class="n">builder</span><span class="p">,</span>
+        <span class="n">type_modules</span><span class="o">=</span><span class="p">[</span>
+            <span class="s2">"domain.entities.enums"</span><span class="p">,</span>  <span class="c1"># Mario Pizzeria enum types</span>
+            <span class="s2">"domain.entities"</span><span class="p">,</span>  <span class="c1"># Also scan entities module for embedded enums</span>
+        <span class="p">],</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Build the service provider (not the full app yet)</span>
+    <span class="n">service_provider</span> <span class="o">=</span> <span class="n">builder</span><span class="o">.</span><span class="n">services</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
+
+    <span class="c1"># Create the main FastAPI app directly</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">fastapi</span><span class="w"> </span><span class="kn">import</span> <span class="n">FastAPI</span>
+
+    <span class="n">app</span> <span class="o">=</span> <span class="n">FastAPI</span><span class="p">(</span>
+        <span class="n">title</span><span class="o">=</span><span class="s2">"Mario's Pizzeria"</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">"Complete pizza ordering and management system"</span><span class="p">,</span>
+        <span class="n">version</span><span class="o">=</span><span class="s2">"1.0.0"</span><span class="p">,</span>
+        <span class="n">debug</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Make DI services available to the app</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">services</span> <span class="o">=</span> <span class="n">service_provider</span>
+
+    <span class="c1"># Create separate API app for backend REST API</span>
+    <span class="n">api_app</span> <span class="o">=</span> <span class="n">FastAPI</span><span class="p">(</span>
+        <span class="n">title</span><span class="o">=</span><span class="s2">"Mario's Pizzeria API"</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">"Pizza ordering and management API"</span><span class="p">,</span>
+        <span class="n">version</span><span class="o">=</span><span class="s2">"1.0.0"</span><span class="p">,</span>
+        <span class="n">docs_url</span><span class="o">=</span><span class="s2">"/docs"</span><span class="p">,</span>
+        <span class="n">debug</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="c1"># IMPORTANT: Make services available to API app as well</span>
+    <span class="n">api_app</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">services</span> <span class="o">=</span> <span class="n">service_provider</span>
+
+    <span class="c1"># Register API controllers to the API app</span>
+    <span class="n">builder</span><span class="o">.</span><span class="n">add_controllers</span><span class="p">([</span><span class="s2">"api.controllers"</span><span class="p">],</span> <span class="n">app</span><span class="o">=</span><span class="n">api_app</span><span class="p">)</span>
+
+    <span class="c1"># Add exception handling to API app</span>
+    <span class="n">builder</span><span class="o">.</span><span class="n">add_exception_handling</span><span class="p">(</span><span class="n">api_app</span><span class="p">)</span>
+
+    <span class="c1"># Mount the apps</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">mount</span><span class="p">(</span><span class="s2">"/api"</span><span class="p">,</span> <span class="n">api_app</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"api"</span><span class="p">)</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">mount</span><span class="p">(</span><span class="s2">"/ui"</span><span class="p">,</span> <span class="n">ui_app</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"ui"</span><span class="p">)</span>
+
     <span class="k">return</span> <span class="n">app</span>
+</code></pre></div></td></tr></table></div>
+<h3 id="key-implementation-features">Key Implementation Features<a class="headerlink" href="#key-implementation-features" title="Permanent link">¶</a></h3>
+<p><strong>Multi-App Architecture</strong> <span class="code-line-ref">(lines 102-125)</span></p>
+<p>The application uses a sophisticated multi-app setup:</p>
+<ul>
+<li><strong>Main App</strong>: Root FastAPI application with welcome endpoint</li>
+<li><strong>API App</strong>: Dedicated backend API mounted at <code>/api</code> with Swagger documentation</li>
+<li><strong>UI App</strong>: Future frontend application mounted at <code>/ui</code></li>
+</ul>
+<p><strong>Repository Registration Pattern</strong> <span class="code-line-ref">(lines 64-82)</span></p>
+<p>Uses interface-based dependency injection with file-based implementations:</p>
+<div class="highlight"><table class="highlighttable"><tr><th class="filename" colspan="2"><span class="filename">Repository Registration Pattern</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">64</span>
+<span class="normal">65</span>
+<span class="normal">66</span>
+<span class="normal">67</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="n">builder</span><span class="o">.</span><span class="n">services</span><span class="o">.</span><span class="n">add_singleton</span><span class="p">(</span>
+    <span class="n">IPizzaRepository</span><span class="p">,</span>
+    <span class="n">implementation_factory</span><span class="o">=</span><span class="k">lambda</span> <span class="n">_</span><span class="p">:</span> <span class="n">FilePizzaRepository</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">data_dir_path</span> <span class="o">/</span> <span class="s2">"menu"</span><span class="p">)),</span>
+<span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+<p><strong>Auto-Discovery Configuration</strong> <span class="code-line-ref">(lines 84-98)</span></p>
+<p>Framework components use module scanning for automatic registration:</p>
+<div class="highlight"><table class="highlighttable"><tr><th class="filename" colspan="2"><span class="filename">Auto-Discovery Setup</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 84</span>
+<span class="normal"> 85</span>
+<span class="normal"> 86</span>
+<span class="normal"> 87</span>
+<span class="normal"> 88</span>
+<span class="normal"> 89</span>
+<span class="normal"> 90</span>
+<span class="normal"> 91</span>
+<span class="normal"> 92</span>
+<span class="normal"> 93</span>
+<span class="normal"> 94</span>
+<span class="normal"> 95</span>
+<span class="normal"> 96</span>
+<span class="normal"> 97</span>
+<span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span>
+<span class="normal">101</span>
+<span class="normal">102</span>
+<span class="normal">103</span>
+<span class="normal">104</span>
+<span class="normal">105</span>
+<span class="normal">106</span>
+<span class="normal">107</span>
+<span class="normal">108</span>
+<span class="normal">109</span>
+<span class="normal">110</span>
+<span class="normal">111</span>
+<span class="normal">112</span>
+<span class="normal">113</span>
+<span class="normal">114</span>
+<span class="normal">115</span>
+<span class="normal">116</span>
+<span class="normal">117</span>
+<span class="normal">118</span>
+<span class="normal">119</span>
+<span class="normal">120</span>
+<span class="normal">121</span>
+<span class="normal">122</span>
+<span class="normal">123</span>
+<span class="normal">124</span>
+<span class="normal">125</span>
+<span class="normal">126</span>
+<span class="normal">127</span>
+<span class="normal">128</span>
+<span class="normal">129</span>
+<span class="normal">130</span>
+<span class="normal">131</span>
+<span class="normal">132</span>
+<span class="normal">133</span>
+<span class="normal">134</span>
+<span class="normal">135</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1"># Configure mediator with auto-discovery from command and query modules</span>
+<span class="n">Mediator</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="p">[</span><span class="s2">"application.commands"</span><span class="p">,</span> <span class="s2">"application.queries"</span><span class="p">])</span>
 
-<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">setup_sample_data</span><span class="p">():</span>
-<span class="w">    </span><span class="sd">"""Create sample pizza menu"""</span>
-    <span class="n">pizza_repo</span> <span class="o">=</span> <span class="n">FileRepository</span><span class="p">(</span><span class="n">Pizza</span><span class="p">,</span> <span class="s2">"data"</span><span class="p">)</span>
+<span class="c1"># Configure auto-mapper with custom profile</span>
+<span class="n">Mapper</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="p">[</span><span class="s2">"application.mapping"</span><span class="p">,</span> <span class="s2">"api.dtos"</span><span class="p">,</span> <span class="s2">"domain.entities"</span><span class="p">])</span>
 
-    <span class="c1"># Check if data already exists</span>
-    <span class="n">existing_pizzas</span> <span class="o">=</span> <span class="k">await</span> <span class="n">pizza_repo</span><span class="o">.</span><span class="n">get_all_async</span><span class="p">()</span>
-    <span class="k">if</span> <span class="n">existing_pizzas</span><span class="p">:</span>
-        <span class="k">return</span>
+<span class="c1"># Configure JsonSerializer with domain modules for enum discovery</span>
+<span class="n">JsonSerializer</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span>
+    <span class="n">builder</span><span class="p">,</span>
+    <span class="n">type_modules</span><span class="o">=</span><span class="p">[</span>
+        <span class="s2">"domain.entities.enums"</span><span class="p">,</span>  <span class="c1"># Mario Pizzeria enum types</span>
+        <span class="s2">"domain.entities"</span><span class="p">,</span>  <span class="c1"># Also scan entities module for embedded enums</span>
+    <span class="p">],</span>
+<span class="p">)</span>
+<span class="c1">## 🎯 Running the Application</span>
 
-    <span class="c1"># Create sample pizzas</span>
-    <span class="n">sample_pizzas</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="n">Pizza</span><span class="p">(</span><span class="s2">"margherita"</span><span class="p">,</span> <span class="s2">"Margherita"</span><span class="p">,</span> <span class="s2">"medium"</span><span class="p">,</span> <span class="n">Decimal</span><span class="p">(</span><span class="s2">"12.99"</span><span class="p">),</span> <span class="p">[],</span> <span class="mi">15</span><span class="p">),</span>
-        <span class="n">Pizza</span><span class="p">(</span><span class="s2">"pepperoni"</span><span class="p">,</span> <span class="s2">"Pepperoni"</span><span class="p">,</span> <span class="s2">"medium"</span><span class="p">,</span> <span class="n">Decimal</span><span class="p">(</span><span class="s2">"15.99"</span><span class="p">),</span> <span class="p">[</span><span class="s2">"pepperoni"</span><span class="p">],</span> <span class="mi">18</span><span class="p">),</span>
-        <span class="n">Pizza</span><span class="p">(</span><span class="s2">"supreme"</span><span class="p">,</span> <span class="s2">"Supreme"</span><span class="p">,</span> <span class="s2">"medium"</span><span class="p">,</span> <span class="n">Decimal</span><span class="p">(</span><span class="s2">"18.99"</span><span class="p">),</span> <span class="p">[</span><span class="s2">"pepperoni"</span><span class="p">,</span> <span class="s2">"mushrooms"</span><span class="p">,</span> <span class="s2">"bell_peppers"</span><span class="p">],</span> <span class="mi">22</span><span class="p">)</span>
-    <span class="p">]</span>
+<span class="n">The</span> <span class="n">main</span> <span class="n">entry</span> <span class="n">point</span> <span class="n">provides</span> <span class="n">comprehensive</span> <span class="n">application</span> <span class="n">bootstrapping</span> <span class="ow">and</span> <span class="n">startup</span> <span class="n">logic</span><span class="p">:</span>
 
-    <span class="k">for</span> <span class="n">pizza</span> <span class="ow">in</span> <span class="n">sample_pizzas</span><span class="p">:</span>
-        <span class="k">await</span> <span class="n">pizza_repo</span><span class="o">.</span><span class="n">save_async</span><span class="p">(</span><span class="n">pizza</span><span class="p">)</span>
+<span class="o">**</span><span class="p">[</span><span class="n">Application</span> <span class="n">Startup</span><span class="p">](</span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">neuroglia</span><span class="o">-</span><span class="n">io</span><span class="o">/</span><span class="n">python</span><span class="o">-</span><span class="n">framework</span><span class="o">/</span><span class="n">blob</span><span class="o">/</span><span class="n">main</span><span class="o">/</span><span class="n">samples</span><span class="o">/</span><span class="n">mario</span><span class="o">-</span><span class="n">pizzeria</span><span class="o">/</span><span class="n">main</span><span class="o">.</span><span class="n">py</span><span class="p">)</span><span class="o">**</span> <span class="o">&lt;</span><span class="n">span</span> <span class="n">class</span><span class="o">=</span><span class="s2">"code-line-ref"</span><span class="o">&gt;</span><span class="p">(</span><span class="n">lines</span> <span class="mi">198</span><span class="o">-</span><span class="mi">226</span><span class="p">)</span><span class="o">&lt;/</span><span class="n">span</span><span class="o">&gt;</span>
 
-    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Sample pizza menu created"</span><span class="p">)</span>
-
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
-    <span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<span class="err">```</span><span class="n">python</span> <span class="n">title</span><span class="o">=</span><span class="s2">"Application Entry Point"</span> <span class="n">linenums</span><span class="o">=</span><span class="s2">"198"</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">"""Main entry point when running as a script"""</span>
     <span class="kn">import</span><span class="w"> </span><span class="nn">uvicorn</span>
 
-    <span class="c1"># Setup sample data</span>
-    <span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">setup_sample_data</span><span class="p">())</span>
+    <span class="c1"># Parse command line arguments</span>
+    <span class="n">port</span> <span class="o">=</span> <span class="mi">8000</span>
+    <span class="n">host</span> <span class="o">=</span> <span class="s2">"127.0.0.1"</span>
+    <span class="n">data_dir</span> <span class="o">=</span> <span class="kc">None</span>
 
-    <span class="c1"># Create and run the application</span>
-    <span class="n">app</span> <span class="o">=</span> <span class="n">create_app</span><span class="p">()</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">arg</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">arg</span> <span class="o">==</span> <span class="s2">"--port"</span> <span class="ow">and</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">):</span>
+                <span class="n">port</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
+            <span class="k">elif</span> <span class="n">arg</span> <span class="o">==</span> <span class="s2">"--host"</span> <span class="ow">and</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">):</span>
+                <span class="n">host</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
+            <span class="k">elif</span> <span class="n">arg</span> <span class="o">==</span> <span class="s2">"--data-dir"</span> <span class="ow">and</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">):</span>
+                <span class="n">data_dir</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
 
-    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"🍕 Starting Mario's Pizzeria..."</span><span class="p">)</span>
-    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"🌐 Web UI: http://localhost:8000"</span><span class="p">)</span>
-    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"📚 API Docs: http://localhost:8000/docs"</span><span class="p">)</span>
+    <span class="c1"># Create the application</span>
+    <span class="n">app</span> <span class="o">=</span> <span class="n">create_pizzeria_app</span><span class="p">(</span><span class="n">data_dir</span><span class="o">=</span><span class="n">data_dir</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="n">port</span><span class="p">)</span>
 
-    <span class="n">uvicorn</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="n">host</span><span class="o">=</span><span class="s2">"0.0.0.0"</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">8000</span><span class="p">)</span>
-</code></pre></div>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"🍕 Starting Mario's Pizzeria on http://</span><span class="si">{</span><span class="n">host</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">port</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"📖 API Documentation available at http://</span><span class="si">{</span><span class="n">host</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">port</span><span class="si">}</span><span class="s2">/api/docs"</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"🌐 UI will be available at http://</span><span class="si">{</span><span class="n">host</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">port</span><span class="si">}</span><span class="s2">/ui (coming soon)"</span><span class="p">)</span>
+
+    <span class="c1"># Run the server</span>
+    <span class="n">uvicorn</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="n">host</span><span class="o">=</span><span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="n">port</span><span class="p">)</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+</code></pre></div></td></tr></table></div>
 <h2 id="youre-done">🎉 You're Done<a class="headerlink" href="#youre-done" title="Permanent link">¶</a></h2>
 <p>Run your pizzeria:</p>
-<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>marios-pizzeria
-python<span class="w"> </span>src/main.py
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>samples/mario-pizzeria
+python<span class="w"> </span>main.py
 </code></pre></div>
 <p>Visit your application:</p>
 <ul>

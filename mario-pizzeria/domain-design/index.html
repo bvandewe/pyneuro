@@ -166,15 +166,6 @@
         </a>
 </li>
 <li class="md-tabs__item">
-<a class="md-tabs__link" href="../../examples/jsonserializer-configuration/">
-          
-  
-  
-  Examples
-
-        </a>
-</li>
-<li class="md-tabs__item">
 <a class="md-tabs__link" href="../../references/oauth-oidc-jwt/">
           
   
@@ -409,6 +400,31 @@
 <a class="md-nav__link" href="#kitchen-events">
 <span class="md-ellipsis">
       Kitchen Events
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#domain-enums-value-objects">
+<span class="md-ellipsis">
+      📊 Domain Enums &amp; Value Objects
+    </span>
+</a>
+<nav aria-label="📊 Domain Enums &amp; Value Objects" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#pizza-size-enumeration">
+<span class="md-ellipsis">
+      Pizza Size Enumeration
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#order-status-enumeration">
+<span class="md-ellipsis">
+      Order Status Enumeration
     </span>
 </a>
 </li>
@@ -743,6 +759,14 @@
   </span>
 </a>
 </li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../guides/jsonserializer-configuration/">
+<span class="md-ellipsis">
+    JsonSerializer Configuration
+    
+  </span>
+</a>
+</li>
 </ul>
 </nav>
 </li>
@@ -800,39 +824,13 @@
 <input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_8" type="checkbox"/>
 <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
 <span class="md-ellipsis">
-    Examples
+    References
     
   </span>
 <span class="md-nav__icon md-icon"></span>
 </label>
 <nav aria-expanded="false" aria-labelledby="__nav_8_label" class="md-nav" data-md-level="1">
 <label class="md-nav__title" for="__nav_8">
-<span class="md-nav__icon md-icon"></span>
-            Examples
-          </label>
-<ul class="md-nav__list" data-md-scrollfix="">
-<li class="md-nav__item">
-<a class="md-nav__link" href="../../examples/jsonserializer-configuration/">
-<span class="md-ellipsis">
-    JsonSerializer Configuration
-    
-  </span>
-</a>
-</li>
-</ul>
-</nav>
-</li>
-<li class="md-nav__item md-nav__item--nested">
-<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_9" type="checkbox"/>
-<label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
-<span class="md-ellipsis">
-    References
-    
-  </span>
-<span class="md-nav__icon md-icon"></span>
-</label>
-<nav aria-expanded="false" aria-labelledby="__nav_9_label" class="md-nav" data-md-level="1">
-<label class="md-nav__title" for="__nav_9">
 <span class="md-nav__icon md-icon"></span>
             References
           </label>
@@ -1007,6 +1005,31 @@
 </nav>
 </li>
 <li class="md-nav__item">
+<a class="md-nav__link" href="#domain-enums-value-objects">
+<span class="md-ellipsis">
+      📊 Domain Enums &amp; Value Objects
+    </span>
+</a>
+<nav aria-label="📊 Domain Enums &amp; Value Objects" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#pizza-size-enumeration">
+<span class="md-ellipsis">
+      Pizza Size Enumeration
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#order-status-enumeration">
+<span class="md-ellipsis">
+      Order Status Enumeration
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
 <a class="md-nav__link" href="#business-rules-invariants">
 <span class="md-ellipsis">
       🎯 Business Rules &amp; Invariants
@@ -1143,48 +1166,102 @@
     note for Kitchen "Aggregate root for&lt;br/&gt;capacity management"</code></pre>
 <h2 id="detailed-domain-entities">🏗️ Detailed Domain Entities<a class="headerlink" href="#detailed-domain-entities" title="Permanent link">¶</a></h2>
 <h3 id="pizza-entity">Pizza Entity<a class="headerlink" href="#pizza-entity" title="Permanent link">¶</a></h3>
-<p>The Pizza entity encapsulates product information, pricing logic, and customization capabilities:</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">decimal</span><span class="w"> </span><span class="kn">import</span> <span class="n">Decimal</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.data.abstractions</span><span class="w"> </span><span class="kn">import</span> <span class="n">Entity</span>
-
-<span class="nd">@dataclass</span>
+<p>The Pizza entity encapsulates product information, pricing logic, and customization capabilities with sophisticated size-based pricing:</p>
+<p><strong>Source</strong>: <a href="https://github.com/bvandewe/pyneuro/blob/main/samples/mario-pizzeria/domain/entities/pizza.py"><code>samples/mario-pizzeria/domain/entities/pizza.py</code></a></p>
+<div class="highlight"><table class="highlighttable"><tr><th class="filename" colspan="2"><span class="filename">samples/mario-pizzeria/domain/entities/pizza.py</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span>
+<span class="normal">54</span>
+<span class="normal">55</span>
+<span class="normal">56</span>
+<span class="normal">57</span>
+<span class="normal">58</span>
+<span class="normal">59</span>
+<span class="normal">60</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@map_from</span><span class="p">(</span><span class="n">PizzaDto</span><span class="p">)</span>
+<span class="nd">@map_to</span><span class="p">(</span><span class="n">PizzaDto</span><span class="p">)</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Pizza</span><span class="p">(</span><span class="n">Entity</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
-<span class="w">    </span><span class="sd">"""A pizza with toppings and size"""</span>
-    <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">size</span><span class="p">:</span> <span class="nb">str</span>  <span class="c1"># "small", "medium", "large"</span>
-    <span class="n">base_price</span><span class="p">:</span> <span class="n">Decimal</span>
-    <span class="n">toppings</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
-    <span class="n">preparation_time_minutes</span><span class="p">:</span> <span class="nb">int</span>
+<span class="w">    </span><span class="sd">"""Pizza entity with pricing and toppings"""</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">base_price</span><span class="p">:</span> <span class="n">Decimal</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="n">PizzaSize</span><span class="p">,</span> <span class="n">description</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">uuid4</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">base_price</span> <span class="o">=</span> <span class="n">base_price</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">=</span> <span class="n">size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="n">description</span> <span class="ow">or</span> <span class="s2">""</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">toppings</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">size_multiplier</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Decimal</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Get price multiplier based on pizza size"""</span>
+        <span class="n">multipliers</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">PizzaSize</span><span class="o">.</span><span class="n">SMALL</span><span class="p">:</span> <span class="n">Decimal</span><span class="p">(</span><span class="s2">"1.0"</span><span class="p">),</span>
+            <span class="n">PizzaSize</span><span class="o">.</span><span class="n">MEDIUM</span><span class="p">:</span> <span class="n">Decimal</span><span class="p">(</span><span class="s2">"1.3"</span><span class="p">),</span>
+            <span class="n">PizzaSize</span><span class="o">.</span><span class="n">LARGE</span><span class="p">:</span> <span class="n">Decimal</span><span class="p">(</span><span class="s2">"1.6"</span><span class="p">),</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">multipliers</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">]</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">topping_price</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Decimal</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Calculate total price for all toppings"""</span>
+        <span class="k">return</span> <span class="n">Decimal</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">toppings</span><span class="p">)))</span> <span class="o">*</span> <span class="n">Decimal</span><span class="p">(</span><span class="s2">"2.50"</span><span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">total_price</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Decimal</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Calculate total price including toppings"""</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_price</span> <span class="o">+</span> <span class="p">(</span><span class="n">Decimal</span><span class="p">(</span><span class="s2">"1.50"</span><span class="p">)</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">toppings</span><span class="p">))</span>
+<span class="w">        </span><span class="sd">"""Calculate total pizza price including size and toppings"""</span>
+        <span class="n">base_with_size</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_price</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">size_multiplier</span>
+        <span class="k">return</span> <span class="n">base_with_size</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">topping_price</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">add_topping</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">topping</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Add a topping if not already present"""</span>
+<span class="w">        </span><span class="sd">"""Add a topping to the pizza"""</span>
         <span class="k">if</span> <span class="n">topping</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">toppings</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">toppings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">topping</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">remove_topping</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">topping</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Remove a topping if present"""</span>
+<span class="w">        </span><span class="sd">"""Remove a topping from the pizza"""</span>
         <span class="k">if</span> <span class="n">topping</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">toppings</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">toppings</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">topping</span><span class="p">)</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">estimate_cooking_time</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Estimate cooking time based on complexity"""</span>
-        <span class="n">base_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">preparation_time_minutes</span>
-        <span class="n">complexity_modifier</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">toppings</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span>  <span class="c1"># 2 minutes per topping</span>
-        <span class="k">return</span> <span class="n">base_time</span> <span class="o">+</span> <span class="n">complexity_modifier</span>
-</code></pre></div>
+</code></pre></div></td></tr></table></div>
 <p><strong>Business Rules</strong>:</p>
 <ul>
-<li>Each topping adds $1.50 to the base price</li>
-<li>Cooking time increases with topping complexity</li>
-<li>Maximum 10 toppings per pizza</li>
+<li>Size multipliers: Small (1.0x), Medium (1.3x), Large (1.6x) of base price</li>
+<li>Each topping adds $2.50 to the total price</li>
+<li>Automatic mapping to/from DTOs using <code>@map_from</code> and <code>@map_to</code> decorators</li>
+<li>UUID-based entity identification</li>
 </ul>
 <h3 id="order-entity">Order Entity<a class="headerlink" href="#order-entity" title="Permanent link">¶</a></h3>
 <p>The Order aggregate root manages the complete order lifecycle and business rules:</p>
@@ -1437,6 +1514,44 @@
     <span class="n">new_capacity</span><span class="p">:</span> <span class="nb">int</span>
     <span class="n">reason</span><span class="p">:</span> <span class="nb">str</span>
 </code></pre></div>
+<h2 id="domain-enums-value-objects">📊 Domain Enums &amp; Value Objects<a class="headerlink" href="#domain-enums-value-objects" title="Permanent link">¶</a></h2>
+<h3 id="pizza-size-enumeration">Pizza Size Enumeration<a class="headerlink" href="#pizza-size-enumeration" title="Permanent link">¶</a></h3>
+<p>The pizza size enumeration defines the available size options with clear business values:</p>
+<p><strong>Source</strong>: <a href="https://github.com/bvandewe/pyneuro/blob/main/samples/mario-pizzeria/domain/entities/enums.py"><code>samples/mario-pizzeria/domain/entities/enums.py</code></a></p>
+<div class="highlight"><table class="highlighttable"><tr><th class="filename" colspan="2"><span class="filename">samples/mario-pizzeria/domain/entities/enums.py</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">PizzaSize</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Pizza size options"""</span>
+
+    <span class="n">SMALL</span> <span class="o">=</span> <span class="s2">"small"</span>
+    <span class="n">MEDIUM</span> <span class="o">=</span> <span class="s2">"medium"</span>
+    <span class="n">LARGE</span> <span class="o">=</span> <span class="s2">"large"</span>
+</code></pre></div></td></tr></table></div>
+<h3 id="order-status-enumeration">Order Status Enumeration<a class="headerlink" href="#order-status-enumeration" title="Permanent link">¶</a></h3>
+<p>The order status enumeration tracks the complete order lifecycle:</p>
+<div class="highlight"><table class="highlighttable"><tr><th class="filename" colspan="2"><span class="filename">samples/mario-pizzeria/domain/entities/enums.py</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">OrderStatus</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Order lifecycle statuses"""</span>
+
+    <span class="n">PENDING</span> <span class="o">=</span> <span class="s2">"pending"</span>
+    <span class="n">CONFIRMED</span> <span class="o">=</span> <span class="s2">"confirmed"</span>
+    <span class="n">COOKING</span> <span class="o">=</span> <span class="s2">"cooking"</span>
+    <span class="n">READY</span> <span class="o">=</span> <span class="s2">"ready"</span>
+    <span class="n">DELIVERED</span> <span class="o">=</span> <span class="s2">"delivered"</span>
+    <span class="n">CANCELLED</span> <span class="o">=</span> <span class="s2">"cancelled"</span>
+</code></pre></div></td></tr></table></div>
+<p><strong>Status Flow</strong>: <code>PENDING</code> → <code>CONFIRMED</code> → <code>COOKING</code> → <code>READY</code> → <code>DELIVERED</code></p>
+<p>Alternative flow: Any status → <code>CANCELLED</code> (with business rules)</p>
 <h2 id="business-rules-invariants">🎯 Business Rules &amp; Invariants<a class="headerlink" href="#business-rules-invariants" title="Permanent link">¶</a></h2>
 <h3 id="order-rules">Order Rules<a class="headerlink" href="#order-rules" title="Permanent link">¶</a></h3>
 <ul>
