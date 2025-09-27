@@ -35,9 +35,11 @@ LAB_RESOURCE_MANAGER := $(SAMPLES_DIR)/lab_resource_manager
 
 ##@ Installation & Setup
 
-install: ## Install production dependencies
+install: ## Install production dependencies and pre-commit hooks
 	@echo "📦 Installing production dependencies..."
 	$(POETRY) install --only=main
+	@echo "🪝 Installing pre-commit hooks..."
+	$(POETRY) run pre-commit install
 
 dev-install: ## Install development dependencies
 	@echo "🔧 Installing development dependencies..."
@@ -84,7 +86,7 @@ test-unit: ## Run unit tests only
 	@echo "🧪 Running unit tests..."
 	$(POETRY) run pytest $(TESTS_DIR)/unit/ -v
 
-test-integration: ## Run integration tests only  
+test-integration: ## Run integration tests only
 	@echo "🧪 Running integration tests..."
 	$(POETRY) run pytest $(TESTS_DIR)/integration/ -v
 
@@ -159,7 +161,7 @@ sample-openbank: ## Run OpenBank sample
 	@echo "🏦 Starting OpenBank..."
 	cd $(OPENBANK) && $(PYTHON) main.py
 
-sample-gateway: ## Run API Gateway sample  
+sample-gateway: ## Run API Gateway sample
 	@echo "🌐 Starting API Gateway..."
 	cd $(API_GATEWAY) && $(PYTHON) main.py
 
