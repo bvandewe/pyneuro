@@ -1,8 +1,14 @@
 # 🚀 Framework Features
 
-The Neuroglia Python framework provides a comprehensive set of features designed to support modern microservice
-development with clean architecture principles. Each feature is designed to work seamlessly together while maintaining
-loose coupling and high testability.
+The Neuroglia Python framework provides a comprehensive set of **concrete framework capabilities** and implementation utilities. Features are specific tools and utilities provided by the framework, while [**Patterns**](../patterns/) define architectural approaches and design principles.
+
+## 🎯 Features vs Patterns
+
+| **Features** (This Section)                          | **Patterns** (../patterns/)                 |
+| ---------------------------------------------------- | ------------------------------------------- |
+| **What**: Specific framework capabilities            | **What**: Architectural design approaches   |
+| **Purpose**: Tools and utilities you use             | **Purpose**: How to structure and design    |
+| **Examples**: Serialization, Validation, HTTP Client | **Examples**: CQRS, DDD, Pipeline Behaviors |
 
 ## 🎯 Core Architecture Features
 

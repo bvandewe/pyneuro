@@ -5,15 +5,15 @@ from typing import Optional
 @dataclasses.dataclass
 class ProblemDetails:
     """Represents the structure of a Problem Details response according to RFC 7807.
-    
+
     This class provides a standardized way to carry machine-readable details of errors
     in HTTP response bodies. It follows the Internet Engineering Task Force (IETF)
     specification RFC 7807 "Problem Details for HTTP APIs".
-    
+
     The Problem Details format is designed to identify problems encountered by HTTP APIs
     in a way that is both human-readable and machine-readable. It defines a structured
     data format that includes common fields for error information.
-    
+
     Attributes:
         title: A short, human-readable summary of the problem type. It SHOULD NOT
                change from occurrence to occurrence of the problem, except for
@@ -26,10 +26,10 @@ class ProblemDetails:
               it SHOULD provide human-readable documentation for the problem type.
         instance: A URI reference that identifies the specific occurrence of the
                   problem. It may or may not yield further information if dereferenced.
-    
+
     Example:
         Creating a basic problem details response:
-        
+
         >>> problem = ProblemDetails(
         ...     title="Validation Error",
         ...     status=400,
@@ -38,21 +38,21 @@ class ProblemDetails:
         ... )
         >>> problem.is_success_status_code()
         False
-        
+
         Creating a success-status problem details (for inheritance):
-        
+
         >>> success = ProblemDetails(
         ...     title="Created",
         ...     status=201
         ... )
         >>> success.is_success_status_code()
         True
-    
+
     Note:
         This class serves as the base for OperationResult and other error handling
         patterns throughout the Neuroglia framework. It ensures consistent error
         reporting across all framework components and applications.
-    
+
     References:
         - RFC 7807: https://tools.ietf.org/html/rfc7807
         - HTTP Status Codes: https://tools.ietf.org/html/rfc7231#section-6
@@ -60,7 +60,7 @@ class ProblemDetails:
 
     title: str
     """A short, human-readable summary of the problem type.
-    
+
     This should be a concise description that identifies the type of problem
     encountered. It should remain consistent across different occurrences of
     the same problem type.
@@ -68,7 +68,7 @@ class ProblemDetails:
 
     status: int
     """The HTTP status code for this occurrence of the problem.
-    
+
     This should be the appropriate HTTP status code as defined in RFC 7231.
     Common values include:
     - 200: OK (success)
@@ -80,39 +80,39 @@ class ProblemDetails:
 
     detail: Optional[str] = None
     """A human-readable explanation specific to this occurrence of the problem.
-    
+
     This field should focus on helping the client understand and potentially
     correct the problem. It provides additional context beyond the title.
     """
 
     type: Optional[str] = None
     """A URI reference that identifies the problem type.
-    
+
     When dereferenced, this URI should provide human-readable documentation
     for the problem type. This allows for machine-readable problem categorization.
     """
 
     instance: Optional[str] = None
     """A URI reference that identifies the specific occurrence of the problem.
-    
+
     This can be used to provide additional information about this particular
     instance of the problem, such as a correlation ID or request identifier.
     """
-    
+
     def is_success_status_code(self) -> bool:
         """Determines whether the HTTP status code indicates success.
-        
+
         Success status codes are those in the 2xx range (200-299), which indicate
         that the client's request was successfully received, understood, and accepted.
-        
+
         Returns:
             bool: True if the status code is in the 2xx range, False otherwise.
-            
+
         Example:
             >>> problem = ProblemDetails("OK", 200)
             >>> problem.is_success_status_code()
             True
-            
+
             >>> problem = ProblemDetails("Not Found", 404)
             >>> problem.is_success_status_code()
             False

@@ -47,7 +47,13 @@ class ResourceMetadata:
 
 
 class ResourceSpec(ABC):
-    """Base class for resource specifications (desired state)."""
+    """
+    Abstraction defining the desired state specification for a resource.
+
+    Represents the declarative intent of what the resource should look like,
+    similar to how Kubernetes spec sections define desired state. Implementations
+    should provide validation logic to ensure specifications are valid.
+    """
 
     @abstractmethod
     def validate(self) -> list[str]:
@@ -56,7 +62,13 @@ class ResourceSpec(ABC):
 
 
 class ResourceStatus(ABC):
-    """Base class for resource status (current state)."""
+    """
+    Abstraction representing the current observed state of a resource.
+
+    Captures the actual state as observed by controllers, including reconciliation
+    metadata like observed generation and last update times. This enables proper
+    drift detection and reconciliation loop behavior.
+    """
 
     def __init__(self):
         self.observed_generation: int = 0
@@ -82,7 +94,13 @@ class StateTransition(Generic[TState]):
 
 
 class StateMachine(Generic[TState], ABC):
-    """Abstract base class for resource state machines."""
+    """
+    Abstraction for defining valid state transitions in resource lifecycle management.
+
+    Provides a framework for modeling complex resource state transitions with
+    validation rules, ensuring resources can only move through valid state paths.
+    Essential for modeling workflows and lifecycle management.
+    """
 
     def __init__(self, initial_state: TState, transitions: dict[TState, list[TState]]):
         self.initial_state = initial_state
@@ -104,7 +122,13 @@ class StateMachine(Generic[TState], ABC):
 
 
 class Resource(Generic[TResourceSpec, TResourceStatus], Entity[str], ABC):
-    """Base class for all resources with spec, status, and state machine."""
+    """
+    Core abstraction representing a manageable resource in the system.
+
+    Combines Kubernetes-style declarative specification (spec) with observed
+    state (status) and optional state machine behavior. Provides the foundation
+    for resource-oriented architecture with reconciliation loop support.
+    """
 
     def __init__(
         self,
@@ -153,7 +177,13 @@ class Resource(Generic[TResourceSpec, TResourceStatus], Entity[str], ABC):
 
 
 class ResourceEvent(ABC):
-    """Base class for resource-related events."""
+    """
+    Abstraction for events that occur during resource lifecycle operations.
+
+    Provides a standard way to represent significant occurrences in resource
+    management, enabling event-driven architecture and audit trail capabilities
+    for debugging and monitoring resource operations.
+    """
 
     def __init__(self, resource_uid: str, event_time: Optional[datetime] = None):
         self.resource_uid = resource_uid
@@ -161,7 +191,15 @@ class ResourceEvent(ABC):
 
 
 class ResourceController(Generic[TResourceSpec, TResourceStatus], ABC):
-    """Abstract base class for resource controllers."""
+    """
+    Base controller for resource-oriented architecture patterns.
+
+    Implements Kubernetes-style resource controllers with reconciliation
+    loops for managing distributed system state.
+
+    For detailed information about resource-oriented architecture, see:
+    https://bvandewe.github.io/pyneuro/patterns/resource-oriented-architecture/
+    """
 
     @abstractmethod
     async def reconcile(self, resource: Resource[TResourceSpec, TResourceStatus]) -> None:
@@ -175,7 +213,15 @@ class ResourceController(Generic[TResourceSpec, TResourceStatus], ABC):
 
 
 class ResourceWatcher(Generic[TResourceSpec, TResourceStatus], ABC):
-    """Abstract base class for resource watchers."""
+    """
+    Watches for changes in resource state and triggers reconciliation.
+
+    Implements the watcher pattern for detecting resource changes
+    and coordinating with resource controllers.
+
+    For detailed information about watcher patterns, see:
+    https://bvandewe.github.io/pyneuro/patterns/watcher-reconciliation-patterns/
+    """
 
     @abstractmethod
     async def watch(self, namespace: Optional[str] = None, label_selector: Optional[dict[str, str]] = None) -> None:

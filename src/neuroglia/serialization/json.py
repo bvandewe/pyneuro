@@ -1,3 +1,42 @@
+"""
+Comprehensive JSON serialization with intelligent type handling and automatic conversion.
+
+This module provides enterprise-grade JSON serialization capabilities including automatic type
+conversion for complex Python objects, intelligent deserialization with type inference,
+enum handling, datetime conversion, and integration with configurable type discovery.
+
+Key Features:
+    - JsonEncoder: Custom JSON encoder for complex Python types
+    - JsonSerializer: Full-featured serialization service with type inference
+    - Automatic type conversion for enums, datetime, decimals, and custom objects
+    - Type registry integration for intelligent enum discovery
+    - Dataclass and generic type support (List[T], Dict[K,V], Optional[T])
+    - Comprehensive error handling and fallback strategies
+    - Application builder integration for easy setup
+
+Examples:
+    ```python
+    # Quick setup
+    JsonSerializer.configure(app_builder, type_modules=["domain.models", "shared.enums"])
+
+    # Manual registration
+    services.add_singleton(JsonSerializer)
+    serializer = provider.get_service(JsonSerializer)
+
+    # Serialize complex objects
+    order = Order(items=[...], status=OrderStatus.PENDING, total=Decimal("99.99"))
+    json_text = serializer.serialize_to_text(order)
+
+    # Type-safe deserialization
+    restored_order = serializer.deserialize_from_text(json_text, Order)
+    ```
+
+See Also:
+    - JSON Serialization Guide: https://bvandewe.github.io/pyneuro/features/serialization/
+    - Type Discovery: https://bvandewe.github.io/pyneuro/features/configurable-type-discovery/
+    - Getting Started: https://bvandewe.github.io/pyneuro/getting-started/
+"""
+
 import json
 import typing
 from dataclasses import fields, is_dataclass
@@ -12,6 +51,56 @@ if TYPE_CHECKING:
 
 
 class JsonEncoder(json.JSONEncoder):
+    """
+    Enhanced JSON encoder that provides automatic conversion for complex Python types.
+
+    This encoder extends the standard JSON encoder to handle common Python types that
+    are not natively JSON serializable, including enums, datetime objects, decimals,
+    and custom objects with intelligent fallback mechanisms.
+
+    Supported Types:
+        - Enums: Converted to their name value for human readability
+        - DateTime: Converted to ISO format strings
+        - Custom Objects: Serialized using their __dict__ with private field filtering
+        - Unsupported Types: Gracefully converted to string representation
+
+    Examples:
+        ```python
+        from enum import Enum
+        from datetime import datetime
+        from decimal import Decimal
+
+        class Status(Enum):
+            ACTIVE = "active"
+            INACTIVE = "inactive"
+
+        class Order:
+            def __init__(self, id: str, status: Status, total: Decimal):
+                self.id = id
+                self.status = status
+                self.total = total
+                self.created_at = datetime.now()
+                self._internal_field = "hidden"
+
+        # Automatic encoding
+        order = Order("123", Status.ACTIVE, Decimal('99.99'))
+        json_str = json.dumps(order, cls=JsonEncoder)
+
+        # Result:
+        # {
+        #   "id": "123",
+        #   "status": "ACTIVE",
+        #   "total": "99.99",
+        #   "created_at": "2025-09-27T10:30:00.123456"
+        #   // Note: _internal_field is filtered out
+        # }
+        ```
+
+    See Also:
+        - JSON Serialization: https://bvandewe.github.io/pyneuro/features/serialization/
+        - Type Handling Guide: https://bvandewe.github.io/pyneuro/patterns/
+    """
+
     def default(self, obj):
         if issubclass(type(obj), Enum):
             return obj.name
@@ -27,7 +116,96 @@ class JsonEncoder(json.JSONEncoder):
 
 
 class JsonSerializer(TextSerializer):
-    """Represents the service used to serialize/deserialize to/from JSON"""
+    """
+    Comprehensive JSON serialization service with intelligent type handling and conversion.
+
+    This service provides advanced JSON serialization capabilities including automatic type
+    conversion, intelligent deserialization with type inference, enum handling, datetime
+    conversion, and integration with the framework's type registry for robust object reconstruction.
+
+    Key Features:
+        - Automatic type conversion for complex Python objects
+        - Intelligent type inference during deserialization
+        - Enum handling with multiple matching strategies
+        - DateTime conversion with ISO format support
+        - Dataclass and custom object support
+        - Generic type handling (List[T], Dict[K,V], Optional[T])
+        - Type registry integration for enum discovery
+        - Comprehensive error handling and fallback strategies
+
+    Examples:
+        ```python
+        # Service registration
+        services.add_singleton(JsonSerializer)
+        serializer = provider.get_service(JsonSerializer)
+
+        # Basic serialization
+        user = User(name="John", email="john@example.com", created_at=datetime.now())
+        json_text = serializer.serialize_to_text(user)
+
+        # Type-safe deserialization
+        user_data = '{"name": "Alice", "email": "alice@example.com"}'
+        user = serializer.deserialize_from_text(user_data, User)
+
+        # Complex object graphs
+        @dataclass
+        class Order:
+            id: str
+            items: List[OrderItem]
+            status: OrderStatus
+            total: Decimal
+            created_at: datetime
+
+        order = Order(
+            id="ORD-123",
+            items=[OrderItem("prod1", 2), OrderItem("prod2", 1)],
+            status=OrderStatus.PENDING,
+            total=Decimal("99.99"),
+            created_at=datetime.now()
+        )
+
+        # Serialize complex object
+        json_data = serializer.serialize_to_text(order)
+
+        # Deserialize with full type reconstruction
+        restored_order = serializer.deserialize_from_text(json_data, Order)
+        assert isinstance(restored_order.status, OrderStatus)
+        assert isinstance(restored_order.items[0], OrderItem)
+
+        # API response handling
+        class UsersController(ControllerBase):
+            @get("/users/{user_id}")
+            async def get_user(self, user_id: str) -> str:
+                user = await self.user_service.get_by_id(user_id)
+                return self.json_serializer.serialize_to_text(user)
+        ```
+
+    Type Inference:
+        The serializer includes intelligent type inference for fields without explicit
+        type annotations, using naming patterns and value analysis:
+
+        ```python
+        # Automatic decimal detection for money fields
+        data = '{"price": "99.99", "total_amount": "149.50"}'
+        obj = serializer.deserialize_from_text(data, Product)
+        # price and total_amount automatically converted to Decimal
+
+        # Automatic datetime detection
+        data = '{"created_at": "2025-09-27T10:30:00"}'
+        obj = serializer.deserialize_from_text(data, Entity)
+        # created_at automatically converted to datetime
+
+        # Enum matching by name or value
+        data = '{"status": "ACTIVE"}'
+        obj = serializer.deserialize_from_text(data, User)
+        # status automatically matched to UserStatus.ACTIVE enum
+        ```
+
+    See Also:
+        - JSON Serialization Guide: https://bvandewe.github.io/pyneuro/features/serialization/
+        - Type Registry Integration: https://bvandewe.github.io/pyneuro/features/configurable-type-discovery/
+        - API Response Handling: https://bvandewe.github.io/pyneuro/features/mvc-controllers/
+    """
 
     def serialize(self, value: Any) -> bytearray:
         text = self.serialize_to_text(value)

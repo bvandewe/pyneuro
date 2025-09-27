@@ -522,7 +522,178 @@ def deposit_money(self, amount: Decimal, transaction_id: str):
 6. **📈 Temporal Queries**: Query state at any point in time
 7. **🛡️ Immutability**: Events are immutable, ensuring data integrity
 
-## 🏦 Complete Real-World Example: OpenBank
+## �️ Persistence Pattern Choices in DDD
+
+The Neuroglia framework supports **multiple persistence patterns** within the same DDD foundation, allowing you to choose the right approach based on domain complexity and requirements.
+
+### **Pattern Decision Matrix**
+
+| Domain Characteristics     | Recommended Pattern                                                                              | Complexity Level |
+| -------------------------- | ------------------------------------------------------------------------------------------------ | ---------------- |
+| **Simple CRUD operations** | [Entity + State Persistence](persistence-patterns.md#pattern-1-simple-entity--state-persistence) | ⭐⭐☆☆☆          |
+| **Complex business rules** | [AggregateRoot + Event Sourcing](#event-sourcing-implementation)                                 | ⭐⭐⭐⭐⭐       |
+| **Mixed requirements**     | [Hybrid Approach](persistence-patterns.md#hybrid-approach)                                       | ⭐⭐⭐☆☆         |
+
+### **Entity Pattern for Simple Domains**
+
+Perfect for traditional business applications with straightforward persistence needs:
+
+```python
+class Customer(Entity):
+    """Simple entity with state persistence and domain events."""
+
+    def __init__(self, name: str, email: str):
+        super().__init__()
+        self._id = str(uuid.uuid4())
+        self.name = name
+        self.email = email
+
+        # Still raises domain events for integration
+        self._raise_domain_event(CustomerCreatedEvent(
+            customer_id=self.id,
+            name=self.name,
+            email=self.email
+        ))
+
+    def update_email(self, new_email: str) -> None:
+        """Business method with validation and events."""
+        if not self._is_valid_email(new_email):
+            raise ValueError("Invalid email format")
+
+        old_email = self.email
+        self.email = new_email
+
+        # Domain event for integration
+        self._raise_domain_event(CustomerEmailUpdatedEvent(
+            customer_id=self.id,
+            old_email=old_email,
+            new_email=new_email
+        ))
+
+    def _raise_domain_event(self, event: DomainEvent) -> None:
+        if not hasattr(self, '_pending_events'):
+            self._pending_events = []
+        self._pending_events.append(event)
+
+    @property
+    def domain_events(self) -> List[DomainEvent]:
+        """Required for Unit of Work integration."""
+        return getattr(self, '_pending_events', []).copy()
+
+# Usage in handler - same patterns as AggregateRoot
+class UpdateCustomerEmailHandler(CommandHandler):
+    async def handle_async(self, command: UpdateCustomerEmailCommand):
+        customer = await self.customer_repository.get_by_id_async(command.customer_id)
+        customer.update_email(command.new_email)  # Business logic + events
+
+        await self.customer_repository.save_async(customer)  # State persistence
+        self.unit_of_work.register_aggregate(customer)       # Event dispatching
+
+        return self.ok(CustomerDto.from_entity(customer))
+```
+
+### **AggregateRoot Pattern for Complex Domains**
+
+Use when you need rich business logic, comprehensive audit trails, and event sourcing:
+
+```python
+class BankAccount(AggregateRoot[BankAccountState, str]):
+    """Complex aggregate with event sourcing and rich business logic."""
+
+    def deposit_money(self, amount: Decimal, transaction_id: str) -> None:
+        """Rich business logic with comprehensive validation."""
+        # Business rules
+        if amount <= 0:
+            raise ValueError("Deposit amount must be positive")
+        if self.state.is_frozen:
+            raise DomainException("Cannot deposit to frozen account")
+
+        # Apply event (changes state + records for replay)
+        event = MoneyDepositedEvent(
+            aggregate_id=self.id,
+            amount=amount,
+            new_balance=self.state.balance + amount,
+            transaction_id=transaction_id,
+            deposited_at=datetime.utcnow()
+        )
+
+        self.state.on(event)      # Apply to current state
+        self.register_event(event)  # Record for event sourcing
+
+# Usage - same handler patterns
+class DepositMoneyHandler(CommandHandler):
+    async def handle_async(self, command: DepositMoneyCommand):
+        account = await self.account_repository.get_by_id_async(command.account_id)
+        account.deposit_money(command.amount, command.transaction_id)
+
+        await self.account_repository.save_async(account)  # Event store persistence
+        self.unit_of_work.register_aggregate(account)      # Event dispatching
+
+        return self.ok(AccountDto.from_aggregate(account))
+```
+
+### **Pattern Selection Guidelines**
+
+#### **Start Simple, Evolve as Needed**
+
+```mermaid
+flowchart TD
+    START[New Domain Feature] --> ASSESS{Assess Complexity}
+
+    ASSESS -->|Simple Business Rules| ENTITY[Entity + State Persistence]
+    ASSESS -->|Complex Business Rules| AGG[AggregateRoot + Event Sourcing]
+
+    ENTITY --> WORKS{Meets Requirements?}
+    WORKS -->|Yes| DONE[✅ Stay with Entity]
+    WORKS -->|No - Need Audit Trail| MIGRATE[Migrate to AggregateRoot]
+    WORKS -->|No - Complex Rules| MIGRATE
+
+    AGG --> DONE2[✅ Full Event Sourcing]
+    MIGRATE --> DONE2
+
+    style ENTITY fill:#e8f5e8
+    style AGG fill:#fff3e0
+    style DONE fill:#c8e6c9
+    style DONE2 fill:#fff8e1
+```
+
+#### **Decision Criteria**
+
+**Choose Entity + State Persistence When:**
+
+- ✅ Building CRUD-heavy applications
+- ✅ Simple business rules and validation
+- ✅ Traditional database infrastructure
+- ✅ Team is new to DDD concepts
+- ✅ Performance is critical
+- ✅ Quick development cycles needed
+
+**Choose AggregateRoot + Event Sourcing When:**
+
+- ✅ Complex business invariants and rules
+- ✅ Comprehensive audit requirements
+- ✅ Temporal queries needed
+- ✅ Rich domain logic with state machines
+- ✅ Event-driven system integration
+- ✅ Long-term maintenance over initial complexity
+
+### **Framework Benefits for Both Patterns**
+
+Both approaches use the **same infrastructure**:
+
+- **🔄 Unit of Work**: Automatic event collection and dispatching
+- **⚡ Pipeline Behaviors**: Cross-cutting concerns (validation, logging, transactions)
+- **🎯 CQRS Integration**: Command/Query handling with Mediator pattern
+- **📡 Event Integration**: Domain events automatically published as integration events
+- **🧪 Testing Support**: Same testing patterns and infrastructure
+
+**📚 Detailed Guides:**
+
+- **[🏛️ Persistence Patterns Guide](persistence-patterns.md)** - Complete comparison and decision framework
+- **[🔄 Unit of Work Pattern](unit-of-work.md)** - Event coordination and aggregate management
+- **[🏛️ State-Based Persistence](persistence-patterns.md#pattern-1-simple-entity--state-persistence)** - Entity pattern implementation guide
+
+## �🏦 Complete Real-World Example: OpenBank
 
 ### Full Domain Model Implementation
 

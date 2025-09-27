@@ -6,7 +6,7 @@ camelCase serialization and deserialization for Pydantic models, making
 it easy to work with APIs that expect camelCase field names.
 """
 
-from typing import Any, Dict, Optional
+from typing import Any, Optional
 
 try:
     from pydantic import BaseModel, ConfigDict
@@ -23,6 +23,13 @@ from neuroglia.utils.case_conversion import to_camel_case
 class CamelModel(BaseModel if PYDANTIC_AVAILABLE else object):
     """
     A Pydantic BaseModel with automatic camelCase aliases.
+
+    Automatically converts snake_case field names to camelCase aliases
+    for JSON serialization, enabling seamless API compatibility with
+    JavaScript/TypeScript frontends.
+
+    For detailed information about case conversion and API compatibility, see:
+    https://bvandewe.github.io/pyneuro/features/case-conversion-utilities/
 
     This model automatically converts snake_case field names to camelCase
     for JSON serialization while maintaining snake_case field names in Python.
@@ -56,7 +63,7 @@ class CamelModel(BaseModel if PYDANTIC_AVAILABLE else object):
             validate_assignment=True,  # Validate on assignment
         )
 
-    def to_camel_case_dict(self, **kwargs) -> Dict[str, Any]:
+    def to_camel_case_dict(self, **kwargs) -> dict[str, Any]:
         """
         Convert model to dictionary with camelCase keys.
 
@@ -71,7 +78,7 @@ class CamelModel(BaseModel if PYDANTIC_AVAILABLE else object):
 
         return self.model_dump(by_alias=True, **kwargs)
 
-    def to_snake_case_dict(self, **kwargs) -> Dict[str, Any]:
+    def to_snake_case_dict(self, **kwargs) -> dict[str, Any]:
         """
         Convert model to dictionary with snake_case keys.
 
@@ -87,7 +94,7 @@ class CamelModel(BaseModel if PYDANTIC_AVAILABLE else object):
         return self.model_dump(by_alias=False, **kwargs)
 
     @classmethod
-    def from_camel_case_dict(cls, data: Dict[str, Any]) -> "CamelModel":
+    def from_camel_case_dict(cls, data: dict[str, Any]) -> "CamelModel":
         """
         Create model instance from dictionary with camelCase keys.
 
@@ -103,7 +110,7 @@ class CamelModel(BaseModel if PYDANTIC_AVAILABLE else object):
         return cls.model_validate(data)
 
     @classmethod
-    def from_snake_case_dict(cls, data: Dict[str, Any]) -> "CamelModel":
+    def from_snake_case_dict(cls, data: dict[str, Any]) -> "CamelModel":
         """
         Create model instance from dictionary with snake_case keys.
 
@@ -119,9 +126,7 @@ class CamelModel(BaseModel if PYDANTIC_AVAILABLE else object):
         return cls.model_validate(data)
 
 
-def create_camel_model(
-    model_name: str, fields: Dict[str, Any], base_class: Optional[type] = None
-) -> type:
+def create_camel_model(model_name: str, fields: dict[str, Any], base_class: Optional[type] = None) -> type:
     """
     Dynamically create a CamelModel class with specified fields.
 

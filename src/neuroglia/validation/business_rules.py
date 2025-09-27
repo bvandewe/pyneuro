@@ -1,14 +1,19 @@
-"""Business rule validation system for the Neuroglia framework.
+"""
+Business rule validation system for the Neuroglia framework.
 
 This module provides a fluent API for defining and validating business rules,
 enabling complex domain logic validation with clear, readable rule definitions.
 Business rules can be simple property validations or complex multi-entity
 business invariants.
-"""
 
-from typing import Any, Callable, List, Optional, TypeVar, Generic, Dict
-from dataclasses import dataclass
+For detailed information about business rule validation, see:
+https://bvandewe.github.io/pyneuro/features/enhanced-model-validation/
+"""
 from abc import ABC, abstractmethod
+from collections.abc import Callable
+from dataclasses import dataclass
+from typing import Any, Generic, Optional, TypeVar
+
 from .exceptions import BusinessRuleViolationException
 
 T = TypeVar("T")
@@ -16,31 +21,35 @@ T = TypeVar("T")
 
 @dataclass
 class ValidationError:
-    """Represents a single validation error with context.
+    """
+    Represents a single validation error with context.
 
-    Attributes:
-        message: Human-readable error message
-        field: Field name where the error occurred (optional)
-        code: Error code for programmatic handling (optional)
-        context: Additional context information
+    Provides structured error information including field names, error codes,
+    and contextual information for comprehensive error reporting.
+
+    For detailed information about validation patterns, see:
+    https://bvandewe.github.io/pyneuro/features/enhanced-model-validation/
     """
 
     message: str
     field: Optional[str] = None
     code: Optional[str] = None
-    context: Optional[Dict[str, Any]] = None
+    context: Optional[dict[str, Any]] = None
 
 
 @dataclass
 class ValidationResult:
-    """Result of a validation operation containing all errors found.
+    """
+    Represents the result of a validation operation with comprehensive error reporting.
 
-    Attributes:
-        errors: List of validation errors
-        is_valid: True if no errors were found
+    Aggregates multiple validation errors and provides methods for checking
+    validation success and accessing detailed error information.
+
+    For detailed information about validation results, see:
+    https://bvandewe.github.io/pyneuro/features/enhanced-model-validation/
     """
 
-    errors: List[ValidationError]
+    errors: list[ValidationError]
 
     @property
     def is_valid(self) -> bool:
@@ -52,7 +61,7 @@ class ValidationResult:
         message: str,
         field: Optional[str] = None,
         code: Optional[str] = None,
-        context: Optional[Dict[str, Any]] = None,
+        context: Optional[dict[str, Any]] = None,
     ) -> None:
         """Add a validation error to the result."""
         self.errors.append(ValidationError(message, field, code, context))
@@ -62,9 +71,9 @@ class ValidationResult:
         combined_errors = self.errors + other.errors
         return ValidationResult(combined_errors)
 
-    def get_field_errors(self) -> Dict[str, List[str]]:
+    def get_field_errors(self) -> dict[str, list[str]]:
         """Get errors grouped by field name."""
-        field_errors: Dict[str, List[str]] = {}
+        field_errors: dict[str, list[str]] = {}
         for error in self.errors:
             field_name = error.field or "general"
             if field_name not in field_errors:
@@ -74,10 +83,15 @@ class ValidationResult:
 
 
 class BusinessRule(ABC, Generic[T]):
-    """Abstract base class for business rules.
+    """
+    Abstract base class for business rules with fluent validation API.
 
     Business rules encapsulate domain logic and can be applied to entities
-    or value objects to ensure business invariants are maintained.
+    or value objects to ensure business invariants are maintained. This class
+    provides a foundation for implementing complex domain validation logic.
+
+    For detailed information about business rule validation, see:
+    https://bvandewe.github.io/pyneuro/features/enhanced-model-validation/
     """
 
     def __init__(self, name: str, message: Optional[str] = None):
@@ -87,16 +101,13 @@ class BusinessRule(ABC, Generic[T]):
     @abstractmethod
     def is_satisfied_by(self, entity: T) -> bool:
         """Check if the entity satisfies this business rule."""
-        pass
 
     def validate(self, entity: T) -> ValidationResult:
         """Validate the entity against this rule and return detailed results."""
         result = ValidationResult([])
 
         if not self.is_satisfied_by(entity):
-            result.add_error(
-                message=self.message, code=f"business_rule_{self.name.lower().replace(' ', '_')}"
-            )
+            result.add_error(message=self.message, code=f"business_rule_{self.name.lower().replace(' ', '_')}")
 
         return result
 
@@ -190,7 +201,7 @@ class CompositeRule(BusinessRule[T]):
     Supports AND and OR operations on multiple business rules.
     """
 
-    def __init__(self, name: str, rules: List[BusinessRule[T]], operator: str = "AND"):
+    def __init__(self, name: str, rules: list[BusinessRule[T]], operator: str = "AND"):
         super().__init__(name)
         self.rules = rules
         self.operator = operator.upper()
@@ -228,14 +239,18 @@ class CompositeRule(BusinessRule[T]):
 
 
 class BusinessRuleValidator:
-    """Orchestrates validation of multiple business rules against entities.
+    """
+    Provides fluent API for composing and executing business rule validations.
 
-    This class provides a centralized way to validate entities against
-    multiple business rules and collect all validation results.
+    Enables chaining multiple business rules together and executing them
+    with comprehensive error collection and reporting.
+
+    For detailed information about business rule composition, see:
+    https://bvandewe.github.io/pyneuro/features/enhanced-model-validation/
     """
 
     def __init__(self):
-        self.rules: List[BusinessRule] = []
+        self.rules: list[BusinessRule] = []
 
     def add_rule(self, rule: BusinessRule) -> "BusinessRuleValidator":
         """Add a business rule to the validator (fluent interface)."""
@@ -289,9 +304,7 @@ class BusinessRuleValidator:
 # Convenience functions for creating common business rules
 
 
-def rule(
-    name: str, predicate: Callable[[Any], bool], message: Optional[str] = None
-) -> BusinessRule[Any]:
+def rule(name: str, predicate: Callable[[Any], bool], message: Optional[str] = None) -> BusinessRule[Any]:
     """Create a simple business rule from a predicate function.
 
     Args:
@@ -337,9 +350,7 @@ def conditional_rule(
     return ConditionalRule(name, condition, inner_rule, condition_description)
 
 
-def when(
-    condition: Callable[[Any], bool], condition_description: Optional[str] = None
-) -> Callable[[BusinessRule[Any]], ConditionalRule[Any]]:
+def when(condition: Callable[[Any], bool], condition_description: Optional[str] = None) -> Callable[[BusinessRule[Any]], ConditionalRule[Any]]:
     """Decorator-style function for creating conditional rules.
 
     Usage:
@@ -356,8 +367,6 @@ def when(
     """
 
     def wrapper(business_rule: BusinessRule[Any]) -> ConditionalRule[Any]:
-        return ConditionalRule(
-            f"conditional_{business_rule.name}", condition, business_rule, condition_description
-        )
+        return ConditionalRule(f"conditional_{business_rule.name}", condition, business_rule, condition_description)
 
     return wrapper

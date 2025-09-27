@@ -13,11 +13,12 @@ import logging
 import typing
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
-from typing import Optional, TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional
+
+from rx.subject.subject import Subject
 
 from neuroglia.core import ModuleLoader, TypeFinder
 from neuroglia.reactive import AsyncRx
-from rx.subject.subject import Subject
 
 # Import APScheduler components
 try:
@@ -46,8 +47,6 @@ log = logging.getLogger(__name__)
 class BackgroundTaskException(Exception):
     """Exception raised by background task operations."""
 
-    pass
-
 
 def backgroundjob(task_type: Optional[str] = None):
     """Marks a class as a background task that will be scheduled by the BackgroundTaskScheduler."""
@@ -55,9 +54,7 @@ def backgroundjob(task_type: Optional[str] = None):
     def decorator(cls):
         """Adds metadata to the class with the specified task type"""
         cls.__background_task_class_name__ = cls.__name__
-        cls.__background_task_type__ = (
-            task_type if task_type in ("scheduled", "recurrent") else None
-        )
+        cls.__background_task_type__ = task_type if task_type in ("scheduled", "recurrent") else None
         return cls
 
     return decorator
@@ -74,7 +71,6 @@ class BackgroundJob(ABC):
     @abstractmethod
     def configure(self, *args, **kwargs):
         """Configure the background job with necessary dependencies and parameters."""
-        pass
 
 
 class ScheduledBackgroundJob(BackgroundJob, ABC):
@@ -85,7 +81,6 @@ class ScheduledBackgroundJob(BackgroundJob, ABC):
     @abstractmethod
     async def run_at(self, *args, **kwargs):
         """Execute the scheduled job at the specified time."""
-        pass
 
 
 class RecurrentBackgroundJob(BackgroundJob, ABC):
@@ -96,7 +91,6 @@ class RecurrentBackgroundJob(BackgroundJob, ABC):
     @abstractmethod
     async def run_every(self, *args, **kwargs):
         """Execute the recurrent job at each interval."""
-        pass
 
 
 @dataclass
@@ -178,7 +172,15 @@ async def recurrent_job_wrapper(task: RecurrentBackgroundJob, **kwargs):
 
 
 class BackgroundTaskScheduler:
-    """Service for scheduling and managing background tasks."""
+    """
+    Distributed task scheduler for background job processing.
+
+    Provides reliable task scheduling with persistence, retry logic,
+    and distributed execution capabilities.
+
+    For detailed information about background task scheduling, see:
+    https://bvandewe.github.io/pyneuro/features/background-task-scheduling/
+    """
 
     def __init__(
         self,
@@ -188,17 +190,12 @@ class BackgroundTaskScheduler:
     ):
         """Initialize the background task scheduler."""
         if AsyncIOScheduler is None:
-            raise BackgroundTaskException(
-                "APScheduler is required for background task scheduling. "
-                "Install it with: pip install apscheduler[redis]"
-            )
+            raise BackgroundTaskException("APScheduler is required for background task scheduling. " "Install it with: pip install apscheduler[redis]")
 
         self._options = options
         self._background_task_bus = background_task_bus
         if AsyncIOExecutor is not None:
-            self._scheduler = scheduler or AsyncIOScheduler(
-                executors={"default": AsyncIOExecutor()}
-            )
+            self._scheduler = scheduler or AsyncIOScheduler(executors={"default": AsyncIOExecutor()})
         else:
             raise BackgroundTaskException("APScheduler dependencies not available")
         self._started = False
@@ -257,10 +254,7 @@ class BackgroundTaskScheduler:
             # Find the Python type of the task
             task_type = self._options.get_task_type(task_descriptor.name)
             if task_type is None:
-                log.warning(
-                    f"Ignored incoming job request: the specified type '{task_descriptor.name}' "
-                    f"is not supported. Did you forget to put the '@backgroundjob' decorator on the class?"
-                )
+                log.warning(f"Ignored incoming job request: the specified type '{task_descriptor.name}' " f"is not supported. Did you forget to put the '@backgroundjob' decorator on the class?")
                 return
 
             # Deserialize and enqueue the task
@@ -270,9 +264,7 @@ class BackgroundTaskScheduler:
         except Exception as ex:
             log.error(f"Error processing job request for '{task_descriptor.name}': {ex}")
 
-    def deserialize_task(
-        self, task_type: typing.Type, task_descriptor: TaskDescriptor
-    ) -> BackgroundJob:
+    def deserialize_task(self, task_type: typing.Type, task_descriptor: TaskDescriptor) -> BackgroundJob:
         """Deserialize a task descriptor into its Python type."""
         try:
             # Create new instance without calling __init__
@@ -285,17 +277,11 @@ class BackgroundTaskScheduler:
             task.__task_type__ = None
 
             # Set type-specific attributes
-            if (
-                isinstance(task_descriptor, ScheduledTaskDescriptor)
-                and task.__background_task_type__ == "scheduled"
-            ):
+            if isinstance(task_descriptor, ScheduledTaskDescriptor) and task.__background_task_type__ == "scheduled":
                 task.__scheduled_at__ = task_descriptor.scheduled_at  # type: ignore
                 task.__task_type__ = "ScheduledTaskDescriptor"
 
-            if (
-                isinstance(task_descriptor, RecurrentTaskDescriptor)
-                and task.__background_task_type__ == "recurrent"
-            ):
+            if isinstance(task_descriptor, RecurrentTaskDescriptor) and task.__background_task_type__ == "recurrent":
                 task.__interval__ = task_descriptor.interval  # type: ignore
                 task.__task_type__ = "RecurrentTaskDescriptor"
 
@@ -312,9 +298,7 @@ class BackgroundTaskScheduler:
             kwargs = {k: v for k, v in task.__dict__.items() if not k.startswith("_")}
 
             if isinstance(task, ScheduledBackgroundJob):
-                log.debug(
-                    f"Scheduling one-time job: {task.__task_name__} at {task.__scheduled_at__}"
-                )
+                log.debug(f"Scheduling one-time job: {task.__task_name__} at {task.__scheduled_at__}")
                 self._scheduler.add_job(
                     scheduled_job_wrapper,
                     trigger="date",
@@ -326,9 +310,7 @@ class BackgroundTaskScheduler:
                 )
 
             elif isinstance(task, RecurrentBackgroundJob):
-                log.debug(
-                    f"Scheduling recurrent job: {task.__task_name__} every {task.__interval__} seconds"
-                )
+                log.debug(f"Scheduling recurrent job: {task.__task_name__} every {task.__interval__} seconds")
                 self._scheduler.add_job(
                     recurrent_job_wrapper,
                     trigger="interval",
@@ -388,10 +370,7 @@ class BackgroundTaskScheduler:
         """Register and configure background task services in the application builder."""
         try:
             if AsyncIOScheduler is None:
-                raise BackgroundTaskException(
-                    "APScheduler is required for background task scheduling. "
-                    "Install it with: pip install apscheduler[redis]"
-                )
+                raise BackgroundTaskException("APScheduler is required for background task scheduling. " "Install it with: pip install apscheduler[redis]")
 
             # Create scheduler options and discover tasks
             options = BackgroundTaskSchedulerOptions()
@@ -402,8 +381,7 @@ class BackgroundTaskScheduler:
                     module = ModuleLoader.load(module_name)
                     background_tasks = TypeFinder.get_types(
                         module,
-                        lambda cls: inspect.isclass(cls)
-                        and hasattr(cls, "__background_task_class_name__"),
+                        lambda cls: inspect.isclass(cls) and hasattr(cls, "__background_task_class_name__"),
                     )
 
                     for background_task in background_tasks:
@@ -413,9 +391,7 @@ class BackgroundTaskScheduler:
                         options.register_task_type(background_task_name, background_task)
                         builder.services.add_transient(background_task, background_task)
 
-                        log.info(
-                            f"Registered background task '{background_task_name}' of type '{background_task_type}'"
-                        )
+                        log.info(f"Registered background task '{background_task_name}' of type '{background_task_type}'")
 
                 except Exception as ex:
                     log.error(f"Error scanning module '{module_name}' for background tasks: {ex}")
@@ -434,9 +410,7 @@ class BackgroundTaskScheduler:
                         )
                         log.info("Configured Redis job store for background tasks")
                     else:
-                        log.warning(
-                            "Redis job store requested but Redis dependencies not available"
-                        )
+                        log.warning("Redis job store requested but Redis dependencies not available")
                 else:
                     log.warning("Incomplete Redis configuration for background job store")
             else:
@@ -444,9 +418,7 @@ class BackgroundTaskScheduler:
 
             # Create and register scheduler
             if AsyncIOScheduler is not None and AsyncIOExecutor is not None:
-                scheduler = AsyncIOScheduler(
-                    executors={"default": AsyncIOExecutor()}, jobstores=jobstores
-                )
+                scheduler = AsyncIOScheduler(executors={"default": AsyncIOExecutor()}, jobstores=jobstores)
             else:
                 raise BackgroundTaskException("APScheduler dependencies not available")
 
