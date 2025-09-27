@@ -21,7 +21,7 @@ sequenceDiagram
     participant Controller
     participant Service
     participant Database
-    
+
     User->>Controller: HTTP Request
     Controller->>Service: Business Logic
     Service->>Database: Query Data
@@ -39,17 +39,17 @@ graph TB
         B --> C[Command Handlers]
         B --> D[Query Handlers]
     end
-    
+
     subgraph "Domain Layer"
         E[Entities] --> F[Value Objects]
         E --> G[Domain Events]
     end
-    
+
     subgraph "Integration Layer"
         H[Repositories] --> I[External APIs]
         H --> J[Database]
     end
-    
+
     C --> E
     D --> H
     A --> B
@@ -65,15 +65,15 @@ classDiagram
         +mapper: Mapper
         +process(result: OperationResult): Response
     }
-    
+
     class CommandHandler {
         +handle_async(command: Command): OperationResult
     }
-    
+
     class QueryHandler {
         +handle_async(query: Query): Result
     }
-    
+
     Controller --> CommandHandler : uses
     Controller --> QueryHandler : uses
     CommandHandler --> Entity : creates/modifies

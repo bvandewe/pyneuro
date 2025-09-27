@@ -1021,8 +1021,7 @@ class PizzaService:
 ## 🔗 Related Documentation
 
 - [Python Object-Oriented Programming](python_object_oriented.md) - Classes and inheritance in modular design
-- [Python Type Hints Reference](python_type_hints.md) - Type safety across modules
-- [Python Generic Types Reference](python_generic_types.md) - Generic programming for reusable modules
+- [Python Typing Guide](python_typing_guide.md) - Type safety, generics, and modular programming patterns
 - [Dependency Injection](../patterns/dependency-injection.md) - Managing dependencies between modules
 - [CQRS & Mediation](../patterns/cqrs.md) - Organizing commands and queries in modules
 

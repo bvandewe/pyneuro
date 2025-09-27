@@ -1051,8 +1051,7 @@ This example demonstrates how naming conventions create a clear, navigable codeb
 
 ## 🔗 Related Documentation
 
-- [Python Type Hints](python_type_hints.md) - Advanced typing patterns for better code clarity
-- [Python Generic Types](python_generic_types.md) - Generic type usage in framework components
+- [Python Typing Guide](python_typing_guide.md) - Complete guide to type hints, generics, and advanced typing patterns
 - [Python Object-Oriented Programming](python_object_oriented.md) - OOP principles and class design
 - [CQRS & Mediation](../patterns/cqrs.md) - Command and query pattern implementation
 - [Dependency Injection](../patterns/dependency-injection.md) - Service registration and naming patterns

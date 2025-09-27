@@ -1,6 +1,6 @@
 # 🍕 Mario's Pizzeria Tutorial
 
-Build a complete pizza ordering system that demonstrates all of Neuroglia's features in a familiar, easy-to-understand context. This comprehensive tutorial covers clean architecture, CQRS, event-driven design, and web development.
+Build a complete [pizza ordering system](../mario-pizzeria.md) that demonstrates all of Neuroglia's features in a familiar, easy-to-understand context. This comprehensive tutorial covers clean architecture, CQRS, event-driven design, and web development.
 
 !!! info "🎯 What You'll Build"
 A complete pizzeria application with REST API, web UI, authentication, file-based persistence, and event-driven architecture.
@@ -78,95 +78,184 @@ mario-pizzeria/
 
 ## 🏗️ Step 1: Domain Model
 
-**src/domain/pizza.py**
+The domain entities demonstrate sophisticated business logic with real pricing calculations and type safety.
 
-```python
-from dataclasses import dataclass
+**[domain/entities/pizza.py](https://github.com/bvandewe/pyneuro/blob/main/samples/mario-pizzeria/domain/entities/pizza.py)** <span class="code-line-ref">(lines 1-63)</span>
+
+```python title="samples/mario-pizzeria/domain/entities/pizza.py" linenums="1"
+"""Pizza entity for Mario's Pizzeria domain"""
+
 from decimal import Decimal
-from typing import List
-from neuroglia.data.abstractions import Entity
+from typing import Optional
+from uuid import uuid4
 
-@dataclass
+from api.dtos import PizzaDto
+
+from neuroglia.data.abstractions import Entity
+from neuroglia.mapping.mapper import map_from, map_to
+
+from .enums import PizzaSize
+
+
+@map_from(PizzaDto)
+@map_to(PizzaDto)
 class Pizza(Entity[str]):
-    """A pizza with toppings and pricing"""
-    id: str
-    name: str
-    size: str  # "small", "medium", "large"
-    base_price: Decimal
-    toppings: List[str]
-    preparation_time_minutes: int
+    """Pizza entity with pricing and toppings"""
+
+    def __init__(self, name: str, base_price: Decimal, size: PizzaSize, description: Optional[str] = None):
+        super().__init__()
+        self.id = str(uuid4())
+        self.name = name
+        self.base_price = base_price
+        self.size = size
+        self.description = description or ""
+        self.toppings: list[str] = []
+
+    @property
+    def size_multiplier(self) -> Decimal:
+        """Get price multiplier based on pizza size"""
+        multipliers = {
+            PizzaSize.SMALL: Decimal("1.0"),
+            PizzaSize.MEDIUM: Decimal("1.3"),
+            PizzaSize.LARGE: Decimal("1.6"),
+        }
+        return multipliers[self.size]
+
+    @property
+    def topping_price(self) -> Decimal:
+        """Calculate total price for all toppings"""
+        return Decimal(str(len(self.toppings))) * Decimal("2.50")
 
     @property
     def total_price(self) -> Decimal:
-        """Calculate total price with toppings"""
-        return self.base_price + (Decimal("1.50") * len(self.toppings))
+        """Calculate total pizza price including size and toppings"""
+        base_with_size = self.base_price * self.size_multiplier
+        return base_with_size + self.topping_price
 
-    def __post_init__(self):
-        if not self.id:
-            import uuid
-            self.id = str(uuid.uuid4())
+    def add_topping(self, topping: str) -> None:
+        """Add a topping to the pizza"""
+        if topping not in self.toppings:
+            self.toppings.append(topping)
+
+    def remove_topping(self, topping: str) -> None:
+        """Remove a topping from the pizza"""
+        if topping in self.toppings:
+            self.toppings.remove(topping)
 ```
 
-**src/domain/order.py**
+### Key Features
 
-```python
-from dataclasses import dataclass, field
-from datetime import datetime, timedelta
+- **Size-based pricing**: Small (1.0x), Medium (1.3x), Large (1.6x) multipliers
+- **Smart topping pricing**: $2.50 per topping with proper decimal handling
+- **Auto-mapping decorators**: Seamless conversion to/from DTOs
+- **Type safety**: Enum-based size validation with PizzaSize enum
+
+**[domain/entities/order.py](https://github.com/bvandewe/pyneuro/blob/main/samples/mario-pizzeria/domain/entities/order.py)** <span class="code-line-ref">(lines 1-106)</span>
+
+```python title="samples/mario-pizzeria/domain/entities/order.py" linenums="1"
+"""Order entity for Mario's Pizzeria domain"""
+
+from datetime import datetime, timezone
 from decimal import Decimal
-from typing import List, Optional
+from typing import Optional
+from uuid import uuid4
+
+from api.dtos import OrderDto
+
 from neuroglia.data.abstractions import Entity
+from neuroglia.mapping.mapper import map_from, map_to
+
+from .enums import OrderStatus
 from .pizza import Pizza
-from .events import OrderPlacedEvent
 
-@dataclass
+
+@map_from(OrderDto)
+@map_to(OrderDto)
 class Order(Entity[str]):
-    """A customer pizza order"""
-    id: str
-    customer_name: str
-    customer_phone: str
-    pizzas: List[Pizza]
-    status: str = "pending"  # pending, cooking, ready, delivered
-    order_time: datetime = field(default_factory=datetime.utcnow)
-    estimated_ready_time: Optional[datetime] = None
-    total_amount: Optional[Decimal] = None
+    """Order entity with pizzas and status management"""
 
-    def __post_init__(self):
-        if not self.id:
-            import uuid
-            self.id = str(uuid.uuid4())
+    def __init__(self, customer_id: str, estimated_ready_time: Optional[datetime] = None):
+        super().__init__()
+        self.id = str(uuid4())
+        self.customer_id = customer_id
+        self.pizzas: list[Pizza] = []
+        self.status = OrderStatus.PENDING
+        self.order_time = datetime.now(timezone.utc)
+        self.confirmed_time: Optional[datetime] = None
+        self.cooking_started_time: Optional[datetime] = None
+        self.actual_ready_time: Optional[datetime] = None
+        self.estimated_ready_time = estimated_ready_time
+        self.notes: Optional[str] = None
 
-        if self.total_amount is None:
-            self.total_amount = sum(pizza.total_price for pizza in self.pizzas)
+    @property
+    def total_amount(self) -> Decimal:
+        """Calculate total order amount"""
+        return sum((pizza.total_price for pizza in self.pizzas), Decimal("0.00"))
 
-        if self.estimated_ready_time is None:
-            prep_time = max(pizza.preparation_time_minutes for pizza in self.pizzas)
-            self.estimated_ready_time = self.order_time + timedelta(minutes=prep_time)
+    @property
+    def pizza_count(self) -> int:
+        """Get total number of pizzas in the order"""
+        return len(self.pizzas)
 
-        # Raise domain event when order is placed
-        if self.status == "pending":
-            self.raise_event(OrderPlacedEvent(
-                order_id=self.id,
-                customer_name=self.customer_name,
-                total_amount=self.total_amount,
-                estimated_ready_time=self.estimated_ready_time
-            ))
+    def add_pizza(self, pizza: Pizza) -> None:
+        """Add a pizza to the order"""
+        if self.status != OrderStatus.PENDING:
+            raise ValueError("Cannot modify confirmed orders")
+        self.pizzas.append(pizza)
 
-    def start_cooking(self):
-        """Start cooking this order"""
-        if self.status != "pending":
-            raise ValueError("Only pending orders can start cooking")
-        self.status = "cooking"
+    def confirm_order(self) -> None:
+        """Confirm the order and set confirmed time"""
+        if self.status != OrderStatus.PENDING:
+            raise ValueError("Only pending orders can be confirmed")
 
-    def mark_ready(self):
+        if not self.pizzas:
+            raise ValueError("Cannot confirm order without pizzas")
+
+        self.status = OrderStatus.CONFIRMED
+        self.confirmed_time = datetime.now(timezone.utc)
+
+    def start_cooking(self) -> None:
+        """Start cooking the order"""
+        if self.status != OrderStatus.CONFIRMED:
+            raise ValueError("Only confirmed orders can start cooking")
+
+        self.status = OrderStatus.COOKING
+        self.cooking_started_time = datetime.now(timezone.utc)
+
+    def mark_ready(self) -> None:
         """Mark order as ready for pickup/delivery"""
-        if self.status != "cooking":
+        if self.status != OrderStatus.COOKING:
             raise ValueError("Only cooking orders can be marked ready")
-        self.status = "ready"
+
+        self.status = OrderStatus.READY
+        self.actual_ready_time = datetime.now(timezone.utc)
 ```
 
-**src/domain/events.py**
+### Key Features
 
-```python
+- **Status management**: OrderStatus enum with PENDING → CONFIRMED → COOKING → READY workflow
+- **Time tracking**: order_time, confirmed_time, cooking_started_time, actual_ready_time
+- **Business validation**: Cannot modify confirmed orders, cannot confirm empty orders
+- **Auto-mapping decorators**: Seamless conversion to/from DTOs
+- **Computed properties**: Dynamic total_amount and pizza_count calculations
+
+**OrderStatus Enum** ([enums.py](https://github.com/bvandewe/pyneuro/blob/main/samples/mario-pizzeria/domain/entities/enums.py)):
+
+```python title="samples/mario-pizzeria/domain/entities/enums.py" linenums="14"
+class OrderStatus(Enum):
+    """Order lifecycle statuses"""
+
+    PENDING = "pending"
+    CONFIRMED = "confirmed"
+    COOKING = "cooking"
+    READY = "ready"
+```
+
+Notice how the `Order` entity encapsulates the business logic around order management, including validation rules and state transitions.
+
+**Domain Events** (optional extension):
+
+```python title="Domain Events Example" linenums="1"
 from dataclasses import dataclass
 from datetime import datetime
 from decimal import Decimal
@@ -186,264 +275,304 @@ class OrderPlacedEvent(DomainEvent):
 
 ## 🎯 Step 2: Commands and Queries
 
-**src/application/commands/place_order.py**
+Neuroglia implements the CQRS (Command Query Responsibility Segregation) pattern, separating write operations (commands) from read operations (queries).
 
-```python
-from dataclasses import dataclass
-from typing import List
-from neuroglia.mediation import Command, CommandHandler
-from neuroglia.core import OperationResult
-from neuroglia.data.abstractions import Repository
-from src.domain.order import Order
-from src.domain.pizza import Pizza
+### Commands (Write Operations)
 
+**[place_order_command.py](https://github.com/bvandewe/pyneuro/blob/main/samples/mario-pizzeria/application/commands/place_order_command.py)** <span class="code-line-ref">(lines 17-29)</span>
+
+```python title="samples/mario-pizzeria/application/commands/place_order_command.py" linenums="17"
 @dataclass
-class PizzaOrderItem:
-    """Item in a pizza order"""
-    pizza_id: str
-    size: str
-    toppings: List[str]
-
-@dataclass
-class PlaceOrderCommand(Command[OperationResult]):
+@map_from(CreateOrderDto)
+class PlaceOrderCommand(Command[OperationResult[OrderDto]]):
     """Command to place a new pizza order"""
+
     customer_name: str
     customer_phone: str
-    pizza_items: List[PizzaOrderItem]
+    customer_address: Optional[str] = None
+    customer_email: Optional[str] = None
+    pizzas: list[CreatePizzaDto] = field(default_factory=list)
+    payment_method: str = "cash"
+    notes: Optional[str] = None
+```
 
-class PlaceOrderHandler(CommandHandler[PlaceOrderCommand, OperationResult]):
-    """Handler for placing pizza orders"""
+**Command Handler Implementation** ([lines 31-95](https://github.com/bvandewe/pyneuro/blob/main/samples/mario-pizzeria/application/commands/place_order_command.py#L31-L95)):
 
-    def __init__(self,
-                 order_repository: Repository[Order, str],
-                 pizza_repository: Repository[Pizza, str]):
+```python title="samples/mario-pizzeria/application/commands/place_order_command.py" linenums="31"
+class PlaceOrderCommandHandler(CommandHandler[PlaceOrderCommand, OperationResult[OrderDto]]):
+    """Handler for placing new pizza orders"""
+
+    def __init__(
+        self,
+        order_repository: IOrderRepository,
+        customer_repository: ICustomerRepository,
+        mapper: Mapper,
+    ):
         self.order_repository = order_repository
-        self.pizza_repository = pizza_repository
+        self.customer_repository = customer_repository
+        self.mapper = mapper
 
-    async def handle_async(self, command: PlaceOrderCommand) -> OperationResult:
+    async def handle_async(self, request: PlaceOrderCommand) -> OperationResult[OrderDto]:
         try:
-            # Build pizzas for the order
-            pizzas = []
-            for item in command.pizza_items:
-                # Get base pizza
-                base_pizza = await self.pizza_repository.get_by_id_async(item.pizza_id)
-                if not base_pizza:
-                    return self.bad_request(f"Pizza {item.pizza_id} not found")
+            # First create or get customer
+            customer = await self._create_or_get_customer(request)
 
-                # Create customized pizza
-                pizza = Pizza(
-                    id="",  # Will be generated
-                    name=base_pizza.name,
-                    size=item.size,
-                    base_price=base_pizza.base_price,
-                    toppings=item.toppings,
-                    preparation_time_minutes=base_pizza.preparation_time_minutes
-                )
-                pizzas.append(pizza)
+            # Create order with customer_id
+            order = Order(customer_id=customer.id)
+            if request.notes:
+                order.notes = request.notes
 
-            # Create the order
-            order = Order(
-                id="",  # Will be generated
-                customer_name=command.customer_name,
-                customer_phone=command.customer_phone,
-                pizzas=pizzas
+            # Add pizzas to order with dynamic pricing
+            for pizza_item in request.pizzas:
+                size = PizzaSize(pizza_item.size.lower())
+
+                # Dynamic base pricing by pizza type
+                base_price = Decimal("12.99")  # Default
+                if pizza_item.name.lower() == "margherita":
+                    base_price = Decimal("12.99")
+                elif pizza_item.name.lower() == "pepperoni":
+                    base_price = Decimal("14.99")
+                elif pizza_item.name.lower() == "supreme":
+                    base_price = Decimal("17.99")
+
+                pizza = Pizza(name=pizza_item.name, base_price=base_price, size=size)
+
+                # Add toppings
+                for topping in pizza_item.toppings:
+                    pizza.add_topping(topping)
+
+                order.add_pizza(pizza)
+
+            # Validate and confirm order
+            if not order.pizzas:
+                return self.bad_request("Order must contain at least one pizza")
+
+            order.confirm_order()  # Raises domain event
+            await self.order_repository.add_async(order)
+
+            return self.created(self._build_order_dto(order, customer))
+```
+
+### Queries (Read Operations)
+
+**[get_order_by_id_query.py](https://github.com/bvandewe/pyneuro/blob/main/samples/mario-pizzeria/application/queries/get_order_by_id_query.py)** <span class="code-line-ref">(lines 13-17)</span>
+
+```python title="samples/mario-pizzeria/application/queries/get_order_by_id_query.py" linenums="13"
+@dataclass
+class GetOrderByIdQuery(Query[OperationResult[OrderDto]]):
+    """Query to get an order by ID"""
+
+    order_id: str
+```
+
+**Query Handler Implementation** ([lines 20-63](https://github.com/bvandewe/pyneuro/blob/main/samples/mario-pizzeria/application/queries/get_order_by_id_query.py#L20-L63)):
+
+```python title="samples/mario-pizzeria/application/queries/get_order_by_id_query.py" linenums="20"
+class GetOrderByIdQueryHandler(QueryHandler[GetOrderByIdQuery, OperationResult[OrderDto]]):
+    """Handler for getting an order by ID"""
+
+    def __init__(
+        self,
+        order_repository: IOrderRepository,
+        customer_repository: ICustomerRepository,
+        mapper: Mapper,
+    ):
+        self.order_repository = order_repository
+        self.customer_repository = customer_repository
+        self.mapper = mapper
+
+    async def handle_async(self, request: GetOrderByIdQuery) -> OperationResult[OrderDto]:
+        try:
+            order = await self.order_repository.get_async(request.order_id)
+            if not order:
+                return self.not_found("Order", request.order_id)
+
+            # Get customer details
+            customer = await self.customer_repository.get_async(order.customer_id)
+
+            # Create OrderDto with customer information
+            order_dto = OrderDto(
+                id=order.id,
+                customer_name=customer.name if customer else "Unknown",
+                customer_phone=customer.phone if customer else "Unknown",
+                customer_address=customer.address if customer else "Unknown",
+                pizzas=[self.mapper.map(pizza, PizzaDto) for pizza in order.pizzas],
+                status=order.status.value,
+                order_time=order.order_time,
+                confirmed_time=order.confirmed_time,
+                cooking_started_time=order.cooking_started_time,
+                actual_ready_time=order.actual_ready_time,
+                estimated_ready_time=order.estimated_ready_time,
+                total_amount=order.total_amount,
+                notes=order.notes,
             )
 
-            # Save the order
-            await self.order_repository.save_async(order)
-
-            return self.created({
-                "order_id": order.id,
-                "total_amount": str(order.total_amount),
-                "estimated_ready_time": order.estimated_ready_time.isoformat()
-            })
-
+            return self.ok(order_dto)
         except Exception as e:
-            return self.internal_server_error(f"Failed to place order: {str(e)}")
+            return self.internal_server_error(f"Failed to get order: {str(e)}")
 ```
 
-**src/application/queries/get_menu.py**
+### Key CQRS Features
 
-```python
-from dataclasses import dataclass
-from typing import List
-from neuroglia.mediation import Query, QueryHandler
-from neuroglia.core import OperationResult
-from neuroglia.data.abstractions import Repository
-from src.domain.pizza import Pizza
-
-@dataclass
-class GetMenuQuery(Query[OperationResult[List[dict]]]):
-    """Query to get the pizzeria menu"""
-    pass
-
-class GetMenuHandler(QueryHandler[GetMenuQuery, OperationResult[List[dict]]]):
-    """Handler for getting the pizzeria menu"""
-
-    def __init__(self, pizza_repository: Repository[Pizza, str]):
-        self.pizza_repository = pizza_repository
-
-    async def handle_async(self, query: GetMenuQuery) -> OperationResult[List[dict]]:
-        try:
-            pizzas = await self.pizza_repository.get_all_async()
-
-            menu_items = []
-            for pizza in pizzas:
-                menu_items.append({
-                    "id": pizza.id,
-                    "name": pizza.name,
-                    "base_price": str(pizza.base_price),
-                    "preparation_time_minutes": pizza.preparation_time_minutes,
-                    "sizes": ["small", "medium", "large"],
-                    "available_toppings": [
-                        "pepperoni", "mushrooms", "bell_peppers",
-                        "onions", "sausage", "extra_cheese"
-                    ]
-                })
-
-            return self.ok(menu_items)
-
-        except Exception as e:
-            return self.internal_server_error(f"Failed to get menu: {str(e)}")
-```
+- **Command/Query Separation**: Clear distinction between write (commands) and read (queries) operations
+- **Auto-mapping**: @map_from decorators for seamless DTO conversion
+- **Repository Pattern**: Abstracted data access through IOrderRepository and ICustomerRepository
+- **Business Logic**: Domain validation and business rules in command handlers
+- **Error Handling**: Comprehensive error handling with OperationResult pattern
 
 ## 💾 Step 3: File-Based Repository
 
-**src/infrastructure/repositories/file_repository.py**
+**[file_order_repository.py](https://github.com/bvandewe/pyneuro/blob/main/samples/mario-pizzeria/integration/repositories/file_order_repository.py)** <span class="code-line-ref">(lines 1-37)</span>
 
-```python
-import json
-import os
-from pathlib import Path
-from typing import List, Optional, TypeVar, Generic
-from neuroglia.data.abstractions import Repository
+```python title="samples/mario-pizzeria/integration/repositories/file_order_repository.py" linenums="1"
+"""File-based implementation of order repository using generic FileSystemRepository"""
 
-T = TypeVar('T')
-TKey = TypeVar('TKey')
+from datetime import datetime
 
-class FileRepository(Repository[T, TKey], Generic[T, TKey]):
-    """Simple file-based repository using JSON storage"""
+from domain.entities import Order, OrderStatus
+from domain.repositories import IOrderRepository
 
-    def __init__(self, entity_type: type, data_dir: str = "data"):
-        self.entity_type = entity_type
-        self.data_dir = Path(data_dir)
-        self.entity_dir = self.data_dir / entity_type.__name__.lower()
+from neuroglia.data.infrastructure.filesystem import FileSystemRepository
 
-        # Ensure directory exists
-        self.entity_dir.mkdir(parents=True, exist_ok=True)
 
-    async def save_async(self, entity: T) -> None:
-        """Save entity to JSON file"""
-        file_path = self.entity_dir / f"{entity.id}.json"
+class FileOrderRepository(FileSystemRepository[Order, str], IOrderRepository):
+    """File-based implementation of order repository using generic FileSystemRepository"""
 
-        # Convert entity to dict for JSON serialization
-        entity_dict = self._entity_to_dict(entity)
+    def __init__(self, data_directory: str = "data"):
+        super().__init__(data_directory=data_directory, entity_type=Order, key_type=str)
 
-        with open(file_path, 'w') as f:
-            json.dump(entity_dict, f, indent=2, default=str)
+    async def get_by_customer_phone_async(self, phone: str) -> list[Order]:
+        """Get all orders for a customer by phone number"""
+        # Note: This would require a relationship lookup in a real implementation
+        # For now, we'll return empty list as Order entity doesn't directly store phone
+        return []
 
-    async def get_by_id_async(self, id: TKey) -> Optional[T]:
-        """Get entity by ID from JSON file"""
-        file_path = self.entity_dir / f"{id}.json"
+    async def get_orders_by_status_async(self, status: OrderStatus) -> list[Order]:
+        """Get all orders with a specific status"""
+        all_orders = await self.get_all_async()
+        return [order for order in all_orders if order.status == status]
 
-        if not file_path.exists():
-            return None
+    async def get_orders_by_date_range_async(self, start_date: datetime, end_date: datetime) -> list[Order]:
+        """Get orders within a date range"""
+        all_orders = await self.get_all_async()
+        return [order for order in all_orders if start_date <= order.created_at <= end_date]
 
-        with open(file_path, 'r') as f:
-            entity_dict = json.load(f)
-
-        return self._dict_to_entity(entity_dict)
-
-    async def get_all_async(self) -> List[T]:
-        """Get all entities from JSON files"""
-        entities = []
-
-        for file_path in self.entity_dir.glob("*.json"):
-            with open(file_path, 'r') as f:
-                entity_dict = json.load(f)
-                entities.append(self._dict_to_entity(entity_dict))
-
-        return entities
-
-    async def delete_async(self, id: TKey) -> None:
-        """Delete entity JSON file"""
-        file_path = self.entity_dir / f"{id}.json"
-        if file_path.exists():
-            file_path.unlink()
-
-    def _entity_to_dict(self, entity: T) -> dict:
-        """Convert entity to dictionary for JSON serialization"""
-        if hasattr(entity, '__dict__'):
-            return entity.__dict__
-        return entity._asdict() if hasattr(entity, '_asdict') else dict(entity)
-
-    def _dict_to_entity(self, data: dict) -> T:
-        """Convert dictionary back to entity"""
-        return self.entity_type(**data)
+    async def get_active_orders_async(self) -> list[Order]:
+        """Get all active orders (not delivered or cancelled)"""
+        all_orders = await self.get_all_async()
+        active_statuses = {OrderStatus.CONFIRMED, OrderStatus.COOKING}
+        return [order for order in all_orders if order.status in active_statuses]
 ```
+
+### Key Repository Features
+
+- **Generic Base Class**: Inherits from `FileSystemRepository[Order, str]` for common CRUD operations
+- **Domain Interface**: Implements `IOrderRepository` for business-specific methods
+- **Status Filtering**: `get_orders_by_status_async()` for filtering by OrderStatus enum
+- **Date Range Queries**: `get_orders_by_date_range_async()` for reporting functionality
+- **Business Logic**: `get_active_orders_async()` returns orders in CONFIRMED or COOKING status
+- **JSON Persistence**: Built-in serialization through FileSystemRepository base class
+- **Type Safety**: Strongly typed with Order entity and string keys
 
 ## 🌐 Step 4: REST API Controllers
 
-**src/api/controllers/orders_controller.py**
+**[orders_controller.py](https://github.com/bvandewe/pyneuro/blob/main/samples/mario-pizzeria/api/controllers/orders_controller.py)** <span class="code-line-ref">(lines 1-83)</span>
 
-```python
-from typing import List
-from fastapi import status, Depends
-from classy_fastapi.decorators import get, post, put
+```python title="samples/mario-pizzeria/api/controllers/orders_controller.py" linenums="1"
+from typing import List, Optional
+from fastapi import HTTPException
+
 from neuroglia.mvc import ControllerBase
 from neuroglia.dependency_injection import ServiceProviderBase
-from neuroglia.mediation import Mediator
 from neuroglia.mapping import Mapper
+from neuroglia.mediation import Mediator
+from classy_fastapi import get, post, put
 
-from src.application.commands.place_order import PlaceOrderCommand, PizzaOrderItem
-from src.application.queries.get_menu import GetMenuQuery
-from src.infrastructure.auth import get_current_user
+from api.dtos import (
+    OrderDto,
+    CreateOrderDto,
+    UpdateOrderStatusDto,
+)
+from application.commands import PlaceOrderCommand, StartCookingCommand, CompleteOrderCommand
+from application.queries import (
+    GetOrderByIdQuery,
+    GetOrdersByStatusQuery,
+    GetActiveOrdersQuery,
+)
+
 
 class OrdersController(ControllerBase):
-    """Pizza orders API controller"""
+    """Mario's pizza order management endpoints"""
 
     def __init__(self, service_provider: ServiceProviderBase, mapper: Mapper, mediator: Mediator):
         super().__init__(service_provider, mapper, mediator)
 
-    @post("/", response_model=dict, status_code=status.HTTP_201_CREATED)
-    async def place_order(self, request: dict) -> dict:
-        """Place a new pizza order"""
-        command = PlaceOrderCommand(
-            customer_name=request["customer_name"],
-            customer_phone=request["customer_phone"],
-            pizza_items=[
-                PizzaOrderItem(**item) for item in request["pizza_items"]
-            ]
-        )
+    @get("/{order_id}", response_model=OrderDto, responses=ControllerBase.error_responses)
+    async def get_order(self, order_id: str):
+        """Get order details by ID"""
+        query = GetOrderByIdQuery(order_id=order_id)
+        result = await self.mediator.execute_async(query)
+        return self.process(result)
 
+    @get("/", response_model=List[OrderDto], responses=ControllerBase.error_responses)
+    async def get_orders(self, status: Optional[str] = None):
+        """Get orders, optionally filtered by status"""
+        if status:
+            query = GetOrdersByStatusQuery(status=status)
+        else:
+            query = GetActiveOrdersQuery()
+
+        result = await self.mediator.execute_async(query)
+        return self.process(result)
+
+    @post("/", response_model=OrderDto, status_code=201, responses=ControllerBase.error_responses)
+    async def place_order(self, request: CreateOrderDto):
+        """Place a new pizza order"""
+        command = self.mapper.map(request, PlaceOrderCommand)
         result = await self.mediator.execute_async(command)
         return self.process(result)
 
-    @get("/{order_id}", response_model=dict)
-    async def get_order(self, order_id: str) -> dict:
-        """Get order details by ID"""
-        # This would use a GetOrderQuery - simplified for brevity
-        return {"order_id": order_id, "status": "pending"}
+    @put("/{order_id}/cook", response_model=OrderDto, responses=ControllerBase.error_responses)
+    async def start_cooking(self, order_id: str):
+        """Start cooking an order"""
+        command = StartCookingCommand(order_id=order_id)
+        result = await self.mediator.execute_async(command)
+        return self.process(result)
 
-    @put("/{order_id}/cook", response_model=dict)
-    async def start_cooking(self, order_id: str, current_user = Depends(get_current_user)) -> dict:
-        """Start cooking an order (kitchen staff only)"""
-        # This would use a StartCookingCommand - simplified for brevity
-        return {"order_id": order_id, "status": "cooking"}
+    @put("/{order_id}/ready", response_model=OrderDto, responses=ControllerBase.error_responses)
+    async def complete_order(self, order_id: str):
+        """Mark order as ready for pickup/delivery"""
+        command = CompleteOrderCommand(order_id=order_id)
+        result = await self.mediator.execute_async(command)
+        return self.process(result)
 
-class MenuController(ControllerBase):
-    """Pizza menu API controller"""
+    @put("/{order_id}/status", response_model=OrderDto, responses=ControllerBase.error_responses)
+    async def update_order_status(self, order_id: str, request: UpdateOrderStatusDto):
+        """Update order status (general endpoint)"""
+        # Route to appropriate command based on status
+        if request.status.lower() == "cooking":
+            command = StartCookingCommand(order_id=order_id)
+        elif request.status.lower() == "ready":
+            command = CompleteOrderCommand(order_id=order_id)
+        else:
+            raise HTTPException(
+                status_code=400, detail=f"Unsupported status transition: {request.status}"
+            )
 
-    def __init__(self, service_provider: ServiceProviderBase, mapper: Mapper, mediator: Mediator):
-        super().__init__(service_provider, mapper, mediator)
-
-    @get("/", response_model=List[dict])
-    async def get_menu(self) -> List[dict]:
-        """Get the pizzeria menu"""
-        query = GetMenuQuery()
-        result = await self.mediator.execute_async(query)
+        result = await self.mediator.execute_async(command)
         return self.process(result)
 ```
+
+### Key Controller Features
+
+- **Full CRUD Operations**: Complete order lifecycle management from creation to completion
+- **RESTful Design**: Proper HTTP methods (GET, POST, PUT) and status codes (200, 201, 400, 404)
+- **Mediator Pattern**: All business logic delegated to command/query handlers
+- **Type Safety**: Strong typing with Pydantic models for requests and responses
+- **Error Handling**: Consistent error responses using ControllerBase.error_responses
+- **Status Management**: Multiple endpoints for different order status transitions
+- **Auto-mapping**: Seamless DTO to command conversion using mapper.map()
+- **Clean Architecture**: Controllers are thin orchestrators, business logic stays in handlers
 
 ## 🔐 Step 5: OAuth Authentication
 
@@ -833,7 +962,7 @@ builder.services.add_singleton(
 
 Framework components use module scanning for automatic registration:
 
-````python title="Auto-Discovery Setup" linenums="84"
+```python title="Auto-Discovery Setup" linenums="84"
 # Configure mediator with auto-discovery from command and query modules
 Mediator.configure(builder, ["application.commands", "application.queries"])
 
@@ -848,6 +977,8 @@ JsonSerializer.configure(
         "domain.entities",  # Also scan entities module for embedded enums
     ],
 )
+```
+
 ## 🎯 Running the Application
 
 The main entry point provides comprehensive application bootstrapping and startup logic:
@@ -886,7 +1017,7 @@ def main():
 
 if __name__ == "__main__":
     main()
-````
+```
 
 ## 🎉 You're Done
 
@@ -905,14 +1036,14 @@ Visit your application:
 
 ## 🔍 What You've Built
 
-✅ **Complete Web Application** with UI and API
-✅ **Clean Architecture** with domain, application, and infrastructure layers
-✅ **CQRS Pattern** with commands and queries
-✅ **Event-Driven Design** with domain events
-✅ **File-Based Persistence** using the repository pattern
-✅ **OAuth Authentication** for secure endpoints
-✅ **Enhanced Web Application Builder** with multi-app support
-✅ **Automatic API Documentation** with Swagger UI
+- ✅ **Complete Web Application** with UI and API
+- ✅ **Clean Architecture** with domain, application, and infrastructure layers
+- ✅ **CQRS Pattern** with commands and queries
+- ✅ **Event-Driven Design** with domain events
+- ✅ **File-Based Persistence** using the repository pattern
+- ✅ **OAuth Authentication** for secure endpoints
+- ✅ **Enhanced Web Application Builder** with multi-app support
+- ✅ **Automatic API Documentation** with Swagger UI
 
 ## 🚀 Next Steps
 

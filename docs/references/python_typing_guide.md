@@ -1,8 +1,21 @@
-# 🏷️ Python Type Hints Reference
+# 🏷️ Python Typing Guide - Type Hints & Generics
 
-Type hints are essential for understanding and working with the Neuroglia framework. They provide clarity, enable better IDE support, and help catch errors before runtime.
+A comprehensive guide to Python type hints and generic types essential for understanding and working with the Neuroglia framework. They provide clarity, enable better IDE support, and help catch errors before runtime.
 
-## 🎯 What Are Type Hints?
+## 📚 Table of Contents
+
+1. [Type Hints Fundamentals](#-type-hints-fundamentals)
+2. [Basic Type Annotations](#-basic-type-annotations)
+3. [Advanced Type Hints](#-advanced-type-hints)
+4. [Generic Types Fundamentals](#-generic-types-fundamentals)
+5. [Core Generic Concepts](#-core-generic-concepts)
+6. [Framework Integration](#️-framework-integration)
+7. [Advanced Generic Patterns](#-advanced-generic-patterns)
+8. [Testing with Types](#-testing-with-types)
+9. [Type Checking Tools](#-type-checking-tools)
+10. [Best Practices](#-best-practices)
+
+## 🎯 Type Hints Fundamentals
 
 Type hints are optional annotations that specify what types of values functions, variables, and class attributes should have. They make your code more readable and help tools understand your intentions.
 
@@ -213,9 +226,125 @@ def process_pizza_order(
     return processor(pizza_name, toppings)
 ```
 
-## 🏗️ Type Hints in Neuroglia Framework
+## 🧬 Generic Types Fundamentals
 
-### Entity and Repository Patterns
+Understanding generics is crucial for working with the Neuroglia framework, as they provide type safety and flexibility throughout the architecture.
+
+### What Are Generic Types?
+
+Generic types allow you to write code that works with different types while maintaining type safety. Think of them as "type parameters" that get filled in later.
+
+#### Simple Analogy
+
+Imagine a **generic container** that can hold any type of item:
+
+```python
+# Instead of creating separate containers for each type:
+class StringContainer:
+    def __init__(self, value: str):
+        self.value = value
+
+class IntContainer:
+    def __init__(self, value: int):
+        self.value = value
+
+# We create ONE generic container:
+from typing import Generic, TypeVar
+
+T = TypeVar('T')
+
+class Container(Generic[T]):
+    def __init__(self, value: T):
+        self.value = value
+
+    def get_value(self) -> T:
+        return self.value
+
+# Now we can use it with any type:
+string_container = Container[str]("Hello")
+int_container = Container[int](42)
+```
+
+## 🔧 Core Generic Concepts
+
+### TypeVar - Type Variables
+
+`TypeVar` creates a placeholder for a type that will be specified later:
+
+```python
+from typing import TypeVar, List
+
+# Define a type variable
+T = TypeVar('T')
+
+def get_first_item(items: List[T]) -> T:
+    """Returns the first item from a list, preserving its type."""
+    return items[0]
+
+# Usage examples:
+numbers = [1, 2, 3]
+first_number = get_first_item(numbers)  # Type: int
+
+names = ["Alice", "Bob", "Charlie"]
+first_name = get_first_item(names)      # Type: str
+```
+
+### Generic Classes
+
+Classes can be made generic to work with different types:
+
+```python
+from typing import Generic, TypeVar, Optional, List
+
+T = TypeVar('T')
+
+class Repository(Generic[T]):
+    """A generic repository that can store any type of entity."""
+
+    def __init__(self):
+        self._items: List[T] = []
+
+    def add(self, item: T) -> None:
+        self._items.append(item)
+
+    def get_by_index(self, index: int) -> Optional[T]:
+        if 0 <= index < len(self._items):
+            return self._items[index]
+        return None
+
+    def get_all(self) -> List[T]:
+        return self._items.copy()
+
+# Usage with specific types:
+from dataclasses import dataclass
+
+@dataclass
+class User:
+    id: str
+    name: str
+
+@dataclass
+class Product:
+    id: str
+    name: str
+    price: float
+
+# Create type-specific repositories:
+user_repo = Repository[User]()
+product_repo = Repository[Product]()
+
+# Type safety is maintained:
+user_repo.add(User("1", "Alice"))        # ✅ Correct
+product_repo.add(Product("1", "Pizza", 12.99))  # ✅ Correct
+
+# user_repo.add(Product("1", "Pizza", 12.99))  # ❌ Type error!
+```
+
+## 🏗️ Framework Integration
+
+### Type Hints in Neuroglia Framework
+
+#### Entity and Repository Patterns
 
 ```python
 from typing import Generic, TypeVar, Optional, List, Protocol
@@ -281,7 +410,7 @@ class PizzaRepository(Repository[Pizza, str]):
         return list(self._pizzas.values())
 ```
 
-### CQRS Commands and Queries
+#### CQRS Commands and Queries
 
 ```python
 from typing import Generic, TypeVar
@@ -360,7 +489,7 @@ class GetPizzaByIdHandler(Handler[GetPizzaByIdQuery, Optional[Pizza]]):
         return await self._repository.get_by_id_async(query.pizza_id)
 ```
 
-### API Controllers with Type Safety
+#### API Controllers with Type Safety
 
 ```python
 from typing import List, Optional
@@ -418,32 +547,98 @@ class PizzaController(ControllerBase):
         pizzas = await self.mediator.execute_async(query)
 
         return [self.mapper.map(pizza, PizzaDto) for pizza in pizzas]
-
-    async def update_pizza_price(
-        self,
-        pizza_id: str,
-        update_dto: UpdatePizzaPriceDto
-    ) -> Optional[PizzaDto]:
-        """Update pizza price."""
-        command = UpdatePizzaPriceCommand(
-            pizza_id=pizza_id,
-            new_price=update_dto.new_price
-        )
-
-        updated_pizza = await self.mediator.execute_async(command)
-
-        if updated_pizza is None:
-            return None
-
-        return self.mapper.map(updated_pizza, PizzaDto)
 ```
 
-## 🧪 Type Hints in Testing
+## 🎨 Advanced Generic Patterns
+
+### Bounded Type Variables
+
+You can constrain what types a `TypeVar` can be:
+
+```python
+from typing import TypeVar
+from abc import ABC
+
+# Constraint to specific types:
+NumberType = TypeVar('NumberType', int, float)
+
+def add_numbers(a: NumberType, b: NumberType) -> NumberType:
+    return a + b
+
+# Bound to a base class:
+class Entity(ABC):
+    def __init__(self, id: str):
+        self.id = id
+
+EntityType = TypeVar('EntityType', bound=Entity)
+
+class EntityService(Generic[EntityType]):
+    def __init__(self, repository: Repository[EntityType, str]):
+        self._repository = repository
+
+    async def get_by_id(self, id: str) -> Optional[EntityType]:
+        return await self._repository.get_by_id_async(id)
+
+# Usage - only works with Entity subclasses:
+class Pizza(Entity):
+    def __init__(self, id: str, name: str):
+        super().__init__(id)
+        self.name = name
+
+pizza_service = EntityService[Pizza](pizza_repository)  # ✅ Works
+# str_service = EntityService[str](string_repo)         # ❌ Error: str is not an Entity
+```
+
+### Generic Protocols
+
+Protocols define interfaces that any type can implement:
+
+```python
+from typing import Protocol, TypeVar
+
+class Comparable(Protocol):
+    """Protocol for types that can be compared."""
+    def __lt__(self, other: 'Comparable') -> bool: ...
+    def __eq__(self, other: object) -> bool: ...
+
+T = TypeVar('T', bound=Comparable)
+
+def sort_items(items: List[T]) -> List[T]:
+    """Sort any list of comparable items."""
+    return sorted(items)
+
+# Works with any type that implements comparison:
+numbers = [3, 1, 4, 1, 5]
+sorted_numbers = sort_items(numbers)  # ✅ int implements comparison
+
+names = ["Charlie", "Alice", "Bob"]
+sorted_names = sort_items(names)      # ✅ str implements comparison
+
+@dataclass
+class Pizza:
+    name: str
+    price: float
+
+    def __lt__(self, other: 'Pizza') -> bool:
+        return self.price < other.price
+
+    def __eq__(self, other: object) -> bool:
+        return isinstance(other, Pizza) and self.name == other.name
+
+pizzas = [
+    Pizza("Margherita", 12.99),
+    Pizza("Pepperoni", 14.99),
+    Pizza("Hawaiian", 13.49)
+]
+sorted_pizzas = sort_items(pizzas)    # ✅ Pizza implements Comparable
+```
+
+## 🧪 Testing with Types
 
 Type hints make tests more reliable and easier to understand:
 
 ```python
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Optional
 import pytest
 from unittest.mock import Mock, AsyncMock
 
@@ -488,6 +683,53 @@ class TestPizzaRepository:
 
         all_pizzas: List[Pizza] = await self.repository.get_all_async()
         assert len(all_pizzas) == 2
+
+# Generic type testing:
+T = TypeVar('T')
+
+class Stack(Generic[T]):
+    def __init__(self):
+        self._items: List[T] = []
+
+    def push(self, item: T) -> None:
+        self._items.append(item)
+
+    def pop(self) -> T:
+        if not self._items:
+            raise IndexError("Stack is empty")
+        return self._items.pop()
+
+    def is_empty(self) -> bool:
+        return len(self._items) == 0
+
+# Test with multiple types:
+class TestStack:
+    def test_string_stack(self):
+        stack = Stack[str]()
+        stack.push("hello")
+        stack.push("world")
+
+        assert stack.pop() == "world"
+        assert stack.pop() == "hello"
+        assert stack.is_empty()
+
+    def test_int_stack(self):
+        stack = Stack[int]()
+        stack.push(1)
+        stack.push(2)
+
+        assert stack.pop() == 2
+        assert stack.pop() == 1
+        assert stack.is_empty()
+
+    def test_pizza_stack(self):
+        stack = Stack[Pizza]()
+        pizza = Pizza("1", "Margherita", 12.99, ["tomato", "mozzarella"])
+        stack.push(pizza)
+
+        popped_pizza = stack.pop()
+        assert popped_pizza.name == "Margherita"
+        assert stack.is_empty()
 
 # Mock with proper type hints:
 class TestPizzaHandler:
@@ -610,7 +852,37 @@ def process_orders(orders: CustomerOrder) -> Dict[str, float]:
     return totals
 ```
 
-### 3. Document Complex Types
+### 3. Use Descriptive Type Variable Names
+
+```python
+# Good - descriptive names:
+TEntity = TypeVar('TEntity')
+TId = TypeVar('TId')
+TRequest = TypeVar('TRequest')
+TResponse = TypeVar('TResponse')
+
+# Avoid - generic names unless appropriate:
+T = TypeVar('T')  # Only use for truly generic cases
+```
+
+### 4. Provide Type Bounds When Appropriate
+
+```python
+# Good - constrained when you need specific capabilities:
+from typing import Protocol
+
+class Serializable(Protocol):
+    def to_dict(self) -> dict: ...
+
+TSerializable = TypeVar('TSerializable', bound=Serializable)
+
+class ApiService(Generic[TSerializable]):
+    async def send_data(self, data: TSerializable) -> None:
+        json_data = data.to_dict()  # Safe - we know it has to_dict()
+        # ... send to API
+```
+
+### 5. Document Complex Types
 
 ```python
 from typing import NewType, Dict, List
@@ -645,7 +917,7 @@ class OrderService:
         pass
 ```
 
-### 4. Handle Optional Values Explicitly
+### 6. Handle Optional Values Explicitly
 
 ```python
 from typing import Optional
@@ -674,7 +946,7 @@ def format_greeting_modern(customer_id: str) -> str:
         return "Hello, valued customer!"
 ```
 
-### 5. Use Protocols for Duck Typing
+### 7. Use Protocols for Duck Typing
 
 ```python
 from typing import Protocol
@@ -769,7 +1041,59 @@ def get_pizza_or_error(id: str) -> Union[Pizza, str]:  # Returns Pizza or error 
     pass
 ```
 
-### 3. Not Using Forward References
+### 3. Runtime Type Checking with Generics
+
+```python
+# ❌ Wrong - generics are erased at runtime:
+def bad_function(value: T) -> str:
+    if isinstance(value, str):  # This works, but defeats the purpose
+        return value
+    return str(value)
+
+# ✅ Better - use proper type bounds:
+StrOrConvertible = TypeVar('StrOrConvertible', str, int, float)
+
+def good_function(value: StrOrConvertible) -> str:
+    return str(value)
+```
+
+### 4. Overcomplicating Simple Cases
+
+```python
+# ❌ Overkill for simple functions:
+T = TypeVar('T')
+def identity(x: T) -> T:
+    return x
+
+# ✅ Simple functions often don't need generics:
+def identity(x):
+    return x
+```
+
+### 5. Missing Type Bounds
+
+```python
+# ❌ Too permissive - might not have needed methods:
+T = TypeVar('T')
+
+def sort_and_print(items: List[T]) -> None:
+    sorted_items = sorted(items)  # Might fail if T doesn't support comparison
+    print(sorted_items)
+
+# ✅ Use bounds when you need specific capabilities:
+from typing import Protocol
+
+class Comparable(Protocol):
+    def __lt__(self, other: 'Comparable') -> bool: ...
+
+T = TypeVar('T', bound=Comparable)
+
+def sort_and_print(items: List[T]) -> None:
+    sorted_items = sorted(items)  # Safe - T is guaranteed to be comparable
+    print(sorted_items)
+```
+
+### 6. Not Using Forward References
 
 ```python
 # ❌ This might cause issues if Order references Customer and vice versa:
@@ -809,16 +1133,18 @@ class Order:
 
 ## 🔗 Related Documentation
 
-- [Python Generic Types Reference](python_generic_types.md) - Deep dive into generics and type variables
-- [Python Object-Oriented Programming](python_object_oriented.md) - Classes, inheritance, and composition
+- [Python Object-Oriented Programming](python_object_oriented.md) - Classes, inheritance, and composition patterns
 - [Python Modular Code](python_modular_code.md) - Module organization and import patterns
-- [CQRS & Mediation](../patterns/cqrs.md) - Type-safe command/query patterns
-- [MVC Controllers](../features/mvc-controllers.md) - Type-safe API development
+- [CQRS & Mediation](../features/cqrs-mediation.md) - Type-safe command/query patterns in the framework
+- [MVC Controllers](../features/mvc-controllers.md) - Type-safe API development techniques
+- [Data Access](../features/data-access.md) - Repository patterns with full type safety
 
 ## 📚 Further Reading
 
-- [PEP 484 - Type Hints](https://peps.python.org/pep-0484/)
-- [PEP 526 - Variable Annotations](https://peps.python.org/pep-0526/)
-- [Python typing module documentation](https://docs.python.org/3/library/typing.html)
-- [mypy documentation](https://mypy.readthedocs.io/)
-- [Real Python: Type Checking](https://realpython.com/python-type-checking/)
+- [PEP 484 - Type Hints](https://peps.python.org/pep-0484/) - Original type hints specification
+- [PEP 526 - Variable Annotations](https://peps.python.org/pep-0526/) - Variable type annotations
+- [PEP 585 - Type Hinting Generics](https://peps.python.org/pep-0585/) - Built-in generic types
+- [Python typing module documentation](https://docs.python.org/3/library/typing.html) - Official typing reference
+- [mypy documentation](https://mypy.readthedocs.io/) - Static type checker documentation
+- [Real Python: Type Checking](https://realpython.com/python-type-checking/) - Comprehensive typing tutorial
+- [FastAPI and Type Hints](https://fastapi.tiangolo.com/python-types/) - Type hints in web development

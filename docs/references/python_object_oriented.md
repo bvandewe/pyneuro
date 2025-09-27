@@ -1462,8 +1462,7 @@ class Customer:
 
 ## 🔗 Related Documentation
 
-- [Python Type Hints Reference](python_type_hints.md) - Type safety in OOP
-- [Python Generic Types Reference](python_generic_types.md) - Generic classes and inheritance
+- [Python Typing Guide](python_typing_guide.md) - Type safety, generics, and inheritance patterns
 - [Python Modular Code](python_modular_code.md) - Organizing classes across modules
 - [Dependency Injection](../patterns/dependency-injection.md) - OOP with dependency management
 - [CQRS & Mediation](../patterns/cqrs.md) - Object-oriented command/query patterns

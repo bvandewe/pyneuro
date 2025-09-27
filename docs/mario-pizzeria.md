@@ -1,9 +1,9 @@
 # 🍕 Mario's Pizzeria: Complete Digital Transformation Case Study
 
-> **Client**: Mario's Family Restaurant Chain
-> **Project**: Full-Stack Digital Ordering Platform
-> **Industry**: Food Service & Hospitality
-> **Consultant**: Neuroglia Architecture Team
+> **Client**: Mario's Family Restaurant Chain.
+> **Project**: Full-Stack Digital Ordering Platform.
+> **Industry**: Food Service & Hospitality.
+> **Consultant**: Neuroglia Architecture Team.
 
 ---
 

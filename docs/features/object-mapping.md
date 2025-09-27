@@ -1,6 +1,7 @@
 # 🎯 Object Mapping
 
-Neuroglia's object mapping system provides powerful and flexible capabilities for transforming objects between types. Whether converting domain entities to DTOs, mapping API requests to commands, or transforming data between layers, the Mapper class handles complex object-to-object conversions with ease.
+Neuroglia's object mapping system provides powerful and flexible capabilities for transforming objects between types.
+Whether converting domain entities to DTOs, mapping API requests to commands, or transforming data between layers, the Mapper class handles complex object-to-object conversions with ease.
 
 !!! info "🎯 What You'll Learn" - Automatic property mapping with convention-based matching - Custom mapping configurations and transformations - Type conversion and validation - Integration with Mario's Pizzeria domain objects
 
@@ -75,95 +76,165 @@ flowchart TD
 
 Let's see how Mario's Pizzeria uses mapping for API responses:
 
-```python
-from neuroglia.mapping.mapper import Mapper
-from dataclasses import dataclass
+```python title="From samples/mario-pizzeria/domain/entities/" linenums="1"
+from neuroglia.mapping.mapper import Mapper, map_from, map_to
 from decimal import Decimal
-from datetime import datetime
+from datetime import datetime, timezone
 from enum import Enum
-from typing import List
+from typing import Optional
+from uuid import uuid4
+from pydantic import BaseModel, Field, field_validator
 
-# Domain Entities
-class OrderStatus(str, Enum):
+# Domain Entities (from actual Mario's Pizzeria)
+class PizzaSize(Enum):
+    """Pizza size options"""
+    SMALL = "small"
+    MEDIUM = "medium"
+    LARGE = "large"
+
+class OrderStatus(Enum):
+    """Order lifecycle statuses"""
     PENDING = "pending"
+    CONFIRMED = "confirmed"
     COOKING = "cooking"
     READY = "ready"
-    DELIVERED = "delivered"
 
-@dataclass
+@map_from("PizzaDto")
+@map_to("PizzaDto")
 class Pizza:
-    id: str
-    name: str
-    size: str
-    base_price: Decimal
-    toppings: List[str]
-    preparation_time_minutes: int
+    """Pizza entity with sophisticated pricing logic"""
+
+    def __init__(self, name: str, base_price: Decimal, size: PizzaSize):
+        self.id = str(uuid4())
+        self.name = name
+        self.base_price = base_price
+        self.size = size
+        self.toppings: list[str] = []
+
+    @property
+    def size_multiplier(self) -> Decimal:
+        """Size-based pricing multipliers"""
+        multipliers = {
+            PizzaSize.SMALL: Decimal("1.0"),
+            PizzaSize.MEDIUM: Decimal("1.3"),
+            PizzaSize.LARGE: Decimal("1.6")
+        }
+        return multipliers[self.size]
+
+    @property
+    def topping_price(self) -> Decimal:
+        """Calculate total topping cost"""
+        return Decimal("2.50") * len(self.toppings)
 
     @property
     def total_price(self) -> Decimal:
-        return self.base_price + (Decimal("1.50") * len(self.toppings))
+        """Calculate total pizza price with size and toppings"""
+        return (self.base_price * self.size_multiplier) + self.topping_price
 
-@dataclass
+@map_from("OrderDto")
+@map_to("OrderDto")
 class Order:
-    id: str
-    customer_name: str
-    customer_phone: str
-    pizzas: List[Pizza]
-    status: OrderStatus
-    order_time: datetime
-    estimated_ready_time: datetime
-    total_amount: Decimal
+    """Order entity with pizzas and status management"""
 
-# DTOs for API responses
-@dataclass
-class PizzaDto:
-    id: str
-    name: str
-    size: str
-    price: str  # String representation for API
-    toppings: List[str]
-    prep_time: int
+    def __init__(self, customer_id: str, estimated_ready_time: Optional[datetime] = None):
+        self.id = str(uuid4())
+        self.customer_id = customer_id
+        self.pizzas: list[Pizza] = []
+        self.status = OrderStatus.PENDING
+        self.order_time = datetime.now(timezone.utc)
+        self.confirmed_time: Optional[datetime] = None
+        self.cooking_started_time: Optional[datetime] = None
+        self.actual_ready_time: Optional[datetime] = None
+        self.estimated_ready_time = estimated_ready_time
+        self.notes: Optional[str] = None
 
-@dataclass
-class OrderDto:
+    @property
+    def total_amount(self) -> Decimal:
+        """Calculate total order amount"""
+        return sum((pizza.total_price for pizza in self.pizzas), Decimal("0.00"))
+
+# DTOs for API responses (from actual Mario's Pizzeria)
+class PizzaDto(BaseModel):
+    """DTO for pizza information"""
+    id: Optional[str] = None
+    name: str = Field(..., min_length=1, max_length=100)
+    size: str = Field(..., description="Pizza size: small, medium, or large")
+    toppings: list[str] = Field(default_factory=list)
+    base_price: Optional[Decimal] = None
+    total_price: Optional[Decimal] = None
+
+    @field_validator("size")
+    @classmethod
+    def validate_size(cls, v):
+        if v not in ["small", "medium", "large"]:
+            raise ValueError("Size must be: small, medium, or large")
+        return v
+
+class OrderDto(BaseModel):
+    """DTO for complete order information"""
     id: str
-    customer: str  # Different property name
-    phone: str
-    items: List[PizzaDto]  # Different property name
+    customer: Optional["CustomerDto"] = None
+    customer_name: Optional[str] = None
+    customer_phone: Optional[str] = None
+    customer_address: Optional[str] = None
+    pizzas: list[PizzaDto] = Field(default_factory=list)
     status: str
-    ordered_at: str  # ISO string format
-    ready_at: str
-    total: str
+    order_time: datetime
+    confirmed_time: Optional[datetime] = None
+    cooking_started_time: Optional[datetime] = None
+    actual_ready_time: Optional[datetime] = None
+    estimated_ready_time: Optional[datetime] = None
+    notes: Optional[str] = None
+    total_amount: Decimal
+    pizza_count: int
+    payment_method: Optional[str] = None
 
-# Using the Mapper
+# Using the Mapper with Auto-Mapping Decorators
 class OrderService:
     def __init__(self, mapper: Mapper):
         self.mapper = mapper
 
-    def get_order_dto(self, order: Order) -> OrderDto:
-        """Convert domain order to API DTO"""
-        return self.mapper.map(order, OrderDto)
+    def get_order_dto(self, order: Order, customer_name: str = "Unknown") -> OrderDto:
+        """Convert domain order to API DTO using auto-mapping"""
+        # The @map_to decorator on Order entity handles automatic conversion
+        dto = self.mapper.map(order, OrderDto)
+        # Set customer information (since Order only has customer_id)
+        dto.customer_name = customer_name
+        dto.pizza_count = len(order.pizzas)
+        return dto
 
     def get_pizza_dto(self, pizza: Pizza) -> PizzaDto:
-        """Convert domain pizza to API DTO"""
+        """Convert domain pizza to API DTO using auto-mapping"""
+        # The @map_to decorator on Pizza entity handles automatic conversion
         return self.mapper.map(pizza, PizzaDto)
 
-# Example usage
+# Example usage with actual Mario's Pizzeria entities
 mapper = Mapper()
 
-# Configure mapping between Order and OrderDto
-mapper.create_map(Order, OrderDto) \
-    .map_member("customer", lambda ctx: ctx.source.customer_name) \
-    .map_member("phone", lambda ctx: ctx.source.customer_phone) \
-    .map_member("items", lambda ctx: [mapper.map(p, PizzaDto) for p in ctx.source.pizzas]) \
-    .map_member("ordered_at", lambda ctx: ctx.source.order_time.isoformat()) \
-    .map_member("ready_at", lambda ctx: ctx.source.estimated_ready_time.isoformat()) \
-    .map_member("total", lambda ctx: str(ctx.source.total_amount))
+# Create a pizza with sophisticated pricing
+from domain.entities import PizzaSize
 
-# Configure mapping between Pizza and PizzaDto
-mapper.create_map(Pizza, PizzaDto) \
-    .map_member("price", lambda ctx: str(ctx.source.total_price)) \
-    .map_member("prep_time", lambda ctx: ctx.source.preparation_time_minutes)
+pizza = Pizza(
+    name="Supreme",
+    base_price=Decimal("17.99"),
+    size=PizzaSize.LARGE  # 1.6x multiplier
+)
+pizza.add_topping("pepperoni")
+pizza.add_topping("mushrooms")
+# Total: $17.99 * 1.6 + $2.50 * 2 = $33.78
+
+# Create an order
+order = Order(customer_id="cust-123")
+order.add_pizza(pizza)
+order.confirm_order()  # Sets status to CONFIRMED
+
+# Convert to DTOs using auto-mapping
+service = OrderService(mapper)
+pizza_dto = service.get_pizza_dto(pizza)
+order_dto = service.get_order_dto(order, customer_name="Luigi Mario")
+
+print(f"Pizza: {pizza_dto.name} ({pizza_dto.size}) - ${pizza_dto.total_price}")
+print(f"Order {order_dto.id} total: ${order_dto.total_amount} ({order_dto.status})")
 
 # Map objects
 order = create_sample_order()
