@@ -1,7 +1,9 @@
 # 🏢 Mario's Pizzeria: Business Analysis & Requirements
 
-> **Customer**: Mario's Family Restaurant | **Project**: Digital Transformation Initiative
-> **Consultant**: Neuroglia Architecture Team | **Date**: 2024
+> **Customer**: Mario's Family Restaurant
+> **Project**: Digital Transformation Initiative
+> **Consultant**: Neuroglia Architecture Team
+> **Date**: 2025
 
 ## 📊 Executive Summary
 

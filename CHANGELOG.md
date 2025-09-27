@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Documentation
+
+- **Mario's Pizzeria Documentation Alignment**: Comprehensive update to align all documentation with actual codebase implementation
+
+  - **Tutorial Updates**: Updated `mario-pizzeria-tutorial.md` with real project structure, actual application setup code, and multi-app architecture examples
+  - **Domain Design Alignment**: Updated `domain-design.md` with actual Pizza entity implementation including real pricing logic (size multipliers: Small 1.0x, Medium 1.3x, Large 1.6x) and topping pricing ($2.50 each)
+  - **Code Sample Accuracy**: Replaced all placeholder/conceptual code with actual implementation from `samples/mario-pizzeria/` codebase
+  - **GitHub Repository Links**: Added direct GitHub repository links with line number references for easy navigation to source code
+  - **Enhanced Code Formatting**: Improved MkDocs code presentation with `title` and `linenums` attributes for better readability
+  - **Fixed Run Commands**: Corrected directory paths and execution instructions to match actual project structure
+  - **Enum Documentation**: Added real `PizzaSize` and `OrderStatus` enumerations with proper GitHub source links
+  - **Architecture Examples**: Updated with sophisticated multi-app setup, interface-based dependency injection, and auto-discovery configuration patterns
+
 ## [0.4.0] - 2025-09-26
 
 ### Added

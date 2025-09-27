@@ -99,51 +99,63 @@ classDiagram
 
 ### Pizza Entity
 
-The Pizza entity encapsulates product information, pricing logic, and customization capabilities:
+The Pizza entity encapsulates product information, pricing logic, and customization capabilities with sophisticated size-based pricing:
 
-```python
-from dataclasses import dataclass
-from typing import List, Optional
-from decimal import Decimal
-from neuroglia.data.abstractions import Entity
+**Source**: [`samples/mario-pizzeria/domain/entities/pizza.py`](https://github.com/bvandewe/pyneuro/blob/main/samples/mario-pizzeria/domain/entities/pizza.py)
 
-@dataclass
+```python title="samples/mario-pizzeria/domain/entities/pizza.py" linenums="17"
+@map_from(PizzaDto)
+@map_to(PizzaDto)
 class Pizza(Entity[str]):
-    """A pizza with toppings and size"""
-    id: str
-    name: str
-    size: str  # "small", "medium", "large"
-    base_price: Decimal
-    toppings: List[str]
-    preparation_time_minutes: int
+    """Pizza entity with pricing and toppings"""
+
+    def __init__(self, name: str, base_price: Decimal, size: PizzaSize, description: Optional[str] = None):
+        super().__init__()
+        self.id = str(uuid4())
+        self.name = name
+        self.base_price = base_price
+        self.size = size
+        self.description = description or ""
+        self.toppings: list[str] = []
+
+    @property
+    def size_multiplier(self) -> Decimal:
+        """Get price multiplier based on pizza size"""
+        multipliers = {
+            PizzaSize.SMALL: Decimal("1.0"),
+            PizzaSize.MEDIUM: Decimal("1.3"),
+            PizzaSize.LARGE: Decimal("1.6"),
+        }
+        return multipliers[self.size]
+
+    @property
+    def topping_price(self) -> Decimal:
+        """Calculate total price for all toppings"""
+        return Decimal(str(len(self.toppings))) * Decimal("2.50")
 
     @property
     def total_price(self) -> Decimal:
-        """Calculate total price including toppings"""
-        return self.base_price + (Decimal("1.50") * len(self.toppings))
+        """Calculate total pizza price including size and toppings"""
+        base_with_size = self.base_price * self.size_multiplier
+        return base_with_size + self.topping_price
 
     def add_topping(self, topping: str) -> None:
-        """Add a topping if not already present"""
+        """Add a topping to the pizza"""
         if topping not in self.toppings:
             self.toppings.append(topping)
 
     def remove_topping(self, topping: str) -> None:
-        """Remove a topping if present"""
+        """Remove a topping from the pizza"""
         if topping in self.toppings:
             self.toppings.remove(topping)
-
-    def estimate_cooking_time(self) -> int:
-        """Estimate cooking time based on complexity"""
-        base_time = self.preparation_time_minutes
-        complexity_modifier = len(self.toppings) * 2  # 2 minutes per topping
-        return base_time + complexity_modifier
 ```
 
 **Business Rules**:
 
-- Each topping adds $1.50 to the base price
-- Cooking time increases with topping complexity
-- Maximum 10 toppings per pizza
+- Size multipliers: Small (1.0x), Medium (1.3x), Large (1.6x) of base price
+- Each topping adds $2.50 to the total price
+- Automatic mapping to/from DTOs using `@map_from` and `@map_to` decorators
+- UUID-based entity identification
 
 ### Order Entity
 
@@ -418,6 +430,43 @@ class KitchenCapacityAdjustedEvent(DomainEvent):
     new_capacity: int
     reason: str
 ```
+
+## 📊 Domain Enums & Value Objects
+
+### Pizza Size Enumeration
+
+The pizza size enumeration defines the available size options with clear business values:
+
+**Source**: [`samples/mario-pizzeria/domain/entities/enums.py`](https://github.com/bvandewe/pyneuro/blob/main/samples/mario-pizzeria/domain/entities/enums.py)
+
+```python title="samples/mario-pizzeria/domain/entities/enums.py" linenums="6"
+class PizzaSize(Enum):
+    """Pizza size options"""
+
+    SMALL = "small"
+    MEDIUM = "medium"
+    LARGE = "large"
+```
+
+### Order Status Enumeration
+
+The order status enumeration tracks the complete order lifecycle:
+
+```python title="samples/mario-pizzeria/domain/entities/enums.py" linenums="14"
+class OrderStatus(Enum):
+    """Order lifecycle statuses"""
+
+    PENDING = "pending"
+    CONFIRMED = "confirmed"
+    COOKING = "cooking"
+    READY = "ready"
+    DELIVERED = "delivered"
+    CANCELLED = "cancelled"
+```
+
+**Status Flow**: `PENDING` → `CONFIRMED` → `COOKING` → `READY` → `DELIVERED`
+
+Alternative flow: Any status → `CANCELLED` (with business rules)
 
 ## 🎯 Business Rules & Invariants
 
