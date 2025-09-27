@@ -150,28 +150,64 @@ publish: build ## Publish to PyPI
 
 sample-mario: ## Run Mario's Pizzeria sample
 	@echo "🍕 Starting Mario's Pizzeria..."
-	cd $(MARIO_PIZZERIA) && $(PYTHON) main.py
+	cd $(MARIO_PIZZERIA) && $(POETRY) run $(PYTHON) main.py
 
 sample-mario-bg: ## Run Mario's Pizzeria in background
 	@echo "🍕 Starting Mario's Pizzeria in background..."
-	cd $(MARIO_PIZZERIA) && nohup $(PYTHON) main.py > pizza.log 2>&1 & echo $$! > pizza.pid
-	@echo "🍕 Mario's Pizzeria running in background (PID: $$(cat $(MARIO_PIZZERIA)/pizza.pid))"
+	@cd $(MARIO_PIZZERIA) && \
+		(nohup $(POETRY) run $(PYTHON) main.py > pizza.log 2>&1 & echo $$! > pizza.pid)
+	@sleep 0.5
+	@if [ -f $(MARIO_PIZZERIA)/pizza.pid ]; then \
+		echo "🍕 Mario's Pizzeria running in background (PID: $$(cat $(MARIO_PIZZERIA)/pizza.pid))"; \
+		echo "📖 API Documentation: http://127.0.0.1:8000/api/docs"; \
+	else \
+		echo "❌ Failed to start Mario's Pizzeria - PID file not found"; \
+		echo "📋 Check $(MARIO_PIZZERIA)/pizza.log for errors"; \
+	fi
+
+sample-mario-stop: ## Stop Mario's Pizzeria background process
+	@echo "🛑 Stopping Mario's Pizzeria..."
+	@if [ -f $(MARIO_PIZZERIA)/pizza.pid ]; then \
+		PID=$$(cat $(MARIO_PIZZERIA)/pizza.pid); \
+		if kill -0 $$PID 2>/dev/null; then \
+			kill $$PID && echo "✅ Mario's Pizzeria stopped (PID: $$PID)"; \
+		else \
+			echo "⚠️  Process $$PID not running - cleaning up PID file"; \
+		fi; \
+		rm $(MARIO_PIZZERIA)/pizza.pid; \
+	else \
+		echo "⚠️  No PID file found - Mario's Pizzeria may not be running"; \
+	fi
+
+sample-mario-status: ## Check Mario's Pizzeria status
+	@if [ -f $(MARIO_PIZZERIA)/pizza.pid ]; then \
+		PID=$$(cat $(MARIO_PIZZERIA)/pizza.pid); \
+		if kill -0 $$PID 2>/dev/null; then \
+			echo "🍕 Mario's Pizzeria is running (PID: $$PID)"; \
+			echo "📖 API Documentation: http://127.0.0.1:8000/api/docs"; \
+			echo "🌐 Health check: curl http://127.0.0.1:8000/api"; \
+		else \
+			echo "❌ Mario's Pizzeria is not running (stale PID file)"; \
+		fi \
+	else \
+		echo "❌ Mario's Pizzeria is not running"; \
+	fi
 
 sample-openbank: ## Run OpenBank sample
 	@echo "🏦 Starting OpenBank..."
-	cd $(OPENBANK) && $(PYTHON) main.py
+	cd $(OPENBANK) && $(POETRY) run $(PYTHON) main.py
 
 sample-gateway: ## Run API Gateway sample
 	@echo "🌐 Starting API Gateway..."
-	cd $(API_GATEWAY) && $(PYTHON) main.py
+	cd $(API_GATEWAY) && $(POETRY) run $(PYTHON) main.py
 
 sample-desktop: ## Run Desktop Controller sample
 	@echo "🖥️  Starting Desktop Controller..."
-	cd $(DESKTOP_CONTROLLER) && $(PYTHON) main.py
+	cd $(DESKTOP_CONTROLLER) && $(POETRY) run $(PYTHON) main.py
 
 sample-lab: ## Run Lab Resource Manager sample
 	@echo "🧪 Starting Lab Resource Manager..."
-	cd $(LAB_RESOURCE_MANAGER) && $(PYTHON) main.py
+	cd $(LAB_RESOURCE_MANAGER) && $(POETRY) run $(PYTHON) main.py
 
 ##@ Sample Management (using pyneuroctl)
 
