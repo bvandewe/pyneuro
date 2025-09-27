@@ -7,11 +7,9 @@
 <meta content="width=device-width,initial-scale=1" name="viewport"/>
 <meta content="A lightweight, opinionated Python framework built on FastAPI that enforces clean architecture principles" name="description"/>
 <link href="https://bvandewe.github.io/pyneuro/patterns/cqrs/" rel="canonical"/>
-<link href="../dependency-injection/" rel="prev"/>
-<link href="../event-driven/" rel="next"/>
 <link href="../../assets/images/favicon.png" rel="icon"/>
 <meta content="mkdocs-1.6.1, mkdocs-material-9.6.20" name="generator"/>
-<title>CQRS &amp; Mediation - Neuroglia Python Framework</title>
+<title>🎯 CQRS &amp; Mediation Pattern - Neuroglia Python Framework</title>
 <link href="../../assets/stylesheets/main.e53b48f4.min.css" rel="stylesheet"/>
 <link href="../../assets/stylesheets/palette.06af60db.min.css" rel="stylesheet"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
@@ -48,7 +46,7 @@
 <div class="md-header__topic" data-md-component="header-topic">
 <span class="md-ellipsis">
             
-              CQRS &amp; Mediation
+              🎯 CQRS &amp; Mediation Pattern
             
           </span>
 </div>
@@ -141,7 +139,7 @@
 
         </a>
 </li>
-<li class="md-tabs__item md-tabs__item--active">
+<li class="md-tabs__item">
 <a class="md-tabs__link" href="../">
           
   
@@ -178,7 +176,7 @@
         </a>
 </li>
 <li class="md-tabs__item">
-<a class="md-tabs__link" href="../../references/oauth-oidc-jwt/">
+<a class="md-tabs__link" href="../../references/persistence-documentation-guide/">
           
   
   
@@ -338,16 +336,16 @@
 </ul>
 </nav>
 </li>
-<li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
-<input checked="" class="md-nav__toggle md-toggle" id="__nav_4" type="checkbox"/>
-<label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_4" type="checkbox"/>
+<label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
 <span class="md-ellipsis">
     Patterns
     
   </span>
 <span class="md-nav__icon md-icon"></span>
 </label>
-<nav aria-expanded="true" aria-labelledby="__nav_4_label" class="md-nav" data-md-level="1">
+<nav aria-expanded="false" aria-labelledby="__nav_4_label" class="md-nav" data-md-level="1">
 <label class="md-nav__title" for="__nav_4">
 <span class="md-nav__icon md-icon"></span>
             Patterns
@@ -356,15 +354,31 @@
 <li class="md-nav__item">
 <a class="md-nav__link" href="../">
 <span class="md-ellipsis">
-    Overview
+    🎯 Architecture Patterns
     
   </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../clean-architecture/">
+<a class="md-nav__link" href="../persistence-patterns/">
 <span class="md-ellipsis">
-    Clean Architecture
+    Persistence Patterns
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../unit-of-work/">
+<span class="md-ellipsis">
+    Unit of Work
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../pipeline-behaviors/">
+<span class="md-ellipsis">
+    Pipeline Behaviors
     
   </span>
 </a>
@@ -378,384 +392,17 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../dependency-injection/">
+<a class="md-nav__link" href="../repository/">
 <span class="md-ellipsis">
-    Dependency Injection
+    Repository Pattern
     
   </span>
 </a>
-</li>
-<li class="md-nav__item md-nav__item--active">
-<input class="md-nav__toggle md-toggle" id="__toc" type="checkbox"/>
-<label class="md-nav__link md-nav__link--active" for="__toc">
-<span class="md-ellipsis">
-    CQRS &amp; Mediation
-    
-  </span>
-<span class="md-nav__icon md-icon"></span>
-</label>
-<a class="md-nav__link md-nav__link--active" href="./">
-<span class="md-ellipsis">
-    CQRS &amp; Mediation
-    
-  </span>
-</a>
-<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
-<label class="md-nav__title" for="__toc">
-<span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
-<li class="md-nav__item">
-<a class="md-nav__link" href="#overview">
-<span class="md-ellipsis">
-      🎯 Overview
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mediation-pattern-integration">
-<span class="md-ellipsis">
-      🎭 Mediation Pattern Integration
-    </span>
-</a>
-<nav aria-label="🎭 Mediation Pattern Integration" class="md-nav">
-<ul class="md-nav__list">
-<li class="md-nav__item">
-<a class="md-nav__link" href="#mediator-architecture">
-<span class="md-ellipsis">
-      Mediator Architecture
-    </span>
-</a>
-</li>
-</ul>
-</nav>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#benefits">
-<span class="md-ellipsis">
-      ✅ Benefits
-    </span>
-</a>
-<nav aria-label="✅ Benefits" class="md-nav">
-<ul class="md-nav__list">
-<li class="md-nav__item">
-<a class="md-nav__link" href="#1-optimized-performance">
-<span class="md-ellipsis">
-      1. Optimized Performance
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#2-independent-scaling">
-<span class="md-ellipsis">
-      2. Independent Scaling
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#3-clear-separation-of-concerns">
-<span class="md-ellipsis">
-      3. Clear Separation of Concerns
-    </span>
-</a>
-</li>
-</ul>
-</nav>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#data-flow">
-<span class="md-ellipsis">
-      🔄 Data Flow
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#use-cases">
-<span class="md-ellipsis">
-      🎯 Use Cases
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#implementation-in-marios-pizzeria">
-<span class="md-ellipsis">
-      🍕 Implementation in Mario's Pizzeria
-    </span>
-</a>
-<nav aria-label="🍕 Implementation in Mario's Pizzeria" class="md-nav">
-<ul class="md-nav__list">
-<li class="md-nav__item">
-<a class="md-nav__link" href="#commands-write-operations">
-<span class="md-ellipsis">
-      Commands (Write Operations)
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#queries-read-operations">
-<span class="md-ellipsis">
-      Queries (Read Operations)
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#controller-integration">
-<span class="md-ellipsis">
-      Controller Integration
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#read-model-optimization">
-<span class="md-ellipsis">
-      Read Model Optimization
-    </span>
-</a>
-</li>
-</ul>
-</nav>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#testing-cqrs">
-<span class="md-ellipsis">
-      🧪 Testing CQRS
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#related-patterns">
-<span class="md-ellipsis">
-      🔗 Related Patterns
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#handler-implementation-patterns">
-<span class="md-ellipsis">
-      🎪 Handler Implementation Patterns
-    </span>
-</a>
-<nav aria-label="🎪 Handler Implementation Patterns" class="md-nav">
-<ul class="md-nav__list">
-<li class="md-nav__item">
-<a class="md-nav__link" href="#command-handlers-with-business-logic">
-<span class="md-ellipsis">
-      Command Handlers with Business Logic
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#query-handlers-with-caching">
-<span class="md-ellipsis">
-      Query Handlers with Caching
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#event-handlers-for-side-effects">
-<span class="md-ellipsis">
-      Event Handlers for Side Effects
-    </span>
-</a>
-</li>
-</ul>
-</nav>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#pipeline-behaviors">
-<span class="md-ellipsis">
-      🛡️ Pipeline Behaviors
-    </span>
-</a>
-<nav aria-label="🛡️ Pipeline Behaviors" class="md-nav">
-<ul class="md-nav__list">
-<li class="md-nav__item">
-<a class="md-nav__link" href="#validation-behavior">
-<span class="md-ellipsis">
-      Validation Behavior
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#caching-behavior">
-<span class="md-ellipsis">
-      Caching Behavior
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#transaction-behavior">
-<span class="md-ellipsis">
-      Transaction Behavior
-    </span>
-</a>
-</li>
-</ul>
-</nav>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#framework-integration">
-<span class="md-ellipsis">
-      🚀 Framework Integration
-    </span>
-</a>
-<nav aria-label="🚀 Framework Integration" class="md-nav">
-<ul class="md-nav__list">
-<li class="md-nav__item">
-<a class="md-nav__link" href="#service-registration">
-<span class="md-ellipsis">
-      Service Registration
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#controller-integration_1">
-<span class="md-ellipsis">
-      Controller Integration
-    </span>
-</a>
-</li>
-</ul>
-</nav>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#testing-patterns">
-<span class="md-ellipsis">
-      🧪 Testing Patterns
-    </span>
-</a>
-<nav aria-label="🧪 Testing Patterns" class="md-nav">
-<ul class="md-nav__list">
-<li class="md-nav__item">
-<a class="md-nav__link" href="#command-handler-testing">
-<span class="md-ellipsis">
-      Command Handler Testing
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#integration-testing">
-<span class="md-ellipsis">
-      Integration Testing
-    </span>
-</a>
-</li>
-</ul>
-</nav>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#pattern-benefits">
-<span class="md-ellipsis">
-      🎯 Pattern Benefits
-    </span>
-</a>
-<nav aria-label="🎯 Pattern Benefits" class="md-nav">
-<ul class="md-nav__list">
-<li class="md-nav__item">
-<a class="md-nav__link" href="#cqrs-with-mediation-advantages">
-<span class="md-ellipsis">
-      CQRS with Mediation Advantages
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#when-to-use">
-<span class="md-ellipsis">
-      When to Use
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#when-not-to-use">
-<span class="md-ellipsis">
-      When Not to Use
-    </span>
-</a>
-</li>
-</ul>
-</nav>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#related-patterns_1">
-<span class="md-ellipsis">
-      🔗 Related Patterns
-    </span>
-</a>
-<nav aria-label="🔗 Related Patterns" class="md-nav">
-<ul class="md-nav__list">
-<li class="md-nav__item">
-<a class="md-nav__link" href="#complementary-patterns">
-<span class="md-ellipsis">
-      Complementary Patterns
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#integration-examples">
-<span class="md-ellipsis">
-      Integration Examples
-    </span>
-</a>
-</li>
-</ul>
-</nav>
-</li>
-</ul>
-</nav>
 </li>
 <li class="md-nav__item">
 <a class="md-nav__link" href="../event-driven/">
 <span class="md-ellipsis">
-    Event-Driven
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../event-sourcing/">
-<span class="md-ellipsis">
-    Event Sourcing
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../reactive-programming/">
-<span class="md-ellipsis">
-    Reactive Programming
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../repository/">
-<span class="md-ellipsis">
-    Repository
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../resource-oriented-architecture/">
-<span class="md-ellipsis">
-    Resource-Oriented Architecture
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../watcher-reconciliation-patterns/">
-<span class="md-ellipsis">
-    Watcher &amp; Reconciliation Patterns
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../watcher-reconciliation-execution/">
-<span class="md-ellipsis">
-    Watcher &amp; Reconciliation Execution
+    Event-Driven Architecture
     
   </span>
 </a>
@@ -781,7 +428,15 @@
 <li class="md-nav__item">
 <a class="md-nav__link" href="../../features/">
 <span class="md-ellipsis">
-    Overview
+    🚀 Framework Features
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/simple-cqrs/">
+<span class="md-ellipsis">
+    Simple CQRS
     
   </span>
 </a>
@@ -803,22 +458,6 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../features/serialization/">
-<span class="md-ellipsis">
-    Serialization
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../../features/configurable-type-discovery/">
-<span class="md-ellipsis">
-    Configurable Type Discovery
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
 <a class="md-nav__link" href="../../features/object-mapping/">
 <span class="md-ellipsis">
     Object Mapping
@@ -827,25 +466,17 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../features/background-task-scheduling/">
+<a class="md-nav__link" href="../../features/serialization/">
 <span class="md-ellipsis">
-    Background Task Scheduling
+    Serialization
     
   </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../features/redis-cache-repository/">
+<a class="md-nav__link" href="../../features/enhanced-model-validation/">
 <span class="md-ellipsis">
-    Redis Cache Repository
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../../features/http-service-client/">
-<span class="md-ellipsis">
-    HTTP Service Client
+    Enhanced Model Validation
     
   </span>
 </a>
@@ -859,9 +490,41 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../features/enhanced-model-validation/">
+<a class="md-nav__link" href="../../features/http-service-client/">
 <span class="md-ellipsis">
-    Enhanced Model Validation
+    HTTP Service Client
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/redis-cache-repository/">
+<span class="md-ellipsis">
+    Redis Cache Repository
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/background-task-scheduling/">
+<span class="md-ellipsis">
+    Background Task Scheduling
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/resilient-handler-discovery/">
+<span class="md-ellipsis">
+    Resilient Handler Discovery
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/configurable-type-discovery/">
+<span class="md-ellipsis">
+    Configurable Type Discovery
     
   </span>
 </a>
@@ -992,6 +655,14 @@
             References
           </label>
 <ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../references/persistence-documentation-guide/">
+<span class="md-ellipsis">
+    Persistence Documentation Guide
+    
+  </span>
+</a>
+</li>
 <li class="md-nav__item">
 <a class="md-nav__link" href="../../references/oauth-oidc-jwt/">
 <span class="md-ellipsis">

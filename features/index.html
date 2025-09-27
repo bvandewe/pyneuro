@@ -7,11 +7,11 @@
 <meta content="width=device-width,initial-scale=1" name="viewport"/>
 <meta content="A lightweight, opinionated Python framework built on FastAPI that enforces clean architecture principles" name="description"/>
 <link href="https://bvandewe.github.io/pyneuro/features/" rel="canonical"/>
-<link href="../patterns/watcher-reconciliation-execution/" rel="prev"/>
-<link href="mvc-controllers/" rel="next"/>
+<link href="../patterns/event-driven/" rel="prev"/>
+<link href="simple-cqrs/" rel="next"/>
 <link href="../assets/images/favicon.png" rel="icon"/>
 <meta content="mkdocs-1.6.1, mkdocs-material-9.6.20" name="generator"/>
-<title>Overview - Neuroglia Python Framework</title>
+<title>🚀 Framework Features - Neuroglia Python Framework</title>
 <link href="../assets/stylesheets/main.e53b48f4.min.css" rel="stylesheet"/>
 <link href="../assets/stylesheets/palette.06af60db.min.css" rel="stylesheet"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
@@ -48,7 +48,7 @@
 <div class="md-header__topic" data-md-component="header-topic">
 <span class="md-ellipsis">
             
-              Overview
+              🚀 Framework Features
             
           </span>
 </div>
@@ -178,7 +178,7 @@
         </a>
 </li>
 <li class="md-tabs__item">
-<a class="md-tabs__link" href="../references/oauth-oidc-jwt/">
+<a class="md-tabs__link" href="../references/persistence-documentation-guide/">
           
   
   
@@ -356,15 +356,31 @@
 <li class="md-nav__item">
 <a class="md-nav__link" href="../patterns/">
 <span class="md-ellipsis">
-    Overview
+    🎯 Architecture Patterns
     
   </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../patterns/clean-architecture/">
+<a class="md-nav__link" href="../patterns/persistence-patterns/">
 <span class="md-ellipsis">
-    Clean Architecture
+    Persistence Patterns
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../patterns/unit-of-work/">
+<span class="md-ellipsis">
+    Unit of Work
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../patterns/pipeline-behaviors/">
+<span class="md-ellipsis">
+    Pipeline Behaviors
     
   </span>
 </a>
@@ -378,17 +394,9 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../patterns/dependency-injection/">
+<a class="md-nav__link" href="../patterns/repository/">
 <span class="md-ellipsis">
-    Dependency Injection
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../patterns/cqrs/">
-<span class="md-ellipsis">
-    CQRS &amp; Mediation
+    Repository Pattern
     
   </span>
 </a>
@@ -396,55 +404,7 @@
 <li class="md-nav__item">
 <a class="md-nav__link" href="../patterns/event-driven/">
 <span class="md-ellipsis">
-    Event-Driven
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../patterns/event-sourcing/">
-<span class="md-ellipsis">
-    Event Sourcing
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../patterns/reactive-programming/">
-<span class="md-ellipsis">
-    Reactive Programming
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../patterns/repository/">
-<span class="md-ellipsis">
-    Repository
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../patterns/resource-oriented-architecture/">
-<span class="md-ellipsis">
-    Resource-Oriented Architecture
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../patterns/watcher-reconciliation-patterns/">
-<span class="md-ellipsis">
-    Watcher &amp; Reconciliation Patterns
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../patterns/watcher-reconciliation-execution/">
-<span class="md-ellipsis">
-    Watcher &amp; Reconciliation Execution
+    Event-Driven Architecture
     
   </span>
 </a>
@@ -471,14 +431,14 @@
 <input class="md-nav__toggle md-toggle" id="__toc" type="checkbox"/>
 <label class="md-nav__link md-nav__link--active" for="__toc">
 <span class="md-ellipsis">
-    Overview
+    🚀 Framework Features
     
   </span>
 <span class="md-nav__icon md-icon"></span>
 </label>
 <a class="md-nav__link md-nav__link--active" href="./">
 <span class="md-ellipsis">
-    Overview
+    🚀 Framework Features
     
   </span>
 </a>
@@ -488,6 +448,13 @@
       Table of contents
     </label>
 <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#features-vs-patterns">
+<span class="md-ellipsis">
+      🎯 Features vs Patterns
+    </span>
+</a>
+</li>
 <li class="md-nav__item">
 <a class="md-nav__link" href="#core-architecture-features">
 <span class="md-ellipsis">
@@ -641,6 +608,14 @@
 </nav>
 </li>
 <li class="md-nav__item">
+<a class="md-nav__link" href="simple-cqrs/">
+<span class="md-ellipsis">
+    Simple CQRS
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
 <a class="md-nav__link" href="mvc-controllers/">
 <span class="md-ellipsis">
     MVC Controllers
@@ -657,22 +632,6 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="serialization/">
-<span class="md-ellipsis">
-    Serialization
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="configurable-type-discovery/">
-<span class="md-ellipsis">
-    Configurable Type Discovery
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
 <a class="md-nav__link" href="object-mapping/">
 <span class="md-ellipsis">
     Object Mapping
@@ -681,25 +640,17 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="background-task-scheduling/">
+<a class="md-nav__link" href="serialization/">
 <span class="md-ellipsis">
-    Background Task Scheduling
+    Serialization
     
   </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="redis-cache-repository/">
+<a class="md-nav__link" href="enhanced-model-validation/">
 <span class="md-ellipsis">
-    Redis Cache Repository
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="http-service-client/">
-<span class="md-ellipsis">
-    HTTP Service Client
+    Enhanced Model Validation
     
   </span>
 </a>
@@ -713,9 +664,41 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="enhanced-model-validation/">
+<a class="md-nav__link" href="http-service-client/">
 <span class="md-ellipsis">
-    Enhanced Model Validation
+    HTTP Service Client
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="redis-cache-repository/">
+<span class="md-ellipsis">
+    Redis Cache Repository
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="background-task-scheduling/">
+<span class="md-ellipsis">
+    Background Task Scheduling
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="resilient-handler-discovery/">
+<span class="md-ellipsis">
+    Resilient Handler Discovery
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="configurable-type-discovery/">
+<span class="md-ellipsis">
+    Configurable Type Discovery
     
   </span>
 </a>
@@ -847,6 +830,14 @@
           </label>
 <ul class="md-nav__list" data-md-scrollfix="">
 <li class="md-nav__item">
+<a class="md-nav__link" href="../references/persistence-documentation-guide/">
+<span class="md-ellipsis">
+    Persistence Documentation Guide
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
 <a class="md-nav__link" href="../references/oauth-oidc-jwt/">
 <span class="md-ellipsis">
     OAuth, OIDC &amp; JWT
@@ -927,6 +918,13 @@
       Table of contents
     </label>
 <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#features-vs-patterns">
+<span class="md-ellipsis">
+      🎯 Features vs Patterns
+    </span>
+</a>
+</li>
 <li class="md-nav__item">
 <a class="md-nav__link" href="#core-architecture-features">
 <span class="md-ellipsis">
@@ -1084,9 +1082,30 @@
 <div class="md-content" data-md-component="content">
 <article class="md-content__inner md-typeset">
 <h1 id="framework-features">🚀 Framework Features<a class="headerlink" href="#framework-features" title="Permanent link">¶</a></h1>
-<p>The Neuroglia Python framework provides a comprehensive set of features designed to support modern microservice
-development with clean architecture principles. Each feature is designed to work seamlessly together while maintaining
-loose coupling and high testability.</p>
+<p>The Neuroglia Python framework provides a comprehensive set of <strong>concrete framework capabilities</strong> and implementation utilities. Features are specific tools and utilities provided by the framework, while <a href="../patterns/"><strong>Patterns</strong></a> define architectural approaches and design principles.</p>
+<h2 id="features-vs-patterns">🎯 Features vs Patterns<a class="headerlink" href="#features-vs-patterns" title="Permanent link">¶</a></h2>
+<table>
+<thead>
+<tr>
+<th><strong>Features</strong> (This Section)</th>
+<th><strong>Patterns</strong> (../patterns/)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>What</strong>: Specific framework capabilities</td>
+<td><strong>What</strong>: Architectural design approaches</td>
+</tr>
+<tr>
+<td><strong>Purpose</strong>: Tools and utilities you use</td>
+<td><strong>Purpose</strong>: How to structure and design</td>
+</tr>
+<tr>
+<td><strong>Examples</strong>: Serialization, Validation, HTTP Client</td>
+<td><strong>Examples</strong>: CQRS, DDD, Pipeline Behaviors</td>
+</tr>
+</tbody>
+</table>
 <h2 id="core-architecture-features">🎯 Core Architecture Features<a class="headerlink" href="#core-architecture-features" title="Permanent link">¶</a></h2>
 <h3 id="mvc-controllers"><a href="mvc-controllers/">🌐 MVC Controllers</a><a class="headerlink" href="#mvc-controllers" title="Permanent link">¶</a></h3>
 <p>FastAPI-integrated controller framework that automatically discovers and registers API endpoints. Provides consistent patterns for request handling and response formatting.</p>

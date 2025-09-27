@@ -6,12 +6,12 @@
 <meta charset="utf-8"/>
 <meta content="width=device-width,initial-scale=1" name="viewport"/>
 <meta content="A lightweight, opinionated Python framework built on FastAPI that enforces clean architecture principles" name="description"/>
-<link href="https://bvandewe.github.io/pyneuro/references/test-mermaid/" rel="canonical"/>
-<link href="../python_object_oriented/" rel="prev"/>
-<link href="../../ai-agent-guide/" rel="next"/>
+<link href="https://bvandewe.github.io/pyneuro/references/persistence-documentation-guide/" rel="canonical"/>
+<link href="../../samples/desktop_controller/" rel="prev"/>
+<link href="../oauth-oidc-jwt/" rel="next"/>
 <link href="../../assets/images/favicon.png" rel="icon"/>
 <meta content="mkdocs-1.6.1, mkdocs-material-9.6.20" name="generator"/>
-<title>Mermaid References - Neuroglia Python Framework</title>
+<title>Persistence Documentation Guide - Neuroglia Python Framework</title>
 <link href="../../assets/stylesheets/main.e53b48f4.min.css" rel="stylesheet"/>
 <link href="../../assets/stylesheets/palette.06af60db.min.css" rel="stylesheet"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
@@ -24,7 +24,7 @@
 <input autocomplete="off" class="md-toggle" data-md-toggle="search" id="__search" type="checkbox"/>
 <label class="md-overlay" for="__drawer"></label>
 <div data-md-component="skip">
-<a class="md-skip" href="#mermaid-test-page">
+<a class="md-skip" href="#documentation-cross-references">
           Skip to content
         </a>
 </div>
@@ -48,7 +48,7 @@
 <div class="md-header__topic" data-md-component="header-topic">
 <span class="md-ellipsis">
             
-              Mermaid References
+              Persistence Documentation Guide
             
           </span>
 </div>
@@ -178,7 +178,7 @@
         </a>
 </li>
 <li class="md-tabs__item md-tabs__item--active">
-<a class="md-tabs__link" href="../persistence-documentation-guide/">
+<a class="md-tabs__link" href="./">
           
   
   
@@ -657,13 +657,153 @@
             References
           </label>
 <ul class="md-nav__list" data-md-scrollfix="">
-<li class="md-nav__item">
-<a class="md-nav__link" href="../persistence-documentation-guide/">
+<li class="md-nav__item md-nav__item--active">
+<input class="md-nav__toggle md-toggle" id="__toc" type="checkbox"/>
+<label class="md-nav__link md-nav__link--active" for="__toc">
+<span class="md-ellipsis">
+    Persistence Documentation Guide
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<a class="md-nav__link md-nav__link--active" href="./">
 <span class="md-ellipsis">
     Persistence Documentation Guide
     
   </span>
 </a>
+<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#persistence-documentation-hierarchy">
+<span class="md-ellipsis">
+      🏛️ Persistence Documentation Hierarchy
+    </span>
+</a>
+<nav aria-label="🏛️ Persistence Documentation Hierarchy" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#primary-guides">
+<span class="md-ellipsis">
+      Primary Guides
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#feature-specific-guides">
+<span class="md-ellipsis">
+      Feature-Specific Guides
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#pattern-documentation">
+<span class="md-ellipsis">
+      Pattern Documentation
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#reading-path-by-use-case">
+<span class="md-ellipsis">
+      🗺️ Reading Path by Use Case
+    </span>
+</a>
+<nav aria-label="🗺️ Reading Path by Use Case" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#new-to-neuroglia-framework">
+<span class="md-ellipsis">
+      New to Neuroglia Framework
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#implementing-simple-crud-application">
+<span class="md-ellipsis">
+      Implementing Simple CRUD Application
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#building-complex-domain-with-event-sourcing">
+<span class="md-ellipsis">
+      Building Complex Domain with Event Sourcing
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#migrating-between-patterns">
+<span class="md-ellipsis">
+      Migrating Between Patterns
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#understanding-event-coordination">
+<span class="md-ellipsis">
+      Understanding Event Coordination
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#implementing-cross-cutting-concerns">
+<span class="md-ellipsis">
+      Implementing Cross-Cutting Concerns
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#key-relationships">
+<span class="md-ellipsis">
+      🔗 Key Relationships
+    </span>
+</a>
+<nav aria-label="🔗 Key Relationships" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#all-patterns-use-same-infrastructure">
+<span class="md-ellipsis">
+      All Patterns Use Same Infrastructure
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#complexity-progression">
+<span class="md-ellipsis">
+      Complexity Progression
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#framework-integration-points">
+<span class="md-ellipsis">
+      Framework Integration Points
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#quick-reference">
+<span class="md-ellipsis">
+      📖 Quick Reference
+    </span>
+</a>
+</li>
+</ul>
+</nav>
 </li>
 <li class="md-nav__item">
 <a class="md-nav__link" href="../oauth-oidc-jwt/">
@@ -713,57 +853,13 @@
   </span>
 </a>
 </li>
-<li class="md-nav__item md-nav__item--active">
-<input class="md-nav__toggle md-toggle" id="__toc" type="checkbox"/>
-<label class="md-nav__link md-nav__link--active" for="__toc">
-<span class="md-ellipsis">
-    Mermaid References
-    
-  </span>
-<span class="md-nav__icon md-icon"></span>
-</label>
-<a class="md-nav__link md-nav__link--active" href="./">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../test-mermaid/">
 <span class="md-ellipsis">
     Mermaid References
     
   </span>
 </a>
-<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
-<label class="md-nav__title" for="__toc">
-<span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
-<li class="md-nav__item">
-<a class="md-nav__link" href="#basic-flowchart">
-<span class="md-ellipsis">
-      Basic Flowchart
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#sequence-diagram">
-<span class="md-ellipsis">
-      Sequence Diagram
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#architecture-diagram">
-<span class="md-ellipsis">
-      Architecture Diagram
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#class-diagram">
-<span class="md-ellipsis">
-      Class Diagram
-    </span>
-</a>
-</li>
-</ul>
-</nav>
 </li>
 <li class="md-nav__item">
 <a class="md-nav__link" href="../../ai-agent-guide/">
@@ -791,30 +887,126 @@
     </label>
 <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
 <li class="md-nav__item">
-<a class="md-nav__link" href="#basic-flowchart">
+<a class="md-nav__link" href="#persistence-documentation-hierarchy">
 <span class="md-ellipsis">
-      Basic Flowchart
+      🏛️ Persistence Documentation Hierarchy
+    </span>
+</a>
+<nav aria-label="🏛️ Persistence Documentation Hierarchy" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#primary-guides">
+<span class="md-ellipsis">
+      Primary Guides
     </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#sequence-diagram">
+<a class="md-nav__link" href="#feature-specific-guides">
 <span class="md-ellipsis">
-      Sequence Diagram
+      Feature-Specific Guides
     </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#architecture-diagram">
+<a class="md-nav__link" href="#pattern-documentation">
 <span class="md-ellipsis">
-      Architecture Diagram
+      Pattern Documentation
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#reading-path-by-use-case">
+<span class="md-ellipsis">
+      🗺️ Reading Path by Use Case
+    </span>
+</a>
+<nav aria-label="🗺️ Reading Path by Use Case" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#new-to-neuroglia-framework">
+<span class="md-ellipsis">
+      New to Neuroglia Framework
     </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#class-diagram">
+<a class="md-nav__link" href="#implementing-simple-crud-application">
 <span class="md-ellipsis">
-      Class Diagram
+      Implementing Simple CRUD Application
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#building-complex-domain-with-event-sourcing">
+<span class="md-ellipsis">
+      Building Complex Domain with Event Sourcing
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#migrating-between-patterns">
+<span class="md-ellipsis">
+      Migrating Between Patterns
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#understanding-event-coordination">
+<span class="md-ellipsis">
+      Understanding Event Coordination
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#implementing-cross-cutting-concerns">
+<span class="md-ellipsis">
+      Implementing Cross-Cutting Concerns
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#key-relationships">
+<span class="md-ellipsis">
+      🔗 Key Relationships
+    </span>
+</a>
+<nav aria-label="🔗 Key Relationships" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#all-patterns-use-same-infrastructure">
+<span class="md-ellipsis">
+      All Patterns Use Same Infrastructure
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#complexity-progression">
+<span class="md-ellipsis">
+      Complexity Progression
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#framework-integration-points">
+<span class="md-ellipsis">
+      Framework Integration Points
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#quick-reference">
+<span class="md-ellipsis">
+      📖 Quick Reference
     </span>
 </a>
 </li>
@@ -825,70 +1017,179 @@
 </div>
 <div class="md-content" data-md-component="content">
 <article class="md-content__inner md-typeset">
-<h1 id="mermaid-test-page">Mermaid Test Page<a class="headerlink" href="#mermaid-test-page" title="Permanent link">¶</a></h1>
-<p>This page tests Mermaid diagram rendering in MkDocs.</p>
-<h2 id="basic-flowchart">Basic Flowchart<a class="headerlink" href="#basic-flowchart" title="Permanent link">¶</a></h2>
-<pre class="mermaid"><code>graph TD
-    A[Start] --&gt; B{Is it working?}
-    B --&gt;|Yes| C[Great!]
-    B --&gt;|No| D[Debug]
-    D --&gt; A
-    C --&gt; E[End]</code></pre>
-<h2 id="sequence-diagram">Sequence Diagram<a class="headerlink" href="#sequence-diagram" title="Permanent link">¶</a></h2>
-<pre class="mermaid"><code>sequenceDiagram
-    participant User
-    participant Controller
-    participant Service
-    participant Database
-
-    User-&gt;&gt;Controller: HTTP Request
-    Controller-&gt;&gt;Service: Business Logic
-    Service-&gt;&gt;Database: Query Data
-    Database--&gt;&gt;Service: Result
-    Service--&gt;&gt;Controller: Response
-    Controller--&gt;&gt;User: HTTP Response</code></pre>
-<h2 id="architecture-diagram">Architecture Diagram<a class="headerlink" href="#architecture-diagram" title="Permanent link">¶</a></h2>
-<pre class="mermaid"><code>graph TB
-    subgraph "Application Layer"
-        A[Controllers] --&gt; B[Mediator]
-        B --&gt; C[Command Handlers]
-        B --&gt; D[Query Handlers]
-    end
-
-    subgraph "Domain Layer"
-        E[Entities] --&gt; F[Value Objects]
-        E --&gt; G[Domain Events]
-    end
-
-    subgraph "Integration Layer"
-        H[Repositories] --&gt; I[External APIs]
-        H --&gt; J[Database]
-    end
-
-    C --&gt; E
-    D --&gt; H
-    A --&gt; B</code></pre>
-<h2 id="class-diagram">Class Diagram<a class="headerlink" href="#class-diagram" title="Permanent link">¶</a></h2>
-<pre class="mermaid"><code>classDiagram
-    class Controller {
-        +service_provider: ServiceProvider
-        +mediator: Mediator
-        +mapper: Mapper
-        +process(result: OperationResult): Response
-    }
-
-    class CommandHandler {
-        +handle_async(command: Command): OperationResult
-    }
-
-    class QueryHandler {
-        +handle_async(query: Query): Result
-    }
-
-    Controller --&gt; CommandHandler : uses
-    Controller --&gt; QueryHandler : uses
-    CommandHandler --&gt; Entity : creates/modifies
-    QueryHandler --&gt; Repository : reads from</code></pre>
+<h1 id="documentation-cross-references">📚 Documentation Cross-References<a class="headerlink" href="#documentation-cross-references" title="Permanent link">¶</a></h1>
+<p>This document provides cross-references between all the persistence-related documentation in the Neuroglia framework.</p>
+<h2 id="persistence-documentation-hierarchy">🏛️ Persistence Documentation Hierarchy<a class="headerlink" href="#persistence-documentation-hierarchy" title="Permanent link">¶</a></h2>
+<h3 id="primary-guides"><strong>Primary Guides</strong><a class="headerlink" href="#primary-guides" title="Permanent link">¶</a></h3>
+<ol>
+<li>
+<p><strong><a href="../../patterns/persistence-patterns/">🏛️ Persistence Patterns</a></strong> - <em>Start Here</em></p>
+</li>
+<li>
+<p><strong>Purpose</strong>: Complete overview and decision framework for choosing persistence approaches</p>
+</li>
+<li><strong>Contains</strong>: Pattern comparison, complexity levels, decision matrix, implementation examples</li>
+<li>
+<p><strong>When to Read</strong>: When starting a new feature or project and need to choose persistence approach</p>
+</li>
+<li>
+<p><strong><a href="../../patterns/unit-of-work/">🔄 Unit of Work Pattern</a></strong> - <em>Core Infrastructure</em></p>
+</li>
+<li><strong>Purpose</strong>: Deep dive into the coordination layer that works with all persistence patterns</li>
+<li><strong>Contains</strong>: UnitOfWork implementation, event collection, pipeline integration</li>
+<li><strong>When to Read</strong>: When implementing command handlers or need to understand event coordination</li>
+</ol>
+<h3 id="feature-specific-guides"><strong>Feature-Specific Guides</strong><a class="headerlink" href="#feature-specific-guides" title="Permanent link">¶</a></h3>
+<ol>
+<li>
+<p><strong><a href="../features/state-based-persistence.md">🏛️ State-Based Persistence</a></strong> - <em>Simple Approach</em></p>
+</li>
+<li>
+<p><strong>Purpose</strong>: Detailed implementation guide for Entity + State persistence pattern</p>
+</li>
+<li><strong>Contains</strong>: Entity design, repositories, command handlers, event integration</li>
+<li>
+<p><strong>When to Read</strong>: When implementing the simple persistence pattern</p>
+</li>
+<li>
+<p><strong><a href="../../features/simple-cqrs/">🎯 Simple CQRS</a></strong> - <em>Command/Query Handling</em></p>
+</li>
+<li>
+<p><strong>Purpose</strong>: CQRS implementation that works with both persistence patterns</p>
+</li>
+<li><strong>Contains</strong>: Command/Query handlers, mediator usage, pipeline behaviors</li>
+<li>
+<p><strong>When to Read</strong>: When implementing application layer handlers</p>
+</li>
+<li>
+<p><strong><a href="../../patterns/pipeline-behaviors/">🔧 Pipeline Behaviors</a></strong> - <em>Cross-Cutting Concerns</em></p>
+</li>
+<li><strong>Purpose</strong>: Middleware patterns for validation, transactions, event dispatching</li>
+<li><strong>Contains</strong>: Pipeline behavior implementation, ordering, integration patterns</li>
+<li><strong>When to Read</strong>: When implementing cross-cutting concerns like validation or logging</li>
+</ol>
+<h3 id="pattern-documentation"><strong>Pattern Documentation</strong><a class="headerlink" href="#pattern-documentation" title="Permanent link">¶</a></h3>
+<ol>
+<li><strong><a href="../../patterns/domain-driven-design/">🏛️ Domain Driven Design</a></strong> - <em>Foundation Patterns</em></li>
+<li><strong>Purpose</strong>: Core DDD patterns and abstractions used by all approaches</li>
+<li><strong>Contains</strong>: Entity vs AggregateRoot patterns, domain events, DDD principles</li>
+<li><strong>When to Read</strong>: When learning DDD concepts or designing domain models</li>
+</ol>
+<h2 id="reading-path-by-use-case">🗺️ Reading Path by Use Case<a class="headerlink" href="#reading-path-by-use-case" title="Permanent link">¶</a></h2>
+<h3 id="new-to-neuroglia-framework"><strong>New to Neuroglia Framework</strong><a class="headerlink" href="#new-to-neuroglia-framework" title="Permanent link">¶</a></h3>
+<ol>
+<li>Start with <strong><a href="../../patterns/persistence-patterns/">Persistence Patterns</a></strong> for overview</li>
+<li>Read <strong><a href="../../patterns/domain-driven-design/">Domain Driven Design</a></strong> for foundation concepts</li>
+<li>Choose specific pattern guide based on your needs:</li>
+<li>Simple: <strong><a href="../../patterns/persistence-patterns/#pattern-1-simple-entity--state-persistence">Persistence Patterns - Simple Entity</a></strong></li>
+<li>Complex: <strong><a href="../../patterns/domain-driven-design/">Domain Driven Design</a></strong> Event Sourcing sections</li>
+<li>Learn coordination with <strong><a href="../../patterns/unit-of-work/">Unit of Work</a></strong></li>
+<li>Implement handlers with <strong><a href="../../features/simple-cqrs/">Simple CQRS</a></strong></li>
+</ol>
+<h3 id="implementing-simple-crud-application"><strong>Implementing Simple CRUD Application</strong><a class="headerlink" href="#implementing-simple-crud-application" title="Permanent link">¶</a></h3>
+<ol>
+<li><strong><a href="../../patterns/persistence-patterns/">Persistence Patterns</a></strong> → Choose Entity + State Persistence</li>
+<li><strong><a href="../../patterns/persistence-patterns/#pattern-1-simple-entity--state-persistence">Persistence Patterns - Simple Entity</a></strong> → Implementation guide</li>
+<li><strong><a href="../../patterns/unit-of-work/">Unit of Work</a></strong> → Event coordination</li>
+<li><strong><a href="../../features/simple-cqrs/">Simple CQRS</a></strong> → Command/Query handlers</li>
+</ol>
+<h3 id="building-complex-domain-with-event-sourcing"><strong>Building Complex Domain with Event Sourcing</strong><a class="headerlink" href="#building-complex-domain-with-event-sourcing" title="Permanent link">¶</a></h3>
+<ol>
+<li><strong><a href="../../patterns/persistence-patterns/">Persistence Patterns</a></strong> → Choose AggregateRoot + Event Sourcing</li>
+<li><strong><a href="../../patterns/domain-driven-design/">Domain Driven Design</a></strong> → Full DDD patterns</li>
+<li><strong><a href="../../patterns/unit-of-work/">Unit of Work</a></strong> → Event coordination</li>
+<li><strong><a href="../../features/simple-cqrs/">Simple CQRS</a></strong> → Command/Query handlers</li>
+<li><strong><a href="../../patterns/pipeline-behaviors/">Pipeline Behaviors</a></strong> → Cross-cutting concerns</li>
+</ol>
+<h3 id="migrating-between-patterns"><strong>Migrating Between Patterns</strong><a class="headerlink" href="#migrating-between-patterns" title="Permanent link">¶</a></h3>
+<ol>
+<li><strong><a href="../../patterns/persistence-patterns/">Persistence Patterns</a></strong> → Hybrid approach section</li>
+<li><strong><a href="../../patterns/unit-of-work/">Unit of Work</a></strong> → Same infrastructure for both patterns</li>
+<li>Specific implementation guides based on source and target patterns</li>
+</ol>
+<h3 id="understanding-event-coordination"><strong>Understanding Event Coordination</strong><a class="headerlink" href="#understanding-event-coordination" title="Permanent link">¶</a></h3>
+<ol>
+<li><strong><a href="../../patterns/unit-of-work/">Unit of Work</a></strong> → Core coordination patterns</li>
+<li><strong><a href="../../patterns/pipeline-behaviors/">Pipeline Behaviors</a></strong> → Event dispatching middleware</li>
+<li><strong><a href="../../patterns/domain-driven-design/">Domain Driven Design</a></strong> → Domain event patterns</li>
+</ol>
+<h3 id="implementing-cross-cutting-concerns"><strong>Implementing Cross-Cutting Concerns</strong><a class="headerlink" href="#implementing-cross-cutting-concerns" title="Permanent link">¶</a></h3>
+<ol>
+<li><strong><a href="../../patterns/pipeline-behaviors/">Pipeline Behaviors</a></strong> → Core patterns</li>
+<li><strong><a href="../../patterns/unit-of-work/">Unit of Work</a></strong> → Integration with event coordination</li>
+<li><strong><a href="../../features/simple-cqrs/">Simple CQRS</a></strong> → Handler integration</li>
+</ol>
+<h2 id="key-relationships">🔗 Key Relationships<a class="headerlink" href="#key-relationships" title="Permanent link">¶</a></h2>
+<h3 id="all-patterns-use-same-infrastructure"><strong>All Patterns Use Same Infrastructure</strong><a class="headerlink" href="#all-patterns-use-same-infrastructure" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>Unit of Work</strong> coordinates events for both Entity and AggregateRoot patterns</li>
+<li><strong>Pipeline Behaviors</strong> provide cross-cutting concerns for both approaches</li>
+<li><strong>CQRS/Mediator</strong> handles commands/queries regardless of persistence pattern</li>
+<li><strong>Domain Events</strong> work the same way in both simple and complex patterns</li>
+</ul>
+<h3 id="complexity-progression"><strong>Complexity Progression</strong><a class="headerlink" href="#complexity-progression" title="Permanent link">¶</a></h3>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a href="#__codelineno-0-1" id="__codelineno-0-1" name="__codelineno-0-1"></a>Entity + State Persistence (⭐⭐☆☆☆)
+</span><span id="__span-0-2"><a href="#__codelineno-0-2" id="__codelineno-0-2" name="__codelineno-0-2"></a>    ↓ (add business complexity)
+</span><span id="__span-0-3"><a href="#__codelineno-0-3" id="__codelineno-0-3" name="__codelineno-0-3"></a>AggregateRoot + Event Sourcing (⭐⭐⭐⭐⭐)
+</span><span id="__span-0-4"><a href="#__codelineno-0-4" id="__codelineno-0-4" name="__codelineno-0-4"></a>    ↓ (mix both approaches)
+</span><span id="__span-0-5"><a href="#__codelineno-0-5" id="__codelineno-0-5" name="__codelineno-0-5"></a>Hybrid Approach (⭐⭐⭐☆☆)
+</span></code></pre></div>
+<h3 id="framework-integration-points"><strong>Framework Integration Points</strong><a class="headerlink" href="#framework-integration-points" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>Unit of Work</strong> ← All persistence patterns use this for event coordination</li>
+<li><strong>Pipeline Behaviors</strong> ← All handlers use this for cross-cutting concerns</li>
+<li><strong>Mediator</strong> ← All commands/queries route through this</li>
+<li><strong>Domain Events</strong> ← All patterns raise events, same dispatching mechanism</li>
+</ul>
+<h2 id="quick-reference">📖 Quick Reference<a class="headerlink" href="#quick-reference" title="Permanent link">¶</a></h2>
+<table>
+<thead>
+<tr>
+<th><strong>I Need To...</strong></th>
+<th><strong>Read This First</strong></th>
+<th><strong>Then Read</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Choose persistence approach</td>
+<td><a href="../../patterns/persistence-patterns/">Persistence Patterns</a></td>
+<td>Pattern-specific guide</td>
+</tr>
+<tr>
+<td>Implement simple CRUD</td>
+<td><a href="../../patterns/persistence-patterns/#pattern-1-simple-entity--state-persistence">Persistence Patterns - Simple Entity</a></td>
+<td><a href="../../patterns/unit-of-work/">Unit of Work</a></td>
+</tr>
+<tr>
+<td>Build complex domain</td>
+<td><a href="../../patterns/domain-driven-design/">Domain Driven Design</a></td>
+<td><a href="../../patterns/unit-of-work/">Unit of Work</a></td>
+</tr>
+<tr>
+<td>Coordinate events</td>
+<td><a href="../../patterns/unit-of-work/">Unit of Work</a></td>
+<td><a href="../../patterns/pipeline-behaviors/">Pipeline Behaviors</a></td>
+</tr>
+<tr>
+<td>Implement handlers</td>
+<td><a href="../../features/simple-cqrs/">Simple CQRS</a></td>
+<td><a href="../../patterns/pipeline-behaviors/">Pipeline Behaviors</a></td>
+</tr>
+<tr>
+<td>Add validation/logging</td>
+<td><a href="../../patterns/pipeline-behaviors/">Pipeline Behaviors</a></td>
+<td><a href="../../patterns/unit-of-work/">Unit of Work</a></td>
+</tr>
+<tr>
+<td>Understand DDD concepts</td>
+<td><a href="../../patterns/domain-driven-design/">Domain Driven Design</a></td>
+<td><a href="../../patterns/persistence-patterns/">Persistence Patterns</a></td>
+</tr>
+</tbody>
+</table>
+<hr/>
+<p><em>This documentation structure ensures you can find the right information for your specific use case while understanding how all the pieces work together in the Neuroglia framework.</em></p>
 </article>
 </div>
 <script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>

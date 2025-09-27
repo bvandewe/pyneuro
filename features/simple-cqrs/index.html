@@ -7,9 +7,11 @@
 <meta content="width=device-width,initial-scale=1" name="viewport"/>
 <meta content="A lightweight, opinionated Python framework built on FastAPI that enforces clean architecture principles" name="description"/>
 <link href="https://bvandewe.github.io/pyneuro/features/simple-cqrs/" rel="canonical"/>
+<link href="../" rel="prev"/>
+<link href="../mvc-controllers/" rel="next"/>
 <link href="../../assets/images/favicon.png" rel="icon"/>
 <meta content="mkdocs-1.6.1, mkdocs-material-9.6.20" name="generator"/>
-<title>🎯 Simple CQRS Patterns - Neuroglia Python Framework</title>
+<title>Simple CQRS - Neuroglia Python Framework</title>
 <link href="../../assets/stylesheets/main.e53b48f4.min.css" rel="stylesheet"/>
 <link href="../../assets/stylesheets/palette.06af60db.min.css" rel="stylesheet"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
@@ -46,7 +48,7 @@
 <div class="md-header__topic" data-md-component="header-topic">
 <span class="md-ellipsis">
             
-              🎯 Simple CQRS Patterns
+              Simple CQRS
             
           </span>
 </div>
@@ -148,7 +150,7 @@
 
         </a>
 </li>
-<li class="md-tabs__item">
+<li class="md-tabs__item md-tabs__item--active">
 <a class="md-tabs__link" href="../">
           
   
@@ -176,7 +178,7 @@
         </a>
 </li>
 <li class="md-tabs__item">
-<a class="md-tabs__link" href="../../references/oauth-oidc-jwt/">
+<a class="md-tabs__link" href="../../references/persistence-documentation-guide/">
           
   
   
@@ -354,15 +356,31 @@
 <li class="md-nav__item">
 <a class="md-nav__link" href="../../patterns/">
 <span class="md-ellipsis">
-    Overview
+    🎯 Architecture Patterns
     
   </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../patterns/clean-architecture/">
+<a class="md-nav__link" href="../../patterns/persistence-patterns/">
 <span class="md-ellipsis">
-    Clean Architecture
+    Persistence Patterns
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../patterns/unit-of-work/">
+<span class="md-ellipsis">
+    Unit of Work
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../patterns/pipeline-behaviors/">
+<span class="md-ellipsis">
+    Pipeline Behaviors
     
   </span>
 </a>
@@ -376,17 +394,9 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../patterns/dependency-injection/">
+<a class="md-nav__link" href="../../patterns/repository/">
 <span class="md-ellipsis">
-    Dependency Injection
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../../patterns/cqrs/">
-<span class="md-ellipsis">
-    CQRS &amp; Mediation
+    Repository Pattern
     
   </span>
 </a>
@@ -394,55 +404,7 @@
 <li class="md-nav__item">
 <a class="md-nav__link" href="../../patterns/event-driven/">
 <span class="md-ellipsis">
-    Event-Driven
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../../patterns/event-sourcing/">
-<span class="md-ellipsis">
-    Event Sourcing
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../../patterns/reactive-programming/">
-<span class="md-ellipsis">
-    Reactive Programming
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../../patterns/repository/">
-<span class="md-ellipsis">
-    Repository
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../../patterns/resource-oriented-architecture/">
-<span class="md-ellipsis">
-    Resource-Oriented Architecture
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../../patterns/watcher-reconciliation-patterns/">
-<span class="md-ellipsis">
-    Watcher &amp; Reconciliation Patterns
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../../patterns/watcher-reconciliation-execution/">
-<span class="md-ellipsis">
-    Watcher &amp; Reconciliation Execution
+    Event-Driven Architecture
     
   </span>
 </a>
@@ -450,16 +412,16 @@
 </ul>
 </nav>
 </li>
-<li class="md-nav__item md-nav__item--nested">
-<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_5" type="checkbox"/>
-<label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+<li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+<input checked="" class="md-nav__toggle md-toggle" id="__nav_5" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
 <span class="md-ellipsis">
     Features
     
   </span>
 <span class="md-nav__icon md-icon"></span>
 </label>
-<nav aria-expanded="false" aria-labelledby="__nav_5_label" class="md-nav" data-md-level="1">
+<nav aria-expanded="true" aria-labelledby="__nav_5_label" class="md-nav" data-md-level="1">
 <label class="md-nav__title" for="__nav_5">
 <span class="md-nav__icon md-icon"></span>
             Features
@@ -468,10 +430,226 @@
 <li class="md-nav__item">
 <a class="md-nav__link" href="../">
 <span class="md-ellipsis">
-    Overview
+    🚀 Framework Features
     
   </span>
 </a>
+</li>
+<li class="md-nav__item md-nav__item--active">
+<input class="md-nav__toggle md-toggle" id="__toc" type="checkbox"/>
+<label class="md-nav__link md-nav__link--active" for="__toc">
+<span class="md-ellipsis">
+    Simple CQRS
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<a class="md-nav__link md-nav__link--active" href="./">
+<span class="md-ellipsis">
+    Simple CQRS
+    
+  </span>
+</a>
+<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#when-to-use-simple-cqrs">
+<span class="md-ellipsis">
+      🎯 When to Use Simple CQRS
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#basic-setup">
+<span class="md-ellipsis">
+      🏗️ Basic Setup
+    </span>
+</a>
+<nav aria-label="🏗️ Basic Setup" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#minimal-example-5-lines-of-setup">
+<span class="md-ellipsis">
+      Minimal Example (5 lines of setup)
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#standard-setup">
+<span class="md-ellipsis">
+      Standard Setup
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#complete-working-example">
+<span class="md-ellipsis">
+      🚀 Complete Working Example
+    </span>
+</a>
+<nav aria-label="🚀 Complete Working Example" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#1-define-your-models">
+<span class="md-ellipsis">
+      1. Define Your Models
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#2-define-commands-and-queries">
+<span class="md-ellipsis">
+      2. Define Commands and Queries
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#3-implement-handlers">
+<span class="md-ellipsis">
+      3. Implement Handlers
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#4-create-and-use-your-application">
+<span class="md-ellipsis">
+      4. Create and Use Your Application
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#key-patterns">
+<span class="md-ellipsis">
+      💡 Key Patterns
+    </span>
+</a>
+<nav aria-label="💡 Key Patterns" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#validation-and-error-handling">
+<span class="md-ellipsis">
+      Validation and Error Handling
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#repository-patterns">
+<span class="md-ellipsis">
+      Repository Patterns
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#query-result-patterns">
+<span class="md-ellipsis">
+      Query Result Patterns
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#configuration-options">
+<span class="md-ellipsis">
+      🔧 Configuration Options
+    </span>
+</a>
+<nav aria-label="🔧 Configuration Options" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#simple-application-settings">
+<span class="md-ellipsis">
+      Simple Application Settings
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#environment-integration">
+<span class="md-ellipsis">
+      Environment Integration
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#testing-patterns">
+<span class="md-ellipsis">
+      🧪 Testing Patterns
+    </span>
+</a>
+<nav aria-label="🧪 Testing Patterns" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#unit-testing-handlers">
+<span class="md-ellipsis">
+      Unit Testing Handlers
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#integration-testing">
+<span class="md-ellipsis">
+      Integration Testing
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#when-to-upgrade">
+<span class="md-ellipsis">
+      🚀 When to Upgrade
+    </span>
+</a>
+<nav aria-label="🚀 When to Upgrade" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#event-sourcing">
+<span class="md-ellipsis">
+      Event Sourcing
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#cloud-events">
+<span class="md-ellipsis">
+      Cloud Events
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#domain-events">
+<span class="md-ellipsis">
+      Domain Events
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#related-documentation">
+<span class="md-ellipsis">
+      🔗 Related Documentation
+    </span>
+</a>
+</li>
+</ul>
+</nav>
 </li>
 <li class="md-nav__item">
 <a class="md-nav__link" href="../mvc-controllers/">
@@ -490,22 +668,6 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../serialization/">
-<span class="md-ellipsis">
-    Serialization
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../configurable-type-discovery/">
-<span class="md-ellipsis">
-    Configurable Type Discovery
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
 <a class="md-nav__link" href="../object-mapping/">
 <span class="md-ellipsis">
     Object Mapping
@@ -514,25 +676,17 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../background-task-scheduling/">
+<a class="md-nav__link" href="../serialization/">
 <span class="md-ellipsis">
-    Background Task Scheduling
+    Serialization
     
   </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../redis-cache-repository/">
+<a class="md-nav__link" href="../enhanced-model-validation/">
 <span class="md-ellipsis">
-    Redis Cache Repository
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../http-service-client/">
-<span class="md-ellipsis">
-    HTTP Service Client
+    Enhanced Model Validation
     
   </span>
 </a>
@@ -546,9 +700,41 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../enhanced-model-validation/">
+<a class="md-nav__link" href="../http-service-client/">
 <span class="md-ellipsis">
-    Enhanced Model Validation
+    HTTP Service Client
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../redis-cache-repository/">
+<span class="md-ellipsis">
+    Redis Cache Repository
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../background-task-scheduling/">
+<span class="md-ellipsis">
+    Background Task Scheduling
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../resilient-handler-discovery/">
+<span class="md-ellipsis">
+    Resilient Handler Discovery
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../configurable-type-discovery/">
+<span class="md-ellipsis">
+    Configurable Type Discovery
     
   </span>
 </a>
@@ -679,6 +865,14 @@
             References
           </label>
 <ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../references/persistence-documentation-guide/">
+<span class="md-ellipsis">
+    Persistence Documentation Guide
+    
+  </span>
+</a>
+</li>
 <li class="md-nav__item">
 <a class="md-nav__link" href="../../references/oauth-oidc-jwt/">
 <span class="md-ellipsis">

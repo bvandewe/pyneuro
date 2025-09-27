@@ -8,10 +8,10 @@
 <meta content="A lightweight, opinionated Python framework built on FastAPI that enforces clean architecture principles" name="description"/>
 <link href="https://bvandewe.github.io/pyneuro/patterns/" rel="canonical"/>
 <link href="../mario-pizzeria/testing-deployment/" rel="prev"/>
-<link href="clean-architecture/" rel="next"/>
+<link href="persistence-patterns/" rel="next"/>
 <link href="../assets/images/favicon.png" rel="icon"/>
 <meta content="mkdocs-1.6.1, mkdocs-material-9.6.20" name="generator"/>
-<title>Overview - Neuroglia Python Framework</title>
+<title>🎯 Architecture Patterns - Neuroglia Python Framework</title>
 <link href="../assets/stylesheets/main.e53b48f4.min.css" rel="stylesheet"/>
 <link href="../assets/stylesheets/palette.06af60db.min.css" rel="stylesheet"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
@@ -48,7 +48,7 @@
 <div class="md-header__topic" data-md-component="header-topic">
 <span class="md-ellipsis">
             
-              Overview
+              🎯 Architecture Patterns
             
           </span>
 </div>
@@ -178,7 +178,7 @@
         </a>
 </li>
 <li class="md-tabs__item">
-<a class="md-tabs__link" href="../references/oauth-oidc-jwt/">
+<a class="md-tabs__link" href="../references/persistence-documentation-guide/">
           
   
   
@@ -357,14 +357,14 @@
 <input class="md-nav__toggle md-toggle" id="__toc" type="checkbox"/>
 <label class="md-nav__link md-nav__link--active" for="__toc">
 <span class="md-ellipsis">
-    Overview
+    🎯 Architecture Patterns
     
   </span>
 <span class="md-nav__icon md-icon"></span>
 </label>
 <a class="md-nav__link md-nav__link--active" href="./">
 <span class="md-ellipsis">
-    Overview
+    🎯 Architecture Patterns
     
   </span>
 </a>
@@ -445,9 +445,25 @@
 </nav>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="clean-architecture/">
+<a class="md-nav__link" href="persistence-patterns/">
 <span class="md-ellipsis">
-    Clean Architecture
+    Persistence Patterns
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="unit-of-work/">
+<span class="md-ellipsis">
+    Unit of Work
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="pipeline-behaviors/">
+<span class="md-ellipsis">
+    Pipeline Behaviors
     
   </span>
 </a>
@@ -461,17 +477,9 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="dependency-injection/">
+<a class="md-nav__link" href="repository/">
 <span class="md-ellipsis">
-    Dependency Injection
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="cqrs/">
-<span class="md-ellipsis">
-    CQRS &amp; Mediation
+    Repository Pattern
     
   </span>
 </a>
@@ -479,55 +487,7 @@
 <li class="md-nav__item">
 <a class="md-nav__link" href="event-driven/">
 <span class="md-ellipsis">
-    Event-Driven
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="event-sourcing/">
-<span class="md-ellipsis">
-    Event Sourcing
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="reactive-programming/">
-<span class="md-ellipsis">
-    Reactive Programming
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="repository/">
-<span class="md-ellipsis">
-    Repository
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="resource-oriented-architecture/">
-<span class="md-ellipsis">
-    Resource-Oriented Architecture
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="watcher-reconciliation-patterns/">
-<span class="md-ellipsis">
-    Watcher &amp; Reconciliation Patterns
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="watcher-reconciliation-execution/">
-<span class="md-ellipsis">
-    Watcher &amp; Reconciliation Execution
+    Event-Driven Architecture
     
   </span>
 </a>
@@ -553,7 +513,15 @@
 <li class="md-nav__item">
 <a class="md-nav__link" href="../features/">
 <span class="md-ellipsis">
-    Overview
+    🚀 Framework Features
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../features/simple-cqrs/">
+<span class="md-ellipsis">
+    Simple CQRS
     
   </span>
 </a>
@@ -575,22 +543,6 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../features/serialization/">
-<span class="md-ellipsis">
-    Serialization
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../features/configurable-type-discovery/">
-<span class="md-ellipsis">
-    Configurable Type Discovery
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
 <a class="md-nav__link" href="../features/object-mapping/">
 <span class="md-ellipsis">
     Object Mapping
@@ -599,25 +551,17 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../features/background-task-scheduling/">
+<a class="md-nav__link" href="../features/serialization/">
 <span class="md-ellipsis">
-    Background Task Scheduling
+    Serialization
     
   </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../features/redis-cache-repository/">
+<a class="md-nav__link" href="../features/enhanced-model-validation/">
 <span class="md-ellipsis">
-    Redis Cache Repository
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../features/http-service-client/">
-<span class="md-ellipsis">
-    HTTP Service Client
+    Enhanced Model Validation
     
   </span>
 </a>
@@ -631,9 +575,41 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../features/enhanced-model-validation/">
+<a class="md-nav__link" href="../features/http-service-client/">
 <span class="md-ellipsis">
-    Enhanced Model Validation
+    HTTP Service Client
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../features/redis-cache-repository/">
+<span class="md-ellipsis">
+    Redis Cache Repository
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../features/background-task-scheduling/">
+<span class="md-ellipsis">
+    Background Task Scheduling
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../features/resilient-handler-discovery/">
+<span class="md-ellipsis">
+    Resilient Handler Discovery
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../features/configurable-type-discovery/">
+<span class="md-ellipsis">
+    Configurable Type Discovery
     
   </span>
 </a>
@@ -764,6 +740,14 @@
             References
           </label>
 <ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../references/persistence-documentation-guide/">
+<span class="md-ellipsis">
+    Persistence Documentation Guide
+    
+  </span>
+</a>
+</li>
 <li class="md-nav__item">
 <a class="md-nav__link" href="../references/oauth-oidc-jwt/">
 <span class="md-ellipsis">
@@ -951,7 +935,31 @@
 <td>Complex business domains, rich models</td>
 </tr>
 <tr>
-<td><strong><a href="dependency-injection/">💉 Dependency Injection</a></strong></td>
+<td><strong><a href="persistence-patterns/">🏛️ Persistence Patterns</a></strong></td>
+<td>Alternative persistence approaches with different complexity levels and capabilities</td>
+<td>• Simple Entity + State Persistence<br/>• Complex AggregateRoot + Event Sourcing<br/>• Hybrid approaches<br/>• Pattern decision frameworks</td>
+<td>• Complexity level comparison<br/>• Implementation patterns for each approach<br/>• Decision criteria and guidelines<br/>• Migration strategies between patterns</td>
+<td>Customer profiles (simple) vs Order processing (complex) patterns</td>
+<td>All applications - choose right complexity</td>
+</tr>
+<tr>
+<td><strong><a href="unit-of-work/">🔄 Unit of Work Pattern</a></strong></td>
+<td>Coordination layer for domain event collection and dispatching across persistence patterns</td>
+<td>• Aggregate registration and tracking<br/>• Automatic event collection<br/>• Pipeline integration<br/>• Flexible entity support</td>
+<td>• UnitOfWork implementation and usage<br/>• Event coordination patterns<br/>• Pipeline behavior integration<br/>• Testing strategies for event workflows</td>
+<td>Order processing with automatic event dispatching after state persistence</td>
+<td>Event-driven systems, domain coordination</td>
+</tr>
+<tr>
+<td><strong><a href="pipeline-behaviors/">� Pipeline Behaviors</a></strong></td>
+<td>Cross-cutting concerns implemented as composable behaviors around command/query execution</td>
+<td>• Decorator pattern implementation<br/>• Behavior chaining and ordering<br/>• Cross-cutting concerns<br/>• Pre/post processing logic</td>
+<td>• Creating custom pipeline behaviors<br/>• Behavior registration and ordering<br/>• Validation, logging, caching patterns<br/>• Transaction and error handling</td>
+<td>Validation, logging, and transaction management around order processing</td>
+<td>Cross-cutting concerns, AOP patterns</td>
+</tr>
+<tr>
+<td><strong><a href="dependency-injection/">�💉 Dependency Injection</a></strong></td>
 <td>Manages object dependencies and lifecycle through inversion of control patterns</td>
 <td>• Service registration and resolution<br/>• Lifetime management patterns<br/>• Constructor injection<br/>• Interface-based abstractions</td>
 <td>• Service container configuration<br/>• Lifetime scope patterns<br/>• Testing with mock dependencies<br/>• Clean dependency management</td>
