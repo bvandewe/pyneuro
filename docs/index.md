@@ -24,14 +24,116 @@ Complete production examples like [Mario's Pizzeria](mario-pizzeria.md) demonstr
 
 PyNeuroctl command-line interface for managing, testing, and deploying your applications with zero configuration.
 
-## ✨ Key Features
+## Why Neuroglia?
 
-- **🎯 CQRS & Mediation**: Built-in Command Query Responsibility Segregation with mediator pattern
-- **💉 Dependency Injection**: Lightweight container with automatic service discovery
-- **🔌 MVC Controllers**: Class-based controllers with automatic OpenAPI generation
-- **📡 Event-Driven**: Native CloudEvents support and domain event handling
-- **🗄️ Data Access**: Repository pattern with file-based, MongoDB, and event sourcing support
-- **🧪 Testing Utilities**: Comprehensive testing patterns for all architectural layers
+**Choose Neuroglia for complex, domain-driven microservices that need to be maintained for years to come.**
+
+### 🎯 The Philosophy
+
+Neuroglia believes that **software architecture matters more than speed of initial development**. While you can build APIs quickly with vanilla FastAPI or Django, Neuroglia is designed for applications that will:
+
+- **Scale in complexity** over time with changing business requirements
+- **Be maintained by teams** with varying levels of domain expertise
+- **Evolve and adapt** without accumulating technical debt
+- **Integrate seamlessly** with complex enterprise ecosystems
+
+### 🏗️ When to Choose Neuroglia
+
+| **Choose Neuroglia When**                                            | **Choose Alternatives When**                  |
+| -------------------------------------------------------------------- | --------------------------------------------- |
+| ✅ Building **domain-rich applications** with complex business logic | ❌ Creating simple CRUD APIs or prototypes    |
+| ✅ **Long-term maintenance** is a primary concern                    | ❌ You need something working "yesterday"     |
+| ✅ Your team values **architectural consistency**                    | ❌ Framework learning curve is a blocker      |
+| ✅ You need **enterprise patterns** (CQRS, DDD, Event Sourcing)      | ❌ Simple request-response patterns suffice   |
+| ✅ **Multiple developers** will work on the codebase                 | ❌ Solo development or small, simple projects |
+| ✅ Integration with **event-driven architectures**                   | ❌ Monolithic, database-first applications    |
+
+### 🚀 The Neuroglia Advantage
+
+**Compared to vanilla FastAPI:**
+
+- **Enforced Structure**: No more "how should I organize this?" - clear architectural layers
+- **Built-in Patterns**: CQRS, dependency injection, and event handling out of the box
+- **Enterprise Ready**: Designed for complex domains, not just API endpoints
+
+**Compared to Django:**
+
+- **Microservice Native**: Built for distributed systems, not monolithic web apps
+- **Domain-Driven**: Business logic lives in the domain layer, not mixed with web concerns
+- **Modern Async**: Full async support without retrofitting legacy patterns
+
+**Compared to Spring Boot (Java):**
+
+- **Python Simplicity**: All the enterprise patterns without Java's verbosity
+- **Lightweight**: No heavy application server - just the patterns you need
+- **Developer Experience**: Pythonic APIs with comprehensive tooling
+
+### 💡 Real-World Scenarios
+
+**Perfect for:**
+
+- 🏦 **Financial Services**: Complex domain rules, audit trails, event sourcing
+- 🏥 **Healthcare Systems**: HIPAA compliance, complex workflows, integration needs
+- 🏭 **Manufacturing**: Resource management, real-time monitoring, process orchestration
+- 🛒 **E-commerce Platforms**: Order processing, inventory management, payment flows
+- 🎯 **SaaS Products**: Multi-tenant architectures, feature flags, usage analytics
+
+**Not ideal for:**
+
+- 📝 Simple content management systems
+- 🔗 Basic API proxies or data transformation services
+- 📱 Mobile app backends with minimal business logic
+- 🧪 Proof-of-concept or throwaway prototypes
+
+### 🎨 The Developer Experience
+
+Neuroglia optimizes for **code that tells a story**:
+
+```python
+# Your business logic is clear and testable
+class PlaceOrderHandler(CommandHandler[PlaceOrderCommand, OperationResult[OrderDto]]):
+    async def handle_async(self, command: PlaceOrderCommand) -> OperationResult[OrderDto]:
+        # Domain logic is explicit and isolated
+        order = Order(command.customer_id, command.items)
+        await self.repository.save_async(order)
+        return self.created(self.mapper.map(order, OrderDto))
+
+# Infrastructure concerns are separated
+class OrdersController(ControllerBase):
+    @post("/orders", response_model=OrderDto)
+    async def place_order(self, command: PlaceOrderCommand) -> OrderDto:
+        return await self.mediator.execute_async(command)
+```
+
+**The result?** Code that's easy to understand, test, and evolve - even years later.
+
+## 🚀 Key Features
+
+- **🏗️ Clean Architecture**: Enforces separation of concerns with clearly defined layers (API, Application, Domain, Integration)
+- **💉 Dependency Injection**: Lightweight container with automatic service discovery and registration
+- **🎯 CQRS & Mediation**: Command Query Responsibility Segregation with built-in mediator pattern
+- **🏛️ State-Based Persistence**: Alternative to event sourcing with automatic domain event dispatching
+- **🔧 Pipeline Behaviors**: Cross-cutting concerns like validation, caching, and transactions
+- **📡 Event-Driven Architecture**: Native support for CloudEvents, event sourcing, and reactive programming
+- **🎯 Resource Oriented Architecture**: Declarative resource management with watchers, controllers, and reconciliation loops
+- **🔌 MVC Controllers**: Class-based API controllers with automatic discovery and OpenAPI generation
+- **🗄️ Repository Pattern**: Flexible data access layer with support for MongoDB, Event Store, and in-memory repositories
+- **📊 Object Mapping**: Bidirectional mapping between domain models and DTOs
+- **⚡ Reactive Programming**: Built-in support for RxPy and asynchronous event handling
+- **🔧 12-Factor Compliance**: Implements all [12-Factor App](https://12factor.net) principles
+- **📝 Rich Serialization**: JSON serialization with advanced features
+
+## 🎯 Architecture Overview
+
+Neuroglia promotes a clean, layered architecture that separates concerns and makes your code more maintainable:
+
+```text
+src/
+├── api/           # 🌐 API Layer (Controllers, DTOs, Routes)
+├── application/   # 💼 Application Layer (Commands, Queries, Handlers, Services)
+├── domain/        # 🏛️ Domain Layer (Entities, Value Objects, Business Rules)
+└── integration/   # 🔌 Integration Layer (External APIs, Repositories, Infrastructure)
+```
 
 ## 🚀 Quick Start
 
