@@ -806,9 +806,9 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../references/python_type_hints/">
+<a class="md-nav__link" href="../../references/python_typing_guide/">
 <span class="md-ellipsis">
-    Python Type Hints
+    Python Typing Guide
     
   </span>
 </a>
@@ -830,9 +830,9 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../references/python_generic_types/">
+<a class="md-nav__link" href="../../references/test-mermaid/">
 <span class="md-ellipsis">
-    Python Generic Types
+    Mermaid References
     
   </span>
 </a>
@@ -1029,57 +1029,57 @@
 <h2 id="benefits">✅ Benefits<a class="headerlink" href="#benefits" title="Permanent link">¶</a></h2>
 <h3 id="1-loose-coupling">1. <strong>Loose Coupling</strong><a class="headerlink" href="#1-loose-coupling" title="Permanent link">¶</a></h3>
 <p>Components communicate through events without direct dependencies:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Order placement doesn't know about kitchen or notifications</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">PlaceOrderHandler</span><span class="p">(</span><span class="n">CommandHandler</span><span class="p">[</span><span class="n">PlaceOrderCommand</span><span class="p">,</span> <span class="n">OperationResult</span><span class="p">[</span><span class="n">OrderDto</span><span class="p">]]):</span>
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">handle_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command</span><span class="p">:</span> <span class="n">PlaceOrderCommand</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">OperationResult</span><span class="p">[</span><span class="n">OrderDto</span><span class="p">]:</span>
-        <span class="n">order</span> <span class="o">=</span> <span class="n">Order</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">command</span><span class="o">.</span><span class="n">customer_id</span><span class="p">,</span> <span class="n">command</span><span class="o">.</span><span class="n">items</span><span class="p">)</span>
-        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_repository</span><span class="o">.</span><span class="n">save_async</span><span class="p">(</span><span class="n">order</span><span class="p">)</span>
-
-        <span class="c1"># Domain entity raises event - handler doesn't know who listens</span>
-        <span class="c1"># OrderPlacedEvent is automatically published by the framework</span>
-
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">created</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mapper</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">order</span><span class="p">,</span> <span class="n">OrderDto</span><span class="p">))</span>
-
-<span class="c1"># Multiple handlers can respond to events independently</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">KitchenWorkflowHandler</span><span class="p">(</span><span class="n">EventHandler</span><span class="p">[</span><span class="n">OrderPlacedEvent</span><span class="p">]):</span>
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">handle_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">OrderPlacedEvent</span><span class="p">):</span>
-        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_kitchen_service</span><span class="o">.</span><span class="n">add_to_queue_async</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">order_id</span><span class="p">)</span>
-
-<span class="k">class</span><span class="w"> </span><span class="nc">CustomerNotificationHandler</span><span class="p">(</span><span class="n">EventHandler</span><span class="p">[</span><span class="n">OrderPlacedEvent</span><span class="p">]):</span>
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">handle_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">OrderPlacedEvent</span><span class="p">):</span>
-        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sms_service</span><span class="o">.</span><span class="n">send_confirmation_async</span><span class="p">(</span>
-            <span class="n">event</span><span class="o">.</span><span class="n">customer_phone</span><span class="p">,</span> <span class="n">event</span><span class="o">.</span><span class="n">order_id</span>
-        <span class="p">)</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a href="#__codelineno-0-1" id="__codelineno-0-1" name="__codelineno-0-1"></a><span class="c1"># Order placement doesn't know about kitchen or notifications</span>
+</span><span id="__span-0-2"><a href="#__codelineno-0-2" id="__codelineno-0-2" name="__codelineno-0-2"></a><span class="k">class</span><span class="w"> </span><span class="nc">PlaceOrderHandler</span><span class="p">(</span><span class="n">CommandHandler</span><span class="p">[</span><span class="n">PlaceOrderCommand</span><span class="p">,</span> <span class="n">OperationResult</span><span class="p">[</span><span class="n">OrderDto</span><span class="p">]]):</span>
+</span><span id="__span-0-3"><a href="#__codelineno-0-3" id="__codelineno-0-3" name="__codelineno-0-3"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">handle_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command</span><span class="p">:</span> <span class="n">PlaceOrderCommand</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">OperationResult</span><span class="p">[</span><span class="n">OrderDto</span><span class="p">]:</span>
+</span><span id="__span-0-4"><a href="#__codelineno-0-4" id="__codelineno-0-4" name="__codelineno-0-4"></a>        <span class="n">order</span> <span class="o">=</span> <span class="n">Order</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">command</span><span class="o">.</span><span class="n">customer_id</span><span class="p">,</span> <span class="n">command</span><span class="o">.</span><span class="n">items</span><span class="p">)</span>
+</span><span id="__span-0-5"><a href="#__codelineno-0-5" id="__codelineno-0-5" name="__codelineno-0-5"></a>        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_repository</span><span class="o">.</span><span class="n">save_async</span><span class="p">(</span><span class="n">order</span><span class="p">)</span>
+</span><span id="__span-0-6"><a href="#__codelineno-0-6" id="__codelineno-0-6" name="__codelineno-0-6"></a>
+</span><span id="__span-0-7"><a href="#__codelineno-0-7" id="__codelineno-0-7" name="__codelineno-0-7"></a>        <span class="c1"># Domain entity raises event - handler doesn't know who listens</span>
+</span><span id="__span-0-8"><a href="#__codelineno-0-8" id="__codelineno-0-8" name="__codelineno-0-8"></a>        <span class="c1"># OrderPlacedEvent is automatically published by the framework</span>
+</span><span id="__span-0-9"><a href="#__codelineno-0-9" id="__codelineno-0-9" name="__codelineno-0-9"></a>
+</span><span id="__span-0-10"><a href="#__codelineno-0-10" id="__codelineno-0-10" name="__codelineno-0-10"></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">created</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mapper</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">order</span><span class="p">,</span> <span class="n">OrderDto</span><span class="p">))</span>
+</span><span id="__span-0-11"><a href="#__codelineno-0-11" id="__codelineno-0-11" name="__codelineno-0-11"></a>
+</span><span id="__span-0-12"><a href="#__codelineno-0-12" id="__codelineno-0-12" name="__codelineno-0-12"></a><span class="c1"># Multiple handlers can respond to events independently</span>
+</span><span id="__span-0-13"><a href="#__codelineno-0-13" id="__codelineno-0-13" name="__codelineno-0-13"></a><span class="k">class</span><span class="w"> </span><span class="nc">KitchenWorkflowHandler</span><span class="p">(</span><span class="n">EventHandler</span><span class="p">[</span><span class="n">OrderPlacedEvent</span><span class="p">]):</span>
+</span><span id="__span-0-14"><a href="#__codelineno-0-14" id="__codelineno-0-14" name="__codelineno-0-14"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">handle_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">OrderPlacedEvent</span><span class="p">):</span>
+</span><span id="__span-0-15"><a href="#__codelineno-0-15" id="__codelineno-0-15" name="__codelineno-0-15"></a>        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_kitchen_service</span><span class="o">.</span><span class="n">add_to_queue_async</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">order_id</span><span class="p">)</span>
+</span><span id="__span-0-16"><a href="#__codelineno-0-16" id="__codelineno-0-16" name="__codelineno-0-16"></a>
+</span><span id="__span-0-17"><a href="#__codelineno-0-17" id="__codelineno-0-17" name="__codelineno-0-17"></a><span class="k">class</span><span class="w"> </span><span class="nc">CustomerNotificationHandler</span><span class="p">(</span><span class="n">EventHandler</span><span class="p">[</span><span class="n">OrderPlacedEvent</span><span class="p">]):</span>
+</span><span id="__span-0-18"><a href="#__codelineno-0-18" id="__codelineno-0-18" name="__codelineno-0-18"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">handle_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">OrderPlacedEvent</span><span class="p">):</span>
+</span><span id="__span-0-19"><a href="#__codelineno-0-19" id="__codelineno-0-19" name="__codelineno-0-19"></a>        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sms_service</span><span class="o">.</span><span class="n">send_confirmation_async</span><span class="p">(</span>
+</span><span id="__span-0-20"><a href="#__codelineno-0-20" id="__codelineno-0-20" name="__codelineno-0-20"></a>            <span class="n">event</span><span class="o">.</span><span class="n">customer_phone</span><span class="p">,</span> <span class="n">event</span><span class="o">.</span><span class="n">order_id</span>
+</span><span id="__span-0-21"><a href="#__codelineno-0-21" id="__codelineno-0-21" name="__codelineno-0-21"></a>        <span class="p">)</span>
+</span></code></pre></div>
 <h3 id="2-scalability">2. <strong>Scalability</strong><a class="headerlink" href="#2-scalability" title="Permanent link">¶</a></h3>
 <p>Event handlers can be scaled independently based on load:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># High-volume analytics can be processed separately</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">OrderAnalyticsHandler</span><span class="p">(</span><span class="n">EventHandler</span><span class="p">[</span><span class="n">OrderPlacedEvent</span><span class="p">]):</span>
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">handle_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">OrderPlacedEvent</span><span class="p">):</span>
-        <span class="c1"># This can be processed in background/separate service</span>
-        <span class="n">analytics_data</span> <span class="o">=</span> <span class="n">AnalyticsEvent</span><span class="p">(</span>
-            <span class="n">event_type</span><span class="o">=</span><span class="s2">"order_placed"</span><span class="p">,</span>
-            <span class="n">customer_id</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">customer_id</span><span class="p">,</span>
-            <span class="n">order_value</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">total_amount</span><span class="p">,</span>
-            <span class="n">timestamp</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">occurred_at</span>
-        <span class="p">)</span>
-        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_analytics_service</span><span class="o">.</span><span class="n">track_async</span><span class="p">(</span><span class="n">analytics_data</span><span class="p">)</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a href="#__codelineno-1-1" id="__codelineno-1-1" name="__codelineno-1-1"></a><span class="c1"># High-volume analytics can be processed separately</span>
+</span><span id="__span-1-2"><a href="#__codelineno-1-2" id="__codelineno-1-2" name="__codelineno-1-2"></a><span class="k">class</span><span class="w"> </span><span class="nc">OrderAnalyticsHandler</span><span class="p">(</span><span class="n">EventHandler</span><span class="p">[</span><span class="n">OrderPlacedEvent</span><span class="p">]):</span>
+</span><span id="__span-1-3"><a href="#__codelineno-1-3" id="__codelineno-1-3" name="__codelineno-1-3"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">handle_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">OrderPlacedEvent</span><span class="p">):</span>
+</span><span id="__span-1-4"><a href="#__codelineno-1-4" id="__codelineno-1-4" name="__codelineno-1-4"></a>        <span class="c1"># This can be processed in background/separate service</span>
+</span><span id="__span-1-5"><a href="#__codelineno-1-5" id="__codelineno-1-5" name="__codelineno-1-5"></a>        <span class="n">analytics_data</span> <span class="o">=</span> <span class="n">AnalyticsEvent</span><span class="p">(</span>
+</span><span id="__span-1-6"><a href="#__codelineno-1-6" id="__codelineno-1-6" name="__codelineno-1-6"></a>            <span class="n">event_type</span><span class="o">=</span><span class="s2">"order_placed"</span><span class="p">,</span>
+</span><span id="__span-1-7"><a href="#__codelineno-1-7" id="__codelineno-1-7" name="__codelineno-1-7"></a>            <span class="n">customer_id</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">customer_id</span><span class="p">,</span>
+</span><span id="__span-1-8"><a href="#__codelineno-1-8" id="__codelineno-1-8" name="__codelineno-1-8"></a>            <span class="n">order_value</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">total_amount</span><span class="p">,</span>
+</span><span id="__span-1-9"><a href="#__codelineno-1-9" id="__codelineno-1-9" name="__codelineno-1-9"></a>            <span class="n">timestamp</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">occurred_at</span>
+</span><span id="__span-1-10"><a href="#__codelineno-1-10" id="__codelineno-1-10" name="__codelineno-1-10"></a>        <span class="p">)</span>
+</span><span id="__span-1-11"><a href="#__codelineno-1-11" id="__codelineno-1-11" name="__codelineno-1-11"></a>        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_analytics_service</span><span class="o">.</span><span class="n">track_async</span><span class="p">(</span><span class="n">analytics_data</span><span class="p">)</span>
+</span></code></pre></div>
 <h3 id="3-resilience">3. <strong>Resilience</strong><a class="headerlink" href="#3-resilience" title="Permanent link">¶</a></h3>
 <p>Failed event handlers don't affect the main workflow:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># If SMS fails, order processing continues</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">ResilientNotificationHandler</span><span class="p">(</span><span class="n">EventHandler</span><span class="p">[</span><span class="n">OrderReadyEvent</span><span class="p">]):</span>
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">handle_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">OrderReadyEvent</span><span class="p">):</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sms_service</span><span class="o">.</span><span class="n">notify_customer_async</span><span class="p">(</span>
-                <span class="n">event</span><span class="o">.</span><span class="n">customer_phone</span><span class="p">,</span>
-                <span class="sa">f</span><span class="s2">"Your order #</span><span class="si">{</span><span class="n">event</span><span class="o">.</span><span class="n">order_id</span><span class="si">}</span><span class="s2"> is ready!"</span>
-            <span class="p">)</span>
-        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">ex</span><span class="p">:</span>
-            <span class="c1"># Log error but don't fail the entire workflow</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">"SMS notification failed: </span><span class="si">{</span><span class="n">ex</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-            <span class="c1"># Could queue for retry or use alternative notification</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a href="#__codelineno-2-1" id="__codelineno-2-1" name="__codelineno-2-1"></a><span class="c1"># If SMS fails, order processing continues</span>
+</span><span id="__span-2-2"><a href="#__codelineno-2-2" id="__codelineno-2-2" name="__codelineno-2-2"></a><span class="k">class</span><span class="w"> </span><span class="nc">ResilientNotificationHandler</span><span class="p">(</span><span class="n">EventHandler</span><span class="p">[</span><span class="n">OrderReadyEvent</span><span class="p">]):</span>
+</span><span id="__span-2-3"><a href="#__codelineno-2-3" id="__codelineno-2-3" name="__codelineno-2-3"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">handle_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">OrderReadyEvent</span><span class="p">):</span>
+</span><span id="__span-2-4"><a href="#__codelineno-2-4" id="__codelineno-2-4" name="__codelineno-2-4"></a>        <span class="k">try</span><span class="p">:</span>
+</span><span id="__span-2-5"><a href="#__codelineno-2-5" id="__codelineno-2-5" name="__codelineno-2-5"></a>            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sms_service</span><span class="o">.</span><span class="n">notify_customer_async</span><span class="p">(</span>
+</span><span id="__span-2-6"><a href="#__codelineno-2-6" id="__codelineno-2-6" name="__codelineno-2-6"></a>                <span class="n">event</span><span class="o">.</span><span class="n">customer_phone</span><span class="p">,</span>
+</span><span id="__span-2-7"><a href="#__codelineno-2-7" id="__codelineno-2-7" name="__codelineno-2-7"></a>                <span class="sa">f</span><span class="s2">"Your order #</span><span class="si">{</span><span class="n">event</span><span class="o">.</span><span class="n">order_id</span><span class="si">}</span><span class="s2"> is ready!"</span>
+</span><span id="__span-2-8"><a href="#__codelineno-2-8" id="__codelineno-2-8" name="__codelineno-2-8"></a>            <span class="p">)</span>
+</span><span id="__span-2-9"><a href="#__codelineno-2-9" id="__codelineno-2-9" name="__codelineno-2-9"></a>        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">ex</span><span class="p">:</span>
+</span><span id="__span-2-10"><a href="#__codelineno-2-10" id="__codelineno-2-10" name="__codelineno-2-10"></a>            <span class="c1"># Log error but don't fail the entire workflow</span>
+</span><span id="__span-2-11"><a href="#__codelineno-2-11" id="__codelineno-2-11" name="__codelineno-2-11"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">"SMS notification failed: </span><span class="si">{</span><span class="n">ex</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span><span id="__span-2-12"><a href="#__codelineno-2-12" id="__codelineno-2-12" name="__codelineno-2-12"></a>            <span class="c1"># Could queue for retry or use alternative notification</span>
+</span></code></pre></div>
 <h2 id="data-flow">🔄 Data Flow<a class="headerlink" href="#data-flow" title="Permanent link">¶</a></h2>
 <p>The pizza preparation workflow demonstrates event-driven data flow:</p>
 <pre class="mermaid"><code>sequenceDiagram
@@ -1141,226 +1141,226 @@
 </ul>
 <h2 id="implementation-in-marios-pizzeria">🍕 Implementation in Mario's Pizzeria<a class="headerlink" href="#implementation-in-marios-pizzeria" title="Permanent link">¶</a></h2>
 <h3 id="domain-events">Domain Events<a class="headerlink" href="#domain-events" title="Permanent link">¶</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Domain events represent important business occurrences</span>
-<span class="nd">@dataclass</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">OrderPlacedEvent</span><span class="p">(</span><span class="n">DomainEvent</span><span class="p">):</span>
-    <span class="n">order_id</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">customer_id</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">customer_phone</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">items</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">OrderItemDto</span><span class="p">]</span>
-    <span class="n">total_amount</span><span class="p">:</span> <span class="n">Decimal</span>
-    <span class="n">delivery_address</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">estimated_delivery_time</span><span class="p">:</span> <span class="n">datetime</span>
-
-<span class="nd">@dataclass</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">OrderReadyEvent</span><span class="p">(</span><span class="n">DomainEvent</span><span class="p">):</span>
-    <span class="n">order_id</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">customer_id</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">customer_phone</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">preparation_time</span><span class="p">:</span> <span class="n">timedelta</span>
-    <span class="n">pickup_instructions</span><span class="p">:</span> <span class="nb">str</span>
-
-<span class="nd">@dataclass</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">InventoryLowEvent</span><span class="p">(</span><span class="n">DomainEvent</span><span class="p">):</span>
-    <span class="n">ingredient_id</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">ingredient_name</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">current_quantity</span><span class="p">:</span> <span class="nb">int</span>
-    <span class="n">minimum_threshold</span><span class="p">:</span> <span class="nb">int</span>
-    <span class="n">supplier_info</span><span class="p">:</span> <span class="n">SupplierDto</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a href="#__codelineno-3-1" id="__codelineno-3-1" name="__codelineno-3-1"></a><span class="c1"># Domain events represent important business occurrences</span>
+</span><span id="__span-3-2"><a href="#__codelineno-3-2" id="__codelineno-3-2" name="__codelineno-3-2"></a><span class="nd">@dataclass</span>
+</span><span id="__span-3-3"><a href="#__codelineno-3-3" id="__codelineno-3-3" name="__codelineno-3-3"></a><span class="k">class</span><span class="w"> </span><span class="nc">OrderPlacedEvent</span><span class="p">(</span><span class="n">DomainEvent</span><span class="p">):</span>
+</span><span id="__span-3-4"><a href="#__codelineno-3-4" id="__codelineno-3-4" name="__codelineno-3-4"></a>    <span class="n">order_id</span><span class="p">:</span> <span class="nb">str</span>
+</span><span id="__span-3-5"><a href="#__codelineno-3-5" id="__codelineno-3-5" name="__codelineno-3-5"></a>    <span class="n">customer_id</span><span class="p">:</span> <span class="nb">str</span>
+</span><span id="__span-3-6"><a href="#__codelineno-3-6" id="__codelineno-3-6" name="__codelineno-3-6"></a>    <span class="n">customer_phone</span><span class="p">:</span> <span class="nb">str</span>
+</span><span id="__span-3-7"><a href="#__codelineno-3-7" id="__codelineno-3-7" name="__codelineno-3-7"></a>    <span class="n">items</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">OrderItemDto</span><span class="p">]</span>
+</span><span id="__span-3-8"><a href="#__codelineno-3-8" id="__codelineno-3-8" name="__codelineno-3-8"></a>    <span class="n">total_amount</span><span class="p">:</span> <span class="n">Decimal</span>
+</span><span id="__span-3-9"><a href="#__codelineno-3-9" id="__codelineno-3-9" name="__codelineno-3-9"></a>    <span class="n">delivery_address</span><span class="p">:</span> <span class="nb">str</span>
+</span><span id="__span-3-10"><a href="#__codelineno-3-10" id="__codelineno-3-10" name="__codelineno-3-10"></a>    <span class="n">estimated_delivery_time</span><span class="p">:</span> <span class="n">datetime</span>
+</span><span id="__span-3-11"><a href="#__codelineno-3-11" id="__codelineno-3-11" name="__codelineno-3-11"></a>
+</span><span id="__span-3-12"><a href="#__codelineno-3-12" id="__codelineno-3-12" name="__codelineno-3-12"></a><span class="nd">@dataclass</span>
+</span><span id="__span-3-13"><a href="#__codelineno-3-13" id="__codelineno-3-13" name="__codelineno-3-13"></a><span class="k">class</span><span class="w"> </span><span class="nc">OrderReadyEvent</span><span class="p">(</span><span class="n">DomainEvent</span><span class="p">):</span>
+</span><span id="__span-3-14"><a href="#__codelineno-3-14" id="__codelineno-3-14" name="__codelineno-3-14"></a>    <span class="n">order_id</span><span class="p">:</span> <span class="nb">str</span>
+</span><span id="__span-3-15"><a href="#__codelineno-3-15" id="__codelineno-3-15" name="__codelineno-3-15"></a>    <span class="n">customer_id</span><span class="p">:</span> <span class="nb">str</span>
+</span><span id="__span-3-16"><a href="#__codelineno-3-16" id="__codelineno-3-16" name="__codelineno-3-16"></a>    <span class="n">customer_phone</span><span class="p">:</span> <span class="nb">str</span>
+</span><span id="__span-3-17"><a href="#__codelineno-3-17" id="__codelineno-3-17" name="__codelineno-3-17"></a>    <span class="n">preparation_time</span><span class="p">:</span> <span class="n">timedelta</span>
+</span><span id="__span-3-18"><a href="#__codelineno-3-18" id="__codelineno-3-18" name="__codelineno-3-18"></a>    <span class="n">pickup_instructions</span><span class="p">:</span> <span class="nb">str</span>
+</span><span id="__span-3-19"><a href="#__codelineno-3-19" id="__codelineno-3-19" name="__codelineno-3-19"></a>
+</span><span id="__span-3-20"><a href="#__codelineno-3-20" id="__codelineno-3-20" name="__codelineno-3-20"></a><span class="nd">@dataclass</span>
+</span><span id="__span-3-21"><a href="#__codelineno-3-21" id="__codelineno-3-21" name="__codelineno-3-21"></a><span class="k">class</span><span class="w"> </span><span class="nc">InventoryLowEvent</span><span class="p">(</span><span class="n">DomainEvent</span><span class="p">):</span>
+</span><span id="__span-3-22"><a href="#__codelineno-3-22" id="__codelineno-3-22" name="__codelineno-3-22"></a>    <span class="n">ingredient_id</span><span class="p">:</span> <span class="nb">str</span>
+</span><span id="__span-3-23"><a href="#__codelineno-3-23" id="__codelineno-3-23" name="__codelineno-3-23"></a>    <span class="n">ingredient_name</span><span class="p">:</span> <span class="nb">str</span>
+</span><span id="__span-3-24"><a href="#__codelineno-3-24" id="__codelineno-3-24" name="__codelineno-3-24"></a>    <span class="n">current_quantity</span><span class="p">:</span> <span class="nb">int</span>
+</span><span id="__span-3-25"><a href="#__codelineno-3-25" id="__codelineno-3-25" name="__codelineno-3-25"></a>    <span class="n">minimum_threshold</span><span class="p">:</span> <span class="nb">int</span>
+</span><span id="__span-3-26"><a href="#__codelineno-3-26" id="__codelineno-3-26" name="__codelineno-3-26"></a>    <span class="n">supplier_info</span><span class="p">:</span> <span class="n">SupplierDto</span>
+</span></code></pre></div>
 <h3 id="event-handlers">Event Handlers<a class="headerlink" href="#event-handlers" title="Permanent link">¶</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Kitchen workflow responds to order events</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">KitchenWorkflowHandler</span><span class="p">(</span><span class="n">EventHandler</span><span class="p">[</span><span class="n">OrderPlacedEvent</span><span class="p">]):</span>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
-                 <span class="n">kitchen_service</span><span class="p">:</span> <span class="n">KitchenService</span><span class="p">,</span>
-                 <span class="n">inventory_service</span><span class="p">:</span> <span class="n">InventoryService</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_kitchen</span> <span class="o">=</span> <span class="n">kitchen_service</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_inventory</span> <span class="o">=</span> <span class="n">inventory_service</span>
-
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">handle_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">OrderPlacedEvent</span><span class="p">):</span>
-        <span class="c1"># Check ingredient availability</span>
-        <span class="n">availability</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_inventory</span><span class="o">.</span><span class="n">check_ingredients_async</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">items</span><span class="p">)</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">availability</span><span class="o">.</span><span class="n">all_available</span><span class="p">:</span>
-            <span class="c1"># Raise event for procurement</span>
-            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_event_bus</span><span class="o">.</span><span class="n">publish_async</span><span class="p">(</span>
-                <span class="n">InventoryLowEvent</span><span class="p">(</span>
-                    <span class="n">ingredient_id</span><span class="o">=</span><span class="n">availability</span><span class="o">.</span><span class="n">missing_ingredients</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
-                    <span class="n">current_quantity</span><span class="o">=</span><span class="n">availability</span><span class="o">.</span><span class="n">current_stock</span><span class="p">,</span>
-                    <span class="n">minimum_threshold</span><span class="o">=</span><span class="n">availability</span><span class="o">.</span><span class="n">required_stock</span>
-                <span class="p">)</span>
-            <span class="p">)</span>
-
-        <span class="c1"># Add to kitchen queue</span>
-        <span class="n">kitchen_order</span> <span class="o">=</span> <span class="n">KitchenOrder</span><span class="p">(</span>
-            <span class="n">order_id</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">order_id</span><span class="p">,</span>
-            <span class="n">items</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">items</span><span class="p">,</span>
-            <span class="n">priority</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_calculate_priority</span><span class="p">(</span><span class="n">event</span><span class="p">),</span>
-            <span class="n">estimated_prep_time</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_calculate_prep_time</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">items</span><span class="p">)</span>
-        <span class="p">)</span>
-
-        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_kitchen</span><span class="o">.</span><span class="n">add_to_queue_async</span><span class="p">(</span><span class="n">kitchen_order</span><span class="p">)</span>
-
-        <span class="c1"># Raise cooking started event</span>
-        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_event_bus</span><span class="o">.</span><span class="n">publish_async</span><span class="p">(</span>
-            <span class="n">OrderCookingStartedEvent</span><span class="p">(</span>
-                <span class="n">order_id</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">order_id</span><span class="p">,</span>
-                <span class="n">estimated_ready_time</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span> <span class="o">+</span> <span class="n">kitchen_order</span><span class="o">.</span><span class="n">estimated_prep_time</span>
-            <span class="p">)</span>
-        <span class="p">)</span>
-
-<span class="c1"># Customer communication handler</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">CustomerCommunicationHandler</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
-                 <span class="n">sms_service</span><span class="p">:</span> <span class="n">SMSService</span><span class="p">,</span>
-                 <span class="n">email_service</span><span class="p">:</span> <span class="n">EmailService</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_sms</span> <span class="o">=</span> <span class="n">sms_service</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_email</span> <span class="o">=</span> <span class="n">email_service</span>
-
-    <span class="nd">@event_handler</span><span class="p">(</span><span class="n">OrderPlacedEvent</span><span class="p">)</span>
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">send_order_confirmation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">OrderPlacedEvent</span><span class="p">):</span>
-        <span class="n">confirmation_message</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"""</span>
-<span class="s2">        🍕 Order Confirmed!</span>
-
-<span class="s2">        Order #</span><span class="si">{</span><span class="n">event</span><span class="o">.</span><span class="n">order_id</span><span class="si">}</span>
-<span class="s2">        Total: $</span><span class="si">{</span><span class="n">event</span><span class="o">.</span><span class="n">total_amount</span><span class="si">}</span>
-<span class="s2">        Estimated delivery: </span><span class="si">{</span><span class="n">event</span><span class="o">.</span><span class="n">estimated_delivery_time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">'%H:%M'</span><span class="p">)</span><span class="si">}</span>
-
-<span class="s2">        We'll notify you when your pizza is ready!</span>
-<span class="s2">        """</span>
-
-        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sms</span><span class="o">.</span><span class="n">send_async</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">customer_phone</span><span class="p">,</span> <span class="n">confirmation_message</span><span class="p">)</span>
-        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_email</span><span class="o">.</span><span class="n">send_order_confirmation_async</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
-
-    <span class="nd">@event_handler</span><span class="p">(</span><span class="n">OrderReadyEvent</span><span class="p">)</span>
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">send_ready_notification</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">OrderReadyEvent</span><span class="p">):</span>
-        <span class="n">ready_message</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"""</span>
-<span class="s2">        🎉 Your pizza is ready!</span>
-
-<span class="s2">        Order #</span><span class="si">{</span><span class="n">event</span><span class="o">.</span><span class="n">order_id</span><span class="si">}</span>
-<span class="s2">        Pickup instructions: </span><span class="si">{</span><span class="n">event</span><span class="o">.</span><span class="n">pickup_instructions</span><span class="si">}</span>
-
-<span class="s2">        Please collect within 10 minutes for best quality.</span>
-<span class="s2">        """</span>
-
-        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sms</span><span class="o">.</span><span class="n">send_async</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">customer_phone</span><span class="p">,</span> <span class="n">ready_message</span><span class="p">)</span>
-
-<span class="c1"># Analytics and reporting handler</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">AnalyticsHandler</span><span class="p">:</span>
-    <span class="nd">@event_handler</span><span class="p">(</span><span class="n">OrderPlacedEvent</span><span class="p">)</span>
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">track_order_metrics</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">OrderPlacedEvent</span><span class="p">):</span>
-        <span class="n">metrics</span> <span class="o">=</span> <span class="n">OrderMetrics</span><span class="p">(</span>
-            <span class="n">order_id</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">order_id</span><span class="p">,</span>
-            <span class="n">customer_id</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">customer_id</span><span class="p">,</span>
-            <span class="n">order_value</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">total_amount</span><span class="p">,</span>
-            <span class="n">item_count</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">items</span><span class="p">),</span>
-            <span class="n">order_time</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">occurred_at</span><span class="p">,</span>
-            <span class="n">customer_type</span><span class="o">=</span><span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_customer_type</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">customer_id</span><span class="p">)</span>
-        <span class="p">)</span>
-
-        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_analytics_db</span><span class="o">.</span><span class="n">save_metrics_async</span><span class="p">(</span><span class="n">metrics</span><span class="p">)</span>
-
-    <span class="nd">@event_handler</span><span class="p">(</span><span class="n">OrderReadyEvent</span><span class="p">)</span>
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">track_preparation_metrics</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">OrderReadyEvent</span><span class="p">):</span>
-        <span class="n">prep_metrics</span> <span class="o">=</span> <span class="n">PreparationMetrics</span><span class="p">(</span>
-            <span class="n">order_id</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">order_id</span><span class="p">,</span>
-            <span class="n">preparation_time</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">preparation_time</span><span class="p">,</span>
-            <span class="n">efficiency_score</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_calculate_efficiency</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">preparation_time</span><span class="p">)</span>
-        <span class="p">)</span>
-
-        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_analytics_db</span><span class="o">.</span><span class="n">save_prep_metrics_async</span><span class="p">(</span><span class="n">prep_metrics</span><span class="p">)</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a href="#__codelineno-4-1" id="__codelineno-4-1" name="__codelineno-4-1"></a><span class="c1"># Kitchen workflow responds to order events</span>
+</span><span id="__span-4-2"><a href="#__codelineno-4-2" id="__codelineno-4-2" name="__codelineno-4-2"></a><span class="k">class</span><span class="w"> </span><span class="nc">KitchenWorkflowHandler</span><span class="p">(</span><span class="n">EventHandler</span><span class="p">[</span><span class="n">OrderPlacedEvent</span><span class="p">]):</span>
+</span><span id="__span-4-3"><a href="#__codelineno-4-3" id="__codelineno-4-3" name="__codelineno-4-3"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+</span><span id="__span-4-4"><a href="#__codelineno-4-4" id="__codelineno-4-4" name="__codelineno-4-4"></a>                 <span class="n">kitchen_service</span><span class="p">:</span> <span class="n">KitchenService</span><span class="p">,</span>
+</span><span id="__span-4-5"><a href="#__codelineno-4-5" id="__codelineno-4-5" name="__codelineno-4-5"></a>                 <span class="n">inventory_service</span><span class="p">:</span> <span class="n">InventoryService</span><span class="p">):</span>
+</span><span id="__span-4-6"><a href="#__codelineno-4-6" id="__codelineno-4-6" name="__codelineno-4-6"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_kitchen</span> <span class="o">=</span> <span class="n">kitchen_service</span>
+</span><span id="__span-4-7"><a href="#__codelineno-4-7" id="__codelineno-4-7" name="__codelineno-4-7"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_inventory</span> <span class="o">=</span> <span class="n">inventory_service</span>
+</span><span id="__span-4-8"><a href="#__codelineno-4-8" id="__codelineno-4-8" name="__codelineno-4-8"></a>
+</span><span id="__span-4-9"><a href="#__codelineno-4-9" id="__codelineno-4-9" name="__codelineno-4-9"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">handle_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">OrderPlacedEvent</span><span class="p">):</span>
+</span><span id="__span-4-10"><a href="#__codelineno-4-10" id="__codelineno-4-10" name="__codelineno-4-10"></a>        <span class="c1"># Check ingredient availability</span>
+</span><span id="__span-4-11"><a href="#__codelineno-4-11" id="__codelineno-4-11" name="__codelineno-4-11"></a>        <span class="n">availability</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_inventory</span><span class="o">.</span><span class="n">check_ingredients_async</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">items</span><span class="p">)</span>
+</span><span id="__span-4-12"><a href="#__codelineno-4-12" id="__codelineno-4-12" name="__codelineno-4-12"></a>        <span class="k">if</span> <span class="ow">not</span> <span class="n">availability</span><span class="o">.</span><span class="n">all_available</span><span class="p">:</span>
+</span><span id="__span-4-13"><a href="#__codelineno-4-13" id="__codelineno-4-13" name="__codelineno-4-13"></a>            <span class="c1"># Raise event for procurement</span>
+</span><span id="__span-4-14"><a href="#__codelineno-4-14" id="__codelineno-4-14" name="__codelineno-4-14"></a>            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_event_bus</span><span class="o">.</span><span class="n">publish_async</span><span class="p">(</span>
+</span><span id="__span-4-15"><a href="#__codelineno-4-15" id="__codelineno-4-15" name="__codelineno-4-15"></a>                <span class="n">InventoryLowEvent</span><span class="p">(</span>
+</span><span id="__span-4-16"><a href="#__codelineno-4-16" id="__codelineno-4-16" name="__codelineno-4-16"></a>                    <span class="n">ingredient_id</span><span class="o">=</span><span class="n">availability</span><span class="o">.</span><span class="n">missing_ingredients</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+</span><span id="__span-4-17"><a href="#__codelineno-4-17" id="__codelineno-4-17" name="__codelineno-4-17"></a>                    <span class="n">current_quantity</span><span class="o">=</span><span class="n">availability</span><span class="o">.</span><span class="n">current_stock</span><span class="p">,</span>
+</span><span id="__span-4-18"><a href="#__codelineno-4-18" id="__codelineno-4-18" name="__codelineno-4-18"></a>                    <span class="n">minimum_threshold</span><span class="o">=</span><span class="n">availability</span><span class="o">.</span><span class="n">required_stock</span>
+</span><span id="__span-4-19"><a href="#__codelineno-4-19" id="__codelineno-4-19" name="__codelineno-4-19"></a>                <span class="p">)</span>
+</span><span id="__span-4-20"><a href="#__codelineno-4-20" id="__codelineno-4-20" name="__codelineno-4-20"></a>            <span class="p">)</span>
+</span><span id="__span-4-21"><a href="#__codelineno-4-21" id="__codelineno-4-21" name="__codelineno-4-21"></a>
+</span><span id="__span-4-22"><a href="#__codelineno-4-22" id="__codelineno-4-22" name="__codelineno-4-22"></a>        <span class="c1"># Add to kitchen queue</span>
+</span><span id="__span-4-23"><a href="#__codelineno-4-23" id="__codelineno-4-23" name="__codelineno-4-23"></a>        <span class="n">kitchen_order</span> <span class="o">=</span> <span class="n">KitchenOrder</span><span class="p">(</span>
+</span><span id="__span-4-24"><a href="#__codelineno-4-24" id="__codelineno-4-24" name="__codelineno-4-24"></a>            <span class="n">order_id</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">order_id</span><span class="p">,</span>
+</span><span id="__span-4-25"><a href="#__codelineno-4-25" id="__codelineno-4-25" name="__codelineno-4-25"></a>            <span class="n">items</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">items</span><span class="p">,</span>
+</span><span id="__span-4-26"><a href="#__codelineno-4-26" id="__codelineno-4-26" name="__codelineno-4-26"></a>            <span class="n">priority</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_calculate_priority</span><span class="p">(</span><span class="n">event</span><span class="p">),</span>
+</span><span id="__span-4-27"><a href="#__codelineno-4-27" id="__codelineno-4-27" name="__codelineno-4-27"></a>            <span class="n">estimated_prep_time</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_calculate_prep_time</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">items</span><span class="p">)</span>
+</span><span id="__span-4-28"><a href="#__codelineno-4-28" id="__codelineno-4-28" name="__codelineno-4-28"></a>        <span class="p">)</span>
+</span><span id="__span-4-29"><a href="#__codelineno-4-29" id="__codelineno-4-29" name="__codelineno-4-29"></a>
+</span><span id="__span-4-30"><a href="#__codelineno-4-30" id="__codelineno-4-30" name="__codelineno-4-30"></a>        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_kitchen</span><span class="o">.</span><span class="n">add_to_queue_async</span><span class="p">(</span><span class="n">kitchen_order</span><span class="p">)</span>
+</span><span id="__span-4-31"><a href="#__codelineno-4-31" id="__codelineno-4-31" name="__codelineno-4-31"></a>
+</span><span id="__span-4-32"><a href="#__codelineno-4-32" id="__codelineno-4-32" name="__codelineno-4-32"></a>        <span class="c1"># Raise cooking started event</span>
+</span><span id="__span-4-33"><a href="#__codelineno-4-33" id="__codelineno-4-33" name="__codelineno-4-33"></a>        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_event_bus</span><span class="o">.</span><span class="n">publish_async</span><span class="p">(</span>
+</span><span id="__span-4-34"><a href="#__codelineno-4-34" id="__codelineno-4-34" name="__codelineno-4-34"></a>            <span class="n">OrderCookingStartedEvent</span><span class="p">(</span>
+</span><span id="__span-4-35"><a href="#__codelineno-4-35" id="__codelineno-4-35" name="__codelineno-4-35"></a>                <span class="n">order_id</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">order_id</span><span class="p">,</span>
+</span><span id="__span-4-36"><a href="#__codelineno-4-36" id="__codelineno-4-36" name="__codelineno-4-36"></a>                <span class="n">estimated_ready_time</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span> <span class="o">+</span> <span class="n">kitchen_order</span><span class="o">.</span><span class="n">estimated_prep_time</span>
+</span><span id="__span-4-37"><a href="#__codelineno-4-37" id="__codelineno-4-37" name="__codelineno-4-37"></a>            <span class="p">)</span>
+</span><span id="__span-4-38"><a href="#__codelineno-4-38" id="__codelineno-4-38" name="__codelineno-4-38"></a>        <span class="p">)</span>
+</span><span id="__span-4-39"><a href="#__codelineno-4-39" id="__codelineno-4-39" name="__codelineno-4-39"></a>
+</span><span id="__span-4-40"><a href="#__codelineno-4-40" id="__codelineno-4-40" name="__codelineno-4-40"></a><span class="c1"># Customer communication handler</span>
+</span><span id="__span-4-41"><a href="#__codelineno-4-41" id="__codelineno-4-41" name="__codelineno-4-41"></a><span class="k">class</span><span class="w"> </span><span class="nc">CustomerCommunicationHandler</span><span class="p">:</span>
+</span><span id="__span-4-42"><a href="#__codelineno-4-42" id="__codelineno-4-42" name="__codelineno-4-42"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+</span><span id="__span-4-43"><a href="#__codelineno-4-43" id="__codelineno-4-43" name="__codelineno-4-43"></a>                 <span class="n">sms_service</span><span class="p">:</span> <span class="n">SMSService</span><span class="p">,</span>
+</span><span id="__span-4-44"><a href="#__codelineno-4-44" id="__codelineno-4-44" name="__codelineno-4-44"></a>                 <span class="n">email_service</span><span class="p">:</span> <span class="n">EmailService</span><span class="p">):</span>
+</span><span id="__span-4-45"><a href="#__codelineno-4-45" id="__codelineno-4-45" name="__codelineno-4-45"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_sms</span> <span class="o">=</span> <span class="n">sms_service</span>
+</span><span id="__span-4-46"><a href="#__codelineno-4-46" id="__codelineno-4-46" name="__codelineno-4-46"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_email</span> <span class="o">=</span> <span class="n">email_service</span>
+</span><span id="__span-4-47"><a href="#__codelineno-4-47" id="__codelineno-4-47" name="__codelineno-4-47"></a>
+</span><span id="__span-4-48"><a href="#__codelineno-4-48" id="__codelineno-4-48" name="__codelineno-4-48"></a>    <span class="nd">@event_handler</span><span class="p">(</span><span class="n">OrderPlacedEvent</span><span class="p">)</span>
+</span><span id="__span-4-49"><a href="#__codelineno-4-49" id="__codelineno-4-49" name="__codelineno-4-49"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">send_order_confirmation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">OrderPlacedEvent</span><span class="p">):</span>
+</span><span id="__span-4-50"><a href="#__codelineno-4-50" id="__codelineno-4-50" name="__codelineno-4-50"></a>        <span class="n">confirmation_message</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"""</span>
+</span><span id="__span-4-51"><a href="#__codelineno-4-51" id="__codelineno-4-51" name="__codelineno-4-51"></a><span class="s2">        🍕 Order Confirmed!</span>
+</span><span id="__span-4-52"><a href="#__codelineno-4-52" id="__codelineno-4-52" name="__codelineno-4-52"></a>
+</span><span id="__span-4-53"><a href="#__codelineno-4-53" id="__codelineno-4-53" name="__codelineno-4-53"></a><span class="s2">        Order #</span><span class="si">{</span><span class="n">event</span><span class="o">.</span><span class="n">order_id</span><span class="si">}</span>
+</span><span id="__span-4-54"><a href="#__codelineno-4-54" id="__codelineno-4-54" name="__codelineno-4-54"></a><span class="s2">        Total: $</span><span class="si">{</span><span class="n">event</span><span class="o">.</span><span class="n">total_amount</span><span class="si">}</span>
+</span><span id="__span-4-55"><a href="#__codelineno-4-55" id="__codelineno-4-55" name="__codelineno-4-55"></a><span class="s2">        Estimated delivery: </span><span class="si">{</span><span class="n">event</span><span class="o">.</span><span class="n">estimated_delivery_time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">'%H:%M'</span><span class="p">)</span><span class="si">}</span>
+</span><span id="__span-4-56"><a href="#__codelineno-4-56" id="__codelineno-4-56" name="__codelineno-4-56"></a>
+</span><span id="__span-4-57"><a href="#__codelineno-4-57" id="__codelineno-4-57" name="__codelineno-4-57"></a><span class="s2">        We'll notify you when your pizza is ready!</span>
+</span><span id="__span-4-58"><a href="#__codelineno-4-58" id="__codelineno-4-58" name="__codelineno-4-58"></a><span class="s2">        """</span>
+</span><span id="__span-4-59"><a href="#__codelineno-4-59" id="__codelineno-4-59" name="__codelineno-4-59"></a>
+</span><span id="__span-4-60"><a href="#__codelineno-4-60" id="__codelineno-4-60" name="__codelineno-4-60"></a>        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sms</span><span class="o">.</span><span class="n">send_async</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">customer_phone</span><span class="p">,</span> <span class="n">confirmation_message</span><span class="p">)</span>
+</span><span id="__span-4-61"><a href="#__codelineno-4-61" id="__codelineno-4-61" name="__codelineno-4-61"></a>        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_email</span><span class="o">.</span><span class="n">send_order_confirmation_async</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+</span><span id="__span-4-62"><a href="#__codelineno-4-62" id="__codelineno-4-62" name="__codelineno-4-62"></a>
+</span><span id="__span-4-63"><a href="#__codelineno-4-63" id="__codelineno-4-63" name="__codelineno-4-63"></a>    <span class="nd">@event_handler</span><span class="p">(</span><span class="n">OrderReadyEvent</span><span class="p">)</span>
+</span><span id="__span-4-64"><a href="#__codelineno-4-64" id="__codelineno-4-64" name="__codelineno-4-64"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">send_ready_notification</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">OrderReadyEvent</span><span class="p">):</span>
+</span><span id="__span-4-65"><a href="#__codelineno-4-65" id="__codelineno-4-65" name="__codelineno-4-65"></a>        <span class="n">ready_message</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"""</span>
+</span><span id="__span-4-66"><a href="#__codelineno-4-66" id="__codelineno-4-66" name="__codelineno-4-66"></a><span class="s2">        🎉 Your pizza is ready!</span>
+</span><span id="__span-4-67"><a href="#__codelineno-4-67" id="__codelineno-4-67" name="__codelineno-4-67"></a>
+</span><span id="__span-4-68"><a href="#__codelineno-4-68" id="__codelineno-4-68" name="__codelineno-4-68"></a><span class="s2">        Order #</span><span class="si">{</span><span class="n">event</span><span class="o">.</span><span class="n">order_id</span><span class="si">}</span>
+</span><span id="__span-4-69"><a href="#__codelineno-4-69" id="__codelineno-4-69" name="__codelineno-4-69"></a><span class="s2">        Pickup instructions: </span><span class="si">{</span><span class="n">event</span><span class="o">.</span><span class="n">pickup_instructions</span><span class="si">}</span>
+</span><span id="__span-4-70"><a href="#__codelineno-4-70" id="__codelineno-4-70" name="__codelineno-4-70"></a>
+</span><span id="__span-4-71"><a href="#__codelineno-4-71" id="__codelineno-4-71" name="__codelineno-4-71"></a><span class="s2">        Please collect within 10 minutes for best quality.</span>
+</span><span id="__span-4-72"><a href="#__codelineno-4-72" id="__codelineno-4-72" name="__codelineno-4-72"></a><span class="s2">        """</span>
+</span><span id="__span-4-73"><a href="#__codelineno-4-73" id="__codelineno-4-73" name="__codelineno-4-73"></a>
+</span><span id="__span-4-74"><a href="#__codelineno-4-74" id="__codelineno-4-74" name="__codelineno-4-74"></a>        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sms</span><span class="o">.</span><span class="n">send_async</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">customer_phone</span><span class="p">,</span> <span class="n">ready_message</span><span class="p">)</span>
+</span><span id="__span-4-75"><a href="#__codelineno-4-75" id="__codelineno-4-75" name="__codelineno-4-75"></a>
+</span><span id="__span-4-76"><a href="#__codelineno-4-76" id="__codelineno-4-76" name="__codelineno-4-76"></a><span class="c1"># Analytics and reporting handler</span>
+</span><span id="__span-4-77"><a href="#__codelineno-4-77" id="__codelineno-4-77" name="__codelineno-4-77"></a><span class="k">class</span><span class="w"> </span><span class="nc">AnalyticsHandler</span><span class="p">:</span>
+</span><span id="__span-4-78"><a href="#__codelineno-4-78" id="__codelineno-4-78" name="__codelineno-4-78"></a>    <span class="nd">@event_handler</span><span class="p">(</span><span class="n">OrderPlacedEvent</span><span class="p">)</span>
+</span><span id="__span-4-79"><a href="#__codelineno-4-79" id="__codelineno-4-79" name="__codelineno-4-79"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">track_order_metrics</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">OrderPlacedEvent</span><span class="p">):</span>
+</span><span id="__span-4-80"><a href="#__codelineno-4-80" id="__codelineno-4-80" name="__codelineno-4-80"></a>        <span class="n">metrics</span> <span class="o">=</span> <span class="n">OrderMetrics</span><span class="p">(</span>
+</span><span id="__span-4-81"><a href="#__codelineno-4-81" id="__codelineno-4-81" name="__codelineno-4-81"></a>            <span class="n">order_id</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">order_id</span><span class="p">,</span>
+</span><span id="__span-4-82"><a href="#__codelineno-4-82" id="__codelineno-4-82" name="__codelineno-4-82"></a>            <span class="n">customer_id</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">customer_id</span><span class="p">,</span>
+</span><span id="__span-4-83"><a href="#__codelineno-4-83" id="__codelineno-4-83" name="__codelineno-4-83"></a>            <span class="n">order_value</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">total_amount</span><span class="p">,</span>
+</span><span id="__span-4-84"><a href="#__codelineno-4-84" id="__codelineno-4-84" name="__codelineno-4-84"></a>            <span class="n">item_count</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">items</span><span class="p">),</span>
+</span><span id="__span-4-85"><a href="#__codelineno-4-85" id="__codelineno-4-85" name="__codelineno-4-85"></a>            <span class="n">order_time</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">occurred_at</span><span class="p">,</span>
+</span><span id="__span-4-86"><a href="#__codelineno-4-86" id="__codelineno-4-86" name="__codelineno-4-86"></a>            <span class="n">customer_type</span><span class="o">=</span><span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_customer_type</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">customer_id</span><span class="p">)</span>
+</span><span id="__span-4-87"><a href="#__codelineno-4-87" id="__codelineno-4-87" name="__codelineno-4-87"></a>        <span class="p">)</span>
+</span><span id="__span-4-88"><a href="#__codelineno-4-88" id="__codelineno-4-88" name="__codelineno-4-88"></a>
+</span><span id="__span-4-89"><a href="#__codelineno-4-89" id="__codelineno-4-89" name="__codelineno-4-89"></a>        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_analytics_db</span><span class="o">.</span><span class="n">save_metrics_async</span><span class="p">(</span><span class="n">metrics</span><span class="p">)</span>
+</span><span id="__span-4-90"><a href="#__codelineno-4-90" id="__codelineno-4-90" name="__codelineno-4-90"></a>
+</span><span id="__span-4-91"><a href="#__codelineno-4-91" id="__codelineno-4-91" name="__codelineno-4-91"></a>    <span class="nd">@event_handler</span><span class="p">(</span><span class="n">OrderReadyEvent</span><span class="p">)</span>
+</span><span id="__span-4-92"><a href="#__codelineno-4-92" id="__codelineno-4-92" name="__codelineno-4-92"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">track_preparation_metrics</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">OrderReadyEvent</span><span class="p">):</span>
+</span><span id="__span-4-93"><a href="#__codelineno-4-93" id="__codelineno-4-93" name="__codelineno-4-93"></a>        <span class="n">prep_metrics</span> <span class="o">=</span> <span class="n">PreparationMetrics</span><span class="p">(</span>
+</span><span id="__span-4-94"><a href="#__codelineno-4-94" id="__codelineno-4-94" name="__codelineno-4-94"></a>            <span class="n">order_id</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">order_id</span><span class="p">,</span>
+</span><span id="__span-4-95"><a href="#__codelineno-4-95" id="__codelineno-4-95" name="__codelineno-4-95"></a>            <span class="n">preparation_time</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">preparation_time</span><span class="p">,</span>
+</span><span id="__span-4-96"><a href="#__codelineno-4-96" id="__codelineno-4-96" name="__codelineno-4-96"></a>            <span class="n">efficiency_score</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_calculate_efficiency</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">preparation_time</span><span class="p">)</span>
+</span><span id="__span-4-97"><a href="#__codelineno-4-97" id="__codelineno-4-97" name="__codelineno-4-97"></a>        <span class="p">)</span>
+</span><span id="__span-4-98"><a href="#__codelineno-4-98" id="__codelineno-4-98" name="__codelineno-4-98"></a>
+</span><span id="__span-4-99"><a href="#__codelineno-4-99" id="__codelineno-4-99" name="__codelineno-4-99"></a>        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_analytics_db</span><span class="o">.</span><span class="n">save_prep_metrics_async</span><span class="p">(</span><span class="n">prep_metrics</span><span class="p">)</span>
+</span></code></pre></div>
 <h3 id="event-bus-configuration">Event Bus Configuration<a class="headerlink" href="#event-bus-configuration" title="Permanent link">¶</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Configure event routing and handlers</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">EventBusConfiguration</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">configure_events</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">services</span><span class="p">:</span> <span class="n">ServiceCollection</span><span class="p">):</span>
-        <span class="c1"># Register event handlers</span>
-        <span class="n">services</span><span class="o">.</span><span class="n">add_scoped</span><span class="p">(</span><span class="n">KitchenWorkflowHandler</span><span class="p">)</span>
-        <span class="n">services</span><span class="o">.</span><span class="n">add_scoped</span><span class="p">(</span><span class="n">CustomerCommunicationHandler</span><span class="p">)</span>
-        <span class="n">services</span><span class="o">.</span><span class="n">add_scoped</span><span class="p">(</span><span class="n">AnalyticsHandler</span><span class="p">)</span>
-        <span class="n">services</span><span class="o">.</span><span class="n">add_scoped</span><span class="p">(</span><span class="n">InventoryManagementHandler</span><span class="p">)</span>
-
-        <span class="c1"># Configure event routing</span>
-        <span class="n">services</span><span class="o">.</span><span class="n">add_event_handler</span><span class="p">(</span><span class="n">OrderPlacedEvent</span><span class="p">,</span> <span class="n">KitchenWorkflowHandler</span><span class="p">)</span>
-        <span class="n">services</span><span class="o">.</span><span class="n">add_event_handler</span><span class="p">(</span><span class="n">OrderPlacedEvent</span><span class="p">,</span> <span class="n">CustomerCommunicationHandler</span><span class="p">)</span>
-        <span class="n">services</span><span class="o">.</span><span class="n">add_event_handler</span><span class="p">(</span><span class="n">OrderPlacedEvent</span><span class="p">,</span> <span class="n">AnalyticsHandler</span><span class="p">)</span>
-
-        <span class="n">services</span><span class="o">.</span><span class="n">add_event_handler</span><span class="p">(</span><span class="n">OrderReadyEvent</span><span class="p">,</span> <span class="n">CustomerCommunicationHandler</span><span class="p">)</span>
-        <span class="n">services</span><span class="o">.</span><span class="n">add_event_handler</span><span class="p">(</span><span class="n">OrderReadyEvent</span><span class="p">,</span> <span class="n">AnalyticsHandler</span><span class="p">)</span>
-
-        <span class="n">services</span><span class="o">.</span><span class="n">add_event_handler</span><span class="p">(</span><span class="n">InventoryLowEvent</span><span class="p">,</span> <span class="n">InventoryManagementHandler</span><span class="p">)</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a href="#__codelineno-5-1" id="__codelineno-5-1" name="__codelineno-5-1"></a><span class="c1"># Configure event routing and handlers</span>
+</span><span id="__span-5-2"><a href="#__codelineno-5-2" id="__codelineno-5-2" name="__codelineno-5-2"></a><span class="k">class</span><span class="w"> </span><span class="nc">EventBusConfiguration</span><span class="p">:</span>
+</span><span id="__span-5-3"><a href="#__codelineno-5-3" id="__codelineno-5-3" name="__codelineno-5-3"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">configure_events</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">services</span><span class="p">:</span> <span class="n">ServiceCollection</span><span class="p">):</span>
+</span><span id="__span-5-4"><a href="#__codelineno-5-4" id="__codelineno-5-4" name="__codelineno-5-4"></a>        <span class="c1"># Register event handlers</span>
+</span><span id="__span-5-5"><a href="#__codelineno-5-5" id="__codelineno-5-5" name="__codelineno-5-5"></a>        <span class="n">services</span><span class="o">.</span><span class="n">add_scoped</span><span class="p">(</span><span class="n">KitchenWorkflowHandler</span><span class="p">)</span>
+</span><span id="__span-5-6"><a href="#__codelineno-5-6" id="__codelineno-5-6" name="__codelineno-5-6"></a>        <span class="n">services</span><span class="o">.</span><span class="n">add_scoped</span><span class="p">(</span><span class="n">CustomerCommunicationHandler</span><span class="p">)</span>
+</span><span id="__span-5-7"><a href="#__codelineno-5-7" id="__codelineno-5-7" name="__codelineno-5-7"></a>        <span class="n">services</span><span class="o">.</span><span class="n">add_scoped</span><span class="p">(</span><span class="n">AnalyticsHandler</span><span class="p">)</span>
+</span><span id="__span-5-8"><a href="#__codelineno-5-8" id="__codelineno-5-8" name="__codelineno-5-8"></a>        <span class="n">services</span><span class="o">.</span><span class="n">add_scoped</span><span class="p">(</span><span class="n">InventoryManagementHandler</span><span class="p">)</span>
+</span><span id="__span-5-9"><a href="#__codelineno-5-9" id="__codelineno-5-9" name="__codelineno-5-9"></a>
+</span><span id="__span-5-10"><a href="#__codelineno-5-10" id="__codelineno-5-10" name="__codelineno-5-10"></a>        <span class="c1"># Configure event routing</span>
+</span><span id="__span-5-11"><a href="#__codelineno-5-11" id="__codelineno-5-11" name="__codelineno-5-11"></a>        <span class="n">services</span><span class="o">.</span><span class="n">add_event_handler</span><span class="p">(</span><span class="n">OrderPlacedEvent</span><span class="p">,</span> <span class="n">KitchenWorkflowHandler</span><span class="p">)</span>
+</span><span id="__span-5-12"><a href="#__codelineno-5-12" id="__codelineno-5-12" name="__codelineno-5-12"></a>        <span class="n">services</span><span class="o">.</span><span class="n">add_event_handler</span><span class="p">(</span><span class="n">OrderPlacedEvent</span><span class="p">,</span> <span class="n">CustomerCommunicationHandler</span><span class="p">)</span>
+</span><span id="__span-5-13"><a href="#__codelineno-5-13" id="__codelineno-5-13" name="__codelineno-5-13"></a>        <span class="n">services</span><span class="o">.</span><span class="n">add_event_handler</span><span class="p">(</span><span class="n">OrderPlacedEvent</span><span class="p">,</span> <span class="n">AnalyticsHandler</span><span class="p">)</span>
+</span><span id="__span-5-14"><a href="#__codelineno-5-14" id="__codelineno-5-14" name="__codelineno-5-14"></a>
+</span><span id="__span-5-15"><a href="#__codelineno-5-15" id="__codelineno-5-15" name="__codelineno-5-15"></a>        <span class="n">services</span><span class="o">.</span><span class="n">add_event_handler</span><span class="p">(</span><span class="n">OrderReadyEvent</span><span class="p">,</span> <span class="n">CustomerCommunicationHandler</span><span class="p">)</span>
+</span><span id="__span-5-16"><a href="#__codelineno-5-16" id="__codelineno-5-16" name="__codelineno-5-16"></a>        <span class="n">services</span><span class="o">.</span><span class="n">add_event_handler</span><span class="p">(</span><span class="n">OrderReadyEvent</span><span class="p">,</span> <span class="n">AnalyticsHandler</span><span class="p">)</span>
+</span><span id="__span-5-17"><a href="#__codelineno-5-17" id="__codelineno-5-17" name="__codelineno-5-17"></a>
+</span><span id="__span-5-18"><a href="#__codelineno-5-18" id="__codelineno-5-18" name="__codelineno-5-18"></a>        <span class="n">services</span><span class="o">.</span><span class="n">add_event_handler</span><span class="p">(</span><span class="n">InventoryLowEvent</span><span class="p">,</span> <span class="n">InventoryManagementHandler</span><span class="p">)</span>
+</span></code></pre></div>
 <h3 id="cloudevents-integration">CloudEvents Integration<a class="headerlink" href="#cloudevents-integration" title="Permanent link">¶</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># CloudEvents for external system integration</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">CloudEventPublisher</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event_bus</span><span class="p">:</span> <span class="n">EventBus</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_event_bus</span> <span class="o">=</span> <span class="n">event_bus</span>
-
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">publish_order_event</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">order_event</span><span class="p">:</span> <span class="n">OrderPlacedEvent</span><span class="p">):</span>
-        <span class="c1"># Convert domain event to CloudEvent for external systems</span>
-        <span class="n">cloud_event</span> <span class="o">=</span> <span class="n">CloudEvent</span><span class="p">(</span>
-            <span class="n">source</span><span class="o">=</span><span class="s2">"mario-pizzeria/orders"</span><span class="p">,</span>
-            <span class="nb">type</span><span class="o">=</span><span class="s2">"com.mariopizzeria.order.placed"</span><span class="p">,</span>
-            <span class="n">subject</span><span class="o">=</span><span class="sa">f</span><span class="s2">"order/</span><span class="si">{</span><span class="n">order_event</span><span class="o">.</span><span class="n">order_id</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
-            <span class="n">data</span><span class="o">=</span><span class="p">{</span>
-                <span class="s2">"orderId"</span><span class="p">:</span> <span class="n">order_event</span><span class="o">.</span><span class="n">order_id</span><span class="p">,</span>
-                <span class="s2">"customerId"</span><span class="p">:</span> <span class="n">order_event</span><span class="o">.</span><span class="n">customer_id</span><span class="p">,</span>
-                <span class="s2">"totalAmount"</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">order_event</span><span class="o">.</span><span class="n">total_amount</span><span class="p">),</span>
-                <span class="s2">"items"</span><span class="p">:</span> <span class="p">[</span><span class="n">item</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">order_event</span><span class="o">.</span><span class="n">items</span><span class="p">],</span>
-                <span class="s2">"estimatedDelivery"</span><span class="p">:</span> <span class="n">order_event</span><span class="o">.</span><span class="n">estimated_delivery_time</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span>
-            <span class="p">},</span>
-            <span class="n">datacontenttype</span><span class="o">=</span><span class="s2">"application/json"</span>
-        <span class="p">)</span>
-
-        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_event_bus</span><span class="o">.</span><span class="n">publish_cloud_event_async</span><span class="p">(</span><span class="n">cloud_event</span><span class="p">)</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a href="#__codelineno-6-1" id="__codelineno-6-1" name="__codelineno-6-1"></a><span class="c1"># CloudEvents for external system integration</span>
+</span><span id="__span-6-2"><a href="#__codelineno-6-2" id="__codelineno-6-2" name="__codelineno-6-2"></a><span class="k">class</span><span class="w"> </span><span class="nc">CloudEventPublisher</span><span class="p">:</span>
+</span><span id="__span-6-3"><a href="#__codelineno-6-3" id="__codelineno-6-3" name="__codelineno-6-3"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event_bus</span><span class="p">:</span> <span class="n">EventBus</span><span class="p">):</span>
+</span><span id="__span-6-4"><a href="#__codelineno-6-4" id="__codelineno-6-4" name="__codelineno-6-4"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_event_bus</span> <span class="o">=</span> <span class="n">event_bus</span>
+</span><span id="__span-6-5"><a href="#__codelineno-6-5" id="__codelineno-6-5" name="__codelineno-6-5"></a>
+</span><span id="__span-6-6"><a href="#__codelineno-6-6" id="__codelineno-6-6" name="__codelineno-6-6"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">publish_order_event</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">order_event</span><span class="p">:</span> <span class="n">OrderPlacedEvent</span><span class="p">):</span>
+</span><span id="__span-6-7"><a href="#__codelineno-6-7" id="__codelineno-6-7" name="__codelineno-6-7"></a>        <span class="c1"># Convert domain event to CloudEvent for external systems</span>
+</span><span id="__span-6-8"><a href="#__codelineno-6-8" id="__codelineno-6-8" name="__codelineno-6-8"></a>        <span class="n">cloud_event</span> <span class="o">=</span> <span class="n">CloudEvent</span><span class="p">(</span>
+</span><span id="__span-6-9"><a href="#__codelineno-6-9" id="__codelineno-6-9" name="__codelineno-6-9"></a>            <span class="n">source</span><span class="o">=</span><span class="s2">"mario-pizzeria/orders"</span><span class="p">,</span>
+</span><span id="__span-6-10"><a href="#__codelineno-6-10" id="__codelineno-6-10" name="__codelineno-6-10"></a>            <span class="nb">type</span><span class="o">=</span><span class="s2">"com.mariopizzeria.order.placed"</span><span class="p">,</span>
+</span><span id="__span-6-11"><a href="#__codelineno-6-11" id="__codelineno-6-11" name="__codelineno-6-11"></a>            <span class="n">subject</span><span class="o">=</span><span class="sa">f</span><span class="s2">"order/</span><span class="si">{</span><span class="n">order_event</span><span class="o">.</span><span class="n">order_id</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
+</span><span id="__span-6-12"><a href="#__codelineno-6-12" id="__codelineno-6-12" name="__codelineno-6-12"></a>            <span class="n">data</span><span class="o">=</span><span class="p">{</span>
+</span><span id="__span-6-13"><a href="#__codelineno-6-13" id="__codelineno-6-13" name="__codelineno-6-13"></a>                <span class="s2">"orderId"</span><span class="p">:</span> <span class="n">order_event</span><span class="o">.</span><span class="n">order_id</span><span class="p">,</span>
+</span><span id="__span-6-14"><a href="#__codelineno-6-14" id="__codelineno-6-14" name="__codelineno-6-14"></a>                <span class="s2">"customerId"</span><span class="p">:</span> <span class="n">order_event</span><span class="o">.</span><span class="n">customer_id</span><span class="p">,</span>
+</span><span id="__span-6-15"><a href="#__codelineno-6-15" id="__codelineno-6-15" name="__codelineno-6-15"></a>                <span class="s2">"totalAmount"</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">order_event</span><span class="o">.</span><span class="n">total_amount</span><span class="p">),</span>
+</span><span id="__span-6-16"><a href="#__codelineno-6-16" id="__codelineno-6-16" name="__codelineno-6-16"></a>                <span class="s2">"items"</span><span class="p">:</span> <span class="p">[</span><span class="n">item</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">order_event</span><span class="o">.</span><span class="n">items</span><span class="p">],</span>
+</span><span id="__span-6-17"><a href="#__codelineno-6-17" id="__codelineno-6-17" name="__codelineno-6-17"></a>                <span class="s2">"estimatedDelivery"</span><span class="p">:</span> <span class="n">order_event</span><span class="o">.</span><span class="n">estimated_delivery_time</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span>
+</span><span id="__span-6-18"><a href="#__codelineno-6-18" id="__codelineno-6-18" name="__codelineno-6-18"></a>            <span class="p">},</span>
+</span><span id="__span-6-19"><a href="#__codelineno-6-19" id="__codelineno-6-19" name="__codelineno-6-19"></a>            <span class="n">datacontenttype</span><span class="o">=</span><span class="s2">"application/json"</span>
+</span><span id="__span-6-20"><a href="#__codelineno-6-20" id="__codelineno-6-20" name="__codelineno-6-20"></a>        <span class="p">)</span>
+</span><span id="__span-6-21"><a href="#__codelineno-6-21" id="__codelineno-6-21" name="__codelineno-6-21"></a>
+</span><span id="__span-6-22"><a href="#__codelineno-6-22" id="__codelineno-6-22" name="__codelineno-6-22"></a>        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_event_bus</span><span class="o">.</span><span class="n">publish_cloud_event_async</span><span class="p">(</span><span class="n">cloud_event</span><span class="p">)</span>
+</span></code></pre></div>
 <h2 id="testing-event-driven-systems">🧪 Testing Event-Driven Systems<a class="headerlink" href="#testing-event-driven-systems" title="Permanent link">¶</a></h2>
-<div class="highlight"><pre><span></span><code><span class="c1"># Test event handling independently</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">TestKitchenWorkflowHandler</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">setup_method</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">mock_kitchen</span> <span class="o">=</span> <span class="n">Mock</span><span class="p">(</span><span class="n">spec</span><span class="o">=</span><span class="n">KitchenService</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">mock_inventory</span> <span class="o">=</span> <span class="n">Mock</span><span class="p">(</span><span class="n">spec</span><span class="o">=</span><span class="n">InventoryService</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">handler</span> <span class="o">=</span> <span class="n">KitchenWorkflowHandler</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mock_kitchen</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">mock_inventory</span><span class="p">)</span>
-
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">test_order_placed_adds_to_kitchen_queue</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="c1"># Arrange</span>
-        <span class="n">event</span> <span class="o">=</span> <span class="n">OrderPlacedEvent</span><span class="p">(</span>
-            <span class="n">order_id</span><span class="o">=</span><span class="s2">"123"</span><span class="p">,</span>
-            <span class="n">customer_id</span><span class="o">=</span><span class="s2">"456"</span><span class="p">,</span>
-            <span class="n">items</span><span class="o">=</span><span class="p">[</span><span class="n">OrderItemDto</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"Margherita"</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="s2">"Large"</span><span class="p">)]</span>
-        <span class="p">)</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">mock_inventory</span><span class="o">.</span><span class="n">check_ingredients_async</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="n">IngredientAvailability</span><span class="p">(</span>
-            <span class="n">all_available</span><span class="o">=</span><span class="kc">True</span>
-        <span class="p">)</span>
-
-        <span class="c1"># Act</span>
-        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">handler</span><span class="o">.</span><span class="n">handle_async</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
-
-        <span class="c1"># Assert</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">mock_kitchen</span><span class="o">.</span><span class="n">add_to_queue_async</span><span class="o">.</span><span class="n">assert_called_once</span><span class="p">()</span>
-        <span class="n">kitchen_order</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mock_kitchen</span><span class="o">.</span><span class="n">add_to_queue_async</span><span class="o">.</span><span class="n">call_args</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
-        <span class="k">assert</span> <span class="n">kitchen_order</span><span class="o">.</span><span class="n">order_id</span> <span class="o">==</span> <span class="s2">"123"</span>
-
-<span class="c1"># Integration testing with event bus</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">TestEventIntegration</span><span class="p">:</span>
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">test_order_placement_triggers_all_handlers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="c1"># Arrange</span>
-        <span class="n">event_bus</span> <span class="o">=</span> <span class="n">InMemoryEventBus</span><span class="p">()</span>
-        <span class="n">kitchen_handler</span> <span class="o">=</span> <span class="n">Mock</span><span class="p">(</span><span class="n">spec</span><span class="o">=</span><span class="n">KitchenWorkflowHandler</span><span class="p">)</span>
-        <span class="n">notification_handler</span> <span class="o">=</span> <span class="n">Mock</span><span class="p">(</span><span class="n">spec</span><span class="o">=</span><span class="n">CustomerCommunicationHandler</span><span class="p">)</span>
-
-        <span class="n">event_bus</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span><span class="n">OrderPlacedEvent</span><span class="p">,</span> <span class="n">kitchen_handler</span><span class="p">)</span>
-        <span class="n">event_bus</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span><span class="n">OrderPlacedEvent</span><span class="p">,</span> <span class="n">notification_handler</span><span class="p">)</span>
-
-        <span class="n">event</span> <span class="o">=</span> <span class="n">OrderPlacedEvent</span><span class="p">(</span><span class="n">order_id</span><span class="o">=</span><span class="s2">"123"</span><span class="p">,</span> <span class="n">customer_id</span><span class="o">=</span><span class="s2">"456"</span><span class="p">)</span>
-
-        <span class="c1"># Act</span>
-        <span class="k">await</span> <span class="n">event_bus</span><span class="o">.</span><span class="n">publish_async</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
-
-        <span class="c1"># Assert</span>
-        <span class="n">kitchen_handler</span><span class="o">.</span><span class="n">handle_async</span><span class="o">.</span><span class="n">assert_called_once_with</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
-        <span class="n">notification_handler</span><span class="o">.</span><span class="n">send_order_confirmation</span><span class="o">.</span><span class="n">assert_called_once_with</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-7-1"><a href="#__codelineno-7-1" id="__codelineno-7-1" name="__codelineno-7-1"></a><span class="c1"># Test event handling independently</span>
+</span><span id="__span-7-2"><a href="#__codelineno-7-2" id="__codelineno-7-2" name="__codelineno-7-2"></a><span class="k">class</span><span class="w"> </span><span class="nc">TestKitchenWorkflowHandler</span><span class="p">:</span>
+</span><span id="__span-7-3"><a href="#__codelineno-7-3" id="__codelineno-7-3" name="__codelineno-7-3"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">setup_method</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="__span-7-4"><a href="#__codelineno-7-4" id="__codelineno-7-4" name="__codelineno-7-4"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">mock_kitchen</span> <span class="o">=</span> <span class="n">Mock</span><span class="p">(</span><span class="n">spec</span><span class="o">=</span><span class="n">KitchenService</span><span class="p">)</span>
+</span><span id="__span-7-5"><a href="#__codelineno-7-5" id="__codelineno-7-5" name="__codelineno-7-5"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">mock_inventory</span> <span class="o">=</span> <span class="n">Mock</span><span class="p">(</span><span class="n">spec</span><span class="o">=</span><span class="n">InventoryService</span><span class="p">)</span>
+</span><span id="__span-7-6"><a href="#__codelineno-7-6" id="__codelineno-7-6" name="__codelineno-7-6"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">handler</span> <span class="o">=</span> <span class="n">KitchenWorkflowHandler</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mock_kitchen</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">mock_inventory</span><span class="p">)</span>
+</span><span id="__span-7-7"><a href="#__codelineno-7-7" id="__codelineno-7-7" name="__codelineno-7-7"></a>
+</span><span id="__span-7-8"><a href="#__codelineno-7-8" id="__codelineno-7-8" name="__codelineno-7-8"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">test_order_placed_adds_to_kitchen_queue</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="__span-7-9"><a href="#__codelineno-7-9" id="__codelineno-7-9" name="__codelineno-7-9"></a>        <span class="c1"># Arrange</span>
+</span><span id="__span-7-10"><a href="#__codelineno-7-10" id="__codelineno-7-10" name="__codelineno-7-10"></a>        <span class="n">event</span> <span class="o">=</span> <span class="n">OrderPlacedEvent</span><span class="p">(</span>
+</span><span id="__span-7-11"><a href="#__codelineno-7-11" id="__codelineno-7-11" name="__codelineno-7-11"></a>            <span class="n">order_id</span><span class="o">=</span><span class="s2">"123"</span><span class="p">,</span>
+</span><span id="__span-7-12"><a href="#__codelineno-7-12" id="__codelineno-7-12" name="__codelineno-7-12"></a>            <span class="n">customer_id</span><span class="o">=</span><span class="s2">"456"</span><span class="p">,</span>
+</span><span id="__span-7-13"><a href="#__codelineno-7-13" id="__codelineno-7-13" name="__codelineno-7-13"></a>            <span class="n">items</span><span class="o">=</span><span class="p">[</span><span class="n">OrderItemDto</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"Margherita"</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="s2">"Large"</span><span class="p">)]</span>
+</span><span id="__span-7-14"><a href="#__codelineno-7-14" id="__codelineno-7-14" name="__codelineno-7-14"></a>        <span class="p">)</span>
+</span><span id="__span-7-15"><a href="#__codelineno-7-15" id="__codelineno-7-15" name="__codelineno-7-15"></a>
+</span><span id="__span-7-16"><a href="#__codelineno-7-16" id="__codelineno-7-16" name="__codelineno-7-16"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">mock_inventory</span><span class="o">.</span><span class="n">check_ingredients_async</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="n">IngredientAvailability</span><span class="p">(</span>
+</span><span id="__span-7-17"><a href="#__codelineno-7-17" id="__codelineno-7-17" name="__codelineno-7-17"></a>            <span class="n">all_available</span><span class="o">=</span><span class="kc">True</span>
+</span><span id="__span-7-18"><a href="#__codelineno-7-18" id="__codelineno-7-18" name="__codelineno-7-18"></a>        <span class="p">)</span>
+</span><span id="__span-7-19"><a href="#__codelineno-7-19" id="__codelineno-7-19" name="__codelineno-7-19"></a>
+</span><span id="__span-7-20"><a href="#__codelineno-7-20" id="__codelineno-7-20" name="__codelineno-7-20"></a>        <span class="c1"># Act</span>
+</span><span id="__span-7-21"><a href="#__codelineno-7-21" id="__codelineno-7-21" name="__codelineno-7-21"></a>        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">handler</span><span class="o">.</span><span class="n">handle_async</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+</span><span id="__span-7-22"><a href="#__codelineno-7-22" id="__codelineno-7-22" name="__codelineno-7-22"></a>
+</span><span id="__span-7-23"><a href="#__codelineno-7-23" id="__codelineno-7-23" name="__codelineno-7-23"></a>        <span class="c1"># Assert</span>
+</span><span id="__span-7-24"><a href="#__codelineno-7-24" id="__codelineno-7-24" name="__codelineno-7-24"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">mock_kitchen</span><span class="o">.</span><span class="n">add_to_queue_async</span><span class="o">.</span><span class="n">assert_called_once</span><span class="p">()</span>
+</span><span id="__span-7-25"><a href="#__codelineno-7-25" id="__codelineno-7-25" name="__codelineno-7-25"></a>        <span class="n">kitchen_order</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mock_kitchen</span><span class="o">.</span><span class="n">add_to_queue_async</span><span class="o">.</span><span class="n">call_args</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+</span><span id="__span-7-26"><a href="#__codelineno-7-26" id="__codelineno-7-26" name="__codelineno-7-26"></a>        <span class="k">assert</span> <span class="n">kitchen_order</span><span class="o">.</span><span class="n">order_id</span> <span class="o">==</span> <span class="s2">"123"</span>
+</span><span id="__span-7-27"><a href="#__codelineno-7-27" id="__codelineno-7-27" name="__codelineno-7-27"></a>
+</span><span id="__span-7-28"><a href="#__codelineno-7-28" id="__codelineno-7-28" name="__codelineno-7-28"></a><span class="c1"># Integration testing with event bus</span>
+</span><span id="__span-7-29"><a href="#__codelineno-7-29" id="__codelineno-7-29" name="__codelineno-7-29"></a><span class="k">class</span><span class="w"> </span><span class="nc">TestEventIntegration</span><span class="p">:</span>
+</span><span id="__span-7-30"><a href="#__codelineno-7-30" id="__codelineno-7-30" name="__codelineno-7-30"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">test_order_placement_triggers_all_handlers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="__span-7-31"><a href="#__codelineno-7-31" id="__codelineno-7-31" name="__codelineno-7-31"></a>        <span class="c1"># Arrange</span>
+</span><span id="__span-7-32"><a href="#__codelineno-7-32" id="__codelineno-7-32" name="__codelineno-7-32"></a>        <span class="n">event_bus</span> <span class="o">=</span> <span class="n">InMemoryEventBus</span><span class="p">()</span>
+</span><span id="__span-7-33"><a href="#__codelineno-7-33" id="__codelineno-7-33" name="__codelineno-7-33"></a>        <span class="n">kitchen_handler</span> <span class="o">=</span> <span class="n">Mock</span><span class="p">(</span><span class="n">spec</span><span class="o">=</span><span class="n">KitchenWorkflowHandler</span><span class="p">)</span>
+</span><span id="__span-7-34"><a href="#__codelineno-7-34" id="__codelineno-7-34" name="__codelineno-7-34"></a>        <span class="n">notification_handler</span> <span class="o">=</span> <span class="n">Mock</span><span class="p">(</span><span class="n">spec</span><span class="o">=</span><span class="n">CustomerCommunicationHandler</span><span class="p">)</span>
+</span><span id="__span-7-35"><a href="#__codelineno-7-35" id="__codelineno-7-35" name="__codelineno-7-35"></a>
+</span><span id="__span-7-36"><a href="#__codelineno-7-36" id="__codelineno-7-36" name="__codelineno-7-36"></a>        <span class="n">event_bus</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span><span class="n">OrderPlacedEvent</span><span class="p">,</span> <span class="n">kitchen_handler</span><span class="p">)</span>
+</span><span id="__span-7-37"><a href="#__codelineno-7-37" id="__codelineno-7-37" name="__codelineno-7-37"></a>        <span class="n">event_bus</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span><span class="n">OrderPlacedEvent</span><span class="p">,</span> <span class="n">notification_handler</span><span class="p">)</span>
+</span><span id="__span-7-38"><a href="#__codelineno-7-38" id="__codelineno-7-38" name="__codelineno-7-38"></a>
+</span><span id="__span-7-39"><a href="#__codelineno-7-39" id="__codelineno-7-39" name="__codelineno-7-39"></a>        <span class="n">event</span> <span class="o">=</span> <span class="n">OrderPlacedEvent</span><span class="p">(</span><span class="n">order_id</span><span class="o">=</span><span class="s2">"123"</span><span class="p">,</span> <span class="n">customer_id</span><span class="o">=</span><span class="s2">"456"</span><span class="p">)</span>
+</span><span id="__span-7-40"><a href="#__codelineno-7-40" id="__codelineno-7-40" name="__codelineno-7-40"></a>
+</span><span id="__span-7-41"><a href="#__codelineno-7-41" id="__codelineno-7-41" name="__codelineno-7-41"></a>        <span class="c1"># Act</span>
+</span><span id="__span-7-42"><a href="#__codelineno-7-42" id="__codelineno-7-42" name="__codelineno-7-42"></a>        <span class="k">await</span> <span class="n">event_bus</span><span class="o">.</span><span class="n">publish_async</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+</span><span id="__span-7-43"><a href="#__codelineno-7-43" id="__codelineno-7-43" name="__codelineno-7-43"></a>
+</span><span id="__span-7-44"><a href="#__codelineno-7-44" id="__codelineno-7-44" name="__codelineno-7-44"></a>        <span class="c1"># Assert</span>
+</span><span id="__span-7-45"><a href="#__codelineno-7-45" id="__codelineno-7-45" name="__codelineno-7-45"></a>        <span class="n">kitchen_handler</span><span class="o">.</span><span class="n">handle_async</span><span class="o">.</span><span class="n">assert_called_once_with</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+</span><span id="__span-7-46"><a href="#__codelineno-7-46" id="__codelineno-7-46" name="__codelineno-7-46"></a>        <span class="n">notification_handler</span><span class="o">.</span><span class="n">send_order_confirmation</span><span class="o">.</span><span class="n">assert_called_once_with</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+</span></code></pre></div>
 <h2 id="related-patterns">🔗 Related Patterns<a class="headerlink" href="#related-patterns" title="Permanent link">¶</a></h2>
 <ul>
 <li><strong><a href="../cqrs/">CQRS Pattern</a></strong> - Commands often produce domain events</li>

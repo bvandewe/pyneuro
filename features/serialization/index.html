@@ -904,9 +904,9 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../references/python_type_hints/">
+<a class="md-nav__link" href="../../references/python_typing_guide/">
 <span class="md-ellipsis">
-    Python Type Hints
+    Python Typing Guide
     
   </span>
 </a>
@@ -928,9 +928,9 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../references/python_generic_types/">
+<a class="md-nav__link" href="../../references/test-mermaid/">
 <span class="md-ellipsis">
-    Python Generic Types
+    Mermaid References
     
   </span>
 </a>
@@ -1224,98 +1224,98 @@
 <h2 id="basic-usage-in-marios-pizzeria">🍕 Basic Usage in Mario's Pizzeria<a class="headerlink" href="#basic-usage-in-marios-pizzeria" title="Permanent link">¶</a></h2>
 <h3 id="pizza-order-serialization">Pizza Order Serialization<a class="headerlink" href="#pizza-order-serialization" title="Permanent link">¶</a></h3>
 <p>Let's see how Mario's Pizzeria uses serialization for order processing:</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.serialization.json</span><span class="w"> </span><span class="kn">import</span> <span class="n">JsonSerializer</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.dependency_injection</span><span class="w"> </span><span class="kn">import</span> <span class="n">ServiceCollection</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">decimal</span><span class="w"> </span><span class="kn">import</span> <span class="n">Decimal</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">enum</span><span class="w"> </span><span class="kn">import</span> <span class="n">Enum</span>
-
-<span class="c1"># Domain objects from Mario's Pizzeria</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">OrderStatus</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Enum</span><span class="p">):</span>
-    <span class="n">PENDING</span> <span class="o">=</span> <span class="s2">"pending"</span>
-    <span class="n">COOKING</span> <span class="o">=</span> <span class="s2">"cooking"</span>
-    <span class="n">READY</span> <span class="o">=</span> <span class="s2">"ready"</span>
-    <span class="n">DELIVERED</span> <span class="o">=</span> <span class="s2">"delivered"</span>
-
-<span class="nd">@dataclass</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">Pizza</span><span class="p">:</span>
-    <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">size</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">base_price</span><span class="p">:</span> <span class="n">Decimal</span>
-    <span class="n">toppings</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
-
-<span class="nd">@dataclass</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">Order</span><span class="p">:</span>
-    <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">customer_name</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">customer_phone</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">pizzas</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Pizza</span><span class="p">]</span>
-    <span class="n">status</span><span class="p">:</span> <span class="n">OrderStatus</span>
-    <span class="n">order_time</span><span class="p">:</span> <span class="n">datetime</span>
-    <span class="n">total_amount</span><span class="p">:</span> <span class="n">Decimal</span>
-
-<span class="c1"># Using JsonSerializer</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">OrderService</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">serializer</span><span class="p">:</span> <span class="n">JsonSerializer</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">serializer</span> <span class="o">=</span> <span class="n">serializer</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">serialize_order</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">order</span><span class="p">:</span> <span class="n">Order</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Convert order to JSON for storage or API responses"""</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">serializer</span><span class="o">.</span><span class="n">serialize_to_text</span><span class="p">(</span><span class="n">order</span><span class="p">)</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">deserialize_order</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">json_data</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Order</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Convert JSON back to Order object"""</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">serializer</span><span class="o">.</span><span class="n">deserialize_from_text</span><span class="p">(</span><span class="n">json_data</span><span class="p">,</span> <span class="n">Order</span><span class="p">)</span>
-
-<span class="c1"># Example usage</span>
-<span class="n">serializer</span> <span class="o">=</span> <span class="n">JsonSerializer</span><span class="p">()</span>
-<span class="n">order</span> <span class="o">=</span> <span class="n">Order</span><span class="p">(</span>
-    <span class="nb">id</span><span class="o">=</span><span class="s2">"order-123"</span><span class="p">,</span>
-    <span class="n">customer_name</span><span class="o">=</span><span class="s2">"Mario Luigi"</span><span class="p">,</span>
-    <span class="n">customer_phone</span><span class="o">=</span><span class="s2">"+1-555-PIZZA"</span><span class="p">,</span>
-    <span class="n">pizzas</span><span class="o">=</span><span class="p">[</span>
-        <span class="n">Pizza</span><span class="p">(</span><span class="s2">"pizza-1"</span><span class="p">,</span> <span class="s2">"Margherita"</span><span class="p">,</span> <span class="s2">"large"</span><span class="p">,</span> <span class="n">Decimal</span><span class="p">(</span><span class="s2">"15.99"</span><span class="p">),</span> <span class="p">[</span><span class="s2">"basil"</span><span class="p">,</span> <span class="s2">"mozzarella"</span><span class="p">])</span>
-    <span class="p">],</span>
-    <span class="n">status</span><span class="o">=</span><span class="n">OrderStatus</span><span class="o">.</span><span class="n">PENDING</span><span class="p">,</span>
-    <span class="n">order_time</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(),</span>
-    <span class="n">total_amount</span><span class="o">=</span><span class="n">Decimal</span><span class="p">(</span><span class="s2">"17.49"</span><span class="p">)</span>
-<span class="p">)</span>
-
-<span class="c1"># Serialize to JSON</span>
-<span class="n">json_order</span> <span class="o">=</span> <span class="n">serializer</span><span class="o">.</span><span class="n">serialize_to_text</span><span class="p">(</span><span class="n">order</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">json_order</span><span class="p">)</span>
-<span class="c1"># Output: {"id": "order-123", "customer_name": "Mario Luigi", ...}</span>
-
-<span class="c1"># Deserialize back to object</span>
-<span class="n">restored_order</span> <span class="o">=</span> <span class="n">serializer</span><span class="o">.</span><span class="n">deserialize_from_text</span><span class="p">(</span><span class="n">json_order</span><span class="p">,</span> <span class="n">Order</span><span class="p">)</span>
-<span class="k">assert</span> <span class="n">restored_order</span><span class="o">.</span><span class="n">customer_name</span> <span class="o">==</span> <span class="s2">"Mario Luigi"</span>
-<span class="k">assert</span> <span class="n">restored_order</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="n">OrderStatus</span><span class="o">.</span><span class="n">PENDING</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a href="#__codelineno-0-1" id="__codelineno-0-1" name="__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.serialization.json</span><span class="w"> </span><span class="kn">import</span> <span class="n">JsonSerializer</span>
+</span><span id="__span-0-2"><a href="#__codelineno-0-2" id="__codelineno-0-2" name="__codelineno-0-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.dependency_injection</span><span class="w"> </span><span class="kn">import</span> <span class="n">ServiceCollection</span>
+</span><span id="__span-0-3"><a href="#__codelineno-0-3" id="__codelineno-0-3" name="__codelineno-0-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">decimal</span><span class="w"> </span><span class="kn">import</span> <span class="n">Decimal</span>
+</span><span id="__span-0-4"><a href="#__codelineno-0-4" id="__codelineno-0-4" name="__codelineno-0-4"></a><span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
+</span><span id="__span-0-5"><a href="#__codelineno-0-5" id="__codelineno-0-5" name="__codelineno-0-5"></a><span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
+</span><span id="__span-0-6"><a href="#__codelineno-0-6" id="__codelineno-0-6" name="__codelineno-0-6"></a><span class="kn">from</span><span class="w"> </span><span class="nn">enum</span><span class="w"> </span><span class="kn">import</span> <span class="n">Enum</span>
+</span><span id="__span-0-7"><a href="#__codelineno-0-7" id="__codelineno-0-7" name="__codelineno-0-7"></a>
+</span><span id="__span-0-8"><a href="#__codelineno-0-8" id="__codelineno-0-8" name="__codelineno-0-8"></a><span class="c1"># Domain objects from Mario's Pizzeria</span>
+</span><span id="__span-0-9"><a href="#__codelineno-0-9" id="__codelineno-0-9" name="__codelineno-0-9"></a><span class="k">class</span><span class="w"> </span><span class="nc">OrderStatus</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Enum</span><span class="p">):</span>
+</span><span id="__span-0-10"><a href="#__codelineno-0-10" id="__codelineno-0-10" name="__codelineno-0-10"></a>    <span class="n">PENDING</span> <span class="o">=</span> <span class="s2">"pending"</span>
+</span><span id="__span-0-11"><a href="#__codelineno-0-11" id="__codelineno-0-11" name="__codelineno-0-11"></a>    <span class="n">COOKING</span> <span class="o">=</span> <span class="s2">"cooking"</span>
+</span><span id="__span-0-12"><a href="#__codelineno-0-12" id="__codelineno-0-12" name="__codelineno-0-12"></a>    <span class="n">READY</span> <span class="o">=</span> <span class="s2">"ready"</span>
+</span><span id="__span-0-13"><a href="#__codelineno-0-13" id="__codelineno-0-13" name="__codelineno-0-13"></a>    <span class="n">DELIVERED</span> <span class="o">=</span> <span class="s2">"delivered"</span>
+</span><span id="__span-0-14"><a href="#__codelineno-0-14" id="__codelineno-0-14" name="__codelineno-0-14"></a>
+</span><span id="__span-0-15"><a href="#__codelineno-0-15" id="__codelineno-0-15" name="__codelineno-0-15"></a><span class="nd">@dataclass</span>
+</span><span id="__span-0-16"><a href="#__codelineno-0-16" id="__codelineno-0-16" name="__codelineno-0-16"></a><span class="k">class</span><span class="w"> </span><span class="nc">Pizza</span><span class="p">:</span>
+</span><span id="__span-0-17"><a href="#__codelineno-0-17" id="__codelineno-0-17" name="__codelineno-0-17"></a>    <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span>
+</span><span id="__span-0-18"><a href="#__codelineno-0-18" id="__codelineno-0-18" name="__codelineno-0-18"></a>    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+</span><span id="__span-0-19"><a href="#__codelineno-0-19" id="__codelineno-0-19" name="__codelineno-0-19"></a>    <span class="n">size</span><span class="p">:</span> <span class="nb">str</span>
+</span><span id="__span-0-20"><a href="#__codelineno-0-20" id="__codelineno-0-20" name="__codelineno-0-20"></a>    <span class="n">base_price</span><span class="p">:</span> <span class="n">Decimal</span>
+</span><span id="__span-0-21"><a href="#__codelineno-0-21" id="__codelineno-0-21" name="__codelineno-0-21"></a>    <span class="n">toppings</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+</span><span id="__span-0-22"><a href="#__codelineno-0-22" id="__codelineno-0-22" name="__codelineno-0-22"></a>
+</span><span id="__span-0-23"><a href="#__codelineno-0-23" id="__codelineno-0-23" name="__codelineno-0-23"></a><span class="nd">@dataclass</span>
+</span><span id="__span-0-24"><a href="#__codelineno-0-24" id="__codelineno-0-24" name="__codelineno-0-24"></a><span class="k">class</span><span class="w"> </span><span class="nc">Order</span><span class="p">:</span>
+</span><span id="__span-0-25"><a href="#__codelineno-0-25" id="__codelineno-0-25" name="__codelineno-0-25"></a>    <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span>
+</span><span id="__span-0-26"><a href="#__codelineno-0-26" id="__codelineno-0-26" name="__codelineno-0-26"></a>    <span class="n">customer_name</span><span class="p">:</span> <span class="nb">str</span>
+</span><span id="__span-0-27"><a href="#__codelineno-0-27" id="__codelineno-0-27" name="__codelineno-0-27"></a>    <span class="n">customer_phone</span><span class="p">:</span> <span class="nb">str</span>
+</span><span id="__span-0-28"><a href="#__codelineno-0-28" id="__codelineno-0-28" name="__codelineno-0-28"></a>    <span class="n">pizzas</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Pizza</span><span class="p">]</span>
+</span><span id="__span-0-29"><a href="#__codelineno-0-29" id="__codelineno-0-29" name="__codelineno-0-29"></a>    <span class="n">status</span><span class="p">:</span> <span class="n">OrderStatus</span>
+</span><span id="__span-0-30"><a href="#__codelineno-0-30" id="__codelineno-0-30" name="__codelineno-0-30"></a>    <span class="n">order_time</span><span class="p">:</span> <span class="n">datetime</span>
+</span><span id="__span-0-31"><a href="#__codelineno-0-31" id="__codelineno-0-31" name="__codelineno-0-31"></a>    <span class="n">total_amount</span><span class="p">:</span> <span class="n">Decimal</span>
+</span><span id="__span-0-32"><a href="#__codelineno-0-32" id="__codelineno-0-32" name="__codelineno-0-32"></a>
+</span><span id="__span-0-33"><a href="#__codelineno-0-33" id="__codelineno-0-33" name="__codelineno-0-33"></a><span class="c1"># Using JsonSerializer</span>
+</span><span id="__span-0-34"><a href="#__codelineno-0-34" id="__codelineno-0-34" name="__codelineno-0-34"></a><span class="k">class</span><span class="w"> </span><span class="nc">OrderService</span><span class="p">:</span>
+</span><span id="__span-0-35"><a href="#__codelineno-0-35" id="__codelineno-0-35" name="__codelineno-0-35"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">serializer</span><span class="p">:</span> <span class="n">JsonSerializer</span><span class="p">):</span>
+</span><span id="__span-0-36"><a href="#__codelineno-0-36" id="__codelineno-0-36" name="__codelineno-0-36"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">serializer</span> <span class="o">=</span> <span class="n">serializer</span>
+</span><span id="__span-0-37"><a href="#__codelineno-0-37" id="__codelineno-0-37" name="__codelineno-0-37"></a>
+</span><span id="__span-0-38"><a href="#__codelineno-0-38" id="__codelineno-0-38" name="__codelineno-0-38"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">serialize_order</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">order</span><span class="p">:</span> <span class="n">Order</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</span><span id="__span-0-39"><a href="#__codelineno-0-39" id="__codelineno-0-39" name="__codelineno-0-39"></a><span class="w">        </span><span class="sd">"""Convert order to JSON for storage or API responses"""</span>
+</span><span id="__span-0-40"><a href="#__codelineno-0-40" id="__codelineno-0-40" name="__codelineno-0-40"></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">serializer</span><span class="o">.</span><span class="n">serialize_to_text</span><span class="p">(</span><span class="n">order</span><span class="p">)</span>
+</span><span id="__span-0-41"><a href="#__codelineno-0-41" id="__codelineno-0-41" name="__codelineno-0-41"></a>
+</span><span id="__span-0-42"><a href="#__codelineno-0-42" id="__codelineno-0-42" name="__codelineno-0-42"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">deserialize_order</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">json_data</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Order</span><span class="p">:</span>
+</span><span id="__span-0-43"><a href="#__codelineno-0-43" id="__codelineno-0-43" name="__codelineno-0-43"></a><span class="w">        </span><span class="sd">"""Convert JSON back to Order object"""</span>
+</span><span id="__span-0-44"><a href="#__codelineno-0-44" id="__codelineno-0-44" name="__codelineno-0-44"></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">serializer</span><span class="o">.</span><span class="n">deserialize_from_text</span><span class="p">(</span><span class="n">json_data</span><span class="p">,</span> <span class="n">Order</span><span class="p">)</span>
+</span><span id="__span-0-45"><a href="#__codelineno-0-45" id="__codelineno-0-45" name="__codelineno-0-45"></a>
+</span><span id="__span-0-46"><a href="#__codelineno-0-46" id="__codelineno-0-46" name="__codelineno-0-46"></a><span class="c1"># Example usage</span>
+</span><span id="__span-0-47"><a href="#__codelineno-0-47" id="__codelineno-0-47" name="__codelineno-0-47"></a><span class="n">serializer</span> <span class="o">=</span> <span class="n">JsonSerializer</span><span class="p">()</span>
+</span><span id="__span-0-48"><a href="#__codelineno-0-48" id="__codelineno-0-48" name="__codelineno-0-48"></a><span class="n">order</span> <span class="o">=</span> <span class="n">Order</span><span class="p">(</span>
+</span><span id="__span-0-49"><a href="#__codelineno-0-49" id="__codelineno-0-49" name="__codelineno-0-49"></a>    <span class="nb">id</span><span class="o">=</span><span class="s2">"order-123"</span><span class="p">,</span>
+</span><span id="__span-0-50"><a href="#__codelineno-0-50" id="__codelineno-0-50" name="__codelineno-0-50"></a>    <span class="n">customer_name</span><span class="o">=</span><span class="s2">"Mario Luigi"</span><span class="p">,</span>
+</span><span id="__span-0-51"><a href="#__codelineno-0-51" id="__codelineno-0-51" name="__codelineno-0-51"></a>    <span class="n">customer_phone</span><span class="o">=</span><span class="s2">"+1-555-PIZZA"</span><span class="p">,</span>
+</span><span id="__span-0-52"><a href="#__codelineno-0-52" id="__codelineno-0-52" name="__codelineno-0-52"></a>    <span class="n">pizzas</span><span class="o">=</span><span class="p">[</span>
+</span><span id="__span-0-53"><a href="#__codelineno-0-53" id="__codelineno-0-53" name="__codelineno-0-53"></a>        <span class="n">Pizza</span><span class="p">(</span><span class="s2">"pizza-1"</span><span class="p">,</span> <span class="s2">"Margherita"</span><span class="p">,</span> <span class="s2">"large"</span><span class="p">,</span> <span class="n">Decimal</span><span class="p">(</span><span class="s2">"15.99"</span><span class="p">),</span> <span class="p">[</span><span class="s2">"basil"</span><span class="p">,</span> <span class="s2">"mozzarella"</span><span class="p">])</span>
+</span><span id="__span-0-54"><a href="#__codelineno-0-54" id="__codelineno-0-54" name="__codelineno-0-54"></a>    <span class="p">],</span>
+</span><span id="__span-0-55"><a href="#__codelineno-0-55" id="__codelineno-0-55" name="__codelineno-0-55"></a>    <span class="n">status</span><span class="o">=</span><span class="n">OrderStatus</span><span class="o">.</span><span class="n">PENDING</span><span class="p">,</span>
+</span><span id="__span-0-56"><a href="#__codelineno-0-56" id="__codelineno-0-56" name="__codelineno-0-56"></a>    <span class="n">order_time</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(),</span>
+</span><span id="__span-0-57"><a href="#__codelineno-0-57" id="__codelineno-0-57" name="__codelineno-0-57"></a>    <span class="n">total_amount</span><span class="o">=</span><span class="n">Decimal</span><span class="p">(</span><span class="s2">"17.49"</span><span class="p">)</span>
+</span><span id="__span-0-58"><a href="#__codelineno-0-58" id="__codelineno-0-58" name="__codelineno-0-58"></a><span class="p">)</span>
+</span><span id="__span-0-59"><a href="#__codelineno-0-59" id="__codelineno-0-59" name="__codelineno-0-59"></a>
+</span><span id="__span-0-60"><a href="#__codelineno-0-60" id="__codelineno-0-60" name="__codelineno-0-60"></a><span class="c1"># Serialize to JSON</span>
+</span><span id="__span-0-61"><a href="#__codelineno-0-61" id="__codelineno-0-61" name="__codelineno-0-61"></a><span class="n">json_order</span> <span class="o">=</span> <span class="n">serializer</span><span class="o">.</span><span class="n">serialize_to_text</span><span class="p">(</span><span class="n">order</span><span class="p">)</span>
+</span><span id="__span-0-62"><a href="#__codelineno-0-62" id="__codelineno-0-62" name="__codelineno-0-62"></a><span class="nb">print</span><span class="p">(</span><span class="n">json_order</span><span class="p">)</span>
+</span><span id="__span-0-63"><a href="#__codelineno-0-63" id="__codelineno-0-63" name="__codelineno-0-63"></a><span class="c1"># Output: {"id": "order-123", "customer_name": "Mario Luigi", ...}</span>
+</span><span id="__span-0-64"><a href="#__codelineno-0-64" id="__codelineno-0-64" name="__codelineno-0-64"></a>
+</span><span id="__span-0-65"><a href="#__codelineno-0-65" id="__codelineno-0-65" name="__codelineno-0-65"></a><span class="c1"># Deserialize back to object</span>
+</span><span id="__span-0-66"><a href="#__codelineno-0-66" id="__codelineno-0-66" name="__codelineno-0-66"></a><span class="n">restored_order</span> <span class="o">=</span> <span class="n">serializer</span><span class="o">.</span><span class="n">deserialize_from_text</span><span class="p">(</span><span class="n">json_order</span><span class="p">,</span> <span class="n">Order</span><span class="p">)</span>
+</span><span id="__span-0-67"><a href="#__codelineno-0-67" id="__codelineno-0-67" name="__codelineno-0-67"></a><span class="k">assert</span> <span class="n">restored_order</span><span class="o">.</span><span class="n">customer_name</span> <span class="o">==</span> <span class="s2">"Mario Luigi"</span>
+</span><span id="__span-0-68"><a href="#__codelineno-0-68" id="__codelineno-0-68" name="__codelineno-0-68"></a><span class="k">assert</span> <span class="n">restored_order</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="n">OrderStatus</span><span class="o">.</span><span class="n">PENDING</span>
+</span></code></pre></div>
 <h2 id="custom-json-encoder">🎨 Custom JSON Encoder<a class="headerlink" href="#custom-json-encoder" title="Permanent link">¶</a></h2>
 <p>Neuroglia includes a custom <code>JsonEncoder</code> that handles special types automatically:</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.serialization.json</span><span class="w"> </span><span class="kn">import</span> <span class="n">JsonEncoder</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">decimal</span><span class="w"> </span><span class="kn">import</span> <span class="n">Decimal</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">enum</span><span class="w"> </span><span class="kn">import</span> <span class="n">Enum</span>
-
-<span class="k">class</span><span class="w"> </span><span class="nc">PizzaSize</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Enum</span><span class="p">):</span>
-    <span class="n">SMALL</span> <span class="o">=</span> <span class="s2">"small"</span>
-    <span class="n">MEDIUM</span> <span class="o">=</span> <span class="s2">"medium"</span>
-    <span class="n">LARGE</span> <span class="o">=</span> <span class="s2">"large"</span>
-
-<span class="c1"># The JsonEncoder automatically handles these types:</span>
-<span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">"order_time"</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(),</span>       <span class="c1"># → ISO format string</span>
-    <span class="s2">"total_amount"</span><span class="p">:</span> <span class="n">Decimal</span><span class="p">(</span><span class="s2">"15.99"</span><span class="p">),</span>   <span class="c1"># → string representation</span>
-    <span class="s2">"size"</span><span class="p">:</span> <span class="n">PizzaSize</span><span class="o">.</span><span class="n">LARGE</span><span class="p">,</span>           <span class="c1"># → enum name</span>
-    <span class="s2">"custom_object"</span><span class="p">:</span> <span class="n">Pizza</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>         <span class="c1"># → object's __dict__</span>
-<span class="p">}</span>
-
-<span class="n">json_string</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="bp">cls</span><span class="o">=</span><span class="n">JsonEncoder</span><span class="p">)</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a href="#__codelineno-1-1" id="__codelineno-1-1" name="__codelineno-1-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.serialization.json</span><span class="w"> </span><span class="kn">import</span> <span class="n">JsonEncoder</span>
+</span><span id="__span-1-2"><a href="#__codelineno-1-2" id="__codelineno-1-2" name="__codelineno-1-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+</span><span id="__span-1-3"><a href="#__codelineno-1-3" id="__codelineno-1-3" name="__codelineno-1-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
+</span><span id="__span-1-4"><a href="#__codelineno-1-4" id="__codelineno-1-4" name="__codelineno-1-4"></a><span class="kn">from</span><span class="w"> </span><span class="nn">decimal</span><span class="w"> </span><span class="kn">import</span> <span class="n">Decimal</span>
+</span><span id="__span-1-5"><a href="#__codelineno-1-5" id="__codelineno-1-5" name="__codelineno-1-5"></a><span class="kn">from</span><span class="w"> </span><span class="nn">enum</span><span class="w"> </span><span class="kn">import</span> <span class="n">Enum</span>
+</span><span id="__span-1-6"><a href="#__codelineno-1-6" id="__codelineno-1-6" name="__codelineno-1-6"></a>
+</span><span id="__span-1-7"><a href="#__codelineno-1-7" id="__codelineno-1-7" name="__codelineno-1-7"></a><span class="k">class</span><span class="w"> </span><span class="nc">PizzaSize</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Enum</span><span class="p">):</span>
+</span><span id="__span-1-8"><a href="#__codelineno-1-8" id="__codelineno-1-8" name="__codelineno-1-8"></a>    <span class="n">SMALL</span> <span class="o">=</span> <span class="s2">"small"</span>
+</span><span id="__span-1-9"><a href="#__codelineno-1-9" id="__codelineno-1-9" name="__codelineno-1-9"></a>    <span class="n">MEDIUM</span> <span class="o">=</span> <span class="s2">"medium"</span>
+</span><span id="__span-1-10"><a href="#__codelineno-1-10" id="__codelineno-1-10" name="__codelineno-1-10"></a>    <span class="n">LARGE</span> <span class="o">=</span> <span class="s2">"large"</span>
+</span><span id="__span-1-11"><a href="#__codelineno-1-11" id="__codelineno-1-11" name="__codelineno-1-11"></a>
+</span><span id="__span-1-12"><a href="#__codelineno-1-12" id="__codelineno-1-12" name="__codelineno-1-12"></a><span class="c1"># The JsonEncoder automatically handles these types:</span>
+</span><span id="__span-1-13"><a href="#__codelineno-1-13" id="__codelineno-1-13" name="__codelineno-1-13"></a><span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+</span><span id="__span-1-14"><a href="#__codelineno-1-14" id="__codelineno-1-14" name="__codelineno-1-14"></a>    <span class="s2">"order_time"</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(),</span>       <span class="c1"># → ISO format string</span>
+</span><span id="__span-1-15"><a href="#__codelineno-1-15" id="__codelineno-1-15" name="__codelineno-1-15"></a>    <span class="s2">"total_amount"</span><span class="p">:</span> <span class="n">Decimal</span><span class="p">(</span><span class="s2">"15.99"</span><span class="p">),</span>   <span class="c1"># → string representation</span>
+</span><span id="__span-1-16"><a href="#__codelineno-1-16" id="__codelineno-1-16" name="__codelineno-1-16"></a>    <span class="s2">"size"</span><span class="p">:</span> <span class="n">PizzaSize</span><span class="o">.</span><span class="n">LARGE</span><span class="p">,</span>           <span class="c1"># → enum name</span>
+</span><span id="__span-1-17"><a href="#__codelineno-1-17" id="__codelineno-1-17" name="__codelineno-1-17"></a>    <span class="s2">"custom_object"</span><span class="p">:</span> <span class="n">Pizza</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>         <span class="c1"># → object's __dict__</span>
+</span><span id="__span-1-18"><a href="#__codelineno-1-18" id="__codelineno-1-18" name="__codelineno-1-18"></a><span class="p">}</span>
+</span><span id="__span-1-19"><a href="#__codelineno-1-19" id="__codelineno-1-19" name="__codelineno-1-19"></a>
+</span><span id="__span-1-20"><a href="#__codelineno-1-20" id="__codelineno-1-20" name="__codelineno-1-20"></a><span class="n">json_string</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="bp">cls</span><span class="o">=</span><span class="n">JsonEncoder</span><span class="p">)</span>
+</span></code></pre></div>
 <h3 id="encoder-features">Encoder Features<a class="headerlink" href="#encoder-features" title="Permanent link">¶</a></h3>
 <p>The <code>JsonEncoder</code> provides:</p>
 <ul>
@@ -1327,258 +1327,258 @@
 </ul>
 <h2 id="advanced-serialization-patterns">🔧 Advanced Serialization Patterns<a class="headerlink" href="#advanced-serialization-patterns" title="Permanent link">¶</a></h2>
 <h3 id="1-nested-object-serialization">1. Nested Object Serialization<a class="headerlink" href="#1-nested-object-serialization" title="Permanent link">¶</a></h3>
-<div class="highlight"><pre><span></span><code><span class="nd">@dataclass</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">Customer</span><span class="p">:</span>
-    <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">email</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">addresses</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span>
-
-<span class="nd">@dataclass</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">Address</span><span class="p">:</span>
-    <span class="n">street</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">city</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">postal_code</span><span class="p">:</span> <span class="nb">str</span>
-
-<span class="c1"># Automatic recursive serialization</span>
-<span class="n">customer</span> <span class="o">=</span> <span class="n">Customer</span><span class="p">(</span>
-    <span class="nb">id</span><span class="o">=</span><span class="s2">"cust-123"</span><span class="p">,</span>
-    <span class="n">name</span><span class="o">=</span><span class="s2">"Luigi Mario"</span><span class="p">,</span>
-    <span class="n">email</span><span class="o">=</span><span class="s2">"luigi@pizzeria.com"</span><span class="p">,</span>
-    <span class="n">addresses</span><span class="o">=</span><span class="p">[</span>
-        <span class="n">Address</span><span class="p">(</span><span class="s2">"123 Main St"</span><span class="p">,</span> <span class="s2">"Pizza City"</span><span class="p">,</span> <span class="s2">"12345"</span><span class="p">),</span>
-        <span class="n">Address</span><span class="p">(</span><span class="s2">"456 Oak Ave"</span><span class="p">,</span> <span class="s2">"Pepperoni Town"</span><span class="p">,</span> <span class="s2">"67890"</span><span class="p">)</span>
-    <span class="p">]</span>
-<span class="p">)</span>
-
-<span class="n">serializer</span> <span class="o">=</span> <span class="n">JsonSerializer</span><span class="p">()</span>
-<span class="n">json_data</span> <span class="o">=</span> <span class="n">serializer</span><span class="o">.</span><span class="n">serialize_to_text</span><span class="p">(</span><span class="n">customer</span><span class="p">)</span>
-<span class="n">restored_customer</span> <span class="o">=</span> <span class="n">serializer</span><span class="o">.</span><span class="n">deserialize_from_text</span><span class="p">(</span><span class="n">json_data</span><span class="p">,</span> <span class="n">Customer</span><span class="p">)</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a href="#__codelineno-2-1" id="__codelineno-2-1" name="__codelineno-2-1"></a><span class="nd">@dataclass</span>
+</span><span id="__span-2-2"><a href="#__codelineno-2-2" id="__codelineno-2-2" name="__codelineno-2-2"></a><span class="k">class</span><span class="w"> </span><span class="nc">Customer</span><span class="p">:</span>
+</span><span id="__span-2-3"><a href="#__codelineno-2-3" id="__codelineno-2-3" name="__codelineno-2-3"></a>    <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span>
+</span><span id="__span-2-4"><a href="#__codelineno-2-4" id="__codelineno-2-4" name="__codelineno-2-4"></a>    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+</span><span id="__span-2-5"><a href="#__codelineno-2-5" id="__codelineno-2-5" name="__codelineno-2-5"></a>    <span class="n">email</span><span class="p">:</span> <span class="nb">str</span>
+</span><span id="__span-2-6"><a href="#__codelineno-2-6" id="__codelineno-2-6" name="__codelineno-2-6"></a>    <span class="n">addresses</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span>
+</span><span id="__span-2-7"><a href="#__codelineno-2-7" id="__codelineno-2-7" name="__codelineno-2-7"></a>
+</span><span id="__span-2-8"><a href="#__codelineno-2-8" id="__codelineno-2-8" name="__codelineno-2-8"></a><span class="nd">@dataclass</span>
+</span><span id="__span-2-9"><a href="#__codelineno-2-9" id="__codelineno-2-9" name="__codelineno-2-9"></a><span class="k">class</span><span class="w"> </span><span class="nc">Address</span><span class="p">:</span>
+</span><span id="__span-2-10"><a href="#__codelineno-2-10" id="__codelineno-2-10" name="__codelineno-2-10"></a>    <span class="n">street</span><span class="p">:</span> <span class="nb">str</span>
+</span><span id="__span-2-11"><a href="#__codelineno-2-11" id="__codelineno-2-11" name="__codelineno-2-11"></a>    <span class="n">city</span><span class="p">:</span> <span class="nb">str</span>
+</span><span id="__span-2-12"><a href="#__codelineno-2-12" id="__codelineno-2-12" name="__codelineno-2-12"></a>    <span class="n">postal_code</span><span class="p">:</span> <span class="nb">str</span>
+</span><span id="__span-2-13"><a href="#__codelineno-2-13" id="__codelineno-2-13" name="__codelineno-2-13"></a>
+</span><span id="__span-2-14"><a href="#__codelineno-2-14" id="__codelineno-2-14" name="__codelineno-2-14"></a><span class="c1"># Automatic recursive serialization</span>
+</span><span id="__span-2-15"><a href="#__codelineno-2-15" id="__codelineno-2-15" name="__codelineno-2-15"></a><span class="n">customer</span> <span class="o">=</span> <span class="n">Customer</span><span class="p">(</span>
+</span><span id="__span-2-16"><a href="#__codelineno-2-16" id="__codelineno-2-16" name="__codelineno-2-16"></a>    <span class="nb">id</span><span class="o">=</span><span class="s2">"cust-123"</span><span class="p">,</span>
+</span><span id="__span-2-17"><a href="#__codelineno-2-17" id="__codelineno-2-17" name="__codelineno-2-17"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">"Luigi Mario"</span><span class="p">,</span>
+</span><span id="__span-2-18"><a href="#__codelineno-2-18" id="__codelineno-2-18" name="__codelineno-2-18"></a>    <span class="n">email</span><span class="o">=</span><span class="s2">"luigi@pizzeria.com"</span><span class="p">,</span>
+</span><span id="__span-2-19"><a href="#__codelineno-2-19" id="__codelineno-2-19" name="__codelineno-2-19"></a>    <span class="n">addresses</span><span class="o">=</span><span class="p">[</span>
+</span><span id="__span-2-20"><a href="#__codelineno-2-20" id="__codelineno-2-20" name="__codelineno-2-20"></a>        <span class="n">Address</span><span class="p">(</span><span class="s2">"123 Main St"</span><span class="p">,</span> <span class="s2">"Pizza City"</span><span class="p">,</span> <span class="s2">"12345"</span><span class="p">),</span>
+</span><span id="__span-2-21"><a href="#__codelineno-2-21" id="__codelineno-2-21" name="__codelineno-2-21"></a>        <span class="n">Address</span><span class="p">(</span><span class="s2">"456 Oak Ave"</span><span class="p">,</span> <span class="s2">"Pepperoni Town"</span><span class="p">,</span> <span class="s2">"67890"</span><span class="p">)</span>
+</span><span id="__span-2-22"><a href="#__codelineno-2-22" id="__codelineno-2-22" name="__codelineno-2-22"></a>    <span class="p">]</span>
+</span><span id="__span-2-23"><a href="#__codelineno-2-23" id="__codelineno-2-23" name="__codelineno-2-23"></a><span class="p">)</span>
+</span><span id="__span-2-24"><a href="#__codelineno-2-24" id="__codelineno-2-24" name="__codelineno-2-24"></a>
+</span><span id="__span-2-25"><a href="#__codelineno-2-25" id="__codelineno-2-25" name="__codelineno-2-25"></a><span class="n">serializer</span> <span class="o">=</span> <span class="n">JsonSerializer</span><span class="p">()</span>
+</span><span id="__span-2-26"><a href="#__codelineno-2-26" id="__codelineno-2-26" name="__codelineno-2-26"></a><span class="n">json_data</span> <span class="o">=</span> <span class="n">serializer</span><span class="o">.</span><span class="n">serialize_to_text</span><span class="p">(</span><span class="n">customer</span><span class="p">)</span>
+</span><span id="__span-2-27"><a href="#__codelineno-2-27" id="__codelineno-2-27" name="__codelineno-2-27"></a><span class="n">restored_customer</span> <span class="o">=</span> <span class="n">serializer</span><span class="o">.</span><span class="n">deserialize_from_text</span><span class="p">(</span><span class="n">json_data</span><span class="p">,</span> <span class="n">Customer</span><span class="p">)</span>
+</span></code></pre></div>
 <h3 id="2-generic-type-handling">2. Generic Type Handling<a class="headerlink" href="#2-generic-type-handling" title="Permanent link">¶</a></h3>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Optional</span>
-
-<span class="nd">@dataclass</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">MenuSection</span><span class="p">:</span>
-    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">pizzas</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Pizza</span><span class="p">]</span>
-    <span class="n">metadata</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span>
-    <span class="n">featured_pizza</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Pizza</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-
-<span class="c1"># Serializer handles generic types automatically</span>
-<span class="n">menu_section</span> <span class="o">=</span> <span class="n">MenuSection</span><span class="p">(</span>
-    <span class="n">name</span><span class="o">=</span><span class="s2">"Classic Pizzas"</span><span class="p">,</span>
-    <span class="n">pizzas</span><span class="o">=</span><span class="p">[</span><span class="n">margherita_pizza</span><span class="p">,</span> <span class="n">pepperoni_pizza</span><span class="p">],</span>
-    <span class="n">metadata</span><span class="o">=</span><span class="p">{</span><span class="s2">"category"</span><span class="p">:</span> <span class="s2">"traditional"</span><span class="p">,</span> <span class="s2">"popularity"</span><span class="p">:</span> <span class="s2">"high"</span><span class="p">},</span>
-    <span class="n">featured_pizza</span><span class="o">=</span><span class="n">margherita_pizza</span>
-<span class="p">)</span>
-
-<span class="c1"># Serialization preserves type information</span>
-<span class="n">json_data</span> <span class="o">=</span> <span class="n">serializer</span><span class="o">.</span><span class="n">serialize_to_text</span><span class="p">(</span><span class="n">menu_section</span><span class="p">)</span>
-<span class="n">restored_section</span> <span class="o">=</span> <span class="n">serializer</span><span class="o">.</span><span class="n">deserialize_from_text</span><span class="p">(</span><span class="n">json_data</span><span class="p">,</span> <span class="n">MenuSection</span><span class="p">)</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a href="#__codelineno-3-1" id="__codelineno-3-1" name="__codelineno-3-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Optional</span>
+</span><span id="__span-3-2"><a href="#__codelineno-3-2" id="__codelineno-3-2" name="__codelineno-3-2"></a>
+</span><span id="__span-3-3"><a href="#__codelineno-3-3" id="__codelineno-3-3" name="__codelineno-3-3"></a><span class="nd">@dataclass</span>
+</span><span id="__span-3-4"><a href="#__codelineno-3-4" id="__codelineno-3-4" name="__codelineno-3-4"></a><span class="k">class</span><span class="w"> </span><span class="nc">MenuSection</span><span class="p">:</span>
+</span><span id="__span-3-5"><a href="#__codelineno-3-5" id="__codelineno-3-5" name="__codelineno-3-5"></a>    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+</span><span id="__span-3-6"><a href="#__codelineno-3-6" id="__codelineno-3-6" name="__codelineno-3-6"></a>    <span class="n">pizzas</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Pizza</span><span class="p">]</span>
+</span><span id="__span-3-7"><a href="#__codelineno-3-7" id="__codelineno-3-7" name="__codelineno-3-7"></a>    <span class="n">metadata</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span>
+</span><span id="__span-3-8"><a href="#__codelineno-3-8" id="__codelineno-3-8" name="__codelineno-3-8"></a>    <span class="n">featured_pizza</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Pizza</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="__span-3-9"><a href="#__codelineno-3-9" id="__codelineno-3-9" name="__codelineno-3-9"></a>
+</span><span id="__span-3-10"><a href="#__codelineno-3-10" id="__codelineno-3-10" name="__codelineno-3-10"></a><span class="c1"># Serializer handles generic types automatically</span>
+</span><span id="__span-3-11"><a href="#__codelineno-3-11" id="__codelineno-3-11" name="__codelineno-3-11"></a><span class="n">menu_section</span> <span class="o">=</span> <span class="n">MenuSection</span><span class="p">(</span>
+</span><span id="__span-3-12"><a href="#__codelineno-3-12" id="__codelineno-3-12" name="__codelineno-3-12"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">"Classic Pizzas"</span><span class="p">,</span>
+</span><span id="__span-3-13"><a href="#__codelineno-3-13" id="__codelineno-3-13" name="__codelineno-3-13"></a>    <span class="n">pizzas</span><span class="o">=</span><span class="p">[</span><span class="n">margherita_pizza</span><span class="p">,</span> <span class="n">pepperoni_pizza</span><span class="p">],</span>
+</span><span id="__span-3-14"><a href="#__codelineno-3-14" id="__codelineno-3-14" name="__codelineno-3-14"></a>    <span class="n">metadata</span><span class="o">=</span><span class="p">{</span><span class="s2">"category"</span><span class="p">:</span> <span class="s2">"traditional"</span><span class="p">,</span> <span class="s2">"popularity"</span><span class="p">:</span> <span class="s2">"high"</span><span class="p">},</span>
+</span><span id="__span-3-15"><a href="#__codelineno-3-15" id="__codelineno-3-15" name="__codelineno-3-15"></a>    <span class="n">featured_pizza</span><span class="o">=</span><span class="n">margherita_pizza</span>
+</span><span id="__span-3-16"><a href="#__codelineno-3-16" id="__codelineno-3-16" name="__codelineno-3-16"></a><span class="p">)</span>
+</span><span id="__span-3-17"><a href="#__codelineno-3-17" id="__codelineno-3-17" name="__codelineno-3-17"></a>
+</span><span id="__span-3-18"><a href="#__codelineno-3-18" id="__codelineno-3-18" name="__codelineno-3-18"></a><span class="c1"># Serialization preserves type information</span>
+</span><span id="__span-3-19"><a href="#__codelineno-3-19" id="__codelineno-3-19" name="__codelineno-3-19"></a><span class="n">json_data</span> <span class="o">=</span> <span class="n">serializer</span><span class="o">.</span><span class="n">serialize_to_text</span><span class="p">(</span><span class="n">menu_section</span><span class="p">)</span>
+</span><span id="__span-3-20"><a href="#__codelineno-3-20" id="__codelineno-3-20" name="__codelineno-3-20"></a><span class="n">restored_section</span> <span class="o">=</span> <span class="n">serializer</span><span class="o">.</span><span class="n">deserialize_from_text</span><span class="p">(</span><span class="n">json_data</span><span class="p">,</span> <span class="n">MenuSection</span><span class="p">)</span>
+</span></code></pre></div>
 <h3 id="3-integration-with-dependency-injection">3. Integration with Dependency Injection<a class="headerlink" href="#3-integration-with-dependency-injection" title="Permanent link">¶</a></h3>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.hosting</span><span class="w"> </span><span class="kn">import</span> <span class="n">WebApplicationBuilder</span>
-
-<span class="k">def</span><span class="w"> </span><span class="nf">configure_serialization</span><span class="p">(</span><span class="n">builder</span><span class="p">:</span> <span class="n">WebApplicationBuilder</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">"""Configure serialization services"""</span>
-
-    <span class="c1"># Register JsonSerializer as singleton</span>
-    <span class="n">builder</span><span class="o">.</span><span class="n">services</span><span class="o">.</span><span class="n">add_singleton</span><span class="p">(</span><span class="n">JsonSerializer</span><span class="p">)</span>
-
-    <span class="c1"># Use in controllers</span>
-    <span class="k">class</span><span class="w"> </span><span class="nc">OrdersController</span><span class="p">(</span><span class="n">ControllerBase</span><span class="p">):</span>
-        <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
-                     <span class="n">service_provider</span><span class="p">:</span> <span class="n">ServiceProviderBase</span><span class="p">,</span>
-                     <span class="n">mapper</span><span class="p">:</span> <span class="n">Mapper</span><span class="p">,</span>
-                     <span class="n">mediator</span><span class="p">:</span> <span class="n">Mediator</span><span class="p">,</span>
-                     <span class="n">serializer</span><span class="p">:</span> <span class="n">JsonSerializer</span><span class="p">):</span>  <span class="c1"># Injected automatically</span>
-            <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">service_provider</span><span class="p">,</span> <span class="n">mapper</span><span class="p">,</span> <span class="n">mediator</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">serializer</span> <span class="o">=</span> <span class="n">serializer</span>
-
-        <span class="nd">@post</span><span class="p">(</span><span class="s2">"/export"</span><span class="p">)</span>
-        <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">export_orders</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">            </span><span class="sd">"""Export all orders as JSON"""</span>
-            <span class="n">orders</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_all_orders</span><span class="p">()</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">serializer</span><span class="o">.</span><span class="n">serialize_to_text</span><span class="p">(</span><span class="n">orders</span><span class="p">)</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a href="#__codelineno-4-1" id="__codelineno-4-1" name="__codelineno-4-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.hosting</span><span class="w"> </span><span class="kn">import</span> <span class="n">WebApplicationBuilder</span>
+</span><span id="__span-4-2"><a href="#__codelineno-4-2" id="__codelineno-4-2" name="__codelineno-4-2"></a>
+</span><span id="__span-4-3"><a href="#__codelineno-4-3" id="__codelineno-4-3" name="__codelineno-4-3"></a><span class="k">def</span><span class="w"> </span><span class="nf">configure_serialization</span><span class="p">(</span><span class="n">builder</span><span class="p">:</span> <span class="n">WebApplicationBuilder</span><span class="p">):</span>
+</span><span id="__span-4-4"><a href="#__codelineno-4-4" id="__codelineno-4-4" name="__codelineno-4-4"></a><span class="w">    </span><span class="sd">"""Configure serialization services"""</span>
+</span><span id="__span-4-5"><a href="#__codelineno-4-5" id="__codelineno-4-5" name="__codelineno-4-5"></a>
+</span><span id="__span-4-6"><a href="#__codelineno-4-6" id="__codelineno-4-6" name="__codelineno-4-6"></a>    <span class="c1"># Register JsonSerializer as singleton</span>
+</span><span id="__span-4-7"><a href="#__codelineno-4-7" id="__codelineno-4-7" name="__codelineno-4-7"></a>    <span class="n">builder</span><span class="o">.</span><span class="n">services</span><span class="o">.</span><span class="n">add_singleton</span><span class="p">(</span><span class="n">JsonSerializer</span><span class="p">)</span>
+</span><span id="__span-4-8"><a href="#__codelineno-4-8" id="__codelineno-4-8" name="__codelineno-4-8"></a>
+</span><span id="__span-4-9"><a href="#__codelineno-4-9" id="__codelineno-4-9" name="__codelineno-4-9"></a>    <span class="c1"># Use in controllers</span>
+</span><span id="__span-4-10"><a href="#__codelineno-4-10" id="__codelineno-4-10" name="__codelineno-4-10"></a>    <span class="k">class</span><span class="w"> </span><span class="nc">OrdersController</span><span class="p">(</span><span class="n">ControllerBase</span><span class="p">):</span>
+</span><span id="__span-4-11"><a href="#__codelineno-4-11" id="__codelineno-4-11" name="__codelineno-4-11"></a>        <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+</span><span id="__span-4-12"><a href="#__codelineno-4-12" id="__codelineno-4-12" name="__codelineno-4-12"></a>                     <span class="n">service_provider</span><span class="p">:</span> <span class="n">ServiceProviderBase</span><span class="p">,</span>
+</span><span id="__span-4-13"><a href="#__codelineno-4-13" id="__codelineno-4-13" name="__codelineno-4-13"></a>                     <span class="n">mapper</span><span class="p">:</span> <span class="n">Mapper</span><span class="p">,</span>
+</span><span id="__span-4-14"><a href="#__codelineno-4-14" id="__codelineno-4-14" name="__codelineno-4-14"></a>                     <span class="n">mediator</span><span class="p">:</span> <span class="n">Mediator</span><span class="p">,</span>
+</span><span id="__span-4-15"><a href="#__codelineno-4-15" id="__codelineno-4-15" name="__codelineno-4-15"></a>                     <span class="n">serializer</span><span class="p">:</span> <span class="n">JsonSerializer</span><span class="p">):</span>  <span class="c1"># Injected automatically</span>
+</span><span id="__span-4-16"><a href="#__codelineno-4-16" id="__codelineno-4-16" name="__codelineno-4-16"></a>            <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">service_provider</span><span class="p">,</span> <span class="n">mapper</span><span class="p">,</span> <span class="n">mediator</span><span class="p">)</span>
+</span><span id="__span-4-17"><a href="#__codelineno-4-17" id="__codelineno-4-17" name="__codelineno-4-17"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">serializer</span> <span class="o">=</span> <span class="n">serializer</span>
+</span><span id="__span-4-18"><a href="#__codelineno-4-18" id="__codelineno-4-18" name="__codelineno-4-18"></a>
+</span><span id="__span-4-19"><a href="#__codelineno-4-19" id="__codelineno-4-19" name="__codelineno-4-19"></a>        <span class="nd">@post</span><span class="p">(</span><span class="s2">"/export"</span><span class="p">)</span>
+</span><span id="__span-4-20"><a href="#__codelineno-4-20" id="__codelineno-4-20" name="__codelineno-4-20"></a>        <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">export_orders</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</span><span id="__span-4-21"><a href="#__codelineno-4-21" id="__codelineno-4-21" name="__codelineno-4-21"></a><span class="w">            </span><span class="sd">"""Export all orders as JSON"""</span>
+</span><span id="__span-4-22"><a href="#__codelineno-4-22" id="__codelineno-4-22" name="__codelineno-4-22"></a>            <span class="n">orders</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_all_orders</span><span class="p">()</span>
+</span><span id="__span-4-23"><a href="#__codelineno-4-23" id="__codelineno-4-23" name="__codelineno-4-23"></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">serializer</span><span class="o">.</span><span class="n">serialize_to_text</span><span class="p">(</span><span class="n">orders</span><span class="p">)</span>
+</span></code></pre></div>
 <h2 id="testing-serialization">🧪 Testing Serialization<a class="headerlink" href="#testing-serialization" title="Permanent link">¶</a></h2>
 <h3 id="unit-testing-patterns">Unit Testing Patterns<a class="headerlink" href="#unit-testing-patterns" title="Permanent link">¶</a></h3>
-<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.serialization.json</span><span class="w"> </span><span class="kn">import</span> <span class="n">JsonSerializer</span>
-
-<span class="k">class</span><span class="w"> </span><span class="nc">TestPizzaOrderSerialization</span><span class="p">:</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">setup_method</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">serializer</span> <span class="o">=</span> <span class="n">JsonSerializer</span><span class="p">()</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">test_order_serialization_round_trip</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">"""Test complete serialization/deserialization cycle"""</span>
-        <span class="c1"># Arrange</span>
-        <span class="n">original_order</span> <span class="o">=</span> <span class="n">create_test_order</span><span class="p">()</span>
-
-        <span class="c1"># Act</span>
-        <span class="n">json_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">serializer</span><span class="o">.</span><span class="n">serialize_to_text</span><span class="p">(</span><span class="n">original_order</span><span class="p">)</span>
-        <span class="n">restored_order</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">serializer</span><span class="o">.</span><span class="n">deserialize_from_text</span><span class="p">(</span><span class="n">json_data</span><span class="p">,</span> <span class="n">Order</span><span class="p">)</span>
-
-        <span class="c1"># Assert</span>
-        <span class="k">assert</span> <span class="n">restored_order</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">original_order</span><span class="o">.</span><span class="n">id</span>
-        <span class="k">assert</span> <span class="n">restored_order</span><span class="o">.</span><span class="n">customer_name</span> <span class="o">==</span> <span class="n">original_order</span><span class="o">.</span><span class="n">customer_name</span>
-        <span class="k">assert</span> <span class="n">restored_order</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="n">original_order</span><span class="o">.</span><span class="n">status</span>
-        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">restored_order</span><span class="o">.</span><span class="n">pizzas</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">original_order</span><span class="o">.</span><span class="n">pizzas</span><span class="p">)</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">test_handles_none_values_gracefully</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">"""Test serialization with None values"""</span>
-        <span class="c1"># Arrange</span>
-        <span class="n">order</span> <span class="o">=</span> <span class="n">Order</span><span class="p">(</span>
-            <span class="nb">id</span><span class="o">=</span><span class="s2">"test-order"</span><span class="p">,</span>
-            <span class="n">customer_name</span><span class="o">=</span><span class="s2">"Test Customer"</span><span class="p">,</span>
-            <span class="n">customer_phone</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># None value</span>
-            <span class="n">pizzas</span><span class="o">=</span><span class="p">[],</span>
-            <span class="n">status</span><span class="o">=</span><span class="n">OrderStatus</span><span class="o">.</span><span class="n">PENDING</span><span class="p">,</span>
-            <span class="n">order_time</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(),</span>
-            <span class="n">total_amount</span><span class="o">=</span><span class="n">Decimal</span><span class="p">(</span><span class="s2">"0.00"</span><span class="p">)</span>
-        <span class="p">)</span>
-
-        <span class="c1"># Act &amp; Assert</span>
-        <span class="n">json_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">serializer</span><span class="o">.</span><span class="n">serialize_to_text</span><span class="p">(</span><span class="n">order</span><span class="p">)</span>
-        <span class="n">restored_order</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">serializer</span><span class="o">.</span><span class="n">deserialize_from_text</span><span class="p">(</span><span class="n">json_data</span><span class="p">,</span> <span class="n">Order</span><span class="p">)</span>
-
-        <span class="k">assert</span> <span class="n">restored_order</span><span class="o">.</span><span class="n">customer_phone</span> <span class="ow">is</span> <span class="kc">None</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">test_decimal_precision_preserved</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">"""Test that decimal precision is maintained"""</span>
-        <span class="c1"># Arrange</span>
-        <span class="n">pizza</span> <span class="o">=</span> <span class="n">Pizza</span><span class="p">(</span>
-            <span class="nb">id</span><span class="o">=</span><span class="s2">"test-pizza"</span><span class="p">,</span>
-            <span class="n">name</span><span class="o">=</span><span class="s2">"Test Pizza"</span><span class="p">,</span>
-            <span class="n">size</span><span class="o">=</span><span class="s2">"medium"</span><span class="p">,</span>
-            <span class="n">base_price</span><span class="o">=</span><span class="n">Decimal</span><span class="p">(</span><span class="s2">"12.99"</span><span class="p">),</span>
-            <span class="n">toppings</span><span class="o">=</span><span class="p">[]</span>
-        <span class="p">)</span>
-
-        <span class="c1"># Act</span>
-        <span class="n">json_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">serializer</span><span class="o">.</span><span class="n">serialize_to_text</span><span class="p">(</span><span class="n">pizza</span><span class="p">)</span>
-        <span class="n">restored_pizza</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">serializer</span><span class="o">.</span><span class="n">deserialize_from_text</span><span class="p">(</span><span class="n">json_data</span><span class="p">,</span> <span class="n">Pizza</span><span class="p">)</span>
-
-        <span class="c1"># Assert</span>
-        <span class="k">assert</span> <span class="n">restored_pizza</span><span class="o">.</span><span class="n">base_price</span> <span class="o">==</span> <span class="n">Decimal</span><span class="p">(</span><span class="s2">"12.99"</span><span class="p">)</span>
-        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">restored_pizza</span><span class="o">.</span><span class="n">base_price</span><span class="p">,</span> <span class="n">Decimal</span><span class="p">)</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a href="#__codelineno-5-1" id="__codelineno-5-1" name="__codelineno-5-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
+</span><span id="__span-5-2"><a href="#__codelineno-5-2" id="__codelineno-5-2" name="__codelineno-5-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.serialization.json</span><span class="w"> </span><span class="kn">import</span> <span class="n">JsonSerializer</span>
+</span><span id="__span-5-3"><a href="#__codelineno-5-3" id="__codelineno-5-3" name="__codelineno-5-3"></a>
+</span><span id="__span-5-4"><a href="#__codelineno-5-4" id="__codelineno-5-4" name="__codelineno-5-4"></a><span class="k">class</span><span class="w"> </span><span class="nc">TestPizzaOrderSerialization</span><span class="p">:</span>
+</span><span id="__span-5-5"><a href="#__codelineno-5-5" id="__codelineno-5-5" name="__codelineno-5-5"></a>
+</span><span id="__span-5-6"><a href="#__codelineno-5-6" id="__codelineno-5-6" name="__codelineno-5-6"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">setup_method</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="__span-5-7"><a href="#__codelineno-5-7" id="__codelineno-5-7" name="__codelineno-5-7"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">serializer</span> <span class="o">=</span> <span class="n">JsonSerializer</span><span class="p">()</span>
+</span><span id="__span-5-8"><a href="#__codelineno-5-8" id="__codelineno-5-8" name="__codelineno-5-8"></a>
+</span><span id="__span-5-9"><a href="#__codelineno-5-9" id="__codelineno-5-9" name="__codelineno-5-9"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">test_order_serialization_round_trip</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="__span-5-10"><a href="#__codelineno-5-10" id="__codelineno-5-10" name="__codelineno-5-10"></a><span class="w">        </span><span class="sd">"""Test complete serialization/deserialization cycle"""</span>
+</span><span id="__span-5-11"><a href="#__codelineno-5-11" id="__codelineno-5-11" name="__codelineno-5-11"></a>        <span class="c1"># Arrange</span>
+</span><span id="__span-5-12"><a href="#__codelineno-5-12" id="__codelineno-5-12" name="__codelineno-5-12"></a>        <span class="n">original_order</span> <span class="o">=</span> <span class="n">create_test_order</span><span class="p">()</span>
+</span><span id="__span-5-13"><a href="#__codelineno-5-13" id="__codelineno-5-13" name="__codelineno-5-13"></a>
+</span><span id="__span-5-14"><a href="#__codelineno-5-14" id="__codelineno-5-14" name="__codelineno-5-14"></a>        <span class="c1"># Act</span>
+</span><span id="__span-5-15"><a href="#__codelineno-5-15" id="__codelineno-5-15" name="__codelineno-5-15"></a>        <span class="n">json_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">serializer</span><span class="o">.</span><span class="n">serialize_to_text</span><span class="p">(</span><span class="n">original_order</span><span class="p">)</span>
+</span><span id="__span-5-16"><a href="#__codelineno-5-16" id="__codelineno-5-16" name="__codelineno-5-16"></a>        <span class="n">restored_order</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">serializer</span><span class="o">.</span><span class="n">deserialize_from_text</span><span class="p">(</span><span class="n">json_data</span><span class="p">,</span> <span class="n">Order</span><span class="p">)</span>
+</span><span id="__span-5-17"><a href="#__codelineno-5-17" id="__codelineno-5-17" name="__codelineno-5-17"></a>
+</span><span id="__span-5-18"><a href="#__codelineno-5-18" id="__codelineno-5-18" name="__codelineno-5-18"></a>        <span class="c1"># Assert</span>
+</span><span id="__span-5-19"><a href="#__codelineno-5-19" id="__codelineno-5-19" name="__codelineno-5-19"></a>        <span class="k">assert</span> <span class="n">restored_order</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">original_order</span><span class="o">.</span><span class="n">id</span>
+</span><span id="__span-5-20"><a href="#__codelineno-5-20" id="__codelineno-5-20" name="__codelineno-5-20"></a>        <span class="k">assert</span> <span class="n">restored_order</span><span class="o">.</span><span class="n">customer_name</span> <span class="o">==</span> <span class="n">original_order</span><span class="o">.</span><span class="n">customer_name</span>
+</span><span id="__span-5-21"><a href="#__codelineno-5-21" id="__codelineno-5-21" name="__codelineno-5-21"></a>        <span class="k">assert</span> <span class="n">restored_order</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="n">original_order</span><span class="o">.</span><span class="n">status</span>
+</span><span id="__span-5-22"><a href="#__codelineno-5-22" id="__codelineno-5-22" name="__codelineno-5-22"></a>        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">restored_order</span><span class="o">.</span><span class="n">pizzas</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">original_order</span><span class="o">.</span><span class="n">pizzas</span><span class="p">)</span>
+</span><span id="__span-5-23"><a href="#__codelineno-5-23" id="__codelineno-5-23" name="__codelineno-5-23"></a>
+</span><span id="__span-5-24"><a href="#__codelineno-5-24" id="__codelineno-5-24" name="__codelineno-5-24"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">test_handles_none_values_gracefully</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="__span-5-25"><a href="#__codelineno-5-25" id="__codelineno-5-25" name="__codelineno-5-25"></a><span class="w">        </span><span class="sd">"""Test serialization with None values"""</span>
+</span><span id="__span-5-26"><a href="#__codelineno-5-26" id="__codelineno-5-26" name="__codelineno-5-26"></a>        <span class="c1"># Arrange</span>
+</span><span id="__span-5-27"><a href="#__codelineno-5-27" id="__codelineno-5-27" name="__codelineno-5-27"></a>        <span class="n">order</span> <span class="o">=</span> <span class="n">Order</span><span class="p">(</span>
+</span><span id="__span-5-28"><a href="#__codelineno-5-28" id="__codelineno-5-28" name="__codelineno-5-28"></a>            <span class="nb">id</span><span class="o">=</span><span class="s2">"test-order"</span><span class="p">,</span>
+</span><span id="__span-5-29"><a href="#__codelineno-5-29" id="__codelineno-5-29" name="__codelineno-5-29"></a>            <span class="n">customer_name</span><span class="o">=</span><span class="s2">"Test Customer"</span><span class="p">,</span>
+</span><span id="__span-5-30"><a href="#__codelineno-5-30" id="__codelineno-5-30" name="__codelineno-5-30"></a>            <span class="n">customer_phone</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># None value</span>
+</span><span id="__span-5-31"><a href="#__codelineno-5-31" id="__codelineno-5-31" name="__codelineno-5-31"></a>            <span class="n">pizzas</span><span class="o">=</span><span class="p">[],</span>
+</span><span id="__span-5-32"><a href="#__codelineno-5-32" id="__codelineno-5-32" name="__codelineno-5-32"></a>            <span class="n">status</span><span class="o">=</span><span class="n">OrderStatus</span><span class="o">.</span><span class="n">PENDING</span><span class="p">,</span>
+</span><span id="__span-5-33"><a href="#__codelineno-5-33" id="__codelineno-5-33" name="__codelineno-5-33"></a>            <span class="n">order_time</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(),</span>
+</span><span id="__span-5-34"><a href="#__codelineno-5-34" id="__codelineno-5-34" name="__codelineno-5-34"></a>            <span class="n">total_amount</span><span class="o">=</span><span class="n">Decimal</span><span class="p">(</span><span class="s2">"0.00"</span><span class="p">)</span>
+</span><span id="__span-5-35"><a href="#__codelineno-5-35" id="__codelineno-5-35" name="__codelineno-5-35"></a>        <span class="p">)</span>
+</span><span id="__span-5-36"><a href="#__codelineno-5-36" id="__codelineno-5-36" name="__codelineno-5-36"></a>
+</span><span id="__span-5-37"><a href="#__codelineno-5-37" id="__codelineno-5-37" name="__codelineno-5-37"></a>        <span class="c1"># Act &amp; Assert</span>
+</span><span id="__span-5-38"><a href="#__codelineno-5-38" id="__codelineno-5-38" name="__codelineno-5-38"></a>        <span class="n">json_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">serializer</span><span class="o">.</span><span class="n">serialize_to_text</span><span class="p">(</span><span class="n">order</span><span class="p">)</span>
+</span><span id="__span-5-39"><a href="#__codelineno-5-39" id="__codelineno-5-39" name="__codelineno-5-39"></a>        <span class="n">restored_order</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">serializer</span><span class="o">.</span><span class="n">deserialize_from_text</span><span class="p">(</span><span class="n">json_data</span><span class="p">,</span> <span class="n">Order</span><span class="p">)</span>
+</span><span id="__span-5-40"><a href="#__codelineno-5-40" id="__codelineno-5-40" name="__codelineno-5-40"></a>
+</span><span id="__span-5-41"><a href="#__codelineno-5-41" id="__codelineno-5-41" name="__codelineno-5-41"></a>        <span class="k">assert</span> <span class="n">restored_order</span><span class="o">.</span><span class="n">customer_phone</span> <span class="ow">is</span> <span class="kc">None</span>
+</span><span id="__span-5-42"><a href="#__codelineno-5-42" id="__codelineno-5-42" name="__codelineno-5-42"></a>
+</span><span id="__span-5-43"><a href="#__codelineno-5-43" id="__codelineno-5-43" name="__codelineno-5-43"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">test_decimal_precision_preserved</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="__span-5-44"><a href="#__codelineno-5-44" id="__codelineno-5-44" name="__codelineno-5-44"></a><span class="w">        </span><span class="sd">"""Test that decimal precision is maintained"""</span>
+</span><span id="__span-5-45"><a href="#__codelineno-5-45" id="__codelineno-5-45" name="__codelineno-5-45"></a>        <span class="c1"># Arrange</span>
+</span><span id="__span-5-46"><a href="#__codelineno-5-46" id="__codelineno-5-46" name="__codelineno-5-46"></a>        <span class="n">pizza</span> <span class="o">=</span> <span class="n">Pizza</span><span class="p">(</span>
+</span><span id="__span-5-47"><a href="#__codelineno-5-47" id="__codelineno-5-47" name="__codelineno-5-47"></a>            <span class="nb">id</span><span class="o">=</span><span class="s2">"test-pizza"</span><span class="p">,</span>
+</span><span id="__span-5-48"><a href="#__codelineno-5-48" id="__codelineno-5-48" name="__codelineno-5-48"></a>            <span class="n">name</span><span class="o">=</span><span class="s2">"Test Pizza"</span><span class="p">,</span>
+</span><span id="__span-5-49"><a href="#__codelineno-5-49" id="__codelineno-5-49" name="__codelineno-5-49"></a>            <span class="n">size</span><span class="o">=</span><span class="s2">"medium"</span><span class="p">,</span>
+</span><span id="__span-5-50"><a href="#__codelineno-5-50" id="__codelineno-5-50" name="__codelineno-5-50"></a>            <span class="n">base_price</span><span class="o">=</span><span class="n">Decimal</span><span class="p">(</span><span class="s2">"12.99"</span><span class="p">),</span>
+</span><span id="__span-5-51"><a href="#__codelineno-5-51" id="__codelineno-5-51" name="__codelineno-5-51"></a>            <span class="n">toppings</span><span class="o">=</span><span class="p">[]</span>
+</span><span id="__span-5-52"><a href="#__codelineno-5-52" id="__codelineno-5-52" name="__codelineno-5-52"></a>        <span class="p">)</span>
+</span><span id="__span-5-53"><a href="#__codelineno-5-53" id="__codelineno-5-53" name="__codelineno-5-53"></a>
+</span><span id="__span-5-54"><a href="#__codelineno-5-54" id="__codelineno-5-54" name="__codelineno-5-54"></a>        <span class="c1"># Act</span>
+</span><span id="__span-5-55"><a href="#__codelineno-5-55" id="__codelineno-5-55" name="__codelineno-5-55"></a>        <span class="n">json_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">serializer</span><span class="o">.</span><span class="n">serialize_to_text</span><span class="p">(</span><span class="n">pizza</span><span class="p">)</span>
+</span><span id="__span-5-56"><a href="#__codelineno-5-56" id="__codelineno-5-56" name="__codelineno-5-56"></a>        <span class="n">restored_pizza</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">serializer</span><span class="o">.</span><span class="n">deserialize_from_text</span><span class="p">(</span><span class="n">json_data</span><span class="p">,</span> <span class="n">Pizza</span><span class="p">)</span>
+</span><span id="__span-5-57"><a href="#__codelineno-5-57" id="__codelineno-5-57" name="__codelineno-5-57"></a>
+</span><span id="__span-5-58"><a href="#__codelineno-5-58" id="__codelineno-5-58" name="__codelineno-5-58"></a>        <span class="c1"># Assert</span>
+</span><span id="__span-5-59"><a href="#__codelineno-5-59" id="__codelineno-5-59" name="__codelineno-5-59"></a>        <span class="k">assert</span> <span class="n">restored_pizza</span><span class="o">.</span><span class="n">base_price</span> <span class="o">==</span> <span class="n">Decimal</span><span class="p">(</span><span class="s2">"12.99"</span><span class="p">)</span>
+</span><span id="__span-5-60"><a href="#__codelineno-5-60" id="__codelineno-5-60" name="__codelineno-5-60"></a>        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">restored_pizza</span><span class="o">.</span><span class="n">base_price</span><span class="p">,</span> <span class="n">Decimal</span><span class="p">)</span>
+</span></code></pre></div>
 <h2 id="real-world-use-cases">🎯 Real-World Use Cases<a class="headerlink" href="#real-world-use-cases" title="Permanent link">¶</a></h2>
 <h3 id="1-api-response-serialization">1. API Response Serialization<a class="headerlink" href="#1-api-response-serialization" title="Permanent link">¶</a></h3>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">fastapi</span><span class="w"> </span><span class="kn">import</span> <span class="n">FastAPI</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">fastapi.responses</span><span class="w"> </span><span class="kn">import</span> <span class="n">JSONResponse</span>
-
-<span class="k">class</span><span class="w"> </span><span class="nc">MenuController</span><span class="p">(</span><span class="n">ControllerBase</span><span class="p">):</span>
-
-    <span class="nd">@get</span><span class="p">(</span><span class="s2">"/menu"</span><span class="p">)</span>
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_menu</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JSONResponse</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Get pizzeria menu as JSON"""</span>
-        <span class="n">menu_items</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_menu_items</span><span class="p">()</span>
-
-        <span class="c1"># Serialize complex menu structure</span>
-        <span class="n">json_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">serializer</span><span class="o">.</span><span class="n">serialize_to_text</span><span class="p">(</span><span class="n">menu_items</span><span class="p">)</span>
-
-        <span class="k">return</span> <span class="n">JSONResponse</span><span class="p">(</span>
-            <span class="n">content</span><span class="o">=</span><span class="n">json_data</span><span class="p">,</span>
-            <span class="n">media_type</span><span class="o">=</span><span class="s2">"application/json"</span>
-        <span class="p">)</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a href="#__codelineno-6-1" id="__codelineno-6-1" name="__codelineno-6-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">fastapi</span><span class="w"> </span><span class="kn">import</span> <span class="n">FastAPI</span>
+</span><span id="__span-6-2"><a href="#__codelineno-6-2" id="__codelineno-6-2" name="__codelineno-6-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">fastapi.responses</span><span class="w"> </span><span class="kn">import</span> <span class="n">JSONResponse</span>
+</span><span id="__span-6-3"><a href="#__codelineno-6-3" id="__codelineno-6-3" name="__codelineno-6-3"></a>
+</span><span id="__span-6-4"><a href="#__codelineno-6-4" id="__codelineno-6-4" name="__codelineno-6-4"></a><span class="k">class</span><span class="w"> </span><span class="nc">MenuController</span><span class="p">(</span><span class="n">ControllerBase</span><span class="p">):</span>
+</span><span id="__span-6-5"><a href="#__codelineno-6-5" id="__codelineno-6-5" name="__codelineno-6-5"></a>
+</span><span id="__span-6-6"><a href="#__codelineno-6-6" id="__codelineno-6-6" name="__codelineno-6-6"></a>    <span class="nd">@get</span><span class="p">(</span><span class="s2">"/menu"</span><span class="p">)</span>
+</span><span id="__span-6-7"><a href="#__codelineno-6-7" id="__codelineno-6-7" name="__codelineno-6-7"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_menu</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JSONResponse</span><span class="p">:</span>
+</span><span id="__span-6-8"><a href="#__codelineno-6-8" id="__codelineno-6-8" name="__codelineno-6-8"></a><span class="w">        </span><span class="sd">"""Get pizzeria menu as JSON"""</span>
+</span><span id="__span-6-9"><a href="#__codelineno-6-9" id="__codelineno-6-9" name="__codelineno-6-9"></a>        <span class="n">menu_items</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_menu_items</span><span class="p">()</span>
+</span><span id="__span-6-10"><a href="#__codelineno-6-10" id="__codelineno-6-10" name="__codelineno-6-10"></a>
+</span><span id="__span-6-11"><a href="#__codelineno-6-11" id="__codelineno-6-11" name="__codelineno-6-11"></a>        <span class="c1"># Serialize complex menu structure</span>
+</span><span id="__span-6-12"><a href="#__codelineno-6-12" id="__codelineno-6-12" name="__codelineno-6-12"></a>        <span class="n">json_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">serializer</span><span class="o">.</span><span class="n">serialize_to_text</span><span class="p">(</span><span class="n">menu_items</span><span class="p">)</span>
+</span><span id="__span-6-13"><a href="#__codelineno-6-13" id="__codelineno-6-13" name="__codelineno-6-13"></a>
+</span><span id="__span-6-14"><a href="#__codelineno-6-14" id="__codelineno-6-14" name="__codelineno-6-14"></a>        <span class="k">return</span> <span class="n">JSONResponse</span><span class="p">(</span>
+</span><span id="__span-6-15"><a href="#__codelineno-6-15" id="__codelineno-6-15" name="__codelineno-6-15"></a>            <span class="n">content</span><span class="o">=</span><span class="n">json_data</span><span class="p">,</span>
+</span><span id="__span-6-16"><a href="#__codelineno-6-16" id="__codelineno-6-16" name="__codelineno-6-16"></a>            <span class="n">media_type</span><span class="o">=</span><span class="s2">"application/json"</span>
+</span><span id="__span-6-17"><a href="#__codelineno-6-17" id="__codelineno-6-17" name="__codelineno-6-17"></a>        <span class="p">)</span>
+</span></code></pre></div>
 <h3 id="2-event-payload-serialization">2. Event Payload Serialization<a class="headerlink" href="#2-event-payload-serialization" title="Permanent link">¶</a></h3>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.eventing</span><span class="w"> </span><span class="kn">import</span> <span class="n">DomainEvent</span>
-
-<span class="nd">@dataclass</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">OrderPlacedEvent</span><span class="p">(</span><span class="n">DomainEvent</span><span class="p">):</span>
-    <span class="n">order_id</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">customer_email</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">order_details</span><span class="p">:</span> <span class="n">Order</span>
-
-<span class="k">class</span><span class="w"> </span><span class="nc">OrderEventHandler</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">serializer</span><span class="p">:</span> <span class="n">JsonSerializer</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">serializer</span> <span class="o">=</span> <span class="n">serializer</span>
-
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">handle_order_placed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">OrderPlacedEvent</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">"""Handle order placed event with serialization"""</span>
-
-        <span class="c1"># Serialize event for external systems</span>
-        <span class="n">event_json</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">serializer</span><span class="o">.</span><span class="n">serialize_to_text</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
-
-        <span class="c1"># Send to message queue, webhook, etc.</span>
-        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">send_to_external_system</span><span class="p">(</span><span class="n">event_json</span><span class="p">)</span>
-
-        <span class="c1"># Log structured event data</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Order placed"</span><span class="p">,</span> <span class="n">extra</span><span class="o">=</span><span class="p">{</span>
-            <span class="s2">"event_data"</span><span class="p">:</span> <span class="n">event_json</span><span class="p">,</span>
-            <span class="s2">"order_id"</span><span class="p">:</span> <span class="n">event</span><span class="o">.</span><span class="n">order_id</span>
-        <span class="p">})</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-7-1"><a href="#__codelineno-7-1" id="__codelineno-7-1" name="__codelineno-7-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.eventing</span><span class="w"> </span><span class="kn">import</span> <span class="n">DomainEvent</span>
+</span><span id="__span-7-2"><a href="#__codelineno-7-2" id="__codelineno-7-2" name="__codelineno-7-2"></a>
+</span><span id="__span-7-3"><a href="#__codelineno-7-3" id="__codelineno-7-3" name="__codelineno-7-3"></a><span class="nd">@dataclass</span>
+</span><span id="__span-7-4"><a href="#__codelineno-7-4" id="__codelineno-7-4" name="__codelineno-7-4"></a><span class="k">class</span><span class="w"> </span><span class="nc">OrderPlacedEvent</span><span class="p">(</span><span class="n">DomainEvent</span><span class="p">):</span>
+</span><span id="__span-7-5"><a href="#__codelineno-7-5" id="__codelineno-7-5" name="__codelineno-7-5"></a>    <span class="n">order_id</span><span class="p">:</span> <span class="nb">str</span>
+</span><span id="__span-7-6"><a href="#__codelineno-7-6" id="__codelineno-7-6" name="__codelineno-7-6"></a>    <span class="n">customer_email</span><span class="p">:</span> <span class="nb">str</span>
+</span><span id="__span-7-7"><a href="#__codelineno-7-7" id="__codelineno-7-7" name="__codelineno-7-7"></a>    <span class="n">order_details</span><span class="p">:</span> <span class="n">Order</span>
+</span><span id="__span-7-8"><a href="#__codelineno-7-8" id="__codelineno-7-8" name="__codelineno-7-8"></a>
+</span><span id="__span-7-9"><a href="#__codelineno-7-9" id="__codelineno-7-9" name="__codelineno-7-9"></a><span class="k">class</span><span class="w"> </span><span class="nc">OrderEventHandler</span><span class="p">:</span>
+</span><span id="__span-7-10"><a href="#__codelineno-7-10" id="__codelineno-7-10" name="__codelineno-7-10"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">serializer</span><span class="p">:</span> <span class="n">JsonSerializer</span><span class="p">):</span>
+</span><span id="__span-7-11"><a href="#__codelineno-7-11" id="__codelineno-7-11" name="__codelineno-7-11"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">serializer</span> <span class="o">=</span> <span class="n">serializer</span>
+</span><span id="__span-7-12"><a href="#__codelineno-7-12" id="__codelineno-7-12" name="__codelineno-7-12"></a>
+</span><span id="__span-7-13"><a href="#__codelineno-7-13" id="__codelineno-7-13" name="__codelineno-7-13"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">handle_order_placed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">OrderPlacedEvent</span><span class="p">):</span>
+</span><span id="__span-7-14"><a href="#__codelineno-7-14" id="__codelineno-7-14" name="__codelineno-7-14"></a><span class="w">        </span><span class="sd">"""Handle order placed event with serialization"""</span>
+</span><span id="__span-7-15"><a href="#__codelineno-7-15" id="__codelineno-7-15" name="__codelineno-7-15"></a>
+</span><span id="__span-7-16"><a href="#__codelineno-7-16" id="__codelineno-7-16" name="__codelineno-7-16"></a>        <span class="c1"># Serialize event for external systems</span>
+</span><span id="__span-7-17"><a href="#__codelineno-7-17" id="__codelineno-7-17" name="__codelineno-7-17"></a>        <span class="n">event_json</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">serializer</span><span class="o">.</span><span class="n">serialize_to_text</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+</span><span id="__span-7-18"><a href="#__codelineno-7-18" id="__codelineno-7-18" name="__codelineno-7-18"></a>
+</span><span id="__span-7-19"><a href="#__codelineno-7-19" id="__codelineno-7-19" name="__codelineno-7-19"></a>        <span class="c1"># Send to message queue, webhook, etc.</span>
+</span><span id="__span-7-20"><a href="#__codelineno-7-20" id="__codelineno-7-20" name="__codelineno-7-20"></a>        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">send_to_external_system</span><span class="p">(</span><span class="n">event_json</span><span class="p">)</span>
+</span><span id="__span-7-21"><a href="#__codelineno-7-21" id="__codelineno-7-21" name="__codelineno-7-21"></a>
+</span><span id="__span-7-22"><a href="#__codelineno-7-22" id="__codelineno-7-22" name="__codelineno-7-22"></a>        <span class="c1"># Log structured event data</span>
+</span><span id="__span-7-23"><a href="#__codelineno-7-23" id="__codelineno-7-23" name="__codelineno-7-23"></a>        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Order placed"</span><span class="p">,</span> <span class="n">extra</span><span class="o">=</span><span class="p">{</span>
+</span><span id="__span-7-24"><a href="#__codelineno-7-24" id="__codelineno-7-24" name="__codelineno-7-24"></a>            <span class="s2">"event_data"</span><span class="p">:</span> <span class="n">event_json</span><span class="p">,</span>
+</span><span id="__span-7-25"><a href="#__codelineno-7-25" id="__codelineno-7-25" name="__codelineno-7-25"></a>            <span class="s2">"order_id"</span><span class="p">:</span> <span class="n">event</span><span class="o">.</span><span class="n">order_id</span>
+</span><span id="__span-7-26"><a href="#__codelineno-7-26" id="__codelineno-7-26" name="__codelineno-7-26"></a>        <span class="p">})</span>
+</span></code></pre></div>
 <h3 id="3-configuration-and-settings">3. Configuration and Settings<a class="headerlink" href="#3-configuration-and-settings" title="Permanent link">¶</a></h3>
-<div class="highlight"><pre><span></span><code><span class="nd">@dataclass</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">PizzeriaConfig</span><span class="p">:</span>
-    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">address</span><span class="p">:</span> <span class="n">Address</span>
-    <span class="n">operating_hours</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span>
-    <span class="n">menu_sections</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">MenuSection</span><span class="p">]</span>
-    <span class="n">pricing_rules</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Decimal</span><span class="p">]</span>
-
-<span class="k">class</span><span class="w"> </span><span class="nc">ConfigurationService</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">serializer</span><span class="p">:</span> <span class="n">JsonSerializer</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">serializer</span> <span class="o">=</span> <span class="n">serializer</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">load_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PizzeriaConfig</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Load pizzeria configuration from JSON file"""</span>
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">config_path</span><span class="p">,</span> <span class="s1">'r'</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-            <span class="n">json_data</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
-
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">serializer</span><span class="o">.</span><span class="n">deserialize_from_text</span><span class="p">(</span><span class="n">json_data</span><span class="p">,</span> <span class="n">PizzeriaConfig</span><span class="p">)</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">save_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">PizzeriaConfig</span><span class="p">,</span> <span class="n">config_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">"""Save pizzeria configuration to JSON file"""</span>
-        <span class="n">json_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">serializer</span><span class="o">.</span><span class="n">serialize_to_text</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
-
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">config_path</span><span class="p">,</span> <span class="s1">'w'</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">json_data</span><span class="p">)</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-8-1"><a href="#__codelineno-8-1" id="__codelineno-8-1" name="__codelineno-8-1"></a><span class="nd">@dataclass</span>
+</span><span id="__span-8-2"><a href="#__codelineno-8-2" id="__codelineno-8-2" name="__codelineno-8-2"></a><span class="k">class</span><span class="w"> </span><span class="nc">PizzeriaConfig</span><span class="p">:</span>
+</span><span id="__span-8-3"><a href="#__codelineno-8-3" id="__codelineno-8-3" name="__codelineno-8-3"></a>    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+</span><span id="__span-8-4"><a href="#__codelineno-8-4" id="__codelineno-8-4" name="__codelineno-8-4"></a>    <span class="n">address</span><span class="p">:</span> <span class="n">Address</span>
+</span><span id="__span-8-5"><a href="#__codelineno-8-5" id="__codelineno-8-5" name="__codelineno-8-5"></a>    <span class="n">operating_hours</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span>
+</span><span id="__span-8-6"><a href="#__codelineno-8-6" id="__codelineno-8-6" name="__codelineno-8-6"></a>    <span class="n">menu_sections</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">MenuSection</span><span class="p">]</span>
+</span><span id="__span-8-7"><a href="#__codelineno-8-7" id="__codelineno-8-7" name="__codelineno-8-7"></a>    <span class="n">pricing_rules</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Decimal</span><span class="p">]</span>
+</span><span id="__span-8-8"><a href="#__codelineno-8-8" id="__codelineno-8-8" name="__codelineno-8-8"></a>
+</span><span id="__span-8-9"><a href="#__codelineno-8-9" id="__codelineno-8-9" name="__codelineno-8-9"></a><span class="k">class</span><span class="w"> </span><span class="nc">ConfigurationService</span><span class="p">:</span>
+</span><span id="__span-8-10"><a href="#__codelineno-8-10" id="__codelineno-8-10" name="__codelineno-8-10"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">serializer</span><span class="p">:</span> <span class="n">JsonSerializer</span><span class="p">):</span>
+</span><span id="__span-8-11"><a href="#__codelineno-8-11" id="__codelineno-8-11" name="__codelineno-8-11"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">serializer</span> <span class="o">=</span> <span class="n">serializer</span>
+</span><span id="__span-8-12"><a href="#__codelineno-8-12" id="__codelineno-8-12" name="__codelineno-8-12"></a>
+</span><span id="__span-8-13"><a href="#__codelineno-8-13" id="__codelineno-8-13" name="__codelineno-8-13"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">load_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PizzeriaConfig</span><span class="p">:</span>
+</span><span id="__span-8-14"><a href="#__codelineno-8-14" id="__codelineno-8-14" name="__codelineno-8-14"></a><span class="w">        </span><span class="sd">"""Load pizzeria configuration from JSON file"""</span>
+</span><span id="__span-8-15"><a href="#__codelineno-8-15" id="__codelineno-8-15" name="__codelineno-8-15"></a>        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">config_path</span><span class="p">,</span> <span class="s1">'r'</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+</span><span id="__span-8-16"><a href="#__codelineno-8-16" id="__codelineno-8-16" name="__codelineno-8-16"></a>            <span class="n">json_data</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+</span><span id="__span-8-17"><a href="#__codelineno-8-17" id="__codelineno-8-17" name="__codelineno-8-17"></a>
+</span><span id="__span-8-18"><a href="#__codelineno-8-18" id="__codelineno-8-18" name="__codelineno-8-18"></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">serializer</span><span class="o">.</span><span class="n">deserialize_from_text</span><span class="p">(</span><span class="n">json_data</span><span class="p">,</span> <span class="n">PizzeriaConfig</span><span class="p">)</span>
+</span><span id="__span-8-19"><a href="#__codelineno-8-19" id="__codelineno-8-19" name="__codelineno-8-19"></a>
+</span><span id="__span-8-20"><a href="#__codelineno-8-20" id="__codelineno-8-20" name="__codelineno-8-20"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">save_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">PizzeriaConfig</span><span class="p">,</span> <span class="n">config_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+</span><span id="__span-8-21"><a href="#__codelineno-8-21" id="__codelineno-8-21" name="__codelineno-8-21"></a><span class="w">        </span><span class="sd">"""Save pizzeria configuration to JSON file"""</span>
+</span><span id="__span-8-22"><a href="#__codelineno-8-22" id="__codelineno-8-22" name="__codelineno-8-22"></a>        <span class="n">json_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">serializer</span><span class="o">.</span><span class="n">serialize_to_text</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+</span><span id="__span-8-23"><a href="#__codelineno-8-23" id="__codelineno-8-23" name="__codelineno-8-23"></a>
+</span><span id="__span-8-24"><a href="#__codelineno-8-24" id="__codelineno-8-24" name="__codelineno-8-24"></a>        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">config_path</span><span class="p">,</span> <span class="s1">'w'</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+</span><span id="__span-8-25"><a href="#__codelineno-8-25" id="__codelineno-8-25" name="__codelineno-8-25"></a>            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">json_data</span><span class="p">)</span>
+</span></code></pre></div>
 <h2 id="error-handling-and-validation">🔍 Error Handling and Validation<a class="headerlink" href="#error-handling-and-validation" title="Permanent link">¶</a></h2>
 <h3 id="robust-serialization-patterns">Robust Serialization Patterns<a class="headerlink" href="#robust-serialization-patterns" title="Permanent link">¶</a></h3>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Union</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
-
-<span class="k">class</span><span class="w"> </span><span class="nc">SafeSerializationService</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">serializer</span><span class="p">:</span> <span class="n">JsonSerializer</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">serializer</span> <span class="o">=</span> <span class="n">serializer</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">safe_serialize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">"""Safely serialize object with error handling"""</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">serializer</span><span class="o">.</span><span class="n">serialize_to_text</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
-        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Serialization failed for </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-            <span class="k">return</span> <span class="kc">None</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">safe_deserialize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">json_data</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">target_type</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">T</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">T</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">"""Safely deserialize with validation"""</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">json_data</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">json_data</span><span class="o">.</span><span class="n">strip</span><span class="p">():</span>
-                <span class="k">return</span> <span class="kc">None</span>
-
-            <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">serializer</span><span class="o">.</span><span class="n">deserialize_from_text</span><span class="p">(</span><span class="n">json_data</span><span class="p">,</span> <span class="n">target_type</span><span class="p">)</span>
-
-            <span class="c1"># Additional validation</span>
-            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="s1">'validate'</span><span class="p">):</span>
-                <span class="n">result</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span>
-
-            <span class="k">return</span> <span class="n">result</span>
-
-        <span class="k">except</span> <span class="n">json</span><span class="o">.</span><span class="n">JSONDecodeError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Invalid JSON format: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-            <span class="k">return</span> <span class="kc">None</span>
-        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Deserialization failed: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-            <span class="k">return</span> <span class="kc">None</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-9-1"><a href="#__codelineno-9-1" id="__codelineno-9-1" name="__codelineno-9-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Union</span>
+</span><span id="__span-9-2"><a href="#__codelineno-9-2" id="__codelineno-9-2" name="__codelineno-9-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+</span><span id="__span-9-3"><a href="#__codelineno-9-3" id="__codelineno-9-3" name="__codelineno-9-3"></a>
+</span><span id="__span-9-4"><a href="#__codelineno-9-4" id="__codelineno-9-4" name="__codelineno-9-4"></a><span class="k">class</span><span class="w"> </span><span class="nc">SafeSerializationService</span><span class="p">:</span>
+</span><span id="__span-9-5"><a href="#__codelineno-9-5" id="__codelineno-9-5" name="__codelineno-9-5"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">serializer</span><span class="p">:</span> <span class="n">JsonSerializer</span><span class="p">):</span>
+</span><span id="__span-9-6"><a href="#__codelineno-9-6" id="__codelineno-9-6" name="__codelineno-9-6"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">serializer</span> <span class="o">=</span> <span class="n">serializer</span>
+</span><span id="__span-9-7"><a href="#__codelineno-9-7" id="__codelineno-9-7" name="__codelineno-9-7"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+</span><span id="__span-9-8"><a href="#__codelineno-9-8" id="__codelineno-9-8" name="__codelineno-9-8"></a>
+</span><span id="__span-9-9"><a href="#__codelineno-9-9" id="__codelineno-9-9" name="__codelineno-9-9"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">safe_serialize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
+</span><span id="__span-9-10"><a href="#__codelineno-9-10" id="__codelineno-9-10" name="__codelineno-9-10"></a><span class="w">        </span><span class="sd">"""Safely serialize object with error handling"""</span>
+</span><span id="__span-9-11"><a href="#__codelineno-9-11" id="__codelineno-9-11" name="__codelineno-9-11"></a>        <span class="k">try</span><span class="p">:</span>
+</span><span id="__span-9-12"><a href="#__codelineno-9-12" id="__codelineno-9-12" name="__codelineno-9-12"></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">serializer</span><span class="o">.</span><span class="n">serialize_to_text</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+</span><span id="__span-9-13"><a href="#__codelineno-9-13" id="__codelineno-9-13" name="__codelineno-9-13"></a>        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+</span><span id="__span-9-14"><a href="#__codelineno-9-14" id="__codelineno-9-14" name="__codelineno-9-14"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Serialization failed for </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span><span id="__span-9-15"><a href="#__codelineno-9-15" id="__codelineno-9-15" name="__codelineno-9-15"></a>            <span class="k">return</span> <span class="kc">None</span>
+</span><span id="__span-9-16"><a href="#__codelineno-9-16" id="__codelineno-9-16" name="__codelineno-9-16"></a>
+</span><span id="__span-9-17"><a href="#__codelineno-9-17" id="__codelineno-9-17" name="__codelineno-9-17"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">safe_deserialize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">json_data</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">target_type</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">T</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">T</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
+</span><span id="__span-9-18"><a href="#__codelineno-9-18" id="__codelineno-9-18" name="__codelineno-9-18"></a><span class="w">        </span><span class="sd">"""Safely deserialize with validation"""</span>
+</span><span id="__span-9-19"><a href="#__codelineno-9-19" id="__codelineno-9-19" name="__codelineno-9-19"></a>        <span class="k">try</span><span class="p">:</span>
+</span><span id="__span-9-20"><a href="#__codelineno-9-20" id="__codelineno-9-20" name="__codelineno-9-20"></a>            <span class="k">if</span> <span class="ow">not</span> <span class="n">json_data</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">json_data</span><span class="o">.</span><span class="n">strip</span><span class="p">():</span>
+</span><span id="__span-9-21"><a href="#__codelineno-9-21" id="__codelineno-9-21" name="__codelineno-9-21"></a>                <span class="k">return</span> <span class="kc">None</span>
+</span><span id="__span-9-22"><a href="#__codelineno-9-22" id="__codelineno-9-22" name="__codelineno-9-22"></a>
+</span><span id="__span-9-23"><a href="#__codelineno-9-23" id="__codelineno-9-23" name="__codelineno-9-23"></a>            <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">serializer</span><span class="o">.</span><span class="n">deserialize_from_text</span><span class="p">(</span><span class="n">json_data</span><span class="p">,</span> <span class="n">target_type</span><span class="p">)</span>
+</span><span id="__span-9-24"><a href="#__codelineno-9-24" id="__codelineno-9-24" name="__codelineno-9-24"></a>
+</span><span id="__span-9-25"><a href="#__codelineno-9-25" id="__codelineno-9-25" name="__codelineno-9-25"></a>            <span class="c1"># Additional validation</span>
+</span><span id="__span-9-26"><a href="#__codelineno-9-26" id="__codelineno-9-26" name="__codelineno-9-26"></a>            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="s1">'validate'</span><span class="p">):</span>
+</span><span id="__span-9-27"><a href="#__codelineno-9-27" id="__codelineno-9-27" name="__codelineno-9-27"></a>                <span class="n">result</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span>
+</span><span id="__span-9-28"><a href="#__codelineno-9-28" id="__codelineno-9-28" name="__codelineno-9-28"></a>
+</span><span id="__span-9-29"><a href="#__codelineno-9-29" id="__codelineno-9-29" name="__codelineno-9-29"></a>            <span class="k">return</span> <span class="n">result</span>
+</span><span id="__span-9-30"><a href="#__codelineno-9-30" id="__codelineno-9-30" name="__codelineno-9-30"></a>
+</span><span id="__span-9-31"><a href="#__codelineno-9-31" id="__codelineno-9-31" name="__codelineno-9-31"></a>        <span class="k">except</span> <span class="n">json</span><span class="o">.</span><span class="n">JSONDecodeError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+</span><span id="__span-9-32"><a href="#__codelineno-9-32" id="__codelineno-9-32" name="__codelineno-9-32"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Invalid JSON format: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span><span id="__span-9-33"><a href="#__codelineno-9-33" id="__codelineno-9-33" name="__codelineno-9-33"></a>            <span class="k">return</span> <span class="kc">None</span>
+</span><span id="__span-9-34"><a href="#__codelineno-9-34" id="__codelineno-9-34" name="__codelineno-9-34"></a>        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+</span><span id="__span-9-35"><a href="#__codelineno-9-35" id="__codelineno-9-35" name="__codelineno-9-35"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Deserialization failed: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span><span id="__span-9-36"><a href="#__codelineno-9-36" id="__codelineno-9-36" name="__codelineno-9-36"></a>            <span class="k">return</span> <span class="kc">None</span>
+</span></code></pre></div>
 <h2 id="performance-considerations">🚀 Performance Considerations<a class="headerlink" href="#performance-considerations" title="Permanent link">¶</a></h2>
 <h3 id="optimization-tips">Optimization Tips<a class="headerlink" href="#optimization-tips" title="Permanent link">¶</a></h3>
 <ol>
@@ -1587,23 +1587,23 @@
 <li><strong>Stream Processing</strong>: Use byte arrays for large data sets</li>
 <li><strong>Selective Serialization</strong>: Exclude unnecessary fields to reduce payload size</li>
 </ol>
-<div class="highlight"><pre><span></span><code><span class="c1"># Performance-optimized serialization</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">OptimizedOrderService</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">serializer</span><span class="p">:</span> <span class="n">JsonSerializer</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">serializer</span> <span class="o">=</span> <span class="n">serializer</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_byte_buffer</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">(</span><span class="mi">8192</span><span class="p">)</span>  <span class="c1"># Reusable buffer</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">serialize_order_summary</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">order</span><span class="p">:</span> <span class="n">Order</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Serialize only essential order information"""</span>
-        <span class="n">summary</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">"id"</span><span class="p">:</span> <span class="n">order</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
-            <span class="s2">"customer_name"</span><span class="p">:</span> <span class="n">order</span><span class="o">.</span><span class="n">customer_name</span><span class="p">,</span>
-            <span class="s2">"status"</span><span class="p">:</span> <span class="n">order</span><span class="o">.</span><span class="n">status</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
-            <span class="s2">"total_amount"</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">order</span><span class="o">.</span><span class="n">total_amount</span><span class="p">),</span>
-            <span class="s2">"pizza_count"</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">order</span><span class="o">.</span><span class="n">pizzas</span><span class="p">)</span>
-        <span class="p">}</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">serializer</span><span class="o">.</span><span class="n">serialize_to_text</span><span class="p">(</span><span class="n">summary</span><span class="p">)</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-10-1"><a href="#__codelineno-10-1" id="__codelineno-10-1" name="__codelineno-10-1"></a><span class="c1"># Performance-optimized serialization</span>
+</span><span id="__span-10-2"><a href="#__codelineno-10-2" id="__codelineno-10-2" name="__codelineno-10-2"></a><span class="k">class</span><span class="w"> </span><span class="nc">OptimizedOrderService</span><span class="p">:</span>
+</span><span id="__span-10-3"><a href="#__codelineno-10-3" id="__codelineno-10-3" name="__codelineno-10-3"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">serializer</span><span class="p">:</span> <span class="n">JsonSerializer</span><span class="p">):</span>
+</span><span id="__span-10-4"><a href="#__codelineno-10-4" id="__codelineno-10-4" name="__codelineno-10-4"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">serializer</span> <span class="o">=</span> <span class="n">serializer</span>
+</span><span id="__span-10-5"><a href="#__codelineno-10-5" id="__codelineno-10-5" name="__codelineno-10-5"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_byte_buffer</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">(</span><span class="mi">8192</span><span class="p">)</span>  <span class="c1"># Reusable buffer</span>
+</span><span id="__span-10-6"><a href="#__codelineno-10-6" id="__codelineno-10-6" name="__codelineno-10-6"></a>
+</span><span id="__span-10-7"><a href="#__codelineno-10-7" id="__codelineno-10-7" name="__codelineno-10-7"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">serialize_order_summary</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">order</span><span class="p">:</span> <span class="n">Order</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</span><span id="__span-10-8"><a href="#__codelineno-10-8" id="__codelineno-10-8" name="__codelineno-10-8"></a><span class="w">        </span><span class="sd">"""Serialize only essential order information"""</span>
+</span><span id="__span-10-9"><a href="#__codelineno-10-9" id="__codelineno-10-9" name="__codelineno-10-9"></a>        <span class="n">summary</span> <span class="o">=</span> <span class="p">{</span>
+</span><span id="__span-10-10"><a href="#__codelineno-10-10" id="__codelineno-10-10" name="__codelineno-10-10"></a>            <span class="s2">"id"</span><span class="p">:</span> <span class="n">order</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+</span><span id="__span-10-11"><a href="#__codelineno-10-11" id="__codelineno-10-11" name="__codelineno-10-11"></a>            <span class="s2">"customer_name"</span><span class="p">:</span> <span class="n">order</span><span class="o">.</span><span class="n">customer_name</span><span class="p">,</span>
+</span><span id="__span-10-12"><a href="#__codelineno-10-12" id="__codelineno-10-12" name="__codelineno-10-12"></a>            <span class="s2">"status"</span><span class="p">:</span> <span class="n">order</span><span class="o">.</span><span class="n">status</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+</span><span id="__span-10-13"><a href="#__codelineno-10-13" id="__codelineno-10-13" name="__codelineno-10-13"></a>            <span class="s2">"total_amount"</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">order</span><span class="o">.</span><span class="n">total_amount</span><span class="p">),</span>
+</span><span id="__span-10-14"><a href="#__codelineno-10-14" id="__codelineno-10-14" name="__codelineno-10-14"></a>            <span class="s2">"pizza_count"</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">order</span><span class="o">.</span><span class="n">pizzas</span><span class="p">)</span>
+</span><span id="__span-10-15"><a href="#__codelineno-10-15" id="__codelineno-10-15" name="__codelineno-10-15"></a>        <span class="p">}</span>
+</span><span id="__span-10-16"><a href="#__codelineno-10-16" id="__codelineno-10-16" name="__codelineno-10-16"></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">serializer</span><span class="o">.</span><span class="n">serialize_to_text</span><span class="p">(</span><span class="n">summary</span><span class="p">)</span>
+</span></code></pre></div>
 <h2 id="integration-points">🔗 Integration Points<a class="headerlink" href="#integration-points" title="Permanent link">¶</a></h2>
 <h3 id="framework-integration">Framework Integration<a class="headerlink" href="#framework-integration" title="Permanent link">¶</a></h3>
 <p>Serialization integrates seamlessly with:</p>

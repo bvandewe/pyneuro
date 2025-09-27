@@ -906,9 +906,9 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../references/python_type_hints/">
+<a class="md-nav__link" href="../../references/python_typing_guide/">
 <span class="md-ellipsis">
-    Python Type Hints
+    Python Typing Guide
     
   </span>
 </a>
@@ -930,9 +930,9 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../references/python_generic_types/">
+<a class="md-nav__link" href="../../references/test-mermaid/">
 <span class="md-ellipsis">
-    Python Generic Types
+    Mermaid References
     
   </span>
 </a>
@@ -1183,464 +1183,464 @@
 <li><strong>Git</strong> for version control</li>
 <li><strong>VS Code</strong> or preferred IDE</li>
 </ul>
-<div class="highlight"><pre><span></span><code><span class="c1"># Verify Python version</span>
-python<span class="w"> </span>--version<span class="w">  </span><span class="c1"># Should be 3.9 or higher</span>
-
-<span class="c1"># Install Poetry if not already installed</span>
-curl<span class="w"> </span>-sSL<span class="w"> </span>https://install.python-poetry.org<span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-
-
-<span class="c1"># Verify Poetry installation</span>
-poetry<span class="w"> </span>--version
-</code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a href="#__codelineno-0-1" id="__codelineno-0-1" name="__codelineno-0-1"></a><span class="c1"># Verify Python version</span>
+</span><span id="__span-0-2"><a href="#__codelineno-0-2" id="__codelineno-0-2" name="__codelineno-0-2"></a>python<span class="w"> </span>--version<span class="w">  </span><span class="c1"># Should be 3.9 or higher</span>
+</span><span id="__span-0-3"><a href="#__codelineno-0-3" id="__codelineno-0-3" name="__codelineno-0-3"></a>
+</span><span id="__span-0-4"><a href="#__codelineno-0-4" id="__codelineno-0-4" name="__codelineno-0-4"></a><span class="c1"># Install Poetry if not already installed</span>
+</span><span id="__span-0-5"><a href="#__codelineno-0-5" id="__codelineno-0-5" name="__codelineno-0-5"></a>curl<span class="w"> </span>-sSL<span class="w"> </span>https://install.python-poetry.org<span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-
+</span><span id="__span-0-6"><a href="#__codelineno-0-6" id="__codelineno-0-6" name="__codelineno-0-6"></a>
+</span><span id="__span-0-7"><a href="#__codelineno-0-7" id="__codelineno-0-7" name="__codelineno-0-7"></a><span class="c1"># Verify Poetry installation</span>
+</span><span id="__span-0-8"><a href="#__codelineno-0-8" id="__codelineno-0-8" name="__codelineno-0-8"></a>poetry<span class="w"> </span>--version
+</span></code></pre></div>
 <h2 id="creating-a-new-project">🏗️ Creating a New Project<a class="headerlink" href="#creating-a-new-project" title="Permanent link">¶</a></h2>
 <h3 id="option-1-using-pyneuroctl-recommended">Option 1: Using PyNeuroctl (Recommended)<a class="headerlink" href="#option-1-using-pyneuroctl-recommended" title="Permanent link">¶</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Install the CLI tool</span>
-pip<span class="w"> </span>install<span class="w"> </span>neuroglia-cli
-
-<span class="c1"># Create new project from pizzeria template</span>
-pyneuroctl<span class="w"> </span>new<span class="w"> </span>my-pizzeria<span class="w"> </span>--template<span class="w"> </span>pizzeria
-<span class="nb">cd</span><span class="w"> </span>my-pizzeria
-
-<span class="c1"># Install dependencies</span>
-poetry<span class="w"> </span>install
-
-<span class="c1"># Run the application</span>
-poetry<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </span>main.py
-</code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a href="#__codelineno-1-1" id="__codelineno-1-1" name="__codelineno-1-1"></a><span class="c1"># Install the CLI tool</span>
+</span><span id="__span-1-2"><a href="#__codelineno-1-2" id="__codelineno-1-2" name="__codelineno-1-2"></a>pip<span class="w"> </span>install<span class="w"> </span>neuroglia-cli
+</span><span id="__span-1-3"><a href="#__codelineno-1-3" id="__codelineno-1-3" name="__codelineno-1-3"></a>
+</span><span id="__span-1-4"><a href="#__codelineno-1-4" id="__codelineno-1-4" name="__codelineno-1-4"></a><span class="c1"># Create new project from pizzeria template</span>
+</span><span id="__span-1-5"><a href="#__codelineno-1-5" id="__codelineno-1-5" name="__codelineno-1-5"></a>pyneuroctl<span class="w"> </span>new<span class="w"> </span>my-pizzeria<span class="w"> </span>--template<span class="w"> </span>pizzeria
+</span><span id="__span-1-6"><a href="#__codelineno-1-6" id="__codelineno-1-6" name="__codelineno-1-6"></a><span class="nb">cd</span><span class="w"> </span>my-pizzeria
+</span><span id="__span-1-7"><a href="#__codelineno-1-7" id="__codelineno-1-7" name="__codelineno-1-7"></a>
+</span><span id="__span-1-8"><a href="#__codelineno-1-8" id="__codelineno-1-8" name="__codelineno-1-8"></a><span class="c1"># Install dependencies</span>
+</span><span id="__span-1-9"><a href="#__codelineno-1-9" id="__codelineno-1-9" name="__codelineno-1-9"></a>poetry<span class="w"> </span>install
+</span><span id="__span-1-10"><a href="#__codelineno-1-10" id="__codelineno-1-10" name="__codelineno-1-10"></a>
+</span><span id="__span-1-11"><a href="#__codelineno-1-11" id="__codelineno-1-11" name="__codelineno-1-11"></a><span class="c1"># Run the application</span>
+</span><span id="__span-1-12"><a href="#__codelineno-1-12" id="__codelineno-1-12" name="__codelineno-1-12"></a>poetry<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </span>main.py
+</span></code></pre></div>
 <h3 id="option-2-manual-setup">Option 2: Manual Setup<a class="headerlink" href="#option-2-manual-setup" title="Permanent link">¶</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Create project directory</span>
-mkdir<span class="w"> </span>my-pizzeria<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span>my-pizzeria
-
-<span class="c1"># Initialize Poetry project</span>
-poetry<span class="w"> </span>init<span class="w"> </span>--name<span class="w"> </span>my-pizzeria<span class="w"> </span>--description<span class="w"> </span><span class="s2">"Pizza ordering system"</span>
-
-<span class="c1"># Add Neuroglia framework</span>
-poetry<span class="w"> </span>add<span class="w"> </span>neuroglia
-
-<span class="c1"># Add development dependencies</span>
-poetry<span class="w"> </span>add<span class="w"> </span>--group<span class="w"> </span>dev<span class="w"> </span>pytest<span class="w"> </span>pytest-asyncio<span class="w"> </span>httpx
-
-<span class="c1"># Create project structure</span>
-mkdir<span class="w"> </span>-p<span class="w"> </span>src/<span class="o">{</span>api,application,domain,integration<span class="o">}</span>
-mkdir<span class="w"> </span>-p<span class="w"> </span>tests/<span class="o">{</span>unit,integration<span class="o">}</span>
-</code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a href="#__codelineno-2-1" id="__codelineno-2-1" name="__codelineno-2-1"></a><span class="c1"># Create project directory</span>
+</span><span id="__span-2-2"><a href="#__codelineno-2-2" id="__codelineno-2-2" name="__codelineno-2-2"></a>mkdir<span class="w"> </span>my-pizzeria<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span>my-pizzeria
+</span><span id="__span-2-3"><a href="#__codelineno-2-3" id="__codelineno-2-3" name="__codelineno-2-3"></a>
+</span><span id="__span-2-4"><a href="#__codelineno-2-4" id="__codelineno-2-4" name="__codelineno-2-4"></a><span class="c1"># Initialize Poetry project</span>
+</span><span id="__span-2-5"><a href="#__codelineno-2-5" id="__codelineno-2-5" name="__codelineno-2-5"></a>poetry<span class="w"> </span>init<span class="w"> </span>--name<span class="w"> </span>my-pizzeria<span class="w"> </span>--description<span class="w"> </span><span class="s2">"Pizza ordering system"</span>
+</span><span id="__span-2-6"><a href="#__codelineno-2-6" id="__codelineno-2-6" name="__codelineno-2-6"></a>
+</span><span id="__span-2-7"><a href="#__codelineno-2-7" id="__codelineno-2-7" name="__codelineno-2-7"></a><span class="c1"># Add Neuroglia framework</span>
+</span><span id="__span-2-8"><a href="#__codelineno-2-8" id="__codelineno-2-8" name="__codelineno-2-8"></a>poetry<span class="w"> </span>add<span class="w"> </span>neuroglia
+</span><span id="__span-2-9"><a href="#__codelineno-2-9" id="__codelineno-2-9" name="__codelineno-2-9"></a>
+</span><span id="__span-2-10"><a href="#__codelineno-2-10" id="__codelineno-2-10" name="__codelineno-2-10"></a><span class="c1"># Add development dependencies</span>
+</span><span id="__span-2-11"><a href="#__codelineno-2-11" id="__codelineno-2-11" name="__codelineno-2-11"></a>poetry<span class="w"> </span>add<span class="w"> </span>--group<span class="w"> </span>dev<span class="w"> </span>pytest<span class="w"> </span>pytest-asyncio<span class="w"> </span>httpx
+</span><span id="__span-2-12"><a href="#__codelineno-2-12" id="__codelineno-2-12" name="__codelineno-2-12"></a>
+</span><span id="__span-2-13"><a href="#__codelineno-2-13" id="__codelineno-2-13" name="__codelineno-2-13"></a><span class="c1"># Create project structure</span>
+</span><span id="__span-2-14"><a href="#__codelineno-2-14" id="__codelineno-2-14" name="__codelineno-2-14"></a>mkdir<span class="w"> </span>-p<span class="w"> </span>src/<span class="o">{</span>api,application,domain,integration<span class="o">}</span>
+</span><span id="__span-2-15"><a href="#__codelineno-2-15" id="__codelineno-2-15" name="__codelineno-2-15"></a>mkdir<span class="w"> </span>-p<span class="w"> </span>tests/<span class="o">{</span>unit,integration<span class="o">}</span>
+</span></code></pre></div>
 <h2 id="project-structure">📁 Project Structure<a class="headerlink" href="#project-structure" title="Permanent link">¶</a></h2>
 <p>Create the clean architecture structure:</p>
-<div class="highlight"><pre><span></span><code>my-pizzeria/
-├── pyproject.toml              # Project configuration
-├── main.py                     # Application entry point
-├── README.md                   # Project documentation
-├── .env                        # Environment variables
-├── .gitignore                  # Git ignore patterns
-├── src/
-│   ├── __init__.py
-│   ├── api/                    # 🌐 API Layer
-│   │   ├── __init__.py
-│   │   ├── controllers/        # REST endpoints
-│   │   └── dtos/              # Request/response models
-│   ├── application/            # 💼 Application Layer
-│   │   ├── __init__.py
-│   │   ├── commands/          # Write operations
-│   │   ├── queries/           # Read operations
-│   │   ├── handlers/          # Business logic
-│   │   └── services/          # Application services
-│   ├── domain/                # 🏛️ Domain Layer
-│   │   ├── __init__.py
-│   │   ├── entities/          # Business entities
-│   │   ├── events/            # Domain events
-│   │   └── repositories/      # Repository interfaces
-│   └── integration/           # 🔌 Integration Layer
-│       ├── __init__.py
-│       ├── repositories/      # Data access implementations
-│       └── services/          # External service integrations
-├── tests/
-│   ├── __init__.py
-│   ├── conftest.py           # Test configuration
-│   ├── unit/                 # Unit tests
-│   └── integration/          # Integration tests
-└── docs/                     # Project documentation
-</code></pre></div>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a href="#__codelineno-3-1" id="__codelineno-3-1" name="__codelineno-3-1"></a>my-pizzeria/
+</span><span id="__span-3-2"><a href="#__codelineno-3-2" id="__codelineno-3-2" name="__codelineno-3-2"></a>├── pyproject.toml              # Project configuration
+</span><span id="__span-3-3"><a href="#__codelineno-3-3" id="__codelineno-3-3" name="__codelineno-3-3"></a>├── main.py                     # Application entry point
+</span><span id="__span-3-4"><a href="#__codelineno-3-4" id="__codelineno-3-4" name="__codelineno-3-4"></a>├── README.md                   # Project documentation
+</span><span id="__span-3-5"><a href="#__codelineno-3-5" id="__codelineno-3-5" name="__codelineno-3-5"></a>├── .env                        # Environment variables
+</span><span id="__span-3-6"><a href="#__codelineno-3-6" id="__codelineno-3-6" name="__codelineno-3-6"></a>├── .gitignore                  # Git ignore patterns
+</span><span id="__span-3-7"><a href="#__codelineno-3-7" id="__codelineno-3-7" name="__codelineno-3-7"></a>├── src/
+</span><span id="__span-3-8"><a href="#__codelineno-3-8" id="__codelineno-3-8" name="__codelineno-3-8"></a>│   ├── __init__.py
+</span><span id="__span-3-9"><a href="#__codelineno-3-9" id="__codelineno-3-9" name="__codelineno-3-9"></a>│   ├── api/                    # 🌐 API Layer
+</span><span id="__span-3-10"><a href="#__codelineno-3-10" id="__codelineno-3-10" name="__codelineno-3-10"></a>│   │   ├── __init__.py
+</span><span id="__span-3-11"><a href="#__codelineno-3-11" id="__codelineno-3-11" name="__codelineno-3-11"></a>│   │   ├── controllers/        # REST endpoints
+</span><span id="__span-3-12"><a href="#__codelineno-3-12" id="__codelineno-3-12" name="__codelineno-3-12"></a>│   │   └── dtos/              # Request/response models
+</span><span id="__span-3-13"><a href="#__codelineno-3-13" id="__codelineno-3-13" name="__codelineno-3-13"></a>│   ├── application/            # 💼 Application Layer
+</span><span id="__span-3-14"><a href="#__codelineno-3-14" id="__codelineno-3-14" name="__codelineno-3-14"></a>│   │   ├── __init__.py
+</span><span id="__span-3-15"><a href="#__codelineno-3-15" id="__codelineno-3-15" name="__codelineno-3-15"></a>│   │   ├── commands/          # Write operations
+</span><span id="__span-3-16"><a href="#__codelineno-3-16" id="__codelineno-3-16" name="__codelineno-3-16"></a>│   │   ├── queries/           # Read operations
+</span><span id="__span-3-17"><a href="#__codelineno-3-17" id="__codelineno-3-17" name="__codelineno-3-17"></a>│   │   ├── handlers/          # Business logic
+</span><span id="__span-3-18"><a href="#__codelineno-3-18" id="__codelineno-3-18" name="__codelineno-3-18"></a>│   │   └── services/          # Application services
+</span><span id="__span-3-19"><a href="#__codelineno-3-19" id="__codelineno-3-19" name="__codelineno-3-19"></a>│   ├── domain/                # 🏛️ Domain Layer
+</span><span id="__span-3-20"><a href="#__codelineno-3-20" id="__codelineno-3-20" name="__codelineno-3-20"></a>│   │   ├── __init__.py
+</span><span id="__span-3-21"><a href="#__codelineno-3-21" id="__codelineno-3-21" name="__codelineno-3-21"></a>│   │   ├── entities/          # Business entities
+</span><span id="__span-3-22"><a href="#__codelineno-3-22" id="__codelineno-3-22" name="__codelineno-3-22"></a>│   │   ├── events/            # Domain events
+</span><span id="__span-3-23"><a href="#__codelineno-3-23" id="__codelineno-3-23" name="__codelineno-3-23"></a>│   │   └── repositories/      # Repository interfaces
+</span><span id="__span-3-24"><a href="#__codelineno-3-24" id="__codelineno-3-24" name="__codelineno-3-24"></a>│   └── integration/           # 🔌 Integration Layer
+</span><span id="__span-3-25"><a href="#__codelineno-3-25" id="__codelineno-3-25" name="__codelineno-3-25"></a>│       ├── __init__.py
+</span><span id="__span-3-26"><a href="#__codelineno-3-26" id="__codelineno-3-26" name="__codelineno-3-26"></a>│       ├── repositories/      # Data access implementations
+</span><span id="__span-3-27"><a href="#__codelineno-3-27" id="__codelineno-3-27" name="__codelineno-3-27"></a>│       └── services/          # External service integrations
+</span><span id="__span-3-28"><a href="#__codelineno-3-28" id="__codelineno-3-28" name="__codelineno-3-28"></a>├── tests/
+</span><span id="__span-3-29"><a href="#__codelineno-3-29" id="__codelineno-3-29" name="__codelineno-3-29"></a>│   ├── __init__.py
+</span><span id="__span-3-30"><a href="#__codelineno-3-30" id="__codelineno-3-30" name="__codelineno-3-30"></a>│   ├── conftest.py           # Test configuration
+</span><span id="__span-3-31"><a href="#__codelineno-3-31" id="__codelineno-3-31" name="__codelineno-3-31"></a>│   ├── unit/                 # Unit tests
+</span><span id="__span-3-32"><a href="#__codelineno-3-32" id="__codelineno-3-32" name="__codelineno-3-32"></a>│   └── integration/          # Integration tests
+</span><span id="__span-3-33"><a href="#__codelineno-3-33" id="__codelineno-3-33" name="__codelineno-3-33"></a>└── docs/                     # Project documentation
+</span></code></pre></div>
 <h2 id="configuration-setup">⚙️ Configuration Setup<a class="headerlink" href="#configuration-setup" title="Permanent link">¶</a></h2>
 <h3 id="1-environment-configuration">1. Environment Configuration<a class="headerlink" href="#1-environment-configuration" title="Permanent link">¶</a></h3>
 <p>Create <code>.env</code> file:</p>
-<div class="highlight"><pre><span></span><code># Application Settings
-APP_NAME=My Pizzeria
-APP_VERSION=1.0.0
-DEBUG=true
-
-# Server Configuration
-HOST=0.0.0.0
-PORT=8000
-
-# Database Configuration
-DATABASE_TYPE=mongodb
-MONGODB_CONNECTION_STRING=mongodb://localhost:27017/pizzeria
-
-# External Services
-SMS_SERVICE_API_KEY=your_sms_api_key
-EMAIL_SERVICE_API_KEY=your_email_api_key
-PAYMENT_GATEWAY_API_KEY=your_payment_api_key
-
-# Logging
-LOG_LEVEL=INFO
-LOG_FORMAT=json
-</code></pre></div>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a href="#__codelineno-4-1" id="__codelineno-4-1" name="__codelineno-4-1"></a># Application Settings
+</span><span id="__span-4-2"><a href="#__codelineno-4-2" id="__codelineno-4-2" name="__codelineno-4-2"></a>APP_NAME=My Pizzeria
+</span><span id="__span-4-3"><a href="#__codelineno-4-3" id="__codelineno-4-3" name="__codelineno-4-3"></a>APP_VERSION=1.0.0
+</span><span id="__span-4-4"><a href="#__codelineno-4-4" id="__codelineno-4-4" name="__codelineno-4-4"></a>DEBUG=true
+</span><span id="__span-4-5"><a href="#__codelineno-4-5" id="__codelineno-4-5" name="__codelineno-4-5"></a>
+</span><span id="__span-4-6"><a href="#__codelineno-4-6" id="__codelineno-4-6" name="__codelineno-4-6"></a># Server Configuration
+</span><span id="__span-4-7"><a href="#__codelineno-4-7" id="__codelineno-4-7" name="__codelineno-4-7"></a>HOST=0.0.0.0
+</span><span id="__span-4-8"><a href="#__codelineno-4-8" id="__codelineno-4-8" name="__codelineno-4-8"></a>PORT=8000
+</span><span id="__span-4-9"><a href="#__codelineno-4-9" id="__codelineno-4-9" name="__codelineno-4-9"></a>
+</span><span id="__span-4-10"><a href="#__codelineno-4-10" id="__codelineno-4-10" name="__codelineno-4-10"></a># Database Configuration
+</span><span id="__span-4-11"><a href="#__codelineno-4-11" id="__codelineno-4-11" name="__codelineno-4-11"></a>DATABASE_TYPE=mongodb
+</span><span id="__span-4-12"><a href="#__codelineno-4-12" id="__codelineno-4-12" name="__codelineno-4-12"></a>MONGODB_CONNECTION_STRING=mongodb://localhost:27017/pizzeria
+</span><span id="__span-4-13"><a href="#__codelineno-4-13" id="__codelineno-4-13" name="__codelineno-4-13"></a>
+</span><span id="__span-4-14"><a href="#__codelineno-4-14" id="__codelineno-4-14" name="__codelineno-4-14"></a># External Services
+</span><span id="__span-4-15"><a href="#__codelineno-4-15" id="__codelineno-4-15" name="__codelineno-4-15"></a>SMS_SERVICE_API_KEY=your_sms_api_key
+</span><span id="__span-4-16"><a href="#__codelineno-4-16" id="__codelineno-4-16" name="__codelineno-4-16"></a>EMAIL_SERVICE_API_KEY=your_email_api_key
+</span><span id="__span-4-17"><a href="#__codelineno-4-17" id="__codelineno-4-17" name="__codelineno-4-17"></a>PAYMENT_GATEWAY_API_KEY=your_payment_api_key
+</span><span id="__span-4-18"><a href="#__codelineno-4-18" id="__codelineno-4-18" name="__codelineno-4-18"></a>
+</span><span id="__span-4-19"><a href="#__codelineno-4-19" id="__codelineno-4-19" name="__codelineno-4-19"></a># Logging
+</span><span id="__span-4-20"><a href="#__codelineno-4-20" id="__codelineno-4-20" name="__codelineno-4-20"></a>LOG_LEVEL=INFO
+</span><span id="__span-4-21"><a href="#__codelineno-4-21" id="__codelineno-4-21" name="__codelineno-4-21"></a>LOG_FORMAT=json
+</span></code></pre></div>
 <h3 id="2-project-configuration">2. Project Configuration<a class="headerlink" href="#2-project-configuration" title="Permanent link">¶</a></h3>
 <p>Update <code>pyproject.toml</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="k">[tool.poetry]</span>
-<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"my-pizzeria"</span>
-<span class="n">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"1.0.0"</span>
-<span class="n">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Pizza ordering system built with Neuroglia"</span>
-<span class="n">authors</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">"Your Name &lt;your.email@example.com&gt;"</span><span class="p">]</span>
-<span class="n">packages</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[{</span><span class="n">include</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s2">"src"</span><span class="p">}]</span>
-
-<span class="k">[tool.poetry.dependencies]</span>
-<span class="n">python</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"^3.9"</span>
-<span class="n">neuroglia</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"^0.3.0"</span>
-<span class="n">fastapi</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"^0.104.0"</span>
-<span class="n">uvicorn</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"^0.24.0"</span>
-<span class="n">motor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"^3.3.0"</span><span class="w">  </span><span class="c1"># MongoDB async driver</span>
-<span class="n">pydantic-settings</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"^2.0.0"</span>
-
-<span class="k">[tool.poetry.group.dev.dependencies]</span>
-<span class="n">pytest</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"^7.4.0"</span>
-<span class="n">pytest-asyncio</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"^0.21.0"</span>
-<span class="n">httpx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"^0.25.0"</span>
-<span class="n">pytest-cov</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"^4.1.0"</span>
-<span class="n">black</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"^23.0.0"</span>
-<span class="n">isort</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"^5.12.0"</span>
-<span class="n">mypy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"^1.6.0"</span>
-
-<span class="k">[tool.pytest.ini_options]</span>
-<span class="n">asyncio_mode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"auto"</span>
-<span class="n">testpaths</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">"tests"</span><span class="p">]</span>
-<span class="n">python_files</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">"test_*.py"</span><span class="p">,</span><span class="w"> </span><span class="s2">"*_test.py"</span><span class="p">]</span>
-
-<span class="k">[tool.black]</span>
-<span class="n">line-length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">100</span>
-<span class="n">target-version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s1">'py39'</span><span class="p">]</span>
-
-<span class="k">[tool.isort]</span>
-<span class="n">profile</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"black"</span>
-<span class="n">multi_line_output</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span>
-<span class="n">line_length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">100</span>
-
-<span class="k">[build-system]</span>
-<span class="n">requires</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">"poetry-core"</span><span class="p">]</span>
-<span class="n">build-backend</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"poetry.core.masonry.api"</span>
-</code></pre></div>
+<div class="language-toml highlight"><pre><span></span><code><span id="__span-5-1"><a href="#__codelineno-5-1" id="__codelineno-5-1" name="__codelineno-5-1"></a><span class="k">[tool.poetry]</span>
+</span><span id="__span-5-2"><a href="#__codelineno-5-2" id="__codelineno-5-2" name="__codelineno-5-2"></a><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"my-pizzeria"</span>
+</span><span id="__span-5-3"><a href="#__codelineno-5-3" id="__codelineno-5-3" name="__codelineno-5-3"></a><span class="n">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"1.0.0"</span>
+</span><span id="__span-5-4"><a href="#__codelineno-5-4" id="__codelineno-5-4" name="__codelineno-5-4"></a><span class="n">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Pizza ordering system built with Neuroglia"</span>
+</span><span id="__span-5-5"><a href="#__codelineno-5-5" id="__codelineno-5-5" name="__codelineno-5-5"></a><span class="n">authors</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">"Your Name &lt;your.email@example.com&gt;"</span><span class="p">]</span>
+</span><span id="__span-5-6"><a href="#__codelineno-5-6" id="__codelineno-5-6" name="__codelineno-5-6"></a><span class="n">packages</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[{</span><span class="n">include</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s2">"src"</span><span class="p">}]</span>
+</span><span id="__span-5-7"><a href="#__codelineno-5-7" id="__codelineno-5-7" name="__codelineno-5-7"></a>
+</span><span id="__span-5-8"><a href="#__codelineno-5-8" id="__codelineno-5-8" name="__codelineno-5-8"></a><span class="k">[tool.poetry.dependencies]</span>
+</span><span id="__span-5-9"><a href="#__codelineno-5-9" id="__codelineno-5-9" name="__codelineno-5-9"></a><span class="n">python</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"^3.9"</span>
+</span><span id="__span-5-10"><a href="#__codelineno-5-10" id="__codelineno-5-10" name="__codelineno-5-10"></a><span class="n">neuroglia</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"^0.3.0"</span>
+</span><span id="__span-5-11"><a href="#__codelineno-5-11" id="__codelineno-5-11" name="__codelineno-5-11"></a><span class="n">fastapi</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"^0.104.0"</span>
+</span><span id="__span-5-12"><a href="#__codelineno-5-12" id="__codelineno-5-12" name="__codelineno-5-12"></a><span class="n">uvicorn</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"^0.24.0"</span>
+</span><span id="__span-5-13"><a href="#__codelineno-5-13" id="__codelineno-5-13" name="__codelineno-5-13"></a><span class="n">motor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"^3.3.0"</span><span class="w">  </span><span class="c1"># MongoDB async driver</span>
+</span><span id="__span-5-14"><a href="#__codelineno-5-14" id="__codelineno-5-14" name="__codelineno-5-14"></a><span class="n">pydantic-settings</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"^2.0.0"</span>
+</span><span id="__span-5-15"><a href="#__codelineno-5-15" id="__codelineno-5-15" name="__codelineno-5-15"></a>
+</span><span id="__span-5-16"><a href="#__codelineno-5-16" id="__codelineno-5-16" name="__codelineno-5-16"></a><span class="k">[tool.poetry.group.dev.dependencies]</span>
+</span><span id="__span-5-17"><a href="#__codelineno-5-17" id="__codelineno-5-17" name="__codelineno-5-17"></a><span class="n">pytest</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"^7.4.0"</span>
+</span><span id="__span-5-18"><a href="#__codelineno-5-18" id="__codelineno-5-18" name="__codelineno-5-18"></a><span class="n">pytest-asyncio</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"^0.21.0"</span>
+</span><span id="__span-5-19"><a href="#__codelineno-5-19" id="__codelineno-5-19" name="__codelineno-5-19"></a><span class="n">httpx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"^0.25.0"</span>
+</span><span id="__span-5-20"><a href="#__codelineno-5-20" id="__codelineno-5-20" name="__codelineno-5-20"></a><span class="n">pytest-cov</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"^4.1.0"</span>
+</span><span id="__span-5-21"><a href="#__codelineno-5-21" id="__codelineno-5-21" name="__codelineno-5-21"></a><span class="n">black</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"^23.0.0"</span>
+</span><span id="__span-5-22"><a href="#__codelineno-5-22" id="__codelineno-5-22" name="__codelineno-5-22"></a><span class="n">isort</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"^5.12.0"</span>
+</span><span id="__span-5-23"><a href="#__codelineno-5-23" id="__codelineno-5-23" name="__codelineno-5-23"></a><span class="n">mypy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"^1.6.0"</span>
+</span><span id="__span-5-24"><a href="#__codelineno-5-24" id="__codelineno-5-24" name="__codelineno-5-24"></a>
+</span><span id="__span-5-25"><a href="#__codelineno-5-25" id="__codelineno-5-25" name="__codelineno-5-25"></a><span class="k">[tool.pytest.ini_options]</span>
+</span><span id="__span-5-26"><a href="#__codelineno-5-26" id="__codelineno-5-26" name="__codelineno-5-26"></a><span class="n">asyncio_mode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"auto"</span>
+</span><span id="__span-5-27"><a href="#__codelineno-5-27" id="__codelineno-5-27" name="__codelineno-5-27"></a><span class="n">testpaths</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">"tests"</span><span class="p">]</span>
+</span><span id="__span-5-28"><a href="#__codelineno-5-28" id="__codelineno-5-28" name="__codelineno-5-28"></a><span class="n">python_files</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">"test_*.py"</span><span class="p">,</span><span class="w"> </span><span class="s2">"*_test.py"</span><span class="p">]</span>
+</span><span id="__span-5-29"><a href="#__codelineno-5-29" id="__codelineno-5-29" name="__codelineno-5-29"></a>
+</span><span id="__span-5-30"><a href="#__codelineno-5-30" id="__codelineno-5-30" name="__codelineno-5-30"></a><span class="k">[tool.black]</span>
+</span><span id="__span-5-31"><a href="#__codelineno-5-31" id="__codelineno-5-31" name="__codelineno-5-31"></a><span class="n">line-length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">100</span>
+</span><span id="__span-5-32"><a href="#__codelineno-5-32" id="__codelineno-5-32" name="__codelineno-5-32"></a><span class="n">target-version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s1">'py39'</span><span class="p">]</span>
+</span><span id="__span-5-33"><a href="#__codelineno-5-33" id="__codelineno-5-33" name="__codelineno-5-33"></a>
+</span><span id="__span-5-34"><a href="#__codelineno-5-34" id="__codelineno-5-34" name="__codelineno-5-34"></a><span class="k">[tool.isort]</span>
+</span><span id="__span-5-35"><a href="#__codelineno-5-35" id="__codelineno-5-35" name="__codelineno-5-35"></a><span class="n">profile</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"black"</span>
+</span><span id="__span-5-36"><a href="#__codelineno-5-36" id="__codelineno-5-36" name="__codelineno-5-36"></a><span class="n">multi_line_output</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span>
+</span><span id="__span-5-37"><a href="#__codelineno-5-37" id="__codelineno-5-37" name="__codelineno-5-37"></a><span class="n">line_length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">100</span>
+</span><span id="__span-5-38"><a href="#__codelineno-5-38" id="__codelineno-5-38" name="__codelineno-5-38"></a>
+</span><span id="__span-5-39"><a href="#__codelineno-5-39" id="__codelineno-5-39" name="__codelineno-5-39"></a><span class="k">[build-system]</span>
+</span><span id="__span-5-40"><a href="#__codelineno-5-40" id="__codelineno-5-40" name="__codelineno-5-40"></a><span class="n">requires</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">"poetry-core"</span><span class="p">]</span>
+</span><span id="__span-5-41"><a href="#__codelineno-5-41" id="__codelineno-5-41" name="__codelineno-5-41"></a><span class="n">build-backend</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"poetry.core.masonry.api"</span>
+</span></code></pre></div>
 <h2 id="initial-implementation">🍕 Initial Implementation<a class="headerlink" href="#initial-implementation" title="Permanent link">¶</a></h2>
 <h3 id="1-application-entry-point">1. Application Entry Point<a class="headerlink" href="#1-application-entry-point" title="Permanent link">¶</a></h3>
 <p>Create <code>main.py</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">src.startup</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_app</span>
-
-<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
-<span class="w">    </span><span class="sd">"""Application entry point"""</span>
-    <span class="n">app</span> <span class="o">=</span> <span class="k">await</span> <span class="n">create_app</span><span class="p">()</span>
-
-    <span class="kn">import</span><span class="w"> </span><span class="nn">uvicorn</span>
-    <span class="n">uvicorn</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
-        <span class="n">app</span><span class="p">,</span>
-        <span class="n">host</span><span class="o">=</span><span class="s2">"0.0.0.0"</span><span class="p">,</span>
-        <span class="n">port</span><span class="o">=</span><span class="mi">8000</span><span class="p">,</span>
-        <span class="n">reload</span><span class="o">=</span><span class="kc">True</span>  <span class="c1"># Development only</span>
-    <span class="p">)</span>
-
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
-    <span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a href="#__codelineno-6-1" id="__codelineno-6-1" name="__codelineno-6-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+</span><span id="__span-6-2"><a href="#__codelineno-6-2" id="__codelineno-6-2" name="__codelineno-6-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">src.startup</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_app</span>
+</span><span id="__span-6-3"><a href="#__codelineno-6-3" id="__codelineno-6-3" name="__codelineno-6-3"></a>
+</span><span id="__span-6-4"><a href="#__codelineno-6-4" id="__codelineno-6-4" name="__codelineno-6-4"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+</span><span id="__span-6-5"><a href="#__codelineno-6-5" id="__codelineno-6-5" name="__codelineno-6-5"></a><span class="w">    </span><span class="sd">"""Application entry point"""</span>
+</span><span id="__span-6-6"><a href="#__codelineno-6-6" id="__codelineno-6-6" name="__codelineno-6-6"></a>    <span class="n">app</span> <span class="o">=</span> <span class="k">await</span> <span class="n">create_app</span><span class="p">()</span>
+</span><span id="__span-6-7"><a href="#__codelineno-6-7" id="__codelineno-6-7" name="__codelineno-6-7"></a>
+</span><span id="__span-6-8"><a href="#__codelineno-6-8" id="__codelineno-6-8" name="__codelineno-6-8"></a>    <span class="kn">import</span><span class="w"> </span><span class="nn">uvicorn</span>
+</span><span id="__span-6-9"><a href="#__codelineno-6-9" id="__codelineno-6-9" name="__codelineno-6-9"></a>    <span class="n">uvicorn</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
+</span><span id="__span-6-10"><a href="#__codelineno-6-10" id="__codelineno-6-10" name="__codelineno-6-10"></a>        <span class="n">app</span><span class="p">,</span>
+</span><span id="__span-6-11"><a href="#__codelineno-6-11" id="__codelineno-6-11" name="__codelineno-6-11"></a>        <span class="n">host</span><span class="o">=</span><span class="s2">"0.0.0.0"</span><span class="p">,</span>
+</span><span id="__span-6-12"><a href="#__codelineno-6-12" id="__codelineno-6-12" name="__codelineno-6-12"></a>        <span class="n">port</span><span class="o">=</span><span class="mi">8000</span><span class="p">,</span>
+</span><span id="__span-6-13"><a href="#__codelineno-6-13" id="__codelineno-6-13" name="__codelineno-6-13"></a>        <span class="n">reload</span><span class="o">=</span><span class="kc">True</span>  <span class="c1"># Development only</span>
+</span><span id="__span-6-14"><a href="#__codelineno-6-14" id="__codelineno-6-14" name="__codelineno-6-14"></a>    <span class="p">)</span>
+</span><span id="__span-6-15"><a href="#__codelineno-6-15" id="__codelineno-6-15" name="__codelineno-6-15"></a>
+</span><span id="__span-6-16"><a href="#__codelineno-6-16" id="__codelineno-6-16" name="__codelineno-6-16"></a><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
+</span><span id="__span-6-17"><a href="#__codelineno-6-17" id="__codelineno-6-17" name="__codelineno-6-17"></a>    <span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
+</span></code></pre></div>
 <h3 id="2-application-startup">2. Application Startup<a class="headerlink" href="#2-application-startup" title="Permanent link">¶</a></h3>
 <p>Create <code>src/startup.py</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.hosting.web</span><span class="w"> </span><span class="kn">import</span> <span class="n">WebApplicationBuilder</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.dependency_injection</span><span class="w"> </span><span class="kn">import</span> <span class="n">ServiceCollection</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">src.api.controllers.orders_controller</span><span class="w"> </span><span class="kn">import</span> <span class="n">OrdersController</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">src.application.handlers.place_order_handler</span><span class="w"> </span><span class="kn">import</span> <span class="n">PlaceOrderHandler</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">src.integration.repositories.mongo_order_repository</span><span class="w"> </span><span class="kn">import</span> <span class="n">MongoOrderRepository</span>
-
-<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">create_app</span><span class="p">():</span>
-<span class="w">    </span><span class="sd">"""Configure and build the application"""</span>
-    <span class="n">builder</span> <span class="o">=</span> <span class="n">WebApplicationBuilder</span><span class="p">()</span>
-
-    <span class="c1"># Configure services</span>
-    <span class="n">configure_services</span><span class="p">(</span><span class="n">builder</span><span class="o">.</span><span class="n">services</span><span class="p">)</span>
-
-    <span class="c1"># Build application</span>
-    <span class="n">app</span> <span class="o">=</span> <span class="n">builder</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
-
-    <span class="c1"># Configure middleware</span>
-    <span class="n">configure_middleware</span><span class="p">(</span><span class="n">app</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">app</span>
-
-<span class="k">def</span><span class="w"> </span><span class="nf">configure_services</span><span class="p">(</span><span class="n">services</span><span class="p">:</span> <span class="n">ServiceCollection</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">"""Configure dependency injection"""</span>
-    <span class="c1"># Add framework services</span>
-    <span class="n">services</span><span class="o">.</span><span class="n">add_mediator</span><span class="p">()</span>
-    <span class="n">services</span><span class="o">.</span><span class="n">add_controllers</span><span class="p">([</span>
-        <span class="s2">"src.api.controllers"</span>
-    <span class="p">])</span>
-
-    <span class="c1"># Add application services</span>
-    <span class="n">services</span><span class="o">.</span><span class="n">add_scoped</span><span class="p">(</span><span class="n">PlaceOrderHandler</span><span class="p">)</span>
-
-    <span class="c1"># Add repositories</span>
-    <span class="n">services</span><span class="o">.</span><span class="n">add_scoped</span><span class="p">(</span><span class="n">MongoOrderRepository</span><span class="p">)</span>
-
-    <span class="c1"># Add external services</span>
-    <span class="c1"># services.add_scoped(SMSService)</span>
-    <span class="c1"># services.add_scoped(PaymentService)</span>
-
-<span class="k">def</span><span class="w"> </span><span class="nf">configure_middleware</span><span class="p">(</span><span class="n">app</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">"""Configure application middleware"""</span>
-    <span class="c1"># Add CORS if needed</span>
-    <span class="c1"># app.add_middleware(CORSMiddleware, ...)</span>
-
-    <span class="c1"># Add authentication if needed</span>
-    <span class="c1"># app.add_middleware(AuthenticationMiddleware, ...)</span>
-
-    <span class="k">pass</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-7-1"><a href="#__codelineno-7-1" id="__codelineno-7-1" name="__codelineno-7-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.hosting.web</span><span class="w"> </span><span class="kn">import</span> <span class="n">WebApplicationBuilder</span>
+</span><span id="__span-7-2"><a href="#__codelineno-7-2" id="__codelineno-7-2" name="__codelineno-7-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.dependency_injection</span><span class="w"> </span><span class="kn">import</span> <span class="n">ServiceCollection</span>
+</span><span id="__span-7-3"><a href="#__codelineno-7-3" id="__codelineno-7-3" name="__codelineno-7-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">src.api.controllers.orders_controller</span><span class="w"> </span><span class="kn">import</span> <span class="n">OrdersController</span>
+</span><span id="__span-7-4"><a href="#__codelineno-7-4" id="__codelineno-7-4" name="__codelineno-7-4"></a><span class="kn">from</span><span class="w"> </span><span class="nn">src.application.handlers.place_order_handler</span><span class="w"> </span><span class="kn">import</span> <span class="n">PlaceOrderHandler</span>
+</span><span id="__span-7-5"><a href="#__codelineno-7-5" id="__codelineno-7-5" name="__codelineno-7-5"></a><span class="kn">from</span><span class="w"> </span><span class="nn">src.integration.repositories.mongo_order_repository</span><span class="w"> </span><span class="kn">import</span> <span class="n">MongoOrderRepository</span>
+</span><span id="__span-7-6"><a href="#__codelineno-7-6" id="__codelineno-7-6" name="__codelineno-7-6"></a>
+</span><span id="__span-7-7"><a href="#__codelineno-7-7" id="__codelineno-7-7" name="__codelineno-7-7"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">create_app</span><span class="p">():</span>
+</span><span id="__span-7-8"><a href="#__codelineno-7-8" id="__codelineno-7-8" name="__codelineno-7-8"></a><span class="w">    </span><span class="sd">"""Configure and build the application"""</span>
+</span><span id="__span-7-9"><a href="#__codelineno-7-9" id="__codelineno-7-9" name="__codelineno-7-9"></a>    <span class="n">builder</span> <span class="o">=</span> <span class="n">WebApplicationBuilder</span><span class="p">()</span>
+</span><span id="__span-7-10"><a href="#__codelineno-7-10" id="__codelineno-7-10" name="__codelineno-7-10"></a>
+</span><span id="__span-7-11"><a href="#__codelineno-7-11" id="__codelineno-7-11" name="__codelineno-7-11"></a>    <span class="c1"># Configure services</span>
+</span><span id="__span-7-12"><a href="#__codelineno-7-12" id="__codelineno-7-12" name="__codelineno-7-12"></a>    <span class="n">configure_services</span><span class="p">(</span><span class="n">builder</span><span class="o">.</span><span class="n">services</span><span class="p">)</span>
+</span><span id="__span-7-13"><a href="#__codelineno-7-13" id="__codelineno-7-13" name="__codelineno-7-13"></a>
+</span><span id="__span-7-14"><a href="#__codelineno-7-14" id="__codelineno-7-14" name="__codelineno-7-14"></a>    <span class="c1"># Build application</span>
+</span><span id="__span-7-15"><a href="#__codelineno-7-15" id="__codelineno-7-15" name="__codelineno-7-15"></a>    <span class="n">app</span> <span class="o">=</span> <span class="n">builder</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
+</span><span id="__span-7-16"><a href="#__codelineno-7-16" id="__codelineno-7-16" name="__codelineno-7-16"></a>
+</span><span id="__span-7-17"><a href="#__codelineno-7-17" id="__codelineno-7-17" name="__codelineno-7-17"></a>    <span class="c1"># Configure middleware</span>
+</span><span id="__span-7-18"><a href="#__codelineno-7-18" id="__codelineno-7-18" name="__codelineno-7-18"></a>    <span class="n">configure_middleware</span><span class="p">(</span><span class="n">app</span><span class="p">)</span>
+</span><span id="__span-7-19"><a href="#__codelineno-7-19" id="__codelineno-7-19" name="__codelineno-7-19"></a>
+</span><span id="__span-7-20"><a href="#__codelineno-7-20" id="__codelineno-7-20" name="__codelineno-7-20"></a>    <span class="k">return</span> <span class="n">app</span>
+</span><span id="__span-7-21"><a href="#__codelineno-7-21" id="__codelineno-7-21" name="__codelineno-7-21"></a>
+</span><span id="__span-7-22"><a href="#__codelineno-7-22" id="__codelineno-7-22" name="__codelineno-7-22"></a><span class="k">def</span><span class="w"> </span><span class="nf">configure_services</span><span class="p">(</span><span class="n">services</span><span class="p">:</span> <span class="n">ServiceCollection</span><span class="p">):</span>
+</span><span id="__span-7-23"><a href="#__codelineno-7-23" id="__codelineno-7-23" name="__codelineno-7-23"></a><span class="w">    </span><span class="sd">"""Configure dependency injection"""</span>
+</span><span id="__span-7-24"><a href="#__codelineno-7-24" id="__codelineno-7-24" name="__codelineno-7-24"></a>    <span class="c1"># Add framework services</span>
+</span><span id="__span-7-25"><a href="#__codelineno-7-25" id="__codelineno-7-25" name="__codelineno-7-25"></a>    <span class="n">services</span><span class="o">.</span><span class="n">add_mediator</span><span class="p">()</span>
+</span><span id="__span-7-26"><a href="#__codelineno-7-26" id="__codelineno-7-26" name="__codelineno-7-26"></a>    <span class="n">services</span><span class="o">.</span><span class="n">add_controllers</span><span class="p">([</span>
+</span><span id="__span-7-27"><a href="#__codelineno-7-27" id="__codelineno-7-27" name="__codelineno-7-27"></a>        <span class="s2">"src.api.controllers"</span>
+</span><span id="__span-7-28"><a href="#__codelineno-7-28" id="__codelineno-7-28" name="__codelineno-7-28"></a>    <span class="p">])</span>
+</span><span id="__span-7-29"><a href="#__codelineno-7-29" id="__codelineno-7-29" name="__codelineno-7-29"></a>
+</span><span id="__span-7-30"><a href="#__codelineno-7-30" id="__codelineno-7-30" name="__codelineno-7-30"></a>    <span class="c1"># Add application services</span>
+</span><span id="__span-7-31"><a href="#__codelineno-7-31" id="__codelineno-7-31" name="__codelineno-7-31"></a>    <span class="n">services</span><span class="o">.</span><span class="n">add_scoped</span><span class="p">(</span><span class="n">PlaceOrderHandler</span><span class="p">)</span>
+</span><span id="__span-7-32"><a href="#__codelineno-7-32" id="__codelineno-7-32" name="__codelineno-7-32"></a>
+</span><span id="__span-7-33"><a href="#__codelineno-7-33" id="__codelineno-7-33" name="__codelineno-7-33"></a>    <span class="c1"># Add repositories</span>
+</span><span id="__span-7-34"><a href="#__codelineno-7-34" id="__codelineno-7-34" name="__codelineno-7-34"></a>    <span class="n">services</span><span class="o">.</span><span class="n">add_scoped</span><span class="p">(</span><span class="n">MongoOrderRepository</span><span class="p">)</span>
+</span><span id="__span-7-35"><a href="#__codelineno-7-35" id="__codelineno-7-35" name="__codelineno-7-35"></a>
+</span><span id="__span-7-36"><a href="#__codelineno-7-36" id="__codelineno-7-36" name="__codelineno-7-36"></a>    <span class="c1"># Add external services</span>
+</span><span id="__span-7-37"><a href="#__codelineno-7-37" id="__codelineno-7-37" name="__codelineno-7-37"></a>    <span class="c1"># services.add_scoped(SMSService)</span>
+</span><span id="__span-7-38"><a href="#__codelineno-7-38" id="__codelineno-7-38" name="__codelineno-7-38"></a>    <span class="c1"># services.add_scoped(PaymentService)</span>
+</span><span id="__span-7-39"><a href="#__codelineno-7-39" id="__codelineno-7-39" name="__codelineno-7-39"></a>
+</span><span id="__span-7-40"><a href="#__codelineno-7-40" id="__codelineno-7-40" name="__codelineno-7-40"></a><span class="k">def</span><span class="w"> </span><span class="nf">configure_middleware</span><span class="p">(</span><span class="n">app</span><span class="p">):</span>
+</span><span id="__span-7-41"><a href="#__codelineno-7-41" id="__codelineno-7-41" name="__codelineno-7-41"></a><span class="w">    </span><span class="sd">"""Configure application middleware"""</span>
+</span><span id="__span-7-42"><a href="#__codelineno-7-42" id="__codelineno-7-42" name="__codelineno-7-42"></a>    <span class="c1"># Add CORS if needed</span>
+</span><span id="__span-7-43"><a href="#__codelineno-7-43" id="__codelineno-7-43" name="__codelineno-7-43"></a>    <span class="c1"># app.add_middleware(CORSMiddleware, ...)</span>
+</span><span id="__span-7-44"><a href="#__codelineno-7-44" id="__codelineno-7-44" name="__codelineno-7-44"></a>
+</span><span id="__span-7-45"><a href="#__codelineno-7-45" id="__codelineno-7-45" name="__codelineno-7-45"></a>    <span class="c1"># Add authentication if needed</span>
+</span><span id="__span-7-46"><a href="#__codelineno-7-46" id="__codelineno-7-46" name="__codelineno-7-46"></a>    <span class="c1"># app.add_middleware(AuthenticationMiddleware, ...)</span>
+</span><span id="__span-7-47"><a href="#__codelineno-7-47" id="__codelineno-7-47" name="__codelineno-7-47"></a>
+</span><span id="__span-7-48"><a href="#__codelineno-7-48" id="__codelineno-7-48" name="__codelineno-7-48"></a>    <span class="k">pass</span>
+</span></code></pre></div>
 <h3 id="3-first-domain-entity">3. First Domain Entity<a class="headerlink" href="#3-first-domain-entity" title="Permanent link">¶</a></h3>
 <p>Create <code>src/domain/entities/order.py</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">decimal</span><span class="w"> </span><span class="kn">import</span> <span class="n">Decimal</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">enum</span><span class="w"> </span><span class="kn">import</span> <span class="n">Enum</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.domain</span><span class="w"> </span><span class="kn">import</span> <span class="n">Entity</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">src.domain.events.order_events</span><span class="w"> </span><span class="kn">import</span> <span class="n">OrderPlacedEvent</span>
-
-<span class="k">class</span><span class="w"> </span><span class="nc">OrderStatus</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
-    <span class="n">PENDING</span> <span class="o">=</span> <span class="s2">"pending"</span>
-    <span class="n">CONFIRMED</span> <span class="o">=</span> <span class="s2">"confirmed"</span>
-    <span class="n">PREPARING</span> <span class="o">=</span> <span class="s2">"preparing"</span>
-    <span class="n">READY</span> <span class="o">=</span> <span class="s2">"ready"</span>
-    <span class="n">DELIVERED</span> <span class="o">=</span> <span class="s2">"delivered"</span>
-    <span class="n">CANCELLED</span> <span class="o">=</span> <span class="s2">"cancelled"</span>
-
-<span class="nd">@dataclass</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">OrderItem</span><span class="p">:</span>
-    <span class="n">pizza_name</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">size</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">quantity</span><span class="p">:</span> <span class="nb">int</span>
-    <span class="n">price</span><span class="p">:</span> <span class="n">Decimal</span>
-
-<span class="k">class</span><span class="w"> </span><span class="nc">Order</span><span class="p">(</span><span class="n">Entity</span><span class="p">):</span>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
-                 <span class="n">customer_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-                 <span class="n">items</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">OrderItem</span><span class="p">],</span>
-                 <span class="n">delivery_address</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-                 <span class="n">special_instructions</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">customer_id</span> <span class="o">=</span> <span class="n">customer_id</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">items</span> <span class="o">=</span> <span class="n">items</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">delivery_address</span> <span class="o">=</span> <span class="n">delivery_address</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">special_instructions</span> <span class="o">=</span> <span class="n">special_instructions</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">OrderStatus</span><span class="o">.</span><span class="n">PENDING</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">total</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_calculate_total</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">created_at</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">updated_at</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">created_at</span>
-
-        <span class="c1"># Raise domain event</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">raise_event</span><span class="p">(</span><span class="n">OrderPlacedEvent</span><span class="p">(</span>
-            <span class="n">order_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
-            <span class="n">customer_id</span><span class="o">=</span><span class="n">customer_id</span><span class="p">,</span>
-            <span class="n">total</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">total</span><span class="p">,</span>
-            <span class="n">items</span><span class="o">=</span><span class="n">items</span>
-        <span class="p">))</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">_calculate_total</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Decimal</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Calculate order total with tax"""</span>
-        <span class="n">subtotal</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">price</span> <span class="o">*</span> <span class="n">item</span><span class="o">.</span><span class="n">quantity</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">items</span><span class="p">)</span>
-        <span class="n">tax</span> <span class="o">=</span> <span class="n">subtotal</span> <span class="o">*</span> <span class="n">Decimal</span><span class="p">(</span><span class="s1">'0.08'</span><span class="p">)</span>  <span class="c1"># 8% tax</span>
-        <span class="k">return</span> <span class="n">subtotal</span> <span class="o">+</span> <span class="n">tax</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">confirm</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">"""Confirm the order"""</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">status</span> <span class="o">!=</span> <span class="n">OrderStatus</span><span class="o">.</span><span class="n">PENDING</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Only pending orders can be confirmed"</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">OrderStatus</span><span class="o">.</span><span class="n">CONFIRMED</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">updated_at</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">)</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-8-1"><a href="#__codelineno-8-1" id="__codelineno-8-1" name="__codelineno-8-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
+</span><span id="__span-8-2"><a href="#__codelineno-8-2" id="__codelineno-8-2" name="__codelineno-8-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">decimal</span><span class="w"> </span><span class="kn">import</span> <span class="n">Decimal</span>
+</span><span id="__span-8-3"><a href="#__codelineno-8-3" id="__codelineno-8-3" name="__codelineno-8-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
+</span><span id="__span-8-4"><a href="#__codelineno-8-4" id="__codelineno-8-4" name="__codelineno-8-4"></a><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
+</span><span id="__span-8-5"><a href="#__codelineno-8-5" id="__codelineno-8-5" name="__codelineno-8-5"></a><span class="kn">from</span><span class="w"> </span><span class="nn">enum</span><span class="w"> </span><span class="kn">import</span> <span class="n">Enum</span>
+</span><span id="__span-8-6"><a href="#__codelineno-8-6" id="__codelineno-8-6" name="__codelineno-8-6"></a><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.domain</span><span class="w"> </span><span class="kn">import</span> <span class="n">Entity</span>
+</span><span id="__span-8-7"><a href="#__codelineno-8-7" id="__codelineno-8-7" name="__codelineno-8-7"></a><span class="kn">from</span><span class="w"> </span><span class="nn">src.domain.events.order_events</span><span class="w"> </span><span class="kn">import</span> <span class="n">OrderPlacedEvent</span>
+</span><span id="__span-8-8"><a href="#__codelineno-8-8" id="__codelineno-8-8" name="__codelineno-8-8"></a>
+</span><span id="__span-8-9"><a href="#__codelineno-8-9" id="__codelineno-8-9" name="__codelineno-8-9"></a><span class="k">class</span><span class="w"> </span><span class="nc">OrderStatus</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+</span><span id="__span-8-10"><a href="#__codelineno-8-10" id="__codelineno-8-10" name="__codelineno-8-10"></a>    <span class="n">PENDING</span> <span class="o">=</span> <span class="s2">"pending"</span>
+</span><span id="__span-8-11"><a href="#__codelineno-8-11" id="__codelineno-8-11" name="__codelineno-8-11"></a>    <span class="n">CONFIRMED</span> <span class="o">=</span> <span class="s2">"confirmed"</span>
+</span><span id="__span-8-12"><a href="#__codelineno-8-12" id="__codelineno-8-12" name="__codelineno-8-12"></a>    <span class="n">PREPARING</span> <span class="o">=</span> <span class="s2">"preparing"</span>
+</span><span id="__span-8-13"><a href="#__codelineno-8-13" id="__codelineno-8-13" name="__codelineno-8-13"></a>    <span class="n">READY</span> <span class="o">=</span> <span class="s2">"ready"</span>
+</span><span id="__span-8-14"><a href="#__codelineno-8-14" id="__codelineno-8-14" name="__codelineno-8-14"></a>    <span class="n">DELIVERED</span> <span class="o">=</span> <span class="s2">"delivered"</span>
+</span><span id="__span-8-15"><a href="#__codelineno-8-15" id="__codelineno-8-15" name="__codelineno-8-15"></a>    <span class="n">CANCELLED</span> <span class="o">=</span> <span class="s2">"cancelled"</span>
+</span><span id="__span-8-16"><a href="#__codelineno-8-16" id="__codelineno-8-16" name="__codelineno-8-16"></a>
+</span><span id="__span-8-17"><a href="#__codelineno-8-17" id="__codelineno-8-17" name="__codelineno-8-17"></a><span class="nd">@dataclass</span>
+</span><span id="__span-8-18"><a href="#__codelineno-8-18" id="__codelineno-8-18" name="__codelineno-8-18"></a><span class="k">class</span><span class="w"> </span><span class="nc">OrderItem</span><span class="p">:</span>
+</span><span id="__span-8-19"><a href="#__codelineno-8-19" id="__codelineno-8-19" name="__codelineno-8-19"></a>    <span class="n">pizza_name</span><span class="p">:</span> <span class="nb">str</span>
+</span><span id="__span-8-20"><a href="#__codelineno-8-20" id="__codelineno-8-20" name="__codelineno-8-20"></a>    <span class="n">size</span><span class="p">:</span> <span class="nb">str</span>
+</span><span id="__span-8-21"><a href="#__codelineno-8-21" id="__codelineno-8-21" name="__codelineno-8-21"></a>    <span class="n">quantity</span><span class="p">:</span> <span class="nb">int</span>
+</span><span id="__span-8-22"><a href="#__codelineno-8-22" id="__codelineno-8-22" name="__codelineno-8-22"></a>    <span class="n">price</span><span class="p">:</span> <span class="n">Decimal</span>
+</span><span id="__span-8-23"><a href="#__codelineno-8-23" id="__codelineno-8-23" name="__codelineno-8-23"></a>
+</span><span id="__span-8-24"><a href="#__codelineno-8-24" id="__codelineno-8-24" name="__codelineno-8-24"></a><span class="k">class</span><span class="w"> </span><span class="nc">Order</span><span class="p">(</span><span class="n">Entity</span><span class="p">):</span>
+</span><span id="__span-8-25"><a href="#__codelineno-8-25" id="__codelineno-8-25" name="__codelineno-8-25"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+</span><span id="__span-8-26"><a href="#__codelineno-8-26" id="__codelineno-8-26" name="__codelineno-8-26"></a>                 <span class="n">customer_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+</span><span id="__span-8-27"><a href="#__codelineno-8-27" id="__codelineno-8-27" name="__codelineno-8-27"></a>                 <span class="n">items</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">OrderItem</span><span class="p">],</span>
+</span><span id="__span-8-28"><a href="#__codelineno-8-28" id="__codelineno-8-28" name="__codelineno-8-28"></a>                 <span class="n">delivery_address</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+</span><span id="__span-8-29"><a href="#__codelineno-8-29" id="__codelineno-8-29" name="__codelineno-8-29"></a>                 <span class="n">special_instructions</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+</span><span id="__span-8-30"><a href="#__codelineno-8-30" id="__codelineno-8-30" name="__codelineno-8-30"></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+</span><span id="__span-8-31"><a href="#__codelineno-8-31" id="__codelineno-8-31" name="__codelineno-8-31"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">customer_id</span> <span class="o">=</span> <span class="n">customer_id</span>
+</span><span id="__span-8-32"><a href="#__codelineno-8-32" id="__codelineno-8-32" name="__codelineno-8-32"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">items</span> <span class="o">=</span> <span class="n">items</span>
+</span><span id="__span-8-33"><a href="#__codelineno-8-33" id="__codelineno-8-33" name="__codelineno-8-33"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">delivery_address</span> <span class="o">=</span> <span class="n">delivery_address</span>
+</span><span id="__span-8-34"><a href="#__codelineno-8-34" id="__codelineno-8-34" name="__codelineno-8-34"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">special_instructions</span> <span class="o">=</span> <span class="n">special_instructions</span>
+</span><span id="__span-8-35"><a href="#__codelineno-8-35" id="__codelineno-8-35" name="__codelineno-8-35"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">OrderStatus</span><span class="o">.</span><span class="n">PENDING</span>
+</span><span id="__span-8-36"><a href="#__codelineno-8-36" id="__codelineno-8-36" name="__codelineno-8-36"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">total</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_calculate_total</span><span class="p">()</span>
+</span><span id="__span-8-37"><a href="#__codelineno-8-37" id="__codelineno-8-37" name="__codelineno-8-37"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">created_at</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">)</span>
+</span><span id="__span-8-38"><a href="#__codelineno-8-38" id="__codelineno-8-38" name="__codelineno-8-38"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">updated_at</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">created_at</span>
+</span><span id="__span-8-39"><a href="#__codelineno-8-39" id="__codelineno-8-39" name="__codelineno-8-39"></a>
+</span><span id="__span-8-40"><a href="#__codelineno-8-40" id="__codelineno-8-40" name="__codelineno-8-40"></a>        <span class="c1"># Raise domain event</span>
+</span><span id="__span-8-41"><a href="#__codelineno-8-41" id="__codelineno-8-41" name="__codelineno-8-41"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">raise_event</span><span class="p">(</span><span class="n">OrderPlacedEvent</span><span class="p">(</span>
+</span><span id="__span-8-42"><a href="#__codelineno-8-42" id="__codelineno-8-42" name="__codelineno-8-42"></a>            <span class="n">order_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+</span><span id="__span-8-43"><a href="#__codelineno-8-43" id="__codelineno-8-43" name="__codelineno-8-43"></a>            <span class="n">customer_id</span><span class="o">=</span><span class="n">customer_id</span><span class="p">,</span>
+</span><span id="__span-8-44"><a href="#__codelineno-8-44" id="__codelineno-8-44" name="__codelineno-8-44"></a>            <span class="n">total</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">total</span><span class="p">,</span>
+</span><span id="__span-8-45"><a href="#__codelineno-8-45" id="__codelineno-8-45" name="__codelineno-8-45"></a>            <span class="n">items</span><span class="o">=</span><span class="n">items</span>
+</span><span id="__span-8-46"><a href="#__codelineno-8-46" id="__codelineno-8-46" name="__codelineno-8-46"></a>        <span class="p">))</span>
+</span><span id="__span-8-47"><a href="#__codelineno-8-47" id="__codelineno-8-47" name="__codelineno-8-47"></a>
+</span><span id="__span-8-48"><a href="#__codelineno-8-48" id="__codelineno-8-48" name="__codelineno-8-48"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">_calculate_total</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Decimal</span><span class="p">:</span>
+</span><span id="__span-8-49"><a href="#__codelineno-8-49" id="__codelineno-8-49" name="__codelineno-8-49"></a><span class="w">        </span><span class="sd">"""Calculate order total with tax"""</span>
+</span><span id="__span-8-50"><a href="#__codelineno-8-50" id="__codelineno-8-50" name="__codelineno-8-50"></a>        <span class="n">subtotal</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">price</span> <span class="o">*</span> <span class="n">item</span><span class="o">.</span><span class="n">quantity</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">items</span><span class="p">)</span>
+</span><span id="__span-8-51"><a href="#__codelineno-8-51" id="__codelineno-8-51" name="__codelineno-8-51"></a>        <span class="n">tax</span> <span class="o">=</span> <span class="n">subtotal</span> <span class="o">*</span> <span class="n">Decimal</span><span class="p">(</span><span class="s1">'0.08'</span><span class="p">)</span>  <span class="c1"># 8% tax</span>
+</span><span id="__span-8-52"><a href="#__codelineno-8-52" id="__codelineno-8-52" name="__codelineno-8-52"></a>        <span class="k">return</span> <span class="n">subtotal</span> <span class="o">+</span> <span class="n">tax</span>
+</span><span id="__span-8-53"><a href="#__codelineno-8-53" id="__codelineno-8-53" name="__codelineno-8-53"></a>
+</span><span id="__span-8-54"><a href="#__codelineno-8-54" id="__codelineno-8-54" name="__codelineno-8-54"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">confirm</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="__span-8-55"><a href="#__codelineno-8-55" id="__codelineno-8-55" name="__codelineno-8-55"></a><span class="w">        </span><span class="sd">"""Confirm the order"""</span>
+</span><span id="__span-8-56"><a href="#__codelineno-8-56" id="__codelineno-8-56" name="__codelineno-8-56"></a>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">status</span> <span class="o">!=</span> <span class="n">OrderStatus</span><span class="o">.</span><span class="n">PENDING</span><span class="p">:</span>
+</span><span id="__span-8-57"><a href="#__codelineno-8-57" id="__codelineno-8-57" name="__codelineno-8-57"></a>            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Only pending orders can be confirmed"</span><span class="p">)</span>
+</span><span id="__span-8-58"><a href="#__codelineno-8-58" id="__codelineno-8-58" name="__codelineno-8-58"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">OrderStatus</span><span class="o">.</span><span class="n">CONFIRMED</span>
+</span><span id="__span-8-59"><a href="#__codelineno-8-59" id="__codelineno-8-59" name="__codelineno-8-59"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">updated_at</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">)</span>
+</span></code></pre></div>
 <h3 id="4-first-command-handler">4. First Command Handler<a class="headerlink" href="#4-first-command-handler" title="Permanent link">¶</a></h3>
 <p>Create <code>src/application/handlers/place_order_handler.py</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.mediation</span><span class="w"> </span><span class="kn">import</span> <span class="n">Command</span><span class="p">,</span> <span class="n">CommandHandler</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">OperationResult</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">src.domain.entities.order</span><span class="w"> </span><span class="kn">import</span> <span class="n">Order</span><span class="p">,</span> <span class="n">OrderItem</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">src.api.dtos.order_dto</span><span class="w"> </span><span class="kn">import</span> <span class="n">OrderDto</span>
-
-<span class="nd">@dataclass</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">PlaceOrderCommand</span><span class="p">(</span><span class="n">Command</span><span class="p">[</span><span class="n">OperationResult</span><span class="p">[</span><span class="n">OrderDto</span><span class="p">]]):</span>
-    <span class="n">customer_id</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">items</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">OrderItem</span><span class="p">]</span>
-    <span class="n">delivery_address</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">special_instructions</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span>
-
-<span class="k">class</span><span class="w"> </span><span class="nc">PlaceOrderHandler</span><span class="p">(</span><span class="n">CommandHandler</span><span class="p">[</span><span class="n">PlaceOrderCommand</span><span class="p">,</span> <span class="n">OperationResult</span><span class="p">[</span><span class="n">OrderDto</span><span class="p">]]):</span>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">order_repository</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_repository</span> <span class="o">=</span> <span class="n">order_repository</span>
-
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">handle_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command</span><span class="p">:</span> <span class="n">PlaceOrderCommand</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">OperationResult</span><span class="p">[</span><span class="n">OrderDto</span><span class="p">]:</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="c1"># Create domain entity</span>
-            <span class="n">order</span> <span class="o">=</span> <span class="n">Order</span><span class="p">(</span>
-                <span class="n">customer_id</span><span class="o">=</span><span class="n">command</span><span class="o">.</span><span class="n">customer_id</span><span class="p">,</span>
-                <span class="n">items</span><span class="o">=</span><span class="n">command</span><span class="o">.</span><span class="n">items</span><span class="p">,</span>
-                <span class="n">delivery_address</span><span class="o">=</span><span class="n">command</span><span class="o">.</span><span class="n">delivery_address</span><span class="p">,</span>
-                <span class="n">special_instructions</span><span class="o">=</span><span class="n">command</span><span class="o">.</span><span class="n">special_instructions</span>
-            <span class="p">)</span>
-
-            <span class="c1"># Persist order</span>
-            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_repository</span><span class="o">.</span><span class="n">save_async</span><span class="p">(</span><span class="n">order</span><span class="p">)</span>
-
-            <span class="c1"># Return success result</span>
-            <span class="n">dto</span> <span class="o">=</span> <span class="n">OrderDto</span><span class="p">(</span>
-                <span class="nb">id</span><span class="o">=</span><span class="n">order</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
-                <span class="n">customer_id</span><span class="o">=</span><span class="n">order</span><span class="o">.</span><span class="n">customer_id</span><span class="p">,</span>
-                <span class="n">total</span><span class="o">=</span><span class="n">order</span><span class="o">.</span><span class="n">total</span><span class="p">,</span>
-                <span class="n">status</span><span class="o">=</span><span class="n">order</span><span class="o">.</span><span class="n">status</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
-                <span class="n">created_at</span><span class="o">=</span><span class="n">order</span><span class="o">.</span><span class="n">created_at</span>
-            <span class="p">)</span>
-
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">created</span><span class="p">(</span><span class="n">dto</span><span class="p">)</span>
-
-        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">ex</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">internal_server_error</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Failed to place order: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">ex</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-9-1"><a href="#__codelineno-9-1" id="__codelineno-9-1" name="__codelineno-9-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
+</span><span id="__span-9-2"><a href="#__codelineno-9-2" id="__codelineno-9-2" name="__codelineno-9-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span>
+</span><span id="__span-9-3"><a href="#__codelineno-9-3" id="__codelineno-9-3" name="__codelineno-9-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.mediation</span><span class="w"> </span><span class="kn">import</span> <span class="n">Command</span><span class="p">,</span> <span class="n">CommandHandler</span>
+</span><span id="__span-9-4"><a href="#__codelineno-9-4" id="__codelineno-9-4" name="__codelineno-9-4"></a><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">OperationResult</span>
+</span><span id="__span-9-5"><a href="#__codelineno-9-5" id="__codelineno-9-5" name="__codelineno-9-5"></a><span class="kn">from</span><span class="w"> </span><span class="nn">src.domain.entities.order</span><span class="w"> </span><span class="kn">import</span> <span class="n">Order</span><span class="p">,</span> <span class="n">OrderItem</span>
+</span><span id="__span-9-6"><a href="#__codelineno-9-6" id="__codelineno-9-6" name="__codelineno-9-6"></a><span class="kn">from</span><span class="w"> </span><span class="nn">src.api.dtos.order_dto</span><span class="w"> </span><span class="kn">import</span> <span class="n">OrderDto</span>
+</span><span id="__span-9-7"><a href="#__codelineno-9-7" id="__codelineno-9-7" name="__codelineno-9-7"></a>
+</span><span id="__span-9-8"><a href="#__codelineno-9-8" id="__codelineno-9-8" name="__codelineno-9-8"></a><span class="nd">@dataclass</span>
+</span><span id="__span-9-9"><a href="#__codelineno-9-9" id="__codelineno-9-9" name="__codelineno-9-9"></a><span class="k">class</span><span class="w"> </span><span class="nc">PlaceOrderCommand</span><span class="p">(</span><span class="n">Command</span><span class="p">[</span><span class="n">OperationResult</span><span class="p">[</span><span class="n">OrderDto</span><span class="p">]]):</span>
+</span><span id="__span-9-10"><a href="#__codelineno-9-10" id="__codelineno-9-10" name="__codelineno-9-10"></a>    <span class="n">customer_id</span><span class="p">:</span> <span class="nb">str</span>
+</span><span id="__span-9-11"><a href="#__codelineno-9-11" id="__codelineno-9-11" name="__codelineno-9-11"></a>    <span class="n">items</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">OrderItem</span><span class="p">]</span>
+</span><span id="__span-9-12"><a href="#__codelineno-9-12" id="__codelineno-9-12" name="__codelineno-9-12"></a>    <span class="n">delivery_address</span><span class="p">:</span> <span class="nb">str</span>
+</span><span id="__span-9-13"><a href="#__codelineno-9-13" id="__codelineno-9-13" name="__codelineno-9-13"></a>    <span class="n">special_instructions</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="__span-9-14"><a href="#__codelineno-9-14" id="__codelineno-9-14" name="__codelineno-9-14"></a>
+</span><span id="__span-9-15"><a href="#__codelineno-9-15" id="__codelineno-9-15" name="__codelineno-9-15"></a><span class="k">class</span><span class="w"> </span><span class="nc">PlaceOrderHandler</span><span class="p">(</span><span class="n">CommandHandler</span><span class="p">[</span><span class="n">PlaceOrderCommand</span><span class="p">,</span> <span class="n">OperationResult</span><span class="p">[</span><span class="n">OrderDto</span><span class="p">]]):</span>
+</span><span id="__span-9-16"><a href="#__codelineno-9-16" id="__codelineno-9-16" name="__codelineno-9-16"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">order_repository</span><span class="p">):</span>
+</span><span id="__span-9-17"><a href="#__codelineno-9-17" id="__codelineno-9-17" name="__codelineno-9-17"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_repository</span> <span class="o">=</span> <span class="n">order_repository</span>
+</span><span id="__span-9-18"><a href="#__codelineno-9-18" id="__codelineno-9-18" name="__codelineno-9-18"></a>
+</span><span id="__span-9-19"><a href="#__codelineno-9-19" id="__codelineno-9-19" name="__codelineno-9-19"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">handle_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command</span><span class="p">:</span> <span class="n">PlaceOrderCommand</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">OperationResult</span><span class="p">[</span><span class="n">OrderDto</span><span class="p">]:</span>
+</span><span id="__span-9-20"><a href="#__codelineno-9-20" id="__codelineno-9-20" name="__codelineno-9-20"></a>        <span class="k">try</span><span class="p">:</span>
+</span><span id="__span-9-21"><a href="#__codelineno-9-21" id="__codelineno-9-21" name="__codelineno-9-21"></a>            <span class="c1"># Create domain entity</span>
+</span><span id="__span-9-22"><a href="#__codelineno-9-22" id="__codelineno-9-22" name="__codelineno-9-22"></a>            <span class="n">order</span> <span class="o">=</span> <span class="n">Order</span><span class="p">(</span>
+</span><span id="__span-9-23"><a href="#__codelineno-9-23" id="__codelineno-9-23" name="__codelineno-9-23"></a>                <span class="n">customer_id</span><span class="o">=</span><span class="n">command</span><span class="o">.</span><span class="n">customer_id</span><span class="p">,</span>
+</span><span id="__span-9-24"><a href="#__codelineno-9-24" id="__codelineno-9-24" name="__codelineno-9-24"></a>                <span class="n">items</span><span class="o">=</span><span class="n">command</span><span class="o">.</span><span class="n">items</span><span class="p">,</span>
+</span><span id="__span-9-25"><a href="#__codelineno-9-25" id="__codelineno-9-25" name="__codelineno-9-25"></a>                <span class="n">delivery_address</span><span class="o">=</span><span class="n">command</span><span class="o">.</span><span class="n">delivery_address</span><span class="p">,</span>
+</span><span id="__span-9-26"><a href="#__codelineno-9-26" id="__codelineno-9-26" name="__codelineno-9-26"></a>                <span class="n">special_instructions</span><span class="o">=</span><span class="n">command</span><span class="o">.</span><span class="n">special_instructions</span>
+</span><span id="__span-9-27"><a href="#__codelineno-9-27" id="__codelineno-9-27" name="__codelineno-9-27"></a>            <span class="p">)</span>
+</span><span id="__span-9-28"><a href="#__codelineno-9-28" id="__codelineno-9-28" name="__codelineno-9-28"></a>
+</span><span id="__span-9-29"><a href="#__codelineno-9-29" id="__codelineno-9-29" name="__codelineno-9-29"></a>            <span class="c1"># Persist order</span>
+</span><span id="__span-9-30"><a href="#__codelineno-9-30" id="__codelineno-9-30" name="__codelineno-9-30"></a>            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_repository</span><span class="o">.</span><span class="n">save_async</span><span class="p">(</span><span class="n">order</span><span class="p">)</span>
+</span><span id="__span-9-31"><a href="#__codelineno-9-31" id="__codelineno-9-31" name="__codelineno-9-31"></a>
+</span><span id="__span-9-32"><a href="#__codelineno-9-32" id="__codelineno-9-32" name="__codelineno-9-32"></a>            <span class="c1"># Return success result</span>
+</span><span id="__span-9-33"><a href="#__codelineno-9-33" id="__codelineno-9-33" name="__codelineno-9-33"></a>            <span class="n">dto</span> <span class="o">=</span> <span class="n">OrderDto</span><span class="p">(</span>
+</span><span id="__span-9-34"><a href="#__codelineno-9-34" id="__codelineno-9-34" name="__codelineno-9-34"></a>                <span class="nb">id</span><span class="o">=</span><span class="n">order</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+</span><span id="__span-9-35"><a href="#__codelineno-9-35" id="__codelineno-9-35" name="__codelineno-9-35"></a>                <span class="n">customer_id</span><span class="o">=</span><span class="n">order</span><span class="o">.</span><span class="n">customer_id</span><span class="p">,</span>
+</span><span id="__span-9-36"><a href="#__codelineno-9-36" id="__codelineno-9-36" name="__codelineno-9-36"></a>                <span class="n">total</span><span class="o">=</span><span class="n">order</span><span class="o">.</span><span class="n">total</span><span class="p">,</span>
+</span><span id="__span-9-37"><a href="#__codelineno-9-37" id="__codelineno-9-37" name="__codelineno-9-37"></a>                <span class="n">status</span><span class="o">=</span><span class="n">order</span><span class="o">.</span><span class="n">status</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+</span><span id="__span-9-38"><a href="#__codelineno-9-38" id="__codelineno-9-38" name="__codelineno-9-38"></a>                <span class="n">created_at</span><span class="o">=</span><span class="n">order</span><span class="o">.</span><span class="n">created_at</span>
+</span><span id="__span-9-39"><a href="#__codelineno-9-39" id="__codelineno-9-39" name="__codelineno-9-39"></a>            <span class="p">)</span>
+</span><span id="__span-9-40"><a href="#__codelineno-9-40" id="__codelineno-9-40" name="__codelineno-9-40"></a>
+</span><span id="__span-9-41"><a href="#__codelineno-9-41" id="__codelineno-9-41" name="__codelineno-9-41"></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">created</span><span class="p">(</span><span class="n">dto</span><span class="p">)</span>
+</span><span id="__span-9-42"><a href="#__codelineno-9-42" id="__codelineno-9-42" name="__codelineno-9-42"></a>
+</span><span id="__span-9-43"><a href="#__codelineno-9-43" id="__codelineno-9-43" name="__codelineno-9-43"></a>        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">ex</span><span class="p">:</span>
+</span><span id="__span-9-44"><a href="#__codelineno-9-44" id="__codelineno-9-44" name="__codelineno-9-44"></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">internal_server_error</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Failed to place order: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">ex</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span></code></pre></div>
 <h3 id="5-first-controller">5. First Controller<a class="headerlink" href="#5-first-controller" title="Permanent link">¶</a></h3>
 <p>Create <code>src/api/controllers/orders_controller.py</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">fastapi</span><span class="w"> </span><span class="kn">import</span> <span class="n">HTTPException</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.mvc</span><span class="w"> </span><span class="kn">import</span> <span class="n">ControllerBase</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">classy_fastapi</span><span class="w"> </span><span class="kn">import</span> <span class="n">post</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">src.application.handlers.place_order_handler</span><span class="w"> </span><span class="kn">import</span> <span class="n">PlaceOrderCommand</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">src.api.dtos.place_order_request</span><span class="w"> </span><span class="kn">import</span> <span class="n">PlaceOrderRequest</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">src.api.dtos.order_dto</span><span class="w"> </span><span class="kn">import</span> <span class="n">OrderDto</span>
-
-<span class="k">class</span><span class="w"> </span><span class="nc">OrdersController</span><span class="p">(</span><span class="n">ControllerBase</span><span class="p">):</span>
-
-    <span class="nd">@post</span><span class="p">(</span><span class="s2">"/orders"</span><span class="p">,</span> <span class="n">response_model</span><span class="o">=</span><span class="n">OrderDto</span><span class="p">,</span> <span class="n">status_code</span><span class="o">=</span><span class="mi">201</span><span class="p">)</span>
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">place_order</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">PlaceOrderRequest</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">OrderDto</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Place a new pizza order"""</span>
-        <span class="n">command</span> <span class="o">=</span> <span class="n">PlaceOrderCommand</span><span class="p">(</span>
-            <span class="n">customer_id</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">customer_id</span><span class="p">,</span>
-            <span class="n">items</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">items</span><span class="p">,</span>
-            <span class="n">delivery_address</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">delivery_address</span><span class="p">,</span>
-            <span class="n">special_instructions</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">special_instructions</span>
-        <span class="p">)</span>
-
-        <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">mediator</span><span class="o">.</span><span class="n">execute_async</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">is_success</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">result</span><span class="o">.</span><span class="n">data</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">HTTPException</span><span class="p">(</span>
-                <span class="n">status_code</span><span class="o">=</span><span class="n">result</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span>
-                <span class="n">detail</span><span class="o">=</span><span class="n">result</span><span class="o">.</span><span class="n">error_message</span>
-            <span class="p">)</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-10-1"><a href="#__codelineno-10-1" id="__codelineno-10-1" name="__codelineno-10-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">fastapi</span><span class="w"> </span><span class="kn">import</span> <span class="n">HTTPException</span>
+</span><span id="__span-10-2"><a href="#__codelineno-10-2" id="__codelineno-10-2" name="__codelineno-10-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.mvc</span><span class="w"> </span><span class="kn">import</span> <span class="n">ControllerBase</span>
+</span><span id="__span-10-3"><a href="#__codelineno-10-3" id="__codelineno-10-3" name="__codelineno-10-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">classy_fastapi</span><span class="w"> </span><span class="kn">import</span> <span class="n">post</span>
+</span><span id="__span-10-4"><a href="#__codelineno-10-4" id="__codelineno-10-4" name="__codelineno-10-4"></a><span class="kn">from</span><span class="w"> </span><span class="nn">src.application.handlers.place_order_handler</span><span class="w"> </span><span class="kn">import</span> <span class="n">PlaceOrderCommand</span>
+</span><span id="__span-10-5"><a href="#__codelineno-10-5" id="__codelineno-10-5" name="__codelineno-10-5"></a><span class="kn">from</span><span class="w"> </span><span class="nn">src.api.dtos.place_order_request</span><span class="w"> </span><span class="kn">import</span> <span class="n">PlaceOrderRequest</span>
+</span><span id="__span-10-6"><a href="#__codelineno-10-6" id="__codelineno-10-6" name="__codelineno-10-6"></a><span class="kn">from</span><span class="w"> </span><span class="nn">src.api.dtos.order_dto</span><span class="w"> </span><span class="kn">import</span> <span class="n">OrderDto</span>
+</span><span id="__span-10-7"><a href="#__codelineno-10-7" id="__codelineno-10-7" name="__codelineno-10-7"></a>
+</span><span id="__span-10-8"><a href="#__codelineno-10-8" id="__codelineno-10-8" name="__codelineno-10-8"></a><span class="k">class</span><span class="w"> </span><span class="nc">OrdersController</span><span class="p">(</span><span class="n">ControllerBase</span><span class="p">):</span>
+</span><span id="__span-10-9"><a href="#__codelineno-10-9" id="__codelineno-10-9" name="__codelineno-10-9"></a>
+</span><span id="__span-10-10"><a href="#__codelineno-10-10" id="__codelineno-10-10" name="__codelineno-10-10"></a>    <span class="nd">@post</span><span class="p">(</span><span class="s2">"/orders"</span><span class="p">,</span> <span class="n">response_model</span><span class="o">=</span><span class="n">OrderDto</span><span class="p">,</span> <span class="n">status_code</span><span class="o">=</span><span class="mi">201</span><span class="p">)</span>
+</span><span id="__span-10-11"><a href="#__codelineno-10-11" id="__codelineno-10-11" name="__codelineno-10-11"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">place_order</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">PlaceOrderRequest</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">OrderDto</span><span class="p">:</span>
+</span><span id="__span-10-12"><a href="#__codelineno-10-12" id="__codelineno-10-12" name="__codelineno-10-12"></a><span class="w">        </span><span class="sd">"""Place a new pizza order"""</span>
+</span><span id="__span-10-13"><a href="#__codelineno-10-13" id="__codelineno-10-13" name="__codelineno-10-13"></a>        <span class="n">command</span> <span class="o">=</span> <span class="n">PlaceOrderCommand</span><span class="p">(</span>
+</span><span id="__span-10-14"><a href="#__codelineno-10-14" id="__codelineno-10-14" name="__codelineno-10-14"></a>            <span class="n">customer_id</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">customer_id</span><span class="p">,</span>
+</span><span id="__span-10-15"><a href="#__codelineno-10-15" id="__codelineno-10-15" name="__codelineno-10-15"></a>            <span class="n">items</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">items</span><span class="p">,</span>
+</span><span id="__span-10-16"><a href="#__codelineno-10-16" id="__codelineno-10-16" name="__codelineno-10-16"></a>            <span class="n">delivery_address</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">delivery_address</span><span class="p">,</span>
+</span><span id="__span-10-17"><a href="#__codelineno-10-17" id="__codelineno-10-17" name="__codelineno-10-17"></a>            <span class="n">special_instructions</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">special_instructions</span>
+</span><span id="__span-10-18"><a href="#__codelineno-10-18" id="__codelineno-10-18" name="__codelineno-10-18"></a>        <span class="p">)</span>
+</span><span id="__span-10-19"><a href="#__codelineno-10-19" id="__codelineno-10-19" name="__codelineno-10-19"></a>
+</span><span id="__span-10-20"><a href="#__codelineno-10-20" id="__codelineno-10-20" name="__codelineno-10-20"></a>        <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">mediator</span><span class="o">.</span><span class="n">execute_async</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
+</span><span id="__span-10-21"><a href="#__codelineno-10-21" id="__codelineno-10-21" name="__codelineno-10-21"></a>
+</span><span id="__span-10-22"><a href="#__codelineno-10-22" id="__codelineno-10-22" name="__codelineno-10-22"></a>        <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">is_success</span><span class="p">:</span>
+</span><span id="__span-10-23"><a href="#__codelineno-10-23" id="__codelineno-10-23" name="__codelineno-10-23"></a>            <span class="k">return</span> <span class="n">result</span><span class="o">.</span><span class="n">data</span>
+</span><span id="__span-10-24"><a href="#__codelineno-10-24" id="__codelineno-10-24" name="__codelineno-10-24"></a>        <span class="k">else</span><span class="p">:</span>
+</span><span id="__span-10-25"><a href="#__codelineno-10-25" id="__codelineno-10-25" name="__codelineno-10-25"></a>            <span class="k">raise</span> <span class="n">HTTPException</span><span class="p">(</span>
+</span><span id="__span-10-26"><a href="#__codelineno-10-26" id="__codelineno-10-26" name="__codelineno-10-26"></a>                <span class="n">status_code</span><span class="o">=</span><span class="n">result</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span>
+</span><span id="__span-10-27"><a href="#__codelineno-10-27" id="__codelineno-10-27" name="__codelineno-10-27"></a>                <span class="n">detail</span><span class="o">=</span><span class="n">result</span><span class="o">.</span><span class="n">error_message</span>
+</span><span id="__span-10-28"><a href="#__codelineno-10-28" id="__codelineno-10-28" name="__codelineno-10-28"></a>            <span class="p">)</span>
+</span></code></pre></div>
 <h2 id="testing-setup">🧪 Testing Setup<a class="headerlink" href="#testing-setup" title="Permanent link">¶</a></h2>
 <h3 id="1-test-configuration">1. Test Configuration<a class="headerlink" href="#1-test-configuration" title="Permanent link">¶</a></h3>
 <p>Create <code>tests/conftest.py</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">unittest.mock</span><span class="w"> </span><span class="kn">import</span> <span class="n">Mock</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.dependency_injection</span><span class="w"> </span><span class="kn">import</span> <span class="n">ServiceCollection</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">src.startup</span><span class="w"> </span><span class="kn">import</span> <span class="n">configure_services</span>
-
-<span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">service_collection</span><span class="p">():</span>
-<span class="w">    </span><span class="sd">"""Provide a configured service collection for testing"""</span>
-    <span class="n">services</span> <span class="o">=</span> <span class="n">ServiceCollection</span><span class="p">()</span>
-    <span class="n">configure_services</span><span class="p">(</span><span class="n">services</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">services</span>
-
-<span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">mock_order_repository</span><span class="p">():</span>
-<span class="w">    </span><span class="sd">"""Provide a mocked order repository"""</span>
-    <span class="k">return</span> <span class="n">Mock</span><span class="p">()</span>
-
-<span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">sample_order_items</span><span class="p">():</span>
-<span class="w">    </span><span class="sd">"""Provide sample order items for testing"""</span>
-    <span class="kn">from</span><span class="w"> </span><span class="nn">src.domain.entities.order</span><span class="w"> </span><span class="kn">import</span> <span class="n">OrderItem</span>
-    <span class="kn">from</span><span class="w"> </span><span class="nn">decimal</span><span class="w"> </span><span class="kn">import</span> <span class="n">Decimal</span>
-
-    <span class="k">return</span> <span class="p">[</span>
-        <span class="n">OrderItem</span><span class="p">(</span>
-            <span class="n">pizza_name</span><span class="o">=</span><span class="s2">"Margherita"</span><span class="p">,</span>
-            <span class="n">size</span><span class="o">=</span><span class="s2">"Large"</span><span class="p">,</span>
-            <span class="n">quantity</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-            <span class="n">price</span><span class="o">=</span><span class="n">Decimal</span><span class="p">(</span><span class="s1">'15.99'</span><span class="p">)</span>
-        <span class="p">),</span>
-        <span class="n">OrderItem</span><span class="p">(</span>
-            <span class="n">pizza_name</span><span class="o">=</span><span class="s2">"Pepperoni"</span><span class="p">,</span>
-            <span class="n">size</span><span class="o">=</span><span class="s2">"Medium"</span><span class="p">,</span>
-            <span class="n">quantity</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
-            <span class="n">price</span><span class="o">=</span><span class="n">Decimal</span><span class="p">(</span><span class="s1">'12.99'</span><span class="p">)</span>
-        <span class="p">)</span>
-    <span class="p">]</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-11-1"><a href="#__codelineno-11-1" id="__codelineno-11-1" name="__codelineno-11-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
+</span><span id="__span-11-2"><a href="#__codelineno-11-2" id="__codelineno-11-2" name="__codelineno-11-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">unittest.mock</span><span class="w"> </span><span class="kn">import</span> <span class="n">Mock</span>
+</span><span id="__span-11-3"><a href="#__codelineno-11-3" id="__codelineno-11-3" name="__codelineno-11-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.dependency_injection</span><span class="w"> </span><span class="kn">import</span> <span class="n">ServiceCollection</span>
+</span><span id="__span-11-4"><a href="#__codelineno-11-4" id="__codelineno-11-4" name="__codelineno-11-4"></a><span class="kn">from</span><span class="w"> </span><span class="nn">src.startup</span><span class="w"> </span><span class="kn">import</span> <span class="n">configure_services</span>
+</span><span id="__span-11-5"><a href="#__codelineno-11-5" id="__codelineno-11-5" name="__codelineno-11-5"></a>
+</span><span id="__span-11-6"><a href="#__codelineno-11-6" id="__codelineno-11-6" name="__codelineno-11-6"></a><span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
+</span><span id="__span-11-7"><a href="#__codelineno-11-7" id="__codelineno-11-7" name="__codelineno-11-7"></a><span class="k">def</span><span class="w"> </span><span class="nf">service_collection</span><span class="p">():</span>
+</span><span id="__span-11-8"><a href="#__codelineno-11-8" id="__codelineno-11-8" name="__codelineno-11-8"></a><span class="w">    </span><span class="sd">"""Provide a configured service collection for testing"""</span>
+</span><span id="__span-11-9"><a href="#__codelineno-11-9" id="__codelineno-11-9" name="__codelineno-11-9"></a>    <span class="n">services</span> <span class="o">=</span> <span class="n">ServiceCollection</span><span class="p">()</span>
+</span><span id="__span-11-10"><a href="#__codelineno-11-10" id="__codelineno-11-10" name="__codelineno-11-10"></a>    <span class="n">configure_services</span><span class="p">(</span><span class="n">services</span><span class="p">)</span>
+</span><span id="__span-11-11"><a href="#__codelineno-11-11" id="__codelineno-11-11" name="__codelineno-11-11"></a>    <span class="k">return</span> <span class="n">services</span>
+</span><span id="__span-11-12"><a href="#__codelineno-11-12" id="__codelineno-11-12" name="__codelineno-11-12"></a>
+</span><span id="__span-11-13"><a href="#__codelineno-11-13" id="__codelineno-11-13" name="__codelineno-11-13"></a><span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
+</span><span id="__span-11-14"><a href="#__codelineno-11-14" id="__codelineno-11-14" name="__codelineno-11-14"></a><span class="k">def</span><span class="w"> </span><span class="nf">mock_order_repository</span><span class="p">():</span>
+</span><span id="__span-11-15"><a href="#__codelineno-11-15" id="__codelineno-11-15" name="__codelineno-11-15"></a><span class="w">    </span><span class="sd">"""Provide a mocked order repository"""</span>
+</span><span id="__span-11-16"><a href="#__codelineno-11-16" id="__codelineno-11-16" name="__codelineno-11-16"></a>    <span class="k">return</span> <span class="n">Mock</span><span class="p">()</span>
+</span><span id="__span-11-17"><a href="#__codelineno-11-17" id="__codelineno-11-17" name="__codelineno-11-17"></a>
+</span><span id="__span-11-18"><a href="#__codelineno-11-18" id="__codelineno-11-18" name="__codelineno-11-18"></a><span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
+</span><span id="__span-11-19"><a href="#__codelineno-11-19" id="__codelineno-11-19" name="__codelineno-11-19"></a><span class="k">def</span><span class="w"> </span><span class="nf">sample_order_items</span><span class="p">():</span>
+</span><span id="__span-11-20"><a href="#__codelineno-11-20" id="__codelineno-11-20" name="__codelineno-11-20"></a><span class="w">    </span><span class="sd">"""Provide sample order items for testing"""</span>
+</span><span id="__span-11-21"><a href="#__codelineno-11-21" id="__codelineno-11-21" name="__codelineno-11-21"></a>    <span class="kn">from</span><span class="w"> </span><span class="nn">src.domain.entities.order</span><span class="w"> </span><span class="kn">import</span> <span class="n">OrderItem</span>
+</span><span id="__span-11-22"><a href="#__codelineno-11-22" id="__codelineno-11-22" name="__codelineno-11-22"></a>    <span class="kn">from</span><span class="w"> </span><span class="nn">decimal</span><span class="w"> </span><span class="kn">import</span> <span class="n">Decimal</span>
+</span><span id="__span-11-23"><a href="#__codelineno-11-23" id="__codelineno-11-23" name="__codelineno-11-23"></a>
+</span><span id="__span-11-24"><a href="#__codelineno-11-24" id="__codelineno-11-24" name="__codelineno-11-24"></a>    <span class="k">return</span> <span class="p">[</span>
+</span><span id="__span-11-25"><a href="#__codelineno-11-25" id="__codelineno-11-25" name="__codelineno-11-25"></a>        <span class="n">OrderItem</span><span class="p">(</span>
+</span><span id="__span-11-26"><a href="#__codelineno-11-26" id="__codelineno-11-26" name="__codelineno-11-26"></a>            <span class="n">pizza_name</span><span class="o">=</span><span class="s2">"Margherita"</span><span class="p">,</span>
+</span><span id="__span-11-27"><a href="#__codelineno-11-27" id="__codelineno-11-27" name="__codelineno-11-27"></a>            <span class="n">size</span><span class="o">=</span><span class="s2">"Large"</span><span class="p">,</span>
+</span><span id="__span-11-28"><a href="#__codelineno-11-28" id="__codelineno-11-28" name="__codelineno-11-28"></a>            <span class="n">quantity</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+</span><span id="__span-11-29"><a href="#__codelineno-11-29" id="__codelineno-11-29" name="__codelineno-11-29"></a>            <span class="n">price</span><span class="o">=</span><span class="n">Decimal</span><span class="p">(</span><span class="s1">'15.99'</span><span class="p">)</span>
+</span><span id="__span-11-30"><a href="#__codelineno-11-30" id="__codelineno-11-30" name="__codelineno-11-30"></a>        <span class="p">),</span>
+</span><span id="__span-11-31"><a href="#__codelineno-11-31" id="__codelineno-11-31" name="__codelineno-11-31"></a>        <span class="n">OrderItem</span><span class="p">(</span>
+</span><span id="__span-11-32"><a href="#__codelineno-11-32" id="__codelineno-11-32" name="__codelineno-11-32"></a>            <span class="n">pizza_name</span><span class="o">=</span><span class="s2">"Pepperoni"</span><span class="p">,</span>
+</span><span id="__span-11-33"><a href="#__codelineno-11-33" id="__codelineno-11-33" name="__codelineno-11-33"></a>            <span class="n">size</span><span class="o">=</span><span class="s2">"Medium"</span><span class="p">,</span>
+</span><span id="__span-11-34"><a href="#__codelineno-11-34" id="__codelineno-11-34" name="__codelineno-11-34"></a>            <span class="n">quantity</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+</span><span id="__span-11-35"><a href="#__codelineno-11-35" id="__codelineno-11-35" name="__codelineno-11-35"></a>            <span class="n">price</span><span class="o">=</span><span class="n">Decimal</span><span class="p">(</span><span class="s1">'12.99'</span><span class="p">)</span>
+</span><span id="__span-11-36"><a href="#__codelineno-11-36" id="__codelineno-11-36" name="__codelineno-11-36"></a>        <span class="p">)</span>
+</span><span id="__span-11-37"><a href="#__codelineno-11-37" id="__codelineno-11-37" name="__codelineno-11-37"></a>    <span class="p">]</span>
+</span></code></pre></div>
 <h3 id="2-first-unit-test">2. First Unit Test<a class="headerlink" href="#2-first-unit-test" title="Permanent link">¶</a></h3>
 <p>Create <code>tests/unit/test_place_order_handler.py</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">decimal</span><span class="w"> </span><span class="kn">import</span> <span class="n">Decimal</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">src.application.handlers.place_order_handler</span><span class="w"> </span><span class="kn">import</span> <span class="n">PlaceOrderHandler</span><span class="p">,</span> <span class="n">PlaceOrderCommand</span>
-
-<span class="k">class</span><span class="w"> </span><span class="nc">TestPlaceOrderHandler</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">setup_method</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">mock_repository</span> <span class="o">=</span> <span class="n">Mock</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">handler</span> <span class="o">=</span> <span class="n">PlaceOrderHandler</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mock_repository</span><span class="p">)</span>
-
-    <span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">asyncio</span>
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">test_place_order_success</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sample_order_items</span><span class="p">):</span>
-        <span class="c1"># Arrange</span>
-        <span class="n">command</span> <span class="o">=</span> <span class="n">PlaceOrderCommand</span><span class="p">(</span>
-            <span class="n">customer_id</span><span class="o">=</span><span class="s2">"123"</span><span class="p">,</span>
-            <span class="n">items</span><span class="o">=</span><span class="n">sample_order_items</span><span class="p">,</span>
-            <span class="n">delivery_address</span><span class="o">=</span><span class="s2">"123 Pizza St"</span>
-        <span class="p">)</span>
-
-        <span class="c1"># Act</span>
-        <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">handler</span><span class="o">.</span><span class="n">handle_async</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
-
-        <span class="c1"># Assert</span>
-        <span class="k">assert</span> <span class="n">result</span><span class="o">.</span><span class="n">is_success</span>
-        <span class="k">assert</span> <span class="n">result</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">customer_id</span> <span class="o">==</span> <span class="s2">"123"</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">mock_repository</span><span class="o">.</span><span class="n">save_async</span><span class="o">.</span><span class="n">assert_called_once</span><span class="p">()</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-12-1"><a href="#__codelineno-12-1" id="__codelineno-12-1" name="__codelineno-12-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
+</span><span id="__span-12-2"><a href="#__codelineno-12-2" id="__codelineno-12-2" name="__codelineno-12-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">decimal</span><span class="w"> </span><span class="kn">import</span> <span class="n">Decimal</span>
+</span><span id="__span-12-3"><a href="#__codelineno-12-3" id="__codelineno-12-3" name="__codelineno-12-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">src.application.handlers.place_order_handler</span><span class="w"> </span><span class="kn">import</span> <span class="n">PlaceOrderHandler</span><span class="p">,</span> <span class="n">PlaceOrderCommand</span>
+</span><span id="__span-12-4"><a href="#__codelineno-12-4" id="__codelineno-12-4" name="__codelineno-12-4"></a>
+</span><span id="__span-12-5"><a href="#__codelineno-12-5" id="__codelineno-12-5" name="__codelineno-12-5"></a><span class="k">class</span><span class="w"> </span><span class="nc">TestPlaceOrderHandler</span><span class="p">:</span>
+</span><span id="__span-12-6"><a href="#__codelineno-12-6" id="__codelineno-12-6" name="__codelineno-12-6"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">setup_method</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="__span-12-7"><a href="#__codelineno-12-7" id="__codelineno-12-7" name="__codelineno-12-7"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">mock_repository</span> <span class="o">=</span> <span class="n">Mock</span><span class="p">()</span>
+</span><span id="__span-12-8"><a href="#__codelineno-12-8" id="__codelineno-12-8" name="__codelineno-12-8"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">handler</span> <span class="o">=</span> <span class="n">PlaceOrderHandler</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mock_repository</span><span class="p">)</span>
+</span><span id="__span-12-9"><a href="#__codelineno-12-9" id="__codelineno-12-9" name="__codelineno-12-9"></a>
+</span><span id="__span-12-10"><a href="#__codelineno-12-10" id="__codelineno-12-10" name="__codelineno-12-10"></a>    <span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">asyncio</span>
+</span><span id="__span-12-11"><a href="#__codelineno-12-11" id="__codelineno-12-11" name="__codelineno-12-11"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">test_place_order_success</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sample_order_items</span><span class="p">):</span>
+</span><span id="__span-12-12"><a href="#__codelineno-12-12" id="__codelineno-12-12" name="__codelineno-12-12"></a>        <span class="c1"># Arrange</span>
+</span><span id="__span-12-13"><a href="#__codelineno-12-13" id="__codelineno-12-13" name="__codelineno-12-13"></a>        <span class="n">command</span> <span class="o">=</span> <span class="n">PlaceOrderCommand</span><span class="p">(</span>
+</span><span id="__span-12-14"><a href="#__codelineno-12-14" id="__codelineno-12-14" name="__codelineno-12-14"></a>            <span class="n">customer_id</span><span class="o">=</span><span class="s2">"123"</span><span class="p">,</span>
+</span><span id="__span-12-15"><a href="#__codelineno-12-15" id="__codelineno-12-15" name="__codelineno-12-15"></a>            <span class="n">items</span><span class="o">=</span><span class="n">sample_order_items</span><span class="p">,</span>
+</span><span id="__span-12-16"><a href="#__codelineno-12-16" id="__codelineno-12-16" name="__codelineno-12-16"></a>            <span class="n">delivery_address</span><span class="o">=</span><span class="s2">"123 Pizza St"</span>
+</span><span id="__span-12-17"><a href="#__codelineno-12-17" id="__codelineno-12-17" name="__codelineno-12-17"></a>        <span class="p">)</span>
+</span><span id="__span-12-18"><a href="#__codelineno-12-18" id="__codelineno-12-18" name="__codelineno-12-18"></a>
+</span><span id="__span-12-19"><a href="#__codelineno-12-19" id="__codelineno-12-19" name="__codelineno-12-19"></a>        <span class="c1"># Act</span>
+</span><span id="__span-12-20"><a href="#__codelineno-12-20" id="__codelineno-12-20" name="__codelineno-12-20"></a>        <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">handler</span><span class="o">.</span><span class="n">handle_async</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
+</span><span id="__span-12-21"><a href="#__codelineno-12-21" id="__codelineno-12-21" name="__codelineno-12-21"></a>
+</span><span id="__span-12-22"><a href="#__codelineno-12-22" id="__codelineno-12-22" name="__codelineno-12-22"></a>        <span class="c1"># Assert</span>
+</span><span id="__span-12-23"><a href="#__codelineno-12-23" id="__codelineno-12-23" name="__codelineno-12-23"></a>        <span class="k">assert</span> <span class="n">result</span><span class="o">.</span><span class="n">is_success</span>
+</span><span id="__span-12-24"><a href="#__codelineno-12-24" id="__codelineno-12-24" name="__codelineno-12-24"></a>        <span class="k">assert</span> <span class="n">result</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">customer_id</span> <span class="o">==</span> <span class="s2">"123"</span>
+</span><span id="__span-12-25"><a href="#__codelineno-12-25" id="__codelineno-12-25" name="__codelineno-12-25"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">mock_repository</span><span class="o">.</span><span class="n">save_async</span><span class="o">.</span><span class="n">assert_called_once</span><span class="p">()</span>
+</span></code></pre></div>
 <h2 id="running-the-application">🚀 Running the Application<a class="headerlink" href="#running-the-application" title="Permanent link">¶</a></h2>
 <h3 id="development-mode">Development Mode<a class="headerlink" href="#development-mode" title="Permanent link">¶</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Install dependencies</span>
-poetry<span class="w"> </span>install
-
-<span class="c1"># Run with hot reload</span>
-poetry<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </span>main.py
-
-<span class="c1"># Or using uvicorn directly</span>
-poetry<span class="w"> </span>run<span class="w"> </span>uvicorn<span class="w"> </span>src.main:app<span class="w"> </span>--reload
-</code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a href="#__codelineno-13-1" id="__codelineno-13-1" name="__codelineno-13-1"></a><span class="c1"># Install dependencies</span>
+</span><span id="__span-13-2"><a href="#__codelineno-13-2" id="__codelineno-13-2" name="__codelineno-13-2"></a>poetry<span class="w"> </span>install
+</span><span id="__span-13-3"><a href="#__codelineno-13-3" id="__codelineno-13-3" name="__codelineno-13-3"></a>
+</span><span id="__span-13-4"><a href="#__codelineno-13-4" id="__codelineno-13-4" name="__codelineno-13-4"></a><span class="c1"># Run with hot reload</span>
+</span><span id="__span-13-5"><a href="#__codelineno-13-5" id="__codelineno-13-5" name="__codelineno-13-5"></a>poetry<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </span>main.py
+</span><span id="__span-13-6"><a href="#__codelineno-13-6" id="__codelineno-13-6" name="__codelineno-13-6"></a>
+</span><span id="__span-13-7"><a href="#__codelineno-13-7" id="__codelineno-13-7" name="__codelineno-13-7"></a><span class="c1"># Or using uvicorn directly</span>
+</span><span id="__span-13-8"><a href="#__codelineno-13-8" id="__codelineno-13-8" name="__codelineno-13-8"></a>poetry<span class="w"> </span>run<span class="w"> </span>uvicorn<span class="w"> </span>src.main:app<span class="w"> </span>--reload
+</span></code></pre></div>
 <h3 id="testing">Testing<a class="headerlink" href="#testing" title="Permanent link">¶</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Run all tests</span>
-poetry<span class="w"> </span>run<span class="w"> </span>pytest
-
-<span class="c1"># Run with coverage</span>
-poetry<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>--cov<span class="o">=</span>src
-
-<span class="c1"># Run specific test file</span>
-poetry<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>tests/unit/test_place_order_handler.py<span class="w"> </span>-v
-</code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a href="#__codelineno-14-1" id="__codelineno-14-1" name="__codelineno-14-1"></a><span class="c1"># Run all tests</span>
+</span><span id="__span-14-2"><a href="#__codelineno-14-2" id="__codelineno-14-2" name="__codelineno-14-2"></a>poetry<span class="w"> </span>run<span class="w"> </span>pytest
+</span><span id="__span-14-3"><a href="#__codelineno-14-3" id="__codelineno-14-3" name="__codelineno-14-3"></a>
+</span><span id="__span-14-4"><a href="#__codelineno-14-4" id="__codelineno-14-4" name="__codelineno-14-4"></a><span class="c1"># Run with coverage</span>
+</span><span id="__span-14-5"><a href="#__codelineno-14-5" id="__codelineno-14-5" name="__codelineno-14-5"></a>poetry<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>--cov<span class="o">=</span>src
+</span><span id="__span-14-6"><a href="#__codelineno-14-6" id="__codelineno-14-6" name="__codelineno-14-6"></a>
+</span><span id="__span-14-7"><a href="#__codelineno-14-7" id="__codelineno-14-7" name="__codelineno-14-7"></a><span class="c1"># Run specific test file</span>
+</span><span id="__span-14-8"><a href="#__codelineno-14-8" id="__codelineno-14-8" name="__codelineno-14-8"></a>poetry<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>tests/unit/test_place_order_handler.py<span class="w"> </span>-v
+</span></code></pre></div>
 <h3 id="code-quality">Code Quality<a class="headerlink" href="#code-quality" title="Permanent link">¶</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Format code</span>
-poetry<span class="w"> </span>run<span class="w"> </span>black<span class="w"> </span>src<span class="w"> </span>tests
-
-<span class="c1"># Sort imports</span>
-poetry<span class="w"> </span>run<span class="w"> </span>isort<span class="w"> </span>src<span class="w"> </span>tests
-
-<span class="c1"># Type checking</span>
-poetry<span class="w"> </span>run<span class="w"> </span>mypy<span class="w"> </span>src
-</code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-15-1"><a href="#__codelineno-15-1" id="__codelineno-15-1" name="__codelineno-15-1"></a><span class="c1"># Format code</span>
+</span><span id="__span-15-2"><a href="#__codelineno-15-2" id="__codelineno-15-2" name="__codelineno-15-2"></a>poetry<span class="w"> </span>run<span class="w"> </span>black<span class="w"> </span>src<span class="w"> </span>tests
+</span><span id="__span-15-3"><a href="#__codelineno-15-3" id="__codelineno-15-3" name="__codelineno-15-3"></a>
+</span><span id="__span-15-4"><a href="#__codelineno-15-4" id="__codelineno-15-4" name="__codelineno-15-4"></a><span class="c1"># Sort imports</span>
+</span><span id="__span-15-5"><a href="#__codelineno-15-5" id="__codelineno-15-5" name="__codelineno-15-5"></a>poetry<span class="w"> </span>run<span class="w"> </span>isort<span class="w"> </span>src<span class="w"> </span>tests
+</span><span id="__span-15-6"><a href="#__codelineno-15-6" id="__codelineno-15-6" name="__codelineno-15-6"></a>
+</span><span id="__span-15-7"><a href="#__codelineno-15-7" id="__codelineno-15-7" name="__codelineno-15-7"></a><span class="c1"># Type checking</span>
+</span><span id="__span-15-8"><a href="#__codelineno-15-8" id="__codelineno-15-8" name="__codelineno-15-8"></a>poetry<span class="w"> </span>run<span class="w"> </span>mypy<span class="w"> </span>src
+</span></code></pre></div>
 <h2 id="next-steps">🔧 Next Steps<a class="headerlink" href="#next-steps" title="Permanent link">¶</a></h2>
 <p>After basic setup, consider:</p>
 <ol>
@@ -1652,18 +1652,18 @@ poetry<span class="w"> </span>run<span class="w"> </span>mypy<span class="w"> </
 <h2 id="troubleshooting">🆘 Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">¶</a></h2>
 <h3 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">¶</a></h3>
 <p><strong>Import Errors</strong></p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Ensure proper Python path</span>
-<span class="nb">export</span><span class="w"> </span><span class="nv">PYTHONPATH</span><span class="o">=</span><span class="s2">"</span><span class="si">${</span><span class="nv">PYTHONPATH</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">PWD</span><span class="si">}</span><span class="s2">/src"</span>
-</code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-16-1"><a href="#__codelineno-16-1" id="__codelineno-16-1" name="__codelineno-16-1"></a><span class="c1"># Ensure proper Python path</span>
+</span><span id="__span-16-2"><a href="#__codelineno-16-2" id="__codelineno-16-2" name="__codelineno-16-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">PYTHONPATH</span><span class="o">=</span><span class="s2">"</span><span class="si">${</span><span class="nv">PYTHONPATH</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">PWD</span><span class="si">}</span><span class="s2">/src"</span>
+</span></code></pre></div>
 <p><strong>Poetry Issues</strong></p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Reset poetry environment</span>
-poetry<span class="w"> </span>env<span class="w"> </span>remove<span class="w"> </span>python
-poetry<span class="w"> </span>install
-</code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-17-1"><a href="#__codelineno-17-1" id="__codelineno-17-1" name="__codelineno-17-1"></a><span class="c1"># Reset poetry environment</span>
+</span><span id="__span-17-2"><a href="#__codelineno-17-2" id="__codelineno-17-2" name="__codelineno-17-2"></a>poetry<span class="w"> </span>env<span class="w"> </span>remove<span class="w"> </span>python
+</span><span id="__span-17-3"><a href="#__codelineno-17-3" id="__codelineno-17-3" name="__codelineno-17-3"></a>poetry<span class="w"> </span>install
+</span></code></pre></div>
 <p><strong>Missing Dependencies</strong></p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Update lock file</span>
-poetry<span class="w"> </span>update
-</code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-18-1"><a href="#__codelineno-18-1" id="__codelineno-18-1" name="__codelineno-18-1"></a><span class="c1"># Update lock file</span>
+</span><span id="__span-18-2"><a href="#__codelineno-18-2" id="__codelineno-18-2" name="__codelineno-18-2"></a>poetry<span class="w"> </span>update
+</span></code></pre></div>
 <h2 id="related-guides">🔗 Related Guides<a class="headerlink" href="#related-guides" title="Permanent link">¶</a></h2>
 <ul>
 <li><strong><a href="../testing-setup/">Testing Setup</a></strong> - Comprehensive testing strategies</li>

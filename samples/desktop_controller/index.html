@@ -1283,9 +1283,9 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../references/python_type_hints/">
+<a class="md-nav__link" href="../../references/python_typing_guide/">
 <span class="md-ellipsis">
-    Python Type Hints
+    Python Typing Guide
     
   </span>
 </a>
@@ -1307,9 +1307,9 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../references/python_generic_types/">
+<a class="md-nav__link" href="../../references/test-mermaid/">
 <span class="md-ellipsis">
-    Python Generic Types
+    Mermaid References
     
   </span>
 </a>
@@ -1967,139 +1967,139 @@
 <p>This architecture enables secure remote control of desktop systems through containerized services that communicate with their host environments via SSH while maintaining enterprise security standards.</p>
 <h2 id="key-features-demonstrated">🚀 Key Features Demonstrated<a class="headerlink" href="#key-features-demonstrated" title="Permanent link">¶</a></h2>
 <h3 id="1-ssh-based-remote-control">1. <strong>SSH-Based Remote Control</strong><a class="headerlink" href="#1-ssh-based-remote-control" title="Permanent link">¶</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Secure command execution on host systems</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">SecuredHost</span><span class="p">:</span>
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">run_command_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command</span><span class="p">:</span> <span class="n">HostCommand</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">HostCommandResult</span><span class="p">:</span>
-        <span class="n">stdin</span><span class="p">,</span> <span class="n">stdout</span><span class="p">,</span> <span class="n">stderr</span> <span class="o">=</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">to_thread</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">ssh_client</span><span class="o">.</span><span class="n">exec_command</span><span class="p">,</span> <span class="n">command</span><span class="o">.</span><span class="n">line</span>
-        <span class="p">)</span>
-
-        <span class="n">exit_status</span> <span class="o">=</span> <span class="n">stdout</span><span class="o">.</span><span class="n">channel</span><span class="o">.</span><span class="n">recv_exit_status</span><span class="p">()</span>
-        <span class="k">return</span> <span class="n">HostCommandResult</span><span class="p">(</span>
-            <span class="n">command</span><span class="o">=</span><span class="n">command</span><span class="o">.</span><span class="n">line</span><span class="p">,</span>
-            <span class="n">exit_status</span><span class="o">=</span><span class="n">exit_status</span><span class="p">,</span>
-            <span class="n">stdout</span><span class="o">=</span><span class="n">stdout</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">(),</span>
-            <span class="n">stderr</span><span class="o">=</span><span class="n">stderr</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
-        <span class="p">)</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a href="#__codelineno-0-1" id="__codelineno-0-1" name="__codelineno-0-1"></a><span class="c1"># Secure command execution on host systems</span>
+</span><span id="__span-0-2"><a href="#__codelineno-0-2" id="__codelineno-0-2" name="__codelineno-0-2"></a><span class="k">class</span><span class="w"> </span><span class="nc">SecuredHost</span><span class="p">:</span>
+</span><span id="__span-0-3"><a href="#__codelineno-0-3" id="__codelineno-0-3" name="__codelineno-0-3"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">run_command_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command</span><span class="p">:</span> <span class="n">HostCommand</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">HostCommandResult</span><span class="p">:</span>
+</span><span id="__span-0-4"><a href="#__codelineno-0-4" id="__codelineno-0-4" name="__codelineno-0-4"></a>        <span class="n">stdin</span><span class="p">,</span> <span class="n">stdout</span><span class="p">,</span> <span class="n">stderr</span> <span class="o">=</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">to_thread</span><span class="p">(</span>
+</span><span id="__span-0-5"><a href="#__codelineno-0-5" id="__codelineno-0-5" name="__codelineno-0-5"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">ssh_client</span><span class="o">.</span><span class="n">exec_command</span><span class="p">,</span> <span class="n">command</span><span class="o">.</span><span class="n">line</span>
+</span><span id="__span-0-6"><a href="#__codelineno-0-6" id="__codelineno-0-6" name="__codelineno-0-6"></a>        <span class="p">)</span>
+</span><span id="__span-0-7"><a href="#__codelineno-0-7" id="__codelineno-0-7" name="__codelineno-0-7"></a>
+</span><span id="__span-0-8"><a href="#__codelineno-0-8" id="__codelineno-0-8" name="__codelineno-0-8"></a>        <span class="n">exit_status</span> <span class="o">=</span> <span class="n">stdout</span><span class="o">.</span><span class="n">channel</span><span class="o">.</span><span class="n">recv_exit_status</span><span class="p">()</span>
+</span><span id="__span-0-9"><a href="#__codelineno-0-9" id="__codelineno-0-9" name="__codelineno-0-9"></a>        <span class="k">return</span> <span class="n">HostCommandResult</span><span class="p">(</span>
+</span><span id="__span-0-10"><a href="#__codelineno-0-10" id="__codelineno-0-10" name="__codelineno-0-10"></a>            <span class="n">command</span><span class="o">=</span><span class="n">command</span><span class="o">.</span><span class="n">line</span><span class="p">,</span>
+</span><span id="__span-0-11"><a href="#__codelineno-0-11" id="__codelineno-0-11" name="__codelineno-0-11"></a>            <span class="n">exit_status</span><span class="o">=</span><span class="n">exit_status</span><span class="p">,</span>
+</span><span id="__span-0-12"><a href="#__codelineno-0-12" id="__codelineno-0-12" name="__codelineno-0-12"></a>            <span class="n">stdout</span><span class="o">=</span><span class="n">stdout</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">(),</span>
+</span><span id="__span-0-13"><a href="#__codelineno-0-13" id="__codelineno-0-13" name="__codelineno-0-13"></a>            <span class="n">stderr</span><span class="o">=</span><span class="n">stderr</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+</span><span id="__span-0-14"><a href="#__codelineno-0-14" id="__codelineno-0-14" name="__codelineno-0-14"></a>        <span class="p">)</span>
+</span></code></pre></div>
 <h3 id="2-background-service-registration">2. <strong>Background Service Registration</strong><a class="headerlink" href="#2-background-service-registration" title="Permanent link">¶</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Periodic self-registration with cloud events</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">DesktopRegistrator</span><span class="p">(</span><span class="n">HostedService</span><span class="p">):</span>
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">start_async</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">while</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">cancellation_token</span><span class="o">.</span><span class="n">is_cancelled</span><span class="p">:</span>
-            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_register_desktop</span><span class="p">()</span>
-            <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">registration_interval_seconds</span><span class="p">)</span>
-
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_register_desktop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">event</span> <span class="o">=</span> <span class="n">DesktopHostRegistrationRequestedIntegrationEventV1</span><span class="p">(</span>
-            <span class="n">desktop_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">desktop_id</span><span class="p">,</span>
-            <span class="n">host_ip_address</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">host_ip</span><span class="p">,</span>
-            <span class="n">registration_timestamp</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span>
-        <span class="p">)</span>
-        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">cloud_event_publisher</span><span class="o">.</span><span class="n">publish_async</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a href="#__codelineno-1-1" id="__codelineno-1-1" name="__codelineno-1-1"></a><span class="c1"># Periodic self-registration with cloud events</span>
+</span><span id="__span-1-2"><a href="#__codelineno-1-2" id="__codelineno-1-2" name="__codelineno-1-2"></a><span class="k">class</span><span class="w"> </span><span class="nc">DesktopRegistrator</span><span class="p">(</span><span class="n">HostedService</span><span class="p">):</span>
+</span><span id="__span-1-3"><a href="#__codelineno-1-3" id="__codelineno-1-3" name="__codelineno-1-3"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">start_async</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="__span-1-4"><a href="#__codelineno-1-4" id="__codelineno-1-4" name="__codelineno-1-4"></a>        <span class="k">while</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">cancellation_token</span><span class="o">.</span><span class="n">is_cancelled</span><span class="p">:</span>
+</span><span id="__span-1-5"><a href="#__codelineno-1-5" id="__codelineno-1-5" name="__codelineno-1-5"></a>            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_register_desktop</span><span class="p">()</span>
+</span><span id="__span-1-6"><a href="#__codelineno-1-6" id="__codelineno-1-6" name="__codelineno-1-6"></a>            <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">registration_interval_seconds</span><span class="p">)</span>
+</span><span id="__span-1-7"><a href="#__codelineno-1-7" id="__codelineno-1-7" name="__codelineno-1-7"></a>
+</span><span id="__span-1-8"><a href="#__codelineno-1-8" id="__codelineno-1-8" name="__codelineno-1-8"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_register_desktop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="__span-1-9"><a href="#__codelineno-1-9" id="__codelineno-1-9" name="__codelineno-1-9"></a>        <span class="n">event</span> <span class="o">=</span> <span class="n">DesktopHostRegistrationRequestedIntegrationEventV1</span><span class="p">(</span>
+</span><span id="__span-1-10"><a href="#__codelineno-1-10" id="__codelineno-1-10" name="__codelineno-1-10"></a>            <span class="n">desktop_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">desktop_id</span><span class="p">,</span>
+</span><span id="__span-1-11"><a href="#__codelineno-1-11" id="__codelineno-1-11" name="__codelineno-1-11"></a>            <span class="n">host_ip_address</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">host_ip</span><span class="p">,</span>
+</span><span id="__span-1-12"><a href="#__codelineno-1-12" id="__codelineno-1-12" name="__codelineno-1-12"></a>            <span class="n">registration_timestamp</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span>
+</span><span id="__span-1-13"><a href="#__codelineno-1-13" id="__codelineno-1-13" name="__codelineno-1-13"></a>        <span class="p">)</span>
+</span><span id="__span-1-14"><a href="#__codelineno-1-14" id="__codelineno-1-14" name="__codelineno-1-14"></a>        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">cloud_event_publisher</span><span class="o">.</span><span class="n">publish_async</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+</span></code></pre></div>
 <h3 id="3-host-system-information-management">3. <strong>Host System Information Management</strong><a class="headerlink" href="#3-host-system-information-management" title="Permanent link">¶</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Domain model for host information</span>
-<span class="nd">@dataclass</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">HostInfo</span><span class="p">(</span><span class="n">Entity</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
-    <span class="n">desktop_id</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">host_ip_address</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">host_state</span><span class="p">:</span> <span class="n">HostState</span>
-    <span class="n">last_seen</span><span class="p">:</span> <span class="n">datetime</span>
-    <span class="n">is_locked</span><span class="p">:</span> <span class="nb">bool</span>
-    <span class="n">system_info</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">update_system_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_state</span><span class="p">:</span> <span class="n">HostState</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">host_state</span> <span class="o">=</span> <span class="n">new_state</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">last_seen</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">)</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a href="#__codelineno-2-1" id="__codelineno-2-1" name="__codelineno-2-1"></a><span class="c1"># Domain model for host information</span>
+</span><span id="__span-2-2"><a href="#__codelineno-2-2" id="__codelineno-2-2" name="__codelineno-2-2"></a><span class="nd">@dataclass</span>
+</span><span id="__span-2-3"><a href="#__codelineno-2-3" id="__codelineno-2-3" name="__codelineno-2-3"></a><span class="k">class</span><span class="w"> </span><span class="nc">HostInfo</span><span class="p">(</span><span class="n">Entity</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
+</span><span id="__span-2-4"><a href="#__codelineno-2-4" id="__codelineno-2-4" name="__codelineno-2-4"></a>    <span class="n">desktop_id</span><span class="p">:</span> <span class="nb">str</span>
+</span><span id="__span-2-5"><a href="#__codelineno-2-5" id="__codelineno-2-5" name="__codelineno-2-5"></a>    <span class="n">host_ip_address</span><span class="p">:</span> <span class="nb">str</span>
+</span><span id="__span-2-6"><a href="#__codelineno-2-6" id="__codelineno-2-6" name="__codelineno-2-6"></a>    <span class="n">host_state</span><span class="p">:</span> <span class="n">HostState</span>
+</span><span id="__span-2-7"><a href="#__codelineno-2-7" id="__codelineno-2-7" name="__codelineno-2-7"></a>    <span class="n">last_seen</span><span class="p">:</span> <span class="n">datetime</span>
+</span><span id="__span-2-8"><a href="#__codelineno-2-8" id="__codelineno-2-8" name="__codelineno-2-8"></a>    <span class="n">is_locked</span><span class="p">:</span> <span class="nb">bool</span>
+</span><span id="__span-2-9"><a href="#__codelineno-2-9" id="__codelineno-2-9" name="__codelineno-2-9"></a>    <span class="n">system_info</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>
+</span><span id="__span-2-10"><a href="#__codelineno-2-10" id="__codelineno-2-10" name="__codelineno-2-10"></a>
+</span><span id="__span-2-11"><a href="#__codelineno-2-11" id="__codelineno-2-11" name="__codelineno-2-11"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">update_system_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_state</span><span class="p">:</span> <span class="n">HostState</span><span class="p">):</span>
+</span><span id="__span-2-12"><a href="#__codelineno-2-12" id="__codelineno-2-12" name="__codelineno-2-12"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">host_state</span> <span class="o">=</span> <span class="n">new_state</span>
+</span><span id="__span-2-13"><a href="#__codelineno-2-13" id="__codelineno-2-13" name="__codelineno-2-13"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">last_seen</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">)</span>
+</span></code></pre></div>
 <h3 id="4-commandquery-pattern-for-remote-operations">4. <strong>Command/Query Pattern for Remote Operations</strong><a class="headerlink" href="#4-commandquery-pattern-for-remote-operations" title="Permanent link">¶</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Remote command execution</span>
-<span class="nd">@dataclass</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">SetHostLockCommand</span><span class="p">(</span><span class="n">Command</span><span class="p">):</span>
-    <span class="n">script_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"/usr/local/bin/lock.sh"</span>
-
-<span class="k">class</span><span class="w"> </span><span class="nc">HostLockCommandsHandler</span><span class="p">(</span><span class="n">CommandHandler</span><span class="p">[</span><span class="n">SetHostLockCommand</span><span class="p">,</span> <span class="n">OperationResult</span><span class="p">[</span><span class="n">Any</span><span class="p">]]):</span>
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">handle_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command</span><span class="p">:</span> <span class="n">SetHostLockCommand</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">OperationResult</span><span class="p">[</span><span class="n">Any</span><span class="p">]:</span>
-        <span class="n">host_command</span> <span class="o">=</span> <span class="n">HostCommand</span><span class="p">(</span><span class="n">line</span><span class="o">=</span><span class="n">command</span><span class="o">.</span><span class="n">script_name</span><span class="p">)</span>
-        <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">docker_host_command_runner</span><span class="o">.</span><span class="n">run_async</span><span class="p">(</span><span class="n">host_command</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">exit_status</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="s2">"Host locked successfully"</span><span class="p">)</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">bad_request</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Lock command failed: </span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">stderr</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a href="#__codelineno-3-1" id="__codelineno-3-1" name="__codelineno-3-1"></a><span class="c1"># Remote command execution</span>
+</span><span id="__span-3-2"><a href="#__codelineno-3-2" id="__codelineno-3-2" name="__codelineno-3-2"></a><span class="nd">@dataclass</span>
+</span><span id="__span-3-3"><a href="#__codelineno-3-3" id="__codelineno-3-3" name="__codelineno-3-3"></a><span class="k">class</span><span class="w"> </span><span class="nc">SetHostLockCommand</span><span class="p">(</span><span class="n">Command</span><span class="p">):</span>
+</span><span id="__span-3-4"><a href="#__codelineno-3-4" id="__codelineno-3-4" name="__codelineno-3-4"></a>    <span class="n">script_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"/usr/local/bin/lock.sh"</span>
+</span><span id="__span-3-5"><a href="#__codelineno-3-5" id="__codelineno-3-5" name="__codelineno-3-5"></a>
+</span><span id="__span-3-6"><a href="#__codelineno-3-6" id="__codelineno-3-6" name="__codelineno-3-6"></a><span class="k">class</span><span class="w"> </span><span class="nc">HostLockCommandsHandler</span><span class="p">(</span><span class="n">CommandHandler</span><span class="p">[</span><span class="n">SetHostLockCommand</span><span class="p">,</span> <span class="n">OperationResult</span><span class="p">[</span><span class="n">Any</span><span class="p">]]):</span>
+</span><span id="__span-3-7"><a href="#__codelineno-3-7" id="__codelineno-3-7" name="__codelineno-3-7"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">handle_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command</span><span class="p">:</span> <span class="n">SetHostLockCommand</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">OperationResult</span><span class="p">[</span><span class="n">Any</span><span class="p">]:</span>
+</span><span id="__span-3-8"><a href="#__codelineno-3-8" id="__codelineno-3-8" name="__codelineno-3-8"></a>        <span class="n">host_command</span> <span class="o">=</span> <span class="n">HostCommand</span><span class="p">(</span><span class="n">line</span><span class="o">=</span><span class="n">command</span><span class="o">.</span><span class="n">script_name</span><span class="p">)</span>
+</span><span id="__span-3-9"><a href="#__codelineno-3-9" id="__codelineno-3-9" name="__codelineno-3-9"></a>        <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">docker_host_command_runner</span><span class="o">.</span><span class="n">run_async</span><span class="p">(</span><span class="n">host_command</span><span class="p">)</span>
+</span><span id="__span-3-10"><a href="#__codelineno-3-10" id="__codelineno-3-10" name="__codelineno-3-10"></a>
+</span><span id="__span-3-11"><a href="#__codelineno-3-11" id="__codelineno-3-11" name="__codelineno-3-11"></a>        <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">exit_status</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+</span><span id="__span-3-12"><a href="#__codelineno-3-12" id="__codelineno-3-12" name="__codelineno-3-12"></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="s2">"Host locked successfully"</span><span class="p">)</span>
+</span><span id="__span-3-13"><a href="#__codelineno-3-13" id="__codelineno-3-13" name="__codelineno-3-13"></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">bad_request</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Lock command failed: </span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">stderr</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span></code></pre></div>
 <h3 id="5-oauth2-with-ssh-security">5. <strong>OAuth2 with SSH Security</strong><a class="headerlink" href="#5-oauth2-with-ssh-security" title="Permanent link">¶</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Dual security: OAuth2 for API + SSH for host access</span>
-<span class="nd">@get</span><span class="p">(</span><span class="s2">"/info"</span><span class="p">,</span> <span class="n">dependencies</span><span class="o">=</span><span class="p">[</span><span class="n">Depends</span><span class="p">(</span><span class="n">validate_token</span><span class="p">)])</span>
-<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_host_info</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="n">query</span> <span class="o">=</span> <span class="n">ReadHostInfoQuery</span><span class="p">()</span>
-    <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">mediator</span><span class="o">.</span><span class="n">execute_async</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
-    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a href="#__codelineno-4-1" id="__codelineno-4-1" name="__codelineno-4-1"></a><span class="c1"># Dual security: OAuth2 for API + SSH for host access</span>
+</span><span id="__span-4-2"><a href="#__codelineno-4-2" id="__codelineno-4-2" name="__codelineno-4-2"></a><span class="nd">@get</span><span class="p">(</span><span class="s2">"/info"</span><span class="p">,</span> <span class="n">dependencies</span><span class="o">=</span><span class="p">[</span><span class="n">Depends</span><span class="p">(</span><span class="n">validate_token</span><span class="p">)])</span>
+</span><span id="__span-4-3"><a href="#__codelineno-4-3" id="__codelineno-4-3" name="__codelineno-4-3"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_host_info</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="__span-4-4"><a href="#__codelineno-4-4" id="__codelineno-4-4" name="__codelineno-4-4"></a>    <span class="n">query</span> <span class="o">=</span> <span class="n">ReadHostInfoQuery</span><span class="p">()</span>
+</span><span id="__span-4-5"><a href="#__codelineno-4-5" id="__codelineno-4-5" name="__codelineno-4-5"></a>    <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">mediator</span><span class="o">.</span><span class="n">execute_async</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+</span><span id="__span-4-6"><a href="#__codelineno-4-6" id="__codelineno-4-6" name="__codelineno-4-6"></a>    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+</span></code></pre></div>
 <h2 id="configuration-settings">🔧 Configuration &amp; Settings<a class="headerlink" href="#configuration-settings" title="Permanent link">¶</a></h2>
 <h3 id="application-settings">Application Settings<a class="headerlink" href="#application-settings" title="Permanent link">¶</a></h3>
-<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">DesktopControllerSettings</span><span class="p">(</span><span class="n">ApplicationSettings</span><span class="p">):</span>
-    <span class="c1"># OAuth2 Configuration</span>
-    <span class="n">jwt_authority</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"http://keycloak47/realms/mozart"</span>
-    <span class="n">jwt_audience</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"desktops"</span>
-    <span class="n">required_scope</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"api"</span>
-
-    <span class="c1"># SSH Configuration</span>
-    <span class="n">docker_host_user_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"sys-admin"</span>
-    <span class="n">docker_host_host_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"host.docker.internal"</span>
-
-    <span class="c1"># File System Configuration</span>
-    <span class="n">remotefs_base_folder</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"/tmp"</span>
-    <span class="n">hostinfo_filename</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"hostinfo.json"</span>
-    <span class="n">userinfo_filename</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"userinfo.json"</span>
-
-    <span class="c1"># Registration Configuration</span>
-    <span class="n">desktop_registration_interval</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">30</span>  <span class="c1"># seconds</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a href="#__codelineno-5-1" id="__codelineno-5-1" name="__codelineno-5-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">DesktopControllerSettings</span><span class="p">(</span><span class="n">ApplicationSettings</span><span class="p">):</span>
+</span><span id="__span-5-2"><a href="#__codelineno-5-2" id="__codelineno-5-2" name="__codelineno-5-2"></a>    <span class="c1"># OAuth2 Configuration</span>
+</span><span id="__span-5-3"><a href="#__codelineno-5-3" id="__codelineno-5-3" name="__codelineno-5-3"></a>    <span class="n">jwt_authority</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"http://keycloak47/realms/mozart"</span>
+</span><span id="__span-5-4"><a href="#__codelineno-5-4" id="__codelineno-5-4" name="__codelineno-5-4"></a>    <span class="n">jwt_audience</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"desktops"</span>
+</span><span id="__span-5-5"><a href="#__codelineno-5-5" id="__codelineno-5-5" name="__codelineno-5-5"></a>    <span class="n">required_scope</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"api"</span>
+</span><span id="__span-5-6"><a href="#__codelineno-5-6" id="__codelineno-5-6" name="__codelineno-5-6"></a>
+</span><span id="__span-5-7"><a href="#__codelineno-5-7" id="__codelineno-5-7" name="__codelineno-5-7"></a>    <span class="c1"># SSH Configuration</span>
+</span><span id="__span-5-8"><a href="#__codelineno-5-8" id="__codelineno-5-8" name="__codelineno-5-8"></a>    <span class="n">docker_host_user_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"sys-admin"</span>
+</span><span id="__span-5-9"><a href="#__codelineno-5-9" id="__codelineno-5-9" name="__codelineno-5-9"></a>    <span class="n">docker_host_host_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"host.docker.internal"</span>
+</span><span id="__span-5-10"><a href="#__codelineno-5-10" id="__codelineno-5-10" name="__codelineno-5-10"></a>
+</span><span id="__span-5-11"><a href="#__codelineno-5-11" id="__codelineno-5-11" name="__codelineno-5-11"></a>    <span class="c1"># File System Configuration</span>
+</span><span id="__span-5-12"><a href="#__codelineno-5-12" id="__codelineno-5-12" name="__codelineno-5-12"></a>    <span class="n">remotefs_base_folder</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"/tmp"</span>
+</span><span id="__span-5-13"><a href="#__codelineno-5-13" id="__codelineno-5-13" name="__codelineno-5-13"></a>    <span class="n">hostinfo_filename</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"hostinfo.json"</span>
+</span><span id="__span-5-14"><a href="#__codelineno-5-14" id="__codelineno-5-14" name="__codelineno-5-14"></a>    <span class="n">userinfo_filename</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"userinfo.json"</span>
+</span><span id="__span-5-15"><a href="#__codelineno-5-15" id="__codelineno-5-15" name="__codelineno-5-15"></a>
+</span><span id="__span-5-16"><a href="#__codelineno-5-16" id="__codelineno-5-16" name="__codelineno-5-16"></a>    <span class="c1"># Registration Configuration</span>
+</span><span id="__span-5-17"><a href="#__codelineno-5-17" id="__codelineno-5-17" name="__codelineno-5-17"></a>    <span class="n">desktop_registration_interval</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">30</span>  <span class="c1"># seconds</span>
+</span></code></pre></div>
 <h3 id="ssh-client-configuration">SSH Client Configuration<a class="headerlink" href="#ssh-client-configuration" title="Permanent link">¶</a></h3>
-<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">SshClientSettings</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
-    <span class="n">username</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">hostname</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">port</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">22</span>
-    <span class="n">private_key_filename</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"/app/id_rsa"</span>
-
-<span class="c1"># SSH key setup required:</span>
-<span class="c1"># 1. Generate SSH key pair</span>
-<span class="c1"># 2. Mount private key to container at /app/id_rsa</span>
-<span class="c1"># 3. Add public key to host's ~/.ssh/authorized_keys</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a href="#__codelineno-6-1" id="__codelineno-6-1" name="__codelineno-6-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">SshClientSettings</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+</span><span id="__span-6-2"><a href="#__codelineno-6-2" id="__codelineno-6-2" name="__codelineno-6-2"></a>    <span class="n">username</span><span class="p">:</span> <span class="nb">str</span>
+</span><span id="__span-6-3"><a href="#__codelineno-6-3" id="__codelineno-6-3" name="__codelineno-6-3"></a>    <span class="n">hostname</span><span class="p">:</span> <span class="nb">str</span>
+</span><span id="__span-6-4"><a href="#__codelineno-6-4" id="__codelineno-6-4" name="__codelineno-6-4"></a>    <span class="n">port</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">22</span>
+</span><span id="__span-6-5"><a href="#__codelineno-6-5" id="__codelineno-6-5" name="__codelineno-6-5"></a>    <span class="n">private_key_filename</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"/app/id_rsa"</span>
+</span><span id="__span-6-6"><a href="#__codelineno-6-6" id="__codelineno-6-6" name="__codelineno-6-6"></a>
+</span><span id="__span-6-7"><a href="#__codelineno-6-7" id="__codelineno-6-7" name="__codelineno-6-7"></a><span class="c1"># SSH key setup required:</span>
+</span><span id="__span-6-8"><a href="#__codelineno-6-8" id="__codelineno-6-8" name="__codelineno-6-8"></a><span class="c1"># 1. Generate SSH key pair</span>
+</span><span id="__span-6-9"><a href="#__codelineno-6-9" id="__codelineno-6-9" name="__codelineno-6-9"></a><span class="c1"># 2. Mount private key to container at /app/id_rsa</span>
+</span><span id="__span-6-10"><a href="#__codelineno-6-10" id="__codelineno-6-10" name="__codelineno-6-10"></a><span class="c1"># 3. Add public key to host's ~/.ssh/authorized_keys</span>
+</span></code></pre></div>
 <h2 id="testing-strategy">🧪 Testing Strategy<a class="headerlink" href="#testing-strategy" title="Permanent link">¶</a></h2>
 <h3 id="unit-tests">Unit Tests<a class="headerlink" href="#unit-tests" title="Permanent link">¶</a></h3>
-<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">TestHostController</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">test_host_lock_command_success</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="c1"># Test successful host locking</span>
-        <span class="n">command</span> <span class="o">=</span> <span class="n">SetHostLockCommand</span><span class="p">(</span><span class="n">script_name</span><span class="o">=</span><span class="s2">"/usr/local/bin/lock.sh"</span><span class="p">)</span>
-
-        <span class="c1"># Mock SSH client response</span>
-        <span class="n">mock_result</span> <span class="o">=</span> <span class="n">HostCommandResult</span><span class="p">(</span>
-            <span class="n">command</span><span class="o">=</span><span class="s2">"/usr/local/bin/lock.sh"</span><span class="p">,</span>
-            <span class="n">exit_status</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-            <span class="n">stdout</span><span class="o">=</span><span class="s2">"Host locked"</span><span class="p">,</span>
-            <span class="n">stderr</span><span class="o">=</span><span class="s2">""</span>
-        <span class="p">)</span>
-
-        <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">handler</span><span class="o">.</span><span class="n">handle_async</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
-        <span class="k">assert</span> <span class="n">result</span><span class="o">.</span><span class="n">is_success</span>
-        <span class="k">assert</span> <span class="s2">"locked successfully"</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">data</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-7-1"><a href="#__codelineno-7-1" id="__codelineno-7-1" name="__codelineno-7-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">TestHostController</span><span class="p">:</span>
+</span><span id="__span-7-2"><a href="#__codelineno-7-2" id="__codelineno-7-2" name="__codelineno-7-2"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">test_host_lock_command_success</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="__span-7-3"><a href="#__codelineno-7-3" id="__codelineno-7-3" name="__codelineno-7-3"></a>        <span class="c1"># Test successful host locking</span>
+</span><span id="__span-7-4"><a href="#__codelineno-7-4" id="__codelineno-7-4" name="__codelineno-7-4"></a>        <span class="n">command</span> <span class="o">=</span> <span class="n">SetHostLockCommand</span><span class="p">(</span><span class="n">script_name</span><span class="o">=</span><span class="s2">"/usr/local/bin/lock.sh"</span><span class="p">)</span>
+</span><span id="__span-7-5"><a href="#__codelineno-7-5" id="__codelineno-7-5" name="__codelineno-7-5"></a>
+</span><span id="__span-7-6"><a href="#__codelineno-7-6" id="__codelineno-7-6" name="__codelineno-7-6"></a>        <span class="c1"># Mock SSH client response</span>
+</span><span id="__span-7-7"><a href="#__codelineno-7-7" id="__codelineno-7-7" name="__codelineno-7-7"></a>        <span class="n">mock_result</span> <span class="o">=</span> <span class="n">HostCommandResult</span><span class="p">(</span>
+</span><span id="__span-7-8"><a href="#__codelineno-7-8" id="__codelineno-7-8" name="__codelineno-7-8"></a>            <span class="n">command</span><span class="o">=</span><span class="s2">"/usr/local/bin/lock.sh"</span><span class="p">,</span>
+</span><span id="__span-7-9"><a href="#__codelineno-7-9" id="__codelineno-7-9" name="__codelineno-7-9"></a>            <span class="n">exit_status</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+</span><span id="__span-7-10"><a href="#__codelineno-7-10" id="__codelineno-7-10" name="__codelineno-7-10"></a>            <span class="n">stdout</span><span class="o">=</span><span class="s2">"Host locked"</span><span class="p">,</span>
+</span><span id="__span-7-11"><a href="#__codelineno-7-11" id="__codelineno-7-11" name="__codelineno-7-11"></a>            <span class="n">stderr</span><span class="o">=</span><span class="s2">""</span>
+</span><span id="__span-7-12"><a href="#__codelineno-7-12" id="__codelineno-7-12" name="__codelineno-7-12"></a>        <span class="p">)</span>
+</span><span id="__span-7-13"><a href="#__codelineno-7-13" id="__codelineno-7-13" name="__codelineno-7-13"></a>
+</span><span id="__span-7-14"><a href="#__codelineno-7-14" id="__codelineno-7-14" name="__codelineno-7-14"></a>        <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">handler</span><span class="o">.</span><span class="n">handle_async</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
+</span><span id="__span-7-15"><a href="#__codelineno-7-15" id="__codelineno-7-15" name="__codelineno-7-15"></a>        <span class="k">assert</span> <span class="n">result</span><span class="o">.</span><span class="n">is_success</span>
+</span><span id="__span-7-16"><a href="#__codelineno-7-16" id="__codelineno-7-16" name="__codelineno-7-16"></a>        <span class="k">assert</span> <span class="s2">"locked successfully"</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">data</span>
+</span></code></pre></div>
 <h3 id="integration-tests">Integration Tests<a class="headerlink" href="#integration-tests" title="Permanent link">¶</a></h3>
-<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">TestDesktopControllerIntegration</span><span class="p">:</span>
-    <span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">integration</span>
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">test_ssh_host_communication</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="c1"># Test actual SSH communication with test host</span>
-        <span class="n">ssh_client</span> <span class="o">=</span> <span class="n">SecuredHost</span><span class="p">(</span><span class="n">test_ssh_settings</span><span class="p">)</span>
-        <span class="n">command</span> <span class="o">=</span> <span class="n">HostCommand</span><span class="p">(</span><span class="n">line</span><span class="o">=</span><span class="s2">"echo 'test'"</span><span class="p">)</span>
-
-        <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">ssh_client</span><span class="o">.</span><span class="n">run_command_async</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
-
-        <span class="k">assert</span> <span class="n">result</span><span class="o">.</span><span class="n">exit_status</span> <span class="o">==</span> <span class="mi">0</span>
-        <span class="k">assert</span> <span class="s2">"test"</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">stdout</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-8-1"><a href="#__codelineno-8-1" id="__codelineno-8-1" name="__codelineno-8-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">TestDesktopControllerIntegration</span><span class="p">:</span>
+</span><span id="__span-8-2"><a href="#__codelineno-8-2" id="__codelineno-8-2" name="__codelineno-8-2"></a>    <span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">integration</span>
+</span><span id="__span-8-3"><a href="#__codelineno-8-3" id="__codelineno-8-3" name="__codelineno-8-3"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">test_ssh_host_communication</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="__span-8-4"><a href="#__codelineno-8-4" id="__codelineno-8-4" name="__codelineno-8-4"></a>        <span class="c1"># Test actual SSH communication with test host</span>
+</span><span id="__span-8-5"><a href="#__codelineno-8-5" id="__codelineno-8-5" name="__codelineno-8-5"></a>        <span class="n">ssh_client</span> <span class="o">=</span> <span class="n">SecuredHost</span><span class="p">(</span><span class="n">test_ssh_settings</span><span class="p">)</span>
+</span><span id="__span-8-6"><a href="#__codelineno-8-6" id="__codelineno-8-6" name="__codelineno-8-6"></a>        <span class="n">command</span> <span class="o">=</span> <span class="n">HostCommand</span><span class="p">(</span><span class="n">line</span><span class="o">=</span><span class="s2">"echo 'test'"</span><span class="p">)</span>
+</span><span id="__span-8-7"><a href="#__codelineno-8-7" id="__codelineno-8-7" name="__codelineno-8-7"></a>
+</span><span id="__span-8-8"><a href="#__codelineno-8-8" id="__codelineno-8-8" name="__codelineno-8-8"></a>        <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">ssh_client</span><span class="o">.</span><span class="n">run_command_async</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
+</span><span id="__span-8-9"><a href="#__codelineno-8-9" id="__codelineno-8-9" name="__codelineno-8-9"></a>
+</span><span id="__span-8-10"><a href="#__codelineno-8-10" id="__codelineno-8-10" name="__codelineno-8-10"></a>        <span class="k">assert</span> <span class="n">result</span><span class="o">.</span><span class="n">exit_status</span> <span class="o">==</span> <span class="mi">0</span>
+</span><span id="__span-8-11"><a href="#__codelineno-8-11" id="__codelineno-8-11" name="__codelineno-8-11"></a>        <span class="k">assert</span> <span class="s2">"test"</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">stdout</span>
+</span></code></pre></div>
 <h2 id="implementation-details">📚 Implementation Details<a class="headerlink" href="#implementation-details" title="Permanent link">¶</a></h2>
 <h3 id="1-controller-layer-apicontrollers">1. <strong>Controller Layer</strong> (<code>api/controllers/</code>)<a class="headerlink" href="#1-controller-layer-apicontrollers" title="Permanent link">¶</a></h3>
 <ul>
@@ -2131,88 +2131,88 @@
 </ul>
 <h2 id="external-service-integration">🌐 External Service Integration<a class="headerlink" href="#external-service-integration" title="Permanent link">¶</a></h2>
 <h3 id="ssh-host-communication">SSH Host Communication<a class="headerlink" href="#ssh-host-communication" title="Permanent link">¶</a></h3>
-<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">SecuredDockerHost</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""SSH-based secure communication with Docker host system"""</span>
-
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">execute_system_command</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CommandResult</span><span class="p">:</span>
-        <span class="n">ssh_command</span> <span class="o">=</span> <span class="n">HostCommand</span><span class="p">(</span><span class="n">line</span><span class="o">=</span><span class="n">command</span><span class="p">)</span>
-        <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">secured_host</span><span class="o">.</span><span class="n">run_command_async</span><span class="p">(</span><span class="n">ssh_command</span><span class="p">)</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-9-1"><a href="#__codelineno-9-1" id="__codelineno-9-1" name="__codelineno-9-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">SecuredDockerHost</span><span class="p">:</span>
+</span><span id="__span-9-2"><a href="#__codelineno-9-2" id="__codelineno-9-2" name="__codelineno-9-2"></a><span class="w">    </span><span class="sd">"""SSH-based secure communication with Docker host system"""</span>
+</span><span id="__span-9-3"><a href="#__codelineno-9-3" id="__codelineno-9-3" name="__codelineno-9-3"></a>
+</span><span id="__span-9-4"><a href="#__codelineno-9-4" id="__codelineno-9-4" name="__codelineno-9-4"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">execute_system_command</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CommandResult</span><span class="p">:</span>
+</span><span id="__span-9-5"><a href="#__codelineno-9-5" id="__codelineno-9-5" name="__codelineno-9-5"></a>        <span class="n">ssh_command</span> <span class="o">=</span> <span class="n">HostCommand</span><span class="p">(</span><span class="n">line</span><span class="o">=</span><span class="n">command</span><span class="p">)</span>
+</span><span id="__span-9-6"><a href="#__codelineno-9-6" id="__codelineno-9-6" name="__codelineno-9-6"></a>        <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">secured_host</span><span class="o">.</span><span class="n">run_command_async</span><span class="p">(</span><span class="n">ssh_command</span><span class="p">)</span>
+</span></code></pre></div>
 <h3 id="cloud-event-publishing">Cloud Event Publishing<a class="headerlink" href="#cloud-event-publishing" title="Permanent link">¶</a></h3>
-<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">DesktopRegistrationEvent</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""Periodic registration with external desktop registry"""</span>
-
-    <span class="n">event_type</span> <span class="o">=</span> <span class="s2">"com.cisco.mozart.desktop.registered.v1"</span>
-
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">publish_registration</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">cloud_event</span> <span class="o">=</span> <span class="n">CloudEvent</span><span class="p">(</span>
-            <span class="nb">type</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">event_type</span><span class="p">,</span>
-            <span class="n">source</span><span class="o">=</span><span class="sa">f</span><span class="s2">"desktop-controller/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">desktop_id</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
-            <span class="n">data</span><span class="o">=</span><span class="n">DesktopHostRegistrationRequestedIntegrationEventV1</span><span class="p">(</span>
-                <span class="n">desktop_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">desktop_id</span><span class="p">,</span>
-                <span class="n">host_ip_address</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">get_host_ip</span><span class="p">(),</span>
-                <span class="n">capabilities</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">get_host_capabilities</span><span class="p">()</span>
-            <span class="p">)</span>
-        <span class="p">)</span>
-        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">cloud_event_bus</span><span class="o">.</span><span class="n">publish_async</span><span class="p">(</span><span class="n">cloud_event</span><span class="p">)</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-10-1"><a href="#__codelineno-10-1" id="__codelineno-10-1" name="__codelineno-10-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">DesktopRegistrationEvent</span><span class="p">:</span>
+</span><span id="__span-10-2"><a href="#__codelineno-10-2" id="__codelineno-10-2" name="__codelineno-10-2"></a><span class="w">    </span><span class="sd">"""Periodic registration with external desktop registry"""</span>
+</span><span id="__span-10-3"><a href="#__codelineno-10-3" id="__codelineno-10-3" name="__codelineno-10-3"></a>
+</span><span id="__span-10-4"><a href="#__codelineno-10-4" id="__codelineno-10-4" name="__codelineno-10-4"></a>    <span class="n">event_type</span> <span class="o">=</span> <span class="s2">"com.cisco.mozart.desktop.registered.v1"</span>
+</span><span id="__span-10-5"><a href="#__codelineno-10-5" id="__codelineno-10-5" name="__codelineno-10-5"></a>
+</span><span id="__span-10-6"><a href="#__codelineno-10-6" id="__codelineno-10-6" name="__codelineno-10-6"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">publish_registration</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="__span-10-7"><a href="#__codelineno-10-7" id="__codelineno-10-7" name="__codelineno-10-7"></a>        <span class="n">cloud_event</span> <span class="o">=</span> <span class="n">CloudEvent</span><span class="p">(</span>
+</span><span id="__span-10-8"><a href="#__codelineno-10-8" id="__codelineno-10-8" name="__codelineno-10-8"></a>            <span class="nb">type</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">event_type</span><span class="p">,</span>
+</span><span id="__span-10-9"><a href="#__codelineno-10-9" id="__codelineno-10-9" name="__codelineno-10-9"></a>            <span class="n">source</span><span class="o">=</span><span class="sa">f</span><span class="s2">"desktop-controller/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">desktop_id</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
+</span><span id="__span-10-10"><a href="#__codelineno-10-10" id="__codelineno-10-10" name="__codelineno-10-10"></a>            <span class="n">data</span><span class="o">=</span><span class="n">DesktopHostRegistrationRequestedIntegrationEventV1</span><span class="p">(</span>
+</span><span id="__span-10-11"><a href="#__codelineno-10-11" id="__codelineno-10-11" name="__codelineno-10-11"></a>                <span class="n">desktop_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">desktop_id</span><span class="p">,</span>
+</span><span id="__span-10-12"><a href="#__codelineno-10-12" id="__codelineno-10-12" name="__codelineno-10-12"></a>                <span class="n">host_ip_address</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">get_host_ip</span><span class="p">(),</span>
+</span><span id="__span-10-13"><a href="#__codelineno-10-13" id="__codelineno-10-13" name="__codelineno-10-13"></a>                <span class="n">capabilities</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">get_host_capabilities</span><span class="p">()</span>
+</span><span id="__span-10-14"><a href="#__codelineno-10-14" id="__codelineno-10-14" name="__codelineno-10-14"></a>            <span class="p">)</span>
+</span><span id="__span-10-15"><a href="#__codelineno-10-15" id="__codelineno-10-15" name="__codelineno-10-15"></a>        <span class="p">)</span>
+</span><span id="__span-10-16"><a href="#__codelineno-10-16" id="__codelineno-10-16" name="__codelineno-10-16"></a>        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">cloud_event_bus</span><span class="o">.</span><span class="n">publish_async</span><span class="p">(</span><span class="n">cloud_event</span><span class="p">)</span>
+</span></code></pre></div>
 <h3 id="remote-file-system-access">Remote File System Access<a class="headerlink" href="#remote-file-system-access" title="Permanent link">¶</a></h3>
-<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">RemoteFileSystemRepository</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""File-based data persistence on host system"""</span>
-
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">save_host_info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">host_info</span><span class="p">:</span> <span class="n">HostInfo</span><span class="p">):</span>
-        <span class="n">json_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">json_serializer</span><span class="o">.</span><span class="n">serialize</span><span class="p">(</span><span class="n">host_info</span><span class="p">)</span>
-        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">write_file_async</span><span class="p">(</span><span class="s2">"hostinfo.json"</span><span class="p">,</span> <span class="n">json_data</span><span class="p">)</span>
-
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">write_file_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">content</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-        <span class="c1"># Use SSH to write files to host filesystem</span>
-        <span class="n">command</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"echo '</span><span class="si">{</span><span class="n">content</span><span class="si">}</span><span class="s2">' &gt; </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">base_path</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s2">"</span>
-        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">ssh_client</span><span class="o">.</span><span class="n">run_command_async</span><span class="p">(</span><span class="n">HostCommand</span><span class="p">(</span><span class="n">line</span><span class="o">=</span><span class="n">command</span><span class="p">))</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-11-1"><a href="#__codelineno-11-1" id="__codelineno-11-1" name="__codelineno-11-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">RemoteFileSystemRepository</span><span class="p">:</span>
+</span><span id="__span-11-2"><a href="#__codelineno-11-2" id="__codelineno-11-2" name="__codelineno-11-2"></a><span class="w">    </span><span class="sd">"""File-based data persistence on host system"""</span>
+</span><span id="__span-11-3"><a href="#__codelineno-11-3" id="__codelineno-11-3" name="__codelineno-11-3"></a>
+</span><span id="__span-11-4"><a href="#__codelineno-11-4" id="__codelineno-11-4" name="__codelineno-11-4"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">save_host_info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">host_info</span><span class="p">:</span> <span class="n">HostInfo</span><span class="p">):</span>
+</span><span id="__span-11-5"><a href="#__codelineno-11-5" id="__codelineno-11-5" name="__codelineno-11-5"></a>        <span class="n">json_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">json_serializer</span><span class="o">.</span><span class="n">serialize</span><span class="p">(</span><span class="n">host_info</span><span class="p">)</span>
+</span><span id="__span-11-6"><a href="#__codelineno-11-6" id="__codelineno-11-6" name="__codelineno-11-6"></a>        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">write_file_async</span><span class="p">(</span><span class="s2">"hostinfo.json"</span><span class="p">,</span> <span class="n">json_data</span><span class="p">)</span>
+</span><span id="__span-11-7"><a href="#__codelineno-11-7" id="__codelineno-11-7" name="__codelineno-11-7"></a>
+</span><span id="__span-11-8"><a href="#__codelineno-11-8" id="__codelineno-11-8" name="__codelineno-11-8"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">write_file_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">content</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+</span><span id="__span-11-9"><a href="#__codelineno-11-9" id="__codelineno-11-9" name="__codelineno-11-9"></a>        <span class="c1"># Use SSH to write files to host filesystem</span>
+</span><span id="__span-11-10"><a href="#__codelineno-11-10" id="__codelineno-11-10" name="__codelineno-11-10"></a>        <span class="n">command</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"echo '</span><span class="si">{</span><span class="n">content</span><span class="si">}</span><span class="s2">' &gt; </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">base_path</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s2">"</span>
+</span><span id="__span-11-11"><a href="#__codelineno-11-11" id="__codelineno-11-11" name="__codelineno-11-11"></a>        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">ssh_client</span><span class="o">.</span><span class="n">run_command_async</span><span class="p">(</span><span class="n">HostCommand</span><span class="p">(</span><span class="n">line</span><span class="o">=</span><span class="n">command</span><span class="p">))</span>
+</span></code></pre></div>
 <h2 id="getting-started">🚀 Getting Started<a class="headerlink" href="#getting-started" title="Permanent link">¶</a></h2>
 <h3 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">¶</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># 1. Docker and Docker Desktop installed</span>
-<span class="c1"># 2. SSH key pair generated</span>
-ssh-keygen<span class="w"> </span>-t<span class="w"> </span>rsa<span class="w"> </span>-b<span class="w"> </span><span class="m">4096</span><span class="w"> </span>-f<span class="w"> </span>~/.ssh/desktop_controller_key
-
-<span class="c1"># 3. Copy public key to target host</span>
-ssh-copy-id<span class="w"> </span>-i<span class="w"> </span>~/.ssh/desktop_controller_key.pub<span class="w"> </span>user@target-host
-</code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a href="#__codelineno-12-1" id="__codelineno-12-1" name="__codelineno-12-1"></a><span class="c1"># 1. Docker and Docker Desktop installed</span>
+</span><span id="__span-12-2"><a href="#__codelineno-12-2" id="__codelineno-12-2" name="__codelineno-12-2"></a><span class="c1"># 2. SSH key pair generated</span>
+</span><span id="__span-12-3"><a href="#__codelineno-12-3" id="__codelineno-12-3" name="__codelineno-12-3"></a>ssh-keygen<span class="w"> </span>-t<span class="w"> </span>rsa<span class="w"> </span>-b<span class="w"> </span><span class="m">4096</span><span class="w"> </span>-f<span class="w"> </span>~/.ssh/desktop_controller_key
+</span><span id="__span-12-4"><a href="#__codelineno-12-4" id="__codelineno-12-4" name="__codelineno-12-4"></a>
+</span><span id="__span-12-5"><a href="#__codelineno-12-5" id="__codelineno-12-5" name="__codelineno-12-5"></a><span class="c1"># 3. Copy public key to target host</span>
+</span><span id="__span-12-6"><a href="#__codelineno-12-6" id="__codelineno-12-6" name="__codelineno-12-6"></a>ssh-copy-id<span class="w"> </span>-i<span class="w"> </span>~/.ssh/desktop_controller_key.pub<span class="w"> </span>user@target-host
+</span></code></pre></div>
 <h3 id="running-the-application">Running the Application<a class="headerlink" href="#running-the-application" title="Permanent link">¶</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># 1. Clone and setup</span>
-git<span class="w"> </span>clone<span class="w"> </span>&lt;repository&gt;
-<span class="nb">cd</span><span class="w"> </span>samples/desktop-controller
-
-<span class="c1"># 2. Configure environment</span>
-cp<span class="w"> </span>.env.example<span class="w"> </span>.env
-<span class="c1"># Edit .env with your settings</span>
-
-<span class="c1"># 3. Mount SSH private key and run</span>
-docker<span class="w"> </span>run<span class="w"> </span>-d
-<span class="w">  </span>-p<span class="w"> </span><span class="m">8080</span>:80
-<span class="w">  </span>-v<span class="w"> </span>~/.ssh/desktop_controller_key:/app/id_rsa:ro
-<span class="w">  </span>-e<span class="w"> </span><span class="nv">DOCKER_HOST_USER_NAME</span><span class="o">=</span>sys-admin
-<span class="w">  </span>-e<span class="w"> </span><span class="nv">JWT_AUTHORITY</span><span class="o">=</span>http://your-keycloak/realms/mozart
-<span class="w">  </span>desktop-controller:latest
-
-<span class="c1"># 4. Test the API</span>
-curl<span class="w"> </span>-H<span class="w"> </span><span class="s2">"Authorization: Bearer &lt;token&gt;"</span>
-<span class="w">     </span>http://localhost:8080/api/host/info
-</code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a href="#__codelineno-13-1" id="__codelineno-13-1" name="__codelineno-13-1"></a><span class="c1"># 1. Clone and setup</span>
+</span><span id="__span-13-2"><a href="#__codelineno-13-2" id="__codelineno-13-2" name="__codelineno-13-2"></a>git<span class="w"> </span>clone<span class="w"> </span>&lt;repository&gt;
+</span><span id="__span-13-3"><a href="#__codelineno-13-3" id="__codelineno-13-3" name="__codelineno-13-3"></a><span class="nb">cd</span><span class="w"> </span>samples/desktop-controller
+</span><span id="__span-13-4"><a href="#__codelineno-13-4" id="__codelineno-13-4" name="__codelineno-13-4"></a>
+</span><span id="__span-13-5"><a href="#__codelineno-13-5" id="__codelineno-13-5" name="__codelineno-13-5"></a><span class="c1"># 2. Configure environment</span>
+</span><span id="__span-13-6"><a href="#__codelineno-13-6" id="__codelineno-13-6" name="__codelineno-13-6"></a>cp<span class="w"> </span>.env.example<span class="w"> </span>.env
+</span><span id="__span-13-7"><a href="#__codelineno-13-7" id="__codelineno-13-7" name="__codelineno-13-7"></a><span class="c1"># Edit .env with your settings</span>
+</span><span id="__span-13-8"><a href="#__codelineno-13-8" id="__codelineno-13-8" name="__codelineno-13-8"></a>
+</span><span id="__span-13-9"><a href="#__codelineno-13-9" id="__codelineno-13-9" name="__codelineno-13-9"></a><span class="c1"># 3. Mount SSH private key and run</span>
+</span><span id="__span-13-10"><a href="#__codelineno-13-10" id="__codelineno-13-10" name="__codelineno-13-10"></a>docker<span class="w"> </span>run<span class="w"> </span>-d
+</span><span id="__span-13-11"><a href="#__codelineno-13-11" id="__codelineno-13-11" name="__codelineno-13-11"></a><span class="w">  </span>-p<span class="w"> </span><span class="m">8080</span>:80
+</span><span id="__span-13-12"><a href="#__codelineno-13-12" id="__codelineno-13-12" name="__codelineno-13-12"></a><span class="w">  </span>-v<span class="w"> </span>~/.ssh/desktop_controller_key:/app/id_rsa:ro
+</span><span id="__span-13-13"><a href="#__codelineno-13-13" id="__codelineno-13-13" name="__codelineno-13-13"></a><span class="w">  </span>-e<span class="w"> </span><span class="nv">DOCKER_HOST_USER_NAME</span><span class="o">=</span>sys-admin
+</span><span id="__span-13-14"><a href="#__codelineno-13-14" id="__codelineno-13-14" name="__codelineno-13-14"></a><span class="w">  </span>-e<span class="w"> </span><span class="nv">JWT_AUTHORITY</span><span class="o">=</span>http://your-keycloak/realms/mozart
+</span><span id="__span-13-15"><a href="#__codelineno-13-15" id="__codelineno-13-15" name="__codelineno-13-15"></a><span class="w">  </span>desktop-controller:latest
+</span><span id="__span-13-16"><a href="#__codelineno-13-16" id="__codelineno-13-16" name="__codelineno-13-16"></a>
+</span><span id="__span-13-17"><a href="#__codelineno-13-17" id="__codelineno-13-17" name="__codelineno-13-17"></a><span class="c1"># 4. Test the API</span>
+</span><span id="__span-13-18"><a href="#__codelineno-13-18" id="__codelineno-13-18" name="__codelineno-13-18"></a>curl<span class="w"> </span>-H<span class="w"> </span><span class="s2">"Authorization: Bearer &lt;token&gt;"</span>
+</span><span id="__span-13-19"><a href="#__codelineno-13-19" id="__codelineno-13-19" name="__codelineno-13-19"></a><span class="w">     </span>http://localhost:8080/api/host/info
+</span></code></pre></div>
 <h3 id="development-setup">Development Setup<a class="headerlink" href="#development-setup" title="Permanent link">¶</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># 1. Install dependencies</span>
-poetry<span class="w"> </span>install
-
-<span class="c1"># 2. Configure SSH access</span>
-sudo<span class="w"> </span>cp<span class="w"> </span>~/.ssh/desktop_controller_key<span class="w"> </span>./id_rsa
-sudo<span class="w"> </span>chmod<span class="w"> </span><span class="m">600</span><span class="w"> </span>./id_rsa
-
-<span class="c1"># 3. Start development server</span>
-poetry<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </span>main.py
-
-<span class="c1"># 4. Access Swagger UI</span>
-open<span class="w"> </span>http://localhost:8080/docs
-</code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a href="#__codelineno-14-1" id="__codelineno-14-1" name="__codelineno-14-1"></a><span class="c1"># 1. Install dependencies</span>
+</span><span id="__span-14-2"><a href="#__codelineno-14-2" id="__codelineno-14-2" name="__codelineno-14-2"></a>poetry<span class="w"> </span>install
+</span><span id="__span-14-3"><a href="#__codelineno-14-3" id="__codelineno-14-3" name="__codelineno-14-3"></a>
+</span><span id="__span-14-4"><a href="#__codelineno-14-4" id="__codelineno-14-4" name="__codelineno-14-4"></a><span class="c1"># 2. Configure SSH access</span>
+</span><span id="__span-14-5"><a href="#__codelineno-14-5" id="__codelineno-14-5" name="__codelineno-14-5"></a>sudo<span class="w"> </span>cp<span class="w"> </span>~/.ssh/desktop_controller_key<span class="w"> </span>./id_rsa
+</span><span id="__span-14-6"><a href="#__codelineno-14-6" id="__codelineno-14-6" name="__codelineno-14-6"></a>sudo<span class="w"> </span>chmod<span class="w"> </span><span class="m">600</span><span class="w"> </span>./id_rsa
+</span><span id="__span-14-7"><a href="#__codelineno-14-7" id="__codelineno-14-7" name="__codelineno-14-7"></a>
+</span><span id="__span-14-8"><a href="#__codelineno-14-8" id="__codelineno-14-8" name="__codelineno-14-8"></a><span class="c1"># 3. Start development server</span>
+</span><span id="__span-14-9"><a href="#__codelineno-14-9" id="__codelineno-14-9" name="__codelineno-14-9"></a>poetry<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </span>main.py
+</span><span id="__span-14-10"><a href="#__codelineno-14-10" id="__codelineno-14-10" name="__codelineno-14-10"></a>
+</span><span id="__span-14-11"><a href="#__codelineno-14-11" id="__codelineno-14-11" name="__codelineno-14-11"></a><span class="c1"># 4. Access Swagger UI</span>
+</span><span id="__span-14-12"><a href="#__codelineno-14-12" id="__codelineno-14-12" name="__codelineno-14-12"></a>open<span class="w"> </span>http://localhost:8080/docs
+</span></code></pre></div>
 <h2 id="related-documentation">🔗 Related Documentation<a class="headerlink" href="#related-documentation" title="Permanent link">¶</a></h2>
 <ul>
 <li><a href="../features/oauth2-security.md">OAuth2 Security</a> - Authentication patterns</li>
@@ -2225,39 +2225,39 @@ open<span class="w"> </span>http://localhost:8080/docs
 <h2 id="comparison-with-other-samples">🔍 Comparison with Other Samples<a class="headerlink" href="#comparison-with-other-samples" title="Permanent link">¶</a></h2>
 <h3 id="architecture-patterns">Architecture Patterns<a class="headerlink" href="#architecture-patterns" title="Permanent link">¶</a></h3>
 <h4 id="desktop-controller-system-integration-focused">Desktop Controller - <strong>System Integration Focused</strong><a class="headerlink" href="#desktop-controller-system-integration-focused" title="Permanent link">¶</a></h4>
-<div class="highlight"><pre><span></span><code><span class="c1"># SSH-based system control</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">HostController</span><span class="p">(</span><span class="n">ControllerBase</span><span class="p">):</span>
-    <span class="nd">@post</span><span class="p">(</span><span class="s2">"/lock"</span><span class="p">)</span>
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">lock_host</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">command</span> <span class="o">=</span> <span class="n">SetHostLockCommand</span><span class="p">()</span>
-        <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">mediator</span><span class="o">.</span><span class="n">execute_async</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
-
-<span class="c1"># Background service registration</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">DesktopRegistrator</span><span class="p">(</span><span class="n">HostedService</span><span class="p">):</span>
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">start_async</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">while</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">stopping</span><span class="p">:</span>
-            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">register_desktop</span><span class="p">()</span>
-            <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-15-1"><a href="#__codelineno-15-1" id="__codelineno-15-1" name="__codelineno-15-1"></a><span class="c1"># SSH-based system control</span>
+</span><span id="__span-15-2"><a href="#__codelineno-15-2" id="__codelineno-15-2" name="__codelineno-15-2"></a><span class="k">class</span><span class="w"> </span><span class="nc">HostController</span><span class="p">(</span><span class="n">ControllerBase</span><span class="p">):</span>
+</span><span id="__span-15-3"><a href="#__codelineno-15-3" id="__codelineno-15-3" name="__codelineno-15-3"></a>    <span class="nd">@post</span><span class="p">(</span><span class="s2">"/lock"</span><span class="p">)</span>
+</span><span id="__span-15-4"><a href="#__codelineno-15-4" id="__codelineno-15-4" name="__codelineno-15-4"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">lock_host</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="__span-15-5"><a href="#__codelineno-15-5" id="__codelineno-15-5" name="__codelineno-15-5"></a>        <span class="n">command</span> <span class="o">=</span> <span class="n">SetHostLockCommand</span><span class="p">()</span>
+</span><span id="__span-15-6"><a href="#__codelineno-15-6" id="__codelineno-15-6" name="__codelineno-15-6"></a>        <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">mediator</span><span class="o">.</span><span class="n">execute_async</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
+</span><span id="__span-15-7"><a href="#__codelineno-15-7" id="__codelineno-15-7" name="__codelineno-15-7"></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+</span><span id="__span-15-8"><a href="#__codelineno-15-8" id="__codelineno-15-8" name="__codelineno-15-8"></a>
+</span><span id="__span-15-9"><a href="#__codelineno-15-9" id="__codelineno-15-9" name="__codelineno-15-9"></a><span class="c1"># Background service registration</span>
+</span><span id="__span-15-10"><a href="#__codelineno-15-10" id="__codelineno-15-10" name="__codelineno-15-10"></a><span class="k">class</span><span class="w"> </span><span class="nc">DesktopRegistrator</span><span class="p">(</span><span class="n">HostedService</span><span class="p">):</span>
+</span><span id="__span-15-11"><a href="#__codelineno-15-11" id="__codelineno-15-11" name="__codelineno-15-11"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">start_async</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="__span-15-12"><a href="#__codelineno-15-12" id="__codelineno-15-12" name="__codelineno-15-12"></a>        <span class="k">while</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">stopping</span><span class="p">:</span>
+</span><span id="__span-15-13"><a href="#__codelineno-15-13" id="__codelineno-15-13" name="__codelineno-15-13"></a>            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">register_desktop</span><span class="p">()</span>
+</span><span id="__span-15-14"><a href="#__codelineno-15-14" id="__codelineno-15-14" name="__codelineno-15-14"></a>            <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span>
+</span></code></pre></div>
 <h4 id="api-gateway-service-orchestration">API Gateway - <strong>Service Orchestration</strong><a class="headerlink" href="#api-gateway-service-orchestration" title="Permanent link">¶</a></h4>
-<div class="highlight"><pre><span></span><code><span class="c1"># External API orchestration</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">PromptController</span><span class="p">(</span><span class="n">ControllerBase</span><span class="p">):</span>
-    <span class="nd">@post</span><span class="p">(</span><span class="s2">"/prompts"</span><span class="p">)</span>
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">create_prompt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dto</span><span class="p">:</span> <span class="n">CreatePromptDto</span><span class="p">):</span>
-        <span class="n">command</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mapper</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">dto</span><span class="p">,</span> <span class="n">CreatePromptCommand</span><span class="p">)</span>
-        <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">mediator</span><span class="o">.</span><span class="n">execute_async</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-16-1"><a href="#__codelineno-16-1" id="__codelineno-16-1" name="__codelineno-16-1"></a><span class="c1"># External API orchestration</span>
+</span><span id="__span-16-2"><a href="#__codelineno-16-2" id="__codelineno-16-2" name="__codelineno-16-2"></a><span class="k">class</span><span class="w"> </span><span class="nc">PromptController</span><span class="p">(</span><span class="n">ControllerBase</span><span class="p">):</span>
+</span><span id="__span-16-3"><a href="#__codelineno-16-3" id="__codelineno-16-3" name="__codelineno-16-3"></a>    <span class="nd">@post</span><span class="p">(</span><span class="s2">"/prompts"</span><span class="p">)</span>
+</span><span id="__span-16-4"><a href="#__codelineno-16-4" id="__codelineno-16-4" name="__codelineno-16-4"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">create_prompt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dto</span><span class="p">:</span> <span class="n">CreatePromptDto</span><span class="p">):</span>
+</span><span id="__span-16-5"><a href="#__codelineno-16-5" id="__codelineno-16-5" name="__codelineno-16-5"></a>        <span class="n">command</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mapper</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">dto</span><span class="p">,</span> <span class="n">CreatePromptCommand</span><span class="p">)</span>
+</span><span id="__span-16-6"><a href="#__codelineno-16-6" id="__codelineno-16-6" name="__codelineno-16-6"></a>        <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">mediator</span><span class="o">.</span><span class="n">execute_async</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
+</span><span id="__span-16-7"><a href="#__codelineno-16-7" id="__codelineno-16-7" name="__codelineno-16-7"></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+</span></code></pre></div>
 <h4 id="openbank-rich-domain-model">OpenBank - <strong>Rich Domain Model</strong><a class="headerlink" href="#openbank-rich-domain-model" title="Permanent link">¶</a></h4>
-<div class="highlight"><pre><span></span><code><span class="c1"># Event-sourced business logic</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">BankAccount</span><span class="p">(</span><span class="n">AggregateRoot</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">try_add_transaction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction</span><span class="p">:</span> <span class="n">BankTransaction</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">can_process_transaction</span><span class="p">(</span><span class="n">transaction</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">on</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">register_event</span><span class="p">(</span><span class="n">TransactionRecorded</span><span class="p">(</span><span class="n">transaction</span><span class="p">)))</span>
-            <span class="k">return</span> <span class="kc">True</span>
-        <span class="k">return</span> <span class="kc">False</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-17-1"><a href="#__codelineno-17-1" id="__codelineno-17-1" name="__codelineno-17-1"></a><span class="c1"># Event-sourced business logic</span>
+</span><span id="__span-17-2"><a href="#__codelineno-17-2" id="__codelineno-17-2" name="__codelineno-17-2"></a><span class="k">class</span><span class="w"> </span><span class="nc">BankAccount</span><span class="p">(</span><span class="n">AggregateRoot</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
+</span><span id="__span-17-3"><a href="#__codelineno-17-3" id="__codelineno-17-3" name="__codelineno-17-3"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">try_add_transaction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction</span><span class="p">:</span> <span class="n">BankTransaction</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+</span><span id="__span-17-4"><a href="#__codelineno-17-4" id="__codelineno-17-4" name="__codelineno-17-4"></a>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">can_process_transaction</span><span class="p">(</span><span class="n">transaction</span><span class="p">):</span>
+</span><span id="__span-17-5"><a href="#__codelineno-17-5" id="__codelineno-17-5" name="__codelineno-17-5"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">on</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">register_event</span><span class="p">(</span><span class="n">TransactionRecorded</span><span class="p">(</span><span class="n">transaction</span><span class="p">)))</span>
+</span><span id="__span-17-6"><a href="#__codelineno-17-6" id="__codelineno-17-6" name="__codelineno-17-6"></a>            <span class="k">return</span> <span class="kc">True</span>
+</span><span id="__span-17-7"><a href="#__codelineno-17-7" id="__codelineno-17-7" name="__codelineno-17-7"></a>        <span class="k">return</span> <span class="kc">False</span>
+</span></code></pre></div>
 <h3 id="domain-complexity">Domain Complexity<a class="headerlink" href="#domain-complexity" title="Permanent link">¶</a></h3>
 <h4 id="desktop-controller-system-state-management">Desktop Controller - <strong>System State Management</strong><a class="headerlink" href="#desktop-controller-system-state-management" title="Permanent link">¶</a></h4>
 <ul>
@@ -2282,165 +2282,165 @@ open<span class="w"> </span>http://localhost:8080/docs
 </ul>
 <h3 id="data-persistence-strategy">Data Persistence Strategy<a class="headerlink" href="#data-persistence-strategy" title="Permanent link">¶</a></h3>
 <h4 id="desktop-controller-file-based-remote-storage">Desktop Controller - <strong>File-Based + Remote Storage</strong><a class="headerlink" href="#desktop-controller-file-based-remote-storage" title="Permanent link">¶</a></h4>
-<div class="highlight"><pre><span></span><code><span class="c1"># File-based persistence on remote host</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">RemoteFileSystemRepository</span><span class="p">:</span>
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">save_host_info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">host_info</span><span class="p">:</span> <span class="n">HostInfo</span><span class="p">):</span>
-        <span class="n">json_content</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">serializer</span><span class="o">.</span><span class="n">serialize</span><span class="p">(</span><span class="n">host_info</span><span class="p">)</span>
-        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">write_remote_file</span><span class="p">(</span><span class="s2">"hostinfo.json"</span><span class="p">,</span> <span class="n">json_content</span><span class="p">)</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-18-1"><a href="#__codelineno-18-1" id="__codelineno-18-1" name="__codelineno-18-1"></a><span class="c1"># File-based persistence on remote host</span>
+</span><span id="__span-18-2"><a href="#__codelineno-18-2" id="__codelineno-18-2" name="__codelineno-18-2"></a><span class="k">class</span><span class="w"> </span><span class="nc">RemoteFileSystemRepository</span><span class="p">:</span>
+</span><span id="__span-18-3"><a href="#__codelineno-18-3" id="__codelineno-18-3" name="__codelineno-18-3"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">save_host_info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">host_info</span><span class="p">:</span> <span class="n">HostInfo</span><span class="p">):</span>
+</span><span id="__span-18-4"><a href="#__codelineno-18-4" id="__codelineno-18-4" name="__codelineno-18-4"></a>        <span class="n">json_content</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">serializer</span><span class="o">.</span><span class="n">serialize</span><span class="p">(</span><span class="n">host_info</span><span class="p">)</span>
+</span><span id="__span-18-5"><a href="#__codelineno-18-5" id="__codelineno-18-5" name="__codelineno-18-5"></a>        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">write_remote_file</span><span class="p">(</span><span class="s2">"hostinfo.json"</span><span class="p">,</span> <span class="n">json_content</span><span class="p">)</span>
+</span></code></pre></div>
 <h4 id="api-gateway-multi-store-architecture">API Gateway - <strong>Multi-Store Architecture</strong><a class="headerlink" href="#api-gateway-multi-store-architecture" title="Permanent link">¶</a></h4>
-<div class="highlight"><pre><span></span><code><span class="c1"># Multiple storage backends</span>
-<span class="n">services</span><span class="o">.</span><span class="n">add_scoped</span><span class="p">(</span><span class="n">MinioStorageManager</span><span class="p">)</span>      <span class="c1"># Object storage</span>
-<span class="n">services</span><span class="o">.</span><span class="n">add_scoped</span><span class="p">(</span><span class="n">RedisCache</span><span class="p">)</span>               <span class="c1"># Caching</span>
-<span class="n">services</span><span class="o">.</span><span class="n">add_scoped</span><span class="p">(</span><span class="n">MongoRepository</span><span class="p">)</span>          <span class="c1"># Document storage</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-19-1"><a href="#__codelineno-19-1" id="__codelineno-19-1" name="__codelineno-19-1"></a><span class="c1"># Multiple storage backends</span>
+</span><span id="__span-19-2"><a href="#__codelineno-19-2" id="__codelineno-19-2" name="__codelineno-19-2"></a><span class="n">services</span><span class="o">.</span><span class="n">add_scoped</span><span class="p">(</span><span class="n">MinioStorageManager</span><span class="p">)</span>      <span class="c1"># Object storage</span>
+</span><span id="__span-19-3"><a href="#__codelineno-19-3" id="__codelineno-19-3" name="__codelineno-19-3"></a><span class="n">services</span><span class="o">.</span><span class="n">add_scoped</span><span class="p">(</span><span class="n">RedisCache</span><span class="p">)</span>               <span class="c1"># Caching</span>
+</span><span id="__span-19-4"><a href="#__codelineno-19-4" id="__codelineno-19-4" name="__codelineno-19-4"></a><span class="n">services</span><span class="o">.</span><span class="n">add_scoped</span><span class="p">(</span><span class="n">MongoRepository</span><span class="p">)</span>          <span class="c1"># Document storage</span>
+</span></code></pre></div>
 <h4 id="openbank-event-sourcing">OpenBank - <strong>Event Sourcing</strong><a class="headerlink" href="#openbank-event-sourcing" title="Permanent link">¶</a></h4>
-<div class="highlight"><pre><span></span><code><span class="c1"># Event store with projections</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">EventStoreRepository</span><span class="p">:</span>
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">save_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">aggregate</span><span class="p">:</span> <span class="n">AggregateRoot</span><span class="p">):</span>
-        <span class="n">events</span> <span class="o">=</span> <span class="n">aggregate</span><span class="o">.</span><span class="n">_pending_events</span>
-        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">event_store</span><span class="o">.</span><span class="n">append_events_async</span><span class="p">(</span><span class="n">aggregate</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">events</span><span class="p">)</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-20-1"><a href="#__codelineno-20-1" id="__codelineno-20-1" name="__codelineno-20-1"></a><span class="c1"># Event store with projections</span>
+</span><span id="__span-20-2"><a href="#__codelineno-20-2" id="__codelineno-20-2" name="__codelineno-20-2"></a><span class="k">class</span><span class="w"> </span><span class="nc">EventStoreRepository</span><span class="p">:</span>
+</span><span id="__span-20-3"><a href="#__codelineno-20-3" id="__codelineno-20-3" name="__codelineno-20-3"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">save_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">aggregate</span><span class="p">:</span> <span class="n">AggregateRoot</span><span class="p">):</span>
+</span><span id="__span-20-4"><a href="#__codelineno-20-4" id="__codelineno-20-4" name="__codelineno-20-4"></a>        <span class="n">events</span> <span class="o">=</span> <span class="n">aggregate</span><span class="o">.</span><span class="n">_pending_events</span>
+</span><span id="__span-20-5"><a href="#__codelineno-20-5" id="__codelineno-20-5" name="__codelineno-20-5"></a>        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">event_store</span><span class="o">.</span><span class="n">append_events_async</span><span class="p">(</span><span class="n">aggregate</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">events</span><span class="p">)</span>
+</span></code></pre></div>
 <h3 id="authentication-security">Authentication &amp; Security<a class="headerlink" href="#authentication-security" title="Permanent link">¶</a></h3>
 <h4 id="desktop-controller-oauth2-ssh-keys">Desktop Controller - <strong>OAuth2 + SSH Keys</strong><a class="headerlink" href="#desktop-controller-oauth2-ssh-keys" title="Permanent link">¶</a></h4>
-<div class="highlight"><pre><span></span><code><span class="c1"># Dual security model</span>
-<span class="nd">@get</span><span class="p">(</span><span class="s2">"/info"</span><span class="p">,</span> <span class="n">dependencies</span><span class="o">=</span><span class="p">[</span><span class="n">Depends</span><span class="p">(</span><span class="n">validate_token</span><span class="p">)])</span>
-<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_host_info</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="c1"># OAuth2 for API access + SSH for host communication</span>
-    <span class="k">pass</span>
-
-<span class="c1"># SSH key management</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">SshClientSettings</span><span class="p">:</span>
-    <span class="n">private_key_filename</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"/app/id_rsa"</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-21-1"><a href="#__codelineno-21-1" id="__codelineno-21-1" name="__codelineno-21-1"></a><span class="c1"># Dual security model</span>
+</span><span id="__span-21-2"><a href="#__codelineno-21-2" id="__codelineno-21-2" name="__codelineno-21-2"></a><span class="nd">@get</span><span class="p">(</span><span class="s2">"/info"</span><span class="p">,</span> <span class="n">dependencies</span><span class="o">=</span><span class="p">[</span><span class="n">Depends</span><span class="p">(</span><span class="n">validate_token</span><span class="p">)])</span>
+</span><span id="__span-21-3"><a href="#__codelineno-21-3" id="__codelineno-21-3" name="__codelineno-21-3"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_host_info</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="__span-21-4"><a href="#__codelineno-21-4" id="__codelineno-21-4" name="__codelineno-21-4"></a>    <span class="c1"># OAuth2 for API access + SSH for host communication</span>
+</span><span id="__span-21-5"><a href="#__codelineno-21-5" id="__codelineno-21-5" name="__codelineno-21-5"></a>    <span class="k">pass</span>
+</span><span id="__span-21-6"><a href="#__codelineno-21-6" id="__codelineno-21-6" name="__codelineno-21-6"></a>
+</span><span id="__span-21-7"><a href="#__codelineno-21-7" id="__codelineno-21-7" name="__codelineno-21-7"></a><span class="c1"># SSH key management</span>
+</span><span id="__span-21-8"><a href="#__codelineno-21-8" id="__codelineno-21-8" name="__codelineno-21-8"></a><span class="k">class</span><span class="w"> </span><span class="nc">SshClientSettings</span><span class="p">:</span>
+</span><span id="__span-21-9"><a href="#__codelineno-21-9" id="__codelineno-21-9" name="__codelineno-21-9"></a>    <span class="n">private_key_filename</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"/app/id_rsa"</span>
+</span></code></pre></div>
 <h4 id="api-gateway-oauth2-api-keys">API Gateway - <strong>OAuth2 + API Keys</strong><a class="headerlink" href="#api-gateway-oauth2-api-keys" title="Permanent link">¶</a></h4>
-<div class="highlight"><pre><span></span><code><span class="c1"># Multiple authentication schemes</span>
-<span class="nd">@post</span><span class="p">(</span><span class="s2">"/item"</span><span class="p">,</span> <span class="n">dependencies</span><span class="o">=</span><span class="p">[</span><span class="n">Depends</span><span class="p">(</span><span class="n">validate_oauth2_token</span><span class="p">)])</span>
-<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">create_item_oauth</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item_data</span><span class="p">:</span> <span class="n">ItemDto</span><span class="p">):</span>
-    <span class="k">pass</span>
-
-<span class="nd">@get</span><span class="p">(</span><span class="s2">"/health"</span><span class="p">,</span> <span class="n">dependencies</span><span class="o">=</span><span class="p">[</span><span class="n">Depends</span><span class="p">(</span><span class="n">validate_api_key</span><span class="p">)])</span>
-<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">health_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="k">pass</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-22-1"><a href="#__codelineno-22-1" id="__codelineno-22-1" name="__codelineno-22-1"></a><span class="c1"># Multiple authentication schemes</span>
+</span><span id="__span-22-2"><a href="#__codelineno-22-2" id="__codelineno-22-2" name="__codelineno-22-2"></a><span class="nd">@post</span><span class="p">(</span><span class="s2">"/item"</span><span class="p">,</span> <span class="n">dependencies</span><span class="o">=</span><span class="p">[</span><span class="n">Depends</span><span class="p">(</span><span class="n">validate_oauth2_token</span><span class="p">)])</span>
+</span><span id="__span-22-3"><a href="#__codelineno-22-3" id="__codelineno-22-3" name="__codelineno-22-3"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">create_item_oauth</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item_data</span><span class="p">:</span> <span class="n">ItemDto</span><span class="p">):</span>
+</span><span id="__span-22-4"><a href="#__codelineno-22-4" id="__codelineno-22-4" name="__codelineno-22-4"></a>    <span class="k">pass</span>
+</span><span id="__span-22-5"><a href="#__codelineno-22-5" id="__codelineno-22-5" name="__codelineno-22-5"></a>
+</span><span id="__span-22-6"><a href="#__codelineno-22-6" id="__codelineno-22-6" name="__codelineno-22-6"></a><span class="nd">@get</span><span class="p">(</span><span class="s2">"/health"</span><span class="p">,</span> <span class="n">dependencies</span><span class="o">=</span><span class="p">[</span><span class="n">Depends</span><span class="p">(</span><span class="n">validate_api_key</span><span class="p">)])</span>
+</span><span id="__span-22-7"><a href="#__codelineno-22-7" id="__codelineno-22-7" name="__codelineno-22-7"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">health_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="__span-22-8"><a href="#__codelineno-22-8" id="__codelineno-22-8" name="__codelineno-22-8"></a>    <span class="k">pass</span>
+</span></code></pre></div>
 <h4 id="openbank-domain-focused-security">OpenBank - <strong>Domain-Focused Security</strong><a class="headerlink" href="#openbank-domain-focused-security" title="Permanent link">¶</a></h4>
-<div class="highlight"><pre><span></span><code><span class="c1"># Business rule-based security</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">BankAccount</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">withdraw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">amount</span><span class="p">:</span> <span class="n">Decimal</span><span class="p">,</span> <span class="n">user</span><span class="p">:</span> <span class="n">Person</span><span class="p">):</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_owner</span><span class="p">(</span><span class="n">user</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="n">UnauthorizedOperationException</span><span class="p">()</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_sufficient_funds</span><span class="p">(</span><span class="n">amount</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="n">InsufficientFundsException</span><span class="p">()</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-23-1"><a href="#__codelineno-23-1" id="__codelineno-23-1" name="__codelineno-23-1"></a><span class="c1"># Business rule-based security</span>
+</span><span id="__span-23-2"><a href="#__codelineno-23-2" id="__codelineno-23-2" name="__codelineno-23-2"></a><span class="k">class</span><span class="w"> </span><span class="nc">BankAccount</span><span class="p">:</span>
+</span><span id="__span-23-3"><a href="#__codelineno-23-3" id="__codelineno-23-3" name="__codelineno-23-3"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">withdraw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">amount</span><span class="p">:</span> <span class="n">Decimal</span><span class="p">,</span> <span class="n">user</span><span class="p">:</span> <span class="n">Person</span><span class="p">):</span>
+</span><span id="__span-23-4"><a href="#__codelineno-23-4" id="__codelineno-23-4" name="__codelineno-23-4"></a>        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_owner</span><span class="p">(</span><span class="n">user</span><span class="p">):</span>
+</span><span id="__span-23-5"><a href="#__codelineno-23-5" id="__codelineno-23-5" name="__codelineno-23-5"></a>            <span class="k">raise</span> <span class="n">UnauthorizedOperationException</span><span class="p">()</span>
+</span><span id="__span-23-6"><a href="#__codelineno-23-6" id="__codelineno-23-6" name="__codelineno-23-6"></a>        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_sufficient_funds</span><span class="p">(</span><span class="n">amount</span><span class="p">):</span>
+</span><span id="__span-23-7"><a href="#__codelineno-23-7" id="__codelineno-23-7" name="__codelineno-23-7"></a>            <span class="k">raise</span> <span class="n">InsufficientFundsException</span><span class="p">()</span>
+</span></code></pre></div>
 <h3 id="external-service-integration_1">External Service Integration<a class="headerlink" href="#external-service-integration_1" title="Permanent link">¶</a></h3>
 <h4 id="desktop-controller-system-integration">Desktop Controller - <strong>System Integration</strong><a class="headerlink" href="#desktop-controller-system-integration" title="Permanent link">¶</a></h4>
-<div class="highlight"><pre><span></span><code><span class="c1"># Direct system integration via SSH</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">DockerHostCommandRunner</span><span class="p">:</span>
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">run_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command</span><span class="p">:</span> <span class="n">HostCommand</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">HostCommandResult</span><span class="p">:</span>
-        <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">ssh_client</span><span class="o">.</span><span class="n">execute_command</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
-
-<span class="c1"># Cloud event publishing for registration</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">DesktopRegistrator</span><span class="p">:</span>
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">register_desktop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">event</span> <span class="o">=</span> <span class="n">DesktopRegistrationEvent</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">host_info</span><span class="p">)</span>
-        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">cloud_event_bus</span><span class="o">.</span><span class="n">publish_async</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-24-1"><a href="#__codelineno-24-1" id="__codelineno-24-1" name="__codelineno-24-1"></a><span class="c1"># Direct system integration via SSH</span>
+</span><span id="__span-24-2"><a href="#__codelineno-24-2" id="__codelineno-24-2" name="__codelineno-24-2"></a><span class="k">class</span><span class="w"> </span><span class="nc">DockerHostCommandRunner</span><span class="p">:</span>
+</span><span id="__span-24-3"><a href="#__codelineno-24-3" id="__codelineno-24-3" name="__codelineno-24-3"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">run_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command</span><span class="p">:</span> <span class="n">HostCommand</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">HostCommandResult</span><span class="p">:</span>
+</span><span id="__span-24-4"><a href="#__codelineno-24-4" id="__codelineno-24-4" name="__codelineno-24-4"></a>        <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">ssh_client</span><span class="o">.</span><span class="n">execute_command</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
+</span><span id="__span-24-5"><a href="#__codelineno-24-5" id="__codelineno-24-5" name="__codelineno-24-5"></a>
+</span><span id="__span-24-6"><a href="#__codelineno-24-6" id="__codelineno-24-6" name="__codelineno-24-6"></a><span class="c1"># Cloud event publishing for registration</span>
+</span><span id="__span-24-7"><a href="#__codelineno-24-7" id="__codelineno-24-7" name="__codelineno-24-7"></a><span class="k">class</span><span class="w"> </span><span class="nc">DesktopRegistrator</span><span class="p">:</span>
+</span><span id="__span-24-8"><a href="#__codelineno-24-8" id="__codelineno-24-8" name="__codelineno-24-8"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">register_desktop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="__span-24-9"><a href="#__codelineno-24-9" id="__codelineno-24-9" name="__codelineno-24-9"></a>        <span class="n">event</span> <span class="o">=</span> <span class="n">DesktopRegistrationEvent</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">host_info</span><span class="p">)</span>
+</span><span id="__span-24-10"><a href="#__codelineno-24-10" id="__codelineno-24-10" name="__codelineno-24-10"></a>        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">cloud_event_bus</span><span class="o">.</span><span class="n">publish_async</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+</span></code></pre></div>
 <h4 id="api-gateway-extensive-integration">API Gateway - <strong>Extensive Integration</strong><a class="headerlink" href="#api-gateway-extensive-integration" title="Permanent link">¶</a></h4>
-<div class="highlight"><pre><span></span><code><span class="c1"># Multiple external service clients</span>
-<span class="n">services</span><span class="o">.</span><span class="n">add_scoped</span><span class="p">(</span><span class="n">MosaicApiClient</span><span class="p">)</span>
-<span class="n">services</span><span class="o">.</span><span class="n">add_scoped</span><span class="p">(</span><span class="n">MinioStorageManager</span><span class="p">)</span>
-<span class="n">services</span><span class="o">.</span><span class="n">add_scoped</span><span class="p">(</span><span class="n">RedisCache</span><span class="p">)</span>
-<span class="n">services</span><span class="o">.</span><span class="n">add_scoped</span><span class="p">(</span><span class="n">GenAiApiClient</span><span class="p">)</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-25-1"><a href="#__codelineno-25-1" id="__codelineno-25-1" name="__codelineno-25-1"></a><span class="c1"># Multiple external service clients</span>
+</span><span id="__span-25-2"><a href="#__codelineno-25-2" id="__codelineno-25-2" name="__codelineno-25-2"></a><span class="n">services</span><span class="o">.</span><span class="n">add_scoped</span><span class="p">(</span><span class="n">MosaicApiClient</span><span class="p">)</span>
+</span><span id="__span-25-3"><a href="#__codelineno-25-3" id="__codelineno-25-3" name="__codelineno-25-3"></a><span class="n">services</span><span class="o">.</span><span class="n">add_scoped</span><span class="p">(</span><span class="n">MinioStorageManager</span><span class="p">)</span>
+</span><span id="__span-25-4"><a href="#__codelineno-25-4" id="__codelineno-25-4" name="__codelineno-25-4"></a><span class="n">services</span><span class="o">.</span><span class="n">add_scoped</span><span class="p">(</span><span class="n">RedisCache</span><span class="p">)</span>
+</span><span id="__span-25-5"><a href="#__codelineno-25-5" id="__codelineno-25-5" name="__codelineno-25-5"></a><span class="n">services</span><span class="o">.</span><span class="n">add_scoped</span><span class="p">(</span><span class="n">GenAiApiClient</span><span class="p">)</span>
+</span></code></pre></div>
 <h4 id="openbank-minimal-integration">OpenBank - <strong>Minimal Integration</strong><a class="headerlink" href="#openbank-minimal-integration" title="Permanent link">¶</a></h4>
-<div class="highlight"><pre><span></span><code><span class="c1"># Domain-focused with minimal external dependencies</span>
-<span class="n">services</span><span class="o">.</span><span class="n">add_singleton</span><span class="p">(</span><span class="n">EventStoreClient</span><span class="p">)</span>
-<span class="n">services</span><span class="o">.</span><span class="n">add_scoped</span><span class="p">(</span><span class="n">MongoRepository</span><span class="p">)</span>  <span class="c1"># For read models</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-26-1"><a href="#__codelineno-26-1" id="__codelineno-26-1" name="__codelineno-26-1"></a><span class="c1"># Domain-focused with minimal external dependencies</span>
+</span><span id="__span-26-2"><a href="#__codelineno-26-2" id="__codelineno-26-2" name="__codelineno-26-2"></a><span class="n">services</span><span class="o">.</span><span class="n">add_singleton</span><span class="p">(</span><span class="n">EventStoreClient</span><span class="p">)</span>
+</span><span id="__span-26-3"><a href="#__codelineno-26-3" id="__codelineno-26-3" name="__codelineno-26-3"></a><span class="n">services</span><span class="o">.</span><span class="n">add_scoped</span><span class="p">(</span><span class="n">MongoRepository</span><span class="p">)</span>  <span class="c1"># For read models</span>
+</span></code></pre></div>
 <h3 id="background-processing">Background Processing<a class="headerlink" href="#background-processing" title="Permanent link">¶</a></h3>
 <h4 id="desktop-controller-periodic-registration">Desktop Controller - <strong>Periodic Registration</strong><a class="headerlink" href="#desktop-controller-periodic-registration" title="Permanent link">¶</a></h4>
-<div class="highlight"><pre><span></span><code><span class="c1"># Background service for system registration</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">DesktopRegistrator</span><span class="p">(</span><span class="n">HostedService</span><span class="p">):</span>
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">start_async</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">registration_task</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">create_task</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">registration_loop</span><span class="p">())</span>
-
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">registration_loop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">while</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">stopping</span><span class="p">:</span>
-            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">register_with_registry</span><span class="p">()</span>
-            <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">interval</span><span class="p">)</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-27-1"><a href="#__codelineno-27-1" id="__codelineno-27-1" name="__codelineno-27-1"></a><span class="c1"># Background service for system registration</span>
+</span><span id="__span-27-2"><a href="#__codelineno-27-2" id="__codelineno-27-2" name="__codelineno-27-2"></a><span class="k">class</span><span class="w"> </span><span class="nc">DesktopRegistrator</span><span class="p">(</span><span class="n">HostedService</span><span class="p">):</span>
+</span><span id="__span-27-3"><a href="#__codelineno-27-3" id="__codelineno-27-3" name="__codelineno-27-3"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">start_async</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="__span-27-4"><a href="#__codelineno-27-4" id="__codelineno-27-4" name="__codelineno-27-4"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">registration_task</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">create_task</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">registration_loop</span><span class="p">())</span>
+</span><span id="__span-27-5"><a href="#__codelineno-27-5" id="__codelineno-27-5" name="__codelineno-27-5"></a>
+</span><span id="__span-27-6"><a href="#__codelineno-27-6" id="__codelineno-27-6" name="__codelineno-27-6"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">registration_loop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="__span-27-7"><a href="#__codelineno-27-7" id="__codelineno-27-7" name="__codelineno-27-7"></a>        <span class="k">while</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">stopping</span><span class="p">:</span>
+</span><span id="__span-27-8"><a href="#__codelineno-27-8" id="__codelineno-27-8" name="__codelineno-27-8"></a>            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">register_with_registry</span><span class="p">()</span>
+</span><span id="__span-27-9"><a href="#__codelineno-27-9" id="__codelineno-27-9" name="__codelineno-27-9"></a>            <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">interval</span><span class="p">)</span>
+</span></code></pre></div>
 <h4 id="api-gateway-task-queue-pattern">API Gateway - <strong>Task Queue Pattern</strong><a class="headerlink" href="#api-gateway-task-queue-pattern" title="Permanent link">¶</a></h4>
-<div class="highlight"><pre><span></span><code><span class="c1"># Redis-backed background task processing</span>
-<span class="nd">@dataclass</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">ProcessPromptTask</span><span class="p">(</span><span class="n">BackgroundTask</span><span class="p">):</span>
-    <span class="n">prompt_id</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">user_id</span><span class="p">:</span> <span class="nb">str</span>
-
-<span class="k">class</span><span class="w"> </span><span class="nc">PromptProcessingService</span><span class="p">:</span>
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">queue_processing_task</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prompt</span><span class="p">:</span> <span class="n">Prompt</span><span class="p">):</span>
-        <span class="n">task</span> <span class="o">=</span> <span class="n">ProcessPromptTask</span><span class="p">(</span><span class="n">prompt</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">prompt</span><span class="o">.</span><span class="n">user_id</span><span class="p">)</span>
-        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">task_scheduler</span><span class="o">.</span><span class="n">schedule_async</span><span class="p">(</span><span class="n">task</span><span class="p">)</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-28-1"><a href="#__codelineno-28-1" id="__codelineno-28-1" name="__codelineno-28-1"></a><span class="c1"># Redis-backed background task processing</span>
+</span><span id="__span-28-2"><a href="#__codelineno-28-2" id="__codelineno-28-2" name="__codelineno-28-2"></a><span class="nd">@dataclass</span>
+</span><span id="__span-28-3"><a href="#__codelineno-28-3" id="__codelineno-28-3" name="__codelineno-28-3"></a><span class="k">class</span><span class="w"> </span><span class="nc">ProcessPromptTask</span><span class="p">(</span><span class="n">BackgroundTask</span><span class="p">):</span>
+</span><span id="__span-28-4"><a href="#__codelineno-28-4" id="__codelineno-28-4" name="__codelineno-28-4"></a>    <span class="n">prompt_id</span><span class="p">:</span> <span class="nb">str</span>
+</span><span id="__span-28-5"><a href="#__codelineno-28-5" id="__codelineno-28-5" name="__codelineno-28-5"></a>    <span class="n">user_id</span><span class="p">:</span> <span class="nb">str</span>
+</span><span id="__span-28-6"><a href="#__codelineno-28-6" id="__codelineno-28-6" name="__codelineno-28-6"></a>
+</span><span id="__span-28-7"><a href="#__codelineno-28-7" id="__codelineno-28-7" name="__codelineno-28-7"></a><span class="k">class</span><span class="w"> </span><span class="nc">PromptProcessingService</span><span class="p">:</span>
+</span><span id="__span-28-8"><a href="#__codelineno-28-8" id="__codelineno-28-8" name="__codelineno-28-8"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">queue_processing_task</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prompt</span><span class="p">:</span> <span class="n">Prompt</span><span class="p">):</span>
+</span><span id="__span-28-9"><a href="#__codelineno-28-9" id="__codelineno-28-9" name="__codelineno-28-9"></a>        <span class="n">task</span> <span class="o">=</span> <span class="n">ProcessPromptTask</span><span class="p">(</span><span class="n">prompt</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">prompt</span><span class="o">.</span><span class="n">user_id</span><span class="p">)</span>
+</span><span id="__span-28-10"><a href="#__codelineno-28-10" id="__codelineno-28-10" name="__codelineno-28-10"></a>        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">task_scheduler</span><span class="o">.</span><span class="n">schedule_async</span><span class="p">(</span><span class="n">task</span><span class="p">)</span>
+</span></code></pre></div>
 <h4 id="openbank-event-driven-projections">OpenBank - <strong>Event-Driven Projections</strong><a class="headerlink" href="#openbank-event-driven-projections" title="Permanent link">¶</a></h4>
-<div class="highlight"><pre><span></span><code><span class="c1"># Domain event-driven read model updates</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">BankAccountProjectionHandler</span><span class="p">:</span>
-    <span class="nd">@dispatch</span><span class="p">(</span><span class="n">BankAccountCreatedDomainEventV1</span><span class="p">)</span>
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">handle_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">BankAccountCreatedDomainEventV1</span><span class="p">):</span>
-        <span class="n">projection</span> <span class="o">=</span> <span class="n">BankAccountProjection</span><span class="o">.</span><span class="n">from_event</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
-        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">projection_repository</span><span class="o">.</span><span class="n">save_async</span><span class="p">(</span><span class="n">projection</span><span class="p">)</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-29-1"><a href="#__codelineno-29-1" id="__codelineno-29-1" name="__codelineno-29-1"></a><span class="c1"># Domain event-driven read model updates</span>
+</span><span id="__span-29-2"><a href="#__codelineno-29-2" id="__codelineno-29-2" name="__codelineno-29-2"></a><span class="k">class</span><span class="w"> </span><span class="nc">BankAccountProjectionHandler</span><span class="p">:</span>
+</span><span id="__span-29-3"><a href="#__codelineno-29-3" id="__codelineno-29-3" name="__codelineno-29-3"></a>    <span class="nd">@dispatch</span><span class="p">(</span><span class="n">BankAccountCreatedDomainEventV1</span><span class="p">)</span>
+</span><span id="__span-29-4"><a href="#__codelineno-29-4" id="__codelineno-29-4" name="__codelineno-29-4"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">handle_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">BankAccountCreatedDomainEventV1</span><span class="p">):</span>
+</span><span id="__span-29-5"><a href="#__codelineno-29-5" id="__codelineno-29-5" name="__codelineno-29-5"></a>        <span class="n">projection</span> <span class="o">=</span> <span class="n">BankAccountProjection</span><span class="o">.</span><span class="n">from_event</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+</span><span id="__span-29-6"><a href="#__codelineno-29-6" id="__codelineno-29-6" name="__codelineno-29-6"></a>        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">projection_repository</span><span class="o">.</span><span class="n">save_async</span><span class="p">(</span><span class="n">projection</span><span class="p">)</span>
+</span></code></pre></div>
 <h3 id="testing-strategies">Testing Strategies<a class="headerlink" href="#testing-strategies" title="Permanent link">¶</a></h3>
 <h4 id="desktop-controller-system-integration-testing">Desktop Controller - <strong>System Integration Testing</strong><a class="headerlink" href="#desktop-controller-system-integration-testing" title="Permanent link">¶</a></h4>
-<div class="highlight"><pre><span></span><code><span class="c1"># SSH integration tests</span>
-<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">integration</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">TestSSHIntegration</span><span class="p">:</span>
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">test_host_command_execution</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">ssh_client</span> <span class="o">=</span> <span class="n">SecuredHost</span><span class="p">(</span><span class="n">test_settings</span><span class="p">)</span>
-        <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">ssh_client</span><span class="o">.</span><span class="n">run_command_async</span><span class="p">(</span><span class="n">HostCommand</span><span class="p">(</span><span class="s2">"echo test"</span><span class="p">))</span>
-        <span class="k">assert</span> <span class="n">result</span><span class="o">.</span><span class="n">exit_status</span> <span class="o">==</span> <span class="mi">0</span>
-        <span class="k">assert</span> <span class="s2">"test"</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">stdout</span>
-
-<span class="c1"># Background service testing</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">TestDesktopRegistrator</span><span class="p">:</span>
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">test_periodic_registration</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">registrator</span> <span class="o">=</span> <span class="n">DesktopRegistrator</span><span class="p">(</span><span class="n">mock_cloud_event_bus</span><span class="p">)</span>
-        <span class="k">await</span> <span class="n">registrator</span><span class="o">.</span><span class="n">start_async</span><span class="p">()</span>
-        <span class="c1"># Verify registration events are published</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-30-1"><a href="#__codelineno-30-1" id="__codelineno-30-1" name="__codelineno-30-1"></a><span class="c1"># SSH integration tests</span>
+</span><span id="__span-30-2"><a href="#__codelineno-30-2" id="__codelineno-30-2" name="__codelineno-30-2"></a><span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">integration</span>
+</span><span id="__span-30-3"><a href="#__codelineno-30-3" id="__codelineno-30-3" name="__codelineno-30-3"></a><span class="k">class</span><span class="w"> </span><span class="nc">TestSSHIntegration</span><span class="p">:</span>
+</span><span id="__span-30-4"><a href="#__codelineno-30-4" id="__codelineno-30-4" name="__codelineno-30-4"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">test_host_command_execution</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="__span-30-5"><a href="#__codelineno-30-5" id="__codelineno-30-5" name="__codelineno-30-5"></a>        <span class="n">ssh_client</span> <span class="o">=</span> <span class="n">SecuredHost</span><span class="p">(</span><span class="n">test_settings</span><span class="p">)</span>
+</span><span id="__span-30-6"><a href="#__codelineno-30-6" id="__codelineno-30-6" name="__codelineno-30-6"></a>        <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">ssh_client</span><span class="o">.</span><span class="n">run_command_async</span><span class="p">(</span><span class="n">HostCommand</span><span class="p">(</span><span class="s2">"echo test"</span><span class="p">))</span>
+</span><span id="__span-30-7"><a href="#__codelineno-30-7" id="__codelineno-30-7" name="__codelineno-30-7"></a>        <span class="k">assert</span> <span class="n">result</span><span class="o">.</span><span class="n">exit_status</span> <span class="o">==</span> <span class="mi">0</span>
+</span><span id="__span-30-8"><a href="#__codelineno-30-8" id="__codelineno-30-8" name="__codelineno-30-8"></a>        <span class="k">assert</span> <span class="s2">"test"</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">stdout</span>
+</span><span id="__span-30-9"><a href="#__codelineno-30-9" id="__codelineno-30-9" name="__codelineno-30-9"></a>
+</span><span id="__span-30-10"><a href="#__codelineno-30-10" id="__codelineno-30-10" name="__codelineno-30-10"></a><span class="c1"># Background service testing</span>
+</span><span id="__span-30-11"><a href="#__codelineno-30-11" id="__codelineno-30-11" name="__codelineno-30-11"></a><span class="k">class</span><span class="w"> </span><span class="nc">TestDesktopRegistrator</span><span class="p">:</span>
+</span><span id="__span-30-12"><a href="#__codelineno-30-12" id="__codelineno-30-12" name="__codelineno-30-12"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">test_periodic_registration</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="__span-30-13"><a href="#__codelineno-30-13" id="__codelineno-30-13" name="__codelineno-30-13"></a>        <span class="n">registrator</span> <span class="o">=</span> <span class="n">DesktopRegistrator</span><span class="p">(</span><span class="n">mock_cloud_event_bus</span><span class="p">)</span>
+</span><span id="__span-30-14"><a href="#__codelineno-30-14" id="__codelineno-30-14" name="__codelineno-30-14"></a>        <span class="k">await</span> <span class="n">registrator</span><span class="o">.</span><span class="n">start_async</span><span class="p">()</span>
+</span><span id="__span-30-15"><a href="#__codelineno-30-15" id="__codelineno-30-15" name="__codelineno-30-15"></a>        <span class="c1"># Verify registration events are published</span>
+</span></code></pre></div>
 <h4 id="api-gateway-integration-heavy-testing">API Gateway - <strong>Integration-Heavy Testing</strong><a class="headerlink" href="#api-gateway-integration-heavy-testing" title="Permanent link">¶</a></h4>
-<div class="highlight"><pre><span></span><code><span class="c1"># External service integration tests</span>
-<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">integration</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">TestExternalServices</span><span class="p">:</span>
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">test_mosaic_api_integration</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">client</span> <span class="o">=</span> <span class="n">MosaicApiClient</span><span class="p">(</span><span class="n">test_settings</span><span class="p">)</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">get_data_async</span><span class="p">(</span><span class="s2">"test-id"</span><span class="p">)</span>
-        <span class="k">assert</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span>
-
-<span class="c1"># Background task testing</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">TestTaskProcessing</span><span class="p">:</span>
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">test_prompt_processing_workflow</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">task</span> <span class="o">=</span> <span class="n">ProcessPromptTask</span><span class="p">(</span><span class="s2">"prompt-123"</span><span class="p">,</span> <span class="s2">"user-456"</span><span class="p">)</span>
-        <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">task_processor</span><span class="o">.</span><span class="n">process_async</span><span class="p">(</span><span class="n">task</span><span class="p">)</span>
-        <span class="k">assert</span> <span class="n">result</span><span class="o">.</span><span class="n">is_success</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-31-1"><a href="#__codelineno-31-1" id="__codelineno-31-1" name="__codelineno-31-1"></a><span class="c1"># External service integration tests</span>
+</span><span id="__span-31-2"><a href="#__codelineno-31-2" id="__codelineno-31-2" name="__codelineno-31-2"></a><span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">integration</span>
+</span><span id="__span-31-3"><a href="#__codelineno-31-3" id="__codelineno-31-3" name="__codelineno-31-3"></a><span class="k">class</span><span class="w"> </span><span class="nc">TestExternalServices</span><span class="p">:</span>
+</span><span id="__span-31-4"><a href="#__codelineno-31-4" id="__codelineno-31-4" name="__codelineno-31-4"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">test_mosaic_api_integration</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="__span-31-5"><a href="#__codelineno-31-5" id="__codelineno-31-5" name="__codelineno-31-5"></a>        <span class="n">client</span> <span class="o">=</span> <span class="n">MosaicApiClient</span><span class="p">(</span><span class="n">test_settings</span><span class="p">)</span>
+</span><span id="__span-31-6"><a href="#__codelineno-31-6" id="__codelineno-31-6" name="__codelineno-31-6"></a>        <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">get_data_async</span><span class="p">(</span><span class="s2">"test-id"</span><span class="p">)</span>
+</span><span id="__span-31-7"><a href="#__codelineno-31-7" id="__codelineno-31-7" name="__codelineno-31-7"></a>        <span class="k">assert</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span>
+</span><span id="__span-31-8"><a href="#__codelineno-31-8" id="__codelineno-31-8" name="__codelineno-31-8"></a>
+</span><span id="__span-31-9"><a href="#__codelineno-31-9" id="__codelineno-31-9" name="__codelineno-31-9"></a><span class="c1"># Background task testing</span>
+</span><span id="__span-31-10"><a href="#__codelineno-31-10" id="__codelineno-31-10" name="__codelineno-31-10"></a><span class="k">class</span><span class="w"> </span><span class="nc">TestTaskProcessing</span><span class="p">:</span>
+</span><span id="__span-31-11"><a href="#__codelineno-31-11" id="__codelineno-31-11" name="__codelineno-31-11"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">test_prompt_processing_workflow</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="__span-31-12"><a href="#__codelineno-31-12" id="__codelineno-31-12" name="__codelineno-31-12"></a>        <span class="n">task</span> <span class="o">=</span> <span class="n">ProcessPromptTask</span><span class="p">(</span><span class="s2">"prompt-123"</span><span class="p">,</span> <span class="s2">"user-456"</span><span class="p">)</span>
+</span><span id="__span-31-13"><a href="#__codelineno-31-13" id="__codelineno-31-13" name="__codelineno-31-13"></a>        <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">task_processor</span><span class="o">.</span><span class="n">process_async</span><span class="p">(</span><span class="n">task</span><span class="p">)</span>
+</span><span id="__span-31-14"><a href="#__codelineno-31-14" id="__codelineno-31-14" name="__codelineno-31-14"></a>        <span class="k">assert</span> <span class="n">result</span><span class="o">.</span><span class="n">is_success</span>
+</span></code></pre></div>
 <h4 id="openbank-domain-focused-testing">OpenBank - <strong>Domain-Focused Testing</strong><a class="headerlink" href="#openbank-domain-focused-testing" title="Permanent link">¶</a></h4>
-<div class="highlight"><pre><span></span><code><span class="c1"># Rich domain behavior testing</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">TestBankAccount</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">test_account_creation_raises_creation_event</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">account</span> <span class="o">=</span> <span class="n">BankAccount</span><span class="p">()</span>
-        <span class="n">account</span><span class="o">.</span><span class="n">create_account</span><span class="p">(</span><span class="s2">"owner-123"</span><span class="p">,</span> <span class="n">Decimal</span><span class="p">(</span><span class="s2">"1000.00"</span><span class="p">))</span>
-
-        <span class="n">events</span> <span class="o">=</span> <span class="n">account</span><span class="o">.</span><span class="n">_pending_events</span>
-        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">events</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
-        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">events</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">BankAccountCreatedDomainEventV1</span><span class="p">)</span>
-
-<span class="c1"># Event sourcing testing</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">TestEventStore</span><span class="p">:</span>
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">test_aggregate_reconstruction_from_events</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">events</span> <span class="o">=</span> <span class="p">[</span><span class="n">creation_event</span><span class="p">,</span> <span class="n">transaction_event</span><span class="p">]</span>
-        <span class="n">account</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">repository</span><span class="o">.</span><span class="n">load_from_events</span><span class="p">(</span><span class="n">events</span><span class="p">)</span>
-        <span class="k">assert</span> <span class="n">account</span><span class="o">.</span><span class="n">balance</span> <span class="o">==</span> <span class="n">expected_balance</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-32-1"><a href="#__codelineno-32-1" id="__codelineno-32-1" name="__codelineno-32-1"></a><span class="c1"># Rich domain behavior testing</span>
+</span><span id="__span-32-2"><a href="#__codelineno-32-2" id="__codelineno-32-2" name="__codelineno-32-2"></a><span class="k">class</span><span class="w"> </span><span class="nc">TestBankAccount</span><span class="p">:</span>
+</span><span id="__span-32-3"><a href="#__codelineno-32-3" id="__codelineno-32-3" name="__codelineno-32-3"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">test_account_creation_raises_creation_event</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="__span-32-4"><a href="#__codelineno-32-4" id="__codelineno-32-4" name="__codelineno-32-4"></a>        <span class="n">account</span> <span class="o">=</span> <span class="n">BankAccount</span><span class="p">()</span>
+</span><span id="__span-32-5"><a href="#__codelineno-32-5" id="__codelineno-32-5" name="__codelineno-32-5"></a>        <span class="n">account</span><span class="o">.</span><span class="n">create_account</span><span class="p">(</span><span class="s2">"owner-123"</span><span class="p">,</span> <span class="n">Decimal</span><span class="p">(</span><span class="s2">"1000.00"</span><span class="p">))</span>
+</span><span id="__span-32-6"><a href="#__codelineno-32-6" id="__codelineno-32-6" name="__codelineno-32-6"></a>
+</span><span id="__span-32-7"><a href="#__codelineno-32-7" id="__codelineno-32-7" name="__codelineno-32-7"></a>        <span class="n">events</span> <span class="o">=</span> <span class="n">account</span><span class="o">.</span><span class="n">_pending_events</span>
+</span><span id="__span-32-8"><a href="#__codelineno-32-8" id="__codelineno-32-8" name="__codelineno-32-8"></a>        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">events</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
+</span><span id="__span-32-9"><a href="#__codelineno-32-9" id="__codelineno-32-9" name="__codelineno-32-9"></a>        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">events</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">BankAccountCreatedDomainEventV1</span><span class="p">)</span>
+</span><span id="__span-32-10"><a href="#__codelineno-32-10" id="__codelineno-32-10" name="__codelineno-32-10"></a>
+</span><span id="__span-32-11"><a href="#__codelineno-32-11" id="__codelineno-32-11" name="__codelineno-32-11"></a><span class="c1"># Event sourcing testing</span>
+</span><span id="__span-32-12"><a href="#__codelineno-32-12" id="__codelineno-32-12" name="__codelineno-32-12"></a><span class="k">class</span><span class="w"> </span><span class="nc">TestEventStore</span><span class="p">:</span>
+</span><span id="__span-32-13"><a href="#__codelineno-32-13" id="__codelineno-32-13" name="__codelineno-32-13"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">test_aggregate_reconstruction_from_events</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="__span-32-14"><a href="#__codelineno-32-14" id="__codelineno-32-14" name="__codelineno-32-14"></a>        <span class="n">events</span> <span class="o">=</span> <span class="p">[</span><span class="n">creation_event</span><span class="p">,</span> <span class="n">transaction_event</span><span class="p">]</span>
+</span><span id="__span-32-15"><a href="#__codelineno-32-15" id="__codelineno-32-15" name="__codelineno-32-15"></a>        <span class="n">account</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">repository</span><span class="o">.</span><span class="n">load_from_events</span><span class="p">(</span><span class="n">events</span><span class="p">)</span>
+</span><span id="__span-32-16"><a href="#__codelineno-32-16" id="__codelineno-32-16" name="__codelineno-32-16"></a>        <span class="k">assert</span> <span class="n">account</span><span class="o">.</span><span class="n">balance</span> <span class="o">==</span> <span class="n">expected_balance</span>
+</span></code></pre></div>
 <h3 id="use-case-recommendations">Use Case Recommendations<a class="headerlink" href="#use-case-recommendations" title="Permanent link">¶</a></h3>
 <h4 id="choose-desktop-controller-pattern-when">Choose <strong>Desktop Controller Pattern</strong> when<a class="headerlink" href="#choose-desktop-controller-pattern-when" title="Permanent link">¶</a></h4>
 <ul>
@@ -2489,35 +2489,35 @@ open<span class="w"> </span>http://localhost:8080/docs
 <p>TODO</p>
 <h2 id="development">Development<a class="headerlink" href="#development" title="Permanent link">¶</a></h2>
 <h3 id="setup">Setup<a class="headerlink" href="#setup" title="Permanent link">¶</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># 0. Prerequisites:</span>
-<span class="c1">#    Have Python 3.12 installed</span>
-<span class="c1">#</span>
-<span class="c1">#    - Create/Activate a local python environment (e.g. with pyenv)</span>
-<span class="c1">#      pyenv virtualenv 3.12.2 desktop-controller</span>
-<span class="c1">#      pyenv activate desktop-controller</span>
-<span class="c1">#</span>
-<span class="c1">#    - Start Docker Desktop locally</span>
-<span class="c1">#</span>
-<span class="c1"># 1. Clone the repository</span>
-<span class="nb">cd</span><span class="w"> </span>~/
-
-git<span class="w"> </span>clone<span class="w"> </span>git@....
-
-<span class="nb">cd</span><span class="w"> </span>desktop-controller
-
-<span class="c1"># pip install pre-commit</span>
-pre-commit<span class="w"> </span>install
-
-<span class="c1"># pip install poetry</span>
-poetry<span class="w"> </span>lock<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>poetry<span class="w"> </span>install
-
-<span class="c1"># 2. Start the docker-compose stack</span>
-<span class="c1"># sudo apt-get install make</span>
-make<span class="w"> </span>up
-
-<span class="c1"># Access Swagger UI</span>
-open<span class="w"> </span>http://localhost:8080/docs
-</code></pre></div>
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-33-1"><a href="#__codelineno-33-1" id="__codelineno-33-1" name="__codelineno-33-1"></a><span class="c1"># 0. Prerequisites:</span>
+</span><span id="__span-33-2"><a href="#__codelineno-33-2" id="__codelineno-33-2" name="__codelineno-33-2"></a><span class="c1">#    Have Python 3.12 installed</span>
+</span><span id="__span-33-3"><a href="#__codelineno-33-3" id="__codelineno-33-3" name="__codelineno-33-3"></a><span class="c1">#</span>
+</span><span id="__span-33-4"><a href="#__codelineno-33-4" id="__codelineno-33-4" name="__codelineno-33-4"></a><span class="c1">#    - Create/Activate a local python environment (e.g. with pyenv)</span>
+</span><span id="__span-33-5"><a href="#__codelineno-33-5" id="__codelineno-33-5" name="__codelineno-33-5"></a><span class="c1">#      pyenv virtualenv 3.12.2 desktop-controller</span>
+</span><span id="__span-33-6"><a href="#__codelineno-33-6" id="__codelineno-33-6" name="__codelineno-33-6"></a><span class="c1">#      pyenv activate desktop-controller</span>
+</span><span id="__span-33-7"><a href="#__codelineno-33-7" id="__codelineno-33-7" name="__codelineno-33-7"></a><span class="c1">#</span>
+</span><span id="__span-33-8"><a href="#__codelineno-33-8" id="__codelineno-33-8" name="__codelineno-33-8"></a><span class="c1">#    - Start Docker Desktop locally</span>
+</span><span id="__span-33-9"><a href="#__codelineno-33-9" id="__codelineno-33-9" name="__codelineno-33-9"></a><span class="c1">#</span>
+</span><span id="__span-33-10"><a href="#__codelineno-33-10" id="__codelineno-33-10" name="__codelineno-33-10"></a><span class="c1"># 1. Clone the repository</span>
+</span><span id="__span-33-11"><a href="#__codelineno-33-11" id="__codelineno-33-11" name="__codelineno-33-11"></a><span class="nb">cd</span><span class="w"> </span>~/
+</span><span id="__span-33-12"><a href="#__codelineno-33-12" id="__codelineno-33-12" name="__codelineno-33-12"></a>
+</span><span id="__span-33-13"><a href="#__codelineno-33-13" id="__codelineno-33-13" name="__codelineno-33-13"></a>git<span class="w"> </span>clone<span class="w"> </span>git@....
+</span><span id="__span-33-14"><a href="#__codelineno-33-14" id="__codelineno-33-14" name="__codelineno-33-14"></a>
+</span><span id="__span-33-15"><a href="#__codelineno-33-15" id="__codelineno-33-15" name="__codelineno-33-15"></a><span class="nb">cd</span><span class="w"> </span>desktop-controller
+</span><span id="__span-33-16"><a href="#__codelineno-33-16" id="__codelineno-33-16" name="__codelineno-33-16"></a>
+</span><span id="__span-33-17"><a href="#__codelineno-33-17" id="__codelineno-33-17" name="__codelineno-33-17"></a><span class="c1"># pip install pre-commit</span>
+</span><span id="__span-33-18"><a href="#__codelineno-33-18" id="__codelineno-33-18" name="__codelineno-33-18"></a>pre-commit<span class="w"> </span>install
+</span><span id="__span-33-19"><a href="#__codelineno-33-19" id="__codelineno-33-19" name="__codelineno-33-19"></a>
+</span><span id="__span-33-20"><a href="#__codelineno-33-20" id="__codelineno-33-20" name="__codelineno-33-20"></a><span class="c1"># pip install poetry</span>
+</span><span id="__span-33-21"><a href="#__codelineno-33-21" id="__codelineno-33-21" name="__codelineno-33-21"></a>poetry<span class="w"> </span>lock<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>poetry<span class="w"> </span>install
+</span><span id="__span-33-22"><a href="#__codelineno-33-22" id="__codelineno-33-22" name="__codelineno-33-22"></a>
+</span><span id="__span-33-23"><a href="#__codelineno-33-23" id="__codelineno-33-23" name="__codelineno-33-23"></a><span class="c1"># 2. Start the docker-compose stack</span>
+</span><span id="__span-33-24"><a href="#__codelineno-33-24" id="__codelineno-33-24" name="__codelineno-33-24"></a><span class="c1"># sudo apt-get install make</span>
+</span><span id="__span-33-25"><a href="#__codelineno-33-25" id="__codelineno-33-25" name="__codelineno-33-25"></a>make<span class="w"> </span>up
+</span><span id="__span-33-26"><a href="#__codelineno-33-26" id="__codelineno-33-26" name="__codelineno-33-26"></a>
+</span><span id="__span-33-27"><a href="#__codelineno-33-27" id="__codelineno-33-27" name="__codelineno-33-27"></a><span class="c1"># Access Swagger UI</span>
+</span><span id="__span-33-28"><a href="#__codelineno-33-28" id="__codelineno-33-28" name="__codelineno-33-28"></a>open<span class="w"> </span>http://localhost:8080/docs
+</span></code></pre></div>
 <h2 id="key-implementation-highlights">💡 Key Implementation Highlights<a class="headerlink" href="#key-implementation-highlights" title="Permanent link">¶</a></h2>
 <p>The Desktop Controller sample uniquely demonstrates:</p>
 <h3 id="1-dual-security-architecture"><strong>1. Dual Security Architecture</strong><a class="headerlink" href="#1-dual-security-architecture" title="Permanent link">¶</a></h3>

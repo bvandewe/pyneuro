@@ -857,9 +857,9 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../references/python_type_hints/">
+<a class="md-nav__link" href="../../references/python_typing_guide/">
 <span class="md-ellipsis">
-    Python Type Hints
+    Python Typing Guide
     
   </span>
 </a>
@@ -881,9 +881,9 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../references/python_generic_types/">
+<a class="md-nav__link" href="../../references/test-mermaid/">
 <span class="md-ellipsis">
-    Python Generic Types
+    Mermaid References
     
   </span>
 </a>
@@ -1124,518 +1124,518 @@ that handle high-throughput event processing with minimal latency.</p>
     class I,J,K,L services</code></pre>
 <h2 id="pattern-implementation">🍕 Pattern Implementation<a class="headerlink" href="#pattern-implementation" title="Permanent link">¶</a></h2>
 <h3 id="core-reactive-components">Core Reactive Components<a class="headerlink" href="#core-reactive-components" title="Permanent link">¶</a></h3>
-<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">rx.subject.subject</span><span class="w"> </span><span class="kn">import</span> <span class="n">Subject</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">rx.core.typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Disposable</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">rx</span><span class="w"> </span><span class="kn">import</span> <span class="n">operators</span> <span class="k">as</span> <span class="n">ops</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.reactive</span><span class="w"> </span><span class="kn">import</span> <span class="n">AsyncRx</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.eventing</span><span class="w"> </span><span class="kn">import</span> <span class="n">DomainEvent</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">enum</span><span class="w"> </span><span class="kn">import</span> <span class="n">Enum</span>
-
-<span class="c1"># Domain Events for Reactive Processing</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">OrderStatus</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Enum</span><span class="p">):</span>
-    <span class="n">PLACED</span> <span class="o">=</span> <span class="s2">"placed"</span>
-    <span class="n">CONFIRMED</span> <span class="o">=</span> <span class="s2">"confirmed"</span>
-    <span class="n">COOKING</span> <span class="o">=</span> <span class="s2">"cooking"</span>
-    <span class="n">READY</span> <span class="o">=</span> <span class="s2">"ready"</span>
-    <span class="n">DELIVERED</span> <span class="o">=</span> <span class="s2">"delivered"</span>
-
-<span class="nd">@dataclass</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">OrderStatusChangedEvent</span><span class="p">(</span><span class="n">DomainEvent</span><span class="p">):</span>
-    <span class="n">order_id</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">previous_status</span><span class="p">:</span> <span class="n">OrderStatus</span>
-    <span class="n">new_status</span><span class="p">:</span> <span class="n">OrderStatus</span>
-    <span class="n">timestamp</span><span class="p">:</span> <span class="n">datetime</span>
-    <span class="n">estimated_completion</span><span class="p">:</span> <span class="n">datetime</span>
-
-<span class="nd">@dataclass</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">KitchenCapacityEvent</span><span class="p">(</span><span class="n">DomainEvent</span><span class="p">):</span>
-    <span class="n">available_ovens</span><span class="p">:</span> <span class="nb">int</span>
-    <span class="n">current_orders</span><span class="p">:</span> <span class="nb">int</span>
-    <span class="n">estimated_wait_minutes</span><span class="p">:</span> <span class="nb">int</span>
-
-<span class="c1"># Reactive Event Processor Pattern</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">ReactiveEventProcessor</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""Central reactive processor for event streams"""</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="c1"># Observable streams for different event types</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">order_status_stream</span> <span class="o">=</span> <span class="n">Subject</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">kitchen_capacity_stream</span> <span class="o">=</span> <span class="n">Subject</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">customer_notification_stream</span> <span class="o">=</span> <span class="n">Subject</span><span class="p">()</span>
-
-        <span class="c1"># Subscription management for cleanup</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">subscriptions</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Disposable</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
-
-        <span class="c1"># Setup reactive processing pipelines</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_setup_reactive_pipelines</span><span class="p">()</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">_setup_reactive_pipelines</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">"""Configure reactive processing pipelines with stream transformations"""</span>
-
-        <span class="c1"># Order status processing pipeline</span>
-        <span class="n">order_subscription</span> <span class="o">=</span> <span class="n">AsyncRx</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">order_status_stream</span><span class="o">.</span><span class="n">pipe</span><span class="p">(</span>
-                <span class="c1"># Filter only significant status changes</span>
-                <span class="n">ops</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">event</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_significant_status_change</span><span class="p">(</span><span class="n">event</span><span class="p">)),</span>
-                <span class="c1"># Enrich with additional context</span>
-                <span class="n">ops</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">event</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_enrich_order_event</span><span class="p">(</span><span class="n">event</span><span class="p">)),</span>
-                <span class="c1"># Buffer for batch processing efficiency</span>
-                <span class="n">ops</span><span class="o">.</span><span class="n">buffer_with_time</span><span class="p">(</span><span class="n">timespan</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
-            <span class="p">),</span>
-            <span class="k">lambda</span> <span class="n">events</span><span class="p">:</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">create_task</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_process_order_event_batch</span><span class="p">(</span><span class="n">events</span><span class="p">))</span>
-        <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">subscriptions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">order_subscription</span><span class="p">)</span>
-
-        <span class="c1"># Kitchen capacity monitoring pipeline</span>
-        <span class="n">kitchen_subscription</span> <span class="o">=</span> <span class="n">AsyncRx</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">kitchen_capacity_stream</span><span class="o">.</span><span class="n">pipe</span><span class="p">(</span>
-                <span class="c1"># Throttle rapid capacity updates</span>
-                <span class="n">ops</span><span class="o">.</span><span class="n">throttle_first</span><span class="p">(</span><span class="mf">0.5</span><span class="p">),</span>
-                <span class="c1"># Transform to capacity metrics</span>
-                <span class="n">ops</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">event</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_calculate_capacity_metrics</span><span class="p">(</span><span class="n">event</span><span class="p">))</span>
-            <span class="p">),</span>
-            <span class="k">lambda</span> <span class="n">metrics</span><span class="p">:</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">create_task</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_update_capacity_dashboard</span><span class="p">(</span><span class="n">metrics</span><span class="p">))</span>
-        <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">subscriptions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">kitchen_subscription</span><span class="p">)</span>
-
-        <span class="c1"># Customer notification pipeline</span>
-        <span class="n">notification_subscription</span> <span class="o">=</span> <span class="n">AsyncRx</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">customer_notification_stream</span><span class="o">.</span><span class="n">pipe</span><span class="p">(</span>
-                <span class="c1"># Group by customer for consolidated notifications</span>
-                <span class="n">ops</span><span class="o">.</span><span class="n">group_by</span><span class="p">(</span><span class="k">lambda</span> <span class="n">event</span><span class="p">:</span> <span class="n">event</span><span class="o">.</span><span class="n">customer_id</span><span class="p">),</span>
-                <span class="c1"># Debounce to prevent notification spam</span>
-                <span class="n">ops</span><span class="o">.</span><span class="n">debounce</span><span class="p">(</span><span class="mf">1.5</span><span class="p">)</span>
-            <span class="p">),</span>
-            <span class="k">lambda</span> <span class="n">event</span><span class="p">:</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">create_task</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_send_customer_notification</span><span class="p">(</span><span class="n">event</span><span class="p">))</span>
-        <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">subscriptions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">notification_subscription</span><span class="p">)</span>
-
-    <span class="c1"># Event Publishers</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">publish_order_status_change</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">OrderStatusChangedEvent</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">"""Publish order status change to reactive stream"""</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">order_status_stream</span><span class="o">.</span><span class="n">on_next</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
-
-        <span class="c1"># Trigger customer notification for customer-facing statuses</span>
-        <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">new_status</span> <span class="ow">in</span> <span class="p">[</span><span class="n">OrderStatus</span><span class="o">.</span><span class="n">READY</span><span class="p">,</span> <span class="n">OrderStatus</span><span class="o">.</span><span class="n">DELIVERED</span><span class="p">]:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">customer_notification_stream</span><span class="o">.</span><span class="n">on_next</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">publish_kitchen_capacity_update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">KitchenCapacityEvent</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">"""Publish kitchen capacity update to reactive stream"""</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">kitchen_capacity_stream</span><span class="o">.</span><span class="n">on_next</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
-
-    <span class="c1"># Stream Processing Methods</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_is_significant_status_change</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">OrderStatusChangedEvent</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Filter logic for significant status changes"""</span>
-        <span class="n">significant_transitions</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="p">(</span><span class="n">OrderStatus</span><span class="o">.</span><span class="n">PLACED</span><span class="p">,</span> <span class="n">OrderStatus</span><span class="o">.</span><span class="n">CONFIRMED</span><span class="p">),</span>
-            <span class="p">(</span><span class="n">OrderStatus</span><span class="o">.</span><span class="n">CONFIRMED</span><span class="p">,</span> <span class="n">OrderStatus</span><span class="o">.</span><span class="n">COOKING</span><span class="p">),</span>
-            <span class="p">(</span><span class="n">OrderStatus</span><span class="o">.</span><span class="n">COOKING</span><span class="p">,</span> <span class="n">OrderStatus</span><span class="o">.</span><span class="n">READY</span><span class="p">),</span>
-            <span class="p">(</span><span class="n">OrderStatus</span><span class="o">.</span><span class="n">READY</span><span class="p">,</span> <span class="n">OrderStatus</span><span class="o">.</span><span class="n">DELIVERED</span><span class="p">)</span>
-        <span class="p">}</span>
-        <span class="k">return</span> <span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">previous_status</span><span class="p">,</span> <span class="n">event</span><span class="o">.</span><span class="n">new_status</span><span class="p">)</span> <span class="ow">in</span> <span class="n">significant_transitions</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">_enrich_order_event</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">OrderStatusChangedEvent</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">"""Enrich events with additional processing context"""</span>
-        <span class="k">return</span> <span class="p">{</span>
-            <span class="s1">'original_event'</span><span class="p">:</span> <span class="n">event</span><span class="p">,</span>
-            <span class="s1">'processing_timestamp'</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(),</span>
-            <span class="s1">'priority_score'</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_calculate_priority_score</span><span class="p">(</span><span class="n">event</span><span class="p">),</span>
-            <span class="s1">'estimated_impact'</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_estimate_kitchen_impact</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
-        <span class="p">}</span>
-
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_process_order_event_batch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">enriched_events</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]):</span>
-<span class="w">        </span><span class="sd">"""Process batched events for efficiency"""</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">enriched_events</span><span class="p">:</span>
-            <span class="k">return</span>
-
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"🔄 Processing batch of </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">enriched_events</span><span class="p">)</span><span class="si">}</span><span class="s2"> order events"</span><span class="p">)</span>
-
-        <span class="c1"># Extract original events for processing</span>
-        <span class="n">events</span> <span class="o">=</span> <span class="p">[</span><span class="n">e</span><span class="p">[</span><span class="s1">'original_event'</span><span class="p">]</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">enriched_events</span><span class="p">]</span>
-
-        <span class="c1"># Batch update order tracking</span>
-        <span class="n">order_ids</span> <span class="o">=</span> <span class="p">[</span><span class="n">e</span><span class="o">.</span><span class="n">order_id</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">events</span><span class="p">]</span>
-        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_batch_update_order_dashboard</span><span class="p">(</span><span class="n">order_ids</span><span class="p">)</span>
-
-        <span class="c1"># Update kitchen workflow for cooking transitions</span>
-        <span class="n">cooking_events</span> <span class="o">=</span> <span class="p">[</span><span class="n">e</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">events</span> <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">new_status</span> <span class="o">==</span> <span class="n">OrderStatus</span><span class="o">.</span><span class="n">COOKING</span><span class="p">]</span>
-        <span class="k">if</span> <span class="n">cooking_events</span><span class="p">:</span>
-            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_update_kitchen_workflow</span><span class="p">(</span><span class="n">cooking_events</span><span class="p">)</span>
-
-    <span class="c1"># Cleanup Management</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">dispose</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">"""Properly dispose of all reactive subscriptions"""</span>
-        <span class="k">for</span> <span class="n">subscription</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">subscriptions</span><span class="p">:</span>
-            <span class="n">subscription</span><span class="o">.</span><span class="n">dispose</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">subscriptions</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a href="#__codelineno-0-1" id="__codelineno-0-1" name="__codelineno-0-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+</span><span id="__span-0-2"><a href="#__codelineno-0-2" id="__codelineno-0-2" name="__codelineno-0-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span>
+</span><span id="__span-0-3"><a href="#__codelineno-0-3" id="__codelineno-0-3" name="__codelineno-0-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">rx.subject.subject</span><span class="w"> </span><span class="kn">import</span> <span class="n">Subject</span>
+</span><span id="__span-0-4"><a href="#__codelineno-0-4" id="__codelineno-0-4" name="__codelineno-0-4"></a><span class="kn">from</span><span class="w"> </span><span class="nn">rx.core.typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Disposable</span>
+</span><span id="__span-0-5"><a href="#__codelineno-0-5" id="__codelineno-0-5" name="__codelineno-0-5"></a><span class="kn">from</span><span class="w"> </span><span class="nn">rx</span><span class="w"> </span><span class="kn">import</span> <span class="n">operators</span> <span class="k">as</span> <span class="n">ops</span>
+</span><span id="__span-0-6"><a href="#__codelineno-0-6" id="__codelineno-0-6" name="__codelineno-0-6"></a><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.reactive</span><span class="w"> </span><span class="kn">import</span> <span class="n">AsyncRx</span>
+</span><span id="__span-0-7"><a href="#__codelineno-0-7" id="__codelineno-0-7" name="__codelineno-0-7"></a><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.eventing</span><span class="w"> </span><span class="kn">import</span> <span class="n">DomainEvent</span>
+</span><span id="__span-0-8"><a href="#__codelineno-0-8" id="__codelineno-0-8" name="__codelineno-0-8"></a><span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
+</span><span id="__span-0-9"><a href="#__codelineno-0-9" id="__codelineno-0-9" name="__codelineno-0-9"></a><span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
+</span><span id="__span-0-10"><a href="#__codelineno-0-10" id="__codelineno-0-10" name="__codelineno-0-10"></a><span class="kn">from</span><span class="w"> </span><span class="nn">enum</span><span class="w"> </span><span class="kn">import</span> <span class="n">Enum</span>
+</span><span id="__span-0-11"><a href="#__codelineno-0-11" id="__codelineno-0-11" name="__codelineno-0-11"></a>
+</span><span id="__span-0-12"><a href="#__codelineno-0-12" id="__codelineno-0-12" name="__codelineno-0-12"></a><span class="c1"># Domain Events for Reactive Processing</span>
+</span><span id="__span-0-13"><a href="#__codelineno-0-13" id="__codelineno-0-13" name="__codelineno-0-13"></a><span class="k">class</span><span class="w"> </span><span class="nc">OrderStatus</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Enum</span><span class="p">):</span>
+</span><span id="__span-0-14"><a href="#__codelineno-0-14" id="__codelineno-0-14" name="__codelineno-0-14"></a>    <span class="n">PLACED</span> <span class="o">=</span> <span class="s2">"placed"</span>
+</span><span id="__span-0-15"><a href="#__codelineno-0-15" id="__codelineno-0-15" name="__codelineno-0-15"></a>    <span class="n">CONFIRMED</span> <span class="o">=</span> <span class="s2">"confirmed"</span>
+</span><span id="__span-0-16"><a href="#__codelineno-0-16" id="__codelineno-0-16" name="__codelineno-0-16"></a>    <span class="n">COOKING</span> <span class="o">=</span> <span class="s2">"cooking"</span>
+</span><span id="__span-0-17"><a href="#__codelineno-0-17" id="__codelineno-0-17" name="__codelineno-0-17"></a>    <span class="n">READY</span> <span class="o">=</span> <span class="s2">"ready"</span>
+</span><span id="__span-0-18"><a href="#__codelineno-0-18" id="__codelineno-0-18" name="__codelineno-0-18"></a>    <span class="n">DELIVERED</span> <span class="o">=</span> <span class="s2">"delivered"</span>
+</span><span id="__span-0-19"><a href="#__codelineno-0-19" id="__codelineno-0-19" name="__codelineno-0-19"></a>
+</span><span id="__span-0-20"><a href="#__codelineno-0-20" id="__codelineno-0-20" name="__codelineno-0-20"></a><span class="nd">@dataclass</span>
+</span><span id="__span-0-21"><a href="#__codelineno-0-21" id="__codelineno-0-21" name="__codelineno-0-21"></a><span class="k">class</span><span class="w"> </span><span class="nc">OrderStatusChangedEvent</span><span class="p">(</span><span class="n">DomainEvent</span><span class="p">):</span>
+</span><span id="__span-0-22"><a href="#__codelineno-0-22" id="__codelineno-0-22" name="__codelineno-0-22"></a>    <span class="n">order_id</span><span class="p">:</span> <span class="nb">str</span>
+</span><span id="__span-0-23"><a href="#__codelineno-0-23" id="__codelineno-0-23" name="__codelineno-0-23"></a>    <span class="n">previous_status</span><span class="p">:</span> <span class="n">OrderStatus</span>
+</span><span id="__span-0-24"><a href="#__codelineno-0-24" id="__codelineno-0-24" name="__codelineno-0-24"></a>    <span class="n">new_status</span><span class="p">:</span> <span class="n">OrderStatus</span>
+</span><span id="__span-0-25"><a href="#__codelineno-0-25" id="__codelineno-0-25" name="__codelineno-0-25"></a>    <span class="n">timestamp</span><span class="p">:</span> <span class="n">datetime</span>
+</span><span id="__span-0-26"><a href="#__codelineno-0-26" id="__codelineno-0-26" name="__codelineno-0-26"></a>    <span class="n">estimated_completion</span><span class="p">:</span> <span class="n">datetime</span>
+</span><span id="__span-0-27"><a href="#__codelineno-0-27" id="__codelineno-0-27" name="__codelineno-0-27"></a>
+</span><span id="__span-0-28"><a href="#__codelineno-0-28" id="__codelineno-0-28" name="__codelineno-0-28"></a><span class="nd">@dataclass</span>
+</span><span id="__span-0-29"><a href="#__codelineno-0-29" id="__codelineno-0-29" name="__codelineno-0-29"></a><span class="k">class</span><span class="w"> </span><span class="nc">KitchenCapacityEvent</span><span class="p">(</span><span class="n">DomainEvent</span><span class="p">):</span>
+</span><span id="__span-0-30"><a href="#__codelineno-0-30" id="__codelineno-0-30" name="__codelineno-0-30"></a>    <span class="n">available_ovens</span><span class="p">:</span> <span class="nb">int</span>
+</span><span id="__span-0-31"><a href="#__codelineno-0-31" id="__codelineno-0-31" name="__codelineno-0-31"></a>    <span class="n">current_orders</span><span class="p">:</span> <span class="nb">int</span>
+</span><span id="__span-0-32"><a href="#__codelineno-0-32" id="__codelineno-0-32" name="__codelineno-0-32"></a>    <span class="n">estimated_wait_minutes</span><span class="p">:</span> <span class="nb">int</span>
+</span><span id="__span-0-33"><a href="#__codelineno-0-33" id="__codelineno-0-33" name="__codelineno-0-33"></a>
+</span><span id="__span-0-34"><a href="#__codelineno-0-34" id="__codelineno-0-34" name="__codelineno-0-34"></a><span class="c1"># Reactive Event Processor Pattern</span>
+</span><span id="__span-0-35"><a href="#__codelineno-0-35" id="__codelineno-0-35" name="__codelineno-0-35"></a><span class="k">class</span><span class="w"> </span><span class="nc">ReactiveEventProcessor</span><span class="p">:</span>
+</span><span id="__span-0-36"><a href="#__codelineno-0-36" id="__codelineno-0-36" name="__codelineno-0-36"></a><span class="w">    </span><span class="sd">"""Central reactive processor for event streams"""</span>
+</span><span id="__span-0-37"><a href="#__codelineno-0-37" id="__codelineno-0-37" name="__codelineno-0-37"></a>
+</span><span id="__span-0-38"><a href="#__codelineno-0-38" id="__codelineno-0-38" name="__codelineno-0-38"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="__span-0-39"><a href="#__codelineno-0-39" id="__codelineno-0-39" name="__codelineno-0-39"></a>        <span class="c1"># Observable streams for different event types</span>
+</span><span id="__span-0-40"><a href="#__codelineno-0-40" id="__codelineno-0-40" name="__codelineno-0-40"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">order_status_stream</span> <span class="o">=</span> <span class="n">Subject</span><span class="p">()</span>
+</span><span id="__span-0-41"><a href="#__codelineno-0-41" id="__codelineno-0-41" name="__codelineno-0-41"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">kitchen_capacity_stream</span> <span class="o">=</span> <span class="n">Subject</span><span class="p">()</span>
+</span><span id="__span-0-42"><a href="#__codelineno-0-42" id="__codelineno-0-42" name="__codelineno-0-42"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">customer_notification_stream</span> <span class="o">=</span> <span class="n">Subject</span><span class="p">()</span>
+</span><span id="__span-0-43"><a href="#__codelineno-0-43" id="__codelineno-0-43" name="__codelineno-0-43"></a>
+</span><span id="__span-0-44"><a href="#__codelineno-0-44" id="__codelineno-0-44" name="__codelineno-0-44"></a>        <span class="c1"># Subscription management for cleanup</span>
+</span><span id="__span-0-45"><a href="#__codelineno-0-45" id="__codelineno-0-45" name="__codelineno-0-45"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">subscriptions</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Disposable</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+</span><span id="__span-0-46"><a href="#__codelineno-0-46" id="__codelineno-0-46" name="__codelineno-0-46"></a>
+</span><span id="__span-0-47"><a href="#__codelineno-0-47" id="__codelineno-0-47" name="__codelineno-0-47"></a>        <span class="c1"># Setup reactive processing pipelines</span>
+</span><span id="__span-0-48"><a href="#__codelineno-0-48" id="__codelineno-0-48" name="__codelineno-0-48"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_setup_reactive_pipelines</span><span class="p">()</span>
+</span><span id="__span-0-49"><a href="#__codelineno-0-49" id="__codelineno-0-49" name="__codelineno-0-49"></a>
+</span><span id="__span-0-50"><a href="#__codelineno-0-50" id="__codelineno-0-50" name="__codelineno-0-50"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">_setup_reactive_pipelines</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="__span-0-51"><a href="#__codelineno-0-51" id="__codelineno-0-51" name="__codelineno-0-51"></a><span class="w">        </span><span class="sd">"""Configure reactive processing pipelines with stream transformations"""</span>
+</span><span id="__span-0-52"><a href="#__codelineno-0-52" id="__codelineno-0-52" name="__codelineno-0-52"></a>
+</span><span id="__span-0-53"><a href="#__codelineno-0-53" id="__codelineno-0-53" name="__codelineno-0-53"></a>        <span class="c1"># Order status processing pipeline</span>
+</span><span id="__span-0-54"><a href="#__codelineno-0-54" id="__codelineno-0-54" name="__codelineno-0-54"></a>        <span class="n">order_subscription</span> <span class="o">=</span> <span class="n">AsyncRx</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span>
+</span><span id="__span-0-55"><a href="#__codelineno-0-55" id="__codelineno-0-55" name="__codelineno-0-55"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">order_status_stream</span><span class="o">.</span><span class="n">pipe</span><span class="p">(</span>
+</span><span id="__span-0-56"><a href="#__codelineno-0-56" id="__codelineno-0-56" name="__codelineno-0-56"></a>                <span class="c1"># Filter only significant status changes</span>
+</span><span id="__span-0-57"><a href="#__codelineno-0-57" id="__codelineno-0-57" name="__codelineno-0-57"></a>                <span class="n">ops</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">event</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_significant_status_change</span><span class="p">(</span><span class="n">event</span><span class="p">)),</span>
+</span><span id="__span-0-58"><a href="#__codelineno-0-58" id="__codelineno-0-58" name="__codelineno-0-58"></a>                <span class="c1"># Enrich with additional context</span>
+</span><span id="__span-0-59"><a href="#__codelineno-0-59" id="__codelineno-0-59" name="__codelineno-0-59"></a>                <span class="n">ops</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">event</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_enrich_order_event</span><span class="p">(</span><span class="n">event</span><span class="p">)),</span>
+</span><span id="__span-0-60"><a href="#__codelineno-0-60" id="__codelineno-0-60" name="__codelineno-0-60"></a>                <span class="c1"># Buffer for batch processing efficiency</span>
+</span><span id="__span-0-61"><a href="#__codelineno-0-61" id="__codelineno-0-61" name="__codelineno-0-61"></a>                <span class="n">ops</span><span class="o">.</span><span class="n">buffer_with_time</span><span class="p">(</span><span class="n">timespan</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+</span><span id="__span-0-62"><a href="#__codelineno-0-62" id="__codelineno-0-62" name="__codelineno-0-62"></a>            <span class="p">),</span>
+</span><span id="__span-0-63"><a href="#__codelineno-0-63" id="__codelineno-0-63" name="__codelineno-0-63"></a>            <span class="k">lambda</span> <span class="n">events</span><span class="p">:</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">create_task</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_process_order_event_batch</span><span class="p">(</span><span class="n">events</span><span class="p">))</span>
+</span><span id="__span-0-64"><a href="#__codelineno-0-64" id="__codelineno-0-64" name="__codelineno-0-64"></a>        <span class="p">)</span>
+</span><span id="__span-0-65"><a href="#__codelineno-0-65" id="__codelineno-0-65" name="__codelineno-0-65"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">subscriptions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">order_subscription</span><span class="p">)</span>
+</span><span id="__span-0-66"><a href="#__codelineno-0-66" id="__codelineno-0-66" name="__codelineno-0-66"></a>
+</span><span id="__span-0-67"><a href="#__codelineno-0-67" id="__codelineno-0-67" name="__codelineno-0-67"></a>        <span class="c1"># Kitchen capacity monitoring pipeline</span>
+</span><span id="__span-0-68"><a href="#__codelineno-0-68" id="__codelineno-0-68" name="__codelineno-0-68"></a>        <span class="n">kitchen_subscription</span> <span class="o">=</span> <span class="n">AsyncRx</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span>
+</span><span id="__span-0-69"><a href="#__codelineno-0-69" id="__codelineno-0-69" name="__codelineno-0-69"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">kitchen_capacity_stream</span><span class="o">.</span><span class="n">pipe</span><span class="p">(</span>
+</span><span id="__span-0-70"><a href="#__codelineno-0-70" id="__codelineno-0-70" name="__codelineno-0-70"></a>                <span class="c1"># Throttle rapid capacity updates</span>
+</span><span id="__span-0-71"><a href="#__codelineno-0-71" id="__codelineno-0-71" name="__codelineno-0-71"></a>                <span class="n">ops</span><span class="o">.</span><span class="n">throttle_first</span><span class="p">(</span><span class="mf">0.5</span><span class="p">),</span>
+</span><span id="__span-0-72"><a href="#__codelineno-0-72" id="__codelineno-0-72" name="__codelineno-0-72"></a>                <span class="c1"># Transform to capacity metrics</span>
+</span><span id="__span-0-73"><a href="#__codelineno-0-73" id="__codelineno-0-73" name="__codelineno-0-73"></a>                <span class="n">ops</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">event</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_calculate_capacity_metrics</span><span class="p">(</span><span class="n">event</span><span class="p">))</span>
+</span><span id="__span-0-74"><a href="#__codelineno-0-74" id="__codelineno-0-74" name="__codelineno-0-74"></a>            <span class="p">),</span>
+</span><span id="__span-0-75"><a href="#__codelineno-0-75" id="__codelineno-0-75" name="__codelineno-0-75"></a>            <span class="k">lambda</span> <span class="n">metrics</span><span class="p">:</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">create_task</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_update_capacity_dashboard</span><span class="p">(</span><span class="n">metrics</span><span class="p">))</span>
+</span><span id="__span-0-76"><a href="#__codelineno-0-76" id="__codelineno-0-76" name="__codelineno-0-76"></a>        <span class="p">)</span>
+</span><span id="__span-0-77"><a href="#__codelineno-0-77" id="__codelineno-0-77" name="__codelineno-0-77"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">subscriptions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">kitchen_subscription</span><span class="p">)</span>
+</span><span id="__span-0-78"><a href="#__codelineno-0-78" id="__codelineno-0-78" name="__codelineno-0-78"></a>
+</span><span id="__span-0-79"><a href="#__codelineno-0-79" id="__codelineno-0-79" name="__codelineno-0-79"></a>        <span class="c1"># Customer notification pipeline</span>
+</span><span id="__span-0-80"><a href="#__codelineno-0-80" id="__codelineno-0-80" name="__codelineno-0-80"></a>        <span class="n">notification_subscription</span> <span class="o">=</span> <span class="n">AsyncRx</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span>
+</span><span id="__span-0-81"><a href="#__codelineno-0-81" id="__codelineno-0-81" name="__codelineno-0-81"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">customer_notification_stream</span><span class="o">.</span><span class="n">pipe</span><span class="p">(</span>
+</span><span id="__span-0-82"><a href="#__codelineno-0-82" id="__codelineno-0-82" name="__codelineno-0-82"></a>                <span class="c1"># Group by customer for consolidated notifications</span>
+</span><span id="__span-0-83"><a href="#__codelineno-0-83" id="__codelineno-0-83" name="__codelineno-0-83"></a>                <span class="n">ops</span><span class="o">.</span><span class="n">group_by</span><span class="p">(</span><span class="k">lambda</span> <span class="n">event</span><span class="p">:</span> <span class="n">event</span><span class="o">.</span><span class="n">customer_id</span><span class="p">),</span>
+</span><span id="__span-0-84"><a href="#__codelineno-0-84" id="__codelineno-0-84" name="__codelineno-0-84"></a>                <span class="c1"># Debounce to prevent notification spam</span>
+</span><span id="__span-0-85"><a href="#__codelineno-0-85" id="__codelineno-0-85" name="__codelineno-0-85"></a>                <span class="n">ops</span><span class="o">.</span><span class="n">debounce</span><span class="p">(</span><span class="mf">1.5</span><span class="p">)</span>
+</span><span id="__span-0-86"><a href="#__codelineno-0-86" id="__codelineno-0-86" name="__codelineno-0-86"></a>            <span class="p">),</span>
+</span><span id="__span-0-87"><a href="#__codelineno-0-87" id="__codelineno-0-87" name="__codelineno-0-87"></a>            <span class="k">lambda</span> <span class="n">event</span><span class="p">:</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">create_task</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_send_customer_notification</span><span class="p">(</span><span class="n">event</span><span class="p">))</span>
+</span><span id="__span-0-88"><a href="#__codelineno-0-88" id="__codelineno-0-88" name="__codelineno-0-88"></a>        <span class="p">)</span>
+</span><span id="__span-0-89"><a href="#__codelineno-0-89" id="__codelineno-0-89" name="__codelineno-0-89"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">subscriptions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">notification_subscription</span><span class="p">)</span>
+</span><span id="__span-0-90"><a href="#__codelineno-0-90" id="__codelineno-0-90" name="__codelineno-0-90"></a>
+</span><span id="__span-0-91"><a href="#__codelineno-0-91" id="__codelineno-0-91" name="__codelineno-0-91"></a>    <span class="c1"># Event Publishers</span>
+</span><span id="__span-0-92"><a href="#__codelineno-0-92" id="__codelineno-0-92" name="__codelineno-0-92"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">publish_order_status_change</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">OrderStatusChangedEvent</span><span class="p">):</span>
+</span><span id="__span-0-93"><a href="#__codelineno-0-93" id="__codelineno-0-93" name="__codelineno-0-93"></a><span class="w">        </span><span class="sd">"""Publish order status change to reactive stream"""</span>
+</span><span id="__span-0-94"><a href="#__codelineno-0-94" id="__codelineno-0-94" name="__codelineno-0-94"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">order_status_stream</span><span class="o">.</span><span class="n">on_next</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+</span><span id="__span-0-95"><a href="#__codelineno-0-95" id="__codelineno-0-95" name="__codelineno-0-95"></a>
+</span><span id="__span-0-96"><a href="#__codelineno-0-96" id="__codelineno-0-96" name="__codelineno-0-96"></a>        <span class="c1"># Trigger customer notification for customer-facing statuses</span>
+</span><span id="__span-0-97"><a href="#__codelineno-0-97" id="__codelineno-0-97" name="__codelineno-0-97"></a>        <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">new_status</span> <span class="ow">in</span> <span class="p">[</span><span class="n">OrderStatus</span><span class="o">.</span><span class="n">READY</span><span class="p">,</span> <span class="n">OrderStatus</span><span class="o">.</span><span class="n">DELIVERED</span><span class="p">]:</span>
+</span><span id="__span-0-98"><a href="#__codelineno-0-98" id="__codelineno-0-98" name="__codelineno-0-98"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">customer_notification_stream</span><span class="o">.</span><span class="n">on_next</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+</span><span id="__span-0-99"><a href="#__codelineno-0-99" id="__codelineno-0-99" name="__codelineno-0-99"></a>
+</span><span id="__span-0-100"><a href="#__codelineno-0-100" id="__codelineno-0-100" name="__codelineno-0-100"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">publish_kitchen_capacity_update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">KitchenCapacityEvent</span><span class="p">):</span>
+</span><span id="__span-0-101"><a href="#__codelineno-0-101" id="__codelineno-0-101" name="__codelineno-0-101"></a><span class="w">        </span><span class="sd">"""Publish kitchen capacity update to reactive stream"""</span>
+</span><span id="__span-0-102"><a href="#__codelineno-0-102" id="__codelineno-0-102" name="__codelineno-0-102"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">kitchen_capacity_stream</span><span class="o">.</span><span class="n">on_next</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+</span><span id="__span-0-103"><a href="#__codelineno-0-103" id="__codelineno-0-103" name="__codelineno-0-103"></a>
+</span><span id="__span-0-104"><a href="#__codelineno-0-104" id="__codelineno-0-104" name="__codelineno-0-104"></a>    <span class="c1"># Stream Processing Methods</span>
+</span><span id="__span-0-105"><a href="#__codelineno-0-105" id="__codelineno-0-105" name="__codelineno-0-105"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">_is_significant_status_change</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">OrderStatusChangedEvent</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+</span><span id="__span-0-106"><a href="#__codelineno-0-106" id="__codelineno-0-106" name="__codelineno-0-106"></a><span class="w">        </span><span class="sd">"""Filter logic for significant status changes"""</span>
+</span><span id="__span-0-107"><a href="#__codelineno-0-107" id="__codelineno-0-107" name="__codelineno-0-107"></a>        <span class="n">significant_transitions</span> <span class="o">=</span> <span class="p">{</span>
+</span><span id="__span-0-108"><a href="#__codelineno-0-108" id="__codelineno-0-108" name="__codelineno-0-108"></a>            <span class="p">(</span><span class="n">OrderStatus</span><span class="o">.</span><span class="n">PLACED</span><span class="p">,</span> <span class="n">OrderStatus</span><span class="o">.</span><span class="n">CONFIRMED</span><span class="p">),</span>
+</span><span id="__span-0-109"><a href="#__codelineno-0-109" id="__codelineno-0-109" name="__codelineno-0-109"></a>            <span class="p">(</span><span class="n">OrderStatus</span><span class="o">.</span><span class="n">CONFIRMED</span><span class="p">,</span> <span class="n">OrderStatus</span><span class="o">.</span><span class="n">COOKING</span><span class="p">),</span>
+</span><span id="__span-0-110"><a href="#__codelineno-0-110" id="__codelineno-0-110" name="__codelineno-0-110"></a>            <span class="p">(</span><span class="n">OrderStatus</span><span class="o">.</span><span class="n">COOKING</span><span class="p">,</span> <span class="n">OrderStatus</span><span class="o">.</span><span class="n">READY</span><span class="p">),</span>
+</span><span id="__span-0-111"><a href="#__codelineno-0-111" id="__codelineno-0-111" name="__codelineno-0-111"></a>            <span class="p">(</span><span class="n">OrderStatus</span><span class="o">.</span><span class="n">READY</span><span class="p">,</span> <span class="n">OrderStatus</span><span class="o">.</span><span class="n">DELIVERED</span><span class="p">)</span>
+</span><span id="__span-0-112"><a href="#__codelineno-0-112" id="__codelineno-0-112" name="__codelineno-0-112"></a>        <span class="p">}</span>
+</span><span id="__span-0-113"><a href="#__codelineno-0-113" id="__codelineno-0-113" name="__codelineno-0-113"></a>        <span class="k">return</span> <span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">previous_status</span><span class="p">,</span> <span class="n">event</span><span class="o">.</span><span class="n">new_status</span><span class="p">)</span> <span class="ow">in</span> <span class="n">significant_transitions</span>
+</span><span id="__span-0-114"><a href="#__codelineno-0-114" id="__codelineno-0-114" name="__codelineno-0-114"></a>
+</span><span id="__span-0-115"><a href="#__codelineno-0-115" id="__codelineno-0-115" name="__codelineno-0-115"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">_enrich_order_event</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">OrderStatusChangedEvent</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+</span><span id="__span-0-116"><a href="#__codelineno-0-116" id="__codelineno-0-116" name="__codelineno-0-116"></a><span class="w">        </span><span class="sd">"""Enrich events with additional processing context"""</span>
+</span><span id="__span-0-117"><a href="#__codelineno-0-117" id="__codelineno-0-117" name="__codelineno-0-117"></a>        <span class="k">return</span> <span class="p">{</span>
+</span><span id="__span-0-118"><a href="#__codelineno-0-118" id="__codelineno-0-118" name="__codelineno-0-118"></a>            <span class="s1">'original_event'</span><span class="p">:</span> <span class="n">event</span><span class="p">,</span>
+</span><span id="__span-0-119"><a href="#__codelineno-0-119" id="__codelineno-0-119" name="__codelineno-0-119"></a>            <span class="s1">'processing_timestamp'</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(),</span>
+</span><span id="__span-0-120"><a href="#__codelineno-0-120" id="__codelineno-0-120" name="__codelineno-0-120"></a>            <span class="s1">'priority_score'</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_calculate_priority_score</span><span class="p">(</span><span class="n">event</span><span class="p">),</span>
+</span><span id="__span-0-121"><a href="#__codelineno-0-121" id="__codelineno-0-121" name="__codelineno-0-121"></a>            <span class="s1">'estimated_impact'</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_estimate_kitchen_impact</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+</span><span id="__span-0-122"><a href="#__codelineno-0-122" id="__codelineno-0-122" name="__codelineno-0-122"></a>        <span class="p">}</span>
+</span><span id="__span-0-123"><a href="#__codelineno-0-123" id="__codelineno-0-123" name="__codelineno-0-123"></a>
+</span><span id="__span-0-124"><a href="#__codelineno-0-124" id="__codelineno-0-124" name="__codelineno-0-124"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_process_order_event_batch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">enriched_events</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]):</span>
+</span><span id="__span-0-125"><a href="#__codelineno-0-125" id="__codelineno-0-125" name="__codelineno-0-125"></a><span class="w">        </span><span class="sd">"""Process batched events for efficiency"""</span>
+</span><span id="__span-0-126"><a href="#__codelineno-0-126" id="__codelineno-0-126" name="__codelineno-0-126"></a>        <span class="k">if</span> <span class="ow">not</span> <span class="n">enriched_events</span><span class="p">:</span>
+</span><span id="__span-0-127"><a href="#__codelineno-0-127" id="__codelineno-0-127" name="__codelineno-0-127"></a>            <span class="k">return</span>
+</span><span id="__span-0-128"><a href="#__codelineno-0-128" id="__codelineno-0-128" name="__codelineno-0-128"></a>
+</span><span id="__span-0-129"><a href="#__codelineno-0-129" id="__codelineno-0-129" name="__codelineno-0-129"></a>        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"🔄 Processing batch of </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">enriched_events</span><span class="p">)</span><span class="si">}</span><span class="s2"> order events"</span><span class="p">)</span>
+</span><span id="__span-0-130"><a href="#__codelineno-0-130" id="__codelineno-0-130" name="__codelineno-0-130"></a>
+</span><span id="__span-0-131"><a href="#__codelineno-0-131" id="__codelineno-0-131" name="__codelineno-0-131"></a>        <span class="c1"># Extract original events for processing</span>
+</span><span id="__span-0-132"><a href="#__codelineno-0-132" id="__codelineno-0-132" name="__codelineno-0-132"></a>        <span class="n">events</span> <span class="o">=</span> <span class="p">[</span><span class="n">e</span><span class="p">[</span><span class="s1">'original_event'</span><span class="p">]</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">enriched_events</span><span class="p">]</span>
+</span><span id="__span-0-133"><a href="#__codelineno-0-133" id="__codelineno-0-133" name="__codelineno-0-133"></a>
+</span><span id="__span-0-134"><a href="#__codelineno-0-134" id="__codelineno-0-134" name="__codelineno-0-134"></a>        <span class="c1"># Batch update order tracking</span>
+</span><span id="__span-0-135"><a href="#__codelineno-0-135" id="__codelineno-0-135" name="__codelineno-0-135"></a>        <span class="n">order_ids</span> <span class="o">=</span> <span class="p">[</span><span class="n">e</span><span class="o">.</span><span class="n">order_id</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">events</span><span class="p">]</span>
+</span><span id="__span-0-136"><a href="#__codelineno-0-136" id="__codelineno-0-136" name="__codelineno-0-136"></a>        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_batch_update_order_dashboard</span><span class="p">(</span><span class="n">order_ids</span><span class="p">)</span>
+</span><span id="__span-0-137"><a href="#__codelineno-0-137" id="__codelineno-0-137" name="__codelineno-0-137"></a>
+</span><span id="__span-0-138"><a href="#__codelineno-0-138" id="__codelineno-0-138" name="__codelineno-0-138"></a>        <span class="c1"># Update kitchen workflow for cooking transitions</span>
+</span><span id="__span-0-139"><a href="#__codelineno-0-139" id="__codelineno-0-139" name="__codelineno-0-139"></a>        <span class="n">cooking_events</span> <span class="o">=</span> <span class="p">[</span><span class="n">e</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">events</span> <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">new_status</span> <span class="o">==</span> <span class="n">OrderStatus</span><span class="o">.</span><span class="n">COOKING</span><span class="p">]</span>
+</span><span id="__span-0-140"><a href="#__codelineno-0-140" id="__codelineno-0-140" name="__codelineno-0-140"></a>        <span class="k">if</span> <span class="n">cooking_events</span><span class="p">:</span>
+</span><span id="__span-0-141"><a href="#__codelineno-0-141" id="__codelineno-0-141" name="__codelineno-0-141"></a>            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_update_kitchen_workflow</span><span class="p">(</span><span class="n">cooking_events</span><span class="p">)</span>
+</span><span id="__span-0-142"><a href="#__codelineno-0-142" id="__codelineno-0-142" name="__codelineno-0-142"></a>
+</span><span id="__span-0-143"><a href="#__codelineno-0-143" id="__codelineno-0-143" name="__codelineno-0-143"></a>    <span class="c1"># Cleanup Management</span>
+</span><span id="__span-0-144"><a href="#__codelineno-0-144" id="__codelineno-0-144" name="__codelineno-0-144"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">dispose</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="__span-0-145"><a href="#__codelineno-0-145" id="__codelineno-0-145" name="__codelineno-0-145"></a><span class="w">        </span><span class="sd">"""Properly dispose of all reactive subscriptions"""</span>
+</span><span id="__span-0-146"><a href="#__codelineno-0-146" id="__codelineno-0-146" name="__codelineno-0-146"></a>        <span class="k">for</span> <span class="n">subscription</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">subscriptions</span><span class="p">:</span>
+</span><span id="__span-0-147"><a href="#__codelineno-0-147" id="__codelineno-0-147" name="__codelineno-0-147"></a>            <span class="n">subscription</span><span class="o">.</span><span class="n">dispose</span><span class="p">()</span>
+</span><span id="__span-0-148"><a href="#__codelineno-0-148" id="__codelineno-0-148" name="__codelineno-0-148"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">subscriptions</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+</span></code></pre></div>
 <h3 id="stream-transformation-patterns">Stream Transformation Patterns<a class="headerlink" href="#stream-transformation-patterns" title="Permanent link">¶</a></h3>
-<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">StreamTransformationPatterns</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""Common reactive stream transformation patterns"""</span>
-
-    <span class="nd">@staticmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">create_filtering_pipeline</span><span class="p">(</span><span class="n">source_stream</span><span class="p">:</span> <span class="n">Subject</span><span class="p">,</span> <span class="n">predicate</span><span class="p">:</span> <span class="n">Callable</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Subject</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Create filtered stream with predicate"""</span>
-        <span class="n">filtered_stream</span> <span class="o">=</span> <span class="n">Subject</span><span class="p">()</span>
-
-        <span class="n">subscription</span> <span class="o">=</span> <span class="n">AsyncRx</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span>
-            <span class="n">source_stream</span><span class="o">.</span><span class="n">pipe</span><span class="p">(</span><span class="n">ops</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">predicate</span><span class="p">)),</span>
-            <span class="k">lambda</span> <span class="n">item</span><span class="p">:</span> <span class="n">filtered_stream</span><span class="o">.</span><span class="n">on_next</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
-        <span class="p">)</span>
-
-        <span class="k">return</span> <span class="n">filtered_stream</span><span class="p">,</span> <span class="n">subscription</span>
-
-    <span class="nd">@staticmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">create_transformation_pipeline</span><span class="p">(</span><span class="n">source_stream</span><span class="p">:</span> <span class="n">Subject</span><span class="p">,</span> <span class="n">transformer</span><span class="p">:</span> <span class="n">Callable</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Subject</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Create transformed stream with mapping function"""</span>
-        <span class="n">transformed_stream</span> <span class="o">=</span> <span class="n">Subject</span><span class="p">()</span>
-
-        <span class="n">subscription</span> <span class="o">=</span> <span class="n">AsyncRx</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span>
-            <span class="n">source_stream</span><span class="o">.</span><span class="n">pipe</span><span class="p">(</span><span class="n">ops</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">transformer</span><span class="p">)),</span>
-            <span class="k">lambda</span> <span class="n">item</span><span class="p">:</span> <span class="n">transformed_stream</span><span class="o">.</span><span class="n">on_next</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
-        <span class="p">)</span>
-
-        <span class="k">return</span> <span class="n">transformed_stream</span><span class="p">,</span> <span class="n">subscription</span>
-
-    <span class="nd">@staticmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">create_aggregation_pipeline</span><span class="p">(</span><span class="n">source_stream</span><span class="p">:</span> <span class="n">Subject</span><span class="p">,</span> <span class="n">window_seconds</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Subject</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Create aggregated stream with time-based windows"""</span>
-        <span class="n">aggregated_stream</span> <span class="o">=</span> <span class="n">Subject</span><span class="p">()</span>
-
-        <span class="n">subscription</span> <span class="o">=</span> <span class="n">AsyncRx</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span>
-            <span class="n">source_stream</span><span class="o">.</span><span class="n">pipe</span><span class="p">(</span>
-                <span class="n">ops</span><span class="o">.</span><span class="n">buffer_with_time</span><span class="p">(</span><span class="n">timespan</span><span class="o">=</span><span class="n">window_seconds</span><span class="p">),</span>
-                <span class="n">ops</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">items</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">items</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">),</span>
-                <span class="n">ops</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">items</span><span class="p">:</span> <span class="n">StreamTransformationPatterns</span><span class="o">.</span><span class="n">_aggregate_items</span><span class="p">(</span><span class="n">items</span><span class="p">))</span>
-            <span class="p">),</span>
-            <span class="k">lambda</span> <span class="n">aggregated</span><span class="p">:</span> <span class="n">aggregated_stream</span><span class="o">.</span><span class="n">on_next</span><span class="p">(</span><span class="n">aggregated</span><span class="p">)</span>
-        <span class="p">)</span>
-
-        <span class="k">return</span> <span class="n">aggregated_stream</span><span class="p">,</span> <span class="n">subscription</span>
-
-    <span class="nd">@staticmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_aggregate_items</span><span class="p">(</span><span class="n">items</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">"""Aggregate items in a time window"""</span>
-        <span class="k">return</span> <span class="p">{</span>
-            <span class="s1">'count'</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">items</span><span class="p">),</span>
-            <span class="s1">'items'</span><span class="p">:</span> <span class="n">items</span><span class="p">,</span>
-            <span class="s1">'timestamp'</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(),</span>
-            <span class="s1">'window_start'</span><span class="p">:</span> <span class="n">items</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">timestamp</span> <span class="k">if</span> <span class="n">items</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
-            <span class="s1">'window_end'</span><span class="p">:</span> <span class="n">items</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">timestamp</span> <span class="k">if</span> <span class="n">items</span> <span class="k">else</span> <span class="kc">None</span>
-        <span class="p">}</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a href="#__codelineno-1-1" id="__codelineno-1-1" name="__codelineno-1-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">StreamTransformationPatterns</span><span class="p">:</span>
+</span><span id="__span-1-2"><a href="#__codelineno-1-2" id="__codelineno-1-2" name="__codelineno-1-2"></a><span class="w">    </span><span class="sd">"""Common reactive stream transformation patterns"""</span>
+</span><span id="__span-1-3"><a href="#__codelineno-1-3" id="__codelineno-1-3" name="__codelineno-1-3"></a>
+</span><span id="__span-1-4"><a href="#__codelineno-1-4" id="__codelineno-1-4" name="__codelineno-1-4"></a>    <span class="nd">@staticmethod</span>
+</span><span id="__span-1-5"><a href="#__codelineno-1-5" id="__codelineno-1-5" name="__codelineno-1-5"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">create_filtering_pipeline</span><span class="p">(</span><span class="n">source_stream</span><span class="p">:</span> <span class="n">Subject</span><span class="p">,</span> <span class="n">predicate</span><span class="p">:</span> <span class="n">Callable</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Subject</span><span class="p">:</span>
+</span><span id="__span-1-6"><a href="#__codelineno-1-6" id="__codelineno-1-6" name="__codelineno-1-6"></a><span class="w">        </span><span class="sd">"""Create filtered stream with predicate"""</span>
+</span><span id="__span-1-7"><a href="#__codelineno-1-7" id="__codelineno-1-7" name="__codelineno-1-7"></a>        <span class="n">filtered_stream</span> <span class="o">=</span> <span class="n">Subject</span><span class="p">()</span>
+</span><span id="__span-1-8"><a href="#__codelineno-1-8" id="__codelineno-1-8" name="__codelineno-1-8"></a>
+</span><span id="__span-1-9"><a href="#__codelineno-1-9" id="__codelineno-1-9" name="__codelineno-1-9"></a>        <span class="n">subscription</span> <span class="o">=</span> <span class="n">AsyncRx</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span>
+</span><span id="__span-1-10"><a href="#__codelineno-1-10" id="__codelineno-1-10" name="__codelineno-1-10"></a>            <span class="n">source_stream</span><span class="o">.</span><span class="n">pipe</span><span class="p">(</span><span class="n">ops</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">predicate</span><span class="p">)),</span>
+</span><span id="__span-1-11"><a href="#__codelineno-1-11" id="__codelineno-1-11" name="__codelineno-1-11"></a>            <span class="k">lambda</span> <span class="n">item</span><span class="p">:</span> <span class="n">filtered_stream</span><span class="o">.</span><span class="n">on_next</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+</span><span id="__span-1-12"><a href="#__codelineno-1-12" id="__codelineno-1-12" name="__codelineno-1-12"></a>        <span class="p">)</span>
+</span><span id="__span-1-13"><a href="#__codelineno-1-13" id="__codelineno-1-13" name="__codelineno-1-13"></a>
+</span><span id="__span-1-14"><a href="#__codelineno-1-14" id="__codelineno-1-14" name="__codelineno-1-14"></a>        <span class="k">return</span> <span class="n">filtered_stream</span><span class="p">,</span> <span class="n">subscription</span>
+</span><span id="__span-1-15"><a href="#__codelineno-1-15" id="__codelineno-1-15" name="__codelineno-1-15"></a>
+</span><span id="__span-1-16"><a href="#__codelineno-1-16" id="__codelineno-1-16" name="__codelineno-1-16"></a>    <span class="nd">@staticmethod</span>
+</span><span id="__span-1-17"><a href="#__codelineno-1-17" id="__codelineno-1-17" name="__codelineno-1-17"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">create_transformation_pipeline</span><span class="p">(</span><span class="n">source_stream</span><span class="p">:</span> <span class="n">Subject</span><span class="p">,</span> <span class="n">transformer</span><span class="p">:</span> <span class="n">Callable</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Subject</span><span class="p">:</span>
+</span><span id="__span-1-18"><a href="#__codelineno-1-18" id="__codelineno-1-18" name="__codelineno-1-18"></a><span class="w">        </span><span class="sd">"""Create transformed stream with mapping function"""</span>
+</span><span id="__span-1-19"><a href="#__codelineno-1-19" id="__codelineno-1-19" name="__codelineno-1-19"></a>        <span class="n">transformed_stream</span> <span class="o">=</span> <span class="n">Subject</span><span class="p">()</span>
+</span><span id="__span-1-20"><a href="#__codelineno-1-20" id="__codelineno-1-20" name="__codelineno-1-20"></a>
+</span><span id="__span-1-21"><a href="#__codelineno-1-21" id="__codelineno-1-21" name="__codelineno-1-21"></a>        <span class="n">subscription</span> <span class="o">=</span> <span class="n">AsyncRx</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span>
+</span><span id="__span-1-22"><a href="#__codelineno-1-22" id="__codelineno-1-22" name="__codelineno-1-22"></a>            <span class="n">source_stream</span><span class="o">.</span><span class="n">pipe</span><span class="p">(</span><span class="n">ops</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">transformer</span><span class="p">)),</span>
+</span><span id="__span-1-23"><a href="#__codelineno-1-23" id="__codelineno-1-23" name="__codelineno-1-23"></a>            <span class="k">lambda</span> <span class="n">item</span><span class="p">:</span> <span class="n">transformed_stream</span><span class="o">.</span><span class="n">on_next</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+</span><span id="__span-1-24"><a href="#__codelineno-1-24" id="__codelineno-1-24" name="__codelineno-1-24"></a>        <span class="p">)</span>
+</span><span id="__span-1-25"><a href="#__codelineno-1-25" id="__codelineno-1-25" name="__codelineno-1-25"></a>
+</span><span id="__span-1-26"><a href="#__codelineno-1-26" id="__codelineno-1-26" name="__codelineno-1-26"></a>        <span class="k">return</span> <span class="n">transformed_stream</span><span class="p">,</span> <span class="n">subscription</span>
+</span><span id="__span-1-27"><a href="#__codelineno-1-27" id="__codelineno-1-27" name="__codelineno-1-27"></a>
+</span><span id="__span-1-28"><a href="#__codelineno-1-28" id="__codelineno-1-28" name="__codelineno-1-28"></a>    <span class="nd">@staticmethod</span>
+</span><span id="__span-1-29"><a href="#__codelineno-1-29" id="__codelineno-1-29" name="__codelineno-1-29"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">create_aggregation_pipeline</span><span class="p">(</span><span class="n">source_stream</span><span class="p">:</span> <span class="n">Subject</span><span class="p">,</span> <span class="n">window_seconds</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Subject</span><span class="p">:</span>
+</span><span id="__span-1-30"><a href="#__codelineno-1-30" id="__codelineno-1-30" name="__codelineno-1-30"></a><span class="w">        </span><span class="sd">"""Create aggregated stream with time-based windows"""</span>
+</span><span id="__span-1-31"><a href="#__codelineno-1-31" id="__codelineno-1-31" name="__codelineno-1-31"></a>        <span class="n">aggregated_stream</span> <span class="o">=</span> <span class="n">Subject</span><span class="p">()</span>
+</span><span id="__span-1-32"><a href="#__codelineno-1-32" id="__codelineno-1-32" name="__codelineno-1-32"></a>
+</span><span id="__span-1-33"><a href="#__codelineno-1-33" id="__codelineno-1-33" name="__codelineno-1-33"></a>        <span class="n">subscription</span> <span class="o">=</span> <span class="n">AsyncRx</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span>
+</span><span id="__span-1-34"><a href="#__codelineno-1-34" id="__codelineno-1-34" name="__codelineno-1-34"></a>            <span class="n">source_stream</span><span class="o">.</span><span class="n">pipe</span><span class="p">(</span>
+</span><span id="__span-1-35"><a href="#__codelineno-1-35" id="__codelineno-1-35" name="__codelineno-1-35"></a>                <span class="n">ops</span><span class="o">.</span><span class="n">buffer_with_time</span><span class="p">(</span><span class="n">timespan</span><span class="o">=</span><span class="n">window_seconds</span><span class="p">),</span>
+</span><span id="__span-1-36"><a href="#__codelineno-1-36" id="__codelineno-1-36" name="__codelineno-1-36"></a>                <span class="n">ops</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">items</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">items</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">),</span>
+</span><span id="__span-1-37"><a href="#__codelineno-1-37" id="__codelineno-1-37" name="__codelineno-1-37"></a>                <span class="n">ops</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">items</span><span class="p">:</span> <span class="n">StreamTransformationPatterns</span><span class="o">.</span><span class="n">_aggregate_items</span><span class="p">(</span><span class="n">items</span><span class="p">))</span>
+</span><span id="__span-1-38"><a href="#__codelineno-1-38" id="__codelineno-1-38" name="__codelineno-1-38"></a>            <span class="p">),</span>
+</span><span id="__span-1-39"><a href="#__codelineno-1-39" id="__codelineno-1-39" name="__codelineno-1-39"></a>            <span class="k">lambda</span> <span class="n">aggregated</span><span class="p">:</span> <span class="n">aggregated_stream</span><span class="o">.</span><span class="n">on_next</span><span class="p">(</span><span class="n">aggregated</span><span class="p">)</span>
+</span><span id="__span-1-40"><a href="#__codelineno-1-40" id="__codelineno-1-40" name="__codelineno-1-40"></a>        <span class="p">)</span>
+</span><span id="__span-1-41"><a href="#__codelineno-1-41" id="__codelineno-1-41" name="__codelineno-1-41"></a>
+</span><span id="__span-1-42"><a href="#__codelineno-1-42" id="__codelineno-1-42" name="__codelineno-1-42"></a>        <span class="k">return</span> <span class="n">aggregated_stream</span><span class="p">,</span> <span class="n">subscription</span>
+</span><span id="__span-1-43"><a href="#__codelineno-1-43" id="__codelineno-1-43" name="__codelineno-1-43"></a>
+</span><span id="__span-1-44"><a href="#__codelineno-1-44" id="__codelineno-1-44" name="__codelineno-1-44"></a>    <span class="nd">@staticmethod</span>
+</span><span id="__span-1-45"><a href="#__codelineno-1-45" id="__codelineno-1-45" name="__codelineno-1-45"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">_aggregate_items</span><span class="p">(</span><span class="n">items</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+</span><span id="__span-1-46"><a href="#__codelineno-1-46" id="__codelineno-1-46" name="__codelineno-1-46"></a><span class="w">        </span><span class="sd">"""Aggregate items in a time window"""</span>
+</span><span id="__span-1-47"><a href="#__codelineno-1-47" id="__codelineno-1-47" name="__codelineno-1-47"></a>        <span class="k">return</span> <span class="p">{</span>
+</span><span id="__span-1-48"><a href="#__codelineno-1-48" id="__codelineno-1-48" name="__codelineno-1-48"></a>            <span class="s1">'count'</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">items</span><span class="p">),</span>
+</span><span id="__span-1-49"><a href="#__codelineno-1-49" id="__codelineno-1-49" name="__codelineno-1-49"></a>            <span class="s1">'items'</span><span class="p">:</span> <span class="n">items</span><span class="p">,</span>
+</span><span id="__span-1-50"><a href="#__codelineno-1-50" id="__codelineno-1-50" name="__codelineno-1-50"></a>            <span class="s1">'timestamp'</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(),</span>
+</span><span id="__span-1-51"><a href="#__codelineno-1-51" id="__codelineno-1-51" name="__codelineno-1-51"></a>            <span class="s1">'window_start'</span><span class="p">:</span> <span class="n">items</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">timestamp</span> <span class="k">if</span> <span class="n">items</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-1-52"><a href="#__codelineno-1-52" id="__codelineno-1-52" name="__codelineno-1-52"></a>            <span class="s1">'window_end'</span><span class="p">:</span> <span class="n">items</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">timestamp</span> <span class="k">if</span> <span class="n">items</span> <span class="k">else</span> <span class="kc">None</span>
+</span><span id="__span-1-53"><a href="#__codelineno-1-53" id="__codelineno-1-53" name="__codelineno-1-53"></a>        <span class="p">}</span>
+</span></code></pre></div>
 <h3 id="background-service-pattern">Background Service Pattern<a class="headerlink" href="#background-service-pattern" title="Permanent link">¶</a></h3>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.hosting.abstractions</span><span class="w"> </span><span class="kn">import</span> <span class="n">HostedService</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">apscheduler.schedulers.asyncio</span><span class="w"> </span><span class="kn">import</span> <span class="n">AsyncIOScheduler</span>
-
-<span class="k">class</span><span class="w"> </span><span class="nc">ReactiveBackgroundService</span><span class="p">(</span><span class="n">HostedService</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">"""Background service using reactive patterns for task processing"""</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scheduler</span><span class="p">:</span> <span class="n">AsyncIOScheduler</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">scheduler</span> <span class="o">=</span> <span class="n">scheduler</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">task_request_stream</span> <span class="o">=</span> <span class="n">Subject</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">task_completion_stream</span> <span class="o">=</span> <span class="n">Subject</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">subscription</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Disposable</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">start_async</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">"""Start reactive background processing"""</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">"⚡ Starting reactive background service"</span><span class="p">)</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">scheduler</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
-
-        <span class="c1"># Setup reactive task processing pipeline</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">subscription</span> <span class="o">=</span> <span class="n">AsyncRx</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">task_request_stream</span><span class="o">.</span><span class="n">pipe</span><span class="p">(</span>
-                <span class="c1"># Filter valid tasks</span>
-                <span class="n">ops</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">task</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_valid_task</span><span class="p">(</span><span class="n">task</span><span class="p">)),</span>
-                <span class="c1"># Transform to executable tasks</span>
-                <span class="n">ops</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">task</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prepare_task_execution</span><span class="p">(</span><span class="n">task</span><span class="p">))</span>
-            <span class="p">),</span>
-            <span class="k">lambda</span> <span class="n">prepared_task</span><span class="p">:</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">create_task</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_execute_task</span><span class="p">(</span><span class="n">prepared_task</span><span class="p">))</span>
-        <span class="p">)</span>
-
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">stop_async</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">"""Stop reactive background processing"""</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">subscription</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">subscription</span><span class="o">.</span><span class="n">dispose</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">scheduler</span><span class="o">.</span><span class="n">shutdown</span><span class="p">(</span><span class="n">wait</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">"⏹️ Stopped reactive background service"</span><span class="p">)</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">schedule_task</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">task_descriptor</span><span class="p">:</span> <span class="s1">'TaskDescriptor'</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">"""Schedule task through reactive stream"""</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">task_request_stream</span><span class="o">.</span><span class="n">on_next</span><span class="p">(</span><span class="n">task_descriptor</span><span class="p">)</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">_is_valid_task</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">task</span><span class="p">:</span> <span class="s1">'TaskDescriptor'</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Validate task before processing"""</span>
-        <span class="k">return</span> <span class="p">(</span>
-            <span class="nb">hasattr</span><span class="p">(</span><span class="n">task</span><span class="p">,</span> <span class="s1">'id'</span><span class="p">)</span> <span class="ow">and</span> <span class="n">task</span><span class="o">.</span><span class="n">id</span> <span class="ow">and</span>
-            <span class="nb">hasattr</span><span class="p">(</span><span class="n">task</span><span class="p">,</span> <span class="s1">'scheduled_time'</span><span class="p">)</span> <span class="ow">and</span> <span class="n">task</span><span class="o">.</span><span class="n">scheduled_time</span> <span class="ow">and</span>
-            <span class="nb">hasattr</span><span class="p">(</span><span class="n">task</span><span class="p">,</span> <span class="s1">'task_type'</span><span class="p">)</span> <span class="ow">and</span> <span class="n">task</span><span class="o">.</span><span class="n">task_type</span>
-        <span class="p">)</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">_prepare_task_execution</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">task</span><span class="p">:</span> <span class="s1">'TaskDescriptor'</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">"""Prepare task for execution with reactive context"""</span>
-        <span class="k">return</span> <span class="p">{</span>
-            <span class="s1">'task'</span><span class="p">:</span> <span class="n">task</span><span class="p">,</span>
-            <span class="s1">'preparation_time'</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(),</span>
-            <span class="s1">'execution_context'</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_execution_context</span><span class="p">(</span><span class="n">task</span><span class="p">)</span>
-        <span class="p">}</span>
-
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_execute_task</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prepared_task</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]):</span>
-<span class="w">        </span><span class="sd">"""Execute task and publish completion events"""</span>
-        <span class="n">task</span> <span class="o">=</span> <span class="n">prepared_task</span><span class="p">[</span><span class="s1">'task'</span><span class="p">]</span>
-
-        <span class="k">try</span><span class="p">:</span>
-            <span class="c1"># Execute the task</span>
-            <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_run_task</span><span class="p">(</span><span class="n">task</span><span class="p">)</span>
-
-            <span class="c1"># Publish success event</span>
-            <span class="n">completion_event</span> <span class="o">=</span> <span class="n">TaskCompletionEvent</span><span class="p">(</span>
-                <span class="n">task_id</span><span class="o">=</span><span class="n">task</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
-                <span class="n">status</span><span class="o">=</span><span class="s1">'completed'</span><span class="p">,</span>
-                <span class="n">result</span><span class="o">=</span><span class="n">result</span><span class="p">,</span>
-                <span class="n">completed_at</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
-            <span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">task_completion_stream</span><span class="o">.</span><span class="n">on_next</span><span class="p">(</span><span class="n">completion_event</span><span class="p">)</span>
-
-        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">ex</span><span class="p">:</span>
-            <span class="c1"># Publish failure event</span>
-            <span class="n">failure_event</span> <span class="o">=</span> <span class="n">TaskCompletionEvent</span><span class="p">(</span>
-                <span class="n">task_id</span><span class="o">=</span><span class="n">task</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
-                <span class="n">status</span><span class="o">=</span><span class="s1">'failed'</span><span class="p">,</span>
-                <span class="n">error</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">ex</span><span class="p">),</span>
-                <span class="n">completed_at</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
-            <span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">task_completion_stream</span><span class="o">.</span><span class="n">on_next</span><span class="p">(</span><span class="n">failure_event</span><span class="p">)</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a href="#__codelineno-2-1" id="__codelineno-2-1" name="__codelineno-2-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.hosting.abstractions</span><span class="w"> </span><span class="kn">import</span> <span class="n">HostedService</span>
+</span><span id="__span-2-2"><a href="#__codelineno-2-2" id="__codelineno-2-2" name="__codelineno-2-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">apscheduler.schedulers.asyncio</span><span class="w"> </span><span class="kn">import</span> <span class="n">AsyncIOScheduler</span>
+</span><span id="__span-2-3"><a href="#__codelineno-2-3" id="__codelineno-2-3" name="__codelineno-2-3"></a>
+</span><span id="__span-2-4"><a href="#__codelineno-2-4" id="__codelineno-2-4" name="__codelineno-2-4"></a><span class="k">class</span><span class="w"> </span><span class="nc">ReactiveBackgroundService</span><span class="p">(</span><span class="n">HostedService</span><span class="p">):</span>
+</span><span id="__span-2-5"><a href="#__codelineno-2-5" id="__codelineno-2-5" name="__codelineno-2-5"></a><span class="w">    </span><span class="sd">"""Background service using reactive patterns for task processing"""</span>
+</span><span id="__span-2-6"><a href="#__codelineno-2-6" id="__codelineno-2-6" name="__codelineno-2-6"></a>
+</span><span id="__span-2-7"><a href="#__codelineno-2-7" id="__codelineno-2-7" name="__codelineno-2-7"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scheduler</span><span class="p">:</span> <span class="n">AsyncIOScheduler</span><span class="p">):</span>
+</span><span id="__span-2-8"><a href="#__codelineno-2-8" id="__codelineno-2-8" name="__codelineno-2-8"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">scheduler</span> <span class="o">=</span> <span class="n">scheduler</span>
+</span><span id="__span-2-9"><a href="#__codelineno-2-9" id="__codelineno-2-9" name="__codelineno-2-9"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">task_request_stream</span> <span class="o">=</span> <span class="n">Subject</span><span class="p">()</span>
+</span><span id="__span-2-10"><a href="#__codelineno-2-10" id="__codelineno-2-10" name="__codelineno-2-10"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">task_completion_stream</span> <span class="o">=</span> <span class="n">Subject</span><span class="p">()</span>
+</span><span id="__span-2-11"><a href="#__codelineno-2-11" id="__codelineno-2-11" name="__codelineno-2-11"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">subscription</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Disposable</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="__span-2-12"><a href="#__codelineno-2-12" id="__codelineno-2-12" name="__codelineno-2-12"></a>
+</span><span id="__span-2-13"><a href="#__codelineno-2-13" id="__codelineno-2-13" name="__codelineno-2-13"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">start_async</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="__span-2-14"><a href="#__codelineno-2-14" id="__codelineno-2-14" name="__codelineno-2-14"></a><span class="w">        </span><span class="sd">"""Start reactive background processing"""</span>
+</span><span id="__span-2-15"><a href="#__codelineno-2-15" id="__codelineno-2-15" name="__codelineno-2-15"></a>        <span class="nb">print</span><span class="p">(</span><span class="s2">"⚡ Starting reactive background service"</span><span class="p">)</span>
+</span><span id="__span-2-16"><a href="#__codelineno-2-16" id="__codelineno-2-16" name="__codelineno-2-16"></a>
+</span><span id="__span-2-17"><a href="#__codelineno-2-17" id="__codelineno-2-17" name="__codelineno-2-17"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">scheduler</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+</span><span id="__span-2-18"><a href="#__codelineno-2-18" id="__codelineno-2-18" name="__codelineno-2-18"></a>
+</span><span id="__span-2-19"><a href="#__codelineno-2-19" id="__codelineno-2-19" name="__codelineno-2-19"></a>        <span class="c1"># Setup reactive task processing pipeline</span>
+</span><span id="__span-2-20"><a href="#__codelineno-2-20" id="__codelineno-2-20" name="__codelineno-2-20"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">subscription</span> <span class="o">=</span> <span class="n">AsyncRx</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span>
+</span><span id="__span-2-21"><a href="#__codelineno-2-21" id="__codelineno-2-21" name="__codelineno-2-21"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">task_request_stream</span><span class="o">.</span><span class="n">pipe</span><span class="p">(</span>
+</span><span id="__span-2-22"><a href="#__codelineno-2-22" id="__codelineno-2-22" name="__codelineno-2-22"></a>                <span class="c1"># Filter valid tasks</span>
+</span><span id="__span-2-23"><a href="#__codelineno-2-23" id="__codelineno-2-23" name="__codelineno-2-23"></a>                <span class="n">ops</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">task</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_valid_task</span><span class="p">(</span><span class="n">task</span><span class="p">)),</span>
+</span><span id="__span-2-24"><a href="#__codelineno-2-24" id="__codelineno-2-24" name="__codelineno-2-24"></a>                <span class="c1"># Transform to executable tasks</span>
+</span><span id="__span-2-25"><a href="#__codelineno-2-25" id="__codelineno-2-25" name="__codelineno-2-25"></a>                <span class="n">ops</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">task</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prepare_task_execution</span><span class="p">(</span><span class="n">task</span><span class="p">))</span>
+</span><span id="__span-2-26"><a href="#__codelineno-2-26" id="__codelineno-2-26" name="__codelineno-2-26"></a>            <span class="p">),</span>
+</span><span id="__span-2-27"><a href="#__codelineno-2-27" id="__codelineno-2-27" name="__codelineno-2-27"></a>            <span class="k">lambda</span> <span class="n">prepared_task</span><span class="p">:</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">create_task</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_execute_task</span><span class="p">(</span><span class="n">prepared_task</span><span class="p">))</span>
+</span><span id="__span-2-28"><a href="#__codelineno-2-28" id="__codelineno-2-28" name="__codelineno-2-28"></a>        <span class="p">)</span>
+</span><span id="__span-2-29"><a href="#__codelineno-2-29" id="__codelineno-2-29" name="__codelineno-2-29"></a>
+</span><span id="__span-2-30"><a href="#__codelineno-2-30" id="__codelineno-2-30" name="__codelineno-2-30"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">stop_async</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="__span-2-31"><a href="#__codelineno-2-31" id="__codelineno-2-31" name="__codelineno-2-31"></a><span class="w">        </span><span class="sd">"""Stop reactive background processing"""</span>
+</span><span id="__span-2-32"><a href="#__codelineno-2-32" id="__codelineno-2-32" name="__codelineno-2-32"></a>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">subscription</span><span class="p">:</span>
+</span><span id="__span-2-33"><a href="#__codelineno-2-33" id="__codelineno-2-33" name="__codelineno-2-33"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">subscription</span><span class="o">.</span><span class="n">dispose</span><span class="p">()</span>
+</span><span id="__span-2-34"><a href="#__codelineno-2-34" id="__codelineno-2-34" name="__codelineno-2-34"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">scheduler</span><span class="o">.</span><span class="n">shutdown</span><span class="p">(</span><span class="n">wait</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</span><span id="__span-2-35"><a href="#__codelineno-2-35" id="__codelineno-2-35" name="__codelineno-2-35"></a>        <span class="nb">print</span><span class="p">(</span><span class="s2">"⏹️ Stopped reactive background service"</span><span class="p">)</span>
+</span><span id="__span-2-36"><a href="#__codelineno-2-36" id="__codelineno-2-36" name="__codelineno-2-36"></a>
+</span><span id="__span-2-37"><a href="#__codelineno-2-37" id="__codelineno-2-37" name="__codelineno-2-37"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">schedule_task</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">task_descriptor</span><span class="p">:</span> <span class="s1">'TaskDescriptor'</span><span class="p">):</span>
+</span><span id="__span-2-38"><a href="#__codelineno-2-38" id="__codelineno-2-38" name="__codelineno-2-38"></a><span class="w">        </span><span class="sd">"""Schedule task through reactive stream"""</span>
+</span><span id="__span-2-39"><a href="#__codelineno-2-39" id="__codelineno-2-39" name="__codelineno-2-39"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">task_request_stream</span><span class="o">.</span><span class="n">on_next</span><span class="p">(</span><span class="n">task_descriptor</span><span class="p">)</span>
+</span><span id="__span-2-40"><a href="#__codelineno-2-40" id="__codelineno-2-40" name="__codelineno-2-40"></a>
+</span><span id="__span-2-41"><a href="#__codelineno-2-41" id="__codelineno-2-41" name="__codelineno-2-41"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">_is_valid_task</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">task</span><span class="p">:</span> <span class="s1">'TaskDescriptor'</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+</span><span id="__span-2-42"><a href="#__codelineno-2-42" id="__codelineno-2-42" name="__codelineno-2-42"></a><span class="w">        </span><span class="sd">"""Validate task before processing"""</span>
+</span><span id="__span-2-43"><a href="#__codelineno-2-43" id="__codelineno-2-43" name="__codelineno-2-43"></a>        <span class="k">return</span> <span class="p">(</span>
+</span><span id="__span-2-44"><a href="#__codelineno-2-44" id="__codelineno-2-44" name="__codelineno-2-44"></a>            <span class="nb">hasattr</span><span class="p">(</span><span class="n">task</span><span class="p">,</span> <span class="s1">'id'</span><span class="p">)</span> <span class="ow">and</span> <span class="n">task</span><span class="o">.</span><span class="n">id</span> <span class="ow">and</span>
+</span><span id="__span-2-45"><a href="#__codelineno-2-45" id="__codelineno-2-45" name="__codelineno-2-45"></a>            <span class="nb">hasattr</span><span class="p">(</span><span class="n">task</span><span class="p">,</span> <span class="s1">'scheduled_time'</span><span class="p">)</span> <span class="ow">and</span> <span class="n">task</span><span class="o">.</span><span class="n">scheduled_time</span> <span class="ow">and</span>
+</span><span id="__span-2-46"><a href="#__codelineno-2-46" id="__codelineno-2-46" name="__codelineno-2-46"></a>            <span class="nb">hasattr</span><span class="p">(</span><span class="n">task</span><span class="p">,</span> <span class="s1">'task_type'</span><span class="p">)</span> <span class="ow">and</span> <span class="n">task</span><span class="o">.</span><span class="n">task_type</span>
+</span><span id="__span-2-47"><a href="#__codelineno-2-47" id="__codelineno-2-47" name="__codelineno-2-47"></a>        <span class="p">)</span>
+</span><span id="__span-2-48"><a href="#__codelineno-2-48" id="__codelineno-2-48" name="__codelineno-2-48"></a>
+</span><span id="__span-2-49"><a href="#__codelineno-2-49" id="__codelineno-2-49" name="__codelineno-2-49"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">_prepare_task_execution</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">task</span><span class="p">:</span> <span class="s1">'TaskDescriptor'</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+</span><span id="__span-2-50"><a href="#__codelineno-2-50" id="__codelineno-2-50" name="__codelineno-2-50"></a><span class="w">        </span><span class="sd">"""Prepare task for execution with reactive context"""</span>
+</span><span id="__span-2-51"><a href="#__codelineno-2-51" id="__codelineno-2-51" name="__codelineno-2-51"></a>        <span class="k">return</span> <span class="p">{</span>
+</span><span id="__span-2-52"><a href="#__codelineno-2-52" id="__codelineno-2-52" name="__codelineno-2-52"></a>            <span class="s1">'task'</span><span class="p">:</span> <span class="n">task</span><span class="p">,</span>
+</span><span id="__span-2-53"><a href="#__codelineno-2-53" id="__codelineno-2-53" name="__codelineno-2-53"></a>            <span class="s1">'preparation_time'</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(),</span>
+</span><span id="__span-2-54"><a href="#__codelineno-2-54" id="__codelineno-2-54" name="__codelineno-2-54"></a>            <span class="s1">'execution_context'</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_execution_context</span><span class="p">(</span><span class="n">task</span><span class="p">)</span>
+</span><span id="__span-2-55"><a href="#__codelineno-2-55" id="__codelineno-2-55" name="__codelineno-2-55"></a>        <span class="p">}</span>
+</span><span id="__span-2-56"><a href="#__codelineno-2-56" id="__codelineno-2-56" name="__codelineno-2-56"></a>
+</span><span id="__span-2-57"><a href="#__codelineno-2-57" id="__codelineno-2-57" name="__codelineno-2-57"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_execute_task</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prepared_task</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]):</span>
+</span><span id="__span-2-58"><a href="#__codelineno-2-58" id="__codelineno-2-58" name="__codelineno-2-58"></a><span class="w">        </span><span class="sd">"""Execute task and publish completion events"""</span>
+</span><span id="__span-2-59"><a href="#__codelineno-2-59" id="__codelineno-2-59" name="__codelineno-2-59"></a>        <span class="n">task</span> <span class="o">=</span> <span class="n">prepared_task</span><span class="p">[</span><span class="s1">'task'</span><span class="p">]</span>
+</span><span id="__span-2-60"><a href="#__codelineno-2-60" id="__codelineno-2-60" name="__codelineno-2-60"></a>
+</span><span id="__span-2-61"><a href="#__codelineno-2-61" id="__codelineno-2-61" name="__codelineno-2-61"></a>        <span class="k">try</span><span class="p">:</span>
+</span><span id="__span-2-62"><a href="#__codelineno-2-62" id="__codelineno-2-62" name="__codelineno-2-62"></a>            <span class="c1"># Execute the task</span>
+</span><span id="__span-2-63"><a href="#__codelineno-2-63" id="__codelineno-2-63" name="__codelineno-2-63"></a>            <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_run_task</span><span class="p">(</span><span class="n">task</span><span class="p">)</span>
+</span><span id="__span-2-64"><a href="#__codelineno-2-64" id="__codelineno-2-64" name="__codelineno-2-64"></a>
+</span><span id="__span-2-65"><a href="#__codelineno-2-65" id="__codelineno-2-65" name="__codelineno-2-65"></a>            <span class="c1"># Publish success event</span>
+</span><span id="__span-2-66"><a href="#__codelineno-2-66" id="__codelineno-2-66" name="__codelineno-2-66"></a>            <span class="n">completion_event</span> <span class="o">=</span> <span class="n">TaskCompletionEvent</span><span class="p">(</span>
+</span><span id="__span-2-67"><a href="#__codelineno-2-67" id="__codelineno-2-67" name="__codelineno-2-67"></a>                <span class="n">task_id</span><span class="o">=</span><span class="n">task</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+</span><span id="__span-2-68"><a href="#__codelineno-2-68" id="__codelineno-2-68" name="__codelineno-2-68"></a>                <span class="n">status</span><span class="o">=</span><span class="s1">'completed'</span><span class="p">,</span>
+</span><span id="__span-2-69"><a href="#__codelineno-2-69" id="__codelineno-2-69" name="__codelineno-2-69"></a>                <span class="n">result</span><span class="o">=</span><span class="n">result</span><span class="p">,</span>
+</span><span id="__span-2-70"><a href="#__codelineno-2-70" id="__codelineno-2-70" name="__codelineno-2-70"></a>                <span class="n">completed_at</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+</span><span id="__span-2-71"><a href="#__codelineno-2-71" id="__codelineno-2-71" name="__codelineno-2-71"></a>            <span class="p">)</span>
+</span><span id="__span-2-72"><a href="#__codelineno-2-72" id="__codelineno-2-72" name="__codelineno-2-72"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">task_completion_stream</span><span class="o">.</span><span class="n">on_next</span><span class="p">(</span><span class="n">completion_event</span><span class="p">)</span>
+</span><span id="__span-2-73"><a href="#__codelineno-2-73" id="__codelineno-2-73" name="__codelineno-2-73"></a>
+</span><span id="__span-2-74"><a href="#__codelineno-2-74" id="__codelineno-2-74" name="__codelineno-2-74"></a>        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">ex</span><span class="p">:</span>
+</span><span id="__span-2-75"><a href="#__codelineno-2-75" id="__codelineno-2-75" name="__codelineno-2-75"></a>            <span class="c1"># Publish failure event</span>
+</span><span id="__span-2-76"><a href="#__codelineno-2-76" id="__codelineno-2-76" name="__codelineno-2-76"></a>            <span class="n">failure_event</span> <span class="o">=</span> <span class="n">TaskCompletionEvent</span><span class="p">(</span>
+</span><span id="__span-2-77"><a href="#__codelineno-2-77" id="__codelineno-2-77" name="__codelineno-2-77"></a>                <span class="n">task_id</span><span class="o">=</span><span class="n">task</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+</span><span id="__span-2-78"><a href="#__codelineno-2-78" id="__codelineno-2-78" name="__codelineno-2-78"></a>                <span class="n">status</span><span class="o">=</span><span class="s1">'failed'</span><span class="p">,</span>
+</span><span id="__span-2-79"><a href="#__codelineno-2-79" id="__codelineno-2-79" name="__codelineno-2-79"></a>                <span class="n">error</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">ex</span><span class="p">),</span>
+</span><span id="__span-2-80"><a href="#__codelineno-2-80" id="__codelineno-2-80" name="__codelineno-2-80"></a>                <span class="n">completed_at</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+</span><span id="__span-2-81"><a href="#__codelineno-2-81" id="__codelineno-2-81" name="__codelineno-2-81"></a>            <span class="p">)</span>
+</span><span id="__span-2-82"><a href="#__codelineno-2-82" id="__codelineno-2-82" name="__codelineno-2-82"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">task_completion_stream</span><span class="o">.</span><span class="n">on_next</span><span class="p">(</span><span class="n">failure_event</span><span class="p">)</span>
+</span></code></pre></div>
 <h2 id="stream-processing-patterns">🌊 Stream Processing Patterns<a class="headerlink" href="#stream-processing-patterns" title="Permanent link">¶</a></h2>
 <h3 id="event-aggregation-pattern">Event Aggregation Pattern<a class="headerlink" href="#event-aggregation-pattern" title="Permanent link">¶</a></h3>
-<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">EventAggregationPattern</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""Pattern for aggregating events in reactive streams"""</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">source_events</span> <span class="o">=</span> <span class="n">Subject</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">aggregated_events</span> <span class="o">=</span> <span class="n">Subject</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_setup_aggregation_pipeline</span><span class="p">()</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">_setup_aggregation_pipeline</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">"""Setup event aggregation with multiple aggregation strategies"""</span>
-
-        <span class="c1"># Time-based aggregation (5-second windows)</span>
-        <span class="n">time_aggregated</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">source_events</span><span class="o">.</span><span class="n">pipe</span><span class="p">(</span>
-            <span class="n">ops</span><span class="o">.</span><span class="n">buffer_with_time</span><span class="p">(</span><span class="n">timespan</span><span class="o">=</span><span class="mf">5.0</span><span class="p">),</span>
-            <span class="n">ops</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">events</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">events</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">),</span>
-            <span class="n">ops</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">events</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_time_aggregate</span><span class="p">(</span><span class="n">events</span><span class="p">))</span>
-        <span class="p">)</span>
-
-        <span class="c1"># Count-based aggregation (every 10 events)</span>
-        <span class="n">count_aggregated</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">source_events</span><span class="o">.</span><span class="n">pipe</span><span class="p">(</span>
-            <span class="n">ops</span><span class="o">.</span><span class="n">buffer_with_count</span><span class="p">(</span><span class="mi">10</span><span class="p">),</span>
-            <span class="n">ops</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">events</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_count_aggregate</span><span class="p">(</span><span class="n">events</span><span class="p">))</span>
-        <span class="p">)</span>
-
-        <span class="c1"># Combine aggregation strategies</span>
-        <span class="n">combined_aggregated</span> <span class="o">=</span> <span class="n">time_aggregated</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">count_aggregated</span><span class="p">)</span>
-
-        <span class="c1"># Subscribe to combined stream</span>
-        <span class="n">AsyncRx</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span>
-            <span class="n">combined_aggregated</span><span class="p">,</span>
-            <span class="k">lambda</span> <span class="n">aggregate</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">aggregated_events</span><span class="o">.</span><span class="n">on_next</span><span class="p">(</span><span class="n">aggregate</span><span class="p">)</span>
-        <span class="p">)</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">_create_time_aggregate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">events</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">DomainEvent</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">"""Create time-based event aggregate"""</span>
-        <span class="k">return</span> <span class="p">{</span>
-            <span class="s1">'type'</span><span class="p">:</span> <span class="s1">'time_aggregate'</span><span class="p">,</span>
-            <span class="s1">'event_count'</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">events</span><span class="p">),</span>
-            <span class="s1">'events'</span><span class="p">:</span> <span class="n">events</span><span class="p">,</span>
-            <span class="s1">'time_window'</span><span class="p">:</span> <span class="mf">5.0</span><span class="p">,</span>
-            <span class="s1">'aggregate_timestamp'</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
-        <span class="p">}</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">_create_count_aggregate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">events</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">DomainEvent</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">"""Create count-based event aggregate"""</span>
-        <span class="k">return</span> <span class="p">{</span>
-            <span class="s1">'type'</span><span class="p">:</span> <span class="s1">'count_aggregate'</span><span class="p">,</span>
-            <span class="s1">'event_count'</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">events</span><span class="p">),</span>
-            <span class="s1">'events'</span><span class="p">:</span> <span class="n">events</span><span class="p">,</span>
-            <span class="s1">'count_threshold'</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
-            <span class="s1">'aggregate_timestamp'</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
-        <span class="p">}</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a href="#__codelineno-3-1" id="__codelineno-3-1" name="__codelineno-3-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">EventAggregationPattern</span><span class="p">:</span>
+</span><span id="__span-3-2"><a href="#__codelineno-3-2" id="__codelineno-3-2" name="__codelineno-3-2"></a><span class="w">    </span><span class="sd">"""Pattern for aggregating events in reactive streams"""</span>
+</span><span id="__span-3-3"><a href="#__codelineno-3-3" id="__codelineno-3-3" name="__codelineno-3-3"></a>
+</span><span id="__span-3-4"><a href="#__codelineno-3-4" id="__codelineno-3-4" name="__codelineno-3-4"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="__span-3-5"><a href="#__codelineno-3-5" id="__codelineno-3-5" name="__codelineno-3-5"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">source_events</span> <span class="o">=</span> <span class="n">Subject</span><span class="p">()</span>
+</span><span id="__span-3-6"><a href="#__codelineno-3-6" id="__codelineno-3-6" name="__codelineno-3-6"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">aggregated_events</span> <span class="o">=</span> <span class="n">Subject</span><span class="p">()</span>
+</span><span id="__span-3-7"><a href="#__codelineno-3-7" id="__codelineno-3-7" name="__codelineno-3-7"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_setup_aggregation_pipeline</span><span class="p">()</span>
+</span><span id="__span-3-8"><a href="#__codelineno-3-8" id="__codelineno-3-8" name="__codelineno-3-8"></a>
+</span><span id="__span-3-9"><a href="#__codelineno-3-9" id="__codelineno-3-9" name="__codelineno-3-9"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">_setup_aggregation_pipeline</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="__span-3-10"><a href="#__codelineno-3-10" id="__codelineno-3-10" name="__codelineno-3-10"></a><span class="w">        </span><span class="sd">"""Setup event aggregation with multiple aggregation strategies"""</span>
+</span><span id="__span-3-11"><a href="#__codelineno-3-11" id="__codelineno-3-11" name="__codelineno-3-11"></a>
+</span><span id="__span-3-12"><a href="#__codelineno-3-12" id="__codelineno-3-12" name="__codelineno-3-12"></a>        <span class="c1"># Time-based aggregation (5-second windows)</span>
+</span><span id="__span-3-13"><a href="#__codelineno-3-13" id="__codelineno-3-13" name="__codelineno-3-13"></a>        <span class="n">time_aggregated</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">source_events</span><span class="o">.</span><span class="n">pipe</span><span class="p">(</span>
+</span><span id="__span-3-14"><a href="#__codelineno-3-14" id="__codelineno-3-14" name="__codelineno-3-14"></a>            <span class="n">ops</span><span class="o">.</span><span class="n">buffer_with_time</span><span class="p">(</span><span class="n">timespan</span><span class="o">=</span><span class="mf">5.0</span><span class="p">),</span>
+</span><span id="__span-3-15"><a href="#__codelineno-3-15" id="__codelineno-3-15" name="__codelineno-3-15"></a>            <span class="n">ops</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">events</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">events</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">),</span>
+</span><span id="__span-3-16"><a href="#__codelineno-3-16" id="__codelineno-3-16" name="__codelineno-3-16"></a>            <span class="n">ops</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">events</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_time_aggregate</span><span class="p">(</span><span class="n">events</span><span class="p">))</span>
+</span><span id="__span-3-17"><a href="#__codelineno-3-17" id="__codelineno-3-17" name="__codelineno-3-17"></a>        <span class="p">)</span>
+</span><span id="__span-3-18"><a href="#__codelineno-3-18" id="__codelineno-3-18" name="__codelineno-3-18"></a>
+</span><span id="__span-3-19"><a href="#__codelineno-3-19" id="__codelineno-3-19" name="__codelineno-3-19"></a>        <span class="c1"># Count-based aggregation (every 10 events)</span>
+</span><span id="__span-3-20"><a href="#__codelineno-3-20" id="__codelineno-3-20" name="__codelineno-3-20"></a>        <span class="n">count_aggregated</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">source_events</span><span class="o">.</span><span class="n">pipe</span><span class="p">(</span>
+</span><span id="__span-3-21"><a href="#__codelineno-3-21" id="__codelineno-3-21" name="__codelineno-3-21"></a>            <span class="n">ops</span><span class="o">.</span><span class="n">buffer_with_count</span><span class="p">(</span><span class="mi">10</span><span class="p">),</span>
+</span><span id="__span-3-22"><a href="#__codelineno-3-22" id="__codelineno-3-22" name="__codelineno-3-22"></a>            <span class="n">ops</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">events</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_count_aggregate</span><span class="p">(</span><span class="n">events</span><span class="p">))</span>
+</span><span id="__span-3-23"><a href="#__codelineno-3-23" id="__codelineno-3-23" name="__codelineno-3-23"></a>        <span class="p">)</span>
+</span><span id="__span-3-24"><a href="#__codelineno-3-24" id="__codelineno-3-24" name="__codelineno-3-24"></a>
+</span><span id="__span-3-25"><a href="#__codelineno-3-25" id="__codelineno-3-25" name="__codelineno-3-25"></a>        <span class="c1"># Combine aggregation strategies</span>
+</span><span id="__span-3-26"><a href="#__codelineno-3-26" id="__codelineno-3-26" name="__codelineno-3-26"></a>        <span class="n">combined_aggregated</span> <span class="o">=</span> <span class="n">time_aggregated</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">count_aggregated</span><span class="p">)</span>
+</span><span id="__span-3-27"><a href="#__codelineno-3-27" id="__codelineno-3-27" name="__codelineno-3-27"></a>
+</span><span id="__span-3-28"><a href="#__codelineno-3-28" id="__codelineno-3-28" name="__codelineno-3-28"></a>        <span class="c1"># Subscribe to combined stream</span>
+</span><span id="__span-3-29"><a href="#__codelineno-3-29" id="__codelineno-3-29" name="__codelineno-3-29"></a>        <span class="n">AsyncRx</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span>
+</span><span id="__span-3-30"><a href="#__codelineno-3-30" id="__codelineno-3-30" name="__codelineno-3-30"></a>            <span class="n">combined_aggregated</span><span class="p">,</span>
+</span><span id="__span-3-31"><a href="#__codelineno-3-31" id="__codelineno-3-31" name="__codelineno-3-31"></a>            <span class="k">lambda</span> <span class="n">aggregate</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">aggregated_events</span><span class="o">.</span><span class="n">on_next</span><span class="p">(</span><span class="n">aggregate</span><span class="p">)</span>
+</span><span id="__span-3-32"><a href="#__codelineno-3-32" id="__codelineno-3-32" name="__codelineno-3-32"></a>        <span class="p">)</span>
+</span><span id="__span-3-33"><a href="#__codelineno-3-33" id="__codelineno-3-33" name="__codelineno-3-33"></a>
+</span><span id="__span-3-34"><a href="#__codelineno-3-34" id="__codelineno-3-34" name="__codelineno-3-34"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">_create_time_aggregate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">events</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">DomainEvent</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+</span><span id="__span-3-35"><a href="#__codelineno-3-35" id="__codelineno-3-35" name="__codelineno-3-35"></a><span class="w">        </span><span class="sd">"""Create time-based event aggregate"""</span>
+</span><span id="__span-3-36"><a href="#__codelineno-3-36" id="__codelineno-3-36" name="__codelineno-3-36"></a>        <span class="k">return</span> <span class="p">{</span>
+</span><span id="__span-3-37"><a href="#__codelineno-3-37" id="__codelineno-3-37" name="__codelineno-3-37"></a>            <span class="s1">'type'</span><span class="p">:</span> <span class="s1">'time_aggregate'</span><span class="p">,</span>
+</span><span id="__span-3-38"><a href="#__codelineno-3-38" id="__codelineno-3-38" name="__codelineno-3-38"></a>            <span class="s1">'event_count'</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">events</span><span class="p">),</span>
+</span><span id="__span-3-39"><a href="#__codelineno-3-39" id="__codelineno-3-39" name="__codelineno-3-39"></a>            <span class="s1">'events'</span><span class="p">:</span> <span class="n">events</span><span class="p">,</span>
+</span><span id="__span-3-40"><a href="#__codelineno-3-40" id="__codelineno-3-40" name="__codelineno-3-40"></a>            <span class="s1">'time_window'</span><span class="p">:</span> <span class="mf">5.0</span><span class="p">,</span>
+</span><span id="__span-3-41"><a href="#__codelineno-3-41" id="__codelineno-3-41" name="__codelineno-3-41"></a>            <span class="s1">'aggregate_timestamp'</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+</span><span id="__span-3-42"><a href="#__codelineno-3-42" id="__codelineno-3-42" name="__codelineno-3-42"></a>        <span class="p">}</span>
+</span><span id="__span-3-43"><a href="#__codelineno-3-43" id="__codelineno-3-43" name="__codelineno-3-43"></a>
+</span><span id="__span-3-44"><a href="#__codelineno-3-44" id="__codelineno-3-44" name="__codelineno-3-44"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">_create_count_aggregate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">events</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">DomainEvent</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+</span><span id="__span-3-45"><a href="#__codelineno-3-45" id="__codelineno-3-45" name="__codelineno-3-45"></a><span class="w">        </span><span class="sd">"""Create count-based event aggregate"""</span>
+</span><span id="__span-3-46"><a href="#__codelineno-3-46" id="__codelineno-3-46" name="__codelineno-3-46"></a>        <span class="k">return</span> <span class="p">{</span>
+</span><span id="__span-3-47"><a href="#__codelineno-3-47" id="__codelineno-3-47" name="__codelineno-3-47"></a>            <span class="s1">'type'</span><span class="p">:</span> <span class="s1">'count_aggregate'</span><span class="p">,</span>
+</span><span id="__span-3-48"><a href="#__codelineno-3-48" id="__codelineno-3-48" name="__codelineno-3-48"></a>            <span class="s1">'event_count'</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">events</span><span class="p">),</span>
+</span><span id="__span-3-49"><a href="#__codelineno-3-49" id="__codelineno-3-49" name="__codelineno-3-49"></a>            <span class="s1">'events'</span><span class="p">:</span> <span class="n">events</span><span class="p">,</span>
+</span><span id="__span-3-50"><a href="#__codelineno-3-50" id="__codelineno-3-50" name="__codelineno-3-50"></a>            <span class="s1">'count_threshold'</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+</span><span id="__span-3-51"><a href="#__codelineno-3-51" id="__codelineno-3-51" name="__codelineno-3-51"></a>            <span class="s1">'aggregate_timestamp'</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+</span><span id="__span-3-52"><a href="#__codelineno-3-52" id="__codelineno-3-52" name="__codelineno-3-52"></a>        <span class="p">}</span>
+</span></code></pre></div>
 <h2 id="testing-patterns">🧪 Testing Patterns<a class="headerlink" href="#testing-patterns" title="Permanent link">¶</a></h2>
 <h3 id="reactive-component-testing">Reactive Component Testing<a class="headerlink" href="#reactive-component-testing" title="Permanent link">¶</a></h3>
-<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">unittest.mock</span><span class="w"> </span><span class="kn">import</span> <span class="n">Mock</span><span class="p">,</span> <span class="n">AsyncMock</span>
-
-<span class="k">class</span><span class="w"> </span><span class="nc">TestReactiveEventProcessor</span><span class="p">:</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">setup_method</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">processor</span> <span class="o">=</span> <span class="n">ReactiveEventProcessor</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">test_events</span> <span class="o">=</span> <span class="p">[]</span>
-
-        <span class="c1"># Mock external dependencies</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">processor</span><span class="o">.</span><span class="n">_batch_update_order_dashboard</span> <span class="o">=</span> <span class="n">AsyncMock</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">processor</span><span class="o">.</span><span class="n">_update_kitchen_workflow</span> <span class="o">=</span> <span class="n">AsyncMock</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">processor</span><span class="o">.</span><span class="n">_send_customer_notification</span> <span class="o">=</span> <span class="n">AsyncMock</span><span class="p">()</span>
-
-    <span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">asyncio</span>
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">test_order_status_event_triggers_processing</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">"""Test order status events trigger reactive processing"""</span>
-        <span class="c1"># Arrange</span>
-        <span class="n">event</span> <span class="o">=</span> <span class="n">OrderStatusChangedEvent</span><span class="p">(</span>
-            <span class="n">order_id</span><span class="o">=</span><span class="s2">"TEST-001"</span><span class="p">,</span>
-            <span class="n">previous_status</span><span class="o">=</span><span class="n">OrderStatus</span><span class="o">.</span><span class="n">PLACED</span><span class="p">,</span>
-            <span class="n">new_status</span><span class="o">=</span><span class="n">OrderStatus</span><span class="o">.</span><span class="n">CONFIRMED</span><span class="p">,</span>
-            <span class="n">timestamp</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(),</span>
-            <span class="n">estimated_completion</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
-        <span class="p">)</span>
-
-        <span class="c1"># Act</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">processor</span><span class="o">.</span><span class="n">publish_order_status_change</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
-        <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span>  <span class="c1"># Allow reactive processing</span>
-
-        <span class="c1"># Assert - Verify reactive pipeline was triggered</span>
-        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">processor</span><span class="o">.</span><span class="n">subscriptions</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span>
-
-    <span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">asyncio</span>
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">test_kitchen_capacity_stream_throttling</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">"""Test kitchen capacity updates are properly throttled"""</span>
-        <span class="c1"># Arrange</span>
-        <span class="n">events</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="n">KitchenCapacityEvent</span><span class="p">(</span><span class="n">available_ovens</span><span class="o">=</span><span class="n">i</span><span class="p">,</span> <span class="n">current_orders</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">estimated_wait_minutes</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
-            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
-        <span class="p">]</span>
-
-        <span class="c1"># Act - Rapid fire events</span>
-        <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">events</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">processor</span><span class="o">.</span><span class="n">publish_kitchen_capacity_update</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
-            <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span>
-
-        <span class="c1"># Assert - Should be throttled (fewer calls than events)</span>
-        <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">1.0</span><span class="p">)</span>  <span class="c1"># Wait for throttling window</span>
-
-        <span class="c1"># Verify throttling behavior through dashboard update calls</span>
-        <span class="n">call_count</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">processor</span><span class="o">.</span><span class="n">_update_capacity_dashboard</span><span class="o">.</span><span class="n">call_count</span>
-        <span class="k">assert</span> <span class="n">call_count</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">events</span><span class="p">)</span>  <span class="c1"># Should be throttled</span>
-
-    <span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">asyncio</span>
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">test_subscription_cleanup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">"""Test proper cleanup of reactive subscriptions"""</span>
-        <span class="c1"># Arrange</span>
-        <span class="n">initial_subscription_count</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">processor</span><span class="o">.</span><span class="n">subscriptions</span><span class="p">)</span>
-
-        <span class="c1"># Act</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">processor</span><span class="o">.</span><span class="n">dispose</span><span class="p">()</span>
-
-        <span class="c1"># Assert</span>
-        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">processor</span><span class="o">.</span><span class="n">subscriptions</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">teardown_method</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">"""Cleanup test resources"""</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">processor</span><span class="o">.</span><span class="n">dispose</span><span class="p">()</span>
-
-<span class="k">class</span><span class="w"> </span><span class="nc">TestStreamTransformationPatterns</span><span class="p">:</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">setup_method</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">source_stream</span> <span class="o">=</span> <span class="n">Subject</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">received_items</span> <span class="o">=</span> <span class="p">[]</span>
-
-    <span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">asyncio</span>
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">test_filtering_pipeline</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">"""Test stream filtering patterns"""</span>
-        <span class="c1"># Arrange</span>
-        <span class="k">def</span><span class="w"> </span><span class="nf">is_even</span><span class="p">(</span><span class="n">x</span><span class="p">):</span> <span class="k">return</span> <span class="n">x</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span>
-
-        <span class="n">filtered_stream</span><span class="p">,</span> <span class="n">subscription</span> <span class="o">=</span> <span class="n">StreamTransformationPatterns</span><span class="o">.</span><span class="n">create_filtering_pipeline</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">source_stream</span><span class="p">,</span> <span class="n">is_even</span>
-        <span class="p">)</span>
-
-        <span class="c1"># Subscribe to results</span>
-        <span class="n">AsyncRx</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span><span class="n">filtered_stream</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">item</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">received_items</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="p">))</span>
-
-        <span class="c1"># Act</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">source_stream</span><span class="o">.</span><span class="n">on_next</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
-
-        <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span>
-
-        <span class="c1"># Assert</span>
-        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">received_items</span> <span class="o">==</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">8</span><span class="p">]</span>
-
-        <span class="c1"># Cleanup</span>
-        <span class="n">subscription</span><span class="o">.</span><span class="n">dispose</span><span class="p">()</span>
-
-    <span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">asyncio</span>
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">test_transformation_pipeline</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">"""Test stream transformation patterns"""</span>
-        <span class="c1"># Arrange</span>
-        <span class="k">def</span><span class="w"> </span><span class="nf">double</span><span class="p">(</span><span class="n">x</span><span class="p">):</span> <span class="k">return</span> <span class="n">x</span> <span class="o">*</span> <span class="mi">2</span>
-
-        <span class="n">transformed_stream</span><span class="p">,</span> <span class="n">subscription</span> <span class="o">=</span> <span class="n">StreamTransformationPatterns</span><span class="o">.</span><span class="n">create_transformation_pipeline</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">source_stream</span><span class="p">,</span> <span class="n">double</span>
-        <span class="p">)</span>
-
-        <span class="c1"># Subscribe to results</span>
-        <span class="n">AsyncRx</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span><span class="n">transformed_stream</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">item</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">received_items</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="p">))</span>
-
-        <span class="c1"># Act</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">source_stream</span><span class="o">.</span><span class="n">on_next</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">source_stream</span><span class="o">.</span><span class="n">on_next</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
-
-        <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span>
-
-        <span class="c1"># Assert</span>
-        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">received_items</span> <span class="o">==</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">]</span>
-
-        <span class="c1"># Cleanup</span>
-        <span class="n">subscription</span><span class="o">.</span><span class="n">dispose</span><span class="p">()</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">teardown_method</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">"""Cleanup test streams"""</span>
-        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">'source_stream'</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">source_stream</span><span class="o">.</span><span class="n">dispose</span><span class="p">()</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a href="#__codelineno-4-1" id="__codelineno-4-1" name="__codelineno-4-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
+</span><span id="__span-4-2"><a href="#__codelineno-4-2" id="__codelineno-4-2" name="__codelineno-4-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">unittest.mock</span><span class="w"> </span><span class="kn">import</span> <span class="n">Mock</span><span class="p">,</span> <span class="n">AsyncMock</span>
+</span><span id="__span-4-3"><a href="#__codelineno-4-3" id="__codelineno-4-3" name="__codelineno-4-3"></a>
+</span><span id="__span-4-4"><a href="#__codelineno-4-4" id="__codelineno-4-4" name="__codelineno-4-4"></a><span class="k">class</span><span class="w"> </span><span class="nc">TestReactiveEventProcessor</span><span class="p">:</span>
+</span><span id="__span-4-5"><a href="#__codelineno-4-5" id="__codelineno-4-5" name="__codelineno-4-5"></a>
+</span><span id="__span-4-6"><a href="#__codelineno-4-6" id="__codelineno-4-6" name="__codelineno-4-6"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">setup_method</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="__span-4-7"><a href="#__codelineno-4-7" id="__codelineno-4-7" name="__codelineno-4-7"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">processor</span> <span class="o">=</span> <span class="n">ReactiveEventProcessor</span><span class="p">()</span>
+</span><span id="__span-4-8"><a href="#__codelineno-4-8" id="__codelineno-4-8" name="__codelineno-4-8"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">test_events</span> <span class="o">=</span> <span class="p">[]</span>
+</span><span id="__span-4-9"><a href="#__codelineno-4-9" id="__codelineno-4-9" name="__codelineno-4-9"></a>
+</span><span id="__span-4-10"><a href="#__codelineno-4-10" id="__codelineno-4-10" name="__codelineno-4-10"></a>        <span class="c1"># Mock external dependencies</span>
+</span><span id="__span-4-11"><a href="#__codelineno-4-11" id="__codelineno-4-11" name="__codelineno-4-11"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">processor</span><span class="o">.</span><span class="n">_batch_update_order_dashboard</span> <span class="o">=</span> <span class="n">AsyncMock</span><span class="p">()</span>
+</span><span id="__span-4-12"><a href="#__codelineno-4-12" id="__codelineno-4-12" name="__codelineno-4-12"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">processor</span><span class="o">.</span><span class="n">_update_kitchen_workflow</span> <span class="o">=</span> <span class="n">AsyncMock</span><span class="p">()</span>
+</span><span id="__span-4-13"><a href="#__codelineno-4-13" id="__codelineno-4-13" name="__codelineno-4-13"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">processor</span><span class="o">.</span><span class="n">_send_customer_notification</span> <span class="o">=</span> <span class="n">AsyncMock</span><span class="p">()</span>
+</span><span id="__span-4-14"><a href="#__codelineno-4-14" id="__codelineno-4-14" name="__codelineno-4-14"></a>
+</span><span id="__span-4-15"><a href="#__codelineno-4-15" id="__codelineno-4-15" name="__codelineno-4-15"></a>    <span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">asyncio</span>
+</span><span id="__span-4-16"><a href="#__codelineno-4-16" id="__codelineno-4-16" name="__codelineno-4-16"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">test_order_status_event_triggers_processing</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="__span-4-17"><a href="#__codelineno-4-17" id="__codelineno-4-17" name="__codelineno-4-17"></a><span class="w">        </span><span class="sd">"""Test order status events trigger reactive processing"""</span>
+</span><span id="__span-4-18"><a href="#__codelineno-4-18" id="__codelineno-4-18" name="__codelineno-4-18"></a>        <span class="c1"># Arrange</span>
+</span><span id="__span-4-19"><a href="#__codelineno-4-19" id="__codelineno-4-19" name="__codelineno-4-19"></a>        <span class="n">event</span> <span class="o">=</span> <span class="n">OrderStatusChangedEvent</span><span class="p">(</span>
+</span><span id="__span-4-20"><a href="#__codelineno-4-20" id="__codelineno-4-20" name="__codelineno-4-20"></a>            <span class="n">order_id</span><span class="o">=</span><span class="s2">"TEST-001"</span><span class="p">,</span>
+</span><span id="__span-4-21"><a href="#__codelineno-4-21" id="__codelineno-4-21" name="__codelineno-4-21"></a>            <span class="n">previous_status</span><span class="o">=</span><span class="n">OrderStatus</span><span class="o">.</span><span class="n">PLACED</span><span class="p">,</span>
+</span><span id="__span-4-22"><a href="#__codelineno-4-22" id="__codelineno-4-22" name="__codelineno-4-22"></a>            <span class="n">new_status</span><span class="o">=</span><span class="n">OrderStatus</span><span class="o">.</span><span class="n">CONFIRMED</span><span class="p">,</span>
+</span><span id="__span-4-23"><a href="#__codelineno-4-23" id="__codelineno-4-23" name="__codelineno-4-23"></a>            <span class="n">timestamp</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(),</span>
+</span><span id="__span-4-24"><a href="#__codelineno-4-24" id="__codelineno-4-24" name="__codelineno-4-24"></a>            <span class="n">estimated_completion</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+</span><span id="__span-4-25"><a href="#__codelineno-4-25" id="__codelineno-4-25" name="__codelineno-4-25"></a>        <span class="p">)</span>
+</span><span id="__span-4-26"><a href="#__codelineno-4-26" id="__codelineno-4-26" name="__codelineno-4-26"></a>
+</span><span id="__span-4-27"><a href="#__codelineno-4-27" id="__codelineno-4-27" name="__codelineno-4-27"></a>        <span class="c1"># Act</span>
+</span><span id="__span-4-28"><a href="#__codelineno-4-28" id="__codelineno-4-28" name="__codelineno-4-28"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">processor</span><span class="o">.</span><span class="n">publish_order_status_change</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+</span><span id="__span-4-29"><a href="#__codelineno-4-29" id="__codelineno-4-29" name="__codelineno-4-29"></a>        <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span>  <span class="c1"># Allow reactive processing</span>
+</span><span id="__span-4-30"><a href="#__codelineno-4-30" id="__codelineno-4-30" name="__codelineno-4-30"></a>
+</span><span id="__span-4-31"><a href="#__codelineno-4-31" id="__codelineno-4-31" name="__codelineno-4-31"></a>        <span class="c1"># Assert - Verify reactive pipeline was triggered</span>
+</span><span id="__span-4-32"><a href="#__codelineno-4-32" id="__codelineno-4-32" name="__codelineno-4-32"></a>        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">processor</span><span class="o">.</span><span class="n">subscriptions</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span>
+</span><span id="__span-4-33"><a href="#__codelineno-4-33" id="__codelineno-4-33" name="__codelineno-4-33"></a>
+</span><span id="__span-4-34"><a href="#__codelineno-4-34" id="__codelineno-4-34" name="__codelineno-4-34"></a>    <span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">asyncio</span>
+</span><span id="__span-4-35"><a href="#__codelineno-4-35" id="__codelineno-4-35" name="__codelineno-4-35"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">test_kitchen_capacity_stream_throttling</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="__span-4-36"><a href="#__codelineno-4-36" id="__codelineno-4-36" name="__codelineno-4-36"></a><span class="w">        </span><span class="sd">"""Test kitchen capacity updates are properly throttled"""</span>
+</span><span id="__span-4-37"><a href="#__codelineno-4-37" id="__codelineno-4-37" name="__codelineno-4-37"></a>        <span class="c1"># Arrange</span>
+</span><span id="__span-4-38"><a href="#__codelineno-4-38" id="__codelineno-4-38" name="__codelineno-4-38"></a>        <span class="n">events</span> <span class="o">=</span> <span class="p">[</span>
+</span><span id="__span-4-39"><a href="#__codelineno-4-39" id="__codelineno-4-39" name="__codelineno-4-39"></a>            <span class="n">KitchenCapacityEvent</span><span class="p">(</span><span class="n">available_ovens</span><span class="o">=</span><span class="n">i</span><span class="p">,</span> <span class="n">current_orders</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">estimated_wait_minutes</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+</span><span id="__span-4-40"><a href="#__codelineno-4-40" id="__codelineno-4-40" name="__codelineno-4-40"></a>            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+</span><span id="__span-4-41"><a href="#__codelineno-4-41" id="__codelineno-4-41" name="__codelineno-4-41"></a>        <span class="p">]</span>
+</span><span id="__span-4-42"><a href="#__codelineno-4-42" id="__codelineno-4-42" name="__codelineno-4-42"></a>
+</span><span id="__span-4-43"><a href="#__codelineno-4-43" id="__codelineno-4-43" name="__codelineno-4-43"></a>        <span class="c1"># Act - Rapid fire events</span>
+</span><span id="__span-4-44"><a href="#__codelineno-4-44" id="__codelineno-4-44" name="__codelineno-4-44"></a>        <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">events</span><span class="p">:</span>
+</span><span id="__span-4-45"><a href="#__codelineno-4-45" id="__codelineno-4-45" name="__codelineno-4-45"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">processor</span><span class="o">.</span><span class="n">publish_kitchen_capacity_update</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+</span><span id="__span-4-46"><a href="#__codelineno-4-46" id="__codelineno-4-46" name="__codelineno-4-46"></a>            <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span>
+</span><span id="__span-4-47"><a href="#__codelineno-4-47" id="__codelineno-4-47" name="__codelineno-4-47"></a>
+</span><span id="__span-4-48"><a href="#__codelineno-4-48" id="__codelineno-4-48" name="__codelineno-4-48"></a>        <span class="c1"># Assert - Should be throttled (fewer calls than events)</span>
+</span><span id="__span-4-49"><a href="#__codelineno-4-49" id="__codelineno-4-49" name="__codelineno-4-49"></a>        <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">1.0</span><span class="p">)</span>  <span class="c1"># Wait for throttling window</span>
+</span><span id="__span-4-50"><a href="#__codelineno-4-50" id="__codelineno-4-50" name="__codelineno-4-50"></a>
+</span><span id="__span-4-51"><a href="#__codelineno-4-51" id="__codelineno-4-51" name="__codelineno-4-51"></a>        <span class="c1"># Verify throttling behavior through dashboard update calls</span>
+</span><span id="__span-4-52"><a href="#__codelineno-4-52" id="__codelineno-4-52" name="__codelineno-4-52"></a>        <span class="n">call_count</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">processor</span><span class="o">.</span><span class="n">_update_capacity_dashboard</span><span class="o">.</span><span class="n">call_count</span>
+</span><span id="__span-4-53"><a href="#__codelineno-4-53" id="__codelineno-4-53" name="__codelineno-4-53"></a>        <span class="k">assert</span> <span class="n">call_count</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">events</span><span class="p">)</span>  <span class="c1"># Should be throttled</span>
+</span><span id="__span-4-54"><a href="#__codelineno-4-54" id="__codelineno-4-54" name="__codelineno-4-54"></a>
+</span><span id="__span-4-55"><a href="#__codelineno-4-55" id="__codelineno-4-55" name="__codelineno-4-55"></a>    <span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">asyncio</span>
+</span><span id="__span-4-56"><a href="#__codelineno-4-56" id="__codelineno-4-56" name="__codelineno-4-56"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">test_subscription_cleanup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="__span-4-57"><a href="#__codelineno-4-57" id="__codelineno-4-57" name="__codelineno-4-57"></a><span class="w">        </span><span class="sd">"""Test proper cleanup of reactive subscriptions"""</span>
+</span><span id="__span-4-58"><a href="#__codelineno-4-58" id="__codelineno-4-58" name="__codelineno-4-58"></a>        <span class="c1"># Arrange</span>
+</span><span id="__span-4-59"><a href="#__codelineno-4-59" id="__codelineno-4-59" name="__codelineno-4-59"></a>        <span class="n">initial_subscription_count</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">processor</span><span class="o">.</span><span class="n">subscriptions</span><span class="p">)</span>
+</span><span id="__span-4-60"><a href="#__codelineno-4-60" id="__codelineno-4-60" name="__codelineno-4-60"></a>
+</span><span id="__span-4-61"><a href="#__codelineno-4-61" id="__codelineno-4-61" name="__codelineno-4-61"></a>        <span class="c1"># Act</span>
+</span><span id="__span-4-62"><a href="#__codelineno-4-62" id="__codelineno-4-62" name="__codelineno-4-62"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">processor</span><span class="o">.</span><span class="n">dispose</span><span class="p">()</span>
+</span><span id="__span-4-63"><a href="#__codelineno-4-63" id="__codelineno-4-63" name="__codelineno-4-63"></a>
+</span><span id="__span-4-64"><a href="#__codelineno-4-64" id="__codelineno-4-64" name="__codelineno-4-64"></a>        <span class="c1"># Assert</span>
+</span><span id="__span-4-65"><a href="#__codelineno-4-65" id="__codelineno-4-65" name="__codelineno-4-65"></a>        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">processor</span><span class="o">.</span><span class="n">subscriptions</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span>
+</span><span id="__span-4-66"><a href="#__codelineno-4-66" id="__codelineno-4-66" name="__codelineno-4-66"></a>
+</span><span id="__span-4-67"><a href="#__codelineno-4-67" id="__codelineno-4-67" name="__codelineno-4-67"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">teardown_method</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="__span-4-68"><a href="#__codelineno-4-68" id="__codelineno-4-68" name="__codelineno-4-68"></a><span class="w">        </span><span class="sd">"""Cleanup test resources"""</span>
+</span><span id="__span-4-69"><a href="#__codelineno-4-69" id="__codelineno-4-69" name="__codelineno-4-69"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">processor</span><span class="o">.</span><span class="n">dispose</span><span class="p">()</span>
+</span><span id="__span-4-70"><a href="#__codelineno-4-70" id="__codelineno-4-70" name="__codelineno-4-70"></a>
+</span><span id="__span-4-71"><a href="#__codelineno-4-71" id="__codelineno-4-71" name="__codelineno-4-71"></a><span class="k">class</span><span class="w"> </span><span class="nc">TestStreamTransformationPatterns</span><span class="p">:</span>
+</span><span id="__span-4-72"><a href="#__codelineno-4-72" id="__codelineno-4-72" name="__codelineno-4-72"></a>
+</span><span id="__span-4-73"><a href="#__codelineno-4-73" id="__codelineno-4-73" name="__codelineno-4-73"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">setup_method</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="__span-4-74"><a href="#__codelineno-4-74" id="__codelineno-4-74" name="__codelineno-4-74"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">source_stream</span> <span class="o">=</span> <span class="n">Subject</span><span class="p">()</span>
+</span><span id="__span-4-75"><a href="#__codelineno-4-75" id="__codelineno-4-75" name="__codelineno-4-75"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">received_items</span> <span class="o">=</span> <span class="p">[]</span>
+</span><span id="__span-4-76"><a href="#__codelineno-4-76" id="__codelineno-4-76" name="__codelineno-4-76"></a>
+</span><span id="__span-4-77"><a href="#__codelineno-4-77" id="__codelineno-4-77" name="__codelineno-4-77"></a>    <span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">asyncio</span>
+</span><span id="__span-4-78"><a href="#__codelineno-4-78" id="__codelineno-4-78" name="__codelineno-4-78"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">test_filtering_pipeline</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="__span-4-79"><a href="#__codelineno-4-79" id="__codelineno-4-79" name="__codelineno-4-79"></a><span class="w">        </span><span class="sd">"""Test stream filtering patterns"""</span>
+</span><span id="__span-4-80"><a href="#__codelineno-4-80" id="__codelineno-4-80" name="__codelineno-4-80"></a>        <span class="c1"># Arrange</span>
+</span><span id="__span-4-81"><a href="#__codelineno-4-81" id="__codelineno-4-81" name="__codelineno-4-81"></a>        <span class="k">def</span><span class="w"> </span><span class="nf">is_even</span><span class="p">(</span><span class="n">x</span><span class="p">):</span> <span class="k">return</span> <span class="n">x</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span>
+</span><span id="__span-4-82"><a href="#__codelineno-4-82" id="__codelineno-4-82" name="__codelineno-4-82"></a>
+</span><span id="__span-4-83"><a href="#__codelineno-4-83" id="__codelineno-4-83" name="__codelineno-4-83"></a>        <span class="n">filtered_stream</span><span class="p">,</span> <span class="n">subscription</span> <span class="o">=</span> <span class="n">StreamTransformationPatterns</span><span class="o">.</span><span class="n">create_filtering_pipeline</span><span class="p">(</span>
+</span><span id="__span-4-84"><a href="#__codelineno-4-84" id="__codelineno-4-84" name="__codelineno-4-84"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">source_stream</span><span class="p">,</span> <span class="n">is_even</span>
+</span><span id="__span-4-85"><a href="#__codelineno-4-85" id="__codelineno-4-85" name="__codelineno-4-85"></a>        <span class="p">)</span>
+</span><span id="__span-4-86"><a href="#__codelineno-4-86" id="__codelineno-4-86" name="__codelineno-4-86"></a>
+</span><span id="__span-4-87"><a href="#__codelineno-4-87" id="__codelineno-4-87" name="__codelineno-4-87"></a>        <span class="c1"># Subscribe to results</span>
+</span><span id="__span-4-88"><a href="#__codelineno-4-88" id="__codelineno-4-88" name="__codelineno-4-88"></a>        <span class="n">AsyncRx</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span><span class="n">filtered_stream</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">item</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">received_items</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="p">))</span>
+</span><span id="__span-4-89"><a href="#__codelineno-4-89" id="__codelineno-4-89" name="__codelineno-4-89"></a>
+</span><span id="__span-4-90"><a href="#__codelineno-4-90" id="__codelineno-4-90" name="__codelineno-4-90"></a>        <span class="c1"># Act</span>
+</span><span id="__span-4-91"><a href="#__codelineno-4-91" id="__codelineno-4-91" name="__codelineno-4-91"></a>        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+</span><span id="__span-4-92"><a href="#__codelineno-4-92" id="__codelineno-4-92" name="__codelineno-4-92"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">source_stream</span><span class="o">.</span><span class="n">on_next</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+</span><span id="__span-4-93"><a href="#__codelineno-4-93" id="__codelineno-4-93" name="__codelineno-4-93"></a>
+</span><span id="__span-4-94"><a href="#__codelineno-4-94" id="__codelineno-4-94" name="__codelineno-4-94"></a>        <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span>
+</span><span id="__span-4-95"><a href="#__codelineno-4-95" id="__codelineno-4-95" name="__codelineno-4-95"></a>
+</span><span id="__span-4-96"><a href="#__codelineno-4-96" id="__codelineno-4-96" name="__codelineno-4-96"></a>        <span class="c1"># Assert</span>
+</span><span id="__span-4-97"><a href="#__codelineno-4-97" id="__codelineno-4-97" name="__codelineno-4-97"></a>        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">received_items</span> <span class="o">==</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">8</span><span class="p">]</span>
+</span><span id="__span-4-98"><a href="#__codelineno-4-98" id="__codelineno-4-98" name="__codelineno-4-98"></a>
+</span><span id="__span-4-99"><a href="#__codelineno-4-99" id="__codelineno-4-99" name="__codelineno-4-99"></a>        <span class="c1"># Cleanup</span>
+</span><span id="__span-4-100"><a href="#__codelineno-4-100" id="__codelineno-4-100" name="__codelineno-4-100"></a>        <span class="n">subscription</span><span class="o">.</span><span class="n">dispose</span><span class="p">()</span>
+</span><span id="__span-4-101"><a href="#__codelineno-4-101" id="__codelineno-4-101" name="__codelineno-4-101"></a>
+</span><span id="__span-4-102"><a href="#__codelineno-4-102" id="__codelineno-4-102" name="__codelineno-4-102"></a>    <span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">asyncio</span>
+</span><span id="__span-4-103"><a href="#__codelineno-4-103" id="__codelineno-4-103" name="__codelineno-4-103"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">test_transformation_pipeline</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="__span-4-104"><a href="#__codelineno-4-104" id="__codelineno-4-104" name="__codelineno-4-104"></a><span class="w">        </span><span class="sd">"""Test stream transformation patterns"""</span>
+</span><span id="__span-4-105"><a href="#__codelineno-4-105" id="__codelineno-4-105" name="__codelineno-4-105"></a>        <span class="c1"># Arrange</span>
+</span><span id="__span-4-106"><a href="#__codelineno-4-106" id="__codelineno-4-106" name="__codelineno-4-106"></a>        <span class="k">def</span><span class="w"> </span><span class="nf">double</span><span class="p">(</span><span class="n">x</span><span class="p">):</span> <span class="k">return</span> <span class="n">x</span> <span class="o">*</span> <span class="mi">2</span>
+</span><span id="__span-4-107"><a href="#__codelineno-4-107" id="__codelineno-4-107" name="__codelineno-4-107"></a>
+</span><span id="__span-4-108"><a href="#__codelineno-4-108" id="__codelineno-4-108" name="__codelineno-4-108"></a>        <span class="n">transformed_stream</span><span class="p">,</span> <span class="n">subscription</span> <span class="o">=</span> <span class="n">StreamTransformationPatterns</span><span class="o">.</span><span class="n">create_transformation_pipeline</span><span class="p">(</span>
+</span><span id="__span-4-109"><a href="#__codelineno-4-109" id="__codelineno-4-109" name="__codelineno-4-109"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">source_stream</span><span class="p">,</span> <span class="n">double</span>
+</span><span id="__span-4-110"><a href="#__codelineno-4-110" id="__codelineno-4-110" name="__codelineno-4-110"></a>        <span class="p">)</span>
+</span><span id="__span-4-111"><a href="#__codelineno-4-111" id="__codelineno-4-111" name="__codelineno-4-111"></a>
+</span><span id="__span-4-112"><a href="#__codelineno-4-112" id="__codelineno-4-112" name="__codelineno-4-112"></a>        <span class="c1"># Subscribe to results</span>
+</span><span id="__span-4-113"><a href="#__codelineno-4-113" id="__codelineno-4-113" name="__codelineno-4-113"></a>        <span class="n">AsyncRx</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span><span class="n">transformed_stream</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">item</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">received_items</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="p">))</span>
+</span><span id="__span-4-114"><a href="#__codelineno-4-114" id="__codelineno-4-114" name="__codelineno-4-114"></a>
+</span><span id="__span-4-115"><a href="#__codelineno-4-115" id="__codelineno-4-115" name="__codelineno-4-115"></a>        <span class="c1"># Act</span>
+</span><span id="__span-4-116"><a href="#__codelineno-4-116" id="__codelineno-4-116" name="__codelineno-4-116"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">source_stream</span><span class="o">.</span><span class="n">on_next</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+</span><span id="__span-4-117"><a href="#__codelineno-4-117" id="__codelineno-4-117" name="__codelineno-4-117"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">source_stream</span><span class="o">.</span><span class="n">on_next</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+</span><span id="__span-4-118"><a href="#__codelineno-4-118" id="__codelineno-4-118" name="__codelineno-4-118"></a>
+</span><span id="__span-4-119"><a href="#__codelineno-4-119" id="__codelineno-4-119" name="__codelineno-4-119"></a>        <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span>
+</span><span id="__span-4-120"><a href="#__codelineno-4-120" id="__codelineno-4-120" name="__codelineno-4-120"></a>
+</span><span id="__span-4-121"><a href="#__codelineno-4-121" id="__codelineno-4-121" name="__codelineno-4-121"></a>        <span class="c1"># Assert</span>
+</span><span id="__span-4-122"><a href="#__codelineno-4-122" id="__codelineno-4-122" name="__codelineno-4-122"></a>        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">received_items</span> <span class="o">==</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">]</span>
+</span><span id="__span-4-123"><a href="#__codelineno-4-123" id="__codelineno-4-123" name="__codelineno-4-123"></a>
+</span><span id="__span-4-124"><a href="#__codelineno-4-124" id="__codelineno-4-124" name="__codelineno-4-124"></a>        <span class="c1"># Cleanup</span>
+</span><span id="__span-4-125"><a href="#__codelineno-4-125" id="__codelineno-4-125" name="__codelineno-4-125"></a>        <span class="n">subscription</span><span class="o">.</span><span class="n">dispose</span><span class="p">()</span>
+</span><span id="__span-4-126"><a href="#__codelineno-4-126" id="__codelineno-4-126" name="__codelineno-4-126"></a>
+</span><span id="__span-4-127"><a href="#__codelineno-4-127" id="__codelineno-4-127" name="__codelineno-4-127"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">teardown_method</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="__span-4-128"><a href="#__codelineno-4-128" id="__codelineno-4-128" name="__codelineno-4-128"></a><span class="w">        </span><span class="sd">"""Cleanup test streams"""</span>
+</span><span id="__span-4-129"><a href="#__codelineno-4-129" id="__codelineno-4-129" name="__codelineno-4-129"></a>        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">'source_stream'</span><span class="p">):</span>
+</span><span id="__span-4-130"><a href="#__codelineno-4-130" id="__codelineno-4-130" name="__codelineno-4-130"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">source_stream</span><span class="o">.</span><span class="n">dispose</span><span class="p">()</span>
+</span></code></pre></div>
 <h2 id="framework-integration">🚀 Framework Integration<a class="headerlink" href="#framework-integration" title="Permanent link">¶</a></h2>
 <h3 id="service-registration-pattern">Service Registration Pattern<a class="headerlink" href="#service-registration-pattern" title="Permanent link">¶</a></h3>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.hosting</span><span class="w"> </span><span class="kn">import</span> <span class="n">WebApplicationBuilder</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.dependency_injection</span><span class="w"> </span><span class="kn">import</span> <span class="n">ServiceLifetime</span>
-
-<span class="k">def</span><span class="w"> </span><span class="nf">configure_reactive_services</span><span class="p">(</span><span class="n">builder</span><span class="p">:</span> <span class="n">WebApplicationBuilder</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">"""Configure reactive programming services with dependency injection"""</span>
-
-    <span class="c1"># Register core reactive services</span>
-    <span class="n">builder</span><span class="o">.</span><span class="n">services</span><span class="o">.</span><span class="n">add_singleton</span><span class="p">(</span><span class="n">ReactiveEventProcessor</span><span class="p">)</span>
-    <span class="n">builder</span><span class="o">.</span><span class="n">services</span><span class="o">.</span><span class="n">add_singleton</span><span class="p">(</span><span class="n">EventAggregationPattern</span><span class="p">)</span>
-    <span class="n">builder</span><span class="o">.</span><span class="n">services</span><span class="o">.</span><span class="n">add_scoped</span><span class="p">(</span><span class="n">StreamTransformationPatterns</span><span class="p">)</span>
-
-    <span class="c1"># Register background services</span>
-    <span class="n">builder</span><span class="o">.</span><span class="n">services</span><span class="o">.</span><span class="n">add_hosted_service</span><span class="p">(</span><span class="n">ReactiveBackgroundService</span><span class="p">)</span>
-
-    <span class="c1"># Configure reactive infrastructure</span>
-    <span class="n">builder</span><span class="o">.</span><span class="n">services</span><span class="o">.</span><span class="n">add_singleton</span><span class="p">(</span><span class="n">AsyncIOScheduler</span><span class="p">)</span>
-
-    <span class="c1"># Register domain-specific reactive services</span>
-    <span class="n">builder</span><span class="o">.</span><span class="n">services</span><span class="o">.</span><span class="n">add_singleton</span><span class="p">(</span><span class="n">ReactiveOrderProcessor</span><span class="p">)</span>
-    <span class="n">builder</span><span class="o">.</span><span class="n">services</span><span class="o">.</span><span class="n">add_singleton</span><span class="p">(</span><span class="n">ReactiveAnalyticsDashboard</span><span class="p">)</span>
-
-<span class="c1"># Application startup with reactive configuration</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">create_reactive_application</span><span class="p">():</span>
-<span class="w">    </span><span class="sd">"""Create application with reactive programming support"""</span>
-    <span class="n">builder</span> <span class="o">=</span> <span class="n">WebApplicationBuilder</span><span class="p">()</span>
-
-    <span class="c1"># Configure reactive services</span>
-    <span class="n">configure_reactive_services</span><span class="p">(</span><span class="n">builder</span><span class="p">)</span>
-
-    <span class="c1"># Build application</span>
-    <span class="n">app</span> <span class="o">=</span> <span class="n">builder</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
-
-    <span class="k">return</span> <span class="n">app</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a href="#__codelineno-5-1" id="__codelineno-5-1" name="__codelineno-5-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.hosting</span><span class="w"> </span><span class="kn">import</span> <span class="n">WebApplicationBuilder</span>
+</span><span id="__span-5-2"><a href="#__codelineno-5-2" id="__codelineno-5-2" name="__codelineno-5-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.dependency_injection</span><span class="w"> </span><span class="kn">import</span> <span class="n">ServiceLifetime</span>
+</span><span id="__span-5-3"><a href="#__codelineno-5-3" id="__codelineno-5-3" name="__codelineno-5-3"></a>
+</span><span id="__span-5-4"><a href="#__codelineno-5-4" id="__codelineno-5-4" name="__codelineno-5-4"></a><span class="k">def</span><span class="w"> </span><span class="nf">configure_reactive_services</span><span class="p">(</span><span class="n">builder</span><span class="p">:</span> <span class="n">WebApplicationBuilder</span><span class="p">):</span>
+</span><span id="__span-5-5"><a href="#__codelineno-5-5" id="__codelineno-5-5" name="__codelineno-5-5"></a><span class="w">    </span><span class="sd">"""Configure reactive programming services with dependency injection"""</span>
+</span><span id="__span-5-6"><a href="#__codelineno-5-6" id="__codelineno-5-6" name="__codelineno-5-6"></a>
+</span><span id="__span-5-7"><a href="#__codelineno-5-7" id="__codelineno-5-7" name="__codelineno-5-7"></a>    <span class="c1"># Register core reactive services</span>
+</span><span id="__span-5-8"><a href="#__codelineno-5-8" id="__codelineno-5-8" name="__codelineno-5-8"></a>    <span class="n">builder</span><span class="o">.</span><span class="n">services</span><span class="o">.</span><span class="n">add_singleton</span><span class="p">(</span><span class="n">ReactiveEventProcessor</span><span class="p">)</span>
+</span><span id="__span-5-9"><a href="#__codelineno-5-9" id="__codelineno-5-9" name="__codelineno-5-9"></a>    <span class="n">builder</span><span class="o">.</span><span class="n">services</span><span class="o">.</span><span class="n">add_singleton</span><span class="p">(</span><span class="n">EventAggregationPattern</span><span class="p">)</span>
+</span><span id="__span-5-10"><a href="#__codelineno-5-10" id="__codelineno-5-10" name="__codelineno-5-10"></a>    <span class="n">builder</span><span class="o">.</span><span class="n">services</span><span class="o">.</span><span class="n">add_scoped</span><span class="p">(</span><span class="n">StreamTransformationPatterns</span><span class="p">)</span>
+</span><span id="__span-5-11"><a href="#__codelineno-5-11" id="__codelineno-5-11" name="__codelineno-5-11"></a>
+</span><span id="__span-5-12"><a href="#__codelineno-5-12" id="__codelineno-5-12" name="__codelineno-5-12"></a>    <span class="c1"># Register background services</span>
+</span><span id="__span-5-13"><a href="#__codelineno-5-13" id="__codelineno-5-13" name="__codelineno-5-13"></a>    <span class="n">builder</span><span class="o">.</span><span class="n">services</span><span class="o">.</span><span class="n">add_hosted_service</span><span class="p">(</span><span class="n">ReactiveBackgroundService</span><span class="p">)</span>
+</span><span id="__span-5-14"><a href="#__codelineno-5-14" id="__codelineno-5-14" name="__codelineno-5-14"></a>
+</span><span id="__span-5-15"><a href="#__codelineno-5-15" id="__codelineno-5-15" name="__codelineno-5-15"></a>    <span class="c1"># Configure reactive infrastructure</span>
+</span><span id="__span-5-16"><a href="#__codelineno-5-16" id="__codelineno-5-16" name="__codelineno-5-16"></a>    <span class="n">builder</span><span class="o">.</span><span class="n">services</span><span class="o">.</span><span class="n">add_singleton</span><span class="p">(</span><span class="n">AsyncIOScheduler</span><span class="p">)</span>
+</span><span id="__span-5-17"><a href="#__codelineno-5-17" id="__codelineno-5-17" name="__codelineno-5-17"></a>
+</span><span id="__span-5-18"><a href="#__codelineno-5-18" id="__codelineno-5-18" name="__codelineno-5-18"></a>    <span class="c1"># Register domain-specific reactive services</span>
+</span><span id="__span-5-19"><a href="#__codelineno-5-19" id="__codelineno-5-19" name="__codelineno-5-19"></a>    <span class="n">builder</span><span class="o">.</span><span class="n">services</span><span class="o">.</span><span class="n">add_singleton</span><span class="p">(</span><span class="n">ReactiveOrderProcessor</span><span class="p">)</span>
+</span><span id="__span-5-20"><a href="#__codelineno-5-20" id="__codelineno-5-20" name="__codelineno-5-20"></a>    <span class="n">builder</span><span class="o">.</span><span class="n">services</span><span class="o">.</span><span class="n">add_singleton</span><span class="p">(</span><span class="n">ReactiveAnalyticsDashboard</span><span class="p">)</span>
+</span><span id="__span-5-21"><a href="#__codelineno-5-21" id="__codelineno-5-21" name="__codelineno-5-21"></a>
+</span><span id="__span-5-22"><a href="#__codelineno-5-22" id="__codelineno-5-22" name="__codelineno-5-22"></a><span class="c1"># Application startup with reactive configuration</span>
+</span><span id="__span-5-23"><a href="#__codelineno-5-23" id="__codelineno-5-23" name="__codelineno-5-23"></a><span class="k">def</span><span class="w"> </span><span class="nf">create_reactive_application</span><span class="p">():</span>
+</span><span id="__span-5-24"><a href="#__codelineno-5-24" id="__codelineno-5-24" name="__codelineno-5-24"></a><span class="w">    </span><span class="sd">"""Create application with reactive programming support"""</span>
+</span><span id="__span-5-25"><a href="#__codelineno-5-25" id="__codelineno-5-25" name="__codelineno-5-25"></a>    <span class="n">builder</span> <span class="o">=</span> <span class="n">WebApplicationBuilder</span><span class="p">()</span>
+</span><span id="__span-5-26"><a href="#__codelineno-5-26" id="__codelineno-5-26" name="__codelineno-5-26"></a>
+</span><span id="__span-5-27"><a href="#__codelineno-5-27" id="__codelineno-5-27" name="__codelineno-5-27"></a>    <span class="c1"># Configure reactive services</span>
+</span><span id="__span-5-28"><a href="#__codelineno-5-28" id="__codelineno-5-28" name="__codelineno-5-28"></a>    <span class="n">configure_reactive_services</span><span class="p">(</span><span class="n">builder</span><span class="p">)</span>
+</span><span id="__span-5-29"><a href="#__codelineno-5-29" id="__codelineno-5-29" name="__codelineno-5-29"></a>
+</span><span id="__span-5-30"><a href="#__codelineno-5-30" id="__codelineno-5-30" name="__codelineno-5-30"></a>    <span class="c1"># Build application</span>
+</span><span id="__span-5-31"><a href="#__codelineno-5-31" id="__codelineno-5-31" name="__codelineno-5-31"></a>    <span class="n">app</span> <span class="o">=</span> <span class="n">builder</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
+</span><span id="__span-5-32"><a href="#__codelineno-5-32" id="__codelineno-5-32" name="__codelineno-5-32"></a>
+</span><span id="__span-5-33"><a href="#__codelineno-5-33" id="__codelineno-5-33" name="__codelineno-5-33"></a>    <span class="k">return</span> <span class="n">app</span>
+</span></code></pre></div>
 <h2 id="pattern-benefits">🎯 Pattern Benefits<a class="headerlink" href="#pattern-benefits" title="Permanent link">¶</a></h2>
 <h3 id="advantages">Advantages<a class="headerlink" href="#advantages" title="Permanent link">¶</a></h3>
 <ul>

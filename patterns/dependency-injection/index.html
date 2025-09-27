@@ -853,9 +853,9 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../references/python_type_hints/">
+<a class="md-nav__link" href="../../references/python_typing_guide/">
 <span class="md-ellipsis">
-    Python Type Hints
+    Python Typing Guide
     
   </span>
 </a>
@@ -877,9 +877,9 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../references/python_generic_types/">
+<a class="md-nav__link" href="../../references/test-mermaid/">
 <span class="md-ellipsis">
-    Python Generic Types
+    Mermaid References
     
   </span>
 </a>
@@ -1110,17 +1110,17 @@ lifetime, and resolution, demonstrated through <strong>Mario's Pizzeria</strong>
 <p>Understanding service lifetimes is crucial for proper resource management and performance:</p>
 <h3 id="singleton-shared-infrastructure">Singleton - Shared Infrastructure<a class="headerlink" href="#singleton-shared-infrastructure" title="Permanent link">¶</a></h3>
 <p><strong>Pattern</strong>: One instance for the entire application lifetime</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.dependency_injection</span><span class="w"> </span><span class="kn">import</span> <span class="n">ServiceCollection</span>
-
-<span class="n">services</span> <span class="o">=</span> <span class="n">ServiceCollection</span><span class="p">()</span>
-
-<span class="c1"># Shared infrastructure services</span>
-<span class="n">services</span><span class="o">.</span><span class="n">add_singleton</span><span class="p">(</span><span class="n">DatabaseConnection</span><span class="p">)</span>      <span class="c1"># Connection pool shared across all requests</span>
-<span class="n">services</span><span class="o">.</span><span class="n">add_singleton</span><span class="p">(</span><span class="n">MenuCacheService</span><span class="p">)</span>        <span class="c1"># Menu data cached for all customers</span>
-<span class="n">services</span><span class="o">.</span><span class="n">add_singleton</span><span class="p">(</span><span class="n">KitchenDisplayService</span><span class="p">)</span>   <span class="c1"># Single kitchen display system</span>
-<span class="n">services</span><span class="o">.</span><span class="n">add_singleton</span><span class="p">(</span><span class="n">PaymentGateway</span><span class="p">)</span>          <span class="c1"># Shared payment processing service</span>
-<span class="n">services</span><span class="o">.</span><span class="n">add_singleton</span><span class="p">(</span><span class="n">NotificationService</span><span class="p">)</span>     <span class="c1"># Single SMS/email service instance</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a href="#__codelineno-0-1" id="__codelineno-0-1" name="__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.dependency_injection</span><span class="w"> </span><span class="kn">import</span> <span class="n">ServiceCollection</span>
+</span><span id="__span-0-2"><a href="#__codelineno-0-2" id="__codelineno-0-2" name="__codelineno-0-2"></a>
+</span><span id="__span-0-3"><a href="#__codelineno-0-3" id="__codelineno-0-3" name="__codelineno-0-3"></a><span class="n">services</span> <span class="o">=</span> <span class="n">ServiceCollection</span><span class="p">()</span>
+</span><span id="__span-0-4"><a href="#__codelineno-0-4" id="__codelineno-0-4" name="__codelineno-0-4"></a>
+</span><span id="__span-0-5"><a href="#__codelineno-0-5" id="__codelineno-0-5" name="__codelineno-0-5"></a><span class="c1"># Shared infrastructure services</span>
+</span><span id="__span-0-6"><a href="#__codelineno-0-6" id="__codelineno-0-6" name="__codelineno-0-6"></a><span class="n">services</span><span class="o">.</span><span class="n">add_singleton</span><span class="p">(</span><span class="n">DatabaseConnection</span><span class="p">)</span>      <span class="c1"># Connection pool shared across all requests</span>
+</span><span id="__span-0-7"><a href="#__codelineno-0-7" id="__codelineno-0-7" name="__codelineno-0-7"></a><span class="n">services</span><span class="o">.</span><span class="n">add_singleton</span><span class="p">(</span><span class="n">MenuCacheService</span><span class="p">)</span>        <span class="c1"># Menu data cached for all customers</span>
+</span><span id="__span-0-8"><a href="#__codelineno-0-8" id="__codelineno-0-8" name="__codelineno-0-8"></a><span class="n">services</span><span class="o">.</span><span class="n">add_singleton</span><span class="p">(</span><span class="n">KitchenDisplayService</span><span class="p">)</span>   <span class="c1"># Single kitchen display system</span>
+</span><span id="__span-0-9"><a href="#__codelineno-0-9" id="__codelineno-0-9" name="__codelineno-0-9"></a><span class="n">services</span><span class="o">.</span><span class="n">add_singleton</span><span class="p">(</span><span class="n">PaymentGateway</span><span class="p">)</span>          <span class="c1"># Shared payment processing service</span>
+</span><span id="__span-0-10"><a href="#__codelineno-0-10" id="__codelineno-0-10" name="__codelineno-0-10"></a><span class="n">services</span><span class="o">.</span><span class="n">add_singleton</span><span class="p">(</span><span class="n">NotificationService</span><span class="p">)</span>     <span class="c1"># Single SMS/email service instance</span>
+</span></code></pre></div>
 <p><strong>When to Use</strong>:</p>
 <ul>
 <li>Database connection pools</li>
@@ -1133,12 +1133,12 @@ lifetime, and resolution, demonstrated through <strong>Mario's Pizzeria</strong>
 <strong>Risks</strong>: Thread safety required, potential memory leaks if not disposed</p>
 <h3 id="scoped-request-lifecycle">Scoped - Request Lifecycle<a class="headerlink" href="#scoped-request-lifecycle" title="Permanent link">¶</a></h3>
 <p><strong>Pattern</strong>: One instance per scope (typically per HTTP request or business operation)</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Per-request/per-operation services</span>
-<span class="n">services</span><span class="o">.</span><span class="n">add_scoped</span><span class="p">(</span><span class="n">OrderRepository</span><span class="p">)</span>           <span class="c1"># Order data access for this request</span>
-<span class="n">services</span><span class="o">.</span><span class="n">add_scoped</span><span class="p">(</span><span class="n">OrderProcessingService</span><span class="p">)</span>    <span class="c1"># Business logic for current order</span>
-<span class="n">services</span><span class="o">.</span><span class="n">add_scoped</span><span class="p">(</span><span class="n">CustomerContextService</span><span class="p">)</span>    <span class="c1"># Customer-specific request context</span>
-<span class="n">services</span><span class="o">.</span><span class="n">add_scoped</span><span class="p">(</span><span class="n">KitchenWorkflowService</span><span class="p">)</span>    <span class="c1"># Kitchen operations for this order</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a href="#__codelineno-1-1" id="__codelineno-1-1" name="__codelineno-1-1"></a><span class="c1"># Per-request/per-operation services</span>
+</span><span id="__span-1-2"><a href="#__codelineno-1-2" id="__codelineno-1-2" name="__codelineno-1-2"></a><span class="n">services</span><span class="o">.</span><span class="n">add_scoped</span><span class="p">(</span><span class="n">OrderRepository</span><span class="p">)</span>           <span class="c1"># Order data access for this request</span>
+</span><span id="__span-1-3"><a href="#__codelineno-1-3" id="__codelineno-1-3" name="__codelineno-1-3"></a><span class="n">services</span><span class="o">.</span><span class="n">add_scoped</span><span class="p">(</span><span class="n">OrderProcessingService</span><span class="p">)</span>    <span class="c1"># Business logic for current order</span>
+</span><span id="__span-1-4"><a href="#__codelineno-1-4" id="__codelineno-1-4" name="__codelineno-1-4"></a><span class="n">services</span><span class="o">.</span><span class="n">add_scoped</span><span class="p">(</span><span class="n">CustomerContextService</span><span class="p">)</span>    <span class="c1"># Customer-specific request context</span>
+</span><span id="__span-1-5"><a href="#__codelineno-1-5" id="__codelineno-1-5" name="__codelineno-1-5"></a><span class="n">services</span><span class="o">.</span><span class="n">add_scoped</span><span class="p">(</span><span class="n">KitchenWorkflowService</span><span class="p">)</span>    <span class="c1"># Kitchen operations for this order</span>
+</span></code></pre></div>
 <p><strong>When to Use</strong>:</p>
 <ul>
 <li>Repository instances</li>
@@ -1151,12 +1151,12 @@ lifetime, and resolution, demonstrated through <strong>Mario's Pizzeria</strong>
 <strong>Risks</strong>: Higher memory usage than singleton</p>
 <h3 id="transient-stateless-operations">Transient - Stateless Operations<a class="headerlink" href="#transient-stateless-operations" title="Permanent link">¶</a></h3>
 <p><strong>Pattern</strong>: New instance every time the service is requested</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Stateless calculation and validation services</span>
-<span class="n">services</span><span class="o">.</span><span class="n">add_transient</span><span class="p">(</span><span class="n">PizzaPriceCalculator</span><span class="p">)</span>    <span class="c1"># Fresh calculation each time</span>
-<span class="n">services</span><span class="o">.</span><span class="n">add_transient</span><span class="p">(</span><span class="n">DeliveryTimeEstimator</span><span class="p">)</span>   <span class="c1"># Stateless time calculations</span>
-<span class="n">services</span><span class="o">.</span><span class="n">add_transient</span><span class="p">(</span><span class="n">LoyaltyPointsCalculator</span><span class="p">)</span> <span class="c1"># Independent point calculations</span>
-<span class="n">services</span><span class="o">.</span><span class="n">add_transient</span><span class="p">(</span><span class="n">OrderValidator</span><span class="p">)</span>          <span class="c1"># Fresh validation each time</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a href="#__codelineno-2-1" id="__codelineno-2-1" name="__codelineno-2-1"></a><span class="c1"># Stateless calculation and validation services</span>
+</span><span id="__span-2-2"><a href="#__codelineno-2-2" id="__codelineno-2-2" name="__codelineno-2-2"></a><span class="n">services</span><span class="o">.</span><span class="n">add_transient</span><span class="p">(</span><span class="n">PizzaPriceCalculator</span><span class="p">)</span>    <span class="c1"># Fresh calculation each time</span>
+</span><span id="__span-2-3"><a href="#__codelineno-2-3" id="__codelineno-2-3" name="__codelineno-2-3"></a><span class="n">services</span><span class="o">.</span><span class="n">add_transient</span><span class="p">(</span><span class="n">DeliveryTimeEstimator</span><span class="p">)</span>   <span class="c1"># Stateless time calculations</span>
+</span><span id="__span-2-4"><a href="#__codelineno-2-4" id="__codelineno-2-4" name="__codelineno-2-4"></a><span class="n">services</span><span class="o">.</span><span class="n">add_transient</span><span class="p">(</span><span class="n">LoyaltyPointsCalculator</span><span class="p">)</span> <span class="c1"># Independent point calculations</span>
+</span><span id="__span-2-5"><a href="#__codelineno-2-5" id="__codelineno-2-5" name="__codelineno-2-5"></a><span class="n">services</span><span class="o">.</span><span class="n">add_transient</span><span class="p">(</span><span class="n">OrderValidator</span><span class="p">)</span>          <span class="c1"># Fresh validation each time</span>
+</span></code></pre></div>
 <p><strong>When to Use</strong>:</p>
 <ul>
 <li>Stateless calculators</li>
@@ -1170,268 +1170,268 @@ lifetime, and resolution, demonstrated through <strong>Mario's Pizzeria</strong>
 <h2 id="registration-patterns">🔧 Registration Patterns<a class="headerlink" href="#registration-patterns" title="Permanent link">¶</a></h2>
 <h3 id="interface-based-registration">Interface-Based Registration<a class="headerlink" href="#interface-based-registration" title="Permanent link">¶</a></h3>
 <p><strong>Pattern</strong>: Register services by their abstractions to enable flexibility and testing</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
-
-<span class="c1"># Define contract</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">IOrderRepository</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
-    <span class="nd">@abstractmethod</span>
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">save_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">order</span><span class="p">:</span> <span class="n">Order</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">pass</span>
-
-    <span class="nd">@abstractmethod</span>
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_by_id_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">order_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Order</span><span class="p">]:</span>
-        <span class="k">pass</span>
-
-    <span class="nd">@abstractmethod</span>
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_by_status_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">status</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Order</span><span class="p">]:</span>
-        <span class="k">pass</span>
-
-<span class="c1"># Multiple implementations</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">FileOrderRepository</span><span class="p">(</span><span class="n">IOrderRepository</span><span class="p">):</span>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"data"</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">data_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">data_dir</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">data_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">save_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">order</span><span class="p">:</span> <span class="n">Order</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">file_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">order</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">.json"</span>
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="s1">'w'</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-            <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">order</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="nb">str</span><span class="p">)</span>
-
-<span class="k">class</span><span class="w"> </span><span class="nc">MongoOrderRepository</span><span class="p">(</span><span class="n">IOrderRepository</span><span class="p">):</span>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mongo_client</span><span class="p">:</span> <span class="n">MongoClient</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">collection</span> <span class="o">=</span> <span class="n">mongo_client</span><span class="o">.</span><span class="n">pizzeria</span><span class="o">.</span><span class="n">orders</span>
-
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">save_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">order</span><span class="p">:</span> <span class="n">Order</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">collection</span><span class="o">.</span><span class="n">replace_one</span><span class="p">(</span>
-            <span class="p">{</span><span class="s2">"_id"</span><span class="p">:</span> <span class="n">order</span><span class="o">.</span><span class="n">id</span><span class="p">},</span>
-            <span class="n">order</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">,</span>
-            <span class="n">upsert</span><span class="o">=</span><span class="kc">True</span>
-        <span class="p">)</span>
-
-<span class="c1"># Register by interface - easy to swap implementations</span>
-<span class="n">services</span><span class="o">.</span><span class="n">add_scoped</span><span class="p">(</span><span class="n">IOrderRepository</span><span class="p">,</span> <span class="n">FileOrderRepository</span><span class="p">)</span>  <span class="c1"># Development</span>
-<span class="c1"># services.add_scoped(IOrderRepository, MongoOrderRepository)  # Production</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a href="#__codelineno-3-1" id="__codelineno-3-1" name="__codelineno-3-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
+</span><span id="__span-3-2"><a href="#__codelineno-3-2" id="__codelineno-3-2" name="__codelineno-3-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
+</span><span id="__span-3-3"><a href="#__codelineno-3-3" id="__codelineno-3-3" name="__codelineno-3-3"></a>
+</span><span id="__span-3-4"><a href="#__codelineno-3-4" id="__codelineno-3-4" name="__codelineno-3-4"></a><span class="c1"># Define contract</span>
+</span><span id="__span-3-5"><a href="#__codelineno-3-5" id="__codelineno-3-5" name="__codelineno-3-5"></a><span class="k">class</span><span class="w"> </span><span class="nc">IOrderRepository</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
+</span><span id="__span-3-6"><a href="#__codelineno-3-6" id="__codelineno-3-6" name="__codelineno-3-6"></a>    <span class="nd">@abstractmethod</span>
+</span><span id="__span-3-7"><a href="#__codelineno-3-7" id="__codelineno-3-7" name="__codelineno-3-7"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">save_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">order</span><span class="p">:</span> <span class="n">Order</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-3-8"><a href="#__codelineno-3-8" id="__codelineno-3-8" name="__codelineno-3-8"></a>        <span class="k">pass</span>
+</span><span id="__span-3-9"><a href="#__codelineno-3-9" id="__codelineno-3-9" name="__codelineno-3-9"></a>
+</span><span id="__span-3-10"><a href="#__codelineno-3-10" id="__codelineno-3-10" name="__codelineno-3-10"></a>    <span class="nd">@abstractmethod</span>
+</span><span id="__span-3-11"><a href="#__codelineno-3-11" id="__codelineno-3-11" name="__codelineno-3-11"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_by_id_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">order_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Order</span><span class="p">]:</span>
+</span><span id="__span-3-12"><a href="#__codelineno-3-12" id="__codelineno-3-12" name="__codelineno-3-12"></a>        <span class="k">pass</span>
+</span><span id="__span-3-13"><a href="#__codelineno-3-13" id="__codelineno-3-13" name="__codelineno-3-13"></a>
+</span><span id="__span-3-14"><a href="#__codelineno-3-14" id="__codelineno-3-14" name="__codelineno-3-14"></a>    <span class="nd">@abstractmethod</span>
+</span><span id="__span-3-15"><a href="#__codelineno-3-15" id="__codelineno-3-15" name="__codelineno-3-15"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_by_status_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">status</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Order</span><span class="p">]:</span>
+</span><span id="__span-3-16"><a href="#__codelineno-3-16" id="__codelineno-3-16" name="__codelineno-3-16"></a>        <span class="k">pass</span>
+</span><span id="__span-3-17"><a href="#__codelineno-3-17" id="__codelineno-3-17" name="__codelineno-3-17"></a>
+</span><span id="__span-3-18"><a href="#__codelineno-3-18" id="__codelineno-3-18" name="__codelineno-3-18"></a><span class="c1"># Multiple implementations</span>
+</span><span id="__span-3-19"><a href="#__codelineno-3-19" id="__codelineno-3-19" name="__codelineno-3-19"></a><span class="k">class</span><span class="w"> </span><span class="nc">FileOrderRepository</span><span class="p">(</span><span class="n">IOrderRepository</span><span class="p">):</span>
+</span><span id="__span-3-20"><a href="#__codelineno-3-20" id="__codelineno-3-20" name="__codelineno-3-20"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"data"</span><span class="p">):</span>
+</span><span id="__span-3-21"><a href="#__codelineno-3-21" id="__codelineno-3-21" name="__codelineno-3-21"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">data_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">data_dir</span><span class="p">)</span>
+</span><span id="__span-3-22"><a href="#__codelineno-3-22" id="__codelineno-3-22" name="__codelineno-3-22"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">data_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="__span-3-23"><a href="#__codelineno-3-23" id="__codelineno-3-23" name="__codelineno-3-23"></a>
+</span><span id="__span-3-24"><a href="#__codelineno-3-24" id="__codelineno-3-24" name="__codelineno-3-24"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">save_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">order</span><span class="p">:</span> <span class="n">Order</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-3-25"><a href="#__codelineno-3-25" id="__codelineno-3-25" name="__codelineno-3-25"></a>        <span class="n">file_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">order</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">.json"</span>
+</span><span id="__span-3-26"><a href="#__codelineno-3-26" id="__codelineno-3-26" name="__codelineno-3-26"></a>        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="s1">'w'</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+</span><span id="__span-3-27"><a href="#__codelineno-3-27" id="__codelineno-3-27" name="__codelineno-3-27"></a>            <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">order</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="nb">str</span><span class="p">)</span>
+</span><span id="__span-3-28"><a href="#__codelineno-3-28" id="__codelineno-3-28" name="__codelineno-3-28"></a>
+</span><span id="__span-3-29"><a href="#__codelineno-3-29" id="__codelineno-3-29" name="__codelineno-3-29"></a><span class="k">class</span><span class="w"> </span><span class="nc">MongoOrderRepository</span><span class="p">(</span><span class="n">IOrderRepository</span><span class="p">):</span>
+</span><span id="__span-3-30"><a href="#__codelineno-3-30" id="__codelineno-3-30" name="__codelineno-3-30"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mongo_client</span><span class="p">:</span> <span class="n">MongoClient</span><span class="p">):</span>
+</span><span id="__span-3-31"><a href="#__codelineno-3-31" id="__codelineno-3-31" name="__codelineno-3-31"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">collection</span> <span class="o">=</span> <span class="n">mongo_client</span><span class="o">.</span><span class="n">pizzeria</span><span class="o">.</span><span class="n">orders</span>
+</span><span id="__span-3-32"><a href="#__codelineno-3-32" id="__codelineno-3-32" name="__codelineno-3-32"></a>
+</span><span id="__span-3-33"><a href="#__codelineno-3-33" id="__codelineno-3-33" name="__codelineno-3-33"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">save_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">order</span><span class="p">:</span> <span class="n">Order</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-3-34"><a href="#__codelineno-3-34" id="__codelineno-3-34" name="__codelineno-3-34"></a>        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">collection</span><span class="o">.</span><span class="n">replace_one</span><span class="p">(</span>
+</span><span id="__span-3-35"><a href="#__codelineno-3-35" id="__codelineno-3-35" name="__codelineno-3-35"></a>            <span class="p">{</span><span class="s2">"_id"</span><span class="p">:</span> <span class="n">order</span><span class="o">.</span><span class="n">id</span><span class="p">},</span>
+</span><span id="__span-3-36"><a href="#__codelineno-3-36" id="__codelineno-3-36" name="__codelineno-3-36"></a>            <span class="n">order</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">,</span>
+</span><span id="__span-3-37"><a href="#__codelineno-3-37" id="__codelineno-3-37" name="__codelineno-3-37"></a>            <span class="n">upsert</span><span class="o">=</span><span class="kc">True</span>
+</span><span id="__span-3-38"><a href="#__codelineno-3-38" id="__codelineno-3-38" name="__codelineno-3-38"></a>        <span class="p">)</span>
+</span><span id="__span-3-39"><a href="#__codelineno-3-39" id="__codelineno-3-39" name="__codelineno-3-39"></a>
+</span><span id="__span-3-40"><a href="#__codelineno-3-40" id="__codelineno-3-40" name="__codelineno-3-40"></a><span class="c1"># Register by interface - easy to swap implementations</span>
+</span><span id="__span-3-41"><a href="#__codelineno-3-41" id="__codelineno-3-41" name="__codelineno-3-41"></a><span class="n">services</span><span class="o">.</span><span class="n">add_scoped</span><span class="p">(</span><span class="n">IOrderRepository</span><span class="p">,</span> <span class="n">FileOrderRepository</span><span class="p">)</span>  <span class="c1"># Development</span>
+</span><span id="__span-3-42"><a href="#__codelineno-3-42" id="__codelineno-3-42" name="__codelineno-3-42"></a><span class="c1"># services.add_scoped(IOrderRepository, MongoOrderRepository)  # Production</span>
+</span></code></pre></div>
 <h3 id="factory-pattern-registration">Factory Pattern Registration<a class="headerlink" href="#factory-pattern-registration" title="Permanent link">¶</a></h3>
 <p><strong>Pattern</strong>: Use factory functions for complex service initialization</p>
-<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">create_payment_gateway</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">IPaymentGateway</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""Factory creates payment gateway based on configuration"""</span>
-    <span class="n">config</span> <span class="o">=</span> <span class="n">get_payment_config</span><span class="p">()</span>
-
-    <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">environment</span> <span class="o">==</span> <span class="s2">"development"</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">MockPaymentGateway</span><span class="p">()</span>
-    <span class="k">elif</span> <span class="n">config</span><span class="o">.</span><span class="n">provider</span> <span class="o">==</span> <span class="s2">"stripe"</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">StripePaymentGateway</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">stripe_api_key</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">SquarePaymentGateway</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">square_token</span><span class="p">)</span>
-
-<span class="k">def</span><span class="w"> </span><span class="nf">create_notification_service</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">INotificationService</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""Factory creates notification service with proper credentials"""</span>
-    <span class="n">settings</span> <span class="o">=</span> <span class="n">get_app_settings</span><span class="p">()</span>
-
-    <span class="k">return</span> <span class="n">TwilioNotificationService</span><span class="p">(</span>
-        <span class="n">account_sid</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">twilio_sid</span><span class="p">,</span>
-        <span class="n">auth_token</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">twilio_token</span><span class="p">,</span>
-        <span class="n">from_number</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">pizzeria_phone</span>
-    <span class="p">)</span>
-
-<span class="c1"># Register with factories</span>
-<span class="n">services</span><span class="o">.</span><span class="n">add_singleton</span><span class="p">(</span><span class="n">IPaymentGateway</span><span class="p">,</span> <span class="n">factory</span><span class="o">=</span><span class="n">create_payment_gateway</span><span class="p">)</span>
-<span class="n">services</span><span class="o">.</span><span class="n">add_singleton</span><span class="p">(</span><span class="n">INotificationService</span><span class="p">,</span> <span class="n">factory</span><span class="o">=</span><span class="n">create_notification_service</span><span class="p">)</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a href="#__codelineno-4-1" id="__codelineno-4-1" name="__codelineno-4-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">create_payment_gateway</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">IPaymentGateway</span><span class="p">:</span>
+</span><span id="__span-4-2"><a href="#__codelineno-4-2" id="__codelineno-4-2" name="__codelineno-4-2"></a><span class="w">    </span><span class="sd">"""Factory creates payment gateway based on configuration"""</span>
+</span><span id="__span-4-3"><a href="#__codelineno-4-3" id="__codelineno-4-3" name="__codelineno-4-3"></a>    <span class="n">config</span> <span class="o">=</span> <span class="n">get_payment_config</span><span class="p">()</span>
+</span><span id="__span-4-4"><a href="#__codelineno-4-4" id="__codelineno-4-4" name="__codelineno-4-4"></a>
+</span><span id="__span-4-5"><a href="#__codelineno-4-5" id="__codelineno-4-5" name="__codelineno-4-5"></a>    <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">environment</span> <span class="o">==</span> <span class="s2">"development"</span><span class="p">:</span>
+</span><span id="__span-4-6"><a href="#__codelineno-4-6" id="__codelineno-4-6" name="__codelineno-4-6"></a>        <span class="k">return</span> <span class="n">MockPaymentGateway</span><span class="p">()</span>
+</span><span id="__span-4-7"><a href="#__codelineno-4-7" id="__codelineno-4-7" name="__codelineno-4-7"></a>    <span class="k">elif</span> <span class="n">config</span><span class="o">.</span><span class="n">provider</span> <span class="o">==</span> <span class="s2">"stripe"</span><span class="p">:</span>
+</span><span id="__span-4-8"><a href="#__codelineno-4-8" id="__codelineno-4-8" name="__codelineno-4-8"></a>        <span class="k">return</span> <span class="n">StripePaymentGateway</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">stripe_api_key</span><span class="p">)</span>
+</span><span id="__span-4-9"><a href="#__codelineno-4-9" id="__codelineno-4-9" name="__codelineno-4-9"></a>    <span class="k">else</span><span class="p">:</span>
+</span><span id="__span-4-10"><a href="#__codelineno-4-10" id="__codelineno-4-10" name="__codelineno-4-10"></a>        <span class="k">return</span> <span class="n">SquarePaymentGateway</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">square_token</span><span class="p">)</span>
+</span><span id="__span-4-11"><a href="#__codelineno-4-11" id="__codelineno-4-11" name="__codelineno-4-11"></a>
+</span><span id="__span-4-12"><a href="#__codelineno-4-12" id="__codelineno-4-12" name="__codelineno-4-12"></a><span class="k">def</span><span class="w"> </span><span class="nf">create_notification_service</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">INotificationService</span><span class="p">:</span>
+</span><span id="__span-4-13"><a href="#__codelineno-4-13" id="__codelineno-4-13" name="__codelineno-4-13"></a><span class="w">    </span><span class="sd">"""Factory creates notification service with proper credentials"""</span>
+</span><span id="__span-4-14"><a href="#__codelineno-4-14" id="__codelineno-4-14" name="__codelineno-4-14"></a>    <span class="n">settings</span> <span class="o">=</span> <span class="n">get_app_settings</span><span class="p">()</span>
+</span><span id="__span-4-15"><a href="#__codelineno-4-15" id="__codelineno-4-15" name="__codelineno-4-15"></a>
+</span><span id="__span-4-16"><a href="#__codelineno-4-16" id="__codelineno-4-16" name="__codelineno-4-16"></a>    <span class="k">return</span> <span class="n">TwilioNotificationService</span><span class="p">(</span>
+</span><span id="__span-4-17"><a href="#__codelineno-4-17" id="__codelineno-4-17" name="__codelineno-4-17"></a>        <span class="n">account_sid</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">twilio_sid</span><span class="p">,</span>
+</span><span id="__span-4-18"><a href="#__codelineno-4-18" id="__codelineno-4-18" name="__codelineno-4-18"></a>        <span class="n">auth_token</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">twilio_token</span><span class="p">,</span>
+</span><span id="__span-4-19"><a href="#__codelineno-4-19" id="__codelineno-4-19" name="__codelineno-4-19"></a>        <span class="n">from_number</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">pizzeria_phone</span>
+</span><span id="__span-4-20"><a href="#__codelineno-4-20" id="__codelineno-4-20" name="__codelineno-4-20"></a>    <span class="p">)</span>
+</span><span id="__span-4-21"><a href="#__codelineno-4-21" id="__codelineno-4-21" name="__codelineno-4-21"></a>
+</span><span id="__span-4-22"><a href="#__codelineno-4-22" id="__codelineno-4-22" name="__codelineno-4-22"></a><span class="c1"># Register with factories</span>
+</span><span id="__span-4-23"><a href="#__codelineno-4-23" id="__codelineno-4-23" name="__codelineno-4-23"></a><span class="n">services</span><span class="o">.</span><span class="n">add_singleton</span><span class="p">(</span><span class="n">IPaymentGateway</span><span class="p">,</span> <span class="n">factory</span><span class="o">=</span><span class="n">create_payment_gateway</span><span class="p">)</span>
+</span><span id="__span-4-24"><a href="#__codelineno-4-24" id="__codelineno-4-24" name="__codelineno-4-24"></a><span class="n">services</span><span class="o">.</span><span class="n">add_singleton</span><span class="p">(</span><span class="n">INotificationService</span><span class="p">,</span> <span class="n">factory</span><span class="o">=</span><span class="n">create_notification_service</span><span class="p">)</span>
+</span></code></pre></div>
 <h3 id="generic-repository-pattern">Generic Repository Pattern<a class="headerlink" href="#generic-repository-pattern" title="Permanent link">¶</a></h3>
 <p><strong>Pattern</strong>: Generic repository implementation for multiple entity types</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TypeVar</span><span class="p">,</span> <span class="n">Generic</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.data.abstractions</span><span class="w"> </span><span class="kn">import</span> <span class="n">Repository</span>
-
-<span class="n">T</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s1">'T'</span><span class="p">)</span>
-<span class="n">TKey</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s1">'TKey'</span><span class="p">)</span>
-
-<span class="k">class</span><span class="w"> </span><span class="nc">FileRepository</span><span class="p">(</span><span class="n">Repository</span><span class="p">[</span><span class="n">T</span><span class="p">,</span> <span class="n">TKey</span><span class="p">],</span> <span class="n">Generic</span><span class="p">[</span><span class="n">T</span><span class="p">,</span> <span class="n">TKey</span><span class="p">]):</span>
-<span class="w">    </span><span class="sd">"""Generic file-based repository for any entity type"""</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">:</span> <span class="nb">type</span><span class="p">,</span> <span class="n">data_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"data"</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">entity_type</span> <span class="o">=</span> <span class="n">entity_type</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">data_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">data_dir</span><span class="p">)</span> <span class="o">/</span> <span class="n">entity_type</span><span class="o">.</span><span class="vm">__name__</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">data_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">save_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity</span><span class="p">:</span> <span class="n">T</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">file_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">entity</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">.json"</span>
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="s1">'w'</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-            <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">entity</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="nb">str</span><span class="p">)</span>
-
-<span class="c1"># Factory functions for type-safe registration</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">create_pizza_repository</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Repository</span><span class="p">[</span><span class="n">Pizza</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
-    <span class="k">return</span> <span class="n">FileRepository</span><span class="p">(</span><span class="n">Pizza</span><span class="p">,</span> <span class="s2">"data"</span><span class="p">)</span>
-
-<span class="k">def</span><span class="w"> </span><span class="nf">create_order_repository</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Repository</span><span class="p">[</span><span class="n">Order</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
-    <span class="k">return</span> <span class="n">FileRepository</span><span class="p">(</span><span class="n">Order</span><span class="p">,</span> <span class="s2">"data"</span><span class="p">)</span>
-
-<span class="c1"># Register generic repositories</span>
-<span class="n">services</span><span class="o">.</span><span class="n">add_scoped</span><span class="p">(</span><span class="n">Repository</span><span class="p">[</span><span class="n">Pizza</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="n">factory</span><span class="o">=</span><span class="n">create_pizza_repository</span><span class="p">)</span>
-<span class="n">services</span><span class="o">.</span><span class="n">add_scoped</span><span class="p">(</span><span class="n">Repository</span><span class="p">[</span><span class="n">Order</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="n">factory</span><span class="o">=</span><span class="n">create_order_repository</span><span class="p">)</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a href="#__codelineno-5-1" id="__codelineno-5-1" name="__codelineno-5-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TypeVar</span><span class="p">,</span> <span class="n">Generic</span>
+</span><span id="__span-5-2"><a href="#__codelineno-5-2" id="__codelineno-5-2" name="__codelineno-5-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.data.abstractions</span><span class="w"> </span><span class="kn">import</span> <span class="n">Repository</span>
+</span><span id="__span-5-3"><a href="#__codelineno-5-3" id="__codelineno-5-3" name="__codelineno-5-3"></a>
+</span><span id="__span-5-4"><a href="#__codelineno-5-4" id="__codelineno-5-4" name="__codelineno-5-4"></a><span class="n">T</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s1">'T'</span><span class="p">)</span>
+</span><span id="__span-5-5"><a href="#__codelineno-5-5" id="__codelineno-5-5" name="__codelineno-5-5"></a><span class="n">TKey</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s1">'TKey'</span><span class="p">)</span>
+</span><span id="__span-5-6"><a href="#__codelineno-5-6" id="__codelineno-5-6" name="__codelineno-5-6"></a>
+</span><span id="__span-5-7"><a href="#__codelineno-5-7" id="__codelineno-5-7" name="__codelineno-5-7"></a><span class="k">class</span><span class="w"> </span><span class="nc">FileRepository</span><span class="p">(</span><span class="n">Repository</span><span class="p">[</span><span class="n">T</span><span class="p">,</span> <span class="n">TKey</span><span class="p">],</span> <span class="n">Generic</span><span class="p">[</span><span class="n">T</span><span class="p">,</span> <span class="n">TKey</span><span class="p">]):</span>
+</span><span id="__span-5-8"><a href="#__codelineno-5-8" id="__codelineno-5-8" name="__codelineno-5-8"></a><span class="w">    </span><span class="sd">"""Generic file-based repository for any entity type"""</span>
+</span><span id="__span-5-9"><a href="#__codelineno-5-9" id="__codelineno-5-9" name="__codelineno-5-9"></a>
+</span><span id="__span-5-10"><a href="#__codelineno-5-10" id="__codelineno-5-10" name="__codelineno-5-10"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">:</span> <span class="nb">type</span><span class="p">,</span> <span class="n">data_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"data"</span><span class="p">):</span>
+</span><span id="__span-5-11"><a href="#__codelineno-5-11" id="__codelineno-5-11" name="__codelineno-5-11"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">entity_type</span> <span class="o">=</span> <span class="n">entity_type</span>
+</span><span id="__span-5-12"><a href="#__codelineno-5-12" id="__codelineno-5-12" name="__codelineno-5-12"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">data_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">data_dir</span><span class="p">)</span> <span class="o">/</span> <span class="n">entity_type</span><span class="o">.</span><span class="vm">__name__</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+</span><span id="__span-5-13"><a href="#__codelineno-5-13" id="__codelineno-5-13" name="__codelineno-5-13"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">data_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="__span-5-14"><a href="#__codelineno-5-14" id="__codelineno-5-14" name="__codelineno-5-14"></a>
+</span><span id="__span-5-15"><a href="#__codelineno-5-15" id="__codelineno-5-15" name="__codelineno-5-15"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">save_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity</span><span class="p">:</span> <span class="n">T</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-5-16"><a href="#__codelineno-5-16" id="__codelineno-5-16" name="__codelineno-5-16"></a>        <span class="n">file_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">entity</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">.json"</span>
+</span><span id="__span-5-17"><a href="#__codelineno-5-17" id="__codelineno-5-17" name="__codelineno-5-17"></a>        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="s1">'w'</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+</span><span id="__span-5-18"><a href="#__codelineno-5-18" id="__codelineno-5-18" name="__codelineno-5-18"></a>            <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">entity</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="nb">str</span><span class="p">)</span>
+</span><span id="__span-5-19"><a href="#__codelineno-5-19" id="__codelineno-5-19" name="__codelineno-5-19"></a>
+</span><span id="__span-5-20"><a href="#__codelineno-5-20" id="__codelineno-5-20" name="__codelineno-5-20"></a><span class="c1"># Factory functions for type-safe registration</span>
+</span><span id="__span-5-21"><a href="#__codelineno-5-21" id="__codelineno-5-21" name="__codelineno-5-21"></a><span class="k">def</span><span class="w"> </span><span class="nf">create_pizza_repository</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Repository</span><span class="p">[</span><span class="n">Pizza</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+</span><span id="__span-5-22"><a href="#__codelineno-5-22" id="__codelineno-5-22" name="__codelineno-5-22"></a>    <span class="k">return</span> <span class="n">FileRepository</span><span class="p">(</span><span class="n">Pizza</span><span class="p">,</span> <span class="s2">"data"</span><span class="p">)</span>
+</span><span id="__span-5-23"><a href="#__codelineno-5-23" id="__codelineno-5-23" name="__codelineno-5-23"></a>
+</span><span id="__span-5-24"><a href="#__codelineno-5-24" id="__codelineno-5-24" name="__codelineno-5-24"></a><span class="k">def</span><span class="w"> </span><span class="nf">create_order_repository</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Repository</span><span class="p">[</span><span class="n">Order</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+</span><span id="__span-5-25"><a href="#__codelineno-5-25" id="__codelineno-5-25" name="__codelineno-5-25"></a>    <span class="k">return</span> <span class="n">FileRepository</span><span class="p">(</span><span class="n">Order</span><span class="p">,</span> <span class="s2">"data"</span><span class="p">)</span>
+</span><span id="__span-5-26"><a href="#__codelineno-5-26" id="__codelineno-5-26" name="__codelineno-5-26"></a>
+</span><span id="__span-5-27"><a href="#__codelineno-5-27" id="__codelineno-5-27" name="__codelineno-5-27"></a><span class="c1"># Register generic repositories</span>
+</span><span id="__span-5-28"><a href="#__codelineno-5-28" id="__codelineno-5-28" name="__codelineno-5-28"></a><span class="n">services</span><span class="o">.</span><span class="n">add_scoped</span><span class="p">(</span><span class="n">Repository</span><span class="p">[</span><span class="n">Pizza</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="n">factory</span><span class="o">=</span><span class="n">create_pizza_repository</span><span class="p">)</span>
+</span><span id="__span-5-29"><a href="#__codelineno-5-29" id="__codelineno-5-29" name="__codelineno-5-29"></a><span class="n">services</span><span class="o">.</span><span class="n">add_scoped</span><span class="p">(</span><span class="n">Repository</span><span class="p">[</span><span class="n">Order</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="n">factory</span><span class="o">=</span><span class="n">create_order_repository</span><span class="p">)</span>
+</span></code></pre></div>
 <h2 id="constructor-injection-pattern">🎯 Constructor Injection Pattern<a class="headerlink" href="#constructor-injection-pattern" title="Permanent link">¶</a></h2>
 <p><strong>Pattern</strong>: Dependencies are provided through constructor parameters</p>
-<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">OrderService</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""Service with injected dependencies"""</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
-                 <span class="n">order_repository</span><span class="p">:</span> <span class="n">IOrderRepository</span><span class="p">,</span>
-                 <span class="n">payment_service</span><span class="p">:</span> <span class="n">IPaymentService</span><span class="p">,</span>
-                 <span class="n">notification_service</span><span class="p">:</span> <span class="n">INotificationService</span><span class="p">,</span>
-                 <span class="n">mapper</span><span class="p">:</span> <span class="n">IMapper</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">order_repository</span> <span class="o">=</span> <span class="n">order_repository</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">payment_service</span> <span class="o">=</span> <span class="n">payment_service</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">notification_service</span> <span class="o">=</span> <span class="n">notification_service</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">mapper</span> <span class="o">=</span> <span class="n">mapper</span>
-
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">place_order_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">order_dto</span><span class="p">:</span> <span class="n">OrderDto</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">OperationResult</span><span class="p">[</span><span class="n">OrderDto</span><span class="p">]:</span>
-        <span class="c1"># Dependencies injected automatically</span>
-        <span class="n">order</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mapper</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">order_dto</span><span class="p">,</span> <span class="n">Order</span><span class="p">)</span>
-
-        <span class="c1"># Process payment using injected service</span>
-        <span class="n">payment_result</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">payment_service</span><span class="o">.</span><span class="n">process_payment_async</span><span class="p">(</span><span class="n">order</span><span class="o">.</span><span class="n">total</span><span class="p">)</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">payment_result</span><span class="o">.</span><span class="n">success</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">OperationResult</span><span class="o">.</span><span class="n">bad_request</span><span class="p">(</span><span class="s2">"Payment failed"</span><span class="p">)</span>
-
-        <span class="c1"># Save using injected repository</span>
-        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">order_repository</span><span class="o">.</span><span class="n">save_async</span><span class="p">(</span><span class="n">order</span><span class="p">)</span>
-
-        <span class="c1"># Send notification using injected service</span>
-        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">notification_service</span><span class="o">.</span><span class="n">send_confirmation_async</span><span class="p">(</span><span class="n">order</span><span class="p">)</span>
-
-        <span class="k">return</span> <span class="n">OperationResult</span><span class="o">.</span><span class="n">ok</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mapper</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">order</span><span class="p">,</span> <span class="n">OrderDto</span><span class="p">))</span>
-
-<span class="k">class</span><span class="w"> </span><span class="nc">OrderController</span><span class="p">(</span><span class="n">ControllerBase</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">"""Controller with service injection"""</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
-                 <span class="n">service_provider</span><span class="p">:</span> <span class="n">ServiceProvider</span><span class="p">,</span>
-                 <span class="n">mapper</span><span class="p">:</span> <span class="n">IMapper</span><span class="p">,</span>
-                 <span class="n">mediator</span><span class="p">:</span> <span class="n">IMediator</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">service_provider</span><span class="p">,</span> <span class="n">mapper</span><span class="p">,</span> <span class="n">mediator</span><span class="p">)</span>
-        <span class="c1"># Dependencies resolved automatically by framework</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a href="#__codelineno-6-1" id="__codelineno-6-1" name="__codelineno-6-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">OrderService</span><span class="p">:</span>
+</span><span id="__span-6-2"><a href="#__codelineno-6-2" id="__codelineno-6-2" name="__codelineno-6-2"></a><span class="w">    </span><span class="sd">"""Service with injected dependencies"""</span>
+</span><span id="__span-6-3"><a href="#__codelineno-6-3" id="__codelineno-6-3" name="__codelineno-6-3"></a>
+</span><span id="__span-6-4"><a href="#__codelineno-6-4" id="__codelineno-6-4" name="__codelineno-6-4"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+</span><span id="__span-6-5"><a href="#__codelineno-6-5" id="__codelineno-6-5" name="__codelineno-6-5"></a>                 <span class="n">order_repository</span><span class="p">:</span> <span class="n">IOrderRepository</span><span class="p">,</span>
+</span><span id="__span-6-6"><a href="#__codelineno-6-6" id="__codelineno-6-6" name="__codelineno-6-6"></a>                 <span class="n">payment_service</span><span class="p">:</span> <span class="n">IPaymentService</span><span class="p">,</span>
+</span><span id="__span-6-7"><a href="#__codelineno-6-7" id="__codelineno-6-7" name="__codelineno-6-7"></a>                 <span class="n">notification_service</span><span class="p">:</span> <span class="n">INotificationService</span><span class="p">,</span>
+</span><span id="__span-6-8"><a href="#__codelineno-6-8" id="__codelineno-6-8" name="__codelineno-6-8"></a>                 <span class="n">mapper</span><span class="p">:</span> <span class="n">IMapper</span><span class="p">):</span>
+</span><span id="__span-6-9"><a href="#__codelineno-6-9" id="__codelineno-6-9" name="__codelineno-6-9"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">order_repository</span> <span class="o">=</span> <span class="n">order_repository</span>
+</span><span id="__span-6-10"><a href="#__codelineno-6-10" id="__codelineno-6-10" name="__codelineno-6-10"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">payment_service</span> <span class="o">=</span> <span class="n">payment_service</span>
+</span><span id="__span-6-11"><a href="#__codelineno-6-11" id="__codelineno-6-11" name="__codelineno-6-11"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">notification_service</span> <span class="o">=</span> <span class="n">notification_service</span>
+</span><span id="__span-6-12"><a href="#__codelineno-6-12" id="__codelineno-6-12" name="__codelineno-6-12"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">mapper</span> <span class="o">=</span> <span class="n">mapper</span>
+</span><span id="__span-6-13"><a href="#__codelineno-6-13" id="__codelineno-6-13" name="__codelineno-6-13"></a>
+</span><span id="__span-6-14"><a href="#__codelineno-6-14" id="__codelineno-6-14" name="__codelineno-6-14"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">place_order_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">order_dto</span><span class="p">:</span> <span class="n">OrderDto</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">OperationResult</span><span class="p">[</span><span class="n">OrderDto</span><span class="p">]:</span>
+</span><span id="__span-6-15"><a href="#__codelineno-6-15" id="__codelineno-6-15" name="__codelineno-6-15"></a>        <span class="c1"># Dependencies injected automatically</span>
+</span><span id="__span-6-16"><a href="#__codelineno-6-16" id="__codelineno-6-16" name="__codelineno-6-16"></a>        <span class="n">order</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mapper</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">order_dto</span><span class="p">,</span> <span class="n">Order</span><span class="p">)</span>
+</span><span id="__span-6-17"><a href="#__codelineno-6-17" id="__codelineno-6-17" name="__codelineno-6-17"></a>
+</span><span id="__span-6-18"><a href="#__codelineno-6-18" id="__codelineno-6-18" name="__codelineno-6-18"></a>        <span class="c1"># Process payment using injected service</span>
+</span><span id="__span-6-19"><a href="#__codelineno-6-19" id="__codelineno-6-19" name="__codelineno-6-19"></a>        <span class="n">payment_result</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">payment_service</span><span class="o">.</span><span class="n">process_payment_async</span><span class="p">(</span><span class="n">order</span><span class="o">.</span><span class="n">total</span><span class="p">)</span>
+</span><span id="__span-6-20"><a href="#__codelineno-6-20" id="__codelineno-6-20" name="__codelineno-6-20"></a>        <span class="k">if</span> <span class="ow">not</span> <span class="n">payment_result</span><span class="o">.</span><span class="n">success</span><span class="p">:</span>
+</span><span id="__span-6-21"><a href="#__codelineno-6-21" id="__codelineno-6-21" name="__codelineno-6-21"></a>            <span class="k">return</span> <span class="n">OperationResult</span><span class="o">.</span><span class="n">bad_request</span><span class="p">(</span><span class="s2">"Payment failed"</span><span class="p">)</span>
+</span><span id="__span-6-22"><a href="#__codelineno-6-22" id="__codelineno-6-22" name="__codelineno-6-22"></a>
+</span><span id="__span-6-23"><a href="#__codelineno-6-23" id="__codelineno-6-23" name="__codelineno-6-23"></a>        <span class="c1"># Save using injected repository</span>
+</span><span id="__span-6-24"><a href="#__codelineno-6-24" id="__codelineno-6-24" name="__codelineno-6-24"></a>        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">order_repository</span><span class="o">.</span><span class="n">save_async</span><span class="p">(</span><span class="n">order</span><span class="p">)</span>
+</span><span id="__span-6-25"><a href="#__codelineno-6-25" id="__codelineno-6-25" name="__codelineno-6-25"></a>
+</span><span id="__span-6-26"><a href="#__codelineno-6-26" id="__codelineno-6-26" name="__codelineno-6-26"></a>        <span class="c1"># Send notification using injected service</span>
+</span><span id="__span-6-27"><a href="#__codelineno-6-27" id="__codelineno-6-27" name="__codelineno-6-27"></a>        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">notification_service</span><span class="o">.</span><span class="n">send_confirmation_async</span><span class="p">(</span><span class="n">order</span><span class="p">)</span>
+</span><span id="__span-6-28"><a href="#__codelineno-6-28" id="__codelineno-6-28" name="__codelineno-6-28"></a>
+</span><span id="__span-6-29"><a href="#__codelineno-6-29" id="__codelineno-6-29" name="__codelineno-6-29"></a>        <span class="k">return</span> <span class="n">OperationResult</span><span class="o">.</span><span class="n">ok</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mapper</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">order</span><span class="p">,</span> <span class="n">OrderDto</span><span class="p">))</span>
+</span><span id="__span-6-30"><a href="#__codelineno-6-30" id="__codelineno-6-30" name="__codelineno-6-30"></a>
+</span><span id="__span-6-31"><a href="#__codelineno-6-31" id="__codelineno-6-31" name="__codelineno-6-31"></a><span class="k">class</span><span class="w"> </span><span class="nc">OrderController</span><span class="p">(</span><span class="n">ControllerBase</span><span class="p">):</span>
+</span><span id="__span-6-32"><a href="#__codelineno-6-32" id="__codelineno-6-32" name="__codelineno-6-32"></a><span class="w">    </span><span class="sd">"""Controller with service injection"""</span>
+</span><span id="__span-6-33"><a href="#__codelineno-6-33" id="__codelineno-6-33" name="__codelineno-6-33"></a>
+</span><span id="__span-6-34"><a href="#__codelineno-6-34" id="__codelineno-6-34" name="__codelineno-6-34"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+</span><span id="__span-6-35"><a href="#__codelineno-6-35" id="__codelineno-6-35" name="__codelineno-6-35"></a>                 <span class="n">service_provider</span><span class="p">:</span> <span class="n">ServiceProvider</span><span class="p">,</span>
+</span><span id="__span-6-36"><a href="#__codelineno-6-36" id="__codelineno-6-36" name="__codelineno-6-36"></a>                 <span class="n">mapper</span><span class="p">:</span> <span class="n">IMapper</span><span class="p">,</span>
+</span><span id="__span-6-37"><a href="#__codelineno-6-37" id="__codelineno-6-37" name="__codelineno-6-37"></a>                 <span class="n">mediator</span><span class="p">:</span> <span class="n">IMediator</span><span class="p">):</span>
+</span><span id="__span-6-38"><a href="#__codelineno-6-38" id="__codelineno-6-38" name="__codelineno-6-38"></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">service_provider</span><span class="p">,</span> <span class="n">mapper</span><span class="p">,</span> <span class="n">mediator</span><span class="p">)</span>
+</span><span id="__span-6-39"><a href="#__codelineno-6-39" id="__codelineno-6-39" name="__codelineno-6-39"></a>        <span class="c1"># Dependencies resolved automatically by framework</span>
+</span></code></pre></div>
 <h2 id="testing-with-dependency-injection">🧪 Testing with Dependency Injection<a class="headerlink" href="#testing-with-dependency-injection" title="Permanent link">¶</a></h2>
 <p><strong>Pattern</strong>: Easy mocking and testing through dependency injection</p>
-<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">unittest.mock</span><span class="w"> </span><span class="kn">import</span> <span class="n">Mock</span><span class="p">,</span> <span class="n">AsyncMock</span>
-
-<span class="k">class</span><span class="w"> </span><span class="nc">TestOrderService</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""Test class demonstrating DI testing benefits"""</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">setup_method</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="c1"># Create mocks for all dependencies</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">order_repository</span> <span class="o">=</span> <span class="n">Mock</span><span class="p">(</span><span class="n">spec</span><span class="o">=</span><span class="n">IOrderRepository</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">payment_service</span> <span class="o">=</span> <span class="n">Mock</span><span class="p">(</span><span class="n">spec</span><span class="o">=</span><span class="n">IPaymentService</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">notification_service</span> <span class="o">=</span> <span class="n">Mock</span><span class="p">(</span><span class="n">spec</span><span class="o">=</span><span class="n">INotificationService</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">mapper</span> <span class="o">=</span> <span class="n">Mock</span><span class="p">(</span><span class="n">spec</span><span class="o">=</span><span class="n">IMapper</span><span class="p">)</span>
-
-        <span class="c1"># Inject mocks into service</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">order_service</span> <span class="o">=</span> <span class="n">OrderService</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">order_repository</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">payment_service</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">notification_service</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">mapper</span>
-        <span class="p">)</span>
-
-    <span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">asyncio</span>
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">test_place_order_success</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="c1"># Arrange - setup mock behaviors</span>
-        <span class="n">order_dto</span> <span class="o">=</span> <span class="n">OrderDto</span><span class="p">(</span><span class="n">customer_name</span><span class="o">=</span><span class="s2">"Test"</span><span class="p">,</span> <span class="n">total</span><span class="o">=</span><span class="mf">25.99</span><span class="p">)</span>
-        <span class="n">order</span> <span class="o">=</span> <span class="n">Order</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s2">"123"</span><span class="p">,</span> <span class="n">customer_name</span><span class="o">=</span><span class="s2">"Test"</span><span class="p">,</span> <span class="n">total</span><span class="o">=</span><span class="mf">25.99</span><span class="p">)</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">mapper</span><span class="o">.</span><span class="n">map</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="n">order</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">payment_service</span><span class="o">.</span><span class="n">process_payment_async</span> <span class="o">=</span> <span class="n">AsyncMock</span><span class="p">(</span>
-            <span class="n">return_value</span><span class="o">=</span><span class="n">PaymentResult</span><span class="p">(</span><span class="n">success</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">order_repository</span><span class="o">.</span><span class="n">save_async</span> <span class="o">=</span> <span class="n">AsyncMock</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">notification_service</span><span class="o">.</span><span class="n">send_confirmation_async</span> <span class="o">=</span> <span class="n">AsyncMock</span><span class="p">()</span>
-
-        <span class="c1"># Act</span>
-        <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">order_service</span><span class="o">.</span><span class="n">place_order_async</span><span class="p">(</span><span class="n">order_dto</span><span class="p">)</span>
-
-        <span class="c1"># Assert</span>
-        <span class="k">assert</span> <span class="n">result</span><span class="o">.</span><span class="n">is_success</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">payment_service</span><span class="o">.</span><span class="n">process_payment_async</span><span class="o">.</span><span class="n">assert_called_once_with</span><span class="p">(</span><span class="mf">25.99</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">order_repository</span><span class="o">.</span><span class="n">save_async</span><span class="o">.</span><span class="n">assert_called_once_with</span><span class="p">(</span><span class="n">order</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">notification_service</span><span class="o">.</span><span class="n">send_confirmation_async</span><span class="o">.</span><span class="n">assert_called_once_with</span><span class="p">(</span><span class="n">order</span><span class="p">)</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-7-1"><a href="#__codelineno-7-1" id="__codelineno-7-1" name="__codelineno-7-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
+</span><span id="__span-7-2"><a href="#__codelineno-7-2" id="__codelineno-7-2" name="__codelineno-7-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">unittest.mock</span><span class="w"> </span><span class="kn">import</span> <span class="n">Mock</span><span class="p">,</span> <span class="n">AsyncMock</span>
+</span><span id="__span-7-3"><a href="#__codelineno-7-3" id="__codelineno-7-3" name="__codelineno-7-3"></a>
+</span><span id="__span-7-4"><a href="#__codelineno-7-4" id="__codelineno-7-4" name="__codelineno-7-4"></a><span class="k">class</span><span class="w"> </span><span class="nc">TestOrderService</span><span class="p">:</span>
+</span><span id="__span-7-5"><a href="#__codelineno-7-5" id="__codelineno-7-5" name="__codelineno-7-5"></a><span class="w">    </span><span class="sd">"""Test class demonstrating DI testing benefits"""</span>
+</span><span id="__span-7-6"><a href="#__codelineno-7-6" id="__codelineno-7-6" name="__codelineno-7-6"></a>
+</span><span id="__span-7-7"><a href="#__codelineno-7-7" id="__codelineno-7-7" name="__codelineno-7-7"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">setup_method</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="__span-7-8"><a href="#__codelineno-7-8" id="__codelineno-7-8" name="__codelineno-7-8"></a>        <span class="c1"># Create mocks for all dependencies</span>
+</span><span id="__span-7-9"><a href="#__codelineno-7-9" id="__codelineno-7-9" name="__codelineno-7-9"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">order_repository</span> <span class="o">=</span> <span class="n">Mock</span><span class="p">(</span><span class="n">spec</span><span class="o">=</span><span class="n">IOrderRepository</span><span class="p">)</span>
+</span><span id="__span-7-10"><a href="#__codelineno-7-10" id="__codelineno-7-10" name="__codelineno-7-10"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">payment_service</span> <span class="o">=</span> <span class="n">Mock</span><span class="p">(</span><span class="n">spec</span><span class="o">=</span><span class="n">IPaymentService</span><span class="p">)</span>
+</span><span id="__span-7-11"><a href="#__codelineno-7-11" id="__codelineno-7-11" name="__codelineno-7-11"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">notification_service</span> <span class="o">=</span> <span class="n">Mock</span><span class="p">(</span><span class="n">spec</span><span class="o">=</span><span class="n">INotificationService</span><span class="p">)</span>
+</span><span id="__span-7-12"><a href="#__codelineno-7-12" id="__codelineno-7-12" name="__codelineno-7-12"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">mapper</span> <span class="o">=</span> <span class="n">Mock</span><span class="p">(</span><span class="n">spec</span><span class="o">=</span><span class="n">IMapper</span><span class="p">)</span>
+</span><span id="__span-7-13"><a href="#__codelineno-7-13" id="__codelineno-7-13" name="__codelineno-7-13"></a>
+</span><span id="__span-7-14"><a href="#__codelineno-7-14" id="__codelineno-7-14" name="__codelineno-7-14"></a>        <span class="c1"># Inject mocks into service</span>
+</span><span id="__span-7-15"><a href="#__codelineno-7-15" id="__codelineno-7-15" name="__codelineno-7-15"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">order_service</span> <span class="o">=</span> <span class="n">OrderService</span><span class="p">(</span>
+</span><span id="__span-7-16"><a href="#__codelineno-7-16" id="__codelineno-7-16" name="__codelineno-7-16"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">order_repository</span><span class="p">,</span>
+</span><span id="__span-7-17"><a href="#__codelineno-7-17" id="__codelineno-7-17" name="__codelineno-7-17"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">payment_service</span><span class="p">,</span>
+</span><span id="__span-7-18"><a href="#__codelineno-7-18" id="__codelineno-7-18" name="__codelineno-7-18"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">notification_service</span><span class="p">,</span>
+</span><span id="__span-7-19"><a href="#__codelineno-7-19" id="__codelineno-7-19" name="__codelineno-7-19"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">mapper</span>
+</span><span id="__span-7-20"><a href="#__codelineno-7-20" id="__codelineno-7-20" name="__codelineno-7-20"></a>        <span class="p">)</span>
+</span><span id="__span-7-21"><a href="#__codelineno-7-21" id="__codelineno-7-21" name="__codelineno-7-21"></a>
+</span><span id="__span-7-22"><a href="#__codelineno-7-22" id="__codelineno-7-22" name="__codelineno-7-22"></a>    <span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">asyncio</span>
+</span><span id="__span-7-23"><a href="#__codelineno-7-23" id="__codelineno-7-23" name="__codelineno-7-23"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">test_place_order_success</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="__span-7-24"><a href="#__codelineno-7-24" id="__codelineno-7-24" name="__codelineno-7-24"></a>        <span class="c1"># Arrange - setup mock behaviors</span>
+</span><span id="__span-7-25"><a href="#__codelineno-7-25" id="__codelineno-7-25" name="__codelineno-7-25"></a>        <span class="n">order_dto</span> <span class="o">=</span> <span class="n">OrderDto</span><span class="p">(</span><span class="n">customer_name</span><span class="o">=</span><span class="s2">"Test"</span><span class="p">,</span> <span class="n">total</span><span class="o">=</span><span class="mf">25.99</span><span class="p">)</span>
+</span><span id="__span-7-26"><a href="#__codelineno-7-26" id="__codelineno-7-26" name="__codelineno-7-26"></a>        <span class="n">order</span> <span class="o">=</span> <span class="n">Order</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s2">"123"</span><span class="p">,</span> <span class="n">customer_name</span><span class="o">=</span><span class="s2">"Test"</span><span class="p">,</span> <span class="n">total</span><span class="o">=</span><span class="mf">25.99</span><span class="p">)</span>
+</span><span id="__span-7-27"><a href="#__codelineno-7-27" id="__codelineno-7-27" name="__codelineno-7-27"></a>
+</span><span id="__span-7-28"><a href="#__codelineno-7-28" id="__codelineno-7-28" name="__codelineno-7-28"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">mapper</span><span class="o">.</span><span class="n">map</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="n">order</span>
+</span><span id="__span-7-29"><a href="#__codelineno-7-29" id="__codelineno-7-29" name="__codelineno-7-29"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">payment_service</span><span class="o">.</span><span class="n">process_payment_async</span> <span class="o">=</span> <span class="n">AsyncMock</span><span class="p">(</span>
+</span><span id="__span-7-30"><a href="#__codelineno-7-30" id="__codelineno-7-30" name="__codelineno-7-30"></a>            <span class="n">return_value</span><span class="o">=</span><span class="n">PaymentResult</span><span class="p">(</span><span class="n">success</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="__span-7-31"><a href="#__codelineno-7-31" id="__codelineno-7-31" name="__codelineno-7-31"></a>        <span class="p">)</span>
+</span><span id="__span-7-32"><a href="#__codelineno-7-32" id="__codelineno-7-32" name="__codelineno-7-32"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">order_repository</span><span class="o">.</span><span class="n">save_async</span> <span class="o">=</span> <span class="n">AsyncMock</span><span class="p">()</span>
+</span><span id="__span-7-33"><a href="#__codelineno-7-33" id="__codelineno-7-33" name="__codelineno-7-33"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">notification_service</span><span class="o">.</span><span class="n">send_confirmation_async</span> <span class="o">=</span> <span class="n">AsyncMock</span><span class="p">()</span>
+</span><span id="__span-7-34"><a href="#__codelineno-7-34" id="__codelineno-7-34" name="__codelineno-7-34"></a>
+</span><span id="__span-7-35"><a href="#__codelineno-7-35" id="__codelineno-7-35" name="__codelineno-7-35"></a>        <span class="c1"># Act</span>
+</span><span id="__span-7-36"><a href="#__codelineno-7-36" id="__codelineno-7-36" name="__codelineno-7-36"></a>        <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">order_service</span><span class="o">.</span><span class="n">place_order_async</span><span class="p">(</span><span class="n">order_dto</span><span class="p">)</span>
+</span><span id="__span-7-37"><a href="#__codelineno-7-37" id="__codelineno-7-37" name="__codelineno-7-37"></a>
+</span><span id="__span-7-38"><a href="#__codelineno-7-38" id="__codelineno-7-38" name="__codelineno-7-38"></a>        <span class="c1"># Assert</span>
+</span><span id="__span-7-39"><a href="#__codelineno-7-39" id="__codelineno-7-39" name="__codelineno-7-39"></a>        <span class="k">assert</span> <span class="n">result</span><span class="o">.</span><span class="n">is_success</span>
+</span><span id="__span-7-40"><a href="#__codelineno-7-40" id="__codelineno-7-40" name="__codelineno-7-40"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">payment_service</span><span class="o">.</span><span class="n">process_payment_async</span><span class="o">.</span><span class="n">assert_called_once_with</span><span class="p">(</span><span class="mf">25.99</span><span class="p">)</span>
+</span><span id="__span-7-41"><a href="#__codelineno-7-41" id="__codelineno-7-41" name="__codelineno-7-41"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">order_repository</span><span class="o">.</span><span class="n">save_async</span><span class="o">.</span><span class="n">assert_called_once_with</span><span class="p">(</span><span class="n">order</span><span class="p">)</span>
+</span><span id="__span-7-42"><a href="#__codelineno-7-42" id="__codelineno-7-42" name="__codelineno-7-42"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">notification_service</span><span class="o">.</span><span class="n">send_confirmation_async</span><span class="o">.</span><span class="n">assert_called_once_with</span><span class="p">(</span><span class="n">order</span><span class="p">)</span>
+</span></code></pre></div>
 <h2 id="advanced-patterns">🚀 Advanced Patterns<a class="headerlink" href="#advanced-patterns" title="Permanent link">¶</a></h2>
 <h3 id="service-locator-anti-pattern">Service Locator Anti-Pattern<a class="headerlink" href="#service-locator-anti-pattern" title="Permanent link">¶</a></h3>
 <p><strong>❌ Avoid</strong>: Service Locator pattern hides dependencies</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># BAD - Service Locator hides dependencies</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">OrderService</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">process_order</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">order_dto</span><span class="p">:</span> <span class="n">OrderDto</span><span class="p">):</span>
-        <span class="c1"># Hidden dependencies - hard to test and understand</span>
-        <span class="n">repository</span> <span class="o">=</span> <span class="n">ServiceLocator</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">IOrderRepository</span><span class="p">)</span>
-        <span class="n">payment</span> <span class="o">=</span> <span class="n">ServiceLocator</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">IPaymentService</span><span class="p">)</span>
-        <span class="c1"># ... rest of implementation</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-8-1"><a href="#__codelineno-8-1" id="__codelineno-8-1" name="__codelineno-8-1"></a><span class="c1"># BAD - Service Locator hides dependencies</span>
+</span><span id="__span-8-2"><a href="#__codelineno-8-2" id="__codelineno-8-2" name="__codelineno-8-2"></a><span class="k">class</span><span class="w"> </span><span class="nc">OrderService</span><span class="p">:</span>
+</span><span id="__span-8-3"><a href="#__codelineno-8-3" id="__codelineno-8-3" name="__codelineno-8-3"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">process_order</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">order_dto</span><span class="p">:</span> <span class="n">OrderDto</span><span class="p">):</span>
+</span><span id="__span-8-4"><a href="#__codelineno-8-4" id="__codelineno-8-4" name="__codelineno-8-4"></a>        <span class="c1"># Hidden dependencies - hard to test and understand</span>
+</span><span id="__span-8-5"><a href="#__codelineno-8-5" id="__codelineno-8-5" name="__codelineno-8-5"></a>        <span class="n">repository</span> <span class="o">=</span> <span class="n">ServiceLocator</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">IOrderRepository</span><span class="p">)</span>
+</span><span id="__span-8-6"><a href="#__codelineno-8-6" id="__codelineno-8-6" name="__codelineno-8-6"></a>        <span class="n">payment</span> <span class="o">=</span> <span class="n">ServiceLocator</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">IPaymentService</span><span class="p">)</span>
+</span><span id="__span-8-7"><a href="#__codelineno-8-7" id="__codelineno-8-7" name="__codelineno-8-7"></a>        <span class="c1"># ... rest of implementation</span>
+</span></code></pre></div>
 <p><strong>✅ Prefer</strong>: Constructor Injection makes dependencies explicit</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># GOOD - Dependencies are explicit and testable</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">OrderService</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
-                 <span class="n">repository</span><span class="p">:</span> <span class="n">IOrderRepository</span><span class="p">,</span>
-                 <span class="n">payment</span><span class="p">:</span> <span class="n">IPaymentService</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">repository</span> <span class="o">=</span> <span class="n">repository</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">payment</span> <span class="o">=</span> <span class="n">payment</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-9-1"><a href="#__codelineno-9-1" id="__codelineno-9-1" name="__codelineno-9-1"></a><span class="c1"># GOOD - Dependencies are explicit and testable</span>
+</span><span id="__span-9-2"><a href="#__codelineno-9-2" id="__codelineno-9-2" name="__codelineno-9-2"></a><span class="k">class</span><span class="w"> </span><span class="nc">OrderService</span><span class="p">:</span>
+</span><span id="__span-9-3"><a href="#__codelineno-9-3" id="__codelineno-9-3" name="__codelineno-9-3"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+</span><span id="__span-9-4"><a href="#__codelineno-9-4" id="__codelineno-9-4" name="__codelineno-9-4"></a>                 <span class="n">repository</span><span class="p">:</span> <span class="n">IOrderRepository</span><span class="p">,</span>
+</span><span id="__span-9-5"><a href="#__codelineno-9-5" id="__codelineno-9-5" name="__codelineno-9-5"></a>                 <span class="n">payment</span><span class="p">:</span> <span class="n">IPaymentService</span><span class="p">):</span>
+</span><span id="__span-9-6"><a href="#__codelineno-9-6" id="__codelineno-9-6" name="__codelineno-9-6"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">repository</span> <span class="o">=</span> <span class="n">repository</span>
+</span><span id="__span-9-7"><a href="#__codelineno-9-7" id="__codelineno-9-7" name="__codelineno-9-7"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">payment</span> <span class="o">=</span> <span class="n">payment</span>
+</span></code></pre></div>
 <h3 id="configuration-based-registration">Configuration-Based Registration<a class="headerlink" href="#configuration-based-registration" title="Permanent link">¶</a></h3>
 <p><strong>Pattern</strong>: Configure services based on environment or settings</p>
-<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">configure_services</span><span class="p">(</span><span class="n">services</span><span class="p">:</span> <span class="n">ServiceCollection</span><span class="p">,</span> <span class="n">environment</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">"""Configure services based on environment"""</span>
-
-    <span class="c1"># Always register core abstractions</span>
-    <span class="n">services</span><span class="o">.</span><span class="n">add_transient</span><span class="p">(</span><span class="n">IMapper</span><span class="p">,</span> <span class="n">AutoMapper</span><span class="p">)</span>
-    <span class="n">services</span><span class="o">.</span><span class="n">add_scoped</span><span class="p">(</span><span class="n">IOrderService</span><span class="p">,</span> <span class="n">OrderService</span><span class="p">)</span>
-
-    <span class="c1"># Environment-specific implementations</span>
-    <span class="k">if</span> <span class="n">environment</span> <span class="o">==</span> <span class="s2">"development"</span><span class="p">:</span>
-        <span class="n">services</span><span class="o">.</span><span class="n">add_scoped</span><span class="p">(</span><span class="n">IOrderRepository</span><span class="p">,</span> <span class="n">FileOrderRepository</span><span class="p">)</span>
-        <span class="n">services</span><span class="o">.</span><span class="n">add_singleton</span><span class="p">(</span><span class="n">IPaymentService</span><span class="p">,</span> <span class="n">MockPaymentService</span><span class="p">)</span>
-        <span class="n">services</span><span class="o">.</span><span class="n">add_singleton</span><span class="p">(</span><span class="n">INotificationService</span><span class="p">,</span> <span class="n">ConsoleNotificationService</span><span class="p">)</span>
-
-    <span class="k">elif</span> <span class="n">environment</span> <span class="o">==</span> <span class="s2">"testing"</span><span class="p">:</span>
-        <span class="n">services</span><span class="o">.</span><span class="n">add_scoped</span><span class="p">(</span><span class="n">IOrderRepository</span><span class="p">,</span> <span class="n">InMemoryOrderRepository</span><span class="p">)</span>
-        <span class="n">services</span><span class="o">.</span><span class="n">add_singleton</span><span class="p">(</span><span class="n">IPaymentService</span><span class="p">,</span> <span class="n">MockPaymentService</span><span class="p">)</span>
-        <span class="n">services</span><span class="o">.</span><span class="n">add_singleton</span><span class="p">(</span><span class="n">INotificationService</span><span class="p">,</span> <span class="n">NoOpNotificationService</span><span class="p">)</span>
-
-    <span class="k">elif</span> <span class="n">environment</span> <span class="o">==</span> <span class="s2">"production"</span><span class="p">:</span>
-        <span class="n">services</span><span class="o">.</span><span class="n">add_scoped</span><span class="p">(</span><span class="n">IOrderRepository</span><span class="p">,</span> <span class="n">MongoOrderRepository</span><span class="p">)</span>
-        <span class="n">services</span><span class="o">.</span><span class="n">add_singleton</span><span class="p">(</span><span class="n">IPaymentService</span><span class="p">,</span> <span class="n">StripePaymentService</span><span class="p">)</span>
-        <span class="n">services</span><span class="o">.</span><span class="n">add_singleton</span><span class="p">(</span><span class="n">INotificationService</span><span class="p">,</span> <span class="n">TwilioNotificationService</span><span class="p">)</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-10-1"><a href="#__codelineno-10-1" id="__codelineno-10-1" name="__codelineno-10-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">configure_services</span><span class="p">(</span><span class="n">services</span><span class="p">:</span> <span class="n">ServiceCollection</span><span class="p">,</span> <span class="n">environment</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+</span><span id="__span-10-2"><a href="#__codelineno-10-2" id="__codelineno-10-2" name="__codelineno-10-2"></a><span class="w">    </span><span class="sd">"""Configure services based on environment"""</span>
+</span><span id="__span-10-3"><a href="#__codelineno-10-3" id="__codelineno-10-3" name="__codelineno-10-3"></a>
+</span><span id="__span-10-4"><a href="#__codelineno-10-4" id="__codelineno-10-4" name="__codelineno-10-4"></a>    <span class="c1"># Always register core abstractions</span>
+</span><span id="__span-10-5"><a href="#__codelineno-10-5" id="__codelineno-10-5" name="__codelineno-10-5"></a>    <span class="n">services</span><span class="o">.</span><span class="n">add_transient</span><span class="p">(</span><span class="n">IMapper</span><span class="p">,</span> <span class="n">AutoMapper</span><span class="p">)</span>
+</span><span id="__span-10-6"><a href="#__codelineno-10-6" id="__codelineno-10-6" name="__codelineno-10-6"></a>    <span class="n">services</span><span class="o">.</span><span class="n">add_scoped</span><span class="p">(</span><span class="n">IOrderService</span><span class="p">,</span> <span class="n">OrderService</span><span class="p">)</span>
+</span><span id="__span-10-7"><a href="#__codelineno-10-7" id="__codelineno-10-7" name="__codelineno-10-7"></a>
+</span><span id="__span-10-8"><a href="#__codelineno-10-8" id="__codelineno-10-8" name="__codelineno-10-8"></a>    <span class="c1"># Environment-specific implementations</span>
+</span><span id="__span-10-9"><a href="#__codelineno-10-9" id="__codelineno-10-9" name="__codelineno-10-9"></a>    <span class="k">if</span> <span class="n">environment</span> <span class="o">==</span> <span class="s2">"development"</span><span class="p">:</span>
+</span><span id="__span-10-10"><a href="#__codelineno-10-10" id="__codelineno-10-10" name="__codelineno-10-10"></a>        <span class="n">services</span><span class="o">.</span><span class="n">add_scoped</span><span class="p">(</span><span class="n">IOrderRepository</span><span class="p">,</span> <span class="n">FileOrderRepository</span><span class="p">)</span>
+</span><span id="__span-10-11"><a href="#__codelineno-10-11" id="__codelineno-10-11" name="__codelineno-10-11"></a>        <span class="n">services</span><span class="o">.</span><span class="n">add_singleton</span><span class="p">(</span><span class="n">IPaymentService</span><span class="p">,</span> <span class="n">MockPaymentService</span><span class="p">)</span>
+</span><span id="__span-10-12"><a href="#__codelineno-10-12" id="__codelineno-10-12" name="__codelineno-10-12"></a>        <span class="n">services</span><span class="o">.</span><span class="n">add_singleton</span><span class="p">(</span><span class="n">INotificationService</span><span class="p">,</span> <span class="n">ConsoleNotificationService</span><span class="p">)</span>
+</span><span id="__span-10-13"><a href="#__codelineno-10-13" id="__codelineno-10-13" name="__codelineno-10-13"></a>
+</span><span id="__span-10-14"><a href="#__codelineno-10-14" id="__codelineno-10-14" name="__codelineno-10-14"></a>    <span class="k">elif</span> <span class="n">environment</span> <span class="o">==</span> <span class="s2">"testing"</span><span class="p">:</span>
+</span><span id="__span-10-15"><a href="#__codelineno-10-15" id="__codelineno-10-15" name="__codelineno-10-15"></a>        <span class="n">services</span><span class="o">.</span><span class="n">add_scoped</span><span class="p">(</span><span class="n">IOrderRepository</span><span class="p">,</span> <span class="n">InMemoryOrderRepository</span><span class="p">)</span>
+</span><span id="__span-10-16"><a href="#__codelineno-10-16" id="__codelineno-10-16" name="__codelineno-10-16"></a>        <span class="n">services</span><span class="o">.</span><span class="n">add_singleton</span><span class="p">(</span><span class="n">IPaymentService</span><span class="p">,</span> <span class="n">MockPaymentService</span><span class="p">)</span>
+</span><span id="__span-10-17"><a href="#__codelineno-10-17" id="__codelineno-10-17" name="__codelineno-10-17"></a>        <span class="n">services</span><span class="o">.</span><span class="n">add_singleton</span><span class="p">(</span><span class="n">INotificationService</span><span class="p">,</span> <span class="n">NoOpNotificationService</span><span class="p">)</span>
+</span><span id="__span-10-18"><a href="#__codelineno-10-18" id="__codelineno-10-18" name="__codelineno-10-18"></a>
+</span><span id="__span-10-19"><a href="#__codelineno-10-19" id="__codelineno-10-19" name="__codelineno-10-19"></a>    <span class="k">elif</span> <span class="n">environment</span> <span class="o">==</span> <span class="s2">"production"</span><span class="p">:</span>
+</span><span id="__span-10-20"><a href="#__codelineno-10-20" id="__codelineno-10-20" name="__codelineno-10-20"></a>        <span class="n">services</span><span class="o">.</span><span class="n">add_scoped</span><span class="p">(</span><span class="n">IOrderRepository</span><span class="p">,</span> <span class="n">MongoOrderRepository</span><span class="p">)</span>
+</span><span id="__span-10-21"><a href="#__codelineno-10-21" id="__codelineno-10-21" name="__codelineno-10-21"></a>        <span class="n">services</span><span class="o">.</span><span class="n">add_singleton</span><span class="p">(</span><span class="n">IPaymentService</span><span class="p">,</span> <span class="n">StripePaymentService</span><span class="p">)</span>
+</span><span id="__span-10-22"><a href="#__codelineno-10-22" id="__codelineno-10-22" name="__codelineno-10-22"></a>        <span class="n">services</span><span class="o">.</span><span class="n">add_singleton</span><span class="p">(</span><span class="n">INotificationService</span><span class="p">,</span> <span class="n">TwilioNotificationService</span><span class="p">)</span>
+</span></code></pre></div>
 <h2 id="integration-with-other-patterns">🔗 Integration with Other Patterns<a class="headerlink" href="#integration-with-other-patterns" title="Permanent link">¶</a></h2>
 <h3 id="di-cqrs-pattern">DI + CQRS Pattern<a class="headerlink" href="#di-cqrs-pattern" title="Permanent link">¶</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Command handlers with injected dependencies</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">PlaceOrderHandler</span><span class="p">(</span><span class="n">ICommandHandler</span><span class="p">[</span><span class="n">PlaceOrderCommand</span><span class="p">,</span> <span class="n">OperationResult</span><span class="p">]):</span>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
-                 <span class="n">order_repository</span><span class="p">:</span> <span class="n">IOrderRepository</span><span class="p">,</span>
-                 <span class="n">payment_service</span><span class="p">:</span> <span class="n">IPaymentService</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">order_repository</span> <span class="o">=</span> <span class="n">order_repository</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">payment_service</span> <span class="o">=</span> <span class="n">payment_service</span>
-
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">handle_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command</span><span class="p">:</span> <span class="n">PlaceOrderCommand</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">OperationResult</span><span class="p">:</span>
-        <span class="c1"># Implementation uses injected dependencies</span>
-        <span class="k">pass</span>
-
-<span class="c1"># Register handlers</span>
-<span class="n">services</span><span class="o">.</span><span class="n">add_scoped</span><span class="p">(</span><span class="n">ICommandHandler</span><span class="p">[</span><span class="n">PlaceOrderCommand</span><span class="p">,</span> <span class="n">OperationResult</span><span class="p">],</span> <span class="n">PlaceOrderHandler</span><span class="p">)</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-11-1"><a href="#__codelineno-11-1" id="__codelineno-11-1" name="__codelineno-11-1"></a><span class="c1"># Command handlers with injected dependencies</span>
+</span><span id="__span-11-2"><a href="#__codelineno-11-2" id="__codelineno-11-2" name="__codelineno-11-2"></a><span class="k">class</span><span class="w"> </span><span class="nc">PlaceOrderHandler</span><span class="p">(</span><span class="n">ICommandHandler</span><span class="p">[</span><span class="n">PlaceOrderCommand</span><span class="p">,</span> <span class="n">OperationResult</span><span class="p">]):</span>
+</span><span id="__span-11-3"><a href="#__codelineno-11-3" id="__codelineno-11-3" name="__codelineno-11-3"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+</span><span id="__span-11-4"><a href="#__codelineno-11-4" id="__codelineno-11-4" name="__codelineno-11-4"></a>                 <span class="n">order_repository</span><span class="p">:</span> <span class="n">IOrderRepository</span><span class="p">,</span>
+</span><span id="__span-11-5"><a href="#__codelineno-11-5" id="__codelineno-11-5" name="__codelineno-11-5"></a>                 <span class="n">payment_service</span><span class="p">:</span> <span class="n">IPaymentService</span><span class="p">):</span>
+</span><span id="__span-11-6"><a href="#__codelineno-11-6" id="__codelineno-11-6" name="__codelineno-11-6"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">order_repository</span> <span class="o">=</span> <span class="n">order_repository</span>
+</span><span id="__span-11-7"><a href="#__codelineno-11-7" id="__codelineno-11-7" name="__codelineno-11-7"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">payment_service</span> <span class="o">=</span> <span class="n">payment_service</span>
+</span><span id="__span-11-8"><a href="#__codelineno-11-8" id="__codelineno-11-8" name="__codelineno-11-8"></a>
+</span><span id="__span-11-9"><a href="#__codelineno-11-9" id="__codelineno-11-9" name="__codelineno-11-9"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">handle_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command</span><span class="p">:</span> <span class="n">PlaceOrderCommand</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">OperationResult</span><span class="p">:</span>
+</span><span id="__span-11-10"><a href="#__codelineno-11-10" id="__codelineno-11-10" name="__codelineno-11-10"></a>        <span class="c1"># Implementation uses injected dependencies</span>
+</span><span id="__span-11-11"><a href="#__codelineno-11-11" id="__codelineno-11-11" name="__codelineno-11-11"></a>        <span class="k">pass</span>
+</span><span id="__span-11-12"><a href="#__codelineno-11-12" id="__codelineno-11-12" name="__codelineno-11-12"></a>
+</span><span id="__span-11-13"><a href="#__codelineno-11-13" id="__codelineno-11-13" name="__codelineno-11-13"></a><span class="c1"># Register handlers</span>
+</span><span id="__span-11-14"><a href="#__codelineno-11-14" id="__codelineno-11-14" name="__codelineno-11-14"></a><span class="n">services</span><span class="o">.</span><span class="n">add_scoped</span><span class="p">(</span><span class="n">ICommandHandler</span><span class="p">[</span><span class="n">PlaceOrderCommand</span><span class="p">,</span> <span class="n">OperationResult</span><span class="p">],</span> <span class="n">PlaceOrderHandler</span><span class="p">)</span>
+</span></code></pre></div>
 <h3 id="di-repository-pattern">DI + Repository Pattern<a class="headerlink" href="#di-repository-pattern" title="Permanent link">¶</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Repository with injected infrastructure dependencies</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">OrderRepository</span><span class="p">(</span><span class="n">IOrderRepository</span><span class="p">):</span>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
-                 <span class="n">mongo_client</span><span class="p">:</span> <span class="n">MongoClient</span><span class="p">,</span>
-                 <span class="n">logger</span><span class="p">:</span> <span class="n">ILogger</span><span class="p">,</span>
-                 <span class="n">cache</span><span class="p">:</span> <span class="n">ICache</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">collection</span> <span class="o">=</span> <span class="n">mongo_client</span><span class="o">.</span><span class="n">pizzeria</span><span class="o">.</span><span class="n">orders</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logger</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">cache</span> <span class="o">=</span> <span class="n">cache</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-12-1"><a href="#__codelineno-12-1" id="__codelineno-12-1" name="__codelineno-12-1"></a><span class="c1"># Repository with injected infrastructure dependencies</span>
+</span><span id="__span-12-2"><a href="#__codelineno-12-2" id="__codelineno-12-2" name="__codelineno-12-2"></a><span class="k">class</span><span class="w"> </span><span class="nc">OrderRepository</span><span class="p">(</span><span class="n">IOrderRepository</span><span class="p">):</span>
+</span><span id="__span-12-3"><a href="#__codelineno-12-3" id="__codelineno-12-3" name="__codelineno-12-3"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+</span><span id="__span-12-4"><a href="#__codelineno-12-4" id="__codelineno-12-4" name="__codelineno-12-4"></a>                 <span class="n">mongo_client</span><span class="p">:</span> <span class="n">MongoClient</span><span class="p">,</span>
+</span><span id="__span-12-5"><a href="#__codelineno-12-5" id="__codelineno-12-5" name="__codelineno-12-5"></a>                 <span class="n">logger</span><span class="p">:</span> <span class="n">ILogger</span><span class="p">,</span>
+</span><span id="__span-12-6"><a href="#__codelineno-12-6" id="__codelineno-12-6" name="__codelineno-12-6"></a>                 <span class="n">cache</span><span class="p">:</span> <span class="n">ICache</span><span class="p">):</span>
+</span><span id="__span-12-7"><a href="#__codelineno-12-7" id="__codelineno-12-7" name="__codelineno-12-7"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">collection</span> <span class="o">=</span> <span class="n">mongo_client</span><span class="o">.</span><span class="n">pizzeria</span><span class="o">.</span><span class="n">orders</span>
+</span><span id="__span-12-8"><a href="#__codelineno-12-8" id="__codelineno-12-8" name="__codelineno-12-8"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logger</span>
+</span><span id="__span-12-9"><a href="#__codelineno-12-9" id="__codelineno-12-9" name="__codelineno-12-9"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">cache</span> <span class="o">=</span> <span class="n">cache</span>
+</span></code></pre></div>
 <h2 id="related-patterns">📚 Related Patterns<a class="headerlink" href="#related-patterns" title="Permanent link">¶</a></h2>
 <ul>
 <li><strong><a href="../cqrs/">🎯 CQRS Pattern</a></strong> - Command and query handlers use DI for dependencies</li>

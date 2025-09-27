@@ -913,9 +913,9 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../references/python_type_hints/">
+<a class="md-nav__link" href="../../references/python_typing_guide/">
 <span class="md-ellipsis">
-    Python Type Hints
+    Python Typing Guide
     
   </span>
 </a>
@@ -937,9 +937,9 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../references/python_generic_types/">
+<a class="md-nav__link" href="../../references/test-mermaid/">
 <span class="md-ellipsis">
-    Python Generic Types
+    Mermaid References
     
   </span>
 </a>
@@ -1241,89 +1241,89 @@ watchers, controllers, and reconciliation loops.</p>
 <h2 id="core-components">🏗️ Core Components<a class="headerlink" href="#core-components" title="Permanent link">¶</a></h2>
 <h3 id="resource-definition">Resource Definition<a class="headerlink" href="#resource-definition" title="Permanent link">¶</a></h3>
 <p>Resources are declarative objects that define desired state:</p>
-<div class="highlight"><pre><span></span><code><span class="nd">@dataclass</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">LabInstanceResource</span><span class="p">:</span>
-    <span class="n">api_version</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"lab.neuroglia.com/v1"</span>
-    <span class="n">kind</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"LabInstance"</span>
-    <span class="n">metadata</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="n">spec</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>      <span class="c1"># Desired state</span>
-    <span class="n">status</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>    <span class="c1"># Current state</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a href="#__codelineno-0-1" id="__codelineno-0-1" name="__codelineno-0-1"></a><span class="nd">@dataclass</span>
+</span><span id="__span-0-2"><a href="#__codelineno-0-2" id="__codelineno-0-2" name="__codelineno-0-2"></a><span class="k">class</span><span class="w"> </span><span class="nc">LabInstanceResource</span><span class="p">:</span>
+</span><span id="__span-0-3"><a href="#__codelineno-0-3" id="__codelineno-0-3" name="__codelineno-0-3"></a>    <span class="n">api_version</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"lab.neuroglia.com/v1"</span>
+</span><span id="__span-0-4"><a href="#__codelineno-0-4" id="__codelineno-0-4" name="__codelineno-0-4"></a>    <span class="n">kind</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"LabInstance"</span>
+</span><span id="__span-0-5"><a href="#__codelineno-0-5" id="__codelineno-0-5" name="__codelineno-0-5"></a>    <span class="n">metadata</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="__span-0-6"><a href="#__codelineno-0-6" id="__codelineno-0-6" name="__codelineno-0-6"></a>    <span class="n">spec</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>      <span class="c1"># Desired state</span>
+</span><span id="__span-0-7"><a href="#__codelineno-0-7" id="__codelineno-0-7" name="__codelineno-0-7"></a>    <span class="n">status</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>    <span class="c1"># Current state</span>
+</span></code></pre></div>
 <h3 id="watcher-pattern">Watcher Pattern<a class="headerlink" href="#watcher-pattern" title="Permanent link">¶</a></h3>
 <p>Watchers continuously monitor resources for changes:</p>
-<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">LabInstanceWatcher</span><span class="p">:</span>
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">start_watching</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_running</span><span class="p">:</span>
-            <span class="c1"># Poll for changes since last known version</span>
-            <span class="n">changes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">storage</span><span class="o">.</span><span class="n">list_resources</span><span class="p">(</span><span class="n">since_version</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">last_resource_version</span><span class="p">)</span>
-
-            <span class="k">for</span> <span class="n">resource</span> <span class="ow">in</span> <span class="n">changes</span><span class="p">:</span>
-                <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_handle_resource_change</span><span class="p">(</span><span class="n">resource</span><span class="p">)</span>
-
-            <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">poll_interval</span><span class="p">)</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a href="#__codelineno-1-1" id="__codelineno-1-1" name="__codelineno-1-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">LabInstanceWatcher</span><span class="p">:</span>
+</span><span id="__span-1-2"><a href="#__codelineno-1-2" id="__codelineno-1-2" name="__codelineno-1-2"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">start_watching</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="__span-1-3"><a href="#__codelineno-1-3" id="__codelineno-1-3" name="__codelineno-1-3"></a>        <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_running</span><span class="p">:</span>
+</span><span id="__span-1-4"><a href="#__codelineno-1-4" id="__codelineno-1-4" name="__codelineno-1-4"></a>            <span class="c1"># Poll for changes since last known version</span>
+</span><span id="__span-1-5"><a href="#__codelineno-1-5" id="__codelineno-1-5" name="__codelineno-1-5"></a>            <span class="n">changes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">storage</span><span class="o">.</span><span class="n">list_resources</span><span class="p">(</span><span class="n">since_version</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">last_resource_version</span><span class="p">)</span>
+</span><span id="__span-1-6"><a href="#__codelineno-1-6" id="__codelineno-1-6" name="__codelineno-1-6"></a>
+</span><span id="__span-1-7"><a href="#__codelineno-1-7" id="__codelineno-1-7" name="__codelineno-1-7"></a>            <span class="k">for</span> <span class="n">resource</span> <span class="ow">in</span> <span class="n">changes</span><span class="p">:</span>
+</span><span id="__span-1-8"><a href="#__codelineno-1-8" id="__codelineno-1-8" name="__codelineno-1-8"></a>                <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_handle_resource_change</span><span class="p">(</span><span class="n">resource</span><span class="p">)</span>
+</span><span id="__span-1-9"><a href="#__codelineno-1-9" id="__codelineno-1-9" name="__codelineno-1-9"></a>
+</span><span id="__span-1-10"><a href="#__codelineno-1-10" id="__codelineno-1-10" name="__codelineno-1-10"></a>            <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">poll_interval</span><span class="p">)</span>
+</span></code></pre></div>
 <h3 id="controller-pattern">Controller Pattern<a class="headerlink" href="#controller-pattern" title="Permanent link">¶</a></h3>
 <p>Controllers respond to resource changes with business logic:</p>
-<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">LabInstanceController</span><span class="p">:</span>
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">handle_resource_event</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resource</span><span class="p">:</span> <span class="n">LabInstanceResource</span><span class="p">):</span>
-        <span class="n">current_state</span> <span class="o">=</span> <span class="n">resource</span><span class="o">.</span><span class="n">status</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'state'</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="n">current_state</span> <span class="o">==</span> <span class="n">ResourceState</span><span class="o">.</span><span class="n">PENDING</span><span class="o">.</span><span class="n">value</span><span class="p">:</span>
-            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_start_provisioning</span><span class="p">(</span><span class="n">resource</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">current_state</span> <span class="o">==</span> <span class="n">ResourceState</span><span class="o">.</span><span class="n">PROVISIONING</span><span class="o">.</span><span class="n">value</span><span class="p">:</span>
-            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_check_provisioning_status</span><span class="p">(</span><span class="n">resource</span><span class="p">)</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a href="#__codelineno-2-1" id="__codelineno-2-1" name="__codelineno-2-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">LabInstanceController</span><span class="p">:</span>
+</span><span id="__span-2-2"><a href="#__codelineno-2-2" id="__codelineno-2-2" name="__codelineno-2-2"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">handle_resource_event</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resource</span><span class="p">:</span> <span class="n">LabInstanceResource</span><span class="p">):</span>
+</span><span id="__span-2-3"><a href="#__codelineno-2-3" id="__codelineno-2-3" name="__codelineno-2-3"></a>        <span class="n">current_state</span> <span class="o">=</span> <span class="n">resource</span><span class="o">.</span><span class="n">status</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'state'</span><span class="p">)</span>
+</span><span id="__span-2-4"><a href="#__codelineno-2-4" id="__codelineno-2-4" name="__codelineno-2-4"></a>
+</span><span id="__span-2-5"><a href="#__codelineno-2-5" id="__codelineno-2-5" name="__codelineno-2-5"></a>        <span class="k">if</span> <span class="n">current_state</span> <span class="o">==</span> <span class="n">ResourceState</span><span class="o">.</span><span class="n">PENDING</span><span class="o">.</span><span class="n">value</span><span class="p">:</span>
+</span><span id="__span-2-6"><a href="#__codelineno-2-6" id="__codelineno-2-6" name="__codelineno-2-6"></a>            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_start_provisioning</span><span class="p">(</span><span class="n">resource</span><span class="p">)</span>
+</span><span id="__span-2-7"><a href="#__codelineno-2-7" id="__codelineno-2-7" name="__codelineno-2-7"></a>        <span class="k">elif</span> <span class="n">current_state</span> <span class="o">==</span> <span class="n">ResourceState</span><span class="o">.</span><span class="n">PROVISIONING</span><span class="o">.</span><span class="n">value</span><span class="p">:</span>
+</span><span id="__span-2-8"><a href="#__codelineno-2-8" id="__codelineno-2-8" name="__codelineno-2-8"></a>            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_check_provisioning_status</span><span class="p">(</span><span class="n">resource</span><span class="p">)</span>
+</span></code></pre></div>
 <h3 id="reconciliation-loop">Reconciliation Loop<a class="headerlink" href="#reconciliation-loop" title="Permanent link">¶</a></h3>
 <p>Reconcilers ensure eventual consistency:</p>
-<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">LabInstanceScheduler</span><span class="p">:</span>
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">start_reconciliation</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_running</span><span class="p">:</span>
-            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reconcile_all_resources</span><span class="p">()</span>
-            <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">reconcile_interval</span><span class="p">)</span>
-
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_reconcile_resource</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resource</span><span class="p">):</span>
-        <span class="c1"># Check for stuck states, timeouts, and drift</span>
-        <span class="c1"># Take corrective actions as needed</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a href="#__codelineno-3-1" id="__codelineno-3-1" name="__codelineno-3-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">LabInstanceScheduler</span><span class="p">:</span>
+</span><span id="__span-3-2"><a href="#__codelineno-3-2" id="__codelineno-3-2" name="__codelineno-3-2"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">start_reconciliation</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="__span-3-3"><a href="#__codelineno-3-3" id="__codelineno-3-3" name="__codelineno-3-3"></a>        <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_running</span><span class="p">:</span>
+</span><span id="__span-3-4"><a href="#__codelineno-3-4" id="__codelineno-3-4" name="__codelineno-3-4"></a>            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reconcile_all_resources</span><span class="p">()</span>
+</span><span id="__span-3-5"><a href="#__codelineno-3-5" id="__codelineno-3-5" name="__codelineno-3-5"></a>            <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">reconcile_interval</span><span class="p">)</span>
+</span><span id="__span-3-6"><a href="#__codelineno-3-6" id="__codelineno-3-6" name="__codelineno-3-6"></a>
+</span><span id="__span-3-7"><a href="#__codelineno-3-7" id="__codelineno-3-7" name="__codelineno-3-7"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_reconcile_resource</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resource</span><span class="p">):</span>
+</span><span id="__span-3-8"><a href="#__codelineno-3-8" id="__codelineno-3-8" name="__codelineno-3-8"></a>        <span class="c1"># Check for stuck states, timeouts, and drift</span>
+</span><span id="__span-3-9"><a href="#__codelineno-3-9" id="__codelineno-3-9" name="__codelineno-3-9"></a>        <span class="c1"># Take corrective actions as needed</span>
+</span></code></pre></div>
 <h2 id="key-patterns">🚀 Key Patterns<a class="headerlink" href="#key-patterns" title="Permanent link">¶</a></h2>
 <h3 id="1-declarative-state-management">1. Declarative State Management<a class="headerlink" href="#1-declarative-state-management" title="Permanent link">¶</a></h3>
 <p>Resources define <strong>what</strong> should exist, not <strong>how</strong> to create it:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Desired state (spec)</span>
-<span class="n">spec</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s1">'template'</span><span class="p">:</span> <span class="s1">'python-basics'</span><span class="p">,</span>
-    <span class="s1">'duration'</span><span class="p">:</span> <span class="s1">'60m'</span><span class="p">,</span>
-    <span class="s1">'studentEmail'</span><span class="p">:</span> <span class="s1">'student@example.com'</span>
-<span class="p">}</span>
-
-<span class="c1"># Current state (status)</span>
-<span class="n">status</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s1">'state'</span><span class="p">:</span> <span class="s1">'ready'</span><span class="p">,</span>
-    <span class="s1">'endpoint'</span><span class="p">:</span> <span class="s1">'https://lab-instance.example.com'</span><span class="p">,</span>
-    <span class="s1">'readyAt'</span><span class="p">:</span> <span class="s1">'2025-09-09T21:34:19Z'</span>
-<span class="p">}</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a href="#__codelineno-4-1" id="__codelineno-4-1" name="__codelineno-4-1"></a><span class="c1"># Desired state (spec)</span>
+</span><span id="__span-4-2"><a href="#__codelineno-4-2" id="__codelineno-4-2" name="__codelineno-4-2"></a><span class="n">spec</span> <span class="o">=</span> <span class="p">{</span>
+</span><span id="__span-4-3"><a href="#__codelineno-4-3" id="__codelineno-4-3" name="__codelineno-4-3"></a>    <span class="s1">'template'</span><span class="p">:</span> <span class="s1">'python-basics'</span><span class="p">,</span>
+</span><span id="__span-4-4"><a href="#__codelineno-4-4" id="__codelineno-4-4" name="__codelineno-4-4"></a>    <span class="s1">'duration'</span><span class="p">:</span> <span class="s1">'60m'</span><span class="p">,</span>
+</span><span id="__span-4-5"><a href="#__codelineno-4-5" id="__codelineno-4-5" name="__codelineno-4-5"></a>    <span class="s1">'studentEmail'</span><span class="p">:</span> <span class="s1">'student@example.com'</span>
+</span><span id="__span-4-6"><a href="#__codelineno-4-6" id="__codelineno-4-6" name="__codelineno-4-6"></a><span class="p">}</span>
+</span><span id="__span-4-7"><a href="#__codelineno-4-7" id="__codelineno-4-7" name="__codelineno-4-7"></a>
+</span><span id="__span-4-8"><a href="#__codelineno-4-8" id="__codelineno-4-8" name="__codelineno-4-8"></a><span class="c1"># Current state (status)</span>
+</span><span id="__span-4-9"><a href="#__codelineno-4-9" id="__codelineno-4-9" name="__codelineno-4-9"></a><span class="n">status</span> <span class="o">=</span> <span class="p">{</span>
+</span><span id="__span-4-10"><a href="#__codelineno-4-10" id="__codelineno-4-10" name="__codelineno-4-10"></a>    <span class="s1">'state'</span><span class="p">:</span> <span class="s1">'ready'</span><span class="p">,</span>
+</span><span id="__span-4-11"><a href="#__codelineno-4-11" id="__codelineno-4-11" name="__codelineno-4-11"></a>    <span class="s1">'endpoint'</span><span class="p">:</span> <span class="s1">'https://lab-instance.example.com'</span><span class="p">,</span>
+</span><span id="__span-4-12"><a href="#__codelineno-4-12" id="__codelineno-4-12" name="__codelineno-4-12"></a>    <span class="s1">'readyAt'</span><span class="p">:</span> <span class="s1">'2025-09-09T21:34:19Z'</span>
+</span><span id="__span-4-13"><a href="#__codelineno-4-13" id="__codelineno-4-13" name="__codelineno-4-13"></a><span class="p">}</span>
+</span></code></pre></div>
 <h3 id="2-event-driven-processing">2. Event-Driven Processing<a class="headerlink" href="#2-event-driven-processing" title="Permanent link">¶</a></h3>
 <p>Watchers detect changes and notify controllers immediately:</p>
-<div class="highlight"><pre><span></span><code>Resource Change → Watcher Detection → Controller Response → State Update
-</code></pre></div>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a href="#__codelineno-5-1" id="__codelineno-5-1" name="__codelineno-5-1"></a>Resource Change → Watcher Detection → Controller Response → State Update
+</span></code></pre></div>
 <h3 id="3-asynchronous-reconciliation">3. Asynchronous Reconciliation<a class="headerlink" href="#3-asynchronous-reconciliation" title="Permanent link">¶</a></h3>
 <p>Controllers handle immediate responses while reconcilers provide safety:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Controller: Immediate response to events</span>
-<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">handle_resource_event</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resource</span><span class="p">):</span>
-    <span class="k">if</span> <span class="n">resource</span><span class="o">.</span><span class="n">state</span> <span class="o">==</span> <span class="n">PENDING</span><span class="p">:</span>
-        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_provisioning</span><span class="p">(</span><span class="n">resource</span><span class="p">)</span>
-
-<span class="c1"># Reconciler: Periodic safety checks</span>
-<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">reconcile_resource</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resource</span><span class="p">):</span>
-    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_stuck_provisioning</span><span class="p">(</span><span class="n">resource</span><span class="p">):</span>
-        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">mark_as_failed</span><span class="p">(</span><span class="n">resource</span><span class="p">)</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a href="#__codelineno-6-1" id="__codelineno-6-1" name="__codelineno-6-1"></a><span class="c1"># Controller: Immediate response to events</span>
+</span><span id="__span-6-2"><a href="#__codelineno-6-2" id="__codelineno-6-2" name="__codelineno-6-2"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">handle_resource_event</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resource</span><span class="p">):</span>
+</span><span id="__span-6-3"><a href="#__codelineno-6-3" id="__codelineno-6-3" name="__codelineno-6-3"></a>    <span class="k">if</span> <span class="n">resource</span><span class="o">.</span><span class="n">state</span> <span class="o">==</span> <span class="n">PENDING</span><span class="p">:</span>
+</span><span id="__span-6-4"><a href="#__codelineno-6-4" id="__codelineno-6-4" name="__codelineno-6-4"></a>        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_provisioning</span><span class="p">(</span><span class="n">resource</span><span class="p">)</span>
+</span><span id="__span-6-5"><a href="#__codelineno-6-5" id="__codelineno-6-5" name="__codelineno-6-5"></a>
+</span><span id="__span-6-6"><a href="#__codelineno-6-6" id="__codelineno-6-6" name="__codelineno-6-6"></a><span class="c1"># Reconciler: Periodic safety checks</span>
+</span><span id="__span-6-7"><a href="#__codelineno-6-7" id="__codelineno-6-7" name="__codelineno-6-7"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">reconcile_resource</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resource</span><span class="p">):</span>
+</span><span id="__span-6-8"><a href="#__codelineno-6-8" id="__codelineno-6-8" name="__codelineno-6-8"></a>    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_stuck_provisioning</span><span class="p">(</span><span class="n">resource</span><span class="p">):</span>
+</span><span id="__span-6-9"><a href="#__codelineno-6-9" id="__codelineno-6-9" name="__codelineno-6-9"></a>        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">mark_as_failed</span><span class="p">(</span><span class="n">resource</span><span class="p">)</span>
+</span></code></pre></div>
 <h3 id="4-state-machine-implementation">4. State Machine Implementation<a class="headerlink" href="#4-state-machine-implementation" title="Permanent link">¶</a></h3>
 <p>Resources progress through well-defined states:</p>
-<div class="highlight"><pre><span></span><code>PENDING → PROVISIONING → READY → (cleanup) → DELETING → DELETED
-    ↓                      ↓
-  FAILED              ← FAILED
-</code></pre></div>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-7-1"><a href="#__codelineno-7-1" id="__codelineno-7-1" name="__codelineno-7-1"></a>PENDING → PROVISIONING → READY → (cleanup) → DELETING → DELETED
+</span><span id="__span-7-2"><a href="#__codelineno-7-2" id="__codelineno-7-2" name="__codelineno-7-2"></a>    ↓                      ↓
+</span><span id="__span-7-3"><a href="#__codelineno-7-3" id="__codelineno-7-3" name="__codelineno-7-3"></a>  FAILED              ← FAILED
+</span></code></pre></div>
 <h2 id="execution-model">⚡ Execution Model<a class="headerlink" href="#execution-model" title="Permanent link">¶</a></h2>
 <h3 id="timing-and-coordination">Timing and Coordination<a class="headerlink" href="#timing-and-coordination" title="Permanent link">¶</a></h3>
 <ul>
@@ -1333,64 +1333,64 @@ watchers, controllers, and reconciliation loops.</p>
 </ul>
 <h3 id="concurrent-processing">Concurrent Processing<a class="headerlink" href="#concurrent-processing" title="Permanent link">¶</a></h3>
 <p>All components run concurrently:</p>
-<div class="highlight"><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
-    <span class="c1"># Start all components concurrently</span>
-    <span class="n">watcher_task</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">create_task</span><span class="p">(</span><span class="n">watcher</span><span class="o">.</span><span class="n">start_watching</span><span class="p">())</span>
-    <span class="n">scheduler_task</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">create_task</span><span class="p">(</span><span class="n">scheduler</span><span class="o">.</span><span class="n">start_reconciliation</span><span class="p">())</span>
-
-    <span class="c1"># Controllers are event-driven (no separate task needed)</span>
-    <span class="n">watcher</span><span class="o">.</span><span class="n">add_event_handler</span><span class="p">(</span><span class="n">controller</span><span class="o">.</span><span class="n">handle_resource_event</span><span class="p">)</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-8-1"><a href="#__codelineno-8-1" id="__codelineno-8-1" name="__codelineno-8-1"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+</span><span id="__span-8-2"><a href="#__codelineno-8-2" id="__codelineno-8-2" name="__codelineno-8-2"></a>    <span class="c1"># Start all components concurrently</span>
+</span><span id="__span-8-3"><a href="#__codelineno-8-3" id="__codelineno-8-3" name="__codelineno-8-3"></a>    <span class="n">watcher_task</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">create_task</span><span class="p">(</span><span class="n">watcher</span><span class="o">.</span><span class="n">start_watching</span><span class="p">())</span>
+</span><span id="__span-8-4"><a href="#__codelineno-8-4" id="__codelineno-8-4" name="__codelineno-8-4"></a>    <span class="n">scheduler_task</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">create_task</span><span class="p">(</span><span class="n">scheduler</span><span class="o">.</span><span class="n">start_reconciliation</span><span class="p">())</span>
+</span><span id="__span-8-5"><a href="#__codelineno-8-5" id="__codelineno-8-5" name="__codelineno-8-5"></a>
+</span><span id="__span-8-6"><a href="#__codelineno-8-6" id="__codelineno-8-6" name="__codelineno-8-6"></a>    <span class="c1"># Controllers are event-driven (no separate task needed)</span>
+</span><span id="__span-8-7"><a href="#__codelineno-8-7" id="__codelineno-8-7" name="__codelineno-8-7"></a>    <span class="n">watcher</span><span class="o">.</span><span class="n">add_event_handler</span><span class="p">(</span><span class="n">controller</span><span class="o">.</span><span class="n">handle_resource_event</span><span class="p">)</span>
+</span></code></pre></div>
 <h2 id="safety-and-reliability">🛡️ Safety and Reliability<a class="headerlink" href="#safety-and-reliability" title="Permanent link">¶</a></h2>
 <h3 id="timeout-handling">Timeout Handling<a class="headerlink" href="#timeout-handling" title="Permanent link">¶</a></h3>
 <p>Reconcilers detect and handle stuck states:</p>
-<div class="highlight"><pre><span></span><code><span class="k">if</span> <span class="n">resource</span><span class="o">.</span><span class="n">state</span> <span class="o">==</span> <span class="n">PROVISIONING</span> <span class="ow">and</span> <span class="n">age</span> <span class="o">&gt;</span> <span class="n">timeout_threshold</span><span class="p">:</span>
-    <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">mark_as_failed</span><span class="p">(</span><span class="n">resource</span><span class="p">,</span> <span class="s2">"Provisioning timeout"</span><span class="p">)</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-9-1"><a href="#__codelineno-9-1" id="__codelineno-9-1" name="__codelineno-9-1"></a><span class="k">if</span> <span class="n">resource</span><span class="o">.</span><span class="n">state</span> <span class="o">==</span> <span class="n">PROVISIONING</span> <span class="ow">and</span> <span class="n">age</span> <span class="o">&gt;</span> <span class="n">timeout_threshold</span><span class="p">:</span>
+</span><span id="__span-9-2"><a href="#__codelineno-9-2" id="__codelineno-9-2" name="__codelineno-9-2"></a>    <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">mark_as_failed</span><span class="p">(</span><span class="n">resource</span><span class="p">,</span> <span class="s2">"Provisioning timeout"</span><span class="p">)</span>
+</span></code></pre></div>
 <h3 id="error-recovery">Error Recovery<a class="headerlink" href="#error-recovery" title="Permanent link">¶</a></h3>
 <p>Controllers and reconcilers implement retry logic:</p>
-<div class="highlight"><pre><span></span><code><span class="k">try</span><span class="p">:</span>
-    <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">provision_lab_instance</span><span class="p">(</span><span class="n">resource</span><span class="p">)</span>
-<span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-    <span class="n">resource</span><span class="o">.</span><span class="n">status</span><span class="p">[</span><span class="s1">'retries'</span><span class="p">]</span> <span class="o">=</span> <span class="n">resource</span><span class="o">.</span><span class="n">status</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'retries'</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
-    <span class="k">if</span> <span class="n">resource</span><span class="o">.</span><span class="n">status</span><span class="p">[</span><span class="s1">'retries'</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">max_retries</span><span class="p">:</span>
-        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">schedule_retry</span><span class="p">(</span><span class="n">resource</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">mark_as_failed</span><span class="p">(</span><span class="n">resource</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-10-1"><a href="#__codelineno-10-1" id="__codelineno-10-1" name="__codelineno-10-1"></a><span class="k">try</span><span class="p">:</span>
+</span><span id="__span-10-2"><a href="#__codelineno-10-2" id="__codelineno-10-2" name="__codelineno-10-2"></a>    <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">provision_lab_instance</span><span class="p">(</span><span class="n">resource</span><span class="p">)</span>
+</span><span id="__span-10-3"><a href="#__codelineno-10-3" id="__codelineno-10-3" name="__codelineno-10-3"></a><span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+</span><span id="__span-10-4"><a href="#__codelineno-10-4" id="__codelineno-10-4" name="__codelineno-10-4"></a>    <span class="n">resource</span><span class="o">.</span><span class="n">status</span><span class="p">[</span><span class="s1">'retries'</span><span class="p">]</span> <span class="o">=</span> <span class="n">resource</span><span class="o">.</span><span class="n">status</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'retries'</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+</span><span id="__span-10-5"><a href="#__codelineno-10-5" id="__codelineno-10-5" name="__codelineno-10-5"></a>    <span class="k">if</span> <span class="n">resource</span><span class="o">.</span><span class="n">status</span><span class="p">[</span><span class="s1">'retries'</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">max_retries</span><span class="p">:</span>
+</span><span id="__span-10-6"><a href="#__codelineno-10-6" id="__codelineno-10-6" name="__codelineno-10-6"></a>        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">schedule_retry</span><span class="p">(</span><span class="n">resource</span><span class="p">)</span>
+</span><span id="__span-10-7"><a href="#__codelineno-10-7" id="__codelineno-10-7" name="__codelineno-10-7"></a>    <span class="k">else</span><span class="p">:</span>
+</span><span id="__span-10-8"><a href="#__codelineno-10-8" id="__codelineno-10-8" name="__codelineno-10-8"></a>        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">mark_as_failed</span><span class="p">(</span><span class="n">resource</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+</span></code></pre></div>
 <h3 id="drift-detection">Drift Detection<a class="headerlink" href="#drift-detection" title="Permanent link">¶</a></h3>
 <p>Reconcilers verify that actual state matches desired state:</p>
-<div class="highlight"><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">check_drift</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resource</span><span class="p">):</span>
-    <span class="n">actual_state</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_actual_infrastructure_state</span><span class="p">(</span><span class="n">resource</span><span class="p">)</span>
-    <span class="n">desired_state</span> <span class="o">=</span> <span class="n">resource</span><span class="o">.</span><span class="n">spec</span>
-
-    <span class="k">if</span> <span class="n">actual_state</span> <span class="o">!=</span> <span class="n">desired_state</span><span class="p">:</span>
-        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">correct_drift</span><span class="p">(</span><span class="n">resource</span><span class="p">,</span> <span class="n">actual_state</span><span class="p">,</span> <span class="n">desired_state</span><span class="p">)</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-11-1"><a href="#__codelineno-11-1" id="__codelineno-11-1" name="__codelineno-11-1"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">check_drift</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resource</span><span class="p">):</span>
+</span><span id="__span-11-2"><a href="#__codelineno-11-2" id="__codelineno-11-2" name="__codelineno-11-2"></a>    <span class="n">actual_state</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_actual_infrastructure_state</span><span class="p">(</span><span class="n">resource</span><span class="p">)</span>
+</span><span id="__span-11-3"><a href="#__codelineno-11-3" id="__codelineno-11-3" name="__codelineno-11-3"></a>    <span class="n">desired_state</span> <span class="o">=</span> <span class="n">resource</span><span class="o">.</span><span class="n">spec</span>
+</span><span id="__span-11-4"><a href="#__codelineno-11-4" id="__codelineno-11-4" name="__codelineno-11-4"></a>
+</span><span id="__span-11-5"><a href="#__codelineno-11-5" id="__codelineno-11-5" name="__codelineno-11-5"></a>    <span class="k">if</span> <span class="n">actual_state</span> <span class="o">!=</span> <span class="n">desired_state</span><span class="p">:</span>
+</span><span id="__span-11-6"><a href="#__codelineno-11-6" id="__codelineno-11-6" name="__codelineno-11-6"></a>        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">correct_drift</span><span class="p">(</span><span class="n">resource</span><span class="p">,</span> <span class="n">actual_state</span><span class="p">,</span> <span class="n">desired_state</span><span class="p">)</span>
+</span></code></pre></div>
 <h2 id="observability">📊 Observability<a class="headerlink" href="#observability" title="Permanent link">¶</a></h2>
 <h3 id="metrics-and-logging">Metrics and Logging<a class="headerlink" href="#metrics-and-logging" title="Permanent link">¶</a></h3>
 <p>ROA components provide rich observability:</p>
-<div class="highlight"><pre><span></span><code><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"🔍 Watcher detected change: </span><span class="si">{</span><span class="n">resource_id</span><span class="si">}</span><span class="s2"> -&gt; </span><span class="si">{</span><span class="n">state</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-<span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"🎮 Controller processing: </span><span class="si">{</span><span class="n">resource_id</span><span class="si">}</span><span class="s2"> (state: </span><span class="si">{</span><span class="n">state</span><span class="si">}</span><span class="s2">)"</span><span class="p">)</span>
-<span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"🔄 Reconciling </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">resources</span><span class="p">)</span><span class="si">}</span><span class="s2"> resources"</span><span class="p">)</span>
-<span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">"⚠️ Reconciler: Resource stuck: </span><span class="si">{</span><span class="n">resource_id</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-12-1"><a href="#__codelineno-12-1" id="__codelineno-12-1" name="__codelineno-12-1"></a><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"🔍 Watcher detected change: </span><span class="si">{</span><span class="n">resource_id</span><span class="si">}</span><span class="s2"> -&gt; </span><span class="si">{</span><span class="n">state</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span><span id="__span-12-2"><a href="#__codelineno-12-2" id="__codelineno-12-2" name="__codelineno-12-2"></a><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"🎮 Controller processing: </span><span class="si">{</span><span class="n">resource_id</span><span class="si">}</span><span class="s2"> (state: </span><span class="si">{</span><span class="n">state</span><span class="si">}</span><span class="s2">)"</span><span class="p">)</span>
+</span><span id="__span-12-3"><a href="#__codelineno-12-3" id="__codelineno-12-3" name="__codelineno-12-3"></a><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"🔄 Reconciling </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">resources</span><span class="p">)</span><span class="si">}</span><span class="s2"> resources"</span><span class="p">)</span>
+</span><span id="__span-12-4"><a href="#__codelineno-12-4" id="__codelineno-12-4" name="__codelineno-12-4"></a><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">"⚠️ Reconciler: Resource stuck: </span><span class="si">{</span><span class="n">resource_id</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span></code></pre></div>
 <h3 id="resource-versioning">Resource Versioning<a class="headerlink" href="#resource-versioning" title="Permanent link">¶</a></h3>
 <p>Track changes with resource versions:</p>
-<div class="highlight"><pre><span></span><code><span class="n">resource</span><span class="o">.</span><span class="n">metadata</span><span class="p">[</span><span class="s1">'resourceVersion'</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">next_version</span><span class="p">())</span>
-<span class="n">resource</span><span class="o">.</span><span class="n">metadata</span><span class="p">[</span><span class="s1">'lastModified'</span><span class="p">]</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">)</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-13-1"><a href="#__codelineno-13-1" id="__codelineno-13-1" name="__codelineno-13-1"></a><span class="n">resource</span><span class="o">.</span><span class="n">metadata</span><span class="p">[</span><span class="s1">'resourceVersion'</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">next_version</span><span class="p">())</span>
+</span><span id="__span-13-2"><a href="#__codelineno-13-2" id="__codelineno-13-2" name="__codelineno-13-2"></a><span class="n">resource</span><span class="o">.</span><span class="n">metadata</span><span class="p">[</span><span class="s1">'lastModified'</span><span class="p">]</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">)</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span>
+</span></code></pre></div>
 <h2 id="configuration">🔧 Configuration<a class="headerlink" href="#configuration" title="Permanent link">¶</a></h2>
 <h3 id="tuning-parameters">Tuning Parameters<a class="headerlink" href="#tuning-parameters" title="Permanent link">¶</a></h3>
 <p>Adjust timing for your use case:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Development: Fast feedback</span>
-<span class="n">watcher</span> <span class="o">=</span> <span class="n">LabInstanceWatcher</span><span class="p">(</span><span class="n">storage</span><span class="p">,</span> <span class="n">poll_interval</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
-<span class="n">scheduler</span> <span class="o">=</span> <span class="n">LabInstanceScheduler</span><span class="p">(</span><span class="n">storage</span><span class="p">,</span> <span class="n">reconcile_interval</span><span class="o">=</span><span class="mf">5.0</span><span class="p">)</span>
-
-<span class="c1"># Production: Balanced performance</span>
-<span class="n">watcher</span> <span class="o">=</span> <span class="n">LabInstanceWatcher</span><span class="p">(</span><span class="n">storage</span><span class="p">,</span> <span class="n">poll_interval</span><span class="o">=</span><span class="mf">5.0</span><span class="p">)</span>
-<span class="n">scheduler</span> <span class="o">=</span> <span class="n">LabInstanceScheduler</span><span class="p">(</span><span class="n">storage</span><span class="p">,</span> <span class="n">reconcile_interval</span><span class="o">=</span><span class="mf">30.0</span><span class="p">)</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-14-1"><a href="#__codelineno-14-1" id="__codelineno-14-1" name="__codelineno-14-1"></a><span class="c1"># Development: Fast feedback</span>
+</span><span id="__span-14-2"><a href="#__codelineno-14-2" id="__codelineno-14-2" name="__codelineno-14-2"></a><span class="n">watcher</span> <span class="o">=</span> <span class="n">LabInstanceWatcher</span><span class="p">(</span><span class="n">storage</span><span class="p">,</span> <span class="n">poll_interval</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+</span><span id="__span-14-3"><a href="#__codelineno-14-3" id="__codelineno-14-3" name="__codelineno-14-3"></a><span class="n">scheduler</span> <span class="o">=</span> <span class="n">LabInstanceScheduler</span><span class="p">(</span><span class="n">storage</span><span class="p">,</span> <span class="n">reconcile_interval</span><span class="o">=</span><span class="mf">5.0</span><span class="p">)</span>
+</span><span id="__span-14-4"><a href="#__codelineno-14-4" id="__codelineno-14-4" name="__codelineno-14-4"></a>
+</span><span id="__span-14-5"><a href="#__codelineno-14-5" id="__codelineno-14-5" name="__codelineno-14-5"></a><span class="c1"># Production: Balanced performance</span>
+</span><span id="__span-14-6"><a href="#__codelineno-14-6" id="__codelineno-14-6" name="__codelineno-14-6"></a><span class="n">watcher</span> <span class="o">=</span> <span class="n">LabInstanceWatcher</span><span class="p">(</span><span class="n">storage</span><span class="p">,</span> <span class="n">poll_interval</span><span class="o">=</span><span class="mf">5.0</span><span class="p">)</span>
+</span><span id="__span-14-7"><a href="#__codelineno-14-7" id="__codelineno-14-7" name="__codelineno-14-7"></a><span class="n">scheduler</span> <span class="o">=</span> <span class="n">LabInstanceScheduler</span><span class="p">(</span><span class="n">storage</span><span class="p">,</span> <span class="n">reconcile_interval</span><span class="o">=</span><span class="mf">30.0</span><span class="p">)</span>
+</span></code></pre></div>
 <h3 id="scaling-considerations">Scaling Considerations<a class="headerlink" href="#scaling-considerations" title="Permanent link">¶</a></h3>
 <ul>
 <li><strong>Multiple Watchers</strong>: Use resource sharding for scale</li>

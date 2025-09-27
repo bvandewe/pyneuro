@@ -842,9 +842,9 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../references/python_type_hints/">
+<a class="md-nav__link" href="../../references/python_typing_guide/">
 <span class="md-ellipsis">
-    Python Type Hints
+    Python Typing Guide
     
   </span>
 </a>
@@ -866,9 +866,9 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../references/python_generic_types/">
+<a class="md-nav__link" href="../../references/test-mermaid/">
 <span class="md-ellipsis">
-    Python Generic Types
+    Mermaid References
     
   </span>
 </a>
@@ -1046,200 +1046,200 @@
 This provides flexibility for different project architectures while maintaining performance through intelligent caching.</p>
 <h2 id="configuration-methods">Configuration Methods<a class="headerlink" href="#configuration-methods" title="Permanent link">¶</a></h2>
 <h3 id="method-1-configure-during-jsonserializer-setup">Method 1: Configure During JsonSerializer Setup<a class="headerlink" href="#method-1-configure-during-jsonserializer-setup" title="Permanent link">¶</a></h3>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.hosting.enhanced_web_application_builder</span><span class="w"> </span><span class="kn">import</span> <span class="n">EnhancedWebApplicationBuilder</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.serialization.json</span><span class="w"> </span><span class="kn">import</span> <span class="n">JsonSerializer</span>
-
-<span class="k">def</span><span class="w"> </span><span class="nf">configure_mario_pizzeria_types</span><span class="p">():</span>
-<span class="w">    </span><span class="sd">"""Example: Configure types for Mario Pizzeria application"""</span>
-    <span class="n">builder</span> <span class="o">=</span> <span class="n">EnhancedWebApplicationBuilder</span><span class="p">()</span>
-
-    <span class="c1"># Configure during JsonSerializer setup</span>
-    <span class="n">JsonSerializer</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span>
-        <span class="n">builder</span><span class="p">,</span>
-        <span class="n">type_modules</span><span class="o">=</span><span class="p">[</span>
-            <span class="s2">"domain.entities.enums"</span><span class="p">,</span>    <span class="c1"># Main enum module</span>
-            <span class="s2">"domain.entities"</span><span class="p">,</span>          <span class="c1"># Entity module (for embedded enums)</span>
-            <span class="s2">"domain.value_objects"</span><span class="p">,</span>     <span class="c1"># Value objects with enums</span>
-            <span class="s2">"shared.enums"</span><span class="p">,</span>             <span class="c1"># Shared enumeration types</span>
-        <span class="p">]</span>
-    <span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">builder</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a href="#__codelineno-0-1" id="__codelineno-0-1" name="__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.hosting.enhanced_web_application_builder</span><span class="w"> </span><span class="kn">import</span> <span class="n">EnhancedWebApplicationBuilder</span>
+</span><span id="__span-0-2"><a href="#__codelineno-0-2" id="__codelineno-0-2" name="__codelineno-0-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.serialization.json</span><span class="w"> </span><span class="kn">import</span> <span class="n">JsonSerializer</span>
+</span><span id="__span-0-3"><a href="#__codelineno-0-3" id="__codelineno-0-3" name="__codelineno-0-3"></a>
+</span><span id="__span-0-4"><a href="#__codelineno-0-4" id="__codelineno-0-4" name="__codelineno-0-4"></a><span class="k">def</span><span class="w"> </span><span class="nf">configure_mario_pizzeria_types</span><span class="p">():</span>
+</span><span id="__span-0-5"><a href="#__codelineno-0-5" id="__codelineno-0-5" name="__codelineno-0-5"></a><span class="w">    </span><span class="sd">"""Example: Configure types for Mario Pizzeria application"""</span>
+</span><span id="__span-0-6"><a href="#__codelineno-0-6" id="__codelineno-0-6" name="__codelineno-0-6"></a>    <span class="n">builder</span> <span class="o">=</span> <span class="n">EnhancedWebApplicationBuilder</span><span class="p">()</span>
+</span><span id="__span-0-7"><a href="#__codelineno-0-7" id="__codelineno-0-7" name="__codelineno-0-7"></a>
+</span><span id="__span-0-8"><a href="#__codelineno-0-8" id="__codelineno-0-8" name="__codelineno-0-8"></a>    <span class="c1"># Configure during JsonSerializer setup</span>
+</span><span id="__span-0-9"><a href="#__codelineno-0-9" id="__codelineno-0-9" name="__codelineno-0-9"></a>    <span class="n">JsonSerializer</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span>
+</span><span id="__span-0-10"><a href="#__codelineno-0-10" id="__codelineno-0-10" name="__codelineno-0-10"></a>        <span class="n">builder</span><span class="p">,</span>
+</span><span id="__span-0-11"><a href="#__codelineno-0-11" id="__codelineno-0-11" name="__codelineno-0-11"></a>        <span class="n">type_modules</span><span class="o">=</span><span class="p">[</span>
+</span><span id="__span-0-12"><a href="#__codelineno-0-12" id="__codelineno-0-12" name="__codelineno-0-12"></a>            <span class="s2">"domain.entities.enums"</span><span class="p">,</span>    <span class="c1"># Main enum module</span>
+</span><span id="__span-0-13"><a href="#__codelineno-0-13" id="__codelineno-0-13" name="__codelineno-0-13"></a>            <span class="s2">"domain.entities"</span><span class="p">,</span>          <span class="c1"># Entity module (for embedded enums)</span>
+</span><span id="__span-0-14"><a href="#__codelineno-0-14" id="__codelineno-0-14" name="__codelineno-0-14"></a>            <span class="s2">"domain.value_objects"</span><span class="p">,</span>     <span class="c1"># Value objects with enums</span>
+</span><span id="__span-0-15"><a href="#__codelineno-0-15" id="__codelineno-0-15" name="__codelineno-0-15"></a>            <span class="s2">"shared.enums"</span><span class="p">,</span>             <span class="c1"># Shared enumeration types</span>
+</span><span id="__span-0-16"><a href="#__codelineno-0-16" id="__codelineno-0-16" name="__codelineno-0-16"></a>        <span class="p">]</span>
+</span><span id="__span-0-17"><a href="#__codelineno-0-17" id="__codelineno-0-17" name="__codelineno-0-17"></a>    <span class="p">)</span>
+</span><span id="__span-0-18"><a href="#__codelineno-0-18" id="__codelineno-0-18" name="__codelineno-0-18"></a>
+</span><span id="__span-0-19"><a href="#__codelineno-0-19" id="__codelineno-0-19" name="__codelineno-0-19"></a>    <span class="k">return</span> <span class="n">builder</span>
+</span></code></pre></div>
 <h3 id="method-2-register-types-after-configuration">Method 2: Register Types After Configuration<a class="headerlink" href="#method-2-register-types-after-configuration" title="Permanent link">¶</a></h3>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.hosting.enhanced_web_application_builder</span><span class="w"> </span><span class="kn">import</span> <span class="n">EnhancedWebApplicationBuilder</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.serialization.json</span><span class="w"> </span><span class="kn">import</span> <span class="n">JsonSerializer</span>
-
-<span class="k">def</span><span class="w"> </span><span class="nf">configure_generic_ddd_application</span><span class="p">():</span>
-<span class="w">    </span><span class="sd">"""Example: Configure types for generic DDD application"""</span>
-    <span class="n">builder</span> <span class="o">=</span> <span class="n">EnhancedWebApplicationBuilder</span><span class="p">()</span>
-
-    <span class="c1"># Configure JsonSerializer first</span>
-    <span class="n">JsonSerializer</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">)</span>
-
-    <span class="c1"># Register additional type modules</span>
-    <span class="n">JsonSerializer</span><span class="o">.</span><span class="n">register_type_modules</span><span class="p">([</span>
-        <span class="s2">"myapp.domain.aggregates"</span><span class="p">,</span>
-        <span class="s2">"myapp.domain.value_objects"</span><span class="p">,</span>
-        <span class="s2">"myapp.domain.enums"</span><span class="p">,</span>
-        <span class="s2">"myapp.shared.types"</span><span class="p">,</span>
-        <span class="s2">"myapp.integration.external_types"</span><span class="p">,</span>
-    <span class="p">])</span>
-
-    <span class="k">return</span> <span class="n">builder</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a href="#__codelineno-1-1" id="__codelineno-1-1" name="__codelineno-1-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.hosting.enhanced_web_application_builder</span><span class="w"> </span><span class="kn">import</span> <span class="n">EnhancedWebApplicationBuilder</span>
+</span><span id="__span-1-2"><a href="#__codelineno-1-2" id="__codelineno-1-2" name="__codelineno-1-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.serialization.json</span><span class="w"> </span><span class="kn">import</span> <span class="n">JsonSerializer</span>
+</span><span id="__span-1-3"><a href="#__codelineno-1-3" id="__codelineno-1-3" name="__codelineno-1-3"></a>
+</span><span id="__span-1-4"><a href="#__codelineno-1-4" id="__codelineno-1-4" name="__codelineno-1-4"></a><span class="k">def</span><span class="w"> </span><span class="nf">configure_generic_ddd_application</span><span class="p">():</span>
+</span><span id="__span-1-5"><a href="#__codelineno-1-5" id="__codelineno-1-5" name="__codelineno-1-5"></a><span class="w">    </span><span class="sd">"""Example: Configure types for generic DDD application"""</span>
+</span><span id="__span-1-6"><a href="#__codelineno-1-6" id="__codelineno-1-6" name="__codelineno-1-6"></a>    <span class="n">builder</span> <span class="o">=</span> <span class="n">EnhancedWebApplicationBuilder</span><span class="p">()</span>
+</span><span id="__span-1-7"><a href="#__codelineno-1-7" id="__codelineno-1-7" name="__codelineno-1-7"></a>
+</span><span id="__span-1-8"><a href="#__codelineno-1-8" id="__codelineno-1-8" name="__codelineno-1-8"></a>    <span class="c1"># Configure JsonSerializer first</span>
+</span><span id="__span-1-9"><a href="#__codelineno-1-9" id="__codelineno-1-9" name="__codelineno-1-9"></a>    <span class="n">JsonSerializer</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">)</span>
+</span><span id="__span-1-10"><a href="#__codelineno-1-10" id="__codelineno-1-10" name="__codelineno-1-10"></a>
+</span><span id="__span-1-11"><a href="#__codelineno-1-11" id="__codelineno-1-11" name="__codelineno-1-11"></a>    <span class="c1"># Register additional type modules</span>
+</span><span id="__span-1-12"><a href="#__codelineno-1-12" id="__codelineno-1-12" name="__codelineno-1-12"></a>    <span class="n">JsonSerializer</span><span class="o">.</span><span class="n">register_type_modules</span><span class="p">([</span>
+</span><span id="__span-1-13"><a href="#__codelineno-1-13" id="__codelineno-1-13" name="__codelineno-1-13"></a>        <span class="s2">"myapp.domain.aggregates"</span><span class="p">,</span>
+</span><span id="__span-1-14"><a href="#__codelineno-1-14" id="__codelineno-1-14" name="__codelineno-1-14"></a>        <span class="s2">"myapp.domain.value_objects"</span><span class="p">,</span>
+</span><span id="__span-1-15"><a href="#__codelineno-1-15" id="__codelineno-1-15" name="__codelineno-1-15"></a>        <span class="s2">"myapp.domain.enums"</span><span class="p">,</span>
+</span><span id="__span-1-16"><a href="#__codelineno-1-16" id="__codelineno-1-16" name="__codelineno-1-16"></a>        <span class="s2">"myapp.shared.types"</span><span class="p">,</span>
+</span><span id="__span-1-17"><a href="#__codelineno-1-17" id="__codelineno-1-17" name="__codelineno-1-17"></a>        <span class="s2">"myapp.integration.external_types"</span><span class="p">,</span>
+</span><span id="__span-1-18"><a href="#__codelineno-1-18" id="__codelineno-1-18" name="__codelineno-1-18"></a>    <span class="p">])</span>
+</span><span id="__span-1-19"><a href="#__codelineno-1-19" id="__codelineno-1-19" name="__codelineno-1-19"></a>
+</span><span id="__span-1-20"><a href="#__codelineno-1-20" id="__codelineno-1-20" name="__codelineno-1-20"></a>    <span class="k">return</span> <span class="n">builder</span>
+</span></code></pre></div>
 <h3 id="method-3-direct-typeregistry-configuration">Method 3: Direct TypeRegistry Configuration<a class="headerlink" href="#method-3-direct-typeregistry-configuration" title="Permanent link">¶</a></h3>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.core.type_registry</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_type_registry</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.hosting.enhanced_web_application_builder</span><span class="w"> </span><span class="kn">import</span> <span class="n">EnhancedWebApplicationBuilder</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.serialization.json</span><span class="w"> </span><span class="kn">import</span> <span class="n">JsonSerializer</span>
-
-<span class="k">def</span><span class="w"> </span><span class="nf">configure_microservice_types</span><span class="p">():</span>
-<span class="w">    </span><span class="sd">"""Example: Configure types for microservice with external dependencies"""</span>
-    <span class="n">builder</span> <span class="o">=</span> <span class="n">EnhancedWebApplicationBuilder</span><span class="p">()</span>
-
-    <span class="c1"># Get the global TypeRegistry instance</span>
-    <span class="n">type_registry</span> <span class="o">=</span> <span class="n">get_type_registry</span><span class="p">()</span>
-
-    <span class="c1"># Register our domain modules</span>
-    <span class="n">type_registry</span><span class="o">.</span><span class="n">register_modules</span><span class="p">([</span>
-        <span class="s2">"orders.domain.entities"</span><span class="p">,</span>
-        <span class="s2">"orders.domain.enums"</span><span class="p">,</span>
-        <span class="s2">"orders.shared.types"</span>
-    <span class="p">])</span>
-
-    <span class="c1"># Register shared library types</span>
-    <span class="n">type_registry</span><span class="o">.</span><span class="n">register_modules</span><span class="p">([</span>
-        <span class="s2">"shared_lib.common.enums"</span><span class="p">,</span>
-        <span class="s2">"shared_lib.business.types"</span>
-    <span class="p">])</span>
-
-    <span class="c1"># Register external API types that we need to deserialize</span>
-    <span class="n">type_registry</span><span class="o">.</span><span class="n">register_modules</span><span class="p">([</span>
-        <span class="s2">"external_api_client.models"</span><span class="p">,</span>
-        <span class="s2">"payment_gateway.types"</span>
-    <span class="p">])</span>
-
-    <span class="n">JsonSerializer</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">builder</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a href="#__codelineno-2-1" id="__codelineno-2-1" name="__codelineno-2-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.core.type_registry</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_type_registry</span>
+</span><span id="__span-2-2"><a href="#__codelineno-2-2" id="__codelineno-2-2" name="__codelineno-2-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.hosting.enhanced_web_application_builder</span><span class="w"> </span><span class="kn">import</span> <span class="n">EnhancedWebApplicationBuilder</span>
+</span><span id="__span-2-3"><a href="#__codelineno-2-3" id="__codelineno-2-3" name="__codelineno-2-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.serialization.json</span><span class="w"> </span><span class="kn">import</span> <span class="n">JsonSerializer</span>
+</span><span id="__span-2-4"><a href="#__codelineno-2-4" id="__codelineno-2-4" name="__codelineno-2-4"></a>
+</span><span id="__span-2-5"><a href="#__codelineno-2-5" id="__codelineno-2-5" name="__codelineno-2-5"></a><span class="k">def</span><span class="w"> </span><span class="nf">configure_microservice_types</span><span class="p">():</span>
+</span><span id="__span-2-6"><a href="#__codelineno-2-6" id="__codelineno-2-6" name="__codelineno-2-6"></a><span class="w">    </span><span class="sd">"""Example: Configure types for microservice with external dependencies"""</span>
+</span><span id="__span-2-7"><a href="#__codelineno-2-7" id="__codelineno-2-7" name="__codelineno-2-7"></a>    <span class="n">builder</span> <span class="o">=</span> <span class="n">EnhancedWebApplicationBuilder</span><span class="p">()</span>
+</span><span id="__span-2-8"><a href="#__codelineno-2-8" id="__codelineno-2-8" name="__codelineno-2-8"></a>
+</span><span id="__span-2-9"><a href="#__codelineno-2-9" id="__codelineno-2-9" name="__codelineno-2-9"></a>    <span class="c1"># Get the global TypeRegistry instance</span>
+</span><span id="__span-2-10"><a href="#__codelineno-2-10" id="__codelineno-2-10" name="__codelineno-2-10"></a>    <span class="n">type_registry</span> <span class="o">=</span> <span class="n">get_type_registry</span><span class="p">()</span>
+</span><span id="__span-2-11"><a href="#__codelineno-2-11" id="__codelineno-2-11" name="__codelineno-2-11"></a>
+</span><span id="__span-2-12"><a href="#__codelineno-2-12" id="__codelineno-2-12" name="__codelineno-2-12"></a>    <span class="c1"># Register our domain modules</span>
+</span><span id="__span-2-13"><a href="#__codelineno-2-13" id="__codelineno-2-13" name="__codelineno-2-13"></a>    <span class="n">type_registry</span><span class="o">.</span><span class="n">register_modules</span><span class="p">([</span>
+</span><span id="__span-2-14"><a href="#__codelineno-2-14" id="__codelineno-2-14" name="__codelineno-2-14"></a>        <span class="s2">"orders.domain.entities"</span><span class="p">,</span>
+</span><span id="__span-2-15"><a href="#__codelineno-2-15" id="__codelineno-2-15" name="__codelineno-2-15"></a>        <span class="s2">"orders.domain.enums"</span><span class="p">,</span>
+</span><span id="__span-2-16"><a href="#__codelineno-2-16" id="__codelineno-2-16" name="__codelineno-2-16"></a>        <span class="s2">"orders.shared.types"</span>
+</span><span id="__span-2-17"><a href="#__codelineno-2-17" id="__codelineno-2-17" name="__codelineno-2-17"></a>    <span class="p">])</span>
+</span><span id="__span-2-18"><a href="#__codelineno-2-18" id="__codelineno-2-18" name="__codelineno-2-18"></a>
+</span><span id="__span-2-19"><a href="#__codelineno-2-19" id="__codelineno-2-19" name="__codelineno-2-19"></a>    <span class="c1"># Register shared library types</span>
+</span><span id="__span-2-20"><a href="#__codelineno-2-20" id="__codelineno-2-20" name="__codelineno-2-20"></a>    <span class="n">type_registry</span><span class="o">.</span><span class="n">register_modules</span><span class="p">([</span>
+</span><span id="__span-2-21"><a href="#__codelineno-2-21" id="__codelineno-2-21" name="__codelineno-2-21"></a>        <span class="s2">"shared_lib.common.enums"</span><span class="p">,</span>
+</span><span id="__span-2-22"><a href="#__codelineno-2-22" id="__codelineno-2-22" name="__codelineno-2-22"></a>        <span class="s2">"shared_lib.business.types"</span>
+</span><span id="__span-2-23"><a href="#__codelineno-2-23" id="__codelineno-2-23" name="__codelineno-2-23"></a>    <span class="p">])</span>
+</span><span id="__span-2-24"><a href="#__codelineno-2-24" id="__codelineno-2-24" name="__codelineno-2-24"></a>
+</span><span id="__span-2-25"><a href="#__codelineno-2-25" id="__codelineno-2-25" name="__codelineno-2-25"></a>    <span class="c1"># Register external API types that we need to deserialize</span>
+</span><span id="__span-2-26"><a href="#__codelineno-2-26" id="__codelineno-2-26" name="__codelineno-2-26"></a>    <span class="n">type_registry</span><span class="o">.</span><span class="n">register_modules</span><span class="p">([</span>
+</span><span id="__span-2-27"><a href="#__codelineno-2-27" id="__codelineno-2-27" name="__codelineno-2-27"></a>        <span class="s2">"external_api_client.models"</span><span class="p">,</span>
+</span><span id="__span-2-28"><a href="#__codelineno-2-28" id="__codelineno-2-28" name="__codelineno-2-28"></a>        <span class="s2">"payment_gateway.types"</span>
+</span><span id="__span-2-29"><a href="#__codelineno-2-29" id="__codelineno-2-29" name="__codelineno-2-29"></a>    <span class="p">])</span>
+</span><span id="__span-2-30"><a href="#__codelineno-2-30" id="__codelineno-2-30" name="__codelineno-2-30"></a>
+</span><span id="__span-2-31"><a href="#__codelineno-2-31" id="__codelineno-2-31" name="__codelineno-2-31"></a>    <span class="n">JsonSerializer</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">)</span>
+</span><span id="__span-2-32"><a href="#__codelineno-2-32" id="__codelineno-2-32" name="__codelineno-2-32"></a>
+</span><span id="__span-2-33"><a href="#__codelineno-2-33" id="__codelineno-2-33" name="__codelineno-2-33"></a>    <span class="k">return</span> <span class="n">builder</span>
+</span></code></pre></div>
 <h2 id="project-structure-examples">Project Structure Examples<a class="headerlink" href="#project-structure-examples" title="Permanent link">¶</a></h2>
 <h3 id="flat-project-structure">Flat Project Structure<a class="headerlink" href="#flat-project-structure" title="Permanent link">¶</a></h3>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.hosting.enhanced_web_application_builder</span><span class="w"> </span><span class="kn">import</span> <span class="n">EnhancedWebApplicationBuilder</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.serialization.json</span><span class="w"> </span><span class="kn">import</span> <span class="n">JsonSerializer</span>
-
-<span class="k">def</span><span class="w"> </span><span class="nf">configure_flat_project_structure</span><span class="p">():</span>
-<span class="w">    </span><span class="sd">"""Example: Configure types for flat project structure"""</span>
-    <span class="n">builder</span> <span class="o">=</span> <span class="n">EnhancedWebApplicationBuilder</span><span class="p">()</span>
-
-    <span class="c1"># For projects with flat structure like:</span>
-    <span class="c1"># myproject/</span>
-    <span class="c1">#   models.py</span>
-    <span class="c1">#   enums.py</span>
-    <span class="c1">#   types.py</span>
-    <span class="n">JsonSerializer</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span>
-        <span class="n">builder</span><span class="p">,</span>
-        <span class="n">type_modules</span><span class="o">=</span><span class="p">[</span>
-            <span class="s2">"models"</span><span class="p">,</span>      <span class="c1"># Main model types</span>
-            <span class="s2">"enums"</span><span class="p">,</span>       <span class="c1"># All enumerations</span>
-            <span class="s2">"types"</span><span class="p">,</span>       <span class="c1"># Custom types</span>
-            <span class="s2">"constants"</span><span class="p">,</span>   <span class="c1"># Constants and lookups</span>
-        <span class="p">]</span>
-    <span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">builder</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a href="#__codelineno-3-1" id="__codelineno-3-1" name="__codelineno-3-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.hosting.enhanced_web_application_builder</span><span class="w"> </span><span class="kn">import</span> <span class="n">EnhancedWebApplicationBuilder</span>
+</span><span id="__span-3-2"><a href="#__codelineno-3-2" id="__codelineno-3-2" name="__codelineno-3-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.serialization.json</span><span class="w"> </span><span class="kn">import</span> <span class="n">JsonSerializer</span>
+</span><span id="__span-3-3"><a href="#__codelineno-3-3" id="__codelineno-3-3" name="__codelineno-3-3"></a>
+</span><span id="__span-3-4"><a href="#__codelineno-3-4" id="__codelineno-3-4" name="__codelineno-3-4"></a><span class="k">def</span><span class="w"> </span><span class="nf">configure_flat_project_structure</span><span class="p">():</span>
+</span><span id="__span-3-5"><a href="#__codelineno-3-5" id="__codelineno-3-5" name="__codelineno-3-5"></a><span class="w">    </span><span class="sd">"""Example: Configure types for flat project structure"""</span>
+</span><span id="__span-3-6"><a href="#__codelineno-3-6" id="__codelineno-3-6" name="__codelineno-3-6"></a>    <span class="n">builder</span> <span class="o">=</span> <span class="n">EnhancedWebApplicationBuilder</span><span class="p">()</span>
+</span><span id="__span-3-7"><a href="#__codelineno-3-7" id="__codelineno-3-7" name="__codelineno-3-7"></a>
+</span><span id="__span-3-8"><a href="#__codelineno-3-8" id="__codelineno-3-8" name="__codelineno-3-8"></a>    <span class="c1"># For projects with flat structure like:</span>
+</span><span id="__span-3-9"><a href="#__codelineno-3-9" id="__codelineno-3-9" name="__codelineno-3-9"></a>    <span class="c1"># myproject/</span>
+</span><span id="__span-3-10"><a href="#__codelineno-3-10" id="__codelineno-3-10" name="__codelineno-3-10"></a>    <span class="c1">#   models.py</span>
+</span><span id="__span-3-11"><a href="#__codelineno-3-11" id="__codelineno-3-11" name="__codelineno-3-11"></a>    <span class="c1">#   enums.py</span>
+</span><span id="__span-3-12"><a href="#__codelineno-3-12" id="__codelineno-3-12" name="__codelineno-3-12"></a>    <span class="c1">#   types.py</span>
+</span><span id="__span-3-13"><a href="#__codelineno-3-13" id="__codelineno-3-13" name="__codelineno-3-13"></a>    <span class="n">JsonSerializer</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span>
+</span><span id="__span-3-14"><a href="#__codelineno-3-14" id="__codelineno-3-14" name="__codelineno-3-14"></a>        <span class="n">builder</span><span class="p">,</span>
+</span><span id="__span-3-15"><a href="#__codelineno-3-15" id="__codelineno-3-15" name="__codelineno-3-15"></a>        <span class="n">type_modules</span><span class="o">=</span><span class="p">[</span>
+</span><span id="__span-3-16"><a href="#__codelineno-3-16" id="__codelineno-3-16" name="__codelineno-3-16"></a>            <span class="s2">"models"</span><span class="p">,</span>      <span class="c1"># Main model types</span>
+</span><span id="__span-3-17"><a href="#__codelineno-3-17" id="__codelineno-3-17" name="__codelineno-3-17"></a>            <span class="s2">"enums"</span><span class="p">,</span>       <span class="c1"># All enumerations</span>
+</span><span id="__span-3-18"><a href="#__codelineno-3-18" id="__codelineno-3-18" name="__codelineno-3-18"></a>            <span class="s2">"types"</span><span class="p">,</span>       <span class="c1"># Custom types</span>
+</span><span id="__span-3-19"><a href="#__codelineno-3-19" id="__codelineno-3-19" name="__codelineno-3-19"></a>            <span class="s2">"constants"</span><span class="p">,</span>   <span class="c1"># Constants and lookups</span>
+</span><span id="__span-3-20"><a href="#__codelineno-3-20" id="__codelineno-3-20" name="__codelineno-3-20"></a>        <span class="p">]</span>
+</span><span id="__span-3-21"><a href="#__codelineno-3-21" id="__codelineno-3-21" name="__codelineno-3-21"></a>    <span class="p">)</span>
+</span><span id="__span-3-22"><a href="#__codelineno-3-22" id="__codelineno-3-22" name="__codelineno-3-22"></a>
+</span><span id="__span-3-23"><a href="#__codelineno-3-23" id="__codelineno-3-23" name="__codelineno-3-23"></a>    <span class="k">return</span> <span class="n">builder</span>
+</span></code></pre></div>
 <h3 id="domain-driven-design-structure">Domain-Driven Design Structure<a class="headerlink" href="#domain-driven-design-structure" title="Permanent link">¶</a></h3>
-<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">configure_ddd_structure</span><span class="p">():</span>
-<span class="w">    </span><span class="sd">"""Example: Configure types for DDD project structure"""</span>
-    <span class="c1"># For projects with DDD structure like:</span>
-    <span class="c1"># myproject/</span>
-    <span class="c1">#   domain/</span>
-    <span class="c1">#     aggregates/</span>
-    <span class="c1">#     entities/</span>
-    <span class="c1">#     value_objects/</span>
-    <span class="c1">#     enums/</span>
-    <span class="c1">#   application/</span>
-    <span class="c1">#   infrastructure/</span>
-
-    <span class="n">JsonSerializer</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span>
-        <span class="n">builder</span><span class="p">,</span>
-        <span class="n">type_modules</span><span class="o">=</span><span class="p">[</span>
-            <span class="s2">"domain.enums"</span><span class="p">,</span>
-            <span class="s2">"domain.entities"</span><span class="p">,</span>
-            <span class="s2">"domain.value_objects"</span><span class="p">,</span>
-            <span class="s2">"domain.aggregates"</span><span class="p">,</span>
-            <span class="s2">"shared.types"</span>
-        <span class="p">]</span>
-    <span class="p">)</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a href="#__codelineno-4-1" id="__codelineno-4-1" name="__codelineno-4-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">configure_ddd_structure</span><span class="p">():</span>
+</span><span id="__span-4-2"><a href="#__codelineno-4-2" id="__codelineno-4-2" name="__codelineno-4-2"></a><span class="w">    </span><span class="sd">"""Example: Configure types for DDD project structure"""</span>
+</span><span id="__span-4-3"><a href="#__codelineno-4-3" id="__codelineno-4-3" name="__codelineno-4-3"></a>    <span class="c1"># For projects with DDD structure like:</span>
+</span><span id="__span-4-4"><a href="#__codelineno-4-4" id="__codelineno-4-4" name="__codelineno-4-4"></a>    <span class="c1"># myproject/</span>
+</span><span id="__span-4-5"><a href="#__codelineno-4-5" id="__codelineno-4-5" name="__codelineno-4-5"></a>    <span class="c1">#   domain/</span>
+</span><span id="__span-4-6"><a href="#__codelineno-4-6" id="__codelineno-4-6" name="__codelineno-4-6"></a>    <span class="c1">#     aggregates/</span>
+</span><span id="__span-4-7"><a href="#__codelineno-4-7" id="__codelineno-4-7" name="__codelineno-4-7"></a>    <span class="c1">#     entities/</span>
+</span><span id="__span-4-8"><a href="#__codelineno-4-8" id="__codelineno-4-8" name="__codelineno-4-8"></a>    <span class="c1">#     value_objects/</span>
+</span><span id="__span-4-9"><a href="#__codelineno-4-9" id="__codelineno-4-9" name="__codelineno-4-9"></a>    <span class="c1">#     enums/</span>
+</span><span id="__span-4-10"><a href="#__codelineno-4-10" id="__codelineno-4-10" name="__codelineno-4-10"></a>    <span class="c1">#   application/</span>
+</span><span id="__span-4-11"><a href="#__codelineno-4-11" id="__codelineno-4-11" name="__codelineno-4-11"></a>    <span class="c1">#   infrastructure/</span>
+</span><span id="__span-4-12"><a href="#__codelineno-4-12" id="__codelineno-4-12" name="__codelineno-4-12"></a>
+</span><span id="__span-4-13"><a href="#__codelineno-4-13" id="__codelineno-4-13" name="__codelineno-4-13"></a>    <span class="n">JsonSerializer</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span>
+</span><span id="__span-4-14"><a href="#__codelineno-4-14" id="__codelineno-4-14" name="__codelineno-4-14"></a>        <span class="n">builder</span><span class="p">,</span>
+</span><span id="__span-4-15"><a href="#__codelineno-4-15" id="__codelineno-4-15" name="__codelineno-4-15"></a>        <span class="n">type_modules</span><span class="o">=</span><span class="p">[</span>
+</span><span id="__span-4-16"><a href="#__codelineno-4-16" id="__codelineno-4-16" name="__codelineno-4-16"></a>            <span class="s2">"domain.enums"</span><span class="p">,</span>
+</span><span id="__span-4-17"><a href="#__codelineno-4-17" id="__codelineno-4-17" name="__codelineno-4-17"></a>            <span class="s2">"domain.entities"</span><span class="p">,</span>
+</span><span id="__span-4-18"><a href="#__codelineno-4-18" id="__codelineno-4-18" name="__codelineno-4-18"></a>            <span class="s2">"domain.value_objects"</span><span class="p">,</span>
+</span><span id="__span-4-19"><a href="#__codelineno-4-19" id="__codelineno-4-19" name="__codelineno-4-19"></a>            <span class="s2">"domain.aggregates"</span><span class="p">,</span>
+</span><span id="__span-4-20"><a href="#__codelineno-4-20" id="__codelineno-4-20" name="__codelineno-4-20"></a>            <span class="s2">"shared.types"</span>
+</span><span id="__span-4-21"><a href="#__codelineno-4-21" id="__codelineno-4-21" name="__codelineno-4-21"></a>        <span class="p">]</span>
+</span><span id="__span-4-22"><a href="#__codelineno-4-22" id="__codelineno-4-22" name="__codelineno-4-22"></a>    <span class="p">)</span>
+</span></code></pre></div>
 <h3 id="microservice-architecture">Microservice Architecture<a class="headerlink" href="#microservice-architecture" title="Permanent link">¶</a></h3>
-<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">configure_microservice_architecture</span><span class="p">():</span>
-<span class="w">    </span><span class="sd">"""Example: Configure types for microservice architecture"""</span>
-    <span class="c1"># For microservices that need to handle:</span>
-    <span class="c1"># - Internal domain types</span>
-    <span class="c1"># - Shared library types</span>
-    <span class="c1"># - External service types</span>
-
-    <span class="n">type_registry</span> <span class="o">=</span> <span class="n">get_type_registry</span><span class="p">()</span>
-
-    <span class="c1"># Internal domain</span>
-    <span class="n">type_registry</span><span class="o">.</span><span class="n">register_modules</span><span class="p">([</span>
-        <span class="s2">"user_service.domain.enums"</span><span class="p">,</span>
-        <span class="s2">"user_service.domain.entities"</span>
-    <span class="p">])</span>
-
-    <span class="c1"># Shared libraries</span>
-    <span class="n">type_registry</span><span class="o">.</span><span class="n">register_modules</span><span class="p">([</span>
-        <span class="s2">"common_lib.enums"</span><span class="p">,</span>
-        <span class="s2">"auth_lib.types"</span>
-    <span class="p">])</span>
-
-    <span class="c1"># External services</span>
-    <span class="n">type_registry</span><span class="o">.</span><span class="n">register_modules</span><span class="p">([</span>
-        <span class="s2">"notification_service.contracts"</span><span class="p">,</span>
-        <span class="s2">"payment_service.models"</span>
-    <span class="p">])</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a href="#__codelineno-5-1" id="__codelineno-5-1" name="__codelineno-5-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">configure_microservice_architecture</span><span class="p">():</span>
+</span><span id="__span-5-2"><a href="#__codelineno-5-2" id="__codelineno-5-2" name="__codelineno-5-2"></a><span class="w">    </span><span class="sd">"""Example: Configure types for microservice architecture"""</span>
+</span><span id="__span-5-3"><a href="#__codelineno-5-3" id="__codelineno-5-3" name="__codelineno-5-3"></a>    <span class="c1"># For microservices that need to handle:</span>
+</span><span id="__span-5-4"><a href="#__codelineno-5-4" id="__codelineno-5-4" name="__codelineno-5-4"></a>    <span class="c1"># - Internal domain types</span>
+</span><span id="__span-5-5"><a href="#__codelineno-5-5" id="__codelineno-5-5" name="__codelineno-5-5"></a>    <span class="c1"># - Shared library types</span>
+</span><span id="__span-5-6"><a href="#__codelineno-5-6" id="__codelineno-5-6" name="__codelineno-5-6"></a>    <span class="c1"># - External service types</span>
+</span><span id="__span-5-7"><a href="#__codelineno-5-7" id="__codelineno-5-7" name="__codelineno-5-7"></a>
+</span><span id="__span-5-8"><a href="#__codelineno-5-8" id="__codelineno-5-8" name="__codelineno-5-8"></a>    <span class="n">type_registry</span> <span class="o">=</span> <span class="n">get_type_registry</span><span class="p">()</span>
+</span><span id="__span-5-9"><a href="#__codelineno-5-9" id="__codelineno-5-9" name="__codelineno-5-9"></a>
+</span><span id="__span-5-10"><a href="#__codelineno-5-10" id="__codelineno-5-10" name="__codelineno-5-10"></a>    <span class="c1"># Internal domain</span>
+</span><span id="__span-5-11"><a href="#__codelineno-5-11" id="__codelineno-5-11" name="__codelineno-5-11"></a>    <span class="n">type_registry</span><span class="o">.</span><span class="n">register_modules</span><span class="p">([</span>
+</span><span id="__span-5-12"><a href="#__codelineno-5-12" id="__codelineno-5-12" name="__codelineno-5-12"></a>        <span class="s2">"user_service.domain.enums"</span><span class="p">,</span>
+</span><span id="__span-5-13"><a href="#__codelineno-5-13" id="__codelineno-5-13" name="__codelineno-5-13"></a>        <span class="s2">"user_service.domain.entities"</span>
+</span><span id="__span-5-14"><a href="#__codelineno-5-14" id="__codelineno-5-14" name="__codelineno-5-14"></a>    <span class="p">])</span>
+</span><span id="__span-5-15"><a href="#__codelineno-5-15" id="__codelineno-5-15" name="__codelineno-5-15"></a>
+</span><span id="__span-5-16"><a href="#__codelineno-5-16" id="__codelineno-5-16" name="__codelineno-5-16"></a>    <span class="c1"># Shared libraries</span>
+</span><span id="__span-5-17"><a href="#__codelineno-5-17" id="__codelineno-5-17" name="__codelineno-5-17"></a>    <span class="n">type_registry</span><span class="o">.</span><span class="n">register_modules</span><span class="p">([</span>
+</span><span id="__span-5-18"><a href="#__codelineno-5-18" id="__codelineno-5-18" name="__codelineno-5-18"></a>        <span class="s2">"common_lib.enums"</span><span class="p">,</span>
+</span><span id="__span-5-19"><a href="#__codelineno-5-19" id="__codelineno-5-19" name="__codelineno-5-19"></a>        <span class="s2">"auth_lib.types"</span>
+</span><span id="__span-5-20"><a href="#__codelineno-5-20" id="__codelineno-5-20" name="__codelineno-5-20"></a>    <span class="p">])</span>
+</span><span id="__span-5-21"><a href="#__codelineno-5-21" id="__codelineno-5-21" name="__codelineno-5-21"></a>
+</span><span id="__span-5-22"><a href="#__codelineno-5-22" id="__codelineno-5-22" name="__codelineno-5-22"></a>    <span class="c1"># External services</span>
+</span><span id="__span-5-23"><a href="#__codelineno-5-23" id="__codelineno-5-23" name="__codelineno-5-23"></a>    <span class="n">type_registry</span><span class="o">.</span><span class="n">register_modules</span><span class="p">([</span>
+</span><span id="__span-5-24"><a href="#__codelineno-5-24" id="__codelineno-5-24" name="__codelineno-5-24"></a>        <span class="s2">"notification_service.contracts"</span><span class="p">,</span>
+</span><span id="__span-5-25"><a href="#__codelineno-5-25" id="__codelineno-5-25" name="__codelineno-5-25"></a>        <span class="s2">"payment_service.models"</span>
+</span><span id="__span-5-26"><a href="#__codelineno-5-26" id="__codelineno-5-26" name="__codelineno-5-26"></a>    <span class="p">])</span>
+</span></code></pre></div>
 <h2 id="dynamic-type-discovery">Dynamic Type Discovery<a class="headerlink" href="#dynamic-type-discovery" title="Permanent link">¶</a></h2>
 <p>For more advanced scenarios, you can dynamically discover and register types:</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">enum</span><span class="w"> </span><span class="kn">import</span> <span class="n">Enum</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.core.module_loader</span><span class="w"> </span><span class="kn">import</span> <span class="n">ModuleLoader</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.core.type_finder</span><span class="w"> </span><span class="kn">import</span> <span class="n">TypeFinder</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.core.type_registry</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_type_registry</span>
-
-<span class="k">def</span><span class="w"> </span><span class="nf">dynamic_type_discovery_example</span><span class="p">():</span>
-<span class="w">    </span><span class="sd">"""Example: Dynamically discover and register types"""</span>
-    <span class="n">type_registry</span> <span class="o">=</span> <span class="n">get_type_registry</span><span class="p">()</span>
-
-    <span class="c1"># Example: Discover all enum types in a base module</span>
-    <span class="n">base_modules</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"myapp.domain"</span><span class="p">,</span> <span class="s2">"myapp.shared"</span><span class="p">,</span> <span class="s2">"myapp.external"</span><span class="p">]</span>
-
-    <span class="k">for</span> <span class="n">base_module_name</span> <span class="ow">in</span> <span class="n">base_modules</span><span class="p">:</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">base_module</span> <span class="o">=</span> <span class="n">ModuleLoader</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">base_module_name</span><span class="p">)</span>
-
-            <span class="c1"># Find all enum types in this module and submodules</span>
-            <span class="n">enum_types</span> <span class="o">=</span> <span class="n">TypeFinder</span><span class="o">.</span><span class="n">get_types</span><span class="p">(</span>
-                <span class="n">base_module</span><span class="p">,</span>
-                <span class="n">predicate</span><span class="o">=</span><span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="p">(</span>
-                    <span class="nb">isinstance</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="nb">type</span><span class="p">)</span>
-                    <span class="ow">and</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">Enum</span><span class="p">)</span>
-                    <span class="ow">and</span> <span class="n">t</span> <span class="o">!=</span> <span class="n">Enum</span>
-                <span class="p">),</span>
-                <span class="n">include_sub_modules</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                <span class="n">include_sub_packages</span><span class="o">=</span><span class="kc">True</span>
-            <span class="p">)</span>
-
-            <span class="k">if</span> <span class="n">enum_types</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Found </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">enum_types</span><span class="p">)</span><span class="si">}</span><span class="s2"> enum types in </span><span class="si">{</span><span class="n">base_module_name</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-                <span class="c1"># The TypeRegistry will cache these automatically when they're accessed</span>
-
-        <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Module </span><span class="si">{</span><span class="n">base_module_name</span><span class="si">}</span><span class="s2"> not available"</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">type_registry</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a href="#__codelineno-6-1" id="__codelineno-6-1" name="__codelineno-6-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">enum</span><span class="w"> </span><span class="kn">import</span> <span class="n">Enum</span>
+</span><span id="__span-6-2"><a href="#__codelineno-6-2" id="__codelineno-6-2" name="__codelineno-6-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.core.module_loader</span><span class="w"> </span><span class="kn">import</span> <span class="n">ModuleLoader</span>
+</span><span id="__span-6-3"><a href="#__codelineno-6-3" id="__codelineno-6-3" name="__codelineno-6-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.core.type_finder</span><span class="w"> </span><span class="kn">import</span> <span class="n">TypeFinder</span>
+</span><span id="__span-6-4"><a href="#__codelineno-6-4" id="__codelineno-6-4" name="__codelineno-6-4"></a><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.core.type_registry</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_type_registry</span>
+</span><span id="__span-6-5"><a href="#__codelineno-6-5" id="__codelineno-6-5" name="__codelineno-6-5"></a>
+</span><span id="__span-6-6"><a href="#__codelineno-6-6" id="__codelineno-6-6" name="__codelineno-6-6"></a><span class="k">def</span><span class="w"> </span><span class="nf">dynamic_type_discovery_example</span><span class="p">():</span>
+</span><span id="__span-6-7"><a href="#__codelineno-6-7" id="__codelineno-6-7" name="__codelineno-6-7"></a><span class="w">    </span><span class="sd">"""Example: Dynamically discover and register types"""</span>
+</span><span id="__span-6-8"><a href="#__codelineno-6-8" id="__codelineno-6-8" name="__codelineno-6-8"></a>    <span class="n">type_registry</span> <span class="o">=</span> <span class="n">get_type_registry</span><span class="p">()</span>
+</span><span id="__span-6-9"><a href="#__codelineno-6-9" id="__codelineno-6-9" name="__codelineno-6-9"></a>
+</span><span id="__span-6-10"><a href="#__codelineno-6-10" id="__codelineno-6-10" name="__codelineno-6-10"></a>    <span class="c1"># Example: Discover all enum types in a base module</span>
+</span><span id="__span-6-11"><a href="#__codelineno-6-11" id="__codelineno-6-11" name="__codelineno-6-11"></a>    <span class="n">base_modules</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"myapp.domain"</span><span class="p">,</span> <span class="s2">"myapp.shared"</span><span class="p">,</span> <span class="s2">"myapp.external"</span><span class="p">]</span>
+</span><span id="__span-6-12"><a href="#__codelineno-6-12" id="__codelineno-6-12" name="__codelineno-6-12"></a>
+</span><span id="__span-6-13"><a href="#__codelineno-6-13" id="__codelineno-6-13" name="__codelineno-6-13"></a>    <span class="k">for</span> <span class="n">base_module_name</span> <span class="ow">in</span> <span class="n">base_modules</span><span class="p">:</span>
+</span><span id="__span-6-14"><a href="#__codelineno-6-14" id="__codelineno-6-14" name="__codelineno-6-14"></a>        <span class="k">try</span><span class="p">:</span>
+</span><span id="__span-6-15"><a href="#__codelineno-6-15" id="__codelineno-6-15" name="__codelineno-6-15"></a>            <span class="n">base_module</span> <span class="o">=</span> <span class="n">ModuleLoader</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">base_module_name</span><span class="p">)</span>
+</span><span id="__span-6-16"><a href="#__codelineno-6-16" id="__codelineno-6-16" name="__codelineno-6-16"></a>
+</span><span id="__span-6-17"><a href="#__codelineno-6-17" id="__codelineno-6-17" name="__codelineno-6-17"></a>            <span class="c1"># Find all enum types in this module and submodules</span>
+</span><span id="__span-6-18"><a href="#__codelineno-6-18" id="__codelineno-6-18" name="__codelineno-6-18"></a>            <span class="n">enum_types</span> <span class="o">=</span> <span class="n">TypeFinder</span><span class="o">.</span><span class="n">get_types</span><span class="p">(</span>
+</span><span id="__span-6-19"><a href="#__codelineno-6-19" id="__codelineno-6-19" name="__codelineno-6-19"></a>                <span class="n">base_module</span><span class="p">,</span>
+</span><span id="__span-6-20"><a href="#__codelineno-6-20" id="__codelineno-6-20" name="__codelineno-6-20"></a>                <span class="n">predicate</span><span class="o">=</span><span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="p">(</span>
+</span><span id="__span-6-21"><a href="#__codelineno-6-21" id="__codelineno-6-21" name="__codelineno-6-21"></a>                    <span class="nb">isinstance</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="nb">type</span><span class="p">)</span>
+</span><span id="__span-6-22"><a href="#__codelineno-6-22" id="__codelineno-6-22" name="__codelineno-6-22"></a>                    <span class="ow">and</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">Enum</span><span class="p">)</span>
+</span><span id="__span-6-23"><a href="#__codelineno-6-23" id="__codelineno-6-23" name="__codelineno-6-23"></a>                    <span class="ow">and</span> <span class="n">t</span> <span class="o">!=</span> <span class="n">Enum</span>
+</span><span id="__span-6-24"><a href="#__codelineno-6-24" id="__codelineno-6-24" name="__codelineno-6-24"></a>                <span class="p">),</span>
+</span><span id="__span-6-25"><a href="#__codelineno-6-25" id="__codelineno-6-25" name="__codelineno-6-25"></a>                <span class="n">include_sub_modules</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+</span><span id="__span-6-26"><a href="#__codelineno-6-26" id="__codelineno-6-26" name="__codelineno-6-26"></a>                <span class="n">include_sub_packages</span><span class="o">=</span><span class="kc">True</span>
+</span><span id="__span-6-27"><a href="#__codelineno-6-27" id="__codelineno-6-27" name="__codelineno-6-27"></a>            <span class="p">)</span>
+</span><span id="__span-6-28"><a href="#__codelineno-6-28" id="__codelineno-6-28" name="__codelineno-6-28"></a>
+</span><span id="__span-6-29"><a href="#__codelineno-6-29" id="__codelineno-6-29" name="__codelineno-6-29"></a>            <span class="k">if</span> <span class="n">enum_types</span><span class="p">:</span>
+</span><span id="__span-6-30"><a href="#__codelineno-6-30" id="__codelineno-6-30" name="__codelineno-6-30"></a>                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Found </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">enum_types</span><span class="p">)</span><span class="si">}</span><span class="s2"> enum types in </span><span class="si">{</span><span class="n">base_module_name</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span><span id="__span-6-31"><a href="#__codelineno-6-31" id="__codelineno-6-31" name="__codelineno-6-31"></a>                <span class="c1"># The TypeRegistry will cache these automatically when they're accessed</span>
+</span><span id="__span-6-32"><a href="#__codelineno-6-32" id="__codelineno-6-32" name="__codelineno-6-32"></a>
+</span><span id="__span-6-33"><a href="#__codelineno-6-33" id="__codelineno-6-33" name="__codelineno-6-33"></a>        <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+</span><span id="__span-6-34"><a href="#__codelineno-6-34" id="__codelineno-6-34" name="__codelineno-6-34"></a>            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Module </span><span class="si">{</span><span class="n">base_module_name</span><span class="si">}</span><span class="s2"> not available"</span><span class="p">)</span>
+</span><span id="__span-6-35"><a href="#__codelineno-6-35" id="__codelineno-6-35" name="__codelineno-6-35"></a>
+</span><span id="__span-6-36"><a href="#__codelineno-6-36" id="__codelineno-6-36" name="__codelineno-6-36"></a>    <span class="k">return</span> <span class="n">type_registry</span>
+</span></code></pre></div>
 <h2 id="performance-considerations">Performance Considerations<a class="headerlink" href="#performance-considerations" title="Permanent link">¶</a></h2>
 <h3 id="module-registration-best-practices">Module Registration Best Practices<a class="headerlink" href="#module-registration-best-practices" title="Permanent link">¶</a></h3>
 <ol>
@@ -1249,59 +1249,59 @@ This provides flexibility for different project architectures while maintaining 
 <li><strong>Group Related Types</strong>: Keep related enums and types in organized module structures</li>
 </ol>
 <h3 id="example-startup-configuration">Example Startup Configuration<a class="headerlink" href="#example-startup-configuration" title="Permanent link">¶</a></h3>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.hosting.enhanced_web_application_builder</span><span class="w"> </span><span class="kn">import</span> <span class="n">EnhancedWebApplicationBuilder</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.serialization.json</span><span class="w"> </span><span class="kn">import</span> <span class="n">JsonSerializer</span>
-
-<span class="k">def</span><span class="w"> </span><span class="nf">create_optimized_app</span><span class="p">():</span>
-<span class="w">    </span><span class="sd">"""Example: Optimized application startup with type registration"""</span>
-    <span class="n">builder</span> <span class="o">=</span> <span class="n">EnhancedWebApplicationBuilder</span><span class="p">()</span>
-
-    <span class="c1"># Register all type modules at startup</span>
-    <span class="n">type_modules</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="c1"># Core domain types</span>
-        <span class="s2">"domain.enums"</span><span class="p">,</span>
-        <span class="s2">"domain.entities"</span><span class="p">,</span>
-
-        <span class="c1"># Application layer types</span>
-        <span class="s2">"application.commands"</span><span class="p">,</span>
-        <span class="s2">"application.queries"</span><span class="p">,</span>
-
-        <span class="c1"># Integration types</span>
-        <span class="s2">"integration.external_apis"</span><span class="p">,</span>
-        <span class="s2">"integration.shared_contracts"</span><span class="p">,</span>
-
-        <span class="c1"># Testing types (if needed in production)</span>
-        <span class="c1"># "tests.fixtures.types",</span>
-    <span class="p">]</span>
-
-    <span class="n">JsonSerializer</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="n">type_modules</span><span class="o">=</span><span class="n">type_modules</span><span class="p">)</span>
-
-    <span class="c1"># Build application</span>
-    <span class="n">app</span> <span class="o">=</span> <span class="n">builder</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
-
-    <span class="k">return</span> <span class="n">app</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-7-1"><a href="#__codelineno-7-1" id="__codelineno-7-1" name="__codelineno-7-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.hosting.enhanced_web_application_builder</span><span class="w"> </span><span class="kn">import</span> <span class="n">EnhancedWebApplicationBuilder</span>
+</span><span id="__span-7-2"><a href="#__codelineno-7-2" id="__codelineno-7-2" name="__codelineno-7-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.serialization.json</span><span class="w"> </span><span class="kn">import</span> <span class="n">JsonSerializer</span>
+</span><span id="__span-7-3"><a href="#__codelineno-7-3" id="__codelineno-7-3" name="__codelineno-7-3"></a>
+</span><span id="__span-7-4"><a href="#__codelineno-7-4" id="__codelineno-7-4" name="__codelineno-7-4"></a><span class="k">def</span><span class="w"> </span><span class="nf">create_optimized_app</span><span class="p">():</span>
+</span><span id="__span-7-5"><a href="#__codelineno-7-5" id="__codelineno-7-5" name="__codelineno-7-5"></a><span class="w">    </span><span class="sd">"""Example: Optimized application startup with type registration"""</span>
+</span><span id="__span-7-6"><a href="#__codelineno-7-6" id="__codelineno-7-6" name="__codelineno-7-6"></a>    <span class="n">builder</span> <span class="o">=</span> <span class="n">EnhancedWebApplicationBuilder</span><span class="p">()</span>
+</span><span id="__span-7-7"><a href="#__codelineno-7-7" id="__codelineno-7-7" name="__codelineno-7-7"></a>
+</span><span id="__span-7-8"><a href="#__codelineno-7-8" id="__codelineno-7-8" name="__codelineno-7-8"></a>    <span class="c1"># Register all type modules at startup</span>
+</span><span id="__span-7-9"><a href="#__codelineno-7-9" id="__codelineno-7-9" name="__codelineno-7-9"></a>    <span class="n">type_modules</span> <span class="o">=</span> <span class="p">[</span>
+</span><span id="__span-7-10"><a href="#__codelineno-7-10" id="__codelineno-7-10" name="__codelineno-7-10"></a>        <span class="c1"># Core domain types</span>
+</span><span id="__span-7-11"><a href="#__codelineno-7-11" id="__codelineno-7-11" name="__codelineno-7-11"></a>        <span class="s2">"domain.enums"</span><span class="p">,</span>
+</span><span id="__span-7-12"><a href="#__codelineno-7-12" id="__codelineno-7-12" name="__codelineno-7-12"></a>        <span class="s2">"domain.entities"</span><span class="p">,</span>
+</span><span id="__span-7-13"><a href="#__codelineno-7-13" id="__codelineno-7-13" name="__codelineno-7-13"></a>
+</span><span id="__span-7-14"><a href="#__codelineno-7-14" id="__codelineno-7-14" name="__codelineno-7-14"></a>        <span class="c1"># Application layer types</span>
+</span><span id="__span-7-15"><a href="#__codelineno-7-15" id="__codelineno-7-15" name="__codelineno-7-15"></a>        <span class="s2">"application.commands"</span><span class="p">,</span>
+</span><span id="__span-7-16"><a href="#__codelineno-7-16" id="__codelineno-7-16" name="__codelineno-7-16"></a>        <span class="s2">"application.queries"</span><span class="p">,</span>
+</span><span id="__span-7-17"><a href="#__codelineno-7-17" id="__codelineno-7-17" name="__codelineno-7-17"></a>
+</span><span id="__span-7-18"><a href="#__codelineno-7-18" id="__codelineno-7-18" name="__codelineno-7-18"></a>        <span class="c1"># Integration types</span>
+</span><span id="__span-7-19"><a href="#__codelineno-7-19" id="__codelineno-7-19" name="__codelineno-7-19"></a>        <span class="s2">"integration.external_apis"</span><span class="p">,</span>
+</span><span id="__span-7-20"><a href="#__codelineno-7-20" id="__codelineno-7-20" name="__codelineno-7-20"></a>        <span class="s2">"integration.shared_contracts"</span><span class="p">,</span>
+</span><span id="__span-7-21"><a href="#__codelineno-7-21" id="__codelineno-7-21" name="__codelineno-7-21"></a>
+</span><span id="__span-7-22"><a href="#__codelineno-7-22" id="__codelineno-7-22" name="__codelineno-7-22"></a>        <span class="c1"># Testing types (if needed in production)</span>
+</span><span id="__span-7-23"><a href="#__codelineno-7-23" id="__codelineno-7-23" name="__codelineno-7-23"></a>        <span class="c1"># "tests.fixtures.types",</span>
+</span><span id="__span-7-24"><a href="#__codelineno-7-24" id="__codelineno-7-24" name="__codelineno-7-24"></a>    <span class="p">]</span>
+</span><span id="__span-7-25"><a href="#__codelineno-7-25" id="__codelineno-7-25" name="__codelineno-7-25"></a>
+</span><span id="__span-7-26"><a href="#__codelineno-7-26" id="__codelineno-7-26" name="__codelineno-7-26"></a>    <span class="n">JsonSerializer</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="n">type_modules</span><span class="o">=</span><span class="n">type_modules</span><span class="p">)</span>
+</span><span id="__span-7-27"><a href="#__codelineno-7-27" id="__codelineno-7-27" name="__codelineno-7-27"></a>
+</span><span id="__span-7-28"><a href="#__codelineno-7-28" id="__codelineno-7-28" name="__codelineno-7-28"></a>    <span class="c1"># Build application</span>
+</span><span id="__span-7-29"><a href="#__codelineno-7-29" id="__codelineno-7-29" name="__codelineno-7-29"></a>    <span class="n">app</span> <span class="o">=</span> <span class="n">builder</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
+</span><span id="__span-7-30"><a href="#__codelineno-7-30" id="__codelineno-7-30" name="__codelineno-7-30"></a>
+</span><span id="__span-7-31"><a href="#__codelineno-7-31" id="__codelineno-7-31" name="__codelineno-7-31"></a>    <span class="k">return</span> <span class="n">app</span>
+</span></code></pre></div>
 <h2 id="error-handling-and-debugging">Error Handling and Debugging<a class="headerlink" href="#error-handling-and-debugging" title="Permanent link">¶</a></h2>
 <h3 id="debugging-type-discovery">Debugging Type Discovery<a class="headerlink" href="#debugging-type-discovery" title="Permanent link">¶</a></h3>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.core.type_registry</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_type_registry</span>
-
-<span class="k">def</span><span class="w"> </span><span class="nf">debug_type_discovery</span><span class="p">():</span>
-<span class="w">    </span><span class="sd">"""Debug helper to inspect registered types"""</span>
-    <span class="n">type_registry</span> <span class="o">=</span> <span class="n">get_type_registry</span><span class="p">()</span>
-
-    <span class="c1"># Check registered modules</span>
-    <span class="n">modules</span> <span class="o">=</span> <span class="n">type_registry</span><span class="o">.</span><span class="n">get_registered_modules</span><span class="p">()</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Registered modules: </span><span class="si">{</span><span class="n">modules</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-
-    <span class="c1"># Check cached enum types</span>
-    <span class="n">cached_enums</span> <span class="o">=</span> <span class="n">type_registry</span><span class="o">.</span><span class="n">get_cached_enum_types</span><span class="p">()</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Cached enum types: </span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="n">cached_enums</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-
-    <span class="c1"># Test enum lookup</span>
-    <span class="n">test_value</span> <span class="o">=</span> <span class="s2">"test_value"</span>
-    <span class="n">found_enum</span> <span class="o">=</span> <span class="n">type_registry</span><span class="o">.</span><span class="n">find_enum_for_value</span><span class="p">(</span><span class="n">test_value</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Enum for '</span><span class="si">{</span><span class="n">test_value</span><span class="si">}</span><span class="s2">': </span><span class="si">{</span><span class="n">found_enum</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-8-1"><a href="#__codelineno-8-1" id="__codelineno-8-1" name="__codelineno-8-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.core.type_registry</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_type_registry</span>
+</span><span id="__span-8-2"><a href="#__codelineno-8-2" id="__codelineno-8-2" name="__codelineno-8-2"></a>
+</span><span id="__span-8-3"><a href="#__codelineno-8-3" id="__codelineno-8-3" name="__codelineno-8-3"></a><span class="k">def</span><span class="w"> </span><span class="nf">debug_type_discovery</span><span class="p">():</span>
+</span><span id="__span-8-4"><a href="#__codelineno-8-4" id="__codelineno-8-4" name="__codelineno-8-4"></a><span class="w">    </span><span class="sd">"""Debug helper to inspect registered types"""</span>
+</span><span id="__span-8-5"><a href="#__codelineno-8-5" id="__codelineno-8-5" name="__codelineno-8-5"></a>    <span class="n">type_registry</span> <span class="o">=</span> <span class="n">get_type_registry</span><span class="p">()</span>
+</span><span id="__span-8-6"><a href="#__codelineno-8-6" id="__codelineno-8-6" name="__codelineno-8-6"></a>
+</span><span id="__span-8-7"><a href="#__codelineno-8-7" id="__codelineno-8-7" name="__codelineno-8-7"></a>    <span class="c1"># Check registered modules</span>
+</span><span id="__span-8-8"><a href="#__codelineno-8-8" id="__codelineno-8-8" name="__codelineno-8-8"></a>    <span class="n">modules</span> <span class="o">=</span> <span class="n">type_registry</span><span class="o">.</span><span class="n">get_registered_modules</span><span class="p">()</span>
+</span><span id="__span-8-9"><a href="#__codelineno-8-9" id="__codelineno-8-9" name="__codelineno-8-9"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Registered modules: </span><span class="si">{</span><span class="n">modules</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span><span id="__span-8-10"><a href="#__codelineno-8-10" id="__codelineno-8-10" name="__codelineno-8-10"></a>
+</span><span id="__span-8-11"><a href="#__codelineno-8-11" id="__codelineno-8-11" name="__codelineno-8-11"></a>    <span class="c1"># Check cached enum types</span>
+</span><span id="__span-8-12"><a href="#__codelineno-8-12" id="__codelineno-8-12" name="__codelineno-8-12"></a>    <span class="n">cached_enums</span> <span class="o">=</span> <span class="n">type_registry</span><span class="o">.</span><span class="n">get_cached_enum_types</span><span class="p">()</span>
+</span><span id="__span-8-13"><a href="#__codelineno-8-13" id="__codelineno-8-13" name="__codelineno-8-13"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Cached enum types: </span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="n">cached_enums</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span><span id="__span-8-14"><a href="#__codelineno-8-14" id="__codelineno-8-14" name="__codelineno-8-14"></a>
+</span><span id="__span-8-15"><a href="#__codelineno-8-15" id="__codelineno-8-15" name="__codelineno-8-15"></a>    <span class="c1"># Test enum lookup</span>
+</span><span id="__span-8-16"><a href="#__codelineno-8-16" id="__codelineno-8-16" name="__codelineno-8-16"></a>    <span class="n">test_value</span> <span class="o">=</span> <span class="s2">"test_value"</span>
+</span><span id="__span-8-17"><a href="#__codelineno-8-17" id="__codelineno-8-17" name="__codelineno-8-17"></a>    <span class="n">found_enum</span> <span class="o">=</span> <span class="n">type_registry</span><span class="o">.</span><span class="n">find_enum_for_value</span><span class="p">(</span><span class="n">test_value</span><span class="p">)</span>
+</span><span id="__span-8-18"><a href="#__codelineno-8-18" id="__codelineno-8-18" name="__codelineno-8-18"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Enum for '</span><span class="si">{</span><span class="n">test_value</span><span class="si">}</span><span class="s2">': </span><span class="si">{</span><span class="n">found_enum</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span></code></pre></div>
 <h3 id="common-configuration-issues">Common Configuration Issues<a class="headerlink" href="#common-configuration-issues" title="Permanent link">¶</a></h3>
 <ol>
 <li><strong>Module Not Found</strong>: Ensure module paths are correct and modules are importable</li>
@@ -1310,23 +1310,23 @@ This provides flexibility for different project architectures while maintaining 
 </ol>
 <h2 id="testing-configuration">Testing Configuration<a class="headerlink" href="#testing-configuration" title="Permanent link">¶</a></h2>
 <p>For testing scenarios, you can configure type discovery specifically for test environments:</p>
-<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">configure_test_types</span><span class="p">():</span>
-<span class="w">    </span><span class="sd">"""Example: Configure types for testing environment"""</span>
-    <span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.core.type_registry</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_type_registry</span>
-
-    <span class="n">type_registry</span> <span class="o">=</span> <span class="n">get_type_registry</span><span class="p">()</span>
-
-    <span class="c1"># Register test-specific modules</span>
-    <span class="n">test_modules</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="s2">"tests.fixtures.enums"</span><span class="p">,</span>
-        <span class="s2">"tests.mocks.types"</span><span class="p">,</span>
-        <span class="s2">"tests.data.models"</span>
-    <span class="p">]</span>
-
-    <span class="n">type_registry</span><span class="o">.</span><span class="n">register_modules</span><span class="p">(</span><span class="n">test_modules</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">type_registry</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-9-1"><a href="#__codelineno-9-1" id="__codelineno-9-1" name="__codelineno-9-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">configure_test_types</span><span class="p">():</span>
+</span><span id="__span-9-2"><a href="#__codelineno-9-2" id="__codelineno-9-2" name="__codelineno-9-2"></a><span class="w">    </span><span class="sd">"""Example: Configure types for testing environment"""</span>
+</span><span id="__span-9-3"><a href="#__codelineno-9-3" id="__codelineno-9-3" name="__codelineno-9-3"></a>    <span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.core.type_registry</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_type_registry</span>
+</span><span id="__span-9-4"><a href="#__codelineno-9-4" id="__codelineno-9-4" name="__codelineno-9-4"></a>
+</span><span id="__span-9-5"><a href="#__codelineno-9-5" id="__codelineno-9-5" name="__codelineno-9-5"></a>    <span class="n">type_registry</span> <span class="o">=</span> <span class="n">get_type_registry</span><span class="p">()</span>
+</span><span id="__span-9-6"><a href="#__codelineno-9-6" id="__codelineno-9-6" name="__codelineno-9-6"></a>
+</span><span id="__span-9-7"><a href="#__codelineno-9-7" id="__codelineno-9-7" name="__codelineno-9-7"></a>    <span class="c1"># Register test-specific modules</span>
+</span><span id="__span-9-8"><a href="#__codelineno-9-8" id="__codelineno-9-8" name="__codelineno-9-8"></a>    <span class="n">test_modules</span> <span class="o">=</span> <span class="p">[</span>
+</span><span id="__span-9-9"><a href="#__codelineno-9-9" id="__codelineno-9-9" name="__codelineno-9-9"></a>        <span class="s2">"tests.fixtures.enums"</span><span class="p">,</span>
+</span><span id="__span-9-10"><a href="#__codelineno-9-10" id="__codelineno-9-10" name="__codelineno-9-10"></a>        <span class="s2">"tests.mocks.types"</span><span class="p">,</span>
+</span><span id="__span-9-11"><a href="#__codelineno-9-11" id="__codelineno-9-11" name="__codelineno-9-11"></a>        <span class="s2">"tests.data.models"</span>
+</span><span id="__span-9-12"><a href="#__codelineno-9-12" id="__codelineno-9-12" name="__codelineno-9-12"></a>    <span class="p">]</span>
+</span><span id="__span-9-13"><a href="#__codelineno-9-13" id="__codelineno-9-13" name="__codelineno-9-13"></a>
+</span><span id="__span-9-14"><a href="#__codelineno-9-14" id="__codelineno-9-14" name="__codelineno-9-14"></a>    <span class="n">type_registry</span><span class="o">.</span><span class="n">register_modules</span><span class="p">(</span><span class="n">test_modules</span><span class="p">)</span>
+</span><span id="__span-9-15"><a href="#__codelineno-9-15" id="__codelineno-9-15" name="__codelineno-9-15"></a>
+</span><span id="__span-9-16"><a href="#__codelineno-9-16" id="__codelineno-9-16" name="__codelineno-9-16"></a>    <span class="k">return</span> <span class="n">type_registry</span>
+</span></code></pre></div>
 <h2 id="best-practices-summary">Best Practices Summary<a class="headerlink" href="#best-practices-summary" title="Permanent link">¶</a></h2>
 <ol>
 <li><strong>Early Registration</strong>: Register type modules during application startup</li>

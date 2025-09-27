@@ -682,9 +682,9 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../references/python_type_hints/">
+<a class="md-nav__link" href="../../references/python_typing_guide/">
 <span class="md-ellipsis">
-    Python Type Hints
+    Python Typing Guide
     
   </span>
 </a>
@@ -706,9 +706,9 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../references/python_generic_types/">
+<a class="md-nav__link" href="../../references/test-mermaid/">
 <span class="md-ellipsis">
-    Python Generic Types
+    Mermaid References
     
   </span>
 </a>
@@ -992,152 +992,152 @@
 <h2 id="how-it-works">🏗️ How It Works<a class="headerlink" href="#how-it-works" title="Permanent link">¶</a></h2>
 <p>The resilient discovery implements a two-stage fallback strategy:</p>
 <h3 id="stage-1-package-import-original-behavior">Stage 1: Package Import (Original Behavior)<a class="headerlink" href="#stage-1-package-import-original-behavior" title="Permanent link">¶</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Attempts to import the entire package</span>
-<span class="n">Mediator</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="p">[</span><span class="s1">'application.runtime_agent.queries'</span><span class="p">])</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a href="#__codelineno-0-1" id="__codelineno-0-1" name="__codelineno-0-1"></a><span class="c1"># Attempts to import the entire package</span>
+</span><span id="__span-0-2"><a href="#__codelineno-0-2" id="__codelineno-0-2" name="__codelineno-0-2"></a><span class="n">Mediator</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="p">[</span><span class="s1">'application.runtime_agent.queries'</span><span class="p">])</span>
+</span></code></pre></div>
 <p>If successful, handlers are discovered and registered normally.</p>
 <h3 id="stage-2-individual-module-fallback">Stage 2: Individual Module Fallback<a class="headerlink" href="#stage-2-individual-module-fallback" title="Permanent link">¶</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># If package import fails, falls back to:</span>
-<span class="c1"># 1. Discover individual .py files in the package directory</span>
-<span class="c1"># 2. Attempt to import each module individually</span>
-<span class="c1"># 3. Register handlers from successful imports</span>
-<span class="c1"># 4. Skip modules with import failures</span>
-
-<span class="c1"># Example fallback discovery:</span>
-<span class="c1"># application.runtime_agent.queries.get_worker_query     ✅ SUCCESS</span>
-<span class="c1"># application.runtime_agent.queries.list_workers_query   ✅ SUCCESS</span>
-<span class="c1"># application.runtime_agent.queries.broken_module        ❌ SKIPPED</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a href="#__codelineno-1-1" id="__codelineno-1-1" name="__codelineno-1-1"></a><span class="c1"># If package import fails, falls back to:</span>
+</span><span id="__span-1-2"><a href="#__codelineno-1-2" id="__codelineno-1-2" name="__codelineno-1-2"></a><span class="c1"># 1. Discover individual .py files in the package directory</span>
+</span><span id="__span-1-3"><a href="#__codelineno-1-3" id="__codelineno-1-3" name="__codelineno-1-3"></a><span class="c1"># 2. Attempt to import each module individually</span>
+</span><span id="__span-1-4"><a href="#__codelineno-1-4" id="__codelineno-1-4" name="__codelineno-1-4"></a><span class="c1"># 3. Register handlers from successful imports</span>
+</span><span id="__span-1-5"><a href="#__codelineno-1-5" id="__codelineno-1-5" name="__codelineno-1-5"></a><span class="c1"># 4. Skip modules with import failures</span>
+</span><span id="__span-1-6"><a href="#__codelineno-1-6" id="__codelineno-1-6" name="__codelineno-1-6"></a>
+</span><span id="__span-1-7"><a href="#__codelineno-1-7" id="__codelineno-1-7" name="__codelineno-1-7"></a><span class="c1"># Example fallback discovery:</span>
+</span><span id="__span-1-8"><a href="#__codelineno-1-8" id="__codelineno-1-8" name="__codelineno-1-8"></a><span class="c1"># application.runtime_agent.queries.get_worker_query     ✅ SUCCESS</span>
+</span><span id="__span-1-9"><a href="#__codelineno-1-9" id="__codelineno-1-9" name="__codelineno-1-9"></a><span class="c1"># application.runtime_agent.queries.list_workers_query   ✅ SUCCESS</span>
+</span><span id="__span-1-10"><a href="#__codelineno-1-10" id="__codelineno-1-10" name="__codelineno-1-10"></a><span class="c1"># application.runtime_agent.queries.broken_module        ❌ SKIPPED</span>
+</span></code></pre></div>
 <h2 id="usage-examples">🚀 Usage Examples<a class="headerlink" href="#usage-examples" title="Permanent link">¶</a></h2>
 <h3 id="basic-usage-unchanged">Basic Usage (Unchanged)<a class="headerlink" href="#basic-usage-unchanged" title="Permanent link">¶</a></h3>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.mediation</span><span class="w"> </span><span class="kn">import</span> <span class="n">Mediator</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.hosting</span><span class="w"> </span><span class="kn">import</span> <span class="n">WebApplicationBuilder</span>
-
-<span class="n">builder</span> <span class="o">=</span> <span class="n">WebApplicationBuilder</span><span class="p">()</span>
-
-<span class="c1"># This now works even if some packages have dependency issues</span>
-<span class="n">Mediator</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="p">[</span>
-    <span class="s1">'application.commands'</span><span class="p">,</span>           <span class="c1"># May have legacy UseCase imports</span>
-    <span class="s1">'application.queries'</span><span class="p">,</span>            <span class="c1"># Clean CQRS handlers</span>
-    <span class="s1">'application.event_handlers'</span>      <span class="c1"># Mixed dependencies</span>
-<span class="p">])</span>
-
-<span class="n">app</span> <span class="o">=</span> <span class="n">builder</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a href="#__codelineno-2-1" id="__codelineno-2-1" name="__codelineno-2-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.mediation</span><span class="w"> </span><span class="kn">import</span> <span class="n">Mediator</span>
+</span><span id="__span-2-2"><a href="#__codelineno-2-2" id="__codelineno-2-2" name="__codelineno-2-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.hosting</span><span class="w"> </span><span class="kn">import</span> <span class="n">WebApplicationBuilder</span>
+</span><span id="__span-2-3"><a href="#__codelineno-2-3" id="__codelineno-2-3" name="__codelineno-2-3"></a>
+</span><span id="__span-2-4"><a href="#__codelineno-2-4" id="__codelineno-2-4" name="__codelineno-2-4"></a><span class="n">builder</span> <span class="o">=</span> <span class="n">WebApplicationBuilder</span><span class="p">()</span>
+</span><span id="__span-2-5"><a href="#__codelineno-2-5" id="__codelineno-2-5" name="__codelineno-2-5"></a>
+</span><span id="__span-2-6"><a href="#__codelineno-2-6" id="__codelineno-2-6" name="__codelineno-2-6"></a><span class="c1"># This now works even if some packages have dependency issues</span>
+</span><span id="__span-2-7"><a href="#__codelineno-2-7" id="__codelineno-2-7" name="__codelineno-2-7"></a><span class="n">Mediator</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="p">[</span>
+</span><span id="__span-2-8"><a href="#__codelineno-2-8" id="__codelineno-2-8" name="__codelineno-2-8"></a>    <span class="s1">'application.commands'</span><span class="p">,</span>           <span class="c1"># May have legacy UseCase imports</span>
+</span><span id="__span-2-9"><a href="#__codelineno-2-9" id="__codelineno-2-9" name="__codelineno-2-9"></a>    <span class="s1">'application.queries'</span><span class="p">,</span>            <span class="c1"># Clean CQRS handlers</span>
+</span><span id="__span-2-10"><a href="#__codelineno-2-10" id="__codelineno-2-10" name="__codelineno-2-10"></a>    <span class="s1">'application.event_handlers'</span>      <span class="c1"># Mixed dependencies</span>
+</span><span id="__span-2-11"><a href="#__codelineno-2-11" id="__codelineno-2-11" name="__codelineno-2-11"></a><span class="p">])</span>
+</span><span id="__span-2-12"><a href="#__codelineno-2-12" id="__codelineno-2-12" name="__codelineno-2-12"></a>
+</span><span id="__span-2-13"><a href="#__codelineno-2-13" id="__codelineno-2-13" name="__codelineno-2-13"></a><span class="n">app</span> <span class="o">=</span> <span class="n">builder</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
+</span></code></pre></div>
 <h3 id="mixed-legacymodern-codebase">Mixed Legacy/Modern Codebase<a class="headerlink" href="#mixed-legacymodern-codebase" title="Permanent link">¶</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Your package structure:</span>
-<span class="c1"># application/</span>
-<span class="c1"># ├── __init__.py                    # ❌ Imports missing UseCase class</span>
-<span class="c1"># ├── legacy_use_cases.py           # ❌ Uses old patterns</span>
-<span class="c1"># └── queries/</span>
-<span class="c1">#     ├── __init__.py               # ✅ Clean file</span>
-<span class="c1">#     ├── get_user_query.py         # ✅ Valid QueryHandler</span>
-<span class="c1">#     └── list_users_query.py       # ✅ Valid QueryHandler</span>
-
-<span class="c1"># This now works! Handlers are discovered from individual modules</span>
-<span class="n">Mediator</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="p">[</span><span class="s1">'application.queries'</span><span class="p">])</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a href="#__codelineno-3-1" id="__codelineno-3-1" name="__codelineno-3-1"></a><span class="c1"># Your package structure:</span>
+</span><span id="__span-3-2"><a href="#__codelineno-3-2" id="__codelineno-3-2" name="__codelineno-3-2"></a><span class="c1"># application/</span>
+</span><span id="__span-3-3"><a href="#__codelineno-3-3" id="__codelineno-3-3" name="__codelineno-3-3"></a><span class="c1"># ├── __init__.py                    # ❌ Imports missing UseCase class</span>
+</span><span id="__span-3-4"><a href="#__codelineno-3-4" id="__codelineno-3-4" name="__codelineno-3-4"></a><span class="c1"># ├── legacy_use_cases.py           # ❌ Uses old patterns</span>
+</span><span id="__span-3-5"><a href="#__codelineno-3-5" id="__codelineno-3-5" name="__codelineno-3-5"></a><span class="c1"># └── queries/</span>
+</span><span id="__span-3-6"><a href="#__codelineno-3-6" id="__codelineno-3-6" name="__codelineno-3-6"></a><span class="c1">#     ├── __init__.py               # ✅ Clean file</span>
+</span><span id="__span-3-7"><a href="#__codelineno-3-7" id="__codelineno-3-7" name="__codelineno-3-7"></a><span class="c1">#     ├── get_user_query.py         # ✅ Valid QueryHandler</span>
+</span><span id="__span-3-8"><a href="#__codelineno-3-8" id="__codelineno-3-8" name="__codelineno-3-8"></a><span class="c1">#     └── list_users_query.py       # ✅ Valid QueryHandler</span>
+</span><span id="__span-3-9"><a href="#__codelineno-3-9" id="__codelineno-3-9" name="__codelineno-3-9"></a>
+</span><span id="__span-3-10"><a href="#__codelineno-3-10" id="__codelineno-3-10" name="__codelineno-3-10"></a><span class="c1"># This now works! Handlers are discovered from individual modules</span>
+</span><span id="__span-3-11"><a href="#__codelineno-3-11" id="__codelineno-3-11" name="__codelineno-3-11"></a><span class="n">Mediator</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="p">[</span><span class="s1">'application.queries'</span><span class="p">])</span>
+</span></code></pre></div>
 <h3 id="debugging-discovery-issues">Debugging Discovery Issues<a class="headerlink" href="#debugging-discovery-issues" title="Permanent link">¶</a></h3>
-<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
-<span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">)</span>
-
-<span class="c1"># Enable detailed logging to see what's discovered vs skipped</span>
-<span class="n">Mediator</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="p">[</span><span class="s1">'your.package.name'</span><span class="p">])</span>
-
-<span class="c1"># Sample output:</span>
-<span class="c1"># WARNING: Package import failed for 'application.queries': UseCase not found</span>
-<span class="c1"># INFO: Attempting fallback: scanning individual modules</span>
-<span class="c1"># DEBUG: Discovered submodule: application.queries.get_user_query</span>
-<span class="c1"># DEBUG: Discovered submodule: application.queries.list_users_query</span>
-<span class="c1"># INFO: Successfully registered 2 handlers from submodule: application.queries.get_user_query</span>
-<span class="c1"># INFO: Fallback succeeded: registered 4 handlers from individual modules</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a href="#__codelineno-4-1" id="__codelineno-4-1" name="__codelineno-4-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+</span><span id="__span-4-2"><a href="#__codelineno-4-2" id="__codelineno-4-2" name="__codelineno-4-2"></a><span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">)</span>
+</span><span id="__span-4-3"><a href="#__codelineno-4-3" id="__codelineno-4-3" name="__codelineno-4-3"></a>
+</span><span id="__span-4-4"><a href="#__codelineno-4-4" id="__codelineno-4-4" name="__codelineno-4-4"></a><span class="c1"># Enable detailed logging to see what's discovered vs skipped</span>
+</span><span id="__span-4-5"><a href="#__codelineno-4-5" id="__codelineno-4-5" name="__codelineno-4-5"></a><span class="n">Mediator</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="p">[</span><span class="s1">'your.package.name'</span><span class="p">])</span>
+</span><span id="__span-4-6"><a href="#__codelineno-4-6" id="__codelineno-4-6" name="__codelineno-4-6"></a>
+</span><span id="__span-4-7"><a href="#__codelineno-4-7" id="__codelineno-4-7" name="__codelineno-4-7"></a><span class="c1"># Sample output:</span>
+</span><span id="__span-4-8"><a href="#__codelineno-4-8" id="__codelineno-4-8" name="__codelineno-4-8"></a><span class="c1"># WARNING: Package import failed for 'application.queries': UseCase not found</span>
+</span><span id="__span-4-9"><a href="#__codelineno-4-9" id="__codelineno-4-9" name="__codelineno-4-9"></a><span class="c1"># INFO: Attempting fallback: scanning individual modules</span>
+</span><span id="__span-4-10"><a href="#__codelineno-4-10" id="__codelineno-4-10" name="__codelineno-4-10"></a><span class="c1"># DEBUG: Discovered submodule: application.queries.get_user_query</span>
+</span><span id="__span-4-11"><a href="#__codelineno-4-11" id="__codelineno-4-11" name="__codelineno-4-11"></a><span class="c1"># DEBUG: Discovered submodule: application.queries.list_users_query</span>
+</span><span id="__span-4-12"><a href="#__codelineno-4-12" id="__codelineno-4-12" name="__codelineno-4-12"></a><span class="c1"># INFO: Successfully registered 2 handlers from submodule: application.queries.get_user_query</span>
+</span><span id="__span-4-13"><a href="#__codelineno-4-13" id="__codelineno-4-13" name="__codelineno-4-13"></a><span class="c1"># INFO: Fallback succeeded: registered 4 handlers from individual modules</span>
+</span></code></pre></div>
 <h2 id="logging-and-diagnostics">🔍 Logging and Diagnostics<a class="headerlink" href="#logging-and-diagnostics" title="Permanent link">¶</a></h2>
 <p>The resilient discovery provides comprehensive logging at different levels:</p>
 <h3 id="info-level-summary-information">INFO Level - Summary Information<a class="headerlink" href="#info-level-summary-information" title="Permanent link">¶</a></h3>
-<div class="highlight"><pre><span></span><code>INFO: Successfully registered 3 handlers from package: application.commands
-INFO: Fallback succeeded: registered 2 handlers from individual modules in 'application.queries'
-INFO: Handler discovery completed: 5 total handlers registered from 2 module specifications
-</code></pre></div>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a href="#__codelineno-5-1" id="__codelineno-5-1" name="__codelineno-5-1"></a>INFO: Successfully registered 3 handlers from package: application.commands
+</span><span id="__span-5-2"><a href="#__codelineno-5-2" id="__codelineno-5-2" name="__codelineno-5-2"></a>INFO: Fallback succeeded: registered 2 handlers from individual modules in 'application.queries'
+</span><span id="__span-5-3"><a href="#__codelineno-5-3" id="__codelineno-5-3" name="__codelineno-5-3"></a>INFO: Handler discovery completed: 5 total handlers registered from 2 module specifications
+</span></code></pre></div>
 <h3 id="warning-level-import-issues">WARNING Level - Import Issues<a class="headerlink" href="#warning-level-import-issues" title="Permanent link">¶</a></h3>
-<div class="highlight"><pre><span></span><code>WARNING: Package import failed for 'application.queries': cannot import name 'UseCase'
-WARNING: No submodules discovered for package: broken.package
-WARNING: Error registering handlers from module application.legacy: circular import
-</code></pre></div>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-6-1"><a href="#__codelineno-6-1" id="__codelineno-6-1" name="__codelineno-6-1"></a>WARNING: Package import failed for 'application.queries': cannot import name 'UseCase'
+</span><span id="__span-6-2"><a href="#__codelineno-6-2" id="__codelineno-6-2" name="__codelineno-6-2"></a>WARNING: No submodules discovered for package: broken.package
+</span><span id="__span-6-3"><a href="#__codelineno-6-3" id="__codelineno-6-3" name="__codelineno-6-3"></a>WARNING: Error registering handlers from module application.legacy: circular import
+</span></code></pre></div>
 <h3 id="debug-level-detailed-discovery">DEBUG Level - Detailed Discovery<a class="headerlink" href="#debug-level-detailed-discovery" title="Permanent link">¶</a></h3>
-<div class="highlight"><pre><span></span><code>DEBUG: Attempting to load package: application.queries
-DEBUG: Found 3 potential submodules in application.queries
-DEBUG: Discovered submodule: application.queries.get_user_query
-DEBUG: Successfully registered QueryHandler: GetUserQueryHandler from application.queries.get_user_query
-DEBUG: Skipping submodule 'application.queries.broken_module': ImportError
-</code></pre></div>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-7-1"><a href="#__codelineno-7-1" id="__codelineno-7-1" name="__codelineno-7-1"></a>DEBUG: Attempting to load package: application.queries
+</span><span id="__span-7-2"><a href="#__codelineno-7-2" id="__codelineno-7-2" name="__codelineno-7-2"></a>DEBUG: Found 3 potential submodules in application.queries
+</span><span id="__span-7-3"><a href="#__codelineno-7-3" id="__codelineno-7-3" name="__codelineno-7-3"></a>DEBUG: Discovered submodule: application.queries.get_user_query
+</span><span id="__span-7-4"><a href="#__codelineno-7-4" id="__codelineno-7-4" name="__codelineno-7-4"></a>DEBUG: Successfully registered QueryHandler: GetUserQueryHandler from application.queries.get_user_query
+</span><span id="__span-7-5"><a href="#__codelineno-7-5" id="__codelineno-7-5" name="__codelineno-7-5"></a>DEBUG: Skipping submodule 'application.queries.broken_module': ImportError
+</span></code></pre></div>
 <h2 id="best-practices">🧪 Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">¶</a></h2>
 <h3 id="1-incremental-migration-strategy">1. Incremental Migration Strategy<a class="headerlink" href="#1-incremental-migration-strategy" title="Permanent link">¶</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Start with clean packages, gradually add legacy ones</span>
-<span class="n">modules</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s1">'application.commands.user'</span><span class="p">,</span>      <span class="c1"># ✅ Clean CQRS handlers</span>
-    <span class="s1">'application.queries.user'</span><span class="p">,</span>       <span class="c1"># ✅ Clean CQRS handlers</span>
-    <span class="s1">'application.legacy.commands'</span><span class="p">,</span>    <span class="c1"># ⚠️  Mixed patterns - will use fallback</span>
-<span class="p">]</span>
-
-<span class="n">Mediator</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="n">modules</span><span class="p">)</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-8-1"><a href="#__codelineno-8-1" id="__codelineno-8-1" name="__codelineno-8-1"></a><span class="c1"># Start with clean packages, gradually add legacy ones</span>
+</span><span id="__span-8-2"><a href="#__codelineno-8-2" id="__codelineno-8-2" name="__codelineno-8-2"></a><span class="n">modules</span> <span class="o">=</span> <span class="p">[</span>
+</span><span id="__span-8-3"><a href="#__codelineno-8-3" id="__codelineno-8-3" name="__codelineno-8-3"></a>    <span class="s1">'application.commands.user'</span><span class="p">,</span>      <span class="c1"># ✅ Clean CQRS handlers</span>
+</span><span id="__span-8-4"><a href="#__codelineno-8-4" id="__codelineno-8-4" name="__codelineno-8-4"></a>    <span class="s1">'application.queries.user'</span><span class="p">,</span>       <span class="c1"># ✅ Clean CQRS handlers</span>
+</span><span id="__span-8-5"><a href="#__codelineno-8-5" id="__codelineno-8-5" name="__codelineno-8-5"></a>    <span class="s1">'application.legacy.commands'</span><span class="p">,</span>    <span class="c1"># ⚠️  Mixed patterns - will use fallback</span>
+</span><span id="__span-8-6"><a href="#__codelineno-8-6" id="__codelineno-8-6" name="__codelineno-8-6"></a><span class="p">]</span>
+</span><span id="__span-8-7"><a href="#__codelineno-8-7" id="__codelineno-8-7" name="__codelineno-8-7"></a>
+</span><span id="__span-8-8"><a href="#__codelineno-8-8" id="__codelineno-8-8" name="__codelineno-8-8"></a><span class="n">Mediator</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="n">modules</span><span class="p">)</span>
+</span></code></pre></div>
 <h3 id="2-package-organization">2. Package Organization<a class="headerlink" href="#2-package-organization" title="Permanent link">¶</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Recommended: Separate clean handlers from legacy code</span>
-<span class="n">application</span><span class="o">/</span>
-<span class="err">├──</span> <span class="n">handlers</span><span class="o">/</span>              <span class="c1"># ✅ Clean CQRS handlers only</span>
-<span class="err">│</span>   <span class="err">├──</span> <span class="n">commands</span><span class="o">/</span>
-<span class="err">│</span>   <span class="err">└──</span> <span class="n">queries</span><span class="o">/</span>
-<span class="err">└──</span> <span class="n">legacy</span><span class="o">/</span>               <span class="c1"># ⚠️  Old patterns with complex dependencies</span>
-    <span class="err">├──</span> <span class="n">use_cases</span><span class="o">/</span>
-    <span class="err">└──</span> <span class="n">services</span><span class="o">/</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-9-1"><a href="#__codelineno-9-1" id="__codelineno-9-1" name="__codelineno-9-1"></a><span class="c1"># Recommended: Separate clean handlers from legacy code</span>
+</span><span id="__span-9-2"><a href="#__codelineno-9-2" id="__codelineno-9-2" name="__codelineno-9-2"></a><span class="n">application</span><span class="o">/</span>
+</span><span id="__span-9-3"><a href="#__codelineno-9-3" id="__codelineno-9-3" name="__codelineno-9-3"></a><span class="err">├──</span> <span class="n">handlers</span><span class="o">/</span>              <span class="c1"># ✅ Clean CQRS handlers only</span>
+</span><span id="__span-9-4"><a href="#__codelineno-9-4" id="__codelineno-9-4" name="__codelineno-9-4"></a><span class="err">│</span>   <span class="err">├──</span> <span class="n">commands</span><span class="o">/</span>
+</span><span id="__span-9-5"><a href="#__codelineno-9-5" id="__codelineno-9-5" name="__codelineno-9-5"></a><span class="err">│</span>   <span class="err">└──</span> <span class="n">queries</span><span class="o">/</span>
+</span><span id="__span-9-6"><a href="#__codelineno-9-6" id="__codelineno-9-6" name="__codelineno-9-6"></a><span class="err">└──</span> <span class="n">legacy</span><span class="o">/</span>               <span class="c1"># ⚠️  Old patterns with complex dependencies</span>
+</span><span id="__span-9-7"><a href="#__codelineno-9-7" id="__codelineno-9-7" name="__codelineno-9-7"></a>    <span class="err">├──</span> <span class="n">use_cases</span><span class="o">/</span>
+</span><span id="__span-9-8"><a href="#__codelineno-9-8" id="__codelineno-9-8" name="__codelineno-9-8"></a>    <span class="err">└──</span> <span class="n">services</span><span class="o">/</span>
+</span></code></pre></div>
 <h3 id="3-gradual-cleanup">3. Gradual Cleanup<a class="headerlink" href="#3-gradual-cleanup" title="Permanent link">¶</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># As you migrate legacy code, packages will automatically</span>
-<span class="c1"># switch from fallback discovery to normal discovery</span>
-<span class="c1"># No changes needed in configuration!</span>
-
-<span class="c1"># Before migration (uses fallback):</span>
-<span class="c1"># WARNING: Package import failed, using fallback discovery</span>
-
-<span class="c1"># After migration (normal discovery):</span>
-<span class="c1"># INFO: Successfully registered 5 handlers from package: application.commands</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-10-1"><a href="#__codelineno-10-1" id="__codelineno-10-1" name="__codelineno-10-1"></a><span class="c1"># As you migrate legacy code, packages will automatically</span>
+</span><span id="__span-10-2"><a href="#__codelineno-10-2" id="__codelineno-10-2" name="__codelineno-10-2"></a><span class="c1"># switch from fallback discovery to normal discovery</span>
+</span><span id="__span-10-3"><a href="#__codelineno-10-3" id="__codelineno-10-3" name="__codelineno-10-3"></a><span class="c1"># No changes needed in configuration!</span>
+</span><span id="__span-10-4"><a href="#__codelineno-10-4" id="__codelineno-10-4" name="__codelineno-10-4"></a>
+</span><span id="__span-10-5"><a href="#__codelineno-10-5" id="__codelineno-10-5" name="__codelineno-10-5"></a><span class="c1"># Before migration (uses fallback):</span>
+</span><span id="__span-10-6"><a href="#__codelineno-10-6" id="__codelineno-10-6" name="__codelineno-10-6"></a><span class="c1"># WARNING: Package import failed, using fallback discovery</span>
+</span><span id="__span-10-7"><a href="#__codelineno-10-7" id="__codelineno-10-7" name="__codelineno-10-7"></a>
+</span><span id="__span-10-8"><a href="#__codelineno-10-8" id="__codelineno-10-8" name="__codelineno-10-8"></a><span class="c1"># After migration (normal discovery):</span>
+</span><span id="__span-10-9"><a href="#__codelineno-10-9" id="__codelineno-10-9" name="__codelineno-10-9"></a><span class="c1"># INFO: Successfully registered 5 handlers from package: application.commands</span>
+</span></code></pre></div>
 <h2 id="advanced-configuration">🔧 Advanced Configuration<a class="headerlink" href="#advanced-configuration" title="Permanent link">¶</a></h2>
 <h3 id="individual-module-specification">Individual Module Specification<a class="headerlink" href="#individual-module-specification" title="Permanent link">¶</a></h3>
 <p>You can also specify individual modules instead of packages:</p>
-<div class="highlight"><pre><span></span><code><span class="n">Mediator</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="p">[</span>
-    <span class="s1">'application.commands.create_user_command'</span><span class="p">,</span>
-    <span class="s1">'application.commands.update_user_command'</span><span class="p">,</span>
-    <span class="s1">'application.queries.get_user_query'</span>
-<span class="p">])</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-11-1"><a href="#__codelineno-11-1" id="__codelineno-11-1" name="__codelineno-11-1"></a><span class="n">Mediator</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="p">[</span>
+</span><span id="__span-11-2"><a href="#__codelineno-11-2" id="__codelineno-11-2" name="__codelineno-11-2"></a>    <span class="s1">'application.commands.create_user_command'</span><span class="p">,</span>
+</span><span id="__span-11-3"><a href="#__codelineno-11-3" id="__codelineno-11-3" name="__codelineno-11-3"></a>    <span class="s1">'application.commands.update_user_command'</span><span class="p">,</span>
+</span><span id="__span-11-4"><a href="#__codelineno-11-4" id="__codelineno-11-4" name="__codelineno-11-4"></a>    <span class="s1">'application.queries.get_user_query'</span>
+</span><span id="__span-11-5"><a href="#__codelineno-11-5" id="__codelineno-11-5" name="__codelineno-11-5"></a><span class="p">])</span>
+</span></code></pre></div>
 <h3 id="error-handling">Error Handling<a class="headerlink" href="#error-handling" title="Permanent link">¶</a></h3>
-<div class="highlight"><pre><span></span><code><span class="k">try</span><span class="p">:</span>
-    <span class="n">Mediator</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="p">[</span><span class="s1">'your.package'</span><span class="p">])</span>
-<span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-    <span class="c1"># Resilient discovery should prevent most exceptions,</span>
-    <span class="c1"># but you can still catch unexpected errors</span>
-    <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Handler discovery failed: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-12-1"><a href="#__codelineno-12-1" id="__codelineno-12-1" name="__codelineno-12-1"></a><span class="k">try</span><span class="p">:</span>
+</span><span id="__span-12-2"><a href="#__codelineno-12-2" id="__codelineno-12-2" name="__codelineno-12-2"></a>    <span class="n">Mediator</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="p">[</span><span class="s1">'your.package'</span><span class="p">])</span>
+</span><span id="__span-12-3"><a href="#__codelineno-12-3" id="__codelineno-12-3" name="__codelineno-12-3"></a><span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+</span><span id="__span-12-4"><a href="#__codelineno-12-4" id="__codelineno-12-4" name="__codelineno-12-4"></a>    <span class="c1"># Resilient discovery should prevent most exceptions,</span>
+</span><span id="__span-12-5"><a href="#__codelineno-12-5" id="__codelineno-12-5" name="__codelineno-12-5"></a>    <span class="c1"># but you can still catch unexpected errors</span>
+</span><span id="__span-12-6"><a href="#__codelineno-12-6" id="__codelineno-12-6" name="__codelineno-12-6"></a>    <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Handler discovery failed: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span></code></pre></div>
 <h2 id="migration-from-manual-registration">🚨 Migration from Manual Registration<a class="headerlink" href="#migration-from-manual-registration" title="Permanent link">¶</a></h2>
 <h3 id="before-manual-workaround">Before (Manual Workaround)<a class="headerlink" href="#before-manual-workaround" title="Permanent link">¶</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Old approach - manual registration due to import failures</span>
-<span class="k">try</span><span class="p">:</span>
-    <span class="kn">from</span><span class="w"> </span><span class="nn">application.queries.get_user_query</span><span class="w"> </span><span class="kn">import</span> <span class="n">GetUserQueryHandler</span>
-    <span class="kn">from</span><span class="w"> </span><span class="nn">application.queries.list_users_query</span><span class="w"> </span><span class="kn">import</span> <span class="n">ListUsersQueryHandler</span>
-
-    <span class="n">builder</span><span class="o">.</span><span class="n">services</span><span class="o">.</span><span class="n">add_scoped</span><span class="p">(</span><span class="n">GetUserQueryHandler</span><span class="p">)</span>
-    <span class="n">builder</span><span class="o">.</span><span class="n">services</span><span class="o">.</span><span class="n">add_scoped</span><span class="p">(</span><span class="n">ListUsersQueryHandler</span><span class="p">)</span>
-    <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">"Manually registered query handlers"</span><span class="p">)</span>
-<span class="k">except</span> <span class="ne">ImportError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-    <span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Could not register handlers: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-13-1"><a href="#__codelineno-13-1" id="__codelineno-13-1" name="__codelineno-13-1"></a><span class="c1"># Old approach - manual registration due to import failures</span>
+</span><span id="__span-13-2"><a href="#__codelineno-13-2" id="__codelineno-13-2" name="__codelineno-13-2"></a><span class="k">try</span><span class="p">:</span>
+</span><span id="__span-13-3"><a href="#__codelineno-13-3" id="__codelineno-13-3" name="__codelineno-13-3"></a>    <span class="kn">from</span><span class="w"> </span><span class="nn">application.queries.get_user_query</span><span class="w"> </span><span class="kn">import</span> <span class="n">GetUserQueryHandler</span>
+</span><span id="__span-13-4"><a href="#__codelineno-13-4" id="__codelineno-13-4" name="__codelineno-13-4"></a>    <span class="kn">from</span><span class="w"> </span><span class="nn">application.queries.list_users_query</span><span class="w"> </span><span class="kn">import</span> <span class="n">ListUsersQueryHandler</span>
+</span><span id="__span-13-5"><a href="#__codelineno-13-5" id="__codelineno-13-5" name="__codelineno-13-5"></a>
+</span><span id="__span-13-6"><a href="#__codelineno-13-6" id="__codelineno-13-6" name="__codelineno-13-6"></a>    <span class="n">builder</span><span class="o">.</span><span class="n">services</span><span class="o">.</span><span class="n">add_scoped</span><span class="p">(</span><span class="n">GetUserQueryHandler</span><span class="p">)</span>
+</span><span id="__span-13-7"><a href="#__codelineno-13-7" id="__codelineno-13-7" name="__codelineno-13-7"></a>    <span class="n">builder</span><span class="o">.</span><span class="n">services</span><span class="o">.</span><span class="n">add_scoped</span><span class="p">(</span><span class="n">ListUsersQueryHandler</span><span class="p">)</span>
+</span><span id="__span-13-8"><a href="#__codelineno-13-8" id="__codelineno-13-8" name="__codelineno-13-8"></a>    <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">"Manually registered query handlers"</span><span class="p">)</span>
+</span><span id="__span-13-9"><a href="#__codelineno-13-9" id="__codelineno-13-9" name="__codelineno-13-9"></a><span class="k">except</span> <span class="ne">ImportError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+</span><span id="__span-13-10"><a href="#__codelineno-13-10" id="__codelineno-13-10" name="__codelineno-13-10"></a>    <span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Could not register handlers: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span></code></pre></div>
 <h3 id="after-automatic-discovery">After (Automatic Discovery)<a class="headerlink" href="#after-automatic-discovery" title="Permanent link">¶</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># New approach - automatic resilient discovery</span>
-<span class="n">Mediator</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="p">[</span><span class="s1">'application.queries'</span><span class="p">])</span>
-<span class="c1"># That's it! No manual registration needed</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-14-1"><a href="#__codelineno-14-1" id="__codelineno-14-1" name="__codelineno-14-1"></a><span class="c1"># New approach - automatic resilient discovery</span>
+</span><span id="__span-14-2"><a href="#__codelineno-14-2" id="__codelineno-14-2" name="__codelineno-14-2"></a><span class="n">Mediator</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="p">[</span><span class="s1">'application.queries'</span><span class="p">])</span>
+</span><span id="__span-14-3"><a href="#__codelineno-14-3" id="__codelineno-14-3" name="__codelineno-14-3"></a><span class="c1"># That's it! No manual registration needed</span>
+</span></code></pre></div>
 <h2 id="important-notes">⚠️ Important Notes<a class="headerlink" href="#important-notes" title="Permanent link">¶</a></h2>
 <h3 id="backward-compatibility">Backward Compatibility<a class="headerlink" href="#backward-compatibility" title="Permanent link">¶</a></h3>
 <ul>

@@ -860,9 +860,9 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../references/python_type_hints/">
+<a class="md-nav__link" href="../../references/python_typing_guide/">
 <span class="md-ellipsis">
-    Python Type Hints
+    Python Typing Guide
     
   </span>
 </a>
@@ -884,9 +884,9 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../references/python_generic_types/">
+<a class="md-nav__link" href="../../references/test-mermaid/">
 <span class="md-ellipsis">
-    Python Generic Types
+    Mermaid References
     
   </span>
 </a>
@@ -1168,94 +1168,94 @@
 <h3 id="pizza-entity">Pizza Entity<a class="headerlink" href="#pizza-entity" title="Permanent link">¶</a></h3>
 <p>The Pizza entity encapsulates product information, pricing logic, and customization capabilities with sophisticated size-based pricing:</p>
 <p><strong>Source</strong>: <a href="https://github.com/bvandewe/pyneuro/blob/main/samples/mario-pizzeria/domain/entities/pizza.py"><code>samples/mario-pizzeria/domain/entities/pizza.py</code></a></p>
-<div class="highlight"><table class="highlighttable"><tr><th class="filename" colspan="2"><span class="filename">samples/mario-pizzeria/domain/entities/pizza.py</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">17</span>
-<span class="normal">18</span>
-<span class="normal">19</span>
-<span class="normal">20</span>
-<span class="normal">21</span>
-<span class="normal">22</span>
-<span class="normal">23</span>
-<span class="normal">24</span>
-<span class="normal">25</span>
-<span class="normal">26</span>
-<span class="normal">27</span>
-<span class="normal">28</span>
-<span class="normal">29</span>
-<span class="normal">30</span>
-<span class="normal">31</span>
-<span class="normal">32</span>
-<span class="normal">33</span>
-<span class="normal">34</span>
-<span class="normal">35</span>
-<span class="normal">36</span>
-<span class="normal">37</span>
-<span class="normal">38</span>
-<span class="normal">39</span>
-<span class="normal">40</span>
-<span class="normal">41</span>
-<span class="normal">42</span>
-<span class="normal">43</span>
-<span class="normal">44</span>
-<span class="normal">45</span>
-<span class="normal">46</span>
-<span class="normal">47</span>
-<span class="normal">48</span>
-<span class="normal">49</span>
-<span class="normal">50</span>
-<span class="normal">51</span>
-<span class="normal">52</span>
-<span class="normal">53</span>
-<span class="normal">54</span>
-<span class="normal">55</span>
-<span class="normal">56</span>
-<span class="normal">57</span>
-<span class="normal">58</span>
-<span class="normal">59</span>
-<span class="normal">60</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@map_from</span><span class="p">(</span><span class="n">PizzaDto</span><span class="p">)</span>
-<span class="nd">@map_to</span><span class="p">(</span><span class="n">PizzaDto</span><span class="p">)</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">Pizza</span><span class="p">(</span><span class="n">Entity</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
-<span class="w">    </span><span class="sd">"""Pizza entity with pricing and toppings"""</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">base_price</span><span class="p">:</span> <span class="n">Decimal</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="n">PizzaSize</span><span class="p">,</span> <span class="n">description</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">uuid4</span><span class="p">())</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">base_price</span> <span class="o">=</span> <span class="n">base_price</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">=</span> <span class="n">size</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="n">description</span> <span class="ow">or</span> <span class="s2">""</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">toppings</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
-
-    <span class="nd">@property</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">size_multiplier</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Decimal</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Get price multiplier based on pizza size"""</span>
-        <span class="n">multipliers</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="n">PizzaSize</span><span class="o">.</span><span class="n">SMALL</span><span class="p">:</span> <span class="n">Decimal</span><span class="p">(</span><span class="s2">"1.0"</span><span class="p">),</span>
-            <span class="n">PizzaSize</span><span class="o">.</span><span class="n">MEDIUM</span><span class="p">:</span> <span class="n">Decimal</span><span class="p">(</span><span class="s2">"1.3"</span><span class="p">),</span>
-            <span class="n">PizzaSize</span><span class="o">.</span><span class="n">LARGE</span><span class="p">:</span> <span class="n">Decimal</span><span class="p">(</span><span class="s2">"1.6"</span><span class="p">),</span>
-        <span class="p">}</span>
-        <span class="k">return</span> <span class="n">multipliers</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">]</span>
-
-    <span class="nd">@property</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">topping_price</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Decimal</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Calculate total price for all toppings"""</span>
-        <span class="k">return</span> <span class="n">Decimal</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">toppings</span><span class="p">)))</span> <span class="o">*</span> <span class="n">Decimal</span><span class="p">(</span><span class="s2">"2.50"</span><span class="p">)</span>
-
-    <span class="nd">@property</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">total_price</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Decimal</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Calculate total pizza price including size and toppings"""</span>
-        <span class="n">base_with_size</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_price</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">size_multiplier</span>
-        <span class="k">return</span> <span class="n">base_with_size</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">topping_price</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">add_topping</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">topping</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Add a topping to the pizza"""</span>
-        <span class="k">if</span> <span class="n">topping</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">toppings</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">toppings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">topping</span><span class="p">)</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">remove_topping</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">topping</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Remove a topping from the pizza"""</span>
-        <span class="k">if</span> <span class="n">topping</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">toppings</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">toppings</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">topping</span><span class="p">)</span>
-</code></pre></div></td></tr></table></div>
+<div class="language-python highlight"><table class="highlighttable"><tr><th class="filename" colspan="2"><span class="filename">samples/mario-pizzeria/domain/entities/pizza.py</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-17">17</a></span>
+<span class="normal"><a href="#__codelineno-0-18">18</a></span>
+<span class="normal"><a href="#__codelineno-0-19">19</a></span>
+<span class="normal"><a href="#__codelineno-0-20">20</a></span>
+<span class="normal"><a href="#__codelineno-0-21">21</a></span>
+<span class="normal"><a href="#__codelineno-0-22">22</a></span>
+<span class="normal"><a href="#__codelineno-0-23">23</a></span>
+<span class="normal"><a href="#__codelineno-0-24">24</a></span>
+<span class="normal"><a href="#__codelineno-0-25">25</a></span>
+<span class="normal"><a href="#__codelineno-0-26">26</a></span>
+<span class="normal"><a href="#__codelineno-0-27">27</a></span>
+<span class="normal"><a href="#__codelineno-0-28">28</a></span>
+<span class="normal"><a href="#__codelineno-0-29">29</a></span>
+<span class="normal"><a href="#__codelineno-0-30">30</a></span>
+<span class="normal"><a href="#__codelineno-0-31">31</a></span>
+<span class="normal"><a href="#__codelineno-0-32">32</a></span>
+<span class="normal"><a href="#__codelineno-0-33">33</a></span>
+<span class="normal"><a href="#__codelineno-0-34">34</a></span>
+<span class="normal"><a href="#__codelineno-0-35">35</a></span>
+<span class="normal"><a href="#__codelineno-0-36">36</a></span>
+<span class="normal"><a href="#__codelineno-0-37">37</a></span>
+<span class="normal"><a href="#__codelineno-0-38">38</a></span>
+<span class="normal"><a href="#__codelineno-0-39">39</a></span>
+<span class="normal"><a href="#__codelineno-0-40">40</a></span>
+<span class="normal"><a href="#__codelineno-0-41">41</a></span>
+<span class="normal"><a href="#__codelineno-0-42">42</a></span>
+<span class="normal"><a href="#__codelineno-0-43">43</a></span>
+<span class="normal"><a href="#__codelineno-0-44">44</a></span>
+<span class="normal"><a href="#__codelineno-0-45">45</a></span>
+<span class="normal"><a href="#__codelineno-0-46">46</a></span>
+<span class="normal"><a href="#__codelineno-0-47">47</a></span>
+<span class="normal"><a href="#__codelineno-0-48">48</a></span>
+<span class="normal"><a href="#__codelineno-0-49">49</a></span>
+<span class="normal"><a href="#__codelineno-0-50">50</a></span>
+<span class="normal"><a href="#__codelineno-0-51">51</a></span>
+<span class="normal"><a href="#__codelineno-0-52">52</a></span>
+<span class="normal"><a href="#__codelineno-0-53">53</a></span>
+<span class="normal"><a href="#__codelineno-0-54">54</a></span>
+<span class="normal"><a href="#__codelineno-0-55">55</a></span>
+<span class="normal"><a href="#__codelineno-0-56">56</a></span>
+<span class="normal"><a href="#__codelineno-0-57">57</a></span>
+<span class="normal"><a href="#__codelineno-0-58">58</a></span>
+<span class="normal"><a href="#__codelineno-0-59">59</a></span>
+<span class="normal"><a href="#__codelineno-0-60">60</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17"></a><span class="nd">@map_from</span><span class="p">(</span><span class="n">PizzaDto</span><span class="p">)</span>
+</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18"></a><span class="nd">@map_to</span><span class="p">(</span><span class="n">PizzaDto</span><span class="p">)</span>
+</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19"></a><span class="k">class</span><span class="w"> </span><span class="nc">Pizza</span><span class="p">(</span><span class="n">Entity</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
+</span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20"></a><span class="w">    </span><span class="sd">"""Pizza entity with pricing and toppings"""</span>
+</span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21"></a>
+</span><span id="__span-0-22"><a id="__codelineno-0-22" name="__codelineno-0-22"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">base_price</span><span class="p">:</span> <span class="n">Decimal</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="n">PizzaSize</span><span class="p">,</span> <span class="n">description</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+</span><span id="__span-0-23"><a id="__codelineno-0-23" name="__codelineno-0-23"></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+</span><span id="__span-0-24"><a id="__codelineno-0-24" name="__codelineno-0-24"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">uuid4</span><span class="p">())</span>
+</span><span id="__span-0-25"><a id="__codelineno-0-25" name="__codelineno-0-25"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+</span><span id="__span-0-26"><a id="__codelineno-0-26" name="__codelineno-0-26"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">base_price</span> <span class="o">=</span> <span class="n">base_price</span>
+</span><span id="__span-0-27"><a id="__codelineno-0-27" name="__codelineno-0-27"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">=</span> <span class="n">size</span>
+</span><span id="__span-0-28"><a id="__codelineno-0-28" name="__codelineno-0-28"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="n">description</span> <span class="ow">or</span> <span class="s2">""</span>
+</span><span id="__span-0-29"><a id="__codelineno-0-29" name="__codelineno-0-29"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">toppings</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+</span><span id="__span-0-30"><a id="__codelineno-0-30" name="__codelineno-0-30"></a>
+</span><span id="__span-0-31"><a id="__codelineno-0-31" name="__codelineno-0-31"></a>    <span class="nd">@property</span>
+</span><span id="__span-0-32"><a id="__codelineno-0-32" name="__codelineno-0-32"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">size_multiplier</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Decimal</span><span class="p">:</span>
+</span><span id="__span-0-33"><a id="__codelineno-0-33" name="__codelineno-0-33"></a><span class="w">        </span><span class="sd">"""Get price multiplier based on pizza size"""</span>
+</span><span id="__span-0-34"><a id="__codelineno-0-34" name="__codelineno-0-34"></a>        <span class="n">multipliers</span> <span class="o">=</span> <span class="p">{</span>
+</span><span id="__span-0-35"><a id="__codelineno-0-35" name="__codelineno-0-35"></a>            <span class="n">PizzaSize</span><span class="o">.</span><span class="n">SMALL</span><span class="p">:</span> <span class="n">Decimal</span><span class="p">(</span><span class="s2">"1.0"</span><span class="p">),</span>
+</span><span id="__span-0-36"><a id="__codelineno-0-36" name="__codelineno-0-36"></a>            <span class="n">PizzaSize</span><span class="o">.</span><span class="n">MEDIUM</span><span class="p">:</span> <span class="n">Decimal</span><span class="p">(</span><span class="s2">"1.3"</span><span class="p">),</span>
+</span><span id="__span-0-37"><a id="__codelineno-0-37" name="__codelineno-0-37"></a>            <span class="n">PizzaSize</span><span class="o">.</span><span class="n">LARGE</span><span class="p">:</span> <span class="n">Decimal</span><span class="p">(</span><span class="s2">"1.6"</span><span class="p">),</span>
+</span><span id="__span-0-38"><a id="__codelineno-0-38" name="__codelineno-0-38"></a>        <span class="p">}</span>
+</span><span id="__span-0-39"><a id="__codelineno-0-39" name="__codelineno-0-39"></a>        <span class="k">return</span> <span class="n">multipliers</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">]</span>
+</span><span id="__span-0-40"><a id="__codelineno-0-40" name="__codelineno-0-40"></a>
+</span><span id="__span-0-41"><a id="__codelineno-0-41" name="__codelineno-0-41"></a>    <span class="nd">@property</span>
+</span><span id="__span-0-42"><a id="__codelineno-0-42" name="__codelineno-0-42"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">topping_price</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Decimal</span><span class="p">:</span>
+</span><span id="__span-0-43"><a id="__codelineno-0-43" name="__codelineno-0-43"></a><span class="w">        </span><span class="sd">"""Calculate total price for all toppings"""</span>
+</span><span id="__span-0-44"><a id="__codelineno-0-44" name="__codelineno-0-44"></a>        <span class="k">return</span> <span class="n">Decimal</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">toppings</span><span class="p">)))</span> <span class="o">*</span> <span class="n">Decimal</span><span class="p">(</span><span class="s2">"2.50"</span><span class="p">)</span>
+</span><span id="__span-0-45"><a id="__codelineno-0-45" name="__codelineno-0-45"></a>
+</span><span id="__span-0-46"><a id="__codelineno-0-46" name="__codelineno-0-46"></a>    <span class="nd">@property</span>
+</span><span id="__span-0-47"><a id="__codelineno-0-47" name="__codelineno-0-47"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">total_price</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Decimal</span><span class="p">:</span>
+</span><span id="__span-0-48"><a id="__codelineno-0-48" name="__codelineno-0-48"></a><span class="w">        </span><span class="sd">"""Calculate total pizza price including size and toppings"""</span>
+</span><span id="__span-0-49"><a id="__codelineno-0-49" name="__codelineno-0-49"></a>        <span class="n">base_with_size</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_price</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">size_multiplier</span>
+</span><span id="__span-0-50"><a id="__codelineno-0-50" name="__codelineno-0-50"></a>        <span class="k">return</span> <span class="n">base_with_size</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">topping_price</span>
+</span><span id="__span-0-51"><a id="__codelineno-0-51" name="__codelineno-0-51"></a>
+</span><span id="__span-0-52"><a id="__codelineno-0-52" name="__codelineno-0-52"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">add_topping</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">topping</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-0-53"><a id="__codelineno-0-53" name="__codelineno-0-53"></a><span class="w">        </span><span class="sd">"""Add a topping to the pizza"""</span>
+</span><span id="__span-0-54"><a id="__codelineno-0-54" name="__codelineno-0-54"></a>        <span class="k">if</span> <span class="n">topping</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">toppings</span><span class="p">:</span>
+</span><span id="__span-0-55"><a id="__codelineno-0-55" name="__codelineno-0-55"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">toppings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">topping</span><span class="p">)</span>
+</span><span id="__span-0-56"><a id="__codelineno-0-56" name="__codelineno-0-56"></a>
+</span><span id="__span-0-57"><a id="__codelineno-0-57" name="__codelineno-0-57"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">remove_topping</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">topping</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-0-58"><a id="__codelineno-0-58" name="__codelineno-0-58"></a><span class="w">        </span><span class="sd">"""Remove a topping from the pizza"""</span>
+</span><span id="__span-0-59"><a id="__codelineno-0-59" name="__codelineno-0-59"></a>        <span class="k">if</span> <span class="n">topping</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">toppings</span><span class="p">:</span>
+</span><span id="__span-0-60"><a id="__codelineno-0-60" name="__codelineno-0-60"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">toppings</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">topping</span><span class="p">)</span>
+</span></code></pre></div></td></tr></table></div>
 <p><strong>Business Rules</strong>:</p>
 <ul>
 <li>Size multipliers: Small (1.0x), Medium (1.3x), Large (1.6x) of base price</li>
@@ -1265,291 +1265,291 @@
 </ul>
 <h3 id="order-entity">Order Entity<a class="headerlink" href="#order-entity" title="Permanent link">¶</a></h3>
 <p>The Order aggregate root manages the complete order lifecycle and business rules:</p>
-<div class="highlight"><pre><span></span><code><span class="nd">@dataclass</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">Order</span><span class="p">(</span><span class="n">Entity</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
-<span class="w">    </span><span class="sd">"""A customer pizza order with complete lifecycle management"""</span>
-    <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">customer_name</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">customer_phone</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">pizzas</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Pizza</span><span class="p">]</span>
-    <span class="n">status</span><span class="p">:</span> <span class="nb">str</span>  <span class="c1"># "pending", "confirmed", "cooking", "ready", "delivered"</span>
-    <span class="n">order_time</span><span class="p">:</span> <span class="n">datetime</span>
-    <span class="n">estimated_ready_time</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">datetime</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="n">total_amount</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Decimal</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">total_amount</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">calculate_total</span><span class="p">()</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">calculate_total</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Calculate order total including taxes and fees"""</span>
-        <span class="n">subtotal</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">pizza</span><span class="o">.</span><span class="n">total_price</span> <span class="k">for</span> <span class="n">pizza</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">pizzas</span><span class="p">)</span>
-        <span class="n">tax_rate</span> <span class="o">=</span> <span class="n">Decimal</span><span class="p">(</span><span class="s2">"0.08"</span><span class="p">)</span>  <span class="c1"># 8% tax</span>
-        <span class="n">delivery_fee</span> <span class="o">=</span> <span class="n">Decimal</span><span class="p">(</span><span class="s2">"2.50"</span><span class="p">)</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">total_amount</span> <span class="o">=</span> <span class="n">subtotal</span> <span class="o">+</span> <span class="p">(</span><span class="n">subtotal</span> <span class="o">*</span> <span class="n">tax_rate</span><span class="p">)</span> <span class="o">+</span> <span class="n">delivery_fee</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">add_pizza</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pizza</span><span class="p">:</span> <span class="n">Pizza</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Add pizza to order and recalculate total"""</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">pizzas</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pizza</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">calculate_total</span><span class="p">()</span>
-
-        <span class="c1"># Raise domain event</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">raise_event</span><span class="p">(</span><span class="n">PizzaAddedToOrderEvent</span><span class="p">(</span>
-            <span class="n">order_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
-            <span class="n">pizza_name</span><span class="o">=</span><span class="n">pizza</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
-            <span class="n">new_total</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">total_amount</span>
-        <span class="p">))</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">confirm_order</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Confirm order after payment processing"""</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">status</span> <span class="o">!=</span> <span class="s2">"pending"</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">InvalidOrderStateError</span><span class="p">(</span><span class="s2">"Order must be pending to confirm"</span><span class="p">)</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="s2">"confirmed"</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">estimated_ready_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_calculate_ready_time</span><span class="p">()</span>
-
-        <span class="c1"># Raise domain event</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">raise_event</span><span class="p">(</span><span class="n">OrderConfirmedEvent</span><span class="p">(</span>
-            <span class="n">order_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
-            <span class="n">customer_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">customer_name</span><span class="p">,</span>
-            <span class="n">estimated_ready_time</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">estimated_ready_time</span>
-        <span class="p">))</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">start_cooking</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Start cooking process"""</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">status</span> <span class="o">!=</span> <span class="s2">"confirmed"</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">InvalidOrderStateError</span><span class="p">(</span><span class="s2">"Order must be confirmed to start cooking"</span><span class="p">)</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="s2">"cooking"</span>
-
-        <span class="c1"># Raise domain event</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">raise_event</span><span class="p">(</span><span class="n">CookingStartedEvent</span><span class="p">(</span>
-            <span class="n">order_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
-            <span class="n">started_at</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span>
-        <span class="p">))</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">mark_ready</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Mark order as ready for pickup/delivery"""</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">status</span> <span class="o">!=</span> <span class="s2">"cooking"</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">InvalidOrderStateError</span><span class="p">(</span><span class="s2">"Order must be cooking to mark ready"</span><span class="p">)</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="s2">"ready"</span>
-
-        <span class="c1"># Raise domain event</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">raise_event</span><span class="p">(</span><span class="n">OrderReadyEvent</span><span class="p">(</span>
-            <span class="n">order_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
-            <span class="n">customer_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">customer_name</span><span class="p">,</span>
-            <span class="n">customer_phone</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">customer_phone</span>
-        <span class="p">))</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">_calculate_ready_time</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">datetime</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Calculate estimated ready time based on pizza complexity"""</span>
-        <span class="n">total_cooking_time</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">pizza</span><span class="o">.</span><span class="n">estimate_cooking_time</span><span class="p">()</span> <span class="k">for</span> <span class="n">pizza</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">pizzas</span><span class="p">)</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">order_time</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">minutes</span><span class="o">=</span><span class="n">total_cooking_time</span> <span class="o">+</span> <span class="mi">10</span><span class="p">)</span>  <span class="c1"># +10 for prep</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a href="#__codelineno-1-1" id="__codelineno-1-1" name="__codelineno-1-1"></a><span class="nd">@dataclass</span>
+</span><span id="__span-1-2"><a href="#__codelineno-1-2" id="__codelineno-1-2" name="__codelineno-1-2"></a><span class="k">class</span><span class="w"> </span><span class="nc">Order</span><span class="p">(</span><span class="n">Entity</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
+</span><span id="__span-1-3"><a href="#__codelineno-1-3" id="__codelineno-1-3" name="__codelineno-1-3"></a><span class="w">    </span><span class="sd">"""A customer pizza order with complete lifecycle management"""</span>
+</span><span id="__span-1-4"><a href="#__codelineno-1-4" id="__codelineno-1-4" name="__codelineno-1-4"></a>    <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span>
+</span><span id="__span-1-5"><a href="#__codelineno-1-5" id="__codelineno-1-5" name="__codelineno-1-5"></a>    <span class="n">customer_name</span><span class="p">:</span> <span class="nb">str</span>
+</span><span id="__span-1-6"><a href="#__codelineno-1-6" id="__codelineno-1-6" name="__codelineno-1-6"></a>    <span class="n">customer_phone</span><span class="p">:</span> <span class="nb">str</span>
+</span><span id="__span-1-7"><a href="#__codelineno-1-7" id="__codelineno-1-7" name="__codelineno-1-7"></a>    <span class="n">pizzas</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Pizza</span><span class="p">]</span>
+</span><span id="__span-1-8"><a href="#__codelineno-1-8" id="__codelineno-1-8" name="__codelineno-1-8"></a>    <span class="n">status</span><span class="p">:</span> <span class="nb">str</span>  <span class="c1"># "pending", "confirmed", "cooking", "ready", "delivered"</span>
+</span><span id="__span-1-9"><a href="#__codelineno-1-9" id="__codelineno-1-9" name="__codelineno-1-9"></a>    <span class="n">order_time</span><span class="p">:</span> <span class="n">datetime</span>
+</span><span id="__span-1-10"><a href="#__codelineno-1-10" id="__codelineno-1-10" name="__codelineno-1-10"></a>    <span class="n">estimated_ready_time</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">datetime</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="__span-1-11"><a href="#__codelineno-1-11" id="__codelineno-1-11" name="__codelineno-1-11"></a>    <span class="n">total_amount</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Decimal</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="__span-1-12"><a href="#__codelineno-1-12" id="__codelineno-1-12" name="__codelineno-1-12"></a>
+</span><span id="__span-1-13"><a href="#__codelineno-1-13" id="__codelineno-1-13" name="__codelineno-1-13"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="__span-1-14"><a href="#__codelineno-1-14" id="__codelineno-1-14" name="__codelineno-1-14"></a>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">total_amount</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-1-15"><a href="#__codelineno-1-15" id="__codelineno-1-15" name="__codelineno-1-15"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">calculate_total</span><span class="p">()</span>
+</span><span id="__span-1-16"><a href="#__codelineno-1-16" id="__codelineno-1-16" name="__codelineno-1-16"></a>
+</span><span id="__span-1-17"><a href="#__codelineno-1-17" id="__codelineno-1-17" name="__codelineno-1-17"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">calculate_total</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-1-18"><a href="#__codelineno-1-18" id="__codelineno-1-18" name="__codelineno-1-18"></a><span class="w">        </span><span class="sd">"""Calculate order total including taxes and fees"""</span>
+</span><span id="__span-1-19"><a href="#__codelineno-1-19" id="__codelineno-1-19" name="__codelineno-1-19"></a>        <span class="n">subtotal</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">pizza</span><span class="o">.</span><span class="n">total_price</span> <span class="k">for</span> <span class="n">pizza</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">pizzas</span><span class="p">)</span>
+</span><span id="__span-1-20"><a href="#__codelineno-1-20" id="__codelineno-1-20" name="__codelineno-1-20"></a>        <span class="n">tax_rate</span> <span class="o">=</span> <span class="n">Decimal</span><span class="p">(</span><span class="s2">"0.08"</span><span class="p">)</span>  <span class="c1"># 8% tax</span>
+</span><span id="__span-1-21"><a href="#__codelineno-1-21" id="__codelineno-1-21" name="__codelineno-1-21"></a>        <span class="n">delivery_fee</span> <span class="o">=</span> <span class="n">Decimal</span><span class="p">(</span><span class="s2">"2.50"</span><span class="p">)</span>
+</span><span id="__span-1-22"><a href="#__codelineno-1-22" id="__codelineno-1-22" name="__codelineno-1-22"></a>
+</span><span id="__span-1-23"><a href="#__codelineno-1-23" id="__codelineno-1-23" name="__codelineno-1-23"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">total_amount</span> <span class="o">=</span> <span class="n">subtotal</span> <span class="o">+</span> <span class="p">(</span><span class="n">subtotal</span> <span class="o">*</span> <span class="n">tax_rate</span><span class="p">)</span> <span class="o">+</span> <span class="n">delivery_fee</span>
+</span><span id="__span-1-24"><a href="#__codelineno-1-24" id="__codelineno-1-24" name="__codelineno-1-24"></a>
+</span><span id="__span-1-25"><a href="#__codelineno-1-25" id="__codelineno-1-25" name="__codelineno-1-25"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">add_pizza</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pizza</span><span class="p">:</span> <span class="n">Pizza</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-1-26"><a href="#__codelineno-1-26" id="__codelineno-1-26" name="__codelineno-1-26"></a><span class="w">        </span><span class="sd">"""Add pizza to order and recalculate total"""</span>
+</span><span id="__span-1-27"><a href="#__codelineno-1-27" id="__codelineno-1-27" name="__codelineno-1-27"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">pizzas</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pizza</span><span class="p">)</span>
+</span><span id="__span-1-28"><a href="#__codelineno-1-28" id="__codelineno-1-28" name="__codelineno-1-28"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">calculate_total</span><span class="p">()</span>
+</span><span id="__span-1-29"><a href="#__codelineno-1-29" id="__codelineno-1-29" name="__codelineno-1-29"></a>
+</span><span id="__span-1-30"><a href="#__codelineno-1-30" id="__codelineno-1-30" name="__codelineno-1-30"></a>        <span class="c1"># Raise domain event</span>
+</span><span id="__span-1-31"><a href="#__codelineno-1-31" id="__codelineno-1-31" name="__codelineno-1-31"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">raise_event</span><span class="p">(</span><span class="n">PizzaAddedToOrderEvent</span><span class="p">(</span>
+</span><span id="__span-1-32"><a href="#__codelineno-1-32" id="__codelineno-1-32" name="__codelineno-1-32"></a>            <span class="n">order_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+</span><span id="__span-1-33"><a href="#__codelineno-1-33" id="__codelineno-1-33" name="__codelineno-1-33"></a>            <span class="n">pizza_name</span><span class="o">=</span><span class="n">pizza</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+</span><span id="__span-1-34"><a href="#__codelineno-1-34" id="__codelineno-1-34" name="__codelineno-1-34"></a>            <span class="n">new_total</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">total_amount</span>
+</span><span id="__span-1-35"><a href="#__codelineno-1-35" id="__codelineno-1-35" name="__codelineno-1-35"></a>        <span class="p">))</span>
+</span><span id="__span-1-36"><a href="#__codelineno-1-36" id="__codelineno-1-36" name="__codelineno-1-36"></a>
+</span><span id="__span-1-37"><a href="#__codelineno-1-37" id="__codelineno-1-37" name="__codelineno-1-37"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">confirm_order</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-1-38"><a href="#__codelineno-1-38" id="__codelineno-1-38" name="__codelineno-1-38"></a><span class="w">        </span><span class="sd">"""Confirm order after payment processing"""</span>
+</span><span id="__span-1-39"><a href="#__codelineno-1-39" id="__codelineno-1-39" name="__codelineno-1-39"></a>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">status</span> <span class="o">!=</span> <span class="s2">"pending"</span><span class="p">:</span>
+</span><span id="__span-1-40"><a href="#__codelineno-1-40" id="__codelineno-1-40" name="__codelineno-1-40"></a>            <span class="k">raise</span> <span class="n">InvalidOrderStateError</span><span class="p">(</span><span class="s2">"Order must be pending to confirm"</span><span class="p">)</span>
+</span><span id="__span-1-41"><a href="#__codelineno-1-41" id="__codelineno-1-41" name="__codelineno-1-41"></a>
+</span><span id="__span-1-42"><a href="#__codelineno-1-42" id="__codelineno-1-42" name="__codelineno-1-42"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="s2">"confirmed"</span>
+</span><span id="__span-1-43"><a href="#__codelineno-1-43" id="__codelineno-1-43" name="__codelineno-1-43"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">estimated_ready_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_calculate_ready_time</span><span class="p">()</span>
+</span><span id="__span-1-44"><a href="#__codelineno-1-44" id="__codelineno-1-44" name="__codelineno-1-44"></a>
+</span><span id="__span-1-45"><a href="#__codelineno-1-45" id="__codelineno-1-45" name="__codelineno-1-45"></a>        <span class="c1"># Raise domain event</span>
+</span><span id="__span-1-46"><a href="#__codelineno-1-46" id="__codelineno-1-46" name="__codelineno-1-46"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">raise_event</span><span class="p">(</span><span class="n">OrderConfirmedEvent</span><span class="p">(</span>
+</span><span id="__span-1-47"><a href="#__codelineno-1-47" id="__codelineno-1-47" name="__codelineno-1-47"></a>            <span class="n">order_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+</span><span id="__span-1-48"><a href="#__codelineno-1-48" id="__codelineno-1-48" name="__codelineno-1-48"></a>            <span class="n">customer_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">customer_name</span><span class="p">,</span>
+</span><span id="__span-1-49"><a href="#__codelineno-1-49" id="__codelineno-1-49" name="__codelineno-1-49"></a>            <span class="n">estimated_ready_time</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">estimated_ready_time</span>
+</span><span id="__span-1-50"><a href="#__codelineno-1-50" id="__codelineno-1-50" name="__codelineno-1-50"></a>        <span class="p">))</span>
+</span><span id="__span-1-51"><a href="#__codelineno-1-51" id="__codelineno-1-51" name="__codelineno-1-51"></a>
+</span><span id="__span-1-52"><a href="#__codelineno-1-52" id="__codelineno-1-52" name="__codelineno-1-52"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">start_cooking</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-1-53"><a href="#__codelineno-1-53" id="__codelineno-1-53" name="__codelineno-1-53"></a><span class="w">        </span><span class="sd">"""Start cooking process"""</span>
+</span><span id="__span-1-54"><a href="#__codelineno-1-54" id="__codelineno-1-54" name="__codelineno-1-54"></a>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">status</span> <span class="o">!=</span> <span class="s2">"confirmed"</span><span class="p">:</span>
+</span><span id="__span-1-55"><a href="#__codelineno-1-55" id="__codelineno-1-55" name="__codelineno-1-55"></a>            <span class="k">raise</span> <span class="n">InvalidOrderStateError</span><span class="p">(</span><span class="s2">"Order must be confirmed to start cooking"</span><span class="p">)</span>
+</span><span id="__span-1-56"><a href="#__codelineno-1-56" id="__codelineno-1-56" name="__codelineno-1-56"></a>
+</span><span id="__span-1-57"><a href="#__codelineno-1-57" id="__codelineno-1-57" name="__codelineno-1-57"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="s2">"cooking"</span>
+</span><span id="__span-1-58"><a href="#__codelineno-1-58" id="__codelineno-1-58" name="__codelineno-1-58"></a>
+</span><span id="__span-1-59"><a href="#__codelineno-1-59" id="__codelineno-1-59" name="__codelineno-1-59"></a>        <span class="c1"># Raise domain event</span>
+</span><span id="__span-1-60"><a href="#__codelineno-1-60" id="__codelineno-1-60" name="__codelineno-1-60"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">raise_event</span><span class="p">(</span><span class="n">CookingStartedEvent</span><span class="p">(</span>
+</span><span id="__span-1-61"><a href="#__codelineno-1-61" id="__codelineno-1-61" name="__codelineno-1-61"></a>            <span class="n">order_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+</span><span id="__span-1-62"><a href="#__codelineno-1-62" id="__codelineno-1-62" name="__codelineno-1-62"></a>            <span class="n">started_at</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span>
+</span><span id="__span-1-63"><a href="#__codelineno-1-63" id="__codelineno-1-63" name="__codelineno-1-63"></a>        <span class="p">))</span>
+</span><span id="__span-1-64"><a href="#__codelineno-1-64" id="__codelineno-1-64" name="__codelineno-1-64"></a>
+</span><span id="__span-1-65"><a href="#__codelineno-1-65" id="__codelineno-1-65" name="__codelineno-1-65"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">mark_ready</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-1-66"><a href="#__codelineno-1-66" id="__codelineno-1-66" name="__codelineno-1-66"></a><span class="w">        </span><span class="sd">"""Mark order as ready for pickup/delivery"""</span>
+</span><span id="__span-1-67"><a href="#__codelineno-1-67" id="__codelineno-1-67" name="__codelineno-1-67"></a>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">status</span> <span class="o">!=</span> <span class="s2">"cooking"</span><span class="p">:</span>
+</span><span id="__span-1-68"><a href="#__codelineno-1-68" id="__codelineno-1-68" name="__codelineno-1-68"></a>            <span class="k">raise</span> <span class="n">InvalidOrderStateError</span><span class="p">(</span><span class="s2">"Order must be cooking to mark ready"</span><span class="p">)</span>
+</span><span id="__span-1-69"><a href="#__codelineno-1-69" id="__codelineno-1-69" name="__codelineno-1-69"></a>
+</span><span id="__span-1-70"><a href="#__codelineno-1-70" id="__codelineno-1-70" name="__codelineno-1-70"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="s2">"ready"</span>
+</span><span id="__span-1-71"><a href="#__codelineno-1-71" id="__codelineno-1-71" name="__codelineno-1-71"></a>
+</span><span id="__span-1-72"><a href="#__codelineno-1-72" id="__codelineno-1-72" name="__codelineno-1-72"></a>        <span class="c1"># Raise domain event</span>
+</span><span id="__span-1-73"><a href="#__codelineno-1-73" id="__codelineno-1-73" name="__codelineno-1-73"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">raise_event</span><span class="p">(</span><span class="n">OrderReadyEvent</span><span class="p">(</span>
+</span><span id="__span-1-74"><a href="#__codelineno-1-74" id="__codelineno-1-74" name="__codelineno-1-74"></a>            <span class="n">order_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+</span><span id="__span-1-75"><a href="#__codelineno-1-75" id="__codelineno-1-75" name="__codelineno-1-75"></a>            <span class="n">customer_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">customer_name</span><span class="p">,</span>
+</span><span id="__span-1-76"><a href="#__codelineno-1-76" id="__codelineno-1-76" name="__codelineno-1-76"></a>            <span class="n">customer_phone</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">customer_phone</span>
+</span><span id="__span-1-77"><a href="#__codelineno-1-77" id="__codelineno-1-77" name="__codelineno-1-77"></a>        <span class="p">))</span>
+</span><span id="__span-1-78"><a href="#__codelineno-1-78" id="__codelineno-1-78" name="__codelineno-1-78"></a>
+</span><span id="__span-1-79"><a href="#__codelineno-1-79" id="__codelineno-1-79" name="__codelineno-1-79"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">_calculate_ready_time</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">datetime</span><span class="p">:</span>
+</span><span id="__span-1-80"><a href="#__codelineno-1-80" id="__codelineno-1-80" name="__codelineno-1-80"></a><span class="w">        </span><span class="sd">"""Calculate estimated ready time based on pizza complexity"""</span>
+</span><span id="__span-1-81"><a href="#__codelineno-1-81" id="__codelineno-1-81" name="__codelineno-1-81"></a>        <span class="n">total_cooking_time</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">pizza</span><span class="o">.</span><span class="n">estimate_cooking_time</span><span class="p">()</span> <span class="k">for</span> <span class="n">pizza</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">pizzas</span><span class="p">)</span>
+</span><span id="__span-1-82"><a href="#__codelineno-1-82" id="__codelineno-1-82" name="__codelineno-1-82"></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">order_time</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">minutes</span><span class="o">=</span><span class="n">total_cooking_time</span> <span class="o">+</span> <span class="mi">10</span><span class="p">)</span>  <span class="c1"># +10 for prep</span>
+</span></code></pre></div>
 <h3 id="kitchen-entity">Kitchen Entity<a class="headerlink" href="#kitchen-entity" title="Permanent link">¶</a></h3>
 <p>The Kitchen entity manages cooking capacity and workflow coordination:</p>
-<div class="highlight"><pre><span></span><code><span class="nd">@dataclass</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">Kitchen</span><span class="p">(</span><span class="n">Entity</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
-<span class="w">    </span><span class="sd">"""Kitchen state and cooking capacity management"""</span>
-    <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">active_orders</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>  <span class="c1"># Order IDs being cooked</span>
-    <span class="n">max_concurrent_orders</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span>
-    <span class="n">staff_count</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span>
-
-    <span class="nd">@property</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">is_at_capacity</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Check if kitchen is at maximum capacity"""</span>
-        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">active_orders</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_concurrent_orders</span>
-
-    <span class="nd">@property</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">current_capacity</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Current number of orders being processed"""</span>
-        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">active_orders</span><span class="p">)</span>
-
-    <span class="nd">@property</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">available_capacity</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Remaining cooking slots available"""</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_concurrent_orders</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">active_orders</span><span class="p">)</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">start_order</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">order_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Start cooking an order if capacity allows"""</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_at_capacity</span><span class="p">:</span>
-            <span class="k">return</span> <span class="kc">False</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">active_orders</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">order_id</span><span class="p">)</span>
-
-        <span class="c1"># Raise domain event</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">raise_event</span><span class="p">(</span><span class="n">KitchenOrderStartedEvent</span><span class="p">(</span>
-            <span class="n">kitchen_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
-            <span class="n">order_id</span><span class="o">=</span><span class="n">order_id</span><span class="p">,</span>
-            <span class="n">remaining_capacity</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">available_capacity</span>
-        <span class="p">))</span>
-
-        <span class="k">return</span> <span class="kc">True</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">complete_order</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">order_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Complete cooking an order"""</span>
-        <span class="k">if</span> <span class="n">order_id</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">active_orders</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">OrderNotInKitchenError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Order </span><span class="si">{</span><span class="n">order_id</span><span class="si">}</span><span class="s2"> not in kitchen"</span><span class="p">)</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">active_orders</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">order_id</span><span class="p">)</span>
-
-        <span class="c1"># Raise domain event</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">raise_event</span><span class="p">(</span><span class="n">KitchenOrderCompletedEvent</span><span class="p">(</span>
-            <span class="n">kitchen_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
-            <span class="n">order_id</span><span class="o">=</span><span class="n">order_id</span><span class="p">,</span>
-            <span class="n">available_capacity</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">available_capacity</span>
-        <span class="p">))</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">adjust_capacity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_max</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Adjust maximum capacity based on staffing"""</span>
-        <span class="k">if</span> <span class="n">new_max</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">active_orders</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="n">CapacityError</span><span class="p">(</span><span class="s2">"Cannot reduce capacity below current active orders"</span><span class="p">)</span>
-
-        <span class="n">old_capacity</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_concurrent_orders</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">max_concurrent_orders</span> <span class="o">=</span> <span class="n">new_max</span>
-
-        <span class="c1"># Raise domain event</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">raise_event</span><span class="p">(</span><span class="n">KitchenCapacityAdjustedEvent</span><span class="p">(</span>
-            <span class="n">kitchen_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
-            <span class="n">old_capacity</span><span class="o">=</span><span class="n">old_capacity</span><span class="p">,</span>
-            <span class="n">new_capacity</span><span class="o">=</span><span class="n">new_max</span>
-        <span class="p">))</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a href="#__codelineno-2-1" id="__codelineno-2-1" name="__codelineno-2-1"></a><span class="nd">@dataclass</span>
+</span><span id="__span-2-2"><a href="#__codelineno-2-2" id="__codelineno-2-2" name="__codelineno-2-2"></a><span class="k">class</span><span class="w"> </span><span class="nc">Kitchen</span><span class="p">(</span><span class="n">Entity</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
+</span><span id="__span-2-3"><a href="#__codelineno-2-3" id="__codelineno-2-3" name="__codelineno-2-3"></a><span class="w">    </span><span class="sd">"""Kitchen state and cooking capacity management"""</span>
+</span><span id="__span-2-4"><a href="#__codelineno-2-4" id="__codelineno-2-4" name="__codelineno-2-4"></a>    <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span>
+</span><span id="__span-2-5"><a href="#__codelineno-2-5" id="__codelineno-2-5" name="__codelineno-2-5"></a>    <span class="n">active_orders</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>  <span class="c1"># Order IDs being cooked</span>
+</span><span id="__span-2-6"><a href="#__codelineno-2-6" id="__codelineno-2-6" name="__codelineno-2-6"></a>    <span class="n">max_concurrent_orders</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span>
+</span><span id="__span-2-7"><a href="#__codelineno-2-7" id="__codelineno-2-7" name="__codelineno-2-7"></a>    <span class="n">staff_count</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span>
+</span><span id="__span-2-8"><a href="#__codelineno-2-8" id="__codelineno-2-8" name="__codelineno-2-8"></a>
+</span><span id="__span-2-9"><a href="#__codelineno-2-9" id="__codelineno-2-9" name="__codelineno-2-9"></a>    <span class="nd">@property</span>
+</span><span id="__span-2-10"><a href="#__codelineno-2-10" id="__codelineno-2-10" name="__codelineno-2-10"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">is_at_capacity</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+</span><span id="__span-2-11"><a href="#__codelineno-2-11" id="__codelineno-2-11" name="__codelineno-2-11"></a><span class="w">        </span><span class="sd">"""Check if kitchen is at maximum capacity"""</span>
+</span><span id="__span-2-12"><a href="#__codelineno-2-12" id="__codelineno-2-12" name="__codelineno-2-12"></a>        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">active_orders</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_concurrent_orders</span>
+</span><span id="__span-2-13"><a href="#__codelineno-2-13" id="__codelineno-2-13" name="__codelineno-2-13"></a>
+</span><span id="__span-2-14"><a href="#__codelineno-2-14" id="__codelineno-2-14" name="__codelineno-2-14"></a>    <span class="nd">@property</span>
+</span><span id="__span-2-15"><a href="#__codelineno-2-15" id="__codelineno-2-15" name="__codelineno-2-15"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">current_capacity</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+</span><span id="__span-2-16"><a href="#__codelineno-2-16" id="__codelineno-2-16" name="__codelineno-2-16"></a><span class="w">        </span><span class="sd">"""Current number of orders being processed"""</span>
+</span><span id="__span-2-17"><a href="#__codelineno-2-17" id="__codelineno-2-17" name="__codelineno-2-17"></a>        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">active_orders</span><span class="p">)</span>
+</span><span id="__span-2-18"><a href="#__codelineno-2-18" id="__codelineno-2-18" name="__codelineno-2-18"></a>
+</span><span id="__span-2-19"><a href="#__codelineno-2-19" id="__codelineno-2-19" name="__codelineno-2-19"></a>    <span class="nd">@property</span>
+</span><span id="__span-2-20"><a href="#__codelineno-2-20" id="__codelineno-2-20" name="__codelineno-2-20"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">available_capacity</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+</span><span id="__span-2-21"><a href="#__codelineno-2-21" id="__codelineno-2-21" name="__codelineno-2-21"></a><span class="w">        </span><span class="sd">"""Remaining cooking slots available"""</span>
+</span><span id="__span-2-22"><a href="#__codelineno-2-22" id="__codelineno-2-22" name="__codelineno-2-22"></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_concurrent_orders</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">active_orders</span><span class="p">)</span>
+</span><span id="__span-2-23"><a href="#__codelineno-2-23" id="__codelineno-2-23" name="__codelineno-2-23"></a>
+</span><span id="__span-2-24"><a href="#__codelineno-2-24" id="__codelineno-2-24" name="__codelineno-2-24"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">start_order</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">order_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+</span><span id="__span-2-25"><a href="#__codelineno-2-25" id="__codelineno-2-25" name="__codelineno-2-25"></a><span class="w">        </span><span class="sd">"""Start cooking an order if capacity allows"""</span>
+</span><span id="__span-2-26"><a href="#__codelineno-2-26" id="__codelineno-2-26" name="__codelineno-2-26"></a>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_at_capacity</span><span class="p">:</span>
+</span><span id="__span-2-27"><a href="#__codelineno-2-27" id="__codelineno-2-27" name="__codelineno-2-27"></a>            <span class="k">return</span> <span class="kc">False</span>
+</span><span id="__span-2-28"><a href="#__codelineno-2-28" id="__codelineno-2-28" name="__codelineno-2-28"></a>
+</span><span id="__span-2-29"><a href="#__codelineno-2-29" id="__codelineno-2-29" name="__codelineno-2-29"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">active_orders</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">order_id</span><span class="p">)</span>
+</span><span id="__span-2-30"><a href="#__codelineno-2-30" id="__codelineno-2-30" name="__codelineno-2-30"></a>
+</span><span id="__span-2-31"><a href="#__codelineno-2-31" id="__codelineno-2-31" name="__codelineno-2-31"></a>        <span class="c1"># Raise domain event</span>
+</span><span id="__span-2-32"><a href="#__codelineno-2-32" id="__codelineno-2-32" name="__codelineno-2-32"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">raise_event</span><span class="p">(</span><span class="n">KitchenOrderStartedEvent</span><span class="p">(</span>
+</span><span id="__span-2-33"><a href="#__codelineno-2-33" id="__codelineno-2-33" name="__codelineno-2-33"></a>            <span class="n">kitchen_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+</span><span id="__span-2-34"><a href="#__codelineno-2-34" id="__codelineno-2-34" name="__codelineno-2-34"></a>            <span class="n">order_id</span><span class="o">=</span><span class="n">order_id</span><span class="p">,</span>
+</span><span id="__span-2-35"><a href="#__codelineno-2-35" id="__codelineno-2-35" name="__codelineno-2-35"></a>            <span class="n">remaining_capacity</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">available_capacity</span>
+</span><span id="__span-2-36"><a href="#__codelineno-2-36" id="__codelineno-2-36" name="__codelineno-2-36"></a>        <span class="p">))</span>
+</span><span id="__span-2-37"><a href="#__codelineno-2-37" id="__codelineno-2-37" name="__codelineno-2-37"></a>
+</span><span id="__span-2-38"><a href="#__codelineno-2-38" id="__codelineno-2-38" name="__codelineno-2-38"></a>        <span class="k">return</span> <span class="kc">True</span>
+</span><span id="__span-2-39"><a href="#__codelineno-2-39" id="__codelineno-2-39" name="__codelineno-2-39"></a>
+</span><span id="__span-2-40"><a href="#__codelineno-2-40" id="__codelineno-2-40" name="__codelineno-2-40"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">complete_order</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">order_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-2-41"><a href="#__codelineno-2-41" id="__codelineno-2-41" name="__codelineno-2-41"></a><span class="w">        </span><span class="sd">"""Complete cooking an order"""</span>
+</span><span id="__span-2-42"><a href="#__codelineno-2-42" id="__codelineno-2-42" name="__codelineno-2-42"></a>        <span class="k">if</span> <span class="n">order_id</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">active_orders</span><span class="p">:</span>
+</span><span id="__span-2-43"><a href="#__codelineno-2-43" id="__codelineno-2-43" name="__codelineno-2-43"></a>            <span class="k">raise</span> <span class="n">OrderNotInKitchenError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Order </span><span class="si">{</span><span class="n">order_id</span><span class="si">}</span><span class="s2"> not in kitchen"</span><span class="p">)</span>
+</span><span id="__span-2-44"><a href="#__codelineno-2-44" id="__codelineno-2-44" name="__codelineno-2-44"></a>
+</span><span id="__span-2-45"><a href="#__codelineno-2-45" id="__codelineno-2-45" name="__codelineno-2-45"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">active_orders</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">order_id</span><span class="p">)</span>
+</span><span id="__span-2-46"><a href="#__codelineno-2-46" id="__codelineno-2-46" name="__codelineno-2-46"></a>
+</span><span id="__span-2-47"><a href="#__codelineno-2-47" id="__codelineno-2-47" name="__codelineno-2-47"></a>        <span class="c1"># Raise domain event</span>
+</span><span id="__span-2-48"><a href="#__codelineno-2-48" id="__codelineno-2-48" name="__codelineno-2-48"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">raise_event</span><span class="p">(</span><span class="n">KitchenOrderCompletedEvent</span><span class="p">(</span>
+</span><span id="__span-2-49"><a href="#__codelineno-2-49" id="__codelineno-2-49" name="__codelineno-2-49"></a>            <span class="n">kitchen_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+</span><span id="__span-2-50"><a href="#__codelineno-2-50" id="__codelineno-2-50" name="__codelineno-2-50"></a>            <span class="n">order_id</span><span class="o">=</span><span class="n">order_id</span><span class="p">,</span>
+</span><span id="__span-2-51"><a href="#__codelineno-2-51" id="__codelineno-2-51" name="__codelineno-2-51"></a>            <span class="n">available_capacity</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">available_capacity</span>
+</span><span id="__span-2-52"><a href="#__codelineno-2-52" id="__codelineno-2-52" name="__codelineno-2-52"></a>        <span class="p">))</span>
+</span><span id="__span-2-53"><a href="#__codelineno-2-53" id="__codelineno-2-53" name="__codelineno-2-53"></a>
+</span><span id="__span-2-54"><a href="#__codelineno-2-54" id="__codelineno-2-54" name="__codelineno-2-54"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">adjust_capacity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_max</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-2-55"><a href="#__codelineno-2-55" id="__codelineno-2-55" name="__codelineno-2-55"></a><span class="w">        </span><span class="sd">"""Adjust maximum capacity based on staffing"""</span>
+</span><span id="__span-2-56"><a href="#__codelineno-2-56" id="__codelineno-2-56" name="__codelineno-2-56"></a>        <span class="k">if</span> <span class="n">new_max</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">active_orders</span><span class="p">):</span>
+</span><span id="__span-2-57"><a href="#__codelineno-2-57" id="__codelineno-2-57" name="__codelineno-2-57"></a>            <span class="k">raise</span> <span class="n">CapacityError</span><span class="p">(</span><span class="s2">"Cannot reduce capacity below current active orders"</span><span class="p">)</span>
+</span><span id="__span-2-58"><a href="#__codelineno-2-58" id="__codelineno-2-58" name="__codelineno-2-58"></a>
+</span><span id="__span-2-59"><a href="#__codelineno-2-59" id="__codelineno-2-59" name="__codelineno-2-59"></a>        <span class="n">old_capacity</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_concurrent_orders</span>
+</span><span id="__span-2-60"><a href="#__codelineno-2-60" id="__codelineno-2-60" name="__codelineno-2-60"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">max_concurrent_orders</span> <span class="o">=</span> <span class="n">new_max</span>
+</span><span id="__span-2-61"><a href="#__codelineno-2-61" id="__codelineno-2-61" name="__codelineno-2-61"></a>
+</span><span id="__span-2-62"><a href="#__codelineno-2-62" id="__codelineno-2-62" name="__codelineno-2-62"></a>        <span class="c1"># Raise domain event</span>
+</span><span id="__span-2-63"><a href="#__codelineno-2-63" id="__codelineno-2-63" name="__codelineno-2-63"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">raise_event</span><span class="p">(</span><span class="n">KitchenCapacityAdjustedEvent</span><span class="p">(</span>
+</span><span id="__span-2-64"><a href="#__codelineno-2-64" id="__codelineno-2-64" name="__codelineno-2-64"></a>            <span class="n">kitchen_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+</span><span id="__span-2-65"><a href="#__codelineno-2-65" id="__codelineno-2-65" name="__codelineno-2-65"></a>            <span class="n">old_capacity</span><span class="o">=</span><span class="n">old_capacity</span><span class="p">,</span>
+</span><span id="__span-2-66"><a href="#__codelineno-2-66" id="__codelineno-2-66" name="__codelineno-2-66"></a>            <span class="n">new_capacity</span><span class="o">=</span><span class="n">new_max</span>
+</span><span id="__span-2-67"><a href="#__codelineno-2-67" id="__codelineno-2-67" name="__codelineno-2-67"></a>        <span class="p">))</span>
+</span></code></pre></div>
 <h2 id="value-objects">📊 Value Objects<a class="headerlink" href="#value-objects" title="Permanent link">¶</a></h2>
 <h3 id="address-value-object">Address Value Object<a class="headerlink" href="#address-value-object" title="Permanent link">¶</a></h3>
-<div class="highlight"><pre><span></span><code><span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">Address</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""Immutable address value object"""</span>
-    <span class="n">street</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">city</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">zip_code</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">state</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"CA"</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">street</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">city</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">zip_code</span><span class="si">}</span><span class="s2">"</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">is_valid</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Validate address format"""</span>
-        <span class="k">return</span> <span class="p">(</span>
-            <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">street</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span>
-            <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">city</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span>
-            <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">zip_code</span><span class="p">)</span> <span class="o">==</span> <span class="mi">5</span> <span class="ow">and</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">zip_code</span><span class="o">.</span><span class="n">isdigit</span><span class="p">()</span>
-        <span class="p">)</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a href="#__codelineno-3-1" id="__codelineno-3-1" name="__codelineno-3-1"></a><span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="__span-3-2"><a href="#__codelineno-3-2" id="__codelineno-3-2" name="__codelineno-3-2"></a><span class="k">class</span><span class="w"> </span><span class="nc">Address</span><span class="p">:</span>
+</span><span id="__span-3-3"><a href="#__codelineno-3-3" id="__codelineno-3-3" name="__codelineno-3-3"></a><span class="w">    </span><span class="sd">"""Immutable address value object"""</span>
+</span><span id="__span-3-4"><a href="#__codelineno-3-4" id="__codelineno-3-4" name="__codelineno-3-4"></a>    <span class="n">street</span><span class="p">:</span> <span class="nb">str</span>
+</span><span id="__span-3-5"><a href="#__codelineno-3-5" id="__codelineno-3-5" name="__codelineno-3-5"></a>    <span class="n">city</span><span class="p">:</span> <span class="nb">str</span>
+</span><span id="__span-3-6"><a href="#__codelineno-3-6" id="__codelineno-3-6" name="__codelineno-3-6"></a>    <span class="n">zip_code</span><span class="p">:</span> <span class="nb">str</span>
+</span><span id="__span-3-7"><a href="#__codelineno-3-7" id="__codelineno-3-7" name="__codelineno-3-7"></a>    <span class="n">state</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"CA"</span>
+</span><span id="__span-3-8"><a href="#__codelineno-3-8" id="__codelineno-3-8" name="__codelineno-3-8"></a>
+</span><span id="__span-3-9"><a href="#__codelineno-3-9" id="__codelineno-3-9" name="__codelineno-3-9"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</span><span id="__span-3-10"><a href="#__codelineno-3-10" id="__codelineno-3-10" name="__codelineno-3-10"></a>        <span class="k">return</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">street</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">city</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">zip_code</span><span class="si">}</span><span class="s2">"</span>
+</span><span id="__span-3-11"><a href="#__codelineno-3-11" id="__codelineno-3-11" name="__codelineno-3-11"></a>
+</span><span id="__span-3-12"><a href="#__codelineno-3-12" id="__codelineno-3-12" name="__codelineno-3-12"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">is_valid</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+</span><span id="__span-3-13"><a href="#__codelineno-3-13" id="__codelineno-3-13" name="__codelineno-3-13"></a><span class="w">        </span><span class="sd">"""Validate address format"""</span>
+</span><span id="__span-3-14"><a href="#__codelineno-3-14" id="__codelineno-3-14" name="__codelineno-3-14"></a>        <span class="k">return</span> <span class="p">(</span>
+</span><span id="__span-3-15"><a href="#__codelineno-3-15" id="__codelineno-3-15" name="__codelineno-3-15"></a>            <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">street</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span>
+</span><span id="__span-3-16"><a href="#__codelineno-3-16" id="__codelineno-3-16" name="__codelineno-3-16"></a>            <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">city</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span>
+</span><span id="__span-3-17"><a href="#__codelineno-3-17" id="__codelineno-3-17" name="__codelineno-3-17"></a>            <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">zip_code</span><span class="p">)</span> <span class="o">==</span> <span class="mi">5</span> <span class="ow">and</span>
+</span><span id="__span-3-18"><a href="#__codelineno-3-18" id="__codelineno-3-18" name="__codelineno-3-18"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">zip_code</span><span class="o">.</span><span class="n">isdigit</span><span class="p">()</span>
+</span><span id="__span-3-19"><a href="#__codelineno-3-19" id="__codelineno-3-19" name="__codelineno-3-19"></a>        <span class="p">)</span>
+</span></code></pre></div>
 <h3 id="money-value-object">Money Value Object<a class="headerlink" href="#money-value-object" title="Permanent link">¶</a></h3>
-<div class="highlight"><pre><span></span><code><span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">Money</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""Immutable money value object"""</span>
-    <span class="n">amount</span><span class="p">:</span> <span class="n">Decimal</span>
-    <span class="n">currency</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"USD"</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s2">"$</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">amount</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">"</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="s1">'Money'</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">'Money'</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Add two money amounts"""</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">currency</span> <span class="o">!=</span> <span class="n">other</span><span class="o">.</span><span class="n">currency</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Cannot add different currencies"</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">Money</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">amount</span> <span class="o">+</span> <span class="n">other</span><span class="o">.</span><span class="n">amount</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">currency</span><span class="p">)</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">multiply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">factor</span><span class="p">:</span> <span class="n">Decimal</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">'Money'</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Multiply money by a factor"""</span>
-        <span class="k">return</span> <span class="n">Money</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">amount</span> <span class="o">*</span> <span class="n">factor</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">currency</span><span class="p">)</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">is_positive</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Check if amount is positive"""</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">amount</span> <span class="o">&gt;</span> <span class="mi">0</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a href="#__codelineno-4-1" id="__codelineno-4-1" name="__codelineno-4-1"></a><span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="__span-4-2"><a href="#__codelineno-4-2" id="__codelineno-4-2" name="__codelineno-4-2"></a><span class="k">class</span><span class="w"> </span><span class="nc">Money</span><span class="p">:</span>
+</span><span id="__span-4-3"><a href="#__codelineno-4-3" id="__codelineno-4-3" name="__codelineno-4-3"></a><span class="w">    </span><span class="sd">"""Immutable money value object"""</span>
+</span><span id="__span-4-4"><a href="#__codelineno-4-4" id="__codelineno-4-4" name="__codelineno-4-4"></a>    <span class="n">amount</span><span class="p">:</span> <span class="n">Decimal</span>
+</span><span id="__span-4-5"><a href="#__codelineno-4-5" id="__codelineno-4-5" name="__codelineno-4-5"></a>    <span class="n">currency</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"USD"</span>
+</span><span id="__span-4-6"><a href="#__codelineno-4-6" id="__codelineno-4-6" name="__codelineno-4-6"></a>
+</span><span id="__span-4-7"><a href="#__codelineno-4-7" id="__codelineno-4-7" name="__codelineno-4-7"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</span><span id="__span-4-8"><a href="#__codelineno-4-8" id="__codelineno-4-8" name="__codelineno-4-8"></a>        <span class="k">return</span> <span class="sa">f</span><span class="s2">"$</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">amount</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">"</span>
+</span><span id="__span-4-9"><a href="#__codelineno-4-9" id="__codelineno-4-9" name="__codelineno-4-9"></a>
+</span><span id="__span-4-10"><a href="#__codelineno-4-10" id="__codelineno-4-10" name="__codelineno-4-10"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="s1">'Money'</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">'Money'</span><span class="p">:</span>
+</span><span id="__span-4-11"><a href="#__codelineno-4-11" id="__codelineno-4-11" name="__codelineno-4-11"></a><span class="w">        </span><span class="sd">"""Add two money amounts"""</span>
+</span><span id="__span-4-12"><a href="#__codelineno-4-12" id="__codelineno-4-12" name="__codelineno-4-12"></a>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">currency</span> <span class="o">!=</span> <span class="n">other</span><span class="o">.</span><span class="n">currency</span><span class="p">:</span>
+</span><span id="__span-4-13"><a href="#__codelineno-4-13" id="__codelineno-4-13" name="__codelineno-4-13"></a>            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Cannot add different currencies"</span><span class="p">)</span>
+</span><span id="__span-4-14"><a href="#__codelineno-4-14" id="__codelineno-4-14" name="__codelineno-4-14"></a>        <span class="k">return</span> <span class="n">Money</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">amount</span> <span class="o">+</span> <span class="n">other</span><span class="o">.</span><span class="n">amount</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">currency</span><span class="p">)</span>
+</span><span id="__span-4-15"><a href="#__codelineno-4-15" id="__codelineno-4-15" name="__codelineno-4-15"></a>
+</span><span id="__span-4-16"><a href="#__codelineno-4-16" id="__codelineno-4-16" name="__codelineno-4-16"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">multiply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">factor</span><span class="p">:</span> <span class="n">Decimal</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">'Money'</span><span class="p">:</span>
+</span><span id="__span-4-17"><a href="#__codelineno-4-17" id="__codelineno-4-17" name="__codelineno-4-17"></a><span class="w">        </span><span class="sd">"""Multiply money by a factor"""</span>
+</span><span id="__span-4-18"><a href="#__codelineno-4-18" id="__codelineno-4-18" name="__codelineno-4-18"></a>        <span class="k">return</span> <span class="n">Money</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">amount</span> <span class="o">*</span> <span class="n">factor</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">currency</span><span class="p">)</span>
+</span><span id="__span-4-19"><a href="#__codelineno-4-19" id="__codelineno-4-19" name="__codelineno-4-19"></a>
+</span><span id="__span-4-20"><a href="#__codelineno-4-20" id="__codelineno-4-20" name="__codelineno-4-20"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">is_positive</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+</span><span id="__span-4-21"><a href="#__codelineno-4-21" id="__codelineno-4-21" name="__codelineno-4-21"></a><span class="w">        </span><span class="sd">"""Check if amount is positive"""</span>
+</span><span id="__span-4-22"><a href="#__codelineno-4-22" id="__codelineno-4-22" name="__codelineno-4-22"></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">amount</span> <span class="o">&gt;</span> <span class="mi">0</span>
+</span></code></pre></div>
 <h2 id="domain-events">📡 Domain Events<a class="headerlink" href="#domain-events" title="Permanent link">¶</a></h2>
 <p>Domain events capture important business occurrences and enable loose coupling:</p>
 <h3 id="order-lifecycle-events">Order Lifecycle Events<a class="headerlink" href="#order-lifecycle-events" title="Permanent link">¶</a></h3>
-<div class="highlight"><pre><span></span><code><span class="nd">@dataclass</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">OrderPlacedEvent</span><span class="p">(</span><span class="n">DomainEvent</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">"""Raised when customer places an order"""</span>
-    <span class="n">order_id</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">customer_name</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">customer_phone</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">total_amount</span><span class="p">:</span> <span class="n">Decimal</span>
-    <span class="n">estimated_ready_time</span><span class="p">:</span> <span class="n">datetime</span>
-
-<span class="nd">@dataclass</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">OrderConfirmedEvent</span><span class="p">(</span><span class="n">DomainEvent</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">"""Raised when order payment is processed"""</span>
-    <span class="n">order_id</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">customer_name</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">estimated_ready_time</span><span class="p">:</span> <span class="n">datetime</span>
-
-<span class="nd">@dataclass</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">CookingStartedEvent</span><span class="p">(</span><span class="n">DomainEvent</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">"""Raised when kitchen starts cooking order"""</span>
-    <span class="n">order_id</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">started_at</span><span class="p">:</span> <span class="n">datetime</span>
-    <span class="n">estimated_completion</span><span class="p">:</span> <span class="n">datetime</span>
-
-<span class="nd">@dataclass</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">OrderReadyEvent</span><span class="p">(</span><span class="n">DomainEvent</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">"""Raised when order is ready for pickup"""</span>
-    <span class="n">order_id</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">customer_name</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">customer_phone</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">ready_at</span><span class="p">:</span> <span class="n">datetime</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a href="#__codelineno-5-1" id="__codelineno-5-1" name="__codelineno-5-1"></a><span class="nd">@dataclass</span>
+</span><span id="__span-5-2"><a href="#__codelineno-5-2" id="__codelineno-5-2" name="__codelineno-5-2"></a><span class="k">class</span><span class="w"> </span><span class="nc">OrderPlacedEvent</span><span class="p">(</span><span class="n">DomainEvent</span><span class="p">):</span>
+</span><span id="__span-5-3"><a href="#__codelineno-5-3" id="__codelineno-5-3" name="__codelineno-5-3"></a><span class="w">    </span><span class="sd">"""Raised when customer places an order"""</span>
+</span><span id="__span-5-4"><a href="#__codelineno-5-4" id="__codelineno-5-4" name="__codelineno-5-4"></a>    <span class="n">order_id</span><span class="p">:</span> <span class="nb">str</span>
+</span><span id="__span-5-5"><a href="#__codelineno-5-5" id="__codelineno-5-5" name="__codelineno-5-5"></a>    <span class="n">customer_name</span><span class="p">:</span> <span class="nb">str</span>
+</span><span id="__span-5-6"><a href="#__codelineno-5-6" id="__codelineno-5-6" name="__codelineno-5-6"></a>    <span class="n">customer_phone</span><span class="p">:</span> <span class="nb">str</span>
+</span><span id="__span-5-7"><a href="#__codelineno-5-7" id="__codelineno-5-7" name="__codelineno-5-7"></a>    <span class="n">total_amount</span><span class="p">:</span> <span class="n">Decimal</span>
+</span><span id="__span-5-8"><a href="#__codelineno-5-8" id="__codelineno-5-8" name="__codelineno-5-8"></a>    <span class="n">estimated_ready_time</span><span class="p">:</span> <span class="n">datetime</span>
+</span><span id="__span-5-9"><a href="#__codelineno-5-9" id="__codelineno-5-9" name="__codelineno-5-9"></a>
+</span><span id="__span-5-10"><a href="#__codelineno-5-10" id="__codelineno-5-10" name="__codelineno-5-10"></a><span class="nd">@dataclass</span>
+</span><span id="__span-5-11"><a href="#__codelineno-5-11" id="__codelineno-5-11" name="__codelineno-5-11"></a><span class="k">class</span><span class="w"> </span><span class="nc">OrderConfirmedEvent</span><span class="p">(</span><span class="n">DomainEvent</span><span class="p">):</span>
+</span><span id="__span-5-12"><a href="#__codelineno-5-12" id="__codelineno-5-12" name="__codelineno-5-12"></a><span class="w">    </span><span class="sd">"""Raised when order payment is processed"""</span>
+</span><span id="__span-5-13"><a href="#__codelineno-5-13" id="__codelineno-5-13" name="__codelineno-5-13"></a>    <span class="n">order_id</span><span class="p">:</span> <span class="nb">str</span>
+</span><span id="__span-5-14"><a href="#__codelineno-5-14" id="__codelineno-5-14" name="__codelineno-5-14"></a>    <span class="n">customer_name</span><span class="p">:</span> <span class="nb">str</span>
+</span><span id="__span-5-15"><a href="#__codelineno-5-15" id="__codelineno-5-15" name="__codelineno-5-15"></a>    <span class="n">estimated_ready_time</span><span class="p">:</span> <span class="n">datetime</span>
+</span><span id="__span-5-16"><a href="#__codelineno-5-16" id="__codelineno-5-16" name="__codelineno-5-16"></a>
+</span><span id="__span-5-17"><a href="#__codelineno-5-17" id="__codelineno-5-17" name="__codelineno-5-17"></a><span class="nd">@dataclass</span>
+</span><span id="__span-5-18"><a href="#__codelineno-5-18" id="__codelineno-5-18" name="__codelineno-5-18"></a><span class="k">class</span><span class="w"> </span><span class="nc">CookingStartedEvent</span><span class="p">(</span><span class="n">DomainEvent</span><span class="p">):</span>
+</span><span id="__span-5-19"><a href="#__codelineno-5-19" id="__codelineno-5-19" name="__codelineno-5-19"></a><span class="w">    </span><span class="sd">"""Raised when kitchen starts cooking order"""</span>
+</span><span id="__span-5-20"><a href="#__codelineno-5-20" id="__codelineno-5-20" name="__codelineno-5-20"></a>    <span class="n">order_id</span><span class="p">:</span> <span class="nb">str</span>
+</span><span id="__span-5-21"><a href="#__codelineno-5-21" id="__codelineno-5-21" name="__codelineno-5-21"></a>    <span class="n">started_at</span><span class="p">:</span> <span class="n">datetime</span>
+</span><span id="__span-5-22"><a href="#__codelineno-5-22" id="__codelineno-5-22" name="__codelineno-5-22"></a>    <span class="n">estimated_completion</span><span class="p">:</span> <span class="n">datetime</span>
+</span><span id="__span-5-23"><a href="#__codelineno-5-23" id="__codelineno-5-23" name="__codelineno-5-23"></a>
+</span><span id="__span-5-24"><a href="#__codelineno-5-24" id="__codelineno-5-24" name="__codelineno-5-24"></a><span class="nd">@dataclass</span>
+</span><span id="__span-5-25"><a href="#__codelineno-5-25" id="__codelineno-5-25" name="__codelineno-5-25"></a><span class="k">class</span><span class="w"> </span><span class="nc">OrderReadyEvent</span><span class="p">(</span><span class="n">DomainEvent</span><span class="p">):</span>
+</span><span id="__span-5-26"><a href="#__codelineno-5-26" id="__codelineno-5-26" name="__codelineno-5-26"></a><span class="w">    </span><span class="sd">"""Raised when order is ready for pickup"""</span>
+</span><span id="__span-5-27"><a href="#__codelineno-5-27" id="__codelineno-5-27" name="__codelineno-5-27"></a>    <span class="n">order_id</span><span class="p">:</span> <span class="nb">str</span>
+</span><span id="__span-5-28"><a href="#__codelineno-5-28" id="__codelineno-5-28" name="__codelineno-5-28"></a>    <span class="n">customer_name</span><span class="p">:</span> <span class="nb">str</span>
+</span><span id="__span-5-29"><a href="#__codelineno-5-29" id="__codelineno-5-29" name="__codelineno-5-29"></a>    <span class="n">customer_phone</span><span class="p">:</span> <span class="nb">str</span>
+</span><span id="__span-5-30"><a href="#__codelineno-5-30" id="__codelineno-5-30" name="__codelineno-5-30"></a>    <span class="n">ready_at</span><span class="p">:</span> <span class="n">datetime</span>
+</span></code></pre></div>
 <h3 id="kitchen-events">Kitchen Events<a class="headerlink" href="#kitchen-events" title="Permanent link">¶</a></h3>
-<div class="highlight"><pre><span></span><code><span class="nd">@dataclass</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">KitchenOrderStartedEvent</span><span class="p">(</span><span class="n">DomainEvent</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">"""Raised when kitchen starts processing order"""</span>
-    <span class="n">kitchen_id</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">order_id</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">remaining_capacity</span><span class="p">:</span> <span class="nb">int</span>
-
-<span class="nd">@dataclass</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">KitchenCapacityAdjustedEvent</span><span class="p">(</span><span class="n">DomainEvent</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">"""Raised when kitchen capacity changes"""</span>
-    <span class="n">kitchen_id</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">old_capacity</span><span class="p">:</span> <span class="nb">int</span>
-    <span class="n">new_capacity</span><span class="p">:</span> <span class="nb">int</span>
-    <span class="n">reason</span><span class="p">:</span> <span class="nb">str</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a href="#__codelineno-6-1" id="__codelineno-6-1" name="__codelineno-6-1"></a><span class="nd">@dataclass</span>
+</span><span id="__span-6-2"><a href="#__codelineno-6-2" id="__codelineno-6-2" name="__codelineno-6-2"></a><span class="k">class</span><span class="w"> </span><span class="nc">KitchenOrderStartedEvent</span><span class="p">(</span><span class="n">DomainEvent</span><span class="p">):</span>
+</span><span id="__span-6-3"><a href="#__codelineno-6-3" id="__codelineno-6-3" name="__codelineno-6-3"></a><span class="w">    </span><span class="sd">"""Raised when kitchen starts processing order"""</span>
+</span><span id="__span-6-4"><a href="#__codelineno-6-4" id="__codelineno-6-4" name="__codelineno-6-4"></a>    <span class="n">kitchen_id</span><span class="p">:</span> <span class="nb">str</span>
+</span><span id="__span-6-5"><a href="#__codelineno-6-5" id="__codelineno-6-5" name="__codelineno-6-5"></a>    <span class="n">order_id</span><span class="p">:</span> <span class="nb">str</span>
+</span><span id="__span-6-6"><a href="#__codelineno-6-6" id="__codelineno-6-6" name="__codelineno-6-6"></a>    <span class="n">remaining_capacity</span><span class="p">:</span> <span class="nb">int</span>
+</span><span id="__span-6-7"><a href="#__codelineno-6-7" id="__codelineno-6-7" name="__codelineno-6-7"></a>
+</span><span id="__span-6-8"><a href="#__codelineno-6-8" id="__codelineno-6-8" name="__codelineno-6-8"></a><span class="nd">@dataclass</span>
+</span><span id="__span-6-9"><a href="#__codelineno-6-9" id="__codelineno-6-9" name="__codelineno-6-9"></a><span class="k">class</span><span class="w"> </span><span class="nc">KitchenCapacityAdjustedEvent</span><span class="p">(</span><span class="n">DomainEvent</span><span class="p">):</span>
+</span><span id="__span-6-10"><a href="#__codelineno-6-10" id="__codelineno-6-10" name="__codelineno-6-10"></a><span class="w">    </span><span class="sd">"""Raised when kitchen capacity changes"""</span>
+</span><span id="__span-6-11"><a href="#__codelineno-6-11" id="__codelineno-6-11" name="__codelineno-6-11"></a>    <span class="n">kitchen_id</span><span class="p">:</span> <span class="nb">str</span>
+</span><span id="__span-6-12"><a href="#__codelineno-6-12" id="__codelineno-6-12" name="__codelineno-6-12"></a>    <span class="n">old_capacity</span><span class="p">:</span> <span class="nb">int</span>
+</span><span id="__span-6-13"><a href="#__codelineno-6-13" id="__codelineno-6-13" name="__codelineno-6-13"></a>    <span class="n">new_capacity</span><span class="p">:</span> <span class="nb">int</span>
+</span><span id="__span-6-14"><a href="#__codelineno-6-14" id="__codelineno-6-14" name="__codelineno-6-14"></a>    <span class="n">reason</span><span class="p">:</span> <span class="nb">str</span>
+</span></code></pre></div>
 <h2 id="domain-enums-value-objects">📊 Domain Enums &amp; Value Objects<a class="headerlink" href="#domain-enums-value-objects" title="Permanent link">¶</a></h2>
 <h3 id="pizza-size-enumeration">Pizza Size Enumeration<a class="headerlink" href="#pizza-size-enumeration" title="Permanent link">¶</a></h3>
 <p>The pizza size enumeration defines the available size options with clear business values:</p>
 <p><strong>Source</strong>: <a href="https://github.com/bvandewe/pyneuro/blob/main/samples/mario-pizzeria/domain/entities/enums.py"><code>samples/mario-pizzeria/domain/entities/enums.py</code></a></p>
-<div class="highlight"><table class="highlighttable"><tr><th class="filename" colspan="2"><span class="filename">samples/mario-pizzeria/domain/entities/enums.py</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 6</span>
-<span class="normal"> 7</span>
-<span class="normal"> 8</span>
-<span class="normal"> 9</span>
-<span class="normal">10</span>
-<span class="normal">11</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">PizzaSize</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">"""Pizza size options"""</span>
-
-    <span class="n">SMALL</span> <span class="o">=</span> <span class="s2">"small"</span>
-    <span class="n">MEDIUM</span> <span class="o">=</span> <span class="s2">"medium"</span>
-    <span class="n">LARGE</span> <span class="o">=</span> <span class="s2">"large"</span>
-</code></pre></div></td></tr></table></div>
+<div class="language-python highlight"><table class="highlighttable"><tr><th class="filename" colspan="2"><span class="filename">samples/mario-pizzeria/domain/entities/enums.py</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-7-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-7-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-7-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-7-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-7-10">10</a></span>
+<span class="normal"><a href="#__codelineno-7-11">11</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6"></a><span class="k">class</span><span class="w"> </span><span class="nc">PizzaSize</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7"></a><span class="w">    </span><span class="sd">"""Pizza size options"""</span>
+</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8"></a>
+</span><span id="__span-7-9"><a id="__codelineno-7-9" name="__codelineno-7-9"></a>    <span class="n">SMALL</span> <span class="o">=</span> <span class="s2">"small"</span>
+</span><span id="__span-7-10"><a id="__codelineno-7-10" name="__codelineno-7-10"></a>    <span class="n">MEDIUM</span> <span class="o">=</span> <span class="s2">"medium"</span>
+</span><span id="__span-7-11"><a id="__codelineno-7-11" name="__codelineno-7-11"></a>    <span class="n">LARGE</span> <span class="o">=</span> <span class="s2">"large"</span>
+</span></code></pre></div></td></tr></table></div>
 <h3 id="order-status-enumeration">Order Status Enumeration<a class="headerlink" href="#order-status-enumeration" title="Permanent link">¶</a></h3>
 <p>The order status enumeration tracks the complete order lifecycle:</p>
-<div class="highlight"><table class="highlighttable"><tr><th class="filename" colspan="2"><span class="filename">samples/mario-pizzeria/domain/entities/enums.py</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">14</span>
-<span class="normal">15</span>
-<span class="normal">16</span>
-<span class="normal">17</span>
-<span class="normal">18</span>
-<span class="normal">19</span>
-<span class="normal">20</span>
-<span class="normal">21</span>
-<span class="normal">22</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">OrderStatus</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">"""Order lifecycle statuses"""</span>
-
-    <span class="n">PENDING</span> <span class="o">=</span> <span class="s2">"pending"</span>
-    <span class="n">CONFIRMED</span> <span class="o">=</span> <span class="s2">"confirmed"</span>
-    <span class="n">COOKING</span> <span class="o">=</span> <span class="s2">"cooking"</span>
-    <span class="n">READY</span> <span class="o">=</span> <span class="s2">"ready"</span>
-    <span class="n">DELIVERED</span> <span class="o">=</span> <span class="s2">"delivered"</span>
-    <span class="n">CANCELLED</span> <span class="o">=</span> <span class="s2">"cancelled"</span>
-</code></pre></div></td></tr></table></div>
+<div class="language-python highlight"><table class="highlighttable"><tr><th class="filename" colspan="2"><span class="filename">samples/mario-pizzeria/domain/entities/enums.py</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-8-14">14</a></span>
+<span class="normal"><a href="#__codelineno-8-15">15</a></span>
+<span class="normal"><a href="#__codelineno-8-16">16</a></span>
+<span class="normal"><a href="#__codelineno-8-17">17</a></span>
+<span class="normal"><a href="#__codelineno-8-18">18</a></span>
+<span class="normal"><a href="#__codelineno-8-19">19</a></span>
+<span class="normal"><a href="#__codelineno-8-20">20</a></span>
+<span class="normal"><a href="#__codelineno-8-21">21</a></span>
+<span class="normal"><a href="#__codelineno-8-22">22</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-8-14"><a id="__codelineno-8-14" name="__codelineno-8-14"></a><span class="k">class</span><span class="w"> </span><span class="nc">OrderStatus</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+</span><span id="__span-8-15"><a id="__codelineno-8-15" name="__codelineno-8-15"></a><span class="w">    </span><span class="sd">"""Order lifecycle statuses"""</span>
+</span><span id="__span-8-16"><a id="__codelineno-8-16" name="__codelineno-8-16"></a>
+</span><span id="__span-8-17"><a id="__codelineno-8-17" name="__codelineno-8-17"></a>    <span class="n">PENDING</span> <span class="o">=</span> <span class="s2">"pending"</span>
+</span><span id="__span-8-18"><a id="__codelineno-8-18" name="__codelineno-8-18"></a>    <span class="n">CONFIRMED</span> <span class="o">=</span> <span class="s2">"confirmed"</span>
+</span><span id="__span-8-19"><a id="__codelineno-8-19" name="__codelineno-8-19"></a>    <span class="n">COOKING</span> <span class="o">=</span> <span class="s2">"cooking"</span>
+</span><span id="__span-8-20"><a id="__codelineno-8-20" name="__codelineno-8-20"></a>    <span class="n">READY</span> <span class="o">=</span> <span class="s2">"ready"</span>
+</span><span id="__span-8-21"><a id="__codelineno-8-21" name="__codelineno-8-21"></a>    <span class="n">DELIVERED</span> <span class="o">=</span> <span class="s2">"delivered"</span>
+</span><span id="__span-8-22"><a id="__codelineno-8-22" name="__codelineno-8-22"></a>    <span class="n">CANCELLED</span> <span class="o">=</span> <span class="s2">"cancelled"</span>
+</span></code></pre></div></td></tr></table></div>
 <p><strong>Status Flow</strong>: <code>PENDING</code> → <code>CONFIRMED</code> → <code>COOKING</code> → <code>READY</code> → <code>DELIVERED</code></p>
 <p>Alternative flow: Any status → <code>CANCELLED</code> (with business rules)</p>
 <h2 id="business-rules-invariants">🎯 Business Rules &amp; Invariants<a class="headerlink" href="#business-rules-invariants" title="Permanent link">¶</a></h2>

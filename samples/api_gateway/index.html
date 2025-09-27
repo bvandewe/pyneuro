@@ -1134,9 +1134,9 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../references/python_type_hints/">
+<a class="md-nav__link" href="../../references/python_typing_guide/">
 <span class="md-ellipsis">
-    Python Type Hints
+    Python Typing Guide
     
   </span>
 </a>
@@ -1158,9 +1158,9 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../references/python_generic_types/">
+<a class="md-nav__link" href="../../references/test-mermaid/">
 <span class="md-ellipsis">
-    Python Generic Types
+    Mermaid References
     
   </span>
 </a>
@@ -1672,118 +1672,118 @@ processing, and cloud event handling.</p>
 </ul>
 <h2 id="key-features-demonstrated">🚀 Key Features Demonstrated<a class="headerlink" href="#key-features-demonstrated" title="Permanent link">¶</a></h2>
 <h3 id="1-oauth2-authentication-security">1. <strong>OAuth2 Authentication &amp; Security</strong><a class="headerlink" href="#1-oauth2-authentication-security" title="Permanent link">¶</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># JWT token validation with Keycloak</span>
-<span class="nd">@post</span><span class="p">(</span><span class="s2">"/item"</span><span class="p">,</span> <span class="n">response_model</span><span class="o">=</span><span class="n">ItemPromptCommandResponseDto</span><span class="p">)</span>
-<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">create_new_item_prompt</span><span class="p">(</span>
-    <span class="bp">self</span><span class="p">,</span>
-    <span class="n">command_dto</span><span class="p">:</span> <span class="n">CreateNewItemPromptCommandDto</span><span class="p">,</span>
-    <span class="n">key</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Depends</span><span class="p">(</span><span class="n">validate_mosaic_authentication</span><span class="p">)</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
-    <span class="c1"># Protected endpoint with API key validation</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a href="#__codelineno-0-1" id="__codelineno-0-1" name="__codelineno-0-1"></a><span class="c1"># JWT token validation with Keycloak</span>
+</span><span id="__span-0-2"><a href="#__codelineno-0-2" id="__codelineno-0-2" name="__codelineno-0-2"></a><span class="nd">@post</span><span class="p">(</span><span class="s2">"/item"</span><span class="p">,</span> <span class="n">response_model</span><span class="o">=</span><span class="n">ItemPromptCommandResponseDto</span><span class="p">)</span>
+</span><span id="__span-0-3"><a href="#__codelineno-0-3" id="__codelineno-0-3" name="__codelineno-0-3"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">create_new_item_prompt</span><span class="p">(</span>
+</span><span id="__span-0-4"><a href="#__codelineno-0-4" id="__codelineno-0-4" name="__codelineno-0-4"></a>    <span class="bp">self</span><span class="p">,</span>
+</span><span id="__span-0-5"><a href="#__codelineno-0-5" id="__codelineno-0-5" name="__codelineno-0-5"></a>    <span class="n">command_dto</span><span class="p">:</span> <span class="n">CreateNewItemPromptCommandDto</span><span class="p">,</span>
+</span><span id="__span-0-6"><a href="#__codelineno-0-6" id="__codelineno-0-6" name="__codelineno-0-6"></a>    <span class="n">key</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Depends</span><span class="p">(</span><span class="n">validate_mosaic_authentication</span><span class="p">)</span>
+</span><span id="__span-0-7"><a href="#__codelineno-0-7" id="__codelineno-0-7" name="__codelineno-0-7"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+</span><span id="__span-0-8"><a href="#__codelineno-0-8" id="__codelineno-0-8" name="__codelineno-0-8"></a>    <span class="c1"># Protected endpoint with API key validation</span>
+</span></code></pre></div>
 <h3 id="2-multi-service-integration">2. <strong>Multi-Service Integration</strong><a class="headerlink" href="#2-multi-service-integration" title="Permanent link">¶</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># External service clients</span>
-<span class="n">MinioStorageManager</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">)</span>          <span class="c1"># Object storage</span>
-<span class="n">MosaicApiClient</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">)</span>              <span class="c1"># External API</span>
-<span class="n">AsyncStringCacheRepository</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">)</span>   <span class="c1"># Redis caching</span>
-<span class="n">BackgroundTaskScheduler</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">)</span>      <span class="c1"># Async processing</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a href="#__codelineno-1-1" id="__codelineno-1-1" name="__codelineno-1-1"></a><span class="c1"># External service clients</span>
+</span><span id="__span-1-2"><a href="#__codelineno-1-2" id="__codelineno-1-2" name="__codelineno-1-2"></a><span class="n">MinioStorageManager</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">)</span>          <span class="c1"># Object storage</span>
+</span><span id="__span-1-3"><a href="#__codelineno-1-3" id="__codelineno-1-3" name="__codelineno-1-3"></a><span class="n">MosaicApiClient</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">)</span>              <span class="c1"># External API</span>
+</span><span id="__span-1-4"><a href="#__codelineno-1-4" id="__codelineno-1-4" name="__codelineno-1-4"></a><span class="n">AsyncStringCacheRepository</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">)</span>   <span class="c1"># Redis caching</span>
+</span><span id="__span-1-5"><a href="#__codelineno-1-5" id="__codelineno-1-5" name="__codelineno-1-5"></a><span class="n">BackgroundTaskScheduler</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">)</span>      <span class="c1"># Async processing</span>
+</span></code></pre></div>
 <h3 id="3-advanced-domain-model">3. <strong>Advanced Domain Model</strong><a class="headerlink" href="#3-advanced-domain-model" title="Permanent link">¶</a></h3>
-<div class="highlight"><pre><span></span><code><span class="nd">@map_to</span><span class="p">(</span><span class="n">PromptResponseDto</span><span class="p">)</span>
-<span class="nd">@dataclass</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">PromptResponse</span><span class="p">:</span>
-    <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">prompt_id</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">content</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">status</span><span class="p">:</span> <span class="n">PromptStatus</span>
-    <span class="n">metadata</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>
-    <span class="n">created_at</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a href="#__codelineno-2-1" id="__codelineno-2-1" name="__codelineno-2-1"></a><span class="nd">@map_to</span><span class="p">(</span><span class="n">PromptResponseDto</span><span class="p">)</span>
+</span><span id="__span-2-2"><a href="#__codelineno-2-2" id="__codelineno-2-2" name="__codelineno-2-2"></a><span class="nd">@dataclass</span>
+</span><span id="__span-2-3"><a href="#__codelineno-2-3" id="__codelineno-2-3" name="__codelineno-2-3"></a><span class="k">class</span><span class="w"> </span><span class="nc">PromptResponse</span><span class="p">:</span>
+</span><span id="__span-2-4"><a href="#__codelineno-2-4" id="__codelineno-2-4" name="__codelineno-2-4"></a>    <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span>
+</span><span id="__span-2-5"><a href="#__codelineno-2-5" id="__codelineno-2-5" name="__codelineno-2-5"></a>    <span class="n">prompt_id</span><span class="p">:</span> <span class="nb">str</span>
+</span><span id="__span-2-6"><a href="#__codelineno-2-6" id="__codelineno-2-6" name="__codelineno-2-6"></a>    <span class="n">content</span><span class="p">:</span> <span class="nb">str</span>
+</span><span id="__span-2-7"><a href="#__codelineno-2-7" id="__codelineno-2-7" name="__codelineno-2-7"></a>    <span class="n">status</span><span class="p">:</span> <span class="n">PromptStatus</span>
+</span><span id="__span-2-8"><a href="#__codelineno-2-8" id="__codelineno-2-8" name="__codelineno-2-8"></a>    <span class="n">metadata</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>
+</span><span id="__span-2-9"><a href="#__codelineno-2-9" id="__codelineno-2-9" name="__codelineno-2-9"></a>    <span class="n">created_at</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span>
+</span></code></pre></div>
 <h3 id="4-background-task-processing">4. <strong>Background Task Processing</strong><a class="headerlink" href="#4-background-task-processing" title="Permanent link">¶</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Asynchronous task execution</span>
-<span class="n">BackgroundTaskScheduler</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="p">[</span><span class="s2">"application.tasks"</span><span class="p">])</span>
-
-<span class="c1"># Redis-backed job queue</span>
-<span class="n">background_job_store</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">"redis_host"</span><span class="p">:</span> <span class="s2">"redis47"</span><span class="p">,</span>
-    <span class="s2">"redis_port"</span><span class="p">:</span> <span class="mi">6379</span><span class="p">,</span>
-    <span class="s2">"redis_db"</span><span class="p">:</span> <span class="mi">0</span>
-<span class="p">}</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a href="#__codelineno-3-1" id="__codelineno-3-1" name="__codelineno-3-1"></a><span class="c1"># Asynchronous task execution</span>
+</span><span id="__span-3-2"><a href="#__codelineno-3-2" id="__codelineno-3-2" name="__codelineno-3-2"></a><span class="n">BackgroundTaskScheduler</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="p">[</span><span class="s2">"application.tasks"</span><span class="p">])</span>
+</span><span id="__span-3-3"><a href="#__codelineno-3-3" id="__codelineno-3-3" name="__codelineno-3-3"></a>
+</span><span id="__span-3-4"><a href="#__codelineno-3-4" id="__codelineno-3-4" name="__codelineno-3-4"></a><span class="c1"># Redis-backed job queue</span>
+</span><span id="__span-3-5"><a href="#__codelineno-3-5" id="__codelineno-3-5" name="__codelineno-3-5"></a><span class="n">background_job_store</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+</span><span id="__span-3-6"><a href="#__codelineno-3-6" id="__codelineno-3-6" name="__codelineno-3-6"></a>    <span class="s2">"redis_host"</span><span class="p">:</span> <span class="s2">"redis47"</span><span class="p">,</span>
+</span><span id="__span-3-7"><a href="#__codelineno-3-7" id="__codelineno-3-7" name="__codelineno-3-7"></a>    <span class="s2">"redis_port"</span><span class="p">:</span> <span class="mi">6379</span><span class="p">,</span>
+</span><span id="__span-3-8"><a href="#__codelineno-3-8" id="__codelineno-3-8" name="__codelineno-3-8"></a>    <span class="s2">"redis_db"</span><span class="p">:</span> <span class="mi">0</span>
+</span><span id="__span-3-9"><a href="#__codelineno-3-9" id="__codelineno-3-9" name="__codelineno-3-9"></a><span class="p">}</span>
+</span></code></pre></div>
 <h3 id="5-cloud-events-integration">5. <strong>Cloud Events Integration</strong><a class="headerlink" href="#5-cloud-events-integration" title="Permanent link">¶</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Event publishing and consumption</span>
-<span class="n">CloudEventIngestor</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="p">[</span><span class="s2">"application.events.integration"</span><span class="p">])</span>
-<span class="n">CloudEventPublisher</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">)</span>
-<span class="n">app</span><span class="o">.</span><span class="n">add_middleware</span><span class="p">(</span><span class="n">CloudEventMiddleware</span><span class="p">,</span> <span class="n">service_provider</span><span class="o">=</span><span class="n">app</span><span class="o">.</span><span class="n">services</span><span class="p">)</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a href="#__codelineno-4-1" id="__codelineno-4-1" name="__codelineno-4-1"></a><span class="c1"># Event publishing and consumption</span>
+</span><span id="__span-4-2"><a href="#__codelineno-4-2" id="__codelineno-4-2" name="__codelineno-4-2"></a><span class="n">CloudEventIngestor</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="p">[</span><span class="s2">"application.events.integration"</span><span class="p">])</span>
+</span><span id="__span-4-3"><a href="#__codelineno-4-3" id="__codelineno-4-3" name="__codelineno-4-3"></a><span class="n">CloudEventPublisher</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">)</span>
+</span><span id="__span-4-4"><a href="#__codelineno-4-4" id="__codelineno-4-4" name="__codelineno-4-4"></a><span class="n">app</span><span class="o">.</span><span class="n">add_middleware</span><span class="p">(</span><span class="n">CloudEventMiddleware</span><span class="p">,</span> <span class="n">service_provider</span><span class="o">=</span><span class="n">app</span><span class="o">.</span><span class="n">services</span><span class="p">)</span>
+</span></code></pre></div>
 <h2 id="configuration-settings">🔧 Configuration &amp; Settings<a class="headerlink" href="#configuration-settings" title="Permanent link">¶</a></h2>
 <h3 id="application-settings">Application Settings<a class="headerlink" href="#application-settings" title="Permanent link">¶</a></h3>
-<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">AiGatewaySettings</span><span class="p">(</span><span class="n">ApplicationSettings</span><span class="p">):</span>
-    <span class="c1"># OAuth2 Configuration</span>
-    <span class="n">jwt_authority</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"http://keycloak47/realms/mozart"</span>
-    <span class="n">jwt_audience</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"ai-gateways"</span>
-    <span class="n">required_scope</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"api"</span>
-
-    <span class="c1"># External Service Settings</span>
-    <span class="n">s3_endpoint</span><span class="p">:</span> <span class="nb">str</span>                    <span class="c1"># MinIO storage</span>
-    <span class="n">connection_strings</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span>  <span class="c1"># Redis, databases</span>
-    <span class="n">mosaic_api_keys</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>         <span class="c1"># API authentication</span>
-
-    <span class="c1"># Background Processing</span>
-    <span class="n">background_job_store</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">int</span><span class="p">]</span>
-    <span class="n">redis_max_connections</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a href="#__codelineno-5-1" id="__codelineno-5-1" name="__codelineno-5-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">AiGatewaySettings</span><span class="p">(</span><span class="n">ApplicationSettings</span><span class="p">):</span>
+</span><span id="__span-5-2"><a href="#__codelineno-5-2" id="__codelineno-5-2" name="__codelineno-5-2"></a>    <span class="c1"># OAuth2 Configuration</span>
+</span><span id="__span-5-3"><a href="#__codelineno-5-3" id="__codelineno-5-3" name="__codelineno-5-3"></a>    <span class="n">jwt_authority</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"http://keycloak47/realms/mozart"</span>
+</span><span id="__span-5-4"><a href="#__codelineno-5-4" id="__codelineno-5-4" name="__codelineno-5-4"></a>    <span class="n">jwt_audience</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"ai-gateways"</span>
+</span><span id="__span-5-5"><a href="#__codelineno-5-5" id="__codelineno-5-5" name="__codelineno-5-5"></a>    <span class="n">required_scope</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"api"</span>
+</span><span id="__span-5-6"><a href="#__codelineno-5-6" id="__codelineno-5-6" name="__codelineno-5-6"></a>
+</span><span id="__span-5-7"><a href="#__codelineno-5-7" id="__codelineno-5-7" name="__codelineno-5-7"></a>    <span class="c1"># External Service Settings</span>
+</span><span id="__span-5-8"><a href="#__codelineno-5-8" id="__codelineno-5-8" name="__codelineno-5-8"></a>    <span class="n">s3_endpoint</span><span class="p">:</span> <span class="nb">str</span>                    <span class="c1"># MinIO storage</span>
+</span><span id="__span-5-9"><a href="#__codelineno-5-9" id="__codelineno-5-9" name="__codelineno-5-9"></a>    <span class="n">connection_strings</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span>  <span class="c1"># Redis, databases</span>
+</span><span id="__span-5-10"><a href="#__codelineno-5-10" id="__codelineno-5-10" name="__codelineno-5-10"></a>    <span class="n">mosaic_api_keys</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>         <span class="c1"># API authentication</span>
+</span><span id="__span-5-11"><a href="#__codelineno-5-11" id="__codelineno-5-11" name="__codelineno-5-11"></a>
+</span><span id="__span-5-12"><a href="#__codelineno-5-12" id="__codelineno-5-12" name="__codelineno-5-12"></a>    <span class="c1"># Background Processing</span>
+</span><span id="__span-5-13"><a href="#__codelineno-5-13" id="__codelineno-5-13" name="__codelineno-5-13"></a>    <span class="n">background_job_store</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">int</span><span class="p">]</span>
+</span><span id="__span-5-14"><a href="#__codelineno-5-14" id="__codelineno-5-14" name="__codelineno-5-14"></a>    <span class="n">redis_max_connections</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span>
+</span></code></pre></div>
 <h3 id="service-registration">Service Registration<a class="headerlink" href="#service-registration" title="Permanent link">¶</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Core framework services</span>
-<span class="n">Mapper</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="n">application_modules</span><span class="p">)</span>
-<span class="n">Mediator</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="n">application_modules</span><span class="p">)</span>
-<span class="n">JsonSerializer</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">)</span>
-
-<span class="c1"># Custom application services</span>
-<span class="n">AsyncStringCacheRepository</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="n">Prompt</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
-<span class="n">BackgroundTaskScheduler</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="p">[</span><span class="s2">"application.tasks"</span><span class="p">])</span>
-<span class="n">MinioStorageManager</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">)</span>
-<span class="n">LocalFileSystemManager</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">)</span>
-
-<span class="c1"># External integrations</span>
-<span class="n">builder</span><span class="o">.</span><span class="n">services</span><span class="o">.</span><span class="n">add_singleton</span><span class="p">(</span><span class="n">AiGatewaySettings</span><span class="p">,</span> <span class="n">singleton</span><span class="o">=</span><span class="n">app_settings</span><span class="p">)</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a href="#__codelineno-6-1" id="__codelineno-6-1" name="__codelineno-6-1"></a><span class="c1"># Core framework services</span>
+</span><span id="__span-6-2"><a href="#__codelineno-6-2" id="__codelineno-6-2" name="__codelineno-6-2"></a><span class="n">Mapper</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="n">application_modules</span><span class="p">)</span>
+</span><span id="__span-6-3"><a href="#__codelineno-6-3" id="__codelineno-6-3" name="__codelineno-6-3"></a><span class="n">Mediator</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="n">application_modules</span><span class="p">)</span>
+</span><span id="__span-6-4"><a href="#__codelineno-6-4" id="__codelineno-6-4" name="__codelineno-6-4"></a><span class="n">JsonSerializer</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">)</span>
+</span><span id="__span-6-5"><a href="#__codelineno-6-5" id="__codelineno-6-5" name="__codelineno-6-5"></a>
+</span><span id="__span-6-6"><a href="#__codelineno-6-6" id="__codelineno-6-6" name="__codelineno-6-6"></a><span class="c1"># Custom application services</span>
+</span><span id="__span-6-7"><a href="#__codelineno-6-7" id="__codelineno-6-7" name="__codelineno-6-7"></a><span class="n">AsyncStringCacheRepository</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="n">Prompt</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
+</span><span id="__span-6-8"><a href="#__codelineno-6-8" id="__codelineno-6-8" name="__codelineno-6-8"></a><span class="n">BackgroundTaskScheduler</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="p">[</span><span class="s2">"application.tasks"</span><span class="p">])</span>
+</span><span id="__span-6-9"><a href="#__codelineno-6-9" id="__codelineno-6-9" name="__codelineno-6-9"></a><span class="n">MinioStorageManager</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">)</span>
+</span><span id="__span-6-10"><a href="#__codelineno-6-10" id="__codelineno-6-10" name="__codelineno-6-10"></a><span class="n">LocalFileSystemManager</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">)</span>
+</span><span id="__span-6-11"><a href="#__codelineno-6-11" id="__codelineno-6-11" name="__codelineno-6-11"></a>
+</span><span id="__span-6-12"><a href="#__codelineno-6-12" id="__codelineno-6-12" name="__codelineno-6-12"></a><span class="c1"># External integrations</span>
+</span><span id="__span-6-13"><a href="#__codelineno-6-13" id="__codelineno-6-13" name="__codelineno-6-13"></a><span class="n">builder</span><span class="o">.</span><span class="n">services</span><span class="o">.</span><span class="n">add_singleton</span><span class="p">(</span><span class="n">AiGatewaySettings</span><span class="p">,</span> <span class="n">singleton</span><span class="o">=</span><span class="n">app_settings</span><span class="p">)</span>
+</span></code></pre></div>
 <h2 id="testing-strategy">🧪 Testing Strategy<a class="headerlink" href="#testing-strategy" title="Permanent link">¶</a></h2>
 <h3 id="unit-tests">Unit Tests<a class="headerlink" href="#unit-tests" title="Permanent link">¶</a></h3>
-<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">TestPromptController</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">setup_method</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">mock_mediator</span> <span class="o">=</span> <span class="n">Mock</span><span class="p">(</span><span class="n">spec</span><span class="o">=</span><span class="n">Mediator</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">mock_mapper</span> <span class="o">=</span> <span class="n">Mock</span><span class="p">(</span><span class="n">spec</span><span class="o">=</span><span class="n">Mapper</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">controller</span> <span class="o">=</span> <span class="n">PromptController</span><span class="p">(</span>
-            <span class="n">service_provider</span><span class="o">=</span><span class="n">Mock</span><span class="p">(),</span>
-            <span class="n">mapper</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mock_mapper</span><span class="p">,</span>
-            <span class="n">mediator</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mock_mediator</span>
-        <span class="p">)</span>
-
-    <span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">asyncio</span>
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">test_create_prompt_success</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="c1"># Test successful prompt creation</span>
-        <span class="n">command_dto</span> <span class="o">=</span> <span class="n">CreateNewItemPromptCommandDto</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="s2">"test"</span><span class="p">)</span>
-        <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">controller</span><span class="o">.</span><span class="n">create_new_item_prompt</span><span class="p">(</span><span class="n">command_dto</span><span class="p">,</span> <span class="s2">"valid-key"</span><span class="p">)</span>
-
-        <span class="k">assert</span> <span class="n">result</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="s2">"created"</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">mock_mediator</span><span class="o">.</span><span class="n">execute_async</span><span class="o">.</span><span class="n">assert_called_once</span><span class="p">()</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-7-1"><a href="#__codelineno-7-1" id="__codelineno-7-1" name="__codelineno-7-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">TestPromptController</span><span class="p">:</span>
+</span><span id="__span-7-2"><a href="#__codelineno-7-2" id="__codelineno-7-2" name="__codelineno-7-2"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">setup_method</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="__span-7-3"><a href="#__codelineno-7-3" id="__codelineno-7-3" name="__codelineno-7-3"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">mock_mediator</span> <span class="o">=</span> <span class="n">Mock</span><span class="p">(</span><span class="n">spec</span><span class="o">=</span><span class="n">Mediator</span><span class="p">)</span>
+</span><span id="__span-7-4"><a href="#__codelineno-7-4" id="__codelineno-7-4" name="__codelineno-7-4"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">mock_mapper</span> <span class="o">=</span> <span class="n">Mock</span><span class="p">(</span><span class="n">spec</span><span class="o">=</span><span class="n">Mapper</span><span class="p">)</span>
+</span><span id="__span-7-5"><a href="#__codelineno-7-5" id="__codelineno-7-5" name="__codelineno-7-5"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">controller</span> <span class="o">=</span> <span class="n">PromptController</span><span class="p">(</span>
+</span><span id="__span-7-6"><a href="#__codelineno-7-6" id="__codelineno-7-6" name="__codelineno-7-6"></a>            <span class="n">service_provider</span><span class="o">=</span><span class="n">Mock</span><span class="p">(),</span>
+</span><span id="__span-7-7"><a href="#__codelineno-7-7" id="__codelineno-7-7" name="__codelineno-7-7"></a>            <span class="n">mapper</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mock_mapper</span><span class="p">,</span>
+</span><span id="__span-7-8"><a href="#__codelineno-7-8" id="__codelineno-7-8" name="__codelineno-7-8"></a>            <span class="n">mediator</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mock_mediator</span>
+</span><span id="__span-7-9"><a href="#__codelineno-7-9" id="__codelineno-7-9" name="__codelineno-7-9"></a>        <span class="p">)</span>
+</span><span id="__span-7-10"><a href="#__codelineno-7-10" id="__codelineno-7-10" name="__codelineno-7-10"></a>
+</span><span id="__span-7-11"><a href="#__codelineno-7-11" id="__codelineno-7-11" name="__codelineno-7-11"></a>    <span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">asyncio</span>
+</span><span id="__span-7-12"><a href="#__codelineno-7-12" id="__codelineno-7-12" name="__codelineno-7-12"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">test_create_prompt_success</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="__span-7-13"><a href="#__codelineno-7-13" id="__codelineno-7-13" name="__codelineno-7-13"></a>        <span class="c1"># Test successful prompt creation</span>
+</span><span id="__span-7-14"><a href="#__codelineno-7-14" id="__codelineno-7-14" name="__codelineno-7-14"></a>        <span class="n">command_dto</span> <span class="o">=</span> <span class="n">CreateNewItemPromptCommandDto</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="s2">"test"</span><span class="p">)</span>
+</span><span id="__span-7-15"><a href="#__codelineno-7-15" id="__codelineno-7-15" name="__codelineno-7-15"></a>        <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">controller</span><span class="o">.</span><span class="n">create_new_item_prompt</span><span class="p">(</span><span class="n">command_dto</span><span class="p">,</span> <span class="s2">"valid-key"</span><span class="p">)</span>
+</span><span id="__span-7-16"><a href="#__codelineno-7-16" id="__codelineno-7-16" name="__codelineno-7-16"></a>
+</span><span id="__span-7-17"><a href="#__codelineno-7-17" id="__codelineno-7-17" name="__codelineno-7-17"></a>        <span class="k">assert</span> <span class="n">result</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="s2">"created"</span>
+</span><span id="__span-7-18"><a href="#__codelineno-7-18" id="__codelineno-7-18" name="__codelineno-7-18"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">mock_mediator</span><span class="o">.</span><span class="n">execute_async</span><span class="o">.</span><span class="n">assert_called_once</span><span class="p">()</span>
+</span></code></pre></div>
 <h3 id="integration-tests">Integration Tests<a class="headerlink" href="#integration-tests" title="Permanent link">¶</a></h3>
-<div class="highlight"><pre><span></span><code><span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">integration</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">TestApiGatewayIntegration</span><span class="p">:</span>
-    <span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">asyncio</span>
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">test_full_prompt_workflow</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_client</span><span class="p">):</span>
-        <span class="c1"># Test complete workflow from API to external services</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="n">test_client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
-            <span class="s2">"/api/prompts/item"</span><span class="p">,</span>
-            <span class="n">json</span><span class="o">=</span><span class="p">{</span><span class="s2">"content"</span><span class="p">:</span> <span class="s2">"test prompt"</span><span class="p">},</span>
-            <span class="n">headers</span><span class="o">=</span><span class="p">{</span><span class="s2">"Authorization"</span><span class="p">:</span> <span class="s2">"Bearer valid-token"</span><span class="p">}</span>
-        <span class="p">)</span>
-
-        <span class="k">assert</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">201</span>
-        <span class="k">assert</span> <span class="s2">"id"</span> <span class="ow">in</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-8-1"><a href="#__codelineno-8-1" id="__codelineno-8-1" name="__codelineno-8-1"></a><span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">integration</span>
+</span><span id="__span-8-2"><a href="#__codelineno-8-2" id="__codelineno-8-2" name="__codelineno-8-2"></a><span class="k">class</span><span class="w"> </span><span class="nc">TestApiGatewayIntegration</span><span class="p">:</span>
+</span><span id="__span-8-3"><a href="#__codelineno-8-3" id="__codelineno-8-3" name="__codelineno-8-3"></a>    <span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">asyncio</span>
+</span><span id="__span-8-4"><a href="#__codelineno-8-4" id="__codelineno-8-4" name="__codelineno-8-4"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">test_full_prompt_workflow</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_client</span><span class="p">):</span>
+</span><span id="__span-8-5"><a href="#__codelineno-8-5" id="__codelineno-8-5" name="__codelineno-8-5"></a>        <span class="c1"># Test complete workflow from API to external services</span>
+</span><span id="__span-8-6"><a href="#__codelineno-8-6" id="__codelineno-8-6" name="__codelineno-8-6"></a>        <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="n">test_client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
+</span><span id="__span-8-7"><a href="#__codelineno-8-7" id="__codelineno-8-7" name="__codelineno-8-7"></a>            <span class="s2">"/api/prompts/item"</span><span class="p">,</span>
+</span><span id="__span-8-8"><a href="#__codelineno-8-8" id="__codelineno-8-8" name="__codelineno-8-8"></a>            <span class="n">json</span><span class="o">=</span><span class="p">{</span><span class="s2">"content"</span><span class="p">:</span> <span class="s2">"test prompt"</span><span class="p">},</span>
+</span><span id="__span-8-9"><a href="#__codelineno-8-9" id="__codelineno-8-9" name="__codelineno-8-9"></a>            <span class="n">headers</span><span class="o">=</span><span class="p">{</span><span class="s2">"Authorization"</span><span class="p">:</span> <span class="s2">"Bearer valid-token"</span><span class="p">}</span>
+</span><span id="__span-8-10"><a href="#__codelineno-8-10" id="__codelineno-8-10" name="__codelineno-8-10"></a>        <span class="p">)</span>
+</span><span id="__span-8-11"><a href="#__codelineno-8-11" id="__codelineno-8-11" name="__codelineno-8-11"></a>
+</span><span id="__span-8-12"><a href="#__codelineno-8-12" id="__codelineno-8-12" name="__codelineno-8-12"></a>        <span class="k">assert</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">201</span>
+</span><span id="__span-8-13"><a href="#__codelineno-8-13" id="__codelineno-8-13" name="__codelineno-8-13"></a>        <span class="k">assert</span> <span class="s2">"id"</span> <span class="ow">in</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+</span></code></pre></div>
 <h2 id="implementation-details">📚 Implementation Details<a class="headerlink" href="#implementation-details" title="Permanent link">¶</a></h2>
 <h3 id="1-controller-layer-apicontrollers">1. <strong>Controller Layer</strong> (<code>api/controllers/</code>)<a class="headerlink" href="#1-controller-layer-apicontrollers" title="Permanent link">¶</a></h3>
 <ul>
@@ -1816,81 +1816,81 @@ processing, and cloud event handling.</p>
 </ul>
 <h2 id="background-processing">🔄 Background Processing<a class="headerlink" href="#background-processing" title="Permanent link">¶</a></h2>
 <p>The API Gateway demonstrates advanced background processing patterns:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Task scheduling configuration</span>
-<span class="n">BackgroundTaskScheduler</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="p">[</span><span class="s2">"application.tasks"</span><span class="p">])</span>
-
-<span class="c1"># Redis-backed job store</span>
-<span class="n">builder</span><span class="o">.</span><span class="n">services</span><span class="o">.</span><span class="n">add_singleton</span><span class="p">(</span><span class="n">AiGatewaySettings</span><span class="p">,</span> <span class="n">singleton</span><span class="o">=</span><span class="n">app_settings</span><span class="p">)</span>
-
-<span class="c1"># Asynchronous task execution</span>
-<span class="nd">@task_handler</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">ProcessPromptTask</span><span class="p">:</span>
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">execute_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prompt_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-        <span class="c1"># Long-running prompt processing</span>
-        <span class="n">prompt</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">prompt_service</span><span class="o">.</span><span class="n">get_by_id</span><span class="p">(</span><span class="n">prompt_id</span><span class="p">)</span>
-        <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">genai_client</span><span class="o">.</span><span class="n">process_prompt</span><span class="p">(</span><span class="n">prompt</span><span class="p">)</span>
-        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">storage_service</span><span class="o">.</span><span class="n">store_result</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-9-1"><a href="#__codelineno-9-1" id="__codelineno-9-1" name="__codelineno-9-1"></a><span class="c1"># Task scheduling configuration</span>
+</span><span id="__span-9-2"><a href="#__codelineno-9-2" id="__codelineno-9-2" name="__codelineno-9-2"></a><span class="n">BackgroundTaskScheduler</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="p">[</span><span class="s2">"application.tasks"</span><span class="p">])</span>
+</span><span id="__span-9-3"><a href="#__codelineno-9-3" id="__codelineno-9-3" name="__codelineno-9-3"></a>
+</span><span id="__span-9-4"><a href="#__codelineno-9-4" id="__codelineno-9-4" name="__codelineno-9-4"></a><span class="c1"># Redis-backed job store</span>
+</span><span id="__span-9-5"><a href="#__codelineno-9-5" id="__codelineno-9-5" name="__codelineno-9-5"></a><span class="n">builder</span><span class="o">.</span><span class="n">services</span><span class="o">.</span><span class="n">add_singleton</span><span class="p">(</span><span class="n">AiGatewaySettings</span><span class="p">,</span> <span class="n">singleton</span><span class="o">=</span><span class="n">app_settings</span><span class="p">)</span>
+</span><span id="__span-9-6"><a href="#__codelineno-9-6" id="__codelineno-9-6" name="__codelineno-9-6"></a>
+</span><span id="__span-9-7"><a href="#__codelineno-9-7" id="__codelineno-9-7" name="__codelineno-9-7"></a><span class="c1"># Asynchronous task execution</span>
+</span><span id="__span-9-8"><a href="#__codelineno-9-8" id="__codelineno-9-8" name="__codelineno-9-8"></a><span class="nd">@task_handler</span>
+</span><span id="__span-9-9"><a href="#__codelineno-9-9" id="__codelineno-9-9" name="__codelineno-9-9"></a><span class="k">class</span><span class="w"> </span><span class="nc">ProcessPromptTask</span><span class="p">:</span>
+</span><span id="__span-9-10"><a href="#__codelineno-9-10" id="__codelineno-9-10" name="__codelineno-9-10"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">execute_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prompt_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+</span><span id="__span-9-11"><a href="#__codelineno-9-11" id="__codelineno-9-11" name="__codelineno-9-11"></a>        <span class="c1"># Long-running prompt processing</span>
+</span><span id="__span-9-12"><a href="#__codelineno-9-12" id="__codelineno-9-12" name="__codelineno-9-12"></a>        <span class="n">prompt</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">prompt_service</span><span class="o">.</span><span class="n">get_by_id</span><span class="p">(</span><span class="n">prompt_id</span><span class="p">)</span>
+</span><span id="__span-9-13"><a href="#__codelineno-9-13" id="__codelineno-9-13" name="__codelineno-9-13"></a>        <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">genai_client</span><span class="o">.</span><span class="n">process_prompt</span><span class="p">(</span><span class="n">prompt</span><span class="p">)</span>
+</span><span id="__span-9-14"><a href="#__codelineno-9-14" id="__codelineno-9-14" name="__codelineno-9-14"></a>        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">storage_service</span><span class="o">.</span><span class="n">store_result</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+</span></code></pre></div>
 <h2 id="external-service-integration">🌐 External Service Integration<a class="headerlink" href="#external-service-integration" title="Permanent link">¶</a></h2>
 <h3 id="minio-object-storage">MinIO Object Storage<a class="headerlink" href="#minio-object-storage" title="Permanent link">¶</a></h3>
-<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">MinioStorageManager</span><span class="p">:</span>
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">upload_file_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bucket</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="c1"># S3-compatible object storage</span>
-        <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">put_object</span><span class="p">(</span><span class="n">bucket</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-10-1"><a href="#__codelineno-10-1" id="__codelineno-10-1" name="__codelineno-10-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">MinioStorageManager</span><span class="p">:</span>
+</span><span id="__span-10-2"><a href="#__codelineno-10-2" id="__codelineno-10-2" name="__codelineno-10-2"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">upload_file_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bucket</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</span><span id="__span-10-3"><a href="#__codelineno-10-3" id="__codelineno-10-3" name="__codelineno-10-3"></a>        <span class="c1"># S3-compatible object storage</span>
+</span><span id="__span-10-4"><a href="#__codelineno-10-4" id="__codelineno-10-4" name="__codelineno-10-4"></a>        <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">put_object</span><span class="p">(</span><span class="n">bucket</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+</span></code></pre></div>
 <h3 id="redis-caching">Redis Caching<a class="headerlink" href="#redis-caching" title="Permanent link">¶</a></h3>
-<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">AsyncStringCacheRepository</span><span class="p">:</span>
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-        <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">redis_client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
-
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">set_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">ttl</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">redis_client</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">ex</span><span class="o">=</span><span class="n">ttl</span><span class="p">)</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-11-1"><a href="#__codelineno-11-1" id="__codelineno-11-1" name="__codelineno-11-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">AsyncStringCacheRepository</span><span class="p">:</span>
+</span><span id="__span-11-2"><a href="#__codelineno-11-2" id="__codelineno-11-2" name="__codelineno-11-2"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+</span><span id="__span-11-3"><a href="#__codelineno-11-3" id="__codelineno-11-3" name="__codelineno-11-3"></a>        <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">redis_client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+</span><span id="__span-11-4"><a href="#__codelineno-11-4" id="__codelineno-11-4" name="__codelineno-11-4"></a>
+</span><span id="__span-11-5"><a href="#__codelineno-11-5" id="__codelineno-11-5" name="__codelineno-11-5"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">set_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">ttl</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+</span><span id="__span-11-6"><a href="#__codelineno-11-6" id="__codelineno-11-6" name="__codelineno-11-6"></a>        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">redis_client</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">ex</span><span class="o">=</span><span class="n">ttl</span><span class="p">)</span>
+</span></code></pre></div>
 <h3 id="external-api-integration">External API Integration<a class="headerlink" href="#external-api-integration" title="Permanent link">¶</a></h3>
-<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">MosaicApiClient</span><span class="p">:</span>
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">submit_prompt_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prompt</span><span class="p">:</span> <span class="n">PromptDto</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PromptResponseDto</span><span class="p">:</span>
-        <span class="c1"># OAuth2 authenticated API calls</span>
-        <span class="n">token</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_access_token</span><span class="p">()</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">http_client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
-            <span class="s2">"/api/prompts"</span><span class="p">,</span>
-            <span class="n">json</span><span class="o">=</span><span class="n">prompt</span><span class="o">.</span><span class="n">dict</span><span class="p">(),</span>
-            <span class="n">headers</span><span class="o">=</span><span class="p">{</span><span class="s2">"Authorization"</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"Bearer </span><span class="si">{</span><span class="n">token</span><span class="si">}</span><span class="s2">"</span><span class="p">}</span>
-        <span class="p">)</span>
-        <span class="k">return</span> <span class="n">PromptResponseDto</span><span class="o">.</span><span class="n">parse_obj</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">())</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-12-1"><a href="#__codelineno-12-1" id="__codelineno-12-1" name="__codelineno-12-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">MosaicApiClient</span><span class="p">:</span>
+</span><span id="__span-12-2"><a href="#__codelineno-12-2" id="__codelineno-12-2" name="__codelineno-12-2"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">submit_prompt_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prompt</span><span class="p">:</span> <span class="n">PromptDto</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PromptResponseDto</span><span class="p">:</span>
+</span><span id="__span-12-3"><a href="#__codelineno-12-3" id="__codelineno-12-3" name="__codelineno-12-3"></a>        <span class="c1"># OAuth2 authenticated API calls</span>
+</span><span id="__span-12-4"><a href="#__codelineno-12-4" id="__codelineno-12-4" name="__codelineno-12-4"></a>        <span class="n">token</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_access_token</span><span class="p">()</span>
+</span><span id="__span-12-5"><a href="#__codelineno-12-5" id="__codelineno-12-5" name="__codelineno-12-5"></a>        <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">http_client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
+</span><span id="__span-12-6"><a href="#__codelineno-12-6" id="__codelineno-12-6" name="__codelineno-12-6"></a>            <span class="s2">"/api/prompts"</span><span class="p">,</span>
+</span><span id="__span-12-7"><a href="#__codelineno-12-7" id="__codelineno-12-7" name="__codelineno-12-7"></a>            <span class="n">json</span><span class="o">=</span><span class="n">prompt</span><span class="o">.</span><span class="n">dict</span><span class="p">(),</span>
+</span><span id="__span-12-8"><a href="#__codelineno-12-8" id="__codelineno-12-8" name="__codelineno-12-8"></a>            <span class="n">headers</span><span class="o">=</span><span class="p">{</span><span class="s2">"Authorization"</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"Bearer </span><span class="si">{</span><span class="n">token</span><span class="si">}</span><span class="s2">"</span><span class="p">}</span>
+</span><span id="__span-12-9"><a href="#__codelineno-12-9" id="__codelineno-12-9" name="__codelineno-12-9"></a>        <span class="p">)</span>
+</span><span id="__span-12-10"><a href="#__codelineno-12-10" id="__codelineno-12-10" name="__codelineno-12-10"></a>        <span class="k">return</span> <span class="n">PromptResponseDto</span><span class="o">.</span><span class="n">parse_obj</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">())</span>
+</span></code></pre></div>
 <h2 id="getting-started">🚀 Getting Started<a class="headerlink" href="#getting-started" title="Permanent link">¶</a></h2>
 <h3 id="1-prerequisites">1. <strong>Prerequisites</strong><a class="headerlink" href="#1-prerequisites" title="Permanent link">¶</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Install dependencies</span>
-pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
-
-<span class="c1"># Configure external services</span>
-docker-compose<span class="w"> </span>up<span class="w"> </span>-d<span class="w"> </span>redis<span class="w"> </span>keycloak<span class="w"> </span>minio
-</code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a href="#__codelineno-13-1" id="__codelineno-13-1" name="__codelineno-13-1"></a><span class="c1"># Install dependencies</span>
+</span><span id="__span-13-2"><a href="#__codelineno-13-2" id="__codelineno-13-2" name="__codelineno-13-2"></a>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
+</span><span id="__span-13-3"><a href="#__codelineno-13-3" id="__codelineno-13-3" name="__codelineno-13-3"></a>
+</span><span id="__span-13-4"><a href="#__codelineno-13-4" id="__codelineno-13-4" name="__codelineno-13-4"></a><span class="c1"># Configure external services</span>
+</span><span id="__span-13-5"><a href="#__codelineno-13-5" id="__codelineno-13-5" name="__codelineno-13-5"></a>docker-compose<span class="w"> </span>up<span class="w"> </span>-d<span class="w"> </span>redis<span class="w"> </span>keycloak<span class="w"> </span>minio
+</span></code></pre></div>
 <h3 id="2-configuration">2. <strong>Configuration</strong><a class="headerlink" href="#2-configuration" title="Permanent link">¶</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Set environment variables</span>
-<span class="nb">export</span><span class="w"> </span><span class="nv">JWT_AUTHORITY</span><span class="o">=</span><span class="s2">"http://localhost:8080/realms/mozart"</span>
-<span class="nb">export</span><span class="w"> </span><span class="nv">S3_ENDPOINT</span><span class="o">=</span><span class="s2">"http://localhost:9000"</span>
-<span class="nb">export</span><span class="w"> </span><span class="nv">REDIS_URL</span><span class="o">=</span><span class="s2">"redis://localhost:6379"</span>
-</code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a href="#__codelineno-14-1" id="__codelineno-14-1" name="__codelineno-14-1"></a><span class="c1"># Set environment variables</span>
+</span><span id="__span-14-2"><a href="#__codelineno-14-2" id="__codelineno-14-2" name="__codelineno-14-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">JWT_AUTHORITY</span><span class="o">=</span><span class="s2">"http://localhost:8080/realms/mozart"</span>
+</span><span id="__span-14-3"><a href="#__codelineno-14-3" id="__codelineno-14-3" name="__codelineno-14-3"></a><span class="nb">export</span><span class="w"> </span><span class="nv">S3_ENDPOINT</span><span class="o">=</span><span class="s2">"http://localhost:9000"</span>
+</span><span id="__span-14-4"><a href="#__codelineno-14-4" id="__codelineno-14-4" name="__codelineno-14-4"></a><span class="nb">export</span><span class="w"> </span><span class="nv">REDIS_URL</span><span class="o">=</span><span class="s2">"redis://localhost:6379"</span>
+</span></code></pre></div>
 <h3 id="3-run-the-application">3. <strong>Run the Application</strong><a class="headerlink" href="#3-run-the-application" title="Permanent link">¶</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Start the API Gateway</span>
-python<span class="w"> </span>samples/api-gateway/main.py
-
-<span class="c1"># Access Swagger UI</span>
-open<span class="w"> </span>http://localhost:8000/docs
-</code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-15-1"><a href="#__codelineno-15-1" id="__codelineno-15-1" name="__codelineno-15-1"></a><span class="c1"># Start the API Gateway</span>
+</span><span id="__span-15-2"><a href="#__codelineno-15-2" id="__codelineno-15-2" name="__codelineno-15-2"></a>python<span class="w"> </span>samples/api-gateway/main.py
+</span><span id="__span-15-3"><a href="#__codelineno-15-3" id="__codelineno-15-3" name="__codelineno-15-3"></a>
+</span><span id="__span-15-4"><a href="#__codelineno-15-4" id="__codelineno-15-4" name="__codelineno-15-4"></a><span class="c1"># Access Swagger UI</span>
+</span><span id="__span-15-5"><a href="#__codelineno-15-5" id="__codelineno-15-5" name="__codelineno-15-5"></a>open<span class="w"> </span>http://localhost:8000/docs
+</span></code></pre></div>
 <h3 id="4-test-the-api">4. <strong>Test the API</strong><a class="headerlink" href="#4-test-the-api" title="Permanent link">¶</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Get access token from Keycloak</span>
-curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://localhost:8080/realms/mozart/protocol/openid-connect/token<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/x-www-form-urlencoded"</span><span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-d<span class="w"> </span><span class="s2">"grant_type=client_credentials&amp;client_id=ai-gateway&amp;client_secret=secret"</span>
-
-<span class="c1"># Call protected endpoint</span>
-curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://localhost:8000/api/prompts/item<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-H<span class="w"> </span><span class="s2">"Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">"</span><span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/json"</span><span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-d<span class="w"> </span><span class="s1">'{"content": "Generate a sample prompt"}'</span>
-</code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-16-1"><a href="#__codelineno-16-1" id="__codelineno-16-1" name="__codelineno-16-1"></a><span class="c1"># Get access token from Keycloak</span>
+</span><span id="__span-16-2"><a href="#__codelineno-16-2" id="__codelineno-16-2" name="__codelineno-16-2"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://localhost:8080/realms/mozart/protocol/openid-connect/token<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-16-3"><a href="#__codelineno-16-3" id="__codelineno-16-3" name="__codelineno-16-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/x-www-form-urlencoded"</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-16-4"><a href="#__codelineno-16-4" id="__codelineno-16-4" name="__codelineno-16-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">"grant_type=client_credentials&amp;client_id=ai-gateway&amp;client_secret=secret"</span>
+</span><span id="__span-16-5"><a href="#__codelineno-16-5" id="__codelineno-16-5" name="__codelineno-16-5"></a>
+</span><span id="__span-16-6"><a href="#__codelineno-16-6" id="__codelineno-16-6" name="__codelineno-16-6"></a><span class="c1"># Call protected endpoint</span>
+</span><span id="__span-16-7"><a href="#__codelineno-16-7" id="__codelineno-16-7" name="__codelineno-16-7"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://localhost:8000/api/prompts/item<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-16-8"><a href="#__codelineno-16-8" id="__codelineno-16-8" name="__codelineno-16-8"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">"</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-16-9"><a href="#__codelineno-16-9" id="__codelineno-16-9" name="__codelineno-16-9"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/json"</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-16-10"><a href="#__codelineno-16-10" id="__codelineno-16-10" name="__codelineno-16-10"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">'{"content": "Generate a sample prompt"}'</span>
+</span></code></pre></div>
 <h2 id="related-documentation">🔗 Related Documentation<a class="headerlink" href="#related-documentation" title="Permanent link">¶</a></h2>
 <ul>
 <li><a href="../../patterns/cqrs/">CQRS &amp; Mediation</a> - Command/Query patterns</li>
@@ -1940,145 +1940,145 @@ curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </spa
 </table>
 <h3 id="domain-complexity">Domain Complexity<a class="headerlink" href="#domain-complexity" title="Permanent link">¶</a></h3>
 <h4 id="api-gateway-integration-focused">API Gateway - <strong>Integration-Focused</strong><a class="headerlink" href="#api-gateway-integration-focused" title="Permanent link">¶</a></h4>
-<div class="highlight"><pre><span></span><code><span class="c1"># Simple domain model focused on orchestration</span>
-<span class="nd">@dataclass</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">PromptResponse</span><span class="p">:</span>
-    <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">prompt_id</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">content</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">status</span><span class="p">:</span> <span class="n">PromptStatus</span>
-    <span class="n">metadata</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-17-1"><a href="#__codelineno-17-1" id="__codelineno-17-1" name="__codelineno-17-1"></a><span class="c1"># Simple domain model focused on orchestration</span>
+</span><span id="__span-17-2"><a href="#__codelineno-17-2" id="__codelineno-17-2" name="__codelineno-17-2"></a><span class="nd">@dataclass</span>
+</span><span id="__span-17-3"><a href="#__codelineno-17-3" id="__codelineno-17-3" name="__codelineno-17-3"></a><span class="k">class</span><span class="w"> </span><span class="nc">PromptResponse</span><span class="p">:</span>
+</span><span id="__span-17-4"><a href="#__codelineno-17-4" id="__codelineno-17-4" name="__codelineno-17-4"></a>    <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span>
+</span><span id="__span-17-5"><a href="#__codelineno-17-5" id="__codelineno-17-5" name="__codelineno-17-5"></a>    <span class="n">prompt_id</span><span class="p">:</span> <span class="nb">str</span>
+</span><span id="__span-17-6"><a href="#__codelineno-17-6" id="__codelineno-17-6" name="__codelineno-17-6"></a>    <span class="n">content</span><span class="p">:</span> <span class="nb">str</span>
+</span><span id="__span-17-7"><a href="#__codelineno-17-7" id="__codelineno-17-7" name="__codelineno-17-7"></a>    <span class="n">status</span><span class="p">:</span> <span class="n">PromptStatus</span>
+</span><span id="__span-17-8"><a href="#__codelineno-17-8" id="__codelineno-17-8" name="__codelineno-17-8"></a>    <span class="n">metadata</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>
+</span></code></pre></div>
 <h4 id="openbank-rich-domain-model">OpenBank - <strong>Rich Domain Model</strong><a class="headerlink" href="#openbank-rich-domain-model" title="Permanent link">¶</a></h4>
-<div class="highlight"><pre><span></span><code><span class="c1"># Complex aggregate with business rules</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">BankAccountV1</span><span class="p">(</span><span class="n">AggregateRoot</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">record_transaction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">amount</span><span class="p">:</span> <span class="n">Decimal</span><span class="p">,</span> <span class="n">transaction_type</span><span class="p">:</span> <span class="n">BankTransactionTypeV1</span><span class="p">):</span>
-        <span class="c1"># Complex business logic and invariants</span>
-        <span class="k">if</span> <span class="n">transaction_type</span> <span class="o">==</span> <span class="n">BankTransactionTypeV1</span><span class="o">.</span><span class="n">DEBIT</span><span class="p">:</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">balance</span> <span class="o">+</span> <span class="n">amount</span> <span class="o">&lt;</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">overdraft_limit</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="n">InsufficientFundsException</span><span class="p">()</span>
-
-        <span class="c1"># Event sourcing</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">raise_event</span><span class="p">(</span><span class="n">BankAccountTransactionRecordedDomainEventV1</span><span class="p">(</span><span class="o">...</span><span class="p">))</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-18-1"><a href="#__codelineno-18-1" id="__codelineno-18-1" name="__codelineno-18-1"></a><span class="c1"># Complex aggregate with business rules</span>
+</span><span id="__span-18-2"><a href="#__codelineno-18-2" id="__codelineno-18-2" name="__codelineno-18-2"></a><span class="k">class</span><span class="w"> </span><span class="nc">BankAccountV1</span><span class="p">(</span><span class="n">AggregateRoot</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
+</span><span id="__span-18-3"><a href="#__codelineno-18-3" id="__codelineno-18-3" name="__codelineno-18-3"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">record_transaction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">amount</span><span class="p">:</span> <span class="n">Decimal</span><span class="p">,</span> <span class="n">transaction_type</span><span class="p">:</span> <span class="n">BankTransactionTypeV1</span><span class="p">):</span>
+</span><span id="__span-18-4"><a href="#__codelineno-18-4" id="__codelineno-18-4" name="__codelineno-18-4"></a>        <span class="c1"># Complex business logic and invariants</span>
+</span><span id="__span-18-5"><a href="#__codelineno-18-5" id="__codelineno-18-5" name="__codelineno-18-5"></a>        <span class="k">if</span> <span class="n">transaction_type</span> <span class="o">==</span> <span class="n">BankTransactionTypeV1</span><span class="o">.</span><span class="n">DEBIT</span><span class="p">:</span>
+</span><span id="__span-18-6"><a href="#__codelineno-18-6" id="__codelineno-18-6" name="__codelineno-18-6"></a>            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">balance</span> <span class="o">+</span> <span class="n">amount</span> <span class="o">&lt;</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">overdraft_limit</span><span class="p">:</span>
+</span><span id="__span-18-7"><a href="#__codelineno-18-7" id="__codelineno-18-7" name="__codelineno-18-7"></a>                <span class="k">raise</span> <span class="n">InsufficientFundsException</span><span class="p">()</span>
+</span><span id="__span-18-8"><a href="#__codelineno-18-8" id="__codelineno-18-8" name="__codelineno-18-8"></a>
+</span><span id="__span-18-9"><a href="#__codelineno-18-9" id="__codelineno-18-9" name="__codelineno-18-9"></a>        <span class="c1"># Event sourcing</span>
+</span><span id="__span-18-10"><a href="#__codelineno-18-10" id="__codelineno-18-10" name="__codelineno-18-10"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">raise_event</span><span class="p">(</span><span class="n">BankAccountTransactionRecordedDomainEventV1</span><span class="p">(</span><span class="o">...</span><span class="p">))</span>
+</span></code></pre></div>
 <h3 id="data-persistence-strategy">Data Persistence Strategy<a class="headerlink" href="#data-persistence-strategy" title="Permanent link">¶</a></h3>
 <h4 id="api-gateway-multi-store-architecture">API Gateway - <strong>Multi-Store Architecture</strong><a class="headerlink" href="#api-gateway-multi-store-architecture" title="Permanent link">¶</a></h4>
-<div class="highlight"><pre><span></span><code><span class="c1"># Multiple specialized storage systems</span>
-<span class="n">AsyncStringCacheRepository</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="n">Prompt</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>  <span class="c1"># Redis caching</span>
-<span class="n">MinioStorageManager</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">)</span>                      <span class="c1"># Object storage</span>
-<span class="n">BackgroundTaskScheduler</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">)</span>                 <span class="c1"># Job queue</span>
-
-<span class="c1"># Standard CRUD operations</span>
-<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">save_prompt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prompt</span><span class="p">:</span> <span class="n">Prompt</span><span class="p">):</span>
-    <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">cache_repository</span><span class="o">.</span><span class="n">set_async</span><span class="p">(</span><span class="n">prompt</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">prompt</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
-    <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">storage_manager</span><span class="o">.</span><span class="n">upload_async</span><span class="p">(</span><span class="n">prompt</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">prompt</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-19-1"><a href="#__codelineno-19-1" id="__codelineno-19-1" name="__codelineno-19-1"></a><span class="c1"># Multiple specialized storage systems</span>
+</span><span id="__span-19-2"><a href="#__codelineno-19-2" id="__codelineno-19-2" name="__codelineno-19-2"></a><span class="n">AsyncStringCacheRepository</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="n">Prompt</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>  <span class="c1"># Redis caching</span>
+</span><span id="__span-19-3"><a href="#__codelineno-19-3" id="__codelineno-19-3" name="__codelineno-19-3"></a><span class="n">MinioStorageManager</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">)</span>                      <span class="c1"># Object storage</span>
+</span><span id="__span-19-4"><a href="#__codelineno-19-4" id="__codelineno-19-4" name="__codelineno-19-4"></a><span class="n">BackgroundTaskScheduler</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">)</span>                 <span class="c1"># Job queue</span>
+</span><span id="__span-19-5"><a href="#__codelineno-19-5" id="__codelineno-19-5" name="__codelineno-19-5"></a>
+</span><span id="__span-19-6"><a href="#__codelineno-19-6" id="__codelineno-19-6" name="__codelineno-19-6"></a><span class="c1"># Standard CRUD operations</span>
+</span><span id="__span-19-7"><a href="#__codelineno-19-7" id="__codelineno-19-7" name="__codelineno-19-7"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">save_prompt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prompt</span><span class="p">:</span> <span class="n">Prompt</span><span class="p">):</span>
+</span><span id="__span-19-8"><a href="#__codelineno-19-8" id="__codelineno-19-8" name="__codelineno-19-8"></a>    <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">cache_repository</span><span class="o">.</span><span class="n">set_async</span><span class="p">(</span><span class="n">prompt</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">prompt</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+</span><span id="__span-19-9"><a href="#__codelineno-19-9" id="__codelineno-19-9" name="__codelineno-19-9"></a>    <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">storage_manager</span><span class="o">.</span><span class="n">upload_async</span><span class="p">(</span><span class="n">prompt</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">prompt</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+</span></code></pre></div>
 <h4 id="openbank-event-sourcing">OpenBank - <strong>Event Sourcing</strong><a class="headerlink" href="#openbank-event-sourcing" title="Permanent link">¶</a></h4>
-<div class="highlight"><pre><span></span><code><span class="c1"># Event-driven persistence</span>
-<span class="n">ESEventStore</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="n">EventStoreOptions</span><span class="p">(</span><span class="n">database_name</span><span class="p">,</span> <span class="n">consumer_group</span><span class="p">))</span>
-
-<span class="c1"># Write model: Event sourcing</span>
-<span class="n">DataAccessLayer</span><span class="o">.</span><span class="n">WriteModel</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span>
-    <span class="n">builder</span><span class="p">,</span>
-    <span class="p">[</span><span class="s2">"samples.openbank.domain.models"</span><span class="p">],</span>
-    <span class="k">lambda</span> <span class="n">builder_</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">,</span> <span class="n">key_type</span><span class="p">:</span> <span class="n">EventSourcingRepository</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
-<span class="p">)</span>
-
-<span class="c1"># Read model: Projections</span>
-<span class="n">DataAccessLayer</span><span class="o">.</span><span class="n">ReadModel</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span>
-    <span class="n">builder</span><span class="p">,</span>
-    <span class="p">[</span><span class="s2">"samples.openbank.integration.models"</span><span class="p">],</span>
-    <span class="k">lambda</span> <span class="n">builder_</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">,</span> <span class="n">key_type</span><span class="p">:</span> <span class="n">MongoRepository</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
-<span class="p">)</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-20-1"><a href="#__codelineno-20-1" id="__codelineno-20-1" name="__codelineno-20-1"></a><span class="c1"># Event-driven persistence</span>
+</span><span id="__span-20-2"><a href="#__codelineno-20-2" id="__codelineno-20-2" name="__codelineno-20-2"></a><span class="n">ESEventStore</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="n">EventStoreOptions</span><span class="p">(</span><span class="n">database_name</span><span class="p">,</span> <span class="n">consumer_group</span><span class="p">))</span>
+</span><span id="__span-20-3"><a href="#__codelineno-20-3" id="__codelineno-20-3" name="__codelineno-20-3"></a>
+</span><span id="__span-20-4"><a href="#__codelineno-20-4" id="__codelineno-20-4" name="__codelineno-20-4"></a><span class="c1"># Write model: Event sourcing</span>
+</span><span id="__span-20-5"><a href="#__codelineno-20-5" id="__codelineno-20-5" name="__codelineno-20-5"></a><span class="n">DataAccessLayer</span><span class="o">.</span><span class="n">WriteModel</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span>
+</span><span id="__span-20-6"><a href="#__codelineno-20-6" id="__codelineno-20-6" name="__codelineno-20-6"></a>    <span class="n">builder</span><span class="p">,</span>
+</span><span id="__span-20-7"><a href="#__codelineno-20-7" id="__codelineno-20-7" name="__codelineno-20-7"></a>    <span class="p">[</span><span class="s2">"samples.openbank.domain.models"</span><span class="p">],</span>
+</span><span id="__span-20-8"><a href="#__codelineno-20-8" id="__codelineno-20-8" name="__codelineno-20-8"></a>    <span class="k">lambda</span> <span class="n">builder_</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">,</span> <span class="n">key_type</span><span class="p">:</span> <span class="n">EventSourcingRepository</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+</span><span id="__span-20-9"><a href="#__codelineno-20-9" id="__codelineno-20-9" name="__codelineno-20-9"></a><span class="p">)</span>
+</span><span id="__span-20-10"><a href="#__codelineno-20-10" id="__codelineno-20-10" name="__codelineno-20-10"></a>
+</span><span id="__span-20-11"><a href="#__codelineno-20-11" id="__codelineno-20-11" name="__codelineno-20-11"></a><span class="c1"># Read model: Projections</span>
+</span><span id="__span-20-12"><a href="#__codelineno-20-12" id="__codelineno-20-12" name="__codelineno-20-12"></a><span class="n">DataAccessLayer</span><span class="o">.</span><span class="n">ReadModel</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span>
+</span><span id="__span-20-13"><a href="#__codelineno-20-13" id="__codelineno-20-13" name="__codelineno-20-13"></a>    <span class="n">builder</span><span class="p">,</span>
+</span><span id="__span-20-14"><a href="#__codelineno-20-14" id="__codelineno-20-14" name="__codelineno-20-14"></a>    <span class="p">[</span><span class="s2">"samples.openbank.integration.models"</span><span class="p">],</span>
+</span><span id="__span-20-15"><a href="#__codelineno-20-15" id="__codelineno-20-15" name="__codelineno-20-15"></a>    <span class="k">lambda</span> <span class="n">builder_</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">,</span> <span class="n">key_type</span><span class="p">:</span> <span class="n">MongoRepository</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+</span><span id="__span-20-16"><a href="#__codelineno-20-16" id="__codelineno-20-16" name="__codelineno-20-16"></a><span class="p">)</span>
+</span></code></pre></div>
 <h3 id="authentication-security">Authentication &amp; Security<a class="headerlink" href="#authentication-security" title="Permanent link">¶</a></h3>
 <h4 id="api-gateway-oauth2-api-keys">API Gateway - <strong>OAuth2 + API Keys</strong><a class="headerlink" href="#api-gateway-oauth2-api-keys" title="Permanent link">¶</a></h4>
-<div class="highlight"><pre><span></span><code><span class="c1"># Multiple authentication schemes</span>
-<span class="nd">@post</span><span class="p">(</span><span class="s2">"/item"</span><span class="p">,</span> <span class="n">dependencies</span><span class="o">=</span><span class="p">[</span><span class="n">Depends</span><span class="p">(</span><span class="n">validate_mosaic_authentication</span><span class="p">)])</span>
-<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">create_item_prompt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command_dto</span><span class="p">:</span> <span class="n">CreateNewItemPromptCommandDto</span><span class="p">):</span>
-    <span class="c1"># API key validation for external services</span>
-
-<span class="nd">@get</span><span class="p">(</span><span class="s2">"/status"</span><span class="p">,</span> <span class="n">dependencies</span><span class="o">=</span><span class="p">[</span><span class="n">Depends</span><span class="p">(</span><span class="n">validate_token</span><span class="p">)])</span>
-<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_status</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="c1"># JWT token validation for internal services</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-21-1"><a href="#__codelineno-21-1" id="__codelineno-21-1" name="__codelineno-21-1"></a><span class="c1"># Multiple authentication schemes</span>
+</span><span id="__span-21-2"><a href="#__codelineno-21-2" id="__codelineno-21-2" name="__codelineno-21-2"></a><span class="nd">@post</span><span class="p">(</span><span class="s2">"/item"</span><span class="p">,</span> <span class="n">dependencies</span><span class="o">=</span><span class="p">[</span><span class="n">Depends</span><span class="p">(</span><span class="n">validate_mosaic_authentication</span><span class="p">)])</span>
+</span><span id="__span-21-3"><a href="#__codelineno-21-3" id="__codelineno-21-3" name="__codelineno-21-3"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">create_item_prompt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command_dto</span><span class="p">:</span> <span class="n">CreateNewItemPromptCommandDto</span><span class="p">):</span>
+</span><span id="__span-21-4"><a href="#__codelineno-21-4" id="__codelineno-21-4" name="__codelineno-21-4"></a>    <span class="c1"># API key validation for external services</span>
+</span><span id="__span-21-5"><a href="#__codelineno-21-5" id="__codelineno-21-5" name="__codelineno-21-5"></a>
+</span><span id="__span-21-6"><a href="#__codelineno-21-6" id="__codelineno-21-6" name="__codelineno-21-6"></a><span class="nd">@get</span><span class="p">(</span><span class="s2">"/status"</span><span class="p">,</span> <span class="n">dependencies</span><span class="o">=</span><span class="p">[</span><span class="n">Depends</span><span class="p">(</span><span class="n">validate_token</span><span class="p">)])</span>
+</span><span id="__span-21-7"><a href="#__codelineno-21-7" id="__codelineno-21-7" name="__codelineno-21-7"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_status</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="__span-21-8"><a href="#__codelineno-21-8" id="__codelineno-21-8" name="__codelineno-21-8"></a>    <span class="c1"># JWT token validation for internal services</span>
+</span></code></pre></div>
 <h4 id="openbank-domain-focused-security">OpenBank - <strong>Domain-Focused Security</strong><a class="headerlink" href="#openbank-domain-focused-security" title="Permanent link">¶</a></h4>
-<div class="highlight"><pre><span></span><code><span class="c1"># Business rule enforcement</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">BankAccountV1</span><span class="p">(</span><span class="n">AggregateRoot</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">record_transaction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">amount</span><span class="p">:</span> <span class="n">Decimal</span><span class="p">,</span> <span class="n">transaction_type</span><span class="p">:</span> <span class="n">BankTransactionTypeV1</span><span class="p">):</span>
-        <span class="c1"># Domain-level authorization</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_authorized_for_transaction</span><span class="p">(</span><span class="n">amount</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="n">UnauthorizedTransactionException</span><span class="p">()</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-22-1"><a href="#__codelineno-22-1" id="__codelineno-22-1" name="__codelineno-22-1"></a><span class="c1"># Business rule enforcement</span>
+</span><span id="__span-22-2"><a href="#__codelineno-22-2" id="__codelineno-22-2" name="__codelineno-22-2"></a><span class="k">class</span><span class="w"> </span><span class="nc">BankAccountV1</span><span class="p">(</span><span class="n">AggregateRoot</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
+</span><span id="__span-22-3"><a href="#__codelineno-22-3" id="__codelineno-22-3" name="__codelineno-22-3"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">record_transaction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">amount</span><span class="p">:</span> <span class="n">Decimal</span><span class="p">,</span> <span class="n">transaction_type</span><span class="p">:</span> <span class="n">BankTransactionTypeV1</span><span class="p">):</span>
+</span><span id="__span-22-4"><a href="#__codelineno-22-4" id="__codelineno-22-4" name="__codelineno-22-4"></a>        <span class="c1"># Domain-level authorization</span>
+</span><span id="__span-22-5"><a href="#__codelineno-22-5" id="__codelineno-22-5" name="__codelineno-22-5"></a>        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_authorized_for_transaction</span><span class="p">(</span><span class="n">amount</span><span class="p">):</span>
+</span><span id="__span-22-6"><a href="#__codelineno-22-6" id="__codelineno-22-6" name="__codelineno-22-6"></a>            <span class="k">raise</span> <span class="n">UnauthorizedTransactionException</span><span class="p">()</span>
+</span></code></pre></div>
 <h3 id="external-service-integration_1">External Service Integration<a class="headerlink" href="#external-service-integration_1" title="Permanent link">¶</a></h3>
 <h4 id="api-gateway-extensive-integration">API Gateway - <strong>Extensive Integration</strong><a class="headerlink" href="#api-gateway-extensive-integration" title="Permanent link">¶</a></h4>
-<div class="highlight"><pre><span></span><code><span class="c1"># Multiple external service clients</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">MosaicApiClient</span><span class="p">:</span>
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">submit_prompt_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prompt</span><span class="p">:</span> <span class="n">PromptDto</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PromptResponseDto</span><span class="p">:</span>
-        <span class="n">token</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">oauth_client</span><span class="o">.</span><span class="n">get_token_async</span><span class="p">()</span>
-        <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">http_client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">"/api/prompts"</span><span class="p">,</span> <span class="n">prompt</span><span class="p">,</span> <span class="n">token</span><span class="p">)</span>
-
-<span class="k">class</span><span class="w"> </span><span class="nc">GenAiClient</span><span class="p">:</span>
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">process_prompt_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prompt</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">ai_service</span><span class="o">.</span><span class="n">generate_response</span><span class="p">(</span><span class="n">prompt</span><span class="p">)</span>
-
-<span class="k">class</span><span class="w"> </span><span class="nc">MinioStorageManager</span><span class="p">:</span>
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">store_file_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bucket</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">):</span>
-        <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">s3_client</span><span class="o">.</span><span class="n">put_object</span><span class="p">(</span><span class="n">bucket</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-23-1"><a href="#__codelineno-23-1" id="__codelineno-23-1" name="__codelineno-23-1"></a><span class="c1"># Multiple external service clients</span>
+</span><span id="__span-23-2"><a href="#__codelineno-23-2" id="__codelineno-23-2" name="__codelineno-23-2"></a><span class="k">class</span><span class="w"> </span><span class="nc">MosaicApiClient</span><span class="p">:</span>
+</span><span id="__span-23-3"><a href="#__codelineno-23-3" id="__codelineno-23-3" name="__codelineno-23-3"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">submit_prompt_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prompt</span><span class="p">:</span> <span class="n">PromptDto</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PromptResponseDto</span><span class="p">:</span>
+</span><span id="__span-23-4"><a href="#__codelineno-23-4" id="__codelineno-23-4" name="__codelineno-23-4"></a>        <span class="n">token</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">oauth_client</span><span class="o">.</span><span class="n">get_token_async</span><span class="p">()</span>
+</span><span id="__span-23-5"><a href="#__codelineno-23-5" id="__codelineno-23-5" name="__codelineno-23-5"></a>        <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">http_client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">"/api/prompts"</span><span class="p">,</span> <span class="n">prompt</span><span class="p">,</span> <span class="n">token</span><span class="p">)</span>
+</span><span id="__span-23-6"><a href="#__codelineno-23-6" id="__codelineno-23-6" name="__codelineno-23-6"></a>
+</span><span id="__span-23-7"><a href="#__codelineno-23-7" id="__codelineno-23-7" name="__codelineno-23-7"></a><span class="k">class</span><span class="w"> </span><span class="nc">GenAiClient</span><span class="p">:</span>
+</span><span id="__span-23-8"><a href="#__codelineno-23-8" id="__codelineno-23-8" name="__codelineno-23-8"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">process_prompt_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prompt</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</span><span id="__span-23-9"><a href="#__codelineno-23-9" id="__codelineno-23-9" name="__codelineno-23-9"></a>        <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">ai_service</span><span class="o">.</span><span class="n">generate_response</span><span class="p">(</span><span class="n">prompt</span><span class="p">)</span>
+</span><span id="__span-23-10"><a href="#__codelineno-23-10" id="__codelineno-23-10" name="__codelineno-23-10"></a>
+</span><span id="__span-23-11"><a href="#__codelineno-23-11" id="__codelineno-23-11" name="__codelineno-23-11"></a><span class="k">class</span><span class="w"> </span><span class="nc">MinioStorageManager</span><span class="p">:</span>
+</span><span id="__span-23-12"><a href="#__codelineno-23-12" id="__codelineno-23-12" name="__codelineno-23-12"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">store_file_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bucket</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">):</span>
+</span><span id="__span-23-13"><a href="#__codelineno-23-13" id="__codelineno-23-13" name="__codelineno-23-13"></a>        <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">s3_client</span><span class="o">.</span><span class="n">put_object</span><span class="p">(</span><span class="n">bucket</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+</span></code></pre></div>
 <h4 id="openbank-minimal-integration">OpenBank - <strong>Minimal Integration</strong><a class="headerlink" href="#openbank-minimal-integration" title="Permanent link">¶</a></h4>
-<div class="highlight"><pre><span></span><code><span class="c1"># Focused on domain logic, minimal external dependencies</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">CreateBankAccountCommandHandler</span><span class="p">:</span>
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">handle_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command</span><span class="p">:</span> <span class="n">CreateBankAccountCommand</span><span class="p">):</span>
-        <span class="c1"># Pure domain logic without external service calls</span>
-        <span class="n">owner</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">person_repository</span><span class="o">.</span><span class="n">get_by_id_async</span><span class="p">(</span><span class="n">command</span><span class="o">.</span><span class="n">owner_id</span><span class="p">)</span>
-        <span class="n">account</span> <span class="o">=</span> <span class="n">BankAccountV1</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">()),</span> <span class="n">owner</span><span class="p">,</span> <span class="n">command</span><span class="o">.</span><span class="n">initial_balance</span><span class="p">)</span>
-        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">account_repository</span><span class="o">.</span><span class="n">save_async</span><span class="p">(</span><span class="n">account</span><span class="p">)</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-24-1"><a href="#__codelineno-24-1" id="__codelineno-24-1" name="__codelineno-24-1"></a><span class="c1"># Focused on domain logic, minimal external dependencies</span>
+</span><span id="__span-24-2"><a href="#__codelineno-24-2" id="__codelineno-24-2" name="__codelineno-24-2"></a><span class="k">class</span><span class="w"> </span><span class="nc">CreateBankAccountCommandHandler</span><span class="p">:</span>
+</span><span id="__span-24-3"><a href="#__codelineno-24-3" id="__codelineno-24-3" name="__codelineno-24-3"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">handle_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command</span><span class="p">:</span> <span class="n">CreateBankAccountCommand</span><span class="p">):</span>
+</span><span id="__span-24-4"><a href="#__codelineno-24-4" id="__codelineno-24-4" name="__codelineno-24-4"></a>        <span class="c1"># Pure domain logic without external service calls</span>
+</span><span id="__span-24-5"><a href="#__codelineno-24-5" id="__codelineno-24-5" name="__codelineno-24-5"></a>        <span class="n">owner</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">person_repository</span><span class="o">.</span><span class="n">get_by_id_async</span><span class="p">(</span><span class="n">command</span><span class="o">.</span><span class="n">owner_id</span><span class="p">)</span>
+</span><span id="__span-24-6"><a href="#__codelineno-24-6" id="__codelineno-24-6" name="__codelineno-24-6"></a>        <span class="n">account</span> <span class="o">=</span> <span class="n">BankAccountV1</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">()),</span> <span class="n">owner</span><span class="p">,</span> <span class="n">command</span><span class="o">.</span><span class="n">initial_balance</span><span class="p">)</span>
+</span><span id="__span-24-7"><a href="#__codelineno-24-7" id="__codelineno-24-7" name="__codelineno-24-7"></a>        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">account_repository</span><span class="o">.</span><span class="n">save_async</span><span class="p">(</span><span class="n">account</span><span class="p">)</span>
+</span></code></pre></div>
 <h3 id="background-processing_1">Background Processing<a class="headerlink" href="#background-processing_1" title="Permanent link">¶</a></h3>
 <h4 id="api-gateway-task-queue-pattern">API Gateway - <strong>Task Queue Pattern</strong><a class="headerlink" href="#api-gateway-task-queue-pattern" title="Permanent link">¶</a></h4>
-<div class="highlight"><pre><span></span><code><span class="c1"># Redis-backed job queues</span>
-<span class="n">BackgroundTaskScheduler</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="p">[</span><span class="s2">"application.tasks"</span><span class="p">])</span>
-
-<span class="nd">@task_handler</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">ProcessPromptTask</span><span class="p">:</span>
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">execute_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prompt_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-        <span class="n">prompt</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">prompt_service</span><span class="o">.</span><span class="n">get_by_id</span><span class="p">(</span><span class="n">prompt_id</span><span class="p">)</span>
-        <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">genai_client</span><span class="o">.</span><span class="n">process_prompt</span><span class="p">(</span><span class="n">prompt</span><span class="p">)</span>
-        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">storage_service</span><span class="o">.</span><span class="n">store_result</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-25-1"><a href="#__codelineno-25-1" id="__codelineno-25-1" name="__codelineno-25-1"></a><span class="c1"># Redis-backed job queues</span>
+</span><span id="__span-25-2"><a href="#__codelineno-25-2" id="__codelineno-25-2" name="__codelineno-25-2"></a><span class="n">BackgroundTaskScheduler</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="p">[</span><span class="s2">"application.tasks"</span><span class="p">])</span>
+</span><span id="__span-25-3"><a href="#__codelineno-25-3" id="__codelineno-25-3" name="__codelineno-25-3"></a>
+</span><span id="__span-25-4"><a href="#__codelineno-25-4" id="__codelineno-25-4" name="__codelineno-25-4"></a><span class="nd">@task_handler</span>
+</span><span id="__span-25-5"><a href="#__codelineno-25-5" id="__codelineno-25-5" name="__codelineno-25-5"></a><span class="k">class</span><span class="w"> </span><span class="nc">ProcessPromptTask</span><span class="p">:</span>
+</span><span id="__span-25-6"><a href="#__codelineno-25-6" id="__codelineno-25-6" name="__codelineno-25-6"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">execute_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prompt_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+</span><span id="__span-25-7"><a href="#__codelineno-25-7" id="__codelineno-25-7" name="__codelineno-25-7"></a>        <span class="n">prompt</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">prompt_service</span><span class="o">.</span><span class="n">get_by_id</span><span class="p">(</span><span class="n">prompt_id</span><span class="p">)</span>
+</span><span id="__span-25-8"><a href="#__codelineno-25-8" id="__codelineno-25-8" name="__codelineno-25-8"></a>        <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">genai_client</span><span class="o">.</span><span class="n">process_prompt</span><span class="p">(</span><span class="n">prompt</span><span class="p">)</span>
+</span><span id="__span-25-9"><a href="#__codelineno-25-9" id="__codelineno-25-9" name="__codelineno-25-9"></a>        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">storage_service</span><span class="o">.</span><span class="n">store_result</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+</span></code></pre></div>
 <h4 id="openbank-event-driven-projections">OpenBank - <strong>Event-Driven Projections</strong><a class="headerlink" href="#openbank-event-driven-projections" title="Permanent link">¶</a></h4>
-<div class="highlight"><pre><span></span><code><span class="c1"># Event handlers for read model updates</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">BankAccountEventHandler</span><span class="p">:</span>
-    <span class="nd">@event_handler</span><span class="p">(</span><span class="n">BankAccountCreatedDomainEventV1</span><span class="p">)</span>
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">handle_account_created</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">BankAccountCreatedDomainEventV1</span><span class="p">):</span>
-        <span class="n">projection</span> <span class="o">=</span> <span class="n">BankAccountProjection</span><span class="o">.</span><span class="n">from_event</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
-        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_model_repository</span><span class="o">.</span><span class="n">save_async</span><span class="p">(</span><span class="n">projection</span><span class="p">)</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-26-1"><a href="#__codelineno-26-1" id="__codelineno-26-1" name="__codelineno-26-1"></a><span class="c1"># Event handlers for read model updates</span>
+</span><span id="__span-26-2"><a href="#__codelineno-26-2" id="__codelineno-26-2" name="__codelineno-26-2"></a><span class="k">class</span><span class="w"> </span><span class="nc">BankAccountEventHandler</span><span class="p">:</span>
+</span><span id="__span-26-3"><a href="#__codelineno-26-3" id="__codelineno-26-3" name="__codelineno-26-3"></a>    <span class="nd">@event_handler</span><span class="p">(</span><span class="n">BankAccountCreatedDomainEventV1</span><span class="p">)</span>
+</span><span id="__span-26-4"><a href="#__codelineno-26-4" id="__codelineno-26-4" name="__codelineno-26-4"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">handle_account_created</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">BankAccountCreatedDomainEventV1</span><span class="p">):</span>
+</span><span id="__span-26-5"><a href="#__codelineno-26-5" id="__codelineno-26-5" name="__codelineno-26-5"></a>        <span class="n">projection</span> <span class="o">=</span> <span class="n">BankAccountProjection</span><span class="o">.</span><span class="n">from_event</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+</span><span id="__span-26-6"><a href="#__codelineno-26-6" id="__codelineno-26-6" name="__codelineno-26-6"></a>        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_model_repository</span><span class="o">.</span><span class="n">save_async</span><span class="p">(</span><span class="n">projection</span><span class="p">)</span>
+</span></code></pre></div>
 <h3 id="testing-strategies">Testing Strategies<a class="headerlink" href="#testing-strategies" title="Permanent link">¶</a></h3>
 <h4 id="api-gateway-integration-heavy-testing">API Gateway - <strong>Integration-Heavy Testing</strong><a class="headerlink" href="#api-gateway-integration-heavy-testing" title="Permanent link">¶</a></h4>
-<div class="highlight"><pre><span></span><code><span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">integration</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">TestApiGatewayIntegration</span><span class="p">:</span>
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">test_full_prompt_workflow</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_client</span><span class="p">,</span> <span class="n">mock_external_services</span><span class="p">):</span>
-        <span class="c1"># Test complete workflow including external services</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="n">test_client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">"/api/prompts/item"</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">prompt_data</span><span class="p">)</span>
-
-        <span class="c1"># Verify external service calls</span>
-        <span class="n">mock_external_services</span><span class="o">.</span><span class="n">genai_client</span><span class="o">.</span><span class="n">process_prompt</span><span class="o">.</span><span class="n">assert_called_once</span><span class="p">()</span>
-        <span class="n">mock_external_services</span><span class="o">.</span><span class="n">storage_manager</span><span class="o">.</span><span class="n">upload</span><span class="o">.</span><span class="n">assert_called_once</span><span class="p">()</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-27-1"><a href="#__codelineno-27-1" id="__codelineno-27-1" name="__codelineno-27-1"></a><span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">integration</span>
+</span><span id="__span-27-2"><a href="#__codelineno-27-2" id="__codelineno-27-2" name="__codelineno-27-2"></a><span class="k">class</span><span class="w"> </span><span class="nc">TestApiGatewayIntegration</span><span class="p">:</span>
+</span><span id="__span-27-3"><a href="#__codelineno-27-3" id="__codelineno-27-3" name="__codelineno-27-3"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">test_full_prompt_workflow</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_client</span><span class="p">,</span> <span class="n">mock_external_services</span><span class="p">):</span>
+</span><span id="__span-27-4"><a href="#__codelineno-27-4" id="__codelineno-27-4" name="__codelineno-27-4"></a>        <span class="c1"># Test complete workflow including external services</span>
+</span><span id="__span-27-5"><a href="#__codelineno-27-5" id="__codelineno-27-5" name="__codelineno-27-5"></a>        <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="n">test_client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">"/api/prompts/item"</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">prompt_data</span><span class="p">)</span>
+</span><span id="__span-27-6"><a href="#__codelineno-27-6" id="__codelineno-27-6" name="__codelineno-27-6"></a>
+</span><span id="__span-27-7"><a href="#__codelineno-27-7" id="__codelineno-27-7" name="__codelineno-27-7"></a>        <span class="c1"># Verify external service calls</span>
+</span><span id="__span-27-8"><a href="#__codelineno-27-8" id="__codelineno-27-8" name="__codelineno-27-8"></a>        <span class="n">mock_external_services</span><span class="o">.</span><span class="n">genai_client</span><span class="o">.</span><span class="n">process_prompt</span><span class="o">.</span><span class="n">assert_called_once</span><span class="p">()</span>
+</span><span id="__span-27-9"><a href="#__codelineno-27-9" id="__codelineno-27-9" name="__codelineno-27-9"></a>        <span class="n">mock_external_services</span><span class="o">.</span><span class="n">storage_manager</span><span class="o">.</span><span class="n">upload</span><span class="o">.</span><span class="n">assert_called_once</span><span class="p">()</span>
+</span></code></pre></div>
 <h4 id="openbank-domain-focused-testing">OpenBank - <strong>Domain-Focused Testing</strong><a class="headerlink" href="#openbank-domain-focused-testing" title="Permanent link">¶</a></h4>
-<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">TestBankAccountAggregate</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">test_transaction_recording</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="c1"># Pure domain logic testing</span>
-        <span class="n">account</span> <span class="o">=</span> <span class="n">BankAccountV1</span><span class="p">(</span><span class="s2">"123"</span><span class="p">,</span> <span class="n">owner</span><span class="p">,</span> <span class="n">Decimal</span><span class="p">(</span><span class="s2">"1000"</span><span class="p">))</span>
-        <span class="n">account</span><span class="o">.</span><span class="n">record_transaction</span><span class="p">(</span><span class="n">Decimal</span><span class="p">(</span><span class="s2">"-100"</span><span class="p">),</span> <span class="n">BankTransactionTypeV1</span><span class="o">.</span><span class="n">DEBIT</span><span class="p">)</span>
-
-        <span class="c1"># Verify business rules and events</span>
-        <span class="k">assert</span> <span class="n">account</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">balance</span> <span class="o">==</span> <span class="n">Decimal</span><span class="p">(</span><span class="s2">"900"</span><span class="p">)</span>
-        <span class="n">events</span> <span class="o">=</span> <span class="n">account</span><span class="o">.</span><span class="n">get_uncommitted_events</span><span class="p">()</span>
-        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">events</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">BankAccountTransactionRecordedDomainEventV1</span><span class="p">)</span>
-</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-28-1"><a href="#__codelineno-28-1" id="__codelineno-28-1" name="__codelineno-28-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">TestBankAccountAggregate</span><span class="p">:</span>
+</span><span id="__span-28-2"><a href="#__codelineno-28-2" id="__codelineno-28-2" name="__codelineno-28-2"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">test_transaction_recording</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="__span-28-3"><a href="#__codelineno-28-3" id="__codelineno-28-3" name="__codelineno-28-3"></a>        <span class="c1"># Pure domain logic testing</span>
+</span><span id="__span-28-4"><a href="#__codelineno-28-4" id="__codelineno-28-4" name="__codelineno-28-4"></a>        <span class="n">account</span> <span class="o">=</span> <span class="n">BankAccountV1</span><span class="p">(</span><span class="s2">"123"</span><span class="p">,</span> <span class="n">owner</span><span class="p">,</span> <span class="n">Decimal</span><span class="p">(</span><span class="s2">"1000"</span><span class="p">))</span>
+</span><span id="__span-28-5"><a href="#__codelineno-28-5" id="__codelineno-28-5" name="__codelineno-28-5"></a>        <span class="n">account</span><span class="o">.</span><span class="n">record_transaction</span><span class="p">(</span><span class="n">Decimal</span><span class="p">(</span><span class="s2">"-100"</span><span class="p">),</span> <span class="n">BankTransactionTypeV1</span><span class="o">.</span><span class="n">DEBIT</span><span class="p">)</span>
+</span><span id="__span-28-6"><a href="#__codelineno-28-6" id="__codelineno-28-6" name="__codelineno-28-6"></a>
+</span><span id="__span-28-7"><a href="#__codelineno-28-7" id="__codelineno-28-7" name="__codelineno-28-7"></a>        <span class="c1"># Verify business rules and events</span>
+</span><span id="__span-28-8"><a href="#__codelineno-28-8" id="__codelineno-28-8" name="__codelineno-28-8"></a>        <span class="k">assert</span> <span class="n">account</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">balance</span> <span class="o">==</span> <span class="n">Decimal</span><span class="p">(</span><span class="s2">"900"</span><span class="p">)</span>
+</span><span id="__span-28-9"><a href="#__codelineno-28-9" id="__codelineno-28-9" name="__codelineno-28-9"></a>        <span class="n">events</span> <span class="o">=</span> <span class="n">account</span><span class="o">.</span><span class="n">get_uncommitted_events</span><span class="p">()</span>
+</span><span id="__span-28-10"><a href="#__codelineno-28-10" id="__codelineno-28-10" name="__codelineno-28-10"></a>        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">events</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">BankAccountTransactionRecordedDomainEventV1</span><span class="p">)</span>
+</span></code></pre></div>
 <h3 id="use-case-recommendations">Use Case Recommendations<a class="headerlink" href="#use-case-recommendations" title="Permanent link">¶</a></h3>
 <h4 id="choose-api-gateway-pattern-when">Choose <strong>API Gateway Pattern</strong> when<a class="headerlink" href="#choose-api-gateway-pattern-when" title="Permanent link">¶</a></h4>
 <ul>
