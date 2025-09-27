@@ -1,6 +1,7 @@
 # 🔄 Serialization & Deserialization
 
-Neuroglia provides powerful and flexible serialization capabilities for converting objects to and from various formats like JSON. The framework includes built-in serializers with automatic type handling, custom converters, and seamless integration with the dependency injection system.
+Neuroglia provides powerful and flexible serialization capabilities for converting objects to and from various formats like JSON.
+The framework includes built-in serializers with automatic type handling, custom converters, and seamless integration with the dependency injection system.
 
 !!! info "🎯 What You'll Learn" - JSON serialization with automatic type handling - Custom serializers and converters - Integration with Mario's Pizzeria domain objects - Best practices for data transformation
 

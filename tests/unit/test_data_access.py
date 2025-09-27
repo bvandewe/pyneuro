@@ -2,18 +2,25 @@
 Unit tests for data access functionality.
 """
 
-import pytest
-from typing import List, Optional, Dict, Any
 from dataclasses import dataclass
 from datetime import datetime
+from typing import Any
+from unittest.mock import AsyncMock, Mock, patch
 from uuid import uuid4
-from unittest.mock import Mock, AsyncMock, patch
 
-from neuroglia.data.abstractions import Repository, Entity, AggregateRoot, DomainEvent
-from neuroglia.data.mongo_repository import MongoRepository
-from neuroglia.data.in_memory_repository import InMemoryRepository
-from neuroglia.data.event_sourcing_repository import EventSourcingRepository
+import pytest
 
+from neuroglia.data.abstractions import (
+    AggregateRoot,
+    AggregateState,
+    DomainEvent,
+    Entity,
+)
+from neuroglia.data.infrastructure.event_sourcing.event_sourcing_repository import (
+    EventSourcingRepository,
+)
+from neuroglia.data.infrastructure.memory.memory_repository import MemoryRepository
+from neuroglia.data.infrastructure.mongo.mongo_repository import MongoRepository
 
 # Test entities and aggregates
 
@@ -40,7 +47,7 @@ class TestOrder(Entity[str]):
 
     id: str
     customer_name: str
-    items: List[Dict[str, Any]]
+    items: list[dict[str, Any]]
     total_amount: float
     status: str = "pending"
     created_at: datetime = None
@@ -87,7 +94,12 @@ class OrderPlacedEvent(DomainEvent):
 # Test aggregate root
 
 
-class ProductAggregate(AggregateRoot[str]):
+class ProductAggregateState(AggregateState[str]):
+    name: str
+    price: float
+
+
+class ProductAggregate(AggregateRoot[ProductAggregateState, str]):
     """Test product aggregate for event sourcing"""
 
     def __init__(self, id: str = None):
@@ -150,7 +162,13 @@ class ProductAggregate(AggregateRoot[str]):
         self.price = event.new_price
 
 
-class OrderAggregate(AggregateRoot[str]):
+class OrderAggregateState(AggregateState[str]):
+    customer_name: str
+    items: list
+    total_amount: float
+
+
+class OrderAggregate(AggregateRoot[OrderAggregateState, str]):
     """Test order aggregate for event sourcing"""
 
     def __init__(self, id: str = None):
@@ -161,7 +179,7 @@ class OrderAggregate(AggregateRoot[str]):
         self.status = "draft"
         self.placed_at = None
 
-    def place_order(self, customer_name: str, items: List[Dict[str, Any]]):
+    def place_order(self, customer_name: str, items: list[dict[str, Any]]):
         """Place a new order"""
         if not customer_name or not customer_name.strip():
             raise ValueError("Customer name is required")
@@ -192,12 +210,9 @@ class OrderAggregate(AggregateRoot[str]):
 
 
 class TestEntity:
-
     def test_entity_creation(self):
         """Test creating entity with ID"""
-        product = TestProduct(
-            id="prod_123", name="Test Product", price=29.99, category="Electronics"
-        )
+        product = TestProduct(id="prod_123", name="Test Product", price=29.99, category="Electronics")
 
         assert product.id == "prod_123"
         assert product.name == "Test Product"
@@ -237,7 +252,6 @@ class TestEntity:
 
 
 class TestAggregateRoot:
-
     def test_aggregate_creation(self):
         """Test creating aggregate root"""
         aggregate = ProductAggregate("prod_123")
@@ -330,17 +344,14 @@ class TestAggregateRoot:
 
 
 class TestInMemoryRepository:
-
     def setup_method(self):
         """Set up test repository"""
-        self.repository = InMemoryRepository[TestProduct, str]()
+        self.repository = MemoryRepository[TestProduct, str]()
 
     @pytest.mark.asyncio
     async def test_add_and_get_by_id(self):
         """Test adding and retrieving entity by ID"""
-        product = TestProduct(
-            id="prod_123", name="Test Product", price=29.99, category="Electronics"
-        )
+        product = TestProduct(id="prod_123", name="Test Product", price=29.99, category="Electronics")
 
         # Add product
         added_product = await self.repository.add_async(product)
@@ -360,9 +371,7 @@ class TestInMemoryRepository:
     @pytest.mark.asyncio
     async def test_update_entity(self):
         """Test updating entity"""
-        product = TestProduct(
-            id="prod_123", name="Original Product", price=29.99, category="Electronics"
-        )
+        product = TestProduct(id="prod_123", name="Original Product", price=29.99, category="Electronics")
 
         await self.repository.add_async(product)
 
@@ -382,9 +391,7 @@ class TestInMemoryRepository:
     @pytest.mark.asyncio
     async def test_update_nonexistent_entity(self):
         """Test updating entity that doesn't exist"""
-        product = TestProduct(
-            id="nonexistent", name="Test Product", price=29.99, category="Electronics"
-        )
+        product = TestProduct(id="nonexistent", name="Test Product", price=29.99, category="Electronics")
 
         with pytest.raises(ValueError, match="not found"):
             await self.repository.update_async(product)
@@ -392,9 +399,7 @@ class TestInMemoryRepository:
     @pytest.mark.asyncio
     async def test_remove_entity(self):
         """Test removing entity"""
-        product = TestProduct(
-            id="prod_123", name="Test Product", price=29.99, category="Electronics"
-        )
+        product = TestProduct(id="prod_123", name="Test Product", price=29.99, category="Electronics")
 
         await self.repository.add_async(product)
 
@@ -439,16 +444,13 @@ class TestInMemoryRepository:
 
 
 class TestMongoRepository:
-
     @pytest.mark.asyncio
     async def test_mongo_repository_get_by_id(self):
         """Test MongoRepository get_by_id with mocked MongoDB"""
         with patch("neuroglia.data.mongo_repository.AsyncIOMotorClient") as mock_client:
             # Mock MongoDB collection
             mock_collection = Mock()
-            mock_client.return_value.__getitem__.return_value.__getitem__.return_value = (
-                mock_collection
-            )
+            mock_client.return_value.__getitem__.return_value.__getitem__.return_value = mock_collection
 
             # Mock find_one result
             mock_collection.find_one = AsyncMock(
@@ -487,9 +489,7 @@ class TestMongoRepository:
         with patch("neuroglia.data.mongo_repository.AsyncIOMotorClient") as mock_client:
             # Mock MongoDB collection
             mock_collection = Mock()
-            mock_client.return_value.__getitem__.return_value.__getitem__.return_value = (
-                mock_collection
-            )
+            mock_client.return_value.__getitem__.return_value.__getitem__.return_value = mock_collection
 
             # Mock insert_one result
             mock_result = Mock()
@@ -505,9 +505,7 @@ class TestMongoRepository:
             )
 
             # Add entity
-            product = TestProduct(
-                id="prod_123", name="Test Product", price=29.99, category="Electronics"
-            )
+            product = TestProduct(id="prod_123", name="Test Product", price=29.99, category="Electronics")
 
             result = await repository.add_async(product)
 
@@ -525,7 +523,6 @@ class TestMongoRepository:
 
 
 class TestEventSourcingRepository:
-
     @pytest.mark.asyncio
     async def test_event_sourcing_repository_save_aggregate(self):
         """Test saving aggregate with events"""
@@ -536,9 +533,7 @@ class TestEventSourcingRepository:
             mock_store_instance.append_to_stream = AsyncMock()
 
             # Create repository
-            repository = EventSourcingRepository[ProductAggregate](
-                event_store=mock_store_instance, aggregate_type=ProductAggregate
-            )
+            repository = EventSourcingRepository[ProductAggregate](event_store=mock_store_instance, aggregate_type=ProductAggregate)
 
             # Create aggregate with events
             aggregate = ProductAggregate("prod_123")
@@ -585,9 +580,7 @@ class TestEventSourcingRepository:
             mock_store_instance.read_stream = AsyncMock(return_value=mock_events)
 
             # Create repository
-            repository = EventSourcingRepository[ProductAggregate](
-                event_store=mock_store_instance, aggregate_type=ProductAggregate
-            )
+            repository = EventSourcingRepository[ProductAggregate](event_store=mock_store_instance, aggregate_type=ProductAggregate)
 
             # Load aggregate
             aggregate = await repository.get_by_id_async("prod_123")
@@ -607,12 +600,11 @@ class TestEventSourcingRepository:
 
 
 class TestDataAccessIntegration:
-
     @pytest.mark.asyncio
     async def test_repository_with_multiple_entity_types(self):
         """Test repository with different entity types"""
-        product_repo = InMemoryRepository[TestProduct, str]()
-        order_repo = InMemoryRepository[TestOrder, str]()
+        product_repo = MemoryRepository[TestProduct, str]()
+        order_repo = MemoryRepository[TestOrder, str]()
 
         # Add products
         product1 = TestProduct(id="1", name="Product 1", price=10.0, category="A")

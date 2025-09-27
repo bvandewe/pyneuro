@@ -1,23 +1,96 @@
-"""HTTP Service Client module for Neuroglia framework.
-
-Provides comprehensive HTTP client capabilities with:
-- Retry policies with exponential backoff
-- Circuit breaker patterns
-- Request/response interceptors
-- Comprehensive error handling and logging
-- Connection pooling and timeout management
-- Authentication and header management
 """
+Resilient HTTP service client with circuit breakers, retry policies, and comprehensive monitoring.
 
+This module provides enterprise-grade HTTP client capabilities for reliable service-to-service
+communication in microservice architectures. Features include circuit breaker patterns,
+exponential backoff retry policies, request/response interceptors, comprehensive error handling,
+and integration with observability systems for monitoring and diagnostics.
+
+Key Features:
+    - HttpServiceClient: Main resilient HTTP client class
+    - Circuit Breaker: Fault tolerance with automatic failure detection
+    - Retry Policies: Exponential backoff, linear delay, and fixed delay strategies
+    - Request/Response Interceptors: Middleware for authentication, logging, and monitoring
+    - Connection Management: Pooling, timeout handling, and connection lifecycle
+    - Authentication Support: Bearer tokens, API keys, and custom authentication
+
+Examples:
+    ```python
+    from neuroglia.integration import (
+        HttpServiceClient, HttpRequestOptions, RetryPolicy,
+        BearerTokenInterceptor, LoggingInterceptor
+    )
+
+    # Configure resilient client
+    options = HttpRequestOptions(
+        timeout=30.0,
+        max_retries=3,
+        retry_policy=RetryPolicy.EXPONENTIAL_BACKOFF,
+        retry_delay=1.0,
+        retry_multiplier=2.0,
+        circuit_breaker_failure_threshold=5,
+        circuit_breaker_timeout=60.0
+    )
+
+    # Create authenticated client
+    client = HttpServiceClient(
+        base_url="https://api.example.com",
+        options=options,
+        interceptors=[
+            BearerTokenInterceptor(token="your-api-token"),
+            LoggingInterceptor(logger_name="http_client")
+        ]
+    )
+
+    # Make resilient API calls
+    try:
+        response = await client.get_async("/users/123")
+        if response.success:
+            user_data = response.json()
+        else:
+            logger.error(f"API call failed: {response.status_code}")
+    except HttpServiceClientException as e:
+        logger.error(f"HTTP client error: {e}")
+
+    # POST requests with automatic retry
+    user_data = {"name": "John Doe", "email": "john@example.com"}
+    response = await client.post_async("/users", json=user_data)
+
+    # Service integration patterns
+    class OrderService:
+        def __init__(self, payment_client: HttpServiceClient):
+            self.payment_client = payment_client
+
+        async def process_payment_async(self, order_id: str, amount: Decimal) -> bool:
+            payment_request = {
+                "order_id": order_id,
+                "amount": str(amount),
+                "currency": "USD"
+            }
+
+            response = await self.payment_client.post_async(
+                "/payments/process",
+                json=payment_request
+            )
+
+            return response.success and response.json().get("status") == "approved"
+    ```
+
+See Also:
+    - HTTP Service Client Guide: https://bvandewe.github.io/pyneuro/features/http-service-client/
+    - Integration Patterns: https://bvandewe.github.io/pyneuro/patterns/
+    - Resilience Patterns: https://bvandewe.github.io/pyneuro/features/
+"""
 import asyncio
+import json
 import logging
 from abc import ABC, abstractmethod
+from collections.abc import Awaitable, Callable
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta
 from enum import Enum
-from typing import Any, Dict, List, Optional, Callable, Awaitable, TypeVar
+from typing import Any, Optional, TypeVar
 from urllib.parse import urljoin
-import json
 
 try:
     import httpx
@@ -34,9 +107,7 @@ TResponse = TypeVar("TResponse")
 class HttpServiceClientException(Exception):
     """Base exception for HTTP service client operations."""
 
-    def __init__(
-        self, message: str, status_code: Optional[int] = None, response_body: Optional[str] = None
-    ):
+    def __init__(self, message: str, status_code: Optional[int] = None, response_body: Optional[str] = None):
         super().__init__(message)
         self.status_code = status_code
         self.response_body = response_body
@@ -72,7 +143,7 @@ class HttpRequestOptions:
     circuit_breaker_failure_threshold: int = 5
     circuit_breaker_timeout: float = 60.0
     circuit_breaker_success_threshold: int = 3
-    headers: Dict[str, str] = field(default_factory=dict)
+    headers: dict[str, str] = field(default_factory=dict)
     verify_ssl: bool = True
     follow_redirects: bool = True
 
@@ -83,7 +154,7 @@ class HttpResponse:
 
     status_code: int
     content: bytes
-    headers: Dict[str, str]
+    headers: dict[str, str]
     request_url: str
     elapsed_time: float
     success: bool = field(init=False)
@@ -125,7 +196,6 @@ class RequestInterceptor(ABC):
     @abstractmethod
     async def intercept_request(self, request: httpx.Request) -> httpx.Request:
         """Intercept and potentially modify outgoing requests."""
-        pass
 
 
 class ResponseInterceptor(ABC):
@@ -134,7 +204,6 @@ class ResponseInterceptor(ABC):
     @abstractmethod
     async def intercept_response(self, response: HttpResponse) -> HttpResponse:
         """Intercept and potentially modify incoming responses."""
-        pass
 
 
 class BearerTokenInterceptor(RequestInterceptor):
@@ -161,9 +230,7 @@ class LoggingInterceptor(ResponseInterceptor):
 
     async def intercept_response(self, response: HttpResponse) -> HttpResponse:
         """Log response details."""
-        self.logger.info(
-            f"HTTP {response.status_code} {response.request_url} " f"({response.elapsed_time:.3f}s)"
-        )
+        self.logger.info(f"HTTP {response.status_code} {response.request_url} " f"({response.elapsed_time:.3f}s)")
         if not response.success:
             self.logger.warning(f"HTTP request failed: {response.text()[:200]}")
         return response
@@ -185,11 +252,7 @@ class CircuitBreaker:
 
             if self.stats.state == CircuitBreakerState.OPEN:
                 # Check if timeout has passed
-                if (
-                    self.stats.last_failure_time
-                    and datetime.now() - self.stats.last_failure_time
-                    > timedelta(seconds=self.options.circuit_breaker_timeout)
-                ):
+                if self.stats.last_failure_time and datetime.now() - self.stats.last_failure_time > timedelta(seconds=self.options.circuit_breaker_timeout):
                     self.stats.state = CircuitBreakerState.HALF_OPEN
                     self.stats.success_count = 0
                     return True
@@ -218,10 +281,7 @@ class CircuitBreaker:
             self.stats.total_requests += 1
             self.stats.last_failure_time = datetime.now()
 
-            if (
-                self.stats.state == CircuitBreakerState.CLOSED
-                and self.stats.failure_count >= self.options.circuit_breaker_failure_threshold
-            ):
+            if self.stats.state == CircuitBreakerState.CLOSED and self.stats.failure_count >= self.options.circuit_breaker_failure_threshold:
                 self.stats.state = CircuitBreakerState.OPEN
             elif self.stats.state == CircuitBreakerState.HALF_OPEN:
                 self.stats.state = CircuitBreakerState.OPEN
@@ -229,20 +289,25 @@ class CircuitBreaker:
 
 
 class HttpServiceClient:
-    """Comprehensive HTTP service client with advanced features."""
+    """
+    Resilient HTTP client with circuit breaker patterns and comprehensive error handling.
+
+    Provides configurable retry policies, timeout handling, and circuit breaker
+    functionality for robust external service integration.
+
+    For detailed information about HTTP service clients, see:
+    https://bvandewe.github.io/pyneuro/features/http-service-client/
+    """
 
     def __init__(
         self,
         base_url: Optional[str] = None,
         options: Optional[HttpRequestOptions] = None,
-        request_interceptors: Optional[List[RequestInterceptor]] = None,
-        response_interceptors: Optional[List[ResponseInterceptor]] = None,
+        request_interceptors: Optional[list[RequestInterceptor]] = None,
+        response_interceptors: Optional[list[ResponseInterceptor]] = None,
     ):
-
         if not HTTP_CLIENT_AVAILABLE:
-            raise HttpServiceClientException(
-                "httpx is required for HTTP service client. Install it with:\n" " pip install httpx"
-            )
+            raise HttpServiceClientException("httpx is required for HTTP service client. Install it with:\n" " pip install httpx")
 
         self.base_url = base_url or ""
         self.options = options or HttpRequestOptions()
@@ -318,9 +383,7 @@ class HttpServiceClient:
 
         # Check circuit breaker
         if not await self._circuit_breaker.can_execute():
-            raise HttpServiceClientException(
-                "Circuit breaker is OPEN - requests are being rejected", status_code=503
-            )
+            raise HttpServiceClientException("Circuit breaker is OPEN - requests are being rejected", status_code=503)
 
         full_url = self._build_url(url)
         last_exception = None
@@ -357,10 +420,7 @@ class HttpServiceClient:
 
                 # Check if we should retry
                 if not http_response.success and await self._should_retry(http_response, attempt):
-                    self._logger.warning(
-                        f"Request failed (attempt {attempt}/{self.options.max_retries}): "
-                        f"{http_response.status_code} {full_url}"
-                    )
+                    self._logger.warning(f"Request failed (attempt {attempt}/{self.options.max_retries}): " f"{http_response.status_code} {full_url}")
 
                     if attempt < self.options.max_retries:
                         delay = await self._calculate_retry_delay(attempt)
@@ -392,35 +452,25 @@ class HttpServiceClient:
         await self._circuit_breaker.record_failure()
 
         if last_exception:
-            raise HttpServiceClientException(
-                f"Request failed after {self.options.max_retries} attempts: {last_exception}"
-            )
+            raise HttpServiceClientException(f"Request failed after {self.options.max_retries} attempts: {last_exception}")
 
         # This shouldn't happen, but just in case
         raise HttpServiceClientException("Request failed for unknown reason")
 
     # HTTP method implementations
-    async def get(
-        self, url: str, params: Optional[Dict[str, Any]] = None, **kwargs
-    ) -> HttpResponse:
+    async def get(self, url: str, params: Optional[dict[str, Any]] = None, **kwargs) -> HttpResponse:
         """Execute GET request."""
         return await self._execute_request("GET", url, params=params, **kwargs)
 
-    async def post(
-        self, url: str, data: Optional[Any] = None, json: Optional[Any] = None, **kwargs
-    ) -> HttpResponse:
+    async def post(self, url: str, data: Optional[Any] = None, json: Optional[Any] = None, **kwargs) -> HttpResponse:
         """Execute POST request."""
         return await self._execute_request("POST", url, data=data, json=json, **kwargs)
 
-    async def put(
-        self, url: str, data: Optional[Any] = None, json: Optional[Any] = None, **kwargs
-    ) -> HttpResponse:
+    async def put(self, url: str, data: Optional[Any] = None, json: Optional[Any] = None, **kwargs) -> HttpResponse:
         """Execute PUT request."""
         return await self._execute_request("PUT", url, data=data, json=json, **kwargs)
 
-    async def patch(
-        self, url: str, data: Optional[Any] = None, json: Optional[Any] = None, **kwargs
-    ) -> HttpResponse:
+    async def patch(self, url: str, data: Optional[Any] = None, json: Optional[Any] = None, **kwargs) -> HttpResponse:
         """Execute PATCH request."""
         return await self._execute_request("PATCH", url, data=data, json=json, **kwargs)
 
@@ -475,15 +525,11 @@ class HttpServiceClientBuilder:
     """Builder class for configuring HTTP service clients."""
 
     @staticmethod
-    def configure(
-        builder, base_url: Optional[str] = None, options: Optional[HttpRequestOptions] = None
-    ):
+    def configure(builder, base_url: Optional[str] = None, options: Optional[HttpRequestOptions] = None):
         """Configure HTTP service client in the DI container."""
 
         if not HTTP_CLIENT_AVAILABLE:
-            raise HttpServiceClientException(
-                "httpx is required for HTTP service client. Install it with:\n" " pip install httpx"
-            )
+            raise HttpServiceClientException("httpx is required for HTTP service client. Install it with:\n" " pip install httpx")
 
         # Register HttpServiceClient as a scoped service
         def create_http_client(sp) -> HttpServiceClient:

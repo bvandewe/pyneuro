@@ -6,6 +6,9 @@ event-driven architecture, and domain-driven design patterns built on FastAPI.
 
 This file provides type stubs for external usage while avoiding circular imports.
 For full functionality, import modules directly.
+
+See full documentation at https://bvandewe.github.io/pyneuro/
+
 """
 
 # Core types for type hints - these should always be available
@@ -75,9 +78,9 @@ def __getattr__(name: str):
         try:
             from .dependency_injection import (
                 ServiceCollection,
-                ServiceProvider,
-                ServiceLifetime,
                 ServiceDescriptor,
+                ServiceLifetime,
+                ServiceProvider,
             )
 
             if name == "ServiceCollection":
@@ -103,12 +106,12 @@ def __getattr__(name: str):
     ]:
         try:
             from .mediation import (
-                Mediator,
                 Command,
-                Query,
-                Request,
                 CommandHandler,
+                Mediator,
+                Query,
                 QueryHandler,
+                Request,
                 RequestHandler,
             )
 
@@ -141,7 +144,7 @@ def __getattr__(name: str):
     # Domain abstractions
     elif name in ["Entity", "DomainEvent"]:
         try:
-            from .data.abstractions import Entity, DomainEvent
+            from .data.abstractions import DomainEvent, Entity
 
             if name == "Entity":
                 return Entity
@@ -170,7 +173,10 @@ def __getattr__(name: str):
     # Event sourcing
     elif name in ["EventStore", "EventSourcingRepository"]:
         try:
-            from .data.infrastructure.event_sourcing import EventStore, EventSourcingRepository
+            from .data.infrastructure.event_sourcing import (
+                EventSourcingRepository,
+                EventStore,
+            )
 
             if name == "EventStore":
                 return EventStore
@@ -194,7 +200,7 @@ def __getattr__(name: str):
     # Event handling
     elif name in ["EventBus", "EventHandler", "CloudEvent"]:
         try:
-            from .eventing import EventBus, EventHandler, CloudEvent
+            from .eventing import CloudEvent, EventBus, EventHandler
 
             if name == "EventBus":
                 return EventBus
@@ -208,8 +214,8 @@ def __getattr__(name: str):
     # Hosting
     elif name in ["WebApplicationBuilder", "WebApplication", "HostedService"]:
         try:
-            from .hosting.web import WebApplicationBuilder, WebApplication
             from .hosting import HostedService
+            from .hosting.web import WebApplication, WebApplicationBuilder
 
             if name == "WebApplicationBuilder":
                 return WebApplicationBuilder
@@ -257,7 +263,7 @@ def __getattr__(name: str):
     # Resource watching
     elif name in ["ResourceWatcher", "Reconciler"]:
         try:
-            from .data.resources import ResourceWatcher, Reconciler
+            from .data.resources import Reconciler, ResourceWatcher
 
             if name == "ResourceWatcher":
                 return ResourceWatcher
@@ -290,11 +296,11 @@ def __getattr__(name: str):
         try:
             from .utils import (
                 CamelCaseConverter,
-                to_camel_case,
-                to_snake_case,
-                to_pascal_case,
-                to_kebab_case,
                 CamelModel,
+                to_camel_case,
+                to_kebab_case,
+                to_pascal_case,
+                to_snake_case,
             )
 
             if name == "CamelCaseConverter":
@@ -340,25 +346,25 @@ def __getattr__(name: str):
             from .validation import (
                 BusinessRule,
                 BusinessRuleValidator,
-                ValidationResult,
-                ValidationError,
-                rule,
-                conditional_rule,
-                when,
-                ValidatorBase,
-                PropertyValidator,
-                EntityValidator,
-                CompositeValidator,
-                validate_with,
-                required,
-                min_length,
-                max_length,
-                email_format,
-                numeric_range,
-                custom_validator,
-                ValidationException,
                 BusinessRuleViolationException,
+                CompositeValidator,
                 ConditionalValidationException,
+                EntityValidator,
+                PropertyValidator,
+                ValidationError,
+                ValidationException,
+                ValidationResult,
+                ValidatorBase,
+                conditional_rule,
+                custom_validator,
+                email_format,
+                max_length,
+                min_length,
+                numeric_range,
+                required,
+                rule,
+                validate_with,
+                when,
             )
 
             if name == "BusinessRule":

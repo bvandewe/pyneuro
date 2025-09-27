@@ -4,10 +4,13 @@ Case conversion utilities for string transformations.
 This module provides comprehensive utilities for converting between different
 case conventions commonly used in programming: snake_case, camelCase,
 PascalCase, kebab-case, and more.
+
+For detailed information about case conversion utilities, see:
+https://bvandewe.github.io/pyneuro/features/case-conversion-utilities/
 """
 
 import re
-from typing import Any, Dict
+from typing import Any
 
 
 class CamelCaseConverter:
@@ -15,7 +18,11 @@ class CamelCaseConverter:
     Comprehensive case conversion utility for string transformations.
 
     Provides methods for converting between snake_case, camelCase, PascalCase,
-    kebab-case, and other common case conventions.
+    kebab-case, and other common case conventions. Essential for API
+    compatibility between different naming conventions.
+
+    For detailed information about case conversion utilities, see:
+    https://bvandewe.github.io/pyneuro/features/case-conversion-utilities/
     """
 
     # Regular expressions for case detection and conversion
@@ -203,21 +210,14 @@ class CamelCaseConverter:
             if isinstance(value, dict):
                 result[new_key] = CamelCaseConverter.transform_dict_keys(value, transform_func)
             elif isinstance(value, list):
-                result[new_key] = [
-                    (
-                        CamelCaseConverter.transform_dict_keys(item, transform_func)
-                        if isinstance(item, dict)
-                        else item
-                    )
-                    for item in value
-                ]
+                result[new_key] = [(CamelCaseConverter.transform_dict_keys(item, transform_func) if isinstance(item, dict) else item) for item in value]
             else:
                 result[new_key] = value
 
         return result
 
     @staticmethod
-    def to_camel_case_dict(data: Dict[str, Any]) -> Dict[str, Any]:
+    def to_camel_case_dict(data: dict[str, Any]) -> dict[str, Any]:
         """
         Convert all dictionary keys to camelCase recursively.
 
@@ -230,7 +230,7 @@ class CamelCaseConverter:
         return CamelCaseConverter.transform_dict_keys(data, CamelCaseConverter.to_camel_case)
 
     @staticmethod
-    def to_snake_case_dict(data: Dict[str, Any]) -> Dict[str, Any]:
+    def to_snake_case_dict(data: dict[str, Any]) -> dict[str, Any]:
         """
         Convert all dictionary keys to snake_case recursively.
 
@@ -269,11 +269,11 @@ def to_title_case(string: str) -> str:
     return CamelCaseConverter.to_title_case(string)
 
 
-def camel_case_dict(data: Dict[str, Any]) -> Dict[str, Any]:
+def camel_case_dict(data: dict[str, Any]) -> dict[str, Any]:
     """Convert dictionary keys to camelCase."""
     return CamelCaseConverter.to_camel_case_dict(data)
 
 
-def snake_case_dict(data: Dict[str, Any]) -> Dict[str, Any]:
+def snake_case_dict(data: dict[str, Any]) -> dict[str, Any]:
     """Convert dictionary keys to snake_case."""
     return CamelCaseConverter.to_snake_case_dict(data)

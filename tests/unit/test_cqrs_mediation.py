@@ -2,43 +2,38 @@
 Unit tests for CQRS and Mediation functionality.
 """
 
-import pytest
-from typing import List, Optional
 from dataclasses import dataclass
-from unittest.mock import Mock, AsyncMock
 from datetime import datetime
-from uuid import uuid4
 
-from neuroglia.mediation.mediator import (
-    Mediator,
-    Command,
-    Query,
-    CommandHandler,
-    QueryHandler,
-    Event,
-    EventHandler,
-    INotification,
-    NotificationHandler,
-)
-from neuroglia.core.operation_result import OperationResult
+import pytest
+
+from neuroglia.data.abstractions import DomainEvent
 from neuroglia.dependency_injection.service_provider import ServiceCollection
+from neuroglia.mediation.mediator import (
+    Command,
+    CommandHandler,
+    DomainEventHandler,
+    Mediator,
+    NotificationHandler,
+    Query,
+    QueryHandler,
+)
 
 # Import test fixtures
 from tests.fixtures.test_fixtures import (
-    TestUser,
-    TestUserDto,
     CreateTestUserCommand,
-    GetTestUserQuery,
-    ListTestUsersQuery,
     CreateTestUserCommandHandler,
+    GetTestUserQuery,
     GetTestUserQueryHandler,
+    InMemoryTestUserDtoRepository,
+    InMemoryTestUserRepository,
+    ListTestUsersQuery,
     ListTestUsersQueryHandler,
+    TestUser,
     TestUserCreatedEvent,
     TestUserCreatedEventHandler,
-    InMemoryTestUserRepository,
-    InMemoryTestUserDtoRepository,
+    TestUserDto,
 )
-
 
 # Additional test models for comprehensive testing
 
@@ -58,7 +53,7 @@ class SimpleQuery(Query[int]):
 
 
 @dataclass
-class SimpleEvent(Event):
+class SimpleEvent(DomainEvent):
     """Simple event for testing"""
 
     data: str
@@ -66,7 +61,7 @@ class SimpleEvent(Event):
 
 
 @dataclass
-class TestNotification(INotification):
+class TestNotification:
     """Test notification"""
 
     message: str
@@ -77,7 +72,7 @@ class SimpleCommandHandler(CommandHandler[SimpleCommand, str]):
     """Simple command handler for testing"""
 
     def __init__(self):
-        self.handled_commands: List[SimpleCommand] = []
+        self.handled_commands: list[SimpleCommand] = []
 
     async def handle_async(self, command: SimpleCommand) -> str:
         self.handled_commands.append(command)
@@ -88,18 +83,18 @@ class SimpleQueryHandler(QueryHandler[SimpleQuery, int]):
     """Simple query handler for testing"""
 
     def __init__(self):
-        self.handled_queries: List[SimpleQuery] = []
+        self.handled_queries: list[SimpleQuery] = []
 
     async def handle_async(self, query: SimpleQuery) -> int:
         self.handled_queries.append(query)
         return query.value * 2
 
 
-class SimpleEventHandler(EventHandler[SimpleEvent]):
+class SimpleEventHandler(DomainEventHandler[SimpleEvent]):
     """Simple event handler for testing"""
 
     def __init__(self):
-        self.handled_events: List[SimpleEvent] = []
+        self.handled_events: list[SimpleEvent] = []
 
     async def handle_async(self, event: SimpleEvent):
         self.handled_events.append(event)
@@ -109,7 +104,7 @@ class FirstNotificationHandler(NotificationHandler[TestNotification]):
     """First notification handler for testing"""
 
     def __init__(self):
-        self.handled_notifications: List[TestNotification] = []
+        self.handled_notifications: list[TestNotification] = []
 
     async def handle_async(self, notification: TestNotification):
         self.handled_notifications.append(notification)
@@ -119,7 +114,7 @@ class SecondNotificationHandler(NotificationHandler[TestNotification]):
     """Second notification handler for testing"""
 
     def __init__(self):
-        self.handled_notifications: List[TestNotification] = []
+        self.handled_notifications: list[TestNotification] = []
 
     async def handle_async(self, notification: TestNotification):
         self.handled_notifications.append(notification)
@@ -136,7 +131,6 @@ class FailingCommandHandler(CommandHandler[SimpleCommand, str]):
 
 
 class TestCommandQueryEventBases:
-
     def test_command_creation(self):
         """Test Command base class"""
         command = SimpleCommand(message="test")
@@ -173,7 +167,6 @@ class TestCommandQueryEventBases:
 
 
 class TestHandlerBases:
-
     @pytest.mark.asyncio
     async def test_command_handler(self):
         """Test CommandHandler base class"""
@@ -225,7 +218,6 @@ class TestHandlerBases:
 
 
 class TestMediator:
-
     def setup_method(self):
         """Set up test mediator with handlers"""
         self.service_collection = ServiceCollection()
@@ -337,7 +329,6 @@ class TestMediator:
 
 
 class TestCQRSScenarios:
-
     def setup_method(self):
         """Set up comprehensive CQRS test scenario"""
         self.service_collection = ServiceCollection()
@@ -350,9 +341,7 @@ class TestCQRSScenarios:
         from neuroglia.mapping.mapper import Mapper
 
         self.mapper = Mapper()
-        self.mapper.create_map(TestUser, TestUserDto).add_member_mapping(
-            lambda src: src.full_name, lambda dst: dst.full_name
-        )
+        self.mapper.create_map(TestUser, TestUserDto).add_member_mapping(lambda src: src.full_name, lambda dst: dst.full_name)
 
         # Set up handlers
         self.create_user_handler = CreateTestUserCommandHandler(self.user_repository, self.mapper)
@@ -361,14 +350,10 @@ class TestCQRSScenarios:
         self.user_created_event_handler = TestUserCreatedEventHandler()
 
         # Register handlers
-        self.service_collection.add_singleton(
-            CreateTestUserCommandHandler, self.create_user_handler
-        )
+        self.service_collection.add_singleton(CreateTestUserCommandHandler, self.create_user_handler)
         self.service_collection.add_singleton(GetTestUserQueryHandler, self.get_user_handler)
         self.service_collection.add_singleton(ListTestUsersQueryHandler, self.list_users_handler)
-        self.service_collection.add_singleton(
-            TestUserCreatedEventHandler, self.user_created_event_handler
-        )
+        self.service_collection.add_singleton(TestUserCreatedEventHandler, self.user_created_event_handler)
 
         self.service_provider = self.service_collection.build_service_provider()
         self.mediator = Mediator(self.service_provider)
@@ -376,9 +361,7 @@ class TestCQRSScenarios:
     @pytest.mark.asyncio
     async def test_create_user_command(self):
         """Test complete user creation workflow"""
-        command = CreateTestUserCommand(
-            email="test@example.com", first_name="John", last_name="Doe"
-        )
+        command = CreateTestUserCommand(email="test@example.com", first_name="John", last_name="Doe")
 
         result = await self.mediator.send_async(command)
 
@@ -398,14 +381,10 @@ class TestCQRSScenarios:
     async def test_create_duplicate_user_command(self):
         """Test creating user with duplicate email"""
         # Create first user
-        await self.user_repository.add_async(
-            TestUser(id="1", email="duplicate@example.com", first_name="First", last_name="User")
-        )
+        await self.user_repository.add_async(TestUser(id="1", email="duplicate@example.com", first_name="First", last_name="User"))
 
         # Try to create user with same email
-        command = CreateTestUserCommand(
-            email="duplicate@example.com", first_name="Second", last_name="User"
-        )
+        command = CreateTestUserCommand(email="duplicate@example.com", first_name="Second", last_name="User")
 
         result = await self.mediator.send_async(command)
 
@@ -515,7 +494,6 @@ class TestCQRSScenarios:
 
 
 class TestMediatorErrorHandling:
-
     @pytest.mark.asyncio
     async def test_mediator_with_null_service_provider(self):
         """Test mediator behavior with null service provider"""
@@ -547,7 +525,6 @@ class TestMediatorErrorHandling:
 
 
 class TestMediatorIntegration:
-
     @pytest.mark.asyncio
     async def test_full_user_lifecycle(self):
         """Test complete user lifecycle using CQRS"""
@@ -559,9 +536,7 @@ class TestMediatorIntegration:
         from neuroglia.mapping.mapper import Mapper
 
         mapper = Mapper()
-        mapper.create_map(TestUser, TestUserDto).add_member_mapping(
-            lambda src: src.full_name, lambda dst: dst.full_name
-        )
+        mapper.create_map(TestUser, TestUserDto).add_member_mapping(lambda src: src.full_name, lambda dst: dst.full_name)
 
         # Register handlers
         create_handler = CreateTestUserCommandHandler(user_repository, mapper)
@@ -576,9 +551,7 @@ class TestMediatorIntegration:
         mediator = Mediator(provider)
 
         # 1. Create user
-        create_command = CreateTestUserCommand(
-            email="lifecycle@example.com", first_name="Life", last_name="Cycle"
-        )
+        create_command = CreateTestUserCommand(email="lifecycle@example.com", first_name="Life", last_name="Cycle")
 
         create_result = await mediator.send_async(create_command)
         assert create_result.is_success

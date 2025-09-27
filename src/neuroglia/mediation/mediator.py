@@ -1,16 +1,17 @@
 import asyncio
 import inspect
 import logging
-from pathlib import Path
-
 from abc import ABC, abstractmethod
+from pathlib import Path
 from types import UnionType
-from typing import Any, Generic, List, Optional, TypeVar
-from neuroglia.core import ModuleLoader, OperationResult, TypeFinder, TypeExtensions
+from typing import Any, Generic, Optional, TypeVar
+
+from neuroglia.core import ModuleLoader, OperationResult, TypeExtensions, TypeFinder
 from neuroglia.data.abstractions import DomainEvent
 from neuroglia.dependency_injection.service_provider import ServiceProviderBase
 from neuroglia.hosting.abstractions import ApplicationBuilderBase
 from neuroglia.integration.models import IntegrationEvent
+from neuroglia.mediation.pipeline_behavior import PipelineBehavior
 
 log = logging.getLogger(__name__)
 
@@ -20,21 +21,104 @@ TResult = TypeVar("TResult", bound=OperationResult)
 
 
 class Request(Generic[TResult], ABC):
-    """Represents a CQRS request"""
+    """
+    Represents the abstraction for all CQRS requests in the Command Query Responsibility Segregation pattern.
 
-    pass
+    This abstraction forms the foundation for both commands (write operations) and queries (read operations),
+    enabling a unified approach to request handling through the mediator pattern.
+
+    Type Parameters:
+        TResult: The type of result expected from processing this request
+
+    Examples:
+        ```python
+        # Custom request types inherit from this abstraction
+        @dataclass
+        class CustomRequest(Request[OperationResult[UserDto]]):
+            user_id: str
+            action_type: str
+
+        # Processing through mediator
+        request = CustomRequest(user_id="123", action_type="activate")
+        result = await mediator.execute_async(request)
+        ```
+
+    See Also:
+        - CQRS Mediation: https://bvandewe.github.io/pyneuro/features/simple-cqrs/
+        - Mediator Pattern: https://bvandewe.github.io/pyneuro/patterns/
+    """
 
 
 class Command(Generic[TResult], Request[TResult], ABC):
-    """Represents a CQRS command"""
+    """
+    Represents the abstraction for CQRS commands that perform write operations and modify system state.
 
-    pass
+    Commands encapsulate business intentions and contain all necessary data to perform state-changing
+    operations. Each command should have exactly one handler and represent a single business use case.
+
+    Type Parameters:
+        TResult: The type of result returned after command execution (typically OperationResult)
+
+    Examples:
+        ```python
+        @dataclass
+        class CreateUserCommand(Command[OperationResult[UserDto]]):
+            first_name: str
+            last_name: str
+            email: str
+
+        @dataclass
+        class UpdateUserCommand(Command[OperationResult[UserDto]]):
+            user_id: str
+            first_name: Optional[str] = None
+            last_name: Optional[str] = None
+
+        # Command execution
+        command = CreateUserCommand("John", "Doe", "john@example.com")
+        result = await mediator.execute_async(command)
+        ```
+
+    See Also:
+        - CQRS Mediation: https://bvandewe.github.io/pyneuro/features/simple-cqrs/
+        - Command Pattern: https://bvandewe.github.io/pyneuro/patterns/
+    """
 
 
 class Query(Generic[TResult], Request[TResult], ABC):
-    """Represents a CQRS query"""
+    """
+    Represents the abstraction for CQRS queries that perform read operations without side effects.
 
-    pass
+    Queries encapsulate data retrieval intentions and should never modify system state. They can
+    have multiple handlers for different projections or optimized read models of the same data.
+
+    Type Parameters:
+        TResult: The type of data returned by the query (DTOs, lists, primitives, etc.)
+
+    Examples:
+        ```python
+        @dataclass
+        class GetUserByIdQuery(Query[Optional[UserDto]]):
+            user_id: str
+
+        @dataclass
+        class GetUsersQuery(Query[List[UserDto]]):
+            page: int = 1
+            page_size: int = 20
+            active_only: bool = True
+
+        @dataclass
+        class GetUserCountQuery(Query[int]):
+            active_only: bool = True
+
+        # Query execution
+        query = GetUserByIdQuery(user_id="123")
+        user = await mediator.execute_async(query)
+        ```
+
+    See Also:
+        - CQRS Mediation: https://bvandewe.github.io/pyneuro/features/simple-cqrs/
+        - Query Pattern: https://bvandewe.github.io/pyneuro/patterns/
+    """
 
 
 TRequest = TypeVar("TRequest", bound=Request)
@@ -42,7 +126,44 @@ TRequest = TypeVar("TRequest", bound=Request)
 
 
 class RequestHandler(Generic[TRequest, TResult], ABC):
-    """Represents a service used to handle a specific type of CQRS request"""
+    """
+    Represents the abstraction for services that handle specific types of CQRS requests.
+
+    Request handlers encapsulate the business logic for processing commands and queries,
+    providing separation of concerns and single responsibility. They are automatically
+    discovered and registered through the dependency injection container.
+
+    Type Parameters:
+        TRequest: The specific type of request this handler processes
+        TResult: The type of result returned after processing
+
+    Examples:
+        ```python
+        class ProcessOrderHandler(RequestHandler[ProcessOrderCommand, OperationResult[OrderDto]]):
+            def __init__(self, order_repository: OrderRepository, payment_service: PaymentService):
+                self.order_repository = order_repository
+                self.payment_service = payment_service
+
+            async def handle_async(self, command: ProcessOrderCommand) -> OperationResult[OrderDto]:
+                # Validation
+                if command.amount <= 0:
+                    return self.bad_request("Amount must be positive")
+
+                # Business logic
+                payment_result = await self.payment_service.process_payment(command.payment_info)
+                if not payment_result.success:
+                    return self.bad_request("Payment failed")
+
+                order = Order.create(command.items, command.customer_id)
+                await self.order_repository.save_async(order)
+
+                return self.created(OrderDto.from_entity(order))
+        ```
+
+    See Also:
+        - CQRS Mediation: https://bvandewe.github.io/pyneuro/features/simple-cqrs/
+        - Handler Pattern: https://bvandewe.github.io/pyneuro/patterns/
+    """
 
     @abstractmethod
     async def handle_async(self, request: TRequest) -> TResult:
@@ -83,9 +204,43 @@ TCommand = TypeVar("TCommand", bound=Command)
 
 
 class CommandHandler(Generic[TCommand, TResult], RequestHandler[TCommand, TResult], ABC):
-    """Represents a service used to handle a specific type of CQRS command"""
+    """
+    Represents the abstraction for services that handle specific types of CQRS commands.
 
-    pass
+    Command handlers contain the business logic for processing write operations that modify
+    system state. Each command type must have exactly one handler to maintain consistency
+    and avoid ambiguity in business operation execution.
+
+    Type Parameters:
+        TCommand: The specific command type this handler processes
+        TResult: The result type returned after command execution
+
+    Examples:
+        ```python
+        class CreateUserCommandHandler(CommandHandler[CreateUserCommand, OperationResult[UserDto]]):
+            def __init__(self, user_repository: UserRepository, email_service: EmailService):
+                self.user_repository = user_repository
+                self.email_service = email_service
+
+            async def handle_async(self, command: CreateUserCommand) -> OperationResult[UserDto]:
+                # Validation
+                if await self.user_repository.exists_by_email(command.email):
+                    return self.bad_request("User with this email already exists")
+
+                # Business logic
+                user = User.create(command.first_name, command.last_name, command.email)
+                await self.user_repository.save_async(user)
+
+                # Side effects (events will be published automatically)
+                await self.email_service.send_welcome_email(user.email)
+
+                return self.created(UserDto.from_entity(user))
+        ```
+
+    See Also:
+        - CQRS Mediation: https://bvandewe.github.io/pyneuro/features/simple-cqrs/
+        - Command Pattern: https://bvandewe.github.io/pyneuro/patterns/
+    """
 
 
 TQuery = TypeVar("TQuery", bound=Query)
@@ -93,9 +248,48 @@ TQuery = TypeVar("TQuery", bound=Query)
 
 
 class QueryHandler(Generic[TQuery, TResult], RequestHandler[TQuery, TResult], ABC):
-    """Represents a service used to handle a specific type of CQRS query"""
+    """
+    Represents the abstraction for services that handle specific types of CQRS queries.
 
-    pass
+    Query handlers contain the logic for processing read operations that retrieve data
+    without side effects. Unlike commands, multiple query handlers can exist for different
+    data projections, optimized views, or caching strategies of the same entity.
+
+    Type Parameters:
+        TQuery: The specific query type this handler processes
+        TResult: The data type returned by the query
+
+    Examples:
+        ```python
+        class GetUserByIdQueryHandler(QueryHandler[GetUserByIdQuery, Optional[UserDto]]):
+            def __init__(self, user_repository: UserRepository):
+                self.user_repository = user_repository
+
+            async def handle_async(self, query: GetUserByIdQuery) -> Optional[UserDto]:
+                user = await self.user_repository.get_by_id_async(query.user_id)
+                return UserDto.from_entity(user) if user else None
+
+        class GetUsersQueryHandler(QueryHandler[GetUsersQuery, List[UserDto]]):
+            def __init__(self, user_repository: QueryableRepository[User, str]):
+                self.user_repository = user_repository
+
+            async def handle_async(self, query: GetUsersQuery) -> List[UserDto]:
+                queryable = await self.user_repository.query_async()
+
+                if query.active_only:
+                    queryable = queryable.where(lambda u: u.is_active)
+
+                users = queryable.skip((query.page - 1) * query.page_size) \\
+                              .take(query.page_size) \\
+                              .to_list()
+
+                return [UserDto.from_entity(u) for u in users]
+        ```
+
+    See Also:
+        - CQRS Mediation: https://bvandewe.github.io/pyneuro/features/simple-cqrs/
+        - Query Pattern: https://bvandewe.github.io/pyneuro/patterns/
+    """
 
 
 TNotification = TypeVar("TNotification", bound=object)
@@ -103,7 +297,46 @@ TNotification = TypeVar("TNotification", bound=object)
 
 
 class NotificationHandler(Generic[TNotification], ABC):
-    """Represents a service used to handle a specific type of CQRS notification"""
+    """
+    Represents the abstraction for services that handle notifications in event-driven architectures.
+
+    Notification handlers process asynchronous messages that don't require a response,
+    enabling loose coupling between components. Multiple handlers can subscribe to the
+    same notification type for cross-cutting concerns and side effects.
+
+    Type Parameters:
+        TNotification: The specific type of notification this handler processes
+
+    Examples:
+        ```python
+        class UserCreatedNotificationHandler(NotificationHandler[UserCreatedEvent]):
+            def __init__(self, email_service: EmailService, audit_service: AuditService):
+                self.email_service = email_service
+                self.audit_service = audit_service
+
+            async def handle_async(self, notification: UserCreatedEvent) -> None:
+                # Send welcome email
+                await self.email_service.send_welcome_email(
+                    notification.user_email,
+                    notification.user_name
+                )
+
+                # Log audit entry
+                await self.audit_service.log_user_creation(
+                    notification.user_id,
+                    notification.created_at
+                )
+
+        # Multiple handlers for the same event
+        class UserCreatedCacheHandler(NotificationHandler[UserCreatedEvent]):
+            async def handle_async(self, notification: UserCreatedEvent) -> None:
+                await self.cache.invalidate_user_statistics()
+        ```
+
+    See Also:
+        - Event-Driven Architecture: https://bvandewe.github.io/pyneuro/patterns/
+        - Domain Events: https://bvandewe.github.io/pyneuro/features/simple-cqrs/
+    """
 
     @abstractmethod
     async def handle_async(self, notification: TNotification) -> None:
@@ -116,25 +349,161 @@ TDomainEvent = TypeVar("TDomainEvent", bound=DomainEvent)
 
 
 class DomainEventHandler(Generic[TDomainEvent], NotificationHandler[TDomainEvent], ABC):
-    """Represents a service used to handle a specific domain event"""
+    """
+    Represents the abstraction for services that handle domain events in domain-driven design.
 
-    pass
+    Domain event handlers process events raised by domain entities to maintain business
+    consistency, trigger side effects, and enable reactive business processes while
+    maintaining loose coupling between bounded contexts.
+
+    Type Parameters:
+        TDomainEvent: The specific domain event type this handler processes
+
+    Examples:
+        ```python
+        @dataclass
+        class OrderShippedEvent(DomainEvent[str]):
+            order_id: str
+            tracking_number: str
+            shipped_at: datetime
+
+        class OrderShippedEventHandler(DomainEventHandler[OrderShippedEvent]):
+            def __init__(self,
+                       email_service: EmailService,
+                       inventory_service: InventoryService):
+                self.email_service = email_service
+                self.inventory_service = inventory_service
+
+            async def handle_async(self, event: OrderShippedEvent) -> None:
+                # Notify customer
+                await self.email_service.send_shipping_notification(
+                    event.order_id,
+                    event.tracking_number
+                )
+
+                # Update inventory projections
+                await self.inventory_service.mark_items_shipped(event.order_id)
+
+        # Handle aggregate events
+        class ProductOutOfStockHandler(DomainEventHandler[ProductOutOfStockEvent]):
+            async def handle_async(self, event: ProductOutOfStockEvent) -> None:
+                await self.procurement_service.trigger_reorder(event.product_id)
+        ```
+
+    See Also:
+        - Domain Events: https://bvandewe.github.io/pyneuro/patterns/
+        - Event-Driven Architecture: https://bvandewe.github.io/pyneuro/features/simple-cqrs/
+    """
 
 
 TIntegrationEvent = TypeVar("TIntegrationEvent", bound=IntegrationEvent)
 """ Represents the type of integration event to handle """
 
 
-class IntegrationEventHandler(
-    Generic[TIntegrationEvent], NotificationHandler[TIntegrationEvent], ABC
-):
-    """Represents a service used to handle a specific integration event"""
+class IntegrationEventHandler(Generic[TIntegrationEvent], NotificationHandler[TIntegrationEvent], ABC):
+    """
+    Represents the abstraction for services that handle integration events between bounded contexts.
 
-    pass
+    Integration event handlers process events that cross bounded context boundaries,
+    enabling communication between different microservices, systems, or external integrations
+    while maintaining loose coupling and autonomous service boundaries.
+
+    Type Parameters:
+        TIntegrationEvent: The specific integration event type this handler processes
+
+    Examples:
+        ```python
+        @dataclass
+        class UserRegisteredIntegrationEvent(IntegrationEvent):
+            user_id: str
+            email: str
+            registration_source: str
+            occurred_at: datetime
+
+        class UserRegisteredIntegrationEventHandler(IntegrationEventHandler[UserRegisteredIntegrationEvent]):
+            def __init__(self,
+                       crm_service: CRMService,
+                       analytics_service: AnalyticsService):
+                self.crm_service = crm_service
+                self.analytics_service = analytics_service
+
+            async def handle_async(self, event: UserRegisteredIntegrationEvent) -> None:
+                # Sync with external CRM
+                await self.crm_service.create_contact(
+                    user_id=event.user_id,
+                    email=event.email,
+                    source=event.registration_source
+                )
+
+                # Send analytics data
+                await self.analytics_service.track_user_registration(
+                    event.user_id,
+                    event.registration_source,
+                    event.occurred_at
+                )
+        ```
+
+    See Also:
+        - Integration Events: https://bvandewe.github.io/pyneuro/patterns/
+        - Microservices Communication: https://bvandewe.github.io/pyneuro/features/
+    """
 
 
 class Mediator:
-    """Represents the default implementation of the IMediator class"""
+    """
+    Orchestrates the dispatch of commands, queries, and notifications to their respective handlers.
+
+    The Mediator is the central component of the CQRS (Command Query Responsibility Segregation)
+    pattern implementation, providing a single entry point for all request processing while
+    maintaining loose coupling between request senders and handlers.
+
+    Key Features:
+        - Type-safe request routing to appropriate handlers
+        - Automatic handler discovery and registration
+        - Support for commands, queries, and notifications
+        - Parallel execution of multiple notification handlers
+        - Comprehensive error handling and logging
+
+    Attributes:
+        _service_provider (ServiceProviderBase): The dependency injection container for handler resolution
+
+    Examples:
+        ```python
+        # Setup mediator with dependency injection
+        services = ServiceCollection()
+        services.add_mediator()
+        services.add_scoped(CreateUserHandler)
+        services.add_scoped(GetUserByIdHandler)
+
+        provider = services.build_provider()
+        mediator = provider.get_service(Mediator)
+
+        # Execute command
+        command = CreateUserCommand("John", "Doe", "john@example.com")
+        result = await mediator.execute_async(command)
+
+        # Execute query
+        query = GetUserByIdQuery(result.data.id)
+        user = await mediator.execute_async(query)
+
+        # Publish notification (multiple handlers can process)
+        event = UserCreatedEvent(user_id=result.data.id, email="john@example.com")
+        await mediator.publish_async(event)
+        ```
+
+    Architecture:
+        ```
+        Controller -> Mediator -> Handler -> Repository/Service
+                  ^            ^        ^
+                  |            |        |
+               Single API   Type Safe  Business Logic
+        ```
+
+    See Also:
+        - CQRS Mediation: https://bvandewe.github.io/pyneuro/features/simple-cqrs/
+        - Mediator Pattern: https://bvandewe.github.io/pyneuro/patterns/
+        - Getting Started Guide: https://bvandewe.github.io/pyneuro/getting-started/
+    """
 
     _service_provider: ServiceProviderBase
 
@@ -142,39 +511,35 @@ class Mediator:
         self._service_provider = service_provider
 
     async def execute_async(self, request: Request) -> OperationResult:
-        """Executes the specified request"""
-        handlers: List[RequestHandler] = [
-            candidate
-            for candidate in self._service_provider.get_services(RequestHandler)
-            if self._request_handler_matches(candidate, request)
-        ]
+        """Executes the specified request through the pipeline behaviors and handler"""
+        handlers: list[RequestHandler] = [candidate for candidate in self._service_provider.get_services(RequestHandler) if self._request_handler_matches(candidate, request)]
         if handlers is None or len(handlers) < 1:
-            raise Exception(
-                f"Failed to find a handler for request of type '{type(request).__name__}'"
-            )
+            raise Exception(f"Failed to find a handler for request of type '{type(request).__name__}'")
         elif len(handlers) > 1:
-            raise Exception(
-                f"There must be exactly one handler defined for the command of type '{type(request).__name__}'"
-            )
+            raise Exception(f"There must be exactly one handler defined for the command of type '{type(request).__name__}'")
+
         log.info(f"Executing request type {type(request).__name__}")
         handler = handlers[0]
-        return await handler.handle_async(request)
+
+        # Get all pipeline behaviors for this request type
+        behaviors = self._get_pipeline_behaviors(request)
+
+        if not behaviors:
+            # No behaviors, execute handler directly
+            return await handler.handle_async(request)
+
+        # Build pipeline chain with behaviors
+        return await self._build_pipeline(request, handler, behaviors)
 
     async def publish_async(self, notification: object):
         """Publishes the specified notification"""
-        handlers: List[NotificationHandler] = [
-            candidate
-            for candidate in self._service_provider.get_services(NotificationHandler)
-            if self._notification_handler_matches(candidate, type(notification))
-        ]
+        handlers: list[NotificationHandler] = [candidate for candidate in self._service_provider.get_services(NotificationHandler) if self._notification_handler_matches(candidate, type(notification))]
         if handlers is None or len(handlers) < 1:
             return
         await asyncio.gather(*(handler.handle_async(notification) for handler in handlers))
 
     def _request_handler_matches(self, candidate, request_type) -> bool:
-        expected_request_type = (
-            request_type.__orig_class__ if hasattr(request_type, "__orig_class__") else request_type
-        )
+        expected_request_type = request_type.__orig_class__ if hasattr(request_type, "__orig_class__") else request_type
         handler_type = TypeExtensions.get_generic_implementation(candidate, RequestHandler)
         handled_request_type = handler_type.__args__[0]
         if type(handled_request_type) == type(expected_request_type):
@@ -185,27 +550,74 @@ class Mediator:
 
     def _notification_handler_matches(self, candidate, request_type) -> bool:
         candidate_type = type(candidate)
-        handler_type = next(
-            base
-            for base in candidate_type.__orig_bases__
-            if (
-                issubclass(base.__origin__, NotificationHandler)
-                if hasattr(base, "__origin__")
-                else issubclass(base, NotificationHandler)
-            )
-        )
+        handler_type = next(base for base in candidate_type.__orig_bases__ if (issubclass(base.__origin__, NotificationHandler) if hasattr(base, "__origin__") else issubclass(base, NotificationHandler)))
         handled_notification_type = handler_type.__args__[0]
         if isinstance(handled_notification_type, UnionType):
             return any(issubclass(t, request_type) for t in handled_notification_type.__args__)
         else:
-            return (
-                issubclass(handled_notification_type.__origin__, request_type)
-                if hasattr(handled_notification_type, "__origin__")
-                else issubclass(handled_notification_type, request_type)
-            )
+            return issubclass(handled_notification_type.__origin__, request_type) if hasattr(handled_notification_type, "__origin__") else issubclass(handled_notification_type, request_type)
+
+    def _get_pipeline_behaviors(self, request: Request) -> list[PipelineBehavior]:
+        """Gets all registered pipeline behaviors that can handle the specified request type"""
+        behaviors = []
+        try:
+            # Get all registered pipeline behaviors
+            all_behaviors = self._service_provider.get_services(PipelineBehavior)
+            if all_behaviors:
+                # Filter behaviors that can handle this request type
+                for behavior in all_behaviors:
+                    if self._pipeline_behavior_matches(behavior, request):
+                        behaviors.append(behavior)
+        except Exception as e:
+            log.debug(f"No pipeline behaviors registered or error getting behaviors: {e}")
+
+        return behaviors
+
+    def _pipeline_behavior_matches(self, behavior: PipelineBehavior, request: Request) -> bool:
+        """Determines if a pipeline behavior can handle the specified request type"""
+        try:
+            # For now, assume all behaviors can handle all requests
+            # This can be enhanced later with more sophisticated type checking
+            return True
+        except Exception as e:
+            behavior_type = type(behavior)
+            behavior_name = getattr(behavior_type, "__name__", "Unknown")
+            log.debug(f"Error matching pipeline behavior {behavior_name}: {e}")
+            return False
+
+    async def _build_pipeline(self, request: Request, handler: RequestHandler, behaviors: list[PipelineBehavior]) -> OperationResult:
+        """Builds and executes the pipeline chain with the specified behaviors and handler"""
+        if not behaviors:
+            return await handler.handle_async(request)
+
+        # Sort behaviors by priority if they have one (optional ordering)
+        sorted_behaviors = self._sort_behaviors(behaviors)
+
+        # Build the pipeline chain from the end (handler) backward to the beginning
+        async def build_handler_delegate(current_index: int) -> Any:
+            if current_index >= len(sorted_behaviors):
+                # Final handler in the chain
+                return await handler.handle_async(request)
+            else:
+                # Intermediate behavior in the chain
+                current_behavior = sorted_behaviors[current_index]
+
+                async def next_handler():
+                    return await build_handler_delegate(current_index + 1)
+
+                return await current_behavior.handle_async(request, next_handler)
+
+        # Execute the pipeline starting from the first behavior
+        return await build_handler_delegate(0)
+
+    def _sort_behaviors(self, behaviors: list[PipelineBehavior]) -> list[PipelineBehavior]:
+        """Sorts pipeline behaviors by priority. Override to customize ordering."""
+        # Default implementation: preserve registration order
+        # Can be extended to support priority attributes or specific ordering rules
+        return behaviors
 
     @staticmethod
-    def _discover_submodules(package_name: str) -> List[str]:
+    def _discover_submodules(package_name: str) -> list[str]:
         """Discover individual modules within a package without importing the package."""
         submodules = []
         try:
@@ -224,78 +636,56 @@ class Mediator:
         return submodules
 
     @staticmethod
-    def _register_handlers_from_module(
-        app: ApplicationBuilderBase, module, module_name: str
-    ) -> int:
+    def _register_handlers_from_module(app: ApplicationBuilderBase, module, module_name: str) -> int:
         """Register all handlers found in a specific module."""
         handlers_registered = 0
         try:
             # Command handlers
             for command_handler_type in TypeFinder.get_types(
                 module,
-                lambda cls: inspect.isclass(cls)
-                and (not hasattr(cls, "__parameters__") or len(cls.__parameters__) < 1)
-                and issubclass(cls, CommandHandler)
-                and cls != CommandHandler,
+                lambda cls: inspect.isclass(cls) and (not hasattr(cls, "__parameters__") or len(cls.__parameters__) < 1) and issubclass(cls, CommandHandler) and cls != CommandHandler,
                 include_sub_modules=True,
             ):
                 app.services.add_transient(RequestHandler, command_handler_type)
                 handlers_registered += 1
-                log.debug(
-                    f"Registered CommandHandler: {command_handler_type.__name__} from {module_name}"
-                )
+                log.debug(f"Registered CommandHandler: {command_handler_type.__name__} from {module_name}")
 
             # Query handlers
             for queryhandler_type in TypeFinder.get_types(
                 module,
-                lambda cls: inspect.isclass(cls)
-                and (not hasattr(cls, "__parameters__") or len(cls.__parameters__) < 1)
-                and issubclass(cls, QueryHandler)
-                and cls != QueryHandler,
+                lambda cls: inspect.isclass(cls) and (not hasattr(cls, "__parameters__") or len(cls.__parameters__) < 1) and issubclass(cls, QueryHandler) and cls != QueryHandler,
                 include_sub_modules=True,
             ):
                 app.services.add_transient(RequestHandler, queryhandler_type)
                 handlers_registered += 1
-                log.debug(
-                    f"Registered QueryHandler: {queryhandler_type.__name__} from {module_name}"
-                )
+                log.debug(f"Registered QueryHandler: {queryhandler_type.__name__} from {module_name}")
 
             # Domain event handlers
             for domain_event_handler_type in TypeFinder.get_types(
                 module,
-                lambda cls: inspect.isclass(cls)
-                and issubclass(cls, DomainEventHandler)
-                and cls != DomainEventHandler,
+                lambda cls: inspect.isclass(cls) and issubclass(cls, DomainEventHandler) and cls != DomainEventHandler,
                 include_sub_modules=True,
             ):
                 app.services.add_transient(NotificationHandler, domain_event_handler_type)
                 handlers_registered += 1
-                log.debug(
-                    f"Registered DomainEventHandler: {domain_event_handler_type.__name__} from {module_name}"
-                )
+                log.debug(f"Registered DomainEventHandler: {domain_event_handler_type.__name__} from {module_name}")
 
             # Integration event handlers
             for integration_event_handler_type in TypeFinder.get_types(
                 module,
-                lambda cls: inspect.isclass(cls)
-                and issubclass(cls, IntegrationEventHandler)
-                and cls != IntegrationEventHandler,
+                lambda cls: inspect.isclass(cls) and issubclass(cls, IntegrationEventHandler) and cls != IntegrationEventHandler,
                 include_sub_packages=True,
             ):
                 app.services.add_transient(NotificationHandler, integration_event_handler_type)
                 handlers_registered += 1
-                log.debug(
-                    f"Registered IntegrationEventHandler: {integration_event_handler_type.__name__} from {module_name}"
-                )
+                log.debug(f"Registered IntegrationEventHandler: {integration_event_handler_type.__name__} from {module_name}")
 
         except Exception as e:
             log.warning(f"Error registering handlers from module {module_name}: {e}")
         return handlers_registered
 
     @staticmethod
-    def configure(
-        app: ApplicationBuilderBase, modules: List[str] = list[str]()
-    ) -> ApplicationBuilderBase:
+    def configure(app: ApplicationBuilderBase, modules: list[str] = list[str]()) -> ApplicationBuilderBase:
         """
         Registers and configures mediation-related services with resilient handler discovery.
 
@@ -320,14 +710,10 @@ class Mediator:
                 # Strategy 1: Try to import the entire package (original behavior)
                 log.debug(f"Attempting to load package: {module_name}")
                 module = ModuleLoader.load(module_name)
-                module_handlers_registered = Mediator._register_handlers_from_module(
-                    app, module, module_name
-                )
+                module_handlers_registered = Mediator._register_handlers_from_module(app, module, module_name)
 
                 if module_handlers_registered > 0:
-                    log.info(
-                        f"Successfully registered {module_handlers_registered} handlers from package: {module_name}"
-                    )
+                    log.info(f"Successfully registered {module_handlers_registered} handlers from package: {module_name}")
                 else:
                     log.debug(f"No handlers found in package: {module_name}")
 
@@ -349,47 +735,33 @@ class Mediator:
                         try:
                             log.debug(f"Attempting to load submodule: {submodule_name}")
                             submodule = ModuleLoader.load(submodule_name)
-                            submodule_handlers = Mediator._register_handlers_from_module(
-                                app, submodule, submodule_name
-                            )
+                            submodule_handlers = Mediator._register_handlers_from_module(app, submodule, submodule_name)
                             module_handlers_registered += submodule_handlers
 
                             if submodule_handlers > 0:
-                                log.info(
-                                    f"Successfully registered {submodule_handlers} handlers from submodule: {submodule_name}"
-                                )
+                                log.info(f"Successfully registered {submodule_handlers} handlers from submodule: {submodule_name}")
 
                         except ImportError as submodule_error:
                             log.debug(f"Skipping submodule '{submodule_name}': {submodule_error}")
                             continue
                         except Exception as submodule_error:
-                            log.warning(
-                                f"Unexpected error loading submodule '{submodule_name}': {submodule_error}"
-                            )
+                            log.warning(f"Unexpected error loading submodule '{submodule_name}': {submodule_error}")
                             continue
 
                     if module_handlers_registered > 0:
-                        log.info(
-                            f"Fallback succeeded: registered {module_handlers_registered} handlers from individual modules in '{module_name}'"
-                        )
+                        log.info(f"Fallback succeeded: registered {module_handlers_registered} handlers from individual modules in '{module_name}'")
                     else:
-                        log.warning(
-                            f"Fallback failed: no handlers registered from '{module_name}' (package or individual modules)"
-                        )
+                        log.warning(f"Fallback failed: no handlers registered from '{module_name}' (package or individual modules)")
 
                 except Exception as discovery_error:
-                    log.error(
-                        f"Failed to discover submodules for '{module_name}': {discovery_error}"
-                    )
+                    log.error(f"Failed to discover submodules for '{module_name}': {discovery_error}")
 
             except Exception as unexpected_error:
                 log.error(f"Unexpected error processing module '{module_name}': {unexpected_error}")
 
             total_handlers_registered += module_handlers_registered
 
-        log.info(
-            f"Handler discovery completed: {total_handlers_registered} total handlers registered from {len(modules)} module specifications"
-        )
+        log.info(f"Handler discovery completed: {total_handlers_registered} total handlers registered from {len(modules)} module specifications")
 
         # Always add the Mediator singleton
         app.services.add_singleton(Mediator)

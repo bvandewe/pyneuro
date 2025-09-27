@@ -2,11 +2,19 @@
 
 Neuroglia is a lightweight, opinionated framework built on top of [FastAPI](https://fastapi.tiangolo.com/) that provides a comprehensive set of tools and patterns for building clean, maintainable, and scalable microservices. It enforces architectural best practices and provides out-of-the-box implementations of common patterns.
 
+📚 **Read the full documentation at [bvandewe.github.io/pyneuro/](https://bvandewe.github.io/pyneuro/)** 📚
+
+## Why Neuroglia?
+
+TODO: Add a "Why Neuroglia?" or "Philosophy" Section: The documentation does a great job explaining how to use the framework. A dedicated section could quickly explain when and why a developer should choose it over other alternatives like vanilla FastAPI or Django. This could be a short, high-level page comparing the trade-offs and highlighting the ideal use cases (e.g., "Choose Neuroglia for complex, domain-driven microservices that need to be maintained for years to come.").
+
 ## 🚀 Key Features
 
 - **🏗️ Clean Architecture**: Enforces separation of concerns with clearly defined layers (API, Application, Domain, Integration)
 - **💉 Dependency Injection**: Lightweight container with automatic service discovery and registration
 - **🎯 CQRS & Mediation**: Command Query Responsibility Segregation with built-in mediator pattern
+- **🏛️ State-Based Persistence**: Alternative to event sourcing with automatic domain event dispatching
+- **🔧 Pipeline Behaviors**: Cross-cutting concerns like validation, caching, and transactions
 - **📡 Event-Driven Architecture**: Native support for CloudEvents, event sourcing, and reactive programming
 - **🎯 Resource Oriented Architecture**: Declarative resource management with watchers, controllers, and reconciliation loops
 - **🔌 MVC Controllers**: Class-based API controllers with automatic discovery and OpenAPI generation
@@ -38,7 +46,9 @@ src/
 - **[🏗️ Architecture Guide](docs/architecture.md)** - Understanding the framework's architecture
 - **[💉 Dependency Injection](docs/features/dependency-injection.md)** - Service container and DI patterns
 - **[🎯 CQRS & Mediation](docs/features/cqrs-mediation.md)** - Command and Query handling
-- **[🎯 Resource Oriented Architecture](docs/features/resource-oriented-architecture.md)** - Declarative resource management patterns
+- **[�️ State-Based Persistence](docs/features/state-based-persistence.md)** - Domain events with state persistence
+- **[🔧 Pipeline Behaviors](docs/features/pipeline-behaviors.md)** - Cross-cutting concerns and middleware
+- **[�🎯 Resource Oriented Architecture](docs/features/resource-oriented-architecture.md)** - Declarative resource management patterns
 - **[🔌 MVC Controllers](docs/features/mvc-controllers.md)** - Building REST APIs
 - **[🗄️ Data Access](docs/features/data-access.md)** - Repository pattern and data persistence
 - **[📡 Event Handling](docs/features/event-handling.md)** - CloudEvents and reactive programming
@@ -83,18 +93,20 @@ app.run()
 
 ## 🏗️ Framework Components
 
-| Component | Purpose | Documentation |
-|-----------|---------|---------------|
-| **Core** | Base types, utilities, module loading | [📖 Core](docs/features/core.md) |
-| **Dependency Injection** | Service container and registration | [📖 DI](docs/features/dependency-injection.md) |
-| **Hosting** | Web application hosting and lifecycle | [📖 Hosting](docs/features/hosting.md) |
-| **MVC** | Controllers and routing | [📖 MVC](docs/features/mvc-controllers.md) |
-| **Mediation** | CQRS, commands, queries, events | [📖 Mediation](docs/features/cqrs-mediation.md) |
-| **Resource Oriented Architecture** | Watchers, controllers, reconciliation | [📖 ROA](docs/features/resource-oriented-architecture.md) |
-| **Data** | Repository pattern, event sourcing | [📖 Data](docs/features/data-access.md) |
-| **Eventing** | CloudEvents, pub/sub, reactive | [📖 Events](docs/features/event-handling.md) |
-| **Mapping** | Object-to-object mapping | [📖 Mapping](docs/features/object-mapping.md) |
-| **Serialization** | JSON and other serialization | [📖 Serialization](docs/features/serialization.md) |
+| Component                          | Purpose                               | Documentation                                                    |
+| ---------------------------------- | ------------------------------------- | ---------------------------------------------------------------- |
+| **Core**                           | Base types, utilities, module loading | [📖 Core](docs/features/core.md)                                 |
+| **Dependency Injection**           | Service container and registration    | [📖 DI](docs/features/dependency-injection.md)                   |
+| **Hosting**                        | Web application hosting and lifecycle | [📖 Hosting](docs/features/hosting.md)                           |
+| **MVC**                            | Controllers and routing               | [📖 MVC](docs/features/mvc-controllers.md)                       |
+| **Mediation**                      | CQRS, commands, queries, events       | [📖 Mediation](docs/features/cqrs-mediation.md)                  |
+| **State Persistence**              | Domain events with state persistence  | [📖 State Persistence](docs/features/state-based-persistence.md) |
+| **Pipeline Behaviors**             | Cross-cutting concerns, middleware    | [📖 Behaviors](docs/features/pipeline-behaviors.md)              |
+| **Resource Oriented Architecture** | Watchers, controllers, reconciliation | [📖 ROA](docs/features/resource-oriented-architecture.md)        |
+| **Data**                           | Repository pattern, event sourcing    | [📖 Data](docs/features/data-access.md)                          |
+| **Eventing**                       | CloudEvents, pub/sub, reactive        | [📖 Events](docs/features/event-handling.md)                     |
+| **Mapping**                        | Object-to-object mapping              | [📖 Mapping](docs/features/object-mapping.md)                    |
+| **Serialization**                  | JSON and other serialization          | [📖 Serialization](docs/features/serialization.md)               |
 
 ## 📋 Requirements
 
@@ -130,7 +142,7 @@ pytest -n auto
 # Run only unit tests
 pytest tests/unit/
 
-# Run only integration tests  
+# Run only integration tests
 pytest tests/integration/
 
 # Run tests by marker
@@ -209,7 +221,7 @@ import pytest
 from neuroglia.dependency_injection import ServiceCollection
 
 class TestNewFeature:
-    
+
     @pytest.mark.unit
     def test_my_unit_feature(self):
         """Test individual component"""

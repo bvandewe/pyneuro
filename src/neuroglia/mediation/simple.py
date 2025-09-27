@@ -6,20 +6,14 @@ that need basic CQRS functionality without complex event sourcing or cloud event
 """
 
 from abc import ABC, abstractmethod
-from typing import TypeVar, Generic, Optional, TYPE_CHECKING
 from dataclasses import dataclass
+from typing import TYPE_CHECKING, Generic, Optional, TypeVar
 
 from neuroglia.core.operation_result import OperationResult
 from neuroglia.dependency_injection.service_provider import ServiceCollection
 
 if TYPE_CHECKING:
-    from neuroglia.mediation.mediator import (
-        Command,
-        Query,
-        CommandHandler,
-        QueryHandler,
-        RequestHandler,
-    )
+    pass
 
 
 TResult = TypeVar("TResult")
@@ -29,19 +23,30 @@ TQuery = TypeVar("TQuery")
 
 class SimpleCommandHandler(Generic[TCommand, TResult], ABC):
     """
-    Simplified command handler base class for basic CQRS scenarios.
+    Simplified command handler abstraction for basic CQRS scenarios without complex infrastructure.
 
-    This handler provides sensible defaults and helper methods without requiring
-    complex dependency injection setup.
+    This abstraction provides sensible defaults and convenience methods for building
+    command handlers without requiring extensive dependency injection setup, making it
+    ideal for smaller applications or rapid prototyping.
 
-    Example:
+    Type Parameters:
+        TCommand: The command type this handler processes
+        TResult: The result type returned (typically OperationResult)
+
+    Features:
+        - Built-in response helper methods (ok, created, bad_request, etc.)
+        - Simplified error handling patterns
+        - Minimal boilerplate for common scenarios
+
+    Examples:
+        ```python
         @dataclass
-        class CreateUserCommand(Command[OperationResult[UserDto]]):
+        class CreateUserCommand:
             name: str
             email: str
 
         class CreateUserHandler(SimpleCommandHandler[CreateUserCommand, OperationResult[UserDto]]):
-            def __init__(self, user_repository):
+            def __init__(self, user_repository: UserRepository):
                 self.user_repository = user_repository
 
             async def handle_async(self, command: CreateUserCommand) -> OperationResult[UserDto]:
@@ -49,13 +54,21 @@ class SimpleCommandHandler(Generic[TCommand, TResult], ABC):
                 if not command.email:
                     return self.bad_request("Email is required")
 
+                if await self.user_repository.exists_by_email(command.email):
+                    return self.conflict("User with this email already exists")
+
                 # Business logic
-                user = User(command.name, command.email)
+                user = User.create(command.name, command.email)
                 await self.user_repository.save_async(user)
 
                 # Return success
-                user_dto = UserDto(user.id, user.name, user.email)
-                return self.ok(user_dto)
+                user_dto = UserDto.from_entity(user)
+                return self.created(user_dto)
+        ```
+
+    See Also:
+        - CQRS Mediation: https://bvandewe.github.io/pyneuro/features/simple-cqrs/
+        - Getting Started: https://bvandewe.github.io/pyneuro/getting-started/
     """
 
     @abstractmethod
@@ -97,9 +110,7 @@ class SimpleCommandHandler(Generic[TCommand, TResult], ABC):
 
     def conflict(self, message: str) -> "OperationResult":
         """Create a conflict error result (HTTP 409)."""
-        return OperationResult(
-            "Conflict", 409, message, "https://www.w3.org/Protocols/HTTP/HTRESP.html"
-        )
+        return OperationResult("Conflict", 409, message, "https://www.w3.org/Protocols/HTTP/HTRESP.html")
 
     def internal_error(self, message: str) -> "OperationResult":
         """Create an internal server error result (HTTP 500)."""
@@ -113,18 +124,30 @@ class SimpleCommandHandler(Generic[TCommand, TResult], ABC):
 
 class SimpleQueryHandler(Generic[TQuery, TResult], ABC):
     """
-    Simplified query handler base class for basic CQRS scenarios.
+    Simplified query handler abstraction for basic CQRS read operations.
 
-    This handler provides common patterns for read operations without requiring
-    complex setup.
+    This abstraction provides streamlined patterns for read operations without requiring
+    complex infrastructure setup, perfect for applications that need clean separation
+    of read and write operations without event sourcing complexity.
 
-    Example:
+    Type Parameters:
+        TQuery: The query type this handler processes
+        TResult: The data type returned by the query
+
+    Features:
+        - Minimal boilerplate for query operations
+        - Direct data return without OperationResult wrapping
+        - Simple error handling patterns
+        - Easy integration with repositories
+
+    Examples:
+        ```python
         @dataclass
-        class GetUserByIdQuery(Query[Optional[UserDto]]):
+        class GetUserByIdQuery:
             user_id: str
 
         class GetUserByIdHandler(SimpleQueryHandler[GetUserByIdQuery, Optional[UserDto]]):
-            def __init__(self, user_repository):
+            def __init__(self, user_repository: UserRepository):
                 self.user_repository = user_repository
 
             async def handle_async(self, query: GetUserByIdQuery) -> Optional[UserDto]:
@@ -132,7 +155,30 @@ class SimpleQueryHandler(Generic[TQuery, TResult], ABC):
                 if not user:
                     return None
 
-                return UserDto(user.id, user.name, user.email)
+                return UserDto(
+                    id=user.id,
+                    name=user.name,
+                    email=user.email,
+                    created_at=user.created_at
+                )
+
+        @dataclass
+        class SearchUsersQuery:
+            search_term: str
+            limit: int = 20
+
+        class SearchUsersHandler(SimpleQueryHandler[SearchUsersQuery, List[UserDto]]):
+            async def handle_async(self, query: SearchUsersQuery) -> List[UserDto]:
+                users = await self.user_repository.search_async(
+                    query.search_term,
+                    limit=query.limit
+                )
+                return [UserDto.from_entity(u) for u in users]
+        ```
+
+    See Also:
+        - CQRS Mediation: https://bvandewe.github.io/pyneuro/features/simple-cqrs/
+        - Getting Started: https://bvandewe.github.io/pyneuro/getting-started/
     """
 
     @abstractmethod
@@ -291,7 +337,7 @@ from dataclasses import dataclass
 from typing import Optional
 import uuid
 from neuroglia.mediation.simple import (
-    SimpleCommandHandler, 
+    SimpleCommandHandler,
     SimpleQueryHandler,
     add_simple_mediator,
     register_simple_handler,
@@ -330,60 +376,60 @@ from neuroglia.mediation.mediator import CommandHandler, QueryHandler
 class CreateUserHandler(CommandHandler[CreateUserCommand, OperationResult[UserDto]]):
     def __init__(self, user_repository: InMemoryRepository[User]):
         self.user_repository = user_repository
-    
+
     async def handle_async(self, command: CreateUserCommand) -> OperationResult[UserDto]:
         if not command.email:
             return OperationResult.error("Bad Request", 400, "Email is required")
-        
+
         user = User(str(uuid.uuid4()), command.name, command.email)
         await self.user_repository.save_async(user)
-        
+
         user_dto = UserDto(user.id, user.name, user.email)
         return OperationResult.success(user_dto)
 
 class GetUserByIdHandler(QueryHandler[GetUserByIdQuery, Optional[UserDto]]):
     def __init__(self, user_repository: InMemoryRepository[User]):
         self.user_repository = user_repository
-    
+
     async def handle_async(self, query: GetUserByIdQuery) -> Optional[UserDto]:
         user = await self.user_repository.get_by_id_async(query.user_id)
         if not user:
             return None
-        
+
         return UserDto(user.id, user.name, user.email)
 
 # Setup your application
 def create_app():
     # Create service collection
     services = ServiceCollection()
-    
+
     # Add simple mediator (no cloud events)
     add_simple_mediator(services)
-    
+
     # Register repository
     services.add_singleton(InMemoryRepository[User])
-    
+
     # Register handlers
     register_simple_handler(services, CreateUserHandler)
     register_simple_handler(services, GetUserByIdHandler)
-    
+
     # Build provider
     provider = services.build()
-    
+
     return provider
 
 # Use in your application
 async def main():
     provider = create_app()
     mediator = provider.get_service(Mediator)
-    
+
     # Create a user
     create_command = CreateUserCommand("John Doe", "john@example.com")
     result = await mediator.execute_async(create_command)
-    
+
     if result.is_success:
         print(f"Created user: {result.data.name}")
-        
+
         # Get the user
         get_query = GetUserByIdQuery(result.data.id)
         user = await mediator.execute_async(get_query)

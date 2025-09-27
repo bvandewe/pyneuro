@@ -63,7 +63,15 @@ class ReconciliationResult:
 
 
 class ResourceControllerBase(Generic[TResourceSpec, TResourceStatus], ResourceController[TResourceSpec, TResourceStatus], ABC):
-    """Base implementation for resource controllers with reconciliation logic."""
+    """
+    Base controller for resource-oriented architecture patterns.
+
+    Implements Kubernetes-style resource controllers with reconciliation
+    loops for managing distributed system state.
+
+    For detailed information about resource-oriented architecture, see:
+    https://bvandewe.github.io/pyneuro/patterns/resource-oriented-architecture/
+    """
 
     def __init__(
         self,
