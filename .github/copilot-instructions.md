@@ -67,6 +67,51 @@ src/
 - **HostedService**: Background services
 - **ApplicationLifetime**: Startup/shutdown management
 
+### `neuroglia.serialization`
+
+- **JsonSerializer**: JSON serialization with type handling
+- **JsonEncoder**: Custom type encoders (enums, decimals, datetime)
+- **TypeRegistry**: Type discovery and caching
+- **Automatic Conversion**: Built-in support for common Python types
+
+### `neuroglia.validation`
+
+- **BusinessRule**: Fluent business rule validation
+- **ValidationResult**: Comprehensive error reporting
+- **PropertyValidator**: Field-level validation
+- **EntityValidator**: Object-level validation
+- **Decorators**: Method parameter validation support
+
+### `neuroglia.reactive`
+
+- **Observable**: RxPy integration for reactive patterns
+- **Observer**: Event stream processing
+- **Reactive Pipelines**: Async data transformation
+
+### `neuroglia.expressions`
+
+- **JavaScriptExpressionTranslator**: JS expression evaluation
+- **Dynamic Expressions**: Runtime expression parsing
+
+### `neuroglia.utils`
+
+- **CaseConversion**: snake_case ↔ camelCase ↔ PascalCase transformations
+- **CamelModel**: Pydantic base class with automatic case conversion
+- **TypeFinder**: Dynamic type discovery utilities
+
+### `neuroglia.integration`
+
+- **HttpServiceClient**: Resilient HTTP client with circuit breakers
+- **CacheRepository**: Redis-based caching layer
+- **BackgroundTaskScheduler**: Distributed task processing
+- **CloudEventPublisher**: Event publishing infrastructure
+
+### `neuroglia.logging`
+
+- **Enhanced Logging**: Structured logging with correlation IDs
+- **Performance Monitoring**: Request/response timing
+- **Diagnostic Context**: Rich contextual information
+
 ## Key Patterns and Conventions
 
 ### 1. Dependency Injection Pattern
@@ -267,13 +312,111 @@ src/
 Always import from specific modules to maintain clear dependencies:
 
 ```python
-# Good
-from neuroglia.dependency_injection import ServiceCollection
-from neuroglia.mediation import Mediator, Command, CommandHandler
+# Core Framework
+from neuroglia.dependency_injection import ServiceCollection, ServiceProvider, ServiceLifetime
+from neuroglia.mediation import Mediator, Command, Query, CommandHandler, QueryHandler
 from neuroglia.mvc import ControllerBase
+from neuroglia.hosting.web import WebApplicationBuilder
+
+# Data Access & Repositories
+from neuroglia.data import Repository, EventStore, MongoRepository, InMemoryRepository
+from neuroglia.data.resources import ResourceController, ResourceWatcher, Reconciler
+
+# Eventing & Integration
+from neuroglia.eventing import DomainEvent, EventHandler, EventBus
+from neuroglia.eventing.cloud_events import CloudEvent, CloudEventPublisher
+from neuroglia.integration import HttpServiceClient, CacheRepository, BackgroundTaskScheduler
+
+# Serialization & Mapping
+from neuroglia.serialization import JsonSerializer, JsonEncoder
+from neuroglia.mapping import Mapper
+
+# Validation & Utilities
+from neuroglia.validation import BusinessRule, ValidationResult, PropertyValidator, EntityValidator
+from neuroglia.utils import CaseConversion, CamelModel, TypeFinder
+from neuroglia.reactive import Observable, Observer
 
 # Avoid
 from neuroglia import *
+```
+
+## Advanced Framework Patterns
+
+### 7. Resource-Oriented Architecture (ROA)
+
+Implement resource controllers and watchers for Kubernetes-style resource management:
+
+```python
+from neuroglia.data.resources import ResourceController, ResourceWatcher
+
+class LabResourceController(ResourceController[LabInstance]):
+    async def reconcile_async(self, resource: LabInstance) -> None:
+        # Handle resource state reconciliation
+        if resource.spec.desired_state == "running":
+            await self.provision_lab_instance(resource)
+        elif resource.spec.desired_state == "stopped":
+            await self.cleanup_lab_instance(resource)
+
+class LabInstanceWatcher(ResourceWatcher[LabInstance]):
+    async def handle_async(self, event: ResourceEvent[LabInstance]) -> None:
+        # React to resource changes
+        await self.controller.reconcile_async(event.resource)
+```
+
+### 8. Advanced Validation with Business Rules
+
+Use fluent validation APIs for complex domain validation:
+
+```python
+from neuroglia.validation import BusinessRule, ValidationResult
+
+class OrderValidator:
+    async def validate_order(self, order: CreateOrderCommand) -> ValidationResult:
+        return await BusinessRule.evaluate_async([
+            BusinessRule.for_property(order.customer_id)
+                .required()
+                .must_exist_in_repository(self.customer_repository),
+
+            BusinessRule.for_property(order.items)
+                .not_empty()
+                .each_item_must(self.validate_order_item),
+
+            BusinessRule.when(order.payment_method == "credit")
+                .then(order.credit_limit)
+                .must_be_greater_than(order.total_amount)
+        ])
+```
+
+### 9. Case Conversion and API Compatibility
+
+Use automatic case conversion for API serialization compatibility:
+
+```python
+from neuroglia.utils import CamelModel
+
+class CreateUserDto(CamelModel):  # Automatically converts snake_case to camelCase
+    first_name: str  # Serializes as "firstName"
+    last_name: str   # Serializes as "lastName"
+    email_address: str  # Serializes as "emailAddress"
+```
+
+### 10. Reactive Programming Patterns
+
+Implement reactive data processing with observables:
+
+```python
+from neuroglia.reactive import Observable
+
+class OrderProcessingService:
+    def __init__(self):
+        self.order_stream = Observable.create(self.setup_order_stream)
+
+    async def setup_order_stream(self, observer):
+        # Setup reactive processing pipeline
+        await self.order_stream \
+            .filter(lambda order: order.is_valid) \
+            .map(self.transform_order) \
+            .subscribe(observer.on_next)
 ```
 
 ## Common Anti-Patterns to Avoid
@@ -284,6 +427,10 @@ from neuroglia import *
 4. **Anemic domain models** - Domain entities should have behavior
 5. **Fat controllers** - Controllers should only orchestrate
 6. **Ignoring async/await** - Use async patterns throughout
+7. **Manual serialization** - Use JsonSerializer with automatic type handling
+8. **Inconsistent case conversion** - Use CamelModel for API compatibility
+9. **Synchronous validation** - Use async business rule validation
+10. **Missing resource reconciliation** - Implement proper resource controllers
 
 ## Testing Patterns & Automated Test Maintenance
 
