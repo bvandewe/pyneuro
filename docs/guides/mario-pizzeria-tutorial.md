@@ -26,26 +26,54 @@ pip install neuroglia-python[web]
 
 ### Project Structure
 
+The actual Mario's Pizzeria implementation follows clean architecture principles:
+
+**Source**: [`samples/mario-pizzeria/`](https://github.com/bvandewe/pyneuro/tree/main/samples/mario-pizzeria)
+
 ```text
-marios-pizzeria/
-├── src/
-│   ├── main.py                    # Application entry point
-│   ├── domain/
-│   │   ├── pizza.py              # Pizza entity
-│   │   ├── order.py              # Order entity
-│   │   └── events.py             # Domain events
-│   ├── application/
-│   │   ├── commands/             # Order placement, cooking
-│   │   └── queries/              # Menu, order status
-│   ├── infrastructure/
-│   │   ├── repositories/         # File-based persistence
-│   │   └── auth.py              # OAuth configuration
-│   ├── api/
-│   │   └── controllers/         # REST endpoints
-│   ├── web/
-│   │   └── static/              # Simple HTML/CSS/JS
-│   └── data/                    # JSON files storage
-└── requirements.txt
+mario-pizzeria/
+├── main.py                       # Application entry point with DI setup
+├── api/
+│   ├── controllers/             # REST API endpoints
+│   │   ├── orders_controller.py  # Order management
+│   │   ├── menu_controller.py    # Pizza menu
+│   │   └── kitchen_controller.py # Kitchen operations
+│   └── dtos/                    # Data Transfer Objects
+│       ├── order_dtos.py        # Order request/response models
+│       ├── menu_dtos.py         # Menu item models
+│       └── kitchen_dtos.py      # Kitchen status models
+├── application/
+│   ├── commands/                # CQRS Command handlers
+│   │   ├── place_order_command.py
+│   │   ├── start_cooking_command.py
+│   │   └── complete_order_command.py
+│   ├── queries/                 # CQRS Query handlers
+│   │   ├── get_order_by_id_query.py
+│   │   ├── get_orders_by_status_query.py
+│   │   └── get_active_orders_query.py
+│   └── mapping/                 # AutoMapper profiles
+│       └── profile.py           # Entity-DTO mappings
+├── domain/
+│   ├── entities/                # Domain entities
+│   │   ├── pizza.py            # Pizza entity with pricing
+│   │   ├── order.py            # Order aggregate root
+│   │   ├── customer.py         # Customer entity
+│   │   ├── kitchen.py          # Kitchen entity
+│   │   └── enums.py            # Domain enumerations
+│   ├── events/                  # Domain events
+│   │   └── order_events.py     # Order lifecycle events
+│   └── repositories/            # Repository interfaces
+│       └── __init__.py         # Repository abstractions
+├── integration/
+│   └── repositories/           # Repository implementations
+│       ├── file_order_repository.py    # File-based order storage
+│       ├── file_pizza_repository.py    # File-based pizza storage
+│       ├── file_customer_repository.py # File-based customer storage
+│       └── file_kitchen_repository.py  # File-based kitchen storage
+└── tests/                      # Test suite
+    ├── test_api.py             # API integration tests
+    ├── test_integration.py     # Full integration tests
+    └── test_data/              # Test data storage
 ```
 
 ## 🏗️ Step 1: Domain Model
@@ -640,112 +668,233 @@ def require_scope(required_scope: str):
 
 ## 🚀 Step 7: Application Setup
 
-**src/main.py**
+The main application file demonstrates sophisticated multi-app architecture with dependency injection configuration.
 
-```python
+**[main.py](https://github.com/neuroglia-io/python-framework/blob/main/samples/mario-pizzeria/main.py)** <span class="code-line-ref">(lines 1-226)</span>
+
+```python title="samples/mario-pizzeria/main.py" linenums="1"
+#!/usr/bin/env python3
+"""
+Mario's Pizzeria - Main Application Entry Point
+
+This is the complete sample application demonstrating all major Neuroglia framework features.
+"""
+
 import logging
+import sys
 from pathlib import Path
-from neuroglia.hosting import EnhancedWebApplicationBuilder
-from neuroglia.mediation import Mediator
+from typing import Optional
+
+# Set up debug logging early
+logging.basicConfig(level=logging.DEBUG)
+
+# Add the project root to Python path so we can import neuroglia
+project_root = Path(__file__).parent.parent.parent.parent
+sys.path.insert(0, str(project_root / "src"))
+
+# Domain repository interfaces
+from domain.repositories import (
+    ICustomerRepository,
+    IKitchenRepository,
+    IOrderRepository,
+    IPizzaRepository,
+)
+from integration.repositories import (
+    FileCustomerRepository,
+    FileKitchenRepository,
+    FileOrderRepository,
+    FilePizzaRepository,
+)
+
+# Framework imports (must be after path manipulation)
+from neuroglia.hosting.enhanced_web_application_builder import (
+    EnhancedWebApplicationBuilder,
+)
 from neuroglia.mapping import Mapper
+from neuroglia.mediation import Mediator
 
-from src.domain.pizza import Pizza
-from src.domain.order import Order
-from src.infrastructure.repositories.file_repository import FileRepository
-from src.application.commands.place_order import PlaceOrderHandler
-from src.application.queries.get_menu import GetMenuHandler
 
-# Configure logging
-logging.basicConfig(level=logging.INFO)
-log = logging.getLogger(__name__)
+def create_pizzeria_app(data_dir: Optional[str] = None, port: int = 8000):
+    """
+    Create Mario's Pizzeria application with multi-app architecture.
 
-def create_app():
-    """Create and configure Mario's Pizzeria application"""
+    Creates separate apps for:
+    - API backend (/api prefix)
+    - Future UI frontend (/ prefix)
+    """
+    # Determine data directory
+    data_dir_path = Path(data_dir) if data_dir else Path(__file__).parent / "data"
+    data_dir_path.mkdir(exist_ok=True)
+
+    print(f"💾 Data stored in: {data_dir_path}")
 
     # Create enhanced web application builder
     builder = EnhancedWebApplicationBuilder()
 
-    # Register repositories
-    builder.services.add_singleton(lambda: FileRepository(Pizza, "data"))
-    builder.services.add_singleton(lambda: FileRepository(Order, "data"))
-
-    # Register command/query handlers
-    builder.services.add_scoped(PlaceOrderHandler)
-    builder.services.add_scoped(GetMenuHandler)
-
-    # Configure mediation
-    Mediator.configure(builder, ["src.application"])
-
-    # Configure object mapping
-    Mapper.configure(builder, ["src"])
-
-    # Add controllers with API prefix
-    builder.add_controllers_with_prefix("src.api.controllers", "/api")
-
-    # Build the application
-    app = builder.build()
-
-    # Add static file serving for the web UI
-    from fastapi.staticfiles import StaticFiles
-    app.mount("/", StaticFiles(directory="src/web/static", html=True), name="static")
-
-    # Add middleware for CORS (if needed)
-    from fastapi.middleware.cors import CORSMiddleware
-    app.add_middleware(
-        CORSMiddleware,
-        allow_origins=["*"],
-        allow_credentials=True,
-        allow_methods=["*"],
-        allow_headers=["*"],
+    # Register repositories with file-based implementations
+    builder.services.add_singleton(
+        IPizzaRepository,
+        implementation_factory=lambda _: FilePizzaRepository(str(data_dir_path / "menu")),
+    )
+    builder.services.add_singleton(
+        ICustomerRepository,
+        implementation_factory=lambda _: FileCustomerRepository(str(data_dir_path / "customers")),
+    )
+    builder.services.add_singleton(
+        IOrderRepository,
+        implementation_factory=lambda _: FileOrderRepository(str(data_dir_path / "orders")),
+    )
+    builder.services.add_singleton(
+        IKitchenRepository,
+        implementation_factory=lambda _: FileKitchenRepository(str(data_dir_path / "kitchen")),
     )
 
+    # Configure mediator with auto-discovery from command and query modules
+    Mediator.configure(builder, ["application.commands", "application.queries"])
+
+    # Configure auto-mapper with custom profile
+    Mapper.configure(builder, ["application.mapping", "api.dtos", "domain.entities"])
+
+    # Configure JSON serialization with type discovery
+    from neuroglia.serialization.json import JsonSerializer
+
+    # Configure JsonSerializer with domain modules for enum discovery
+    JsonSerializer.configure(
+        builder,
+        type_modules=[
+            "domain.entities.enums",  # Mario Pizzeria enum types
+            "domain.entities",  # Also scan entities module for embedded enums
+        ],
+    )
+
+    # Build the service provider (not the full app yet)
+    service_provider = builder.services.build()
+
+    # Create the main FastAPI app directly
+    from fastapi import FastAPI
+
+    app = FastAPI(
+        title="Mario's Pizzeria",
+        description="Complete pizza ordering and management system",
+        version="1.0.0",
+        debug=True,
+    )
+
+    # Make DI services available to the app
+    app.state.services = service_provider
+
+    # Create separate API app for backend REST API
+    api_app = FastAPI(
+        title="Mario's Pizzeria API",
+        description="Pizza ordering and management API",
+        version="1.0.0",
+        docs_url="/docs",
+        debug=True,
+    )
+
+    # IMPORTANT: Make services available to API app as well
+    api_app.state.services = service_provider
+
+    # Register API controllers to the API app
+    builder.add_controllers(["api.controllers"], app=api_app)
+
+    # Add exception handling to API app
+    builder.add_exception_handling(api_app)
+
+    # Mount the apps
+    app.mount("/api", api_app, name="api")
+    app.mount("/ui", ui_app, name="ui")
+
     return app
+```
 
-async def setup_sample_data():
-    """Create sample pizza menu"""
-    pizza_repo = FileRepository(Pizza, "data")
+### Key Implementation Features
 
-    # Check if data already exists
-    existing_pizzas = await pizza_repo.get_all_async()
-    if existing_pizzas:
-        return
+**Multi-App Architecture** <span class="code-line-ref">(lines 102-125)</span>
 
-    # Create sample pizzas
-    sample_pizzas = [
-        Pizza("margherita", "Margherita", "medium", Decimal("12.99"), [], 15),
-        Pizza("pepperoni", "Pepperoni", "medium", Decimal("15.99"), ["pepperoni"], 18),
-        Pizza("supreme", "Supreme", "medium", Decimal("18.99"), ["pepperoni", "mushrooms", "bell_peppers"], 22)
-    ]
+The application uses a sophisticated multi-app setup:
 
-    for pizza in sample_pizzas:
-        await pizza_repo.save_async(pizza)
+- **Main App**: Root FastAPI application with welcome endpoint
+- **API App**: Dedicated backend API mounted at `/api` with Swagger documentation
+- **UI App**: Future frontend application mounted at `/ui`
 
-    log.info("Sample pizza menu created")
+**Repository Registration Pattern** <span class="code-line-ref">(lines 64-82)</span>
 
-if __name__ == "__main__":
-    import asyncio
+Uses interface-based dependency injection with file-based implementations:
+
+```python title="Repository Registration Pattern" linenums="64"
+builder.services.add_singleton(
+    IPizzaRepository,
+    implementation_factory=lambda _: FilePizzaRepository(str(data_dir_path / "menu")),
+)
+```
+
+**Auto-Discovery Configuration** <span class="code-line-ref">(lines 84-98)</span>
+
+Framework components use module scanning for automatic registration:
+
+````python title="Auto-Discovery Setup" linenums="84"
+# Configure mediator with auto-discovery from command and query modules
+Mediator.configure(builder, ["application.commands", "application.queries"])
+
+# Configure auto-mapper with custom profile
+Mapper.configure(builder, ["application.mapping", "api.dtos", "domain.entities"])
+
+# Configure JsonSerializer with domain modules for enum discovery
+JsonSerializer.configure(
+    builder,
+    type_modules=[
+        "domain.entities.enums",  # Mario Pizzeria enum types
+        "domain.entities",  # Also scan entities module for embedded enums
+    ],
+)
+## 🎯 Running the Application
+
+The main entry point provides comprehensive application bootstrapping and startup logic:
+
+**[Application Startup](https://github.com/neuroglia-io/python-framework/blob/main/samples/mario-pizzeria/main.py)** <span class="code-line-ref">(lines 198-226)</span>
+
+```python title="Application Entry Point" linenums="198"
+def main():
+    """Main entry point when running as a script"""
     import uvicorn
 
-    # Setup sample data
-    asyncio.run(setup_sample_data())
+    # Parse command line arguments
+    port = 8000
+    host = "127.0.0.1"
+    data_dir = None
 
-    # Create and run the application
-    app = create_app()
+    if len(sys.argv) > 1:
+        for i, arg in enumerate(sys.argv[1:], 1):
+            if arg == "--port" and i + 1 < len(sys.argv):
+                port = int(sys.argv[i + 1])
+            elif arg == "--host" and i + 1 < len(sys.argv):
+                host = sys.argv[i + 1]
+            elif arg == "--data-dir" and i + 1 < len(sys.argv):
+                data_dir = sys.argv[i + 1]
 
-    log.info("🍕 Starting Mario's Pizzeria...")
-    log.info("🌐 Web UI: http://localhost:8000")
-    log.info("📚 API Docs: http://localhost:8000/docs")
+    # Create the application
+    app = create_pizzeria_app(data_dir=data_dir, port=port)
 
-    uvicorn.run(app, host="0.0.0.0", port=8000)
-```
+    print(f"🍕 Starting Mario's Pizzeria on http://{host}:{port}")
+    print(f"📖 API Documentation available at http://{host}:{port}/api/docs")
+    print(f"🌐 UI will be available at http://{host}:{port}/ui (coming soon)")
+
+    # Run the server
+    uvicorn.run(app, host=host, port=port)
+
+
+if __name__ == "__main__":
+    main()
+````
 
 ## 🎉 You're Done
 
 Run your pizzeria:
 
 ```bash
-cd marios-pizzeria
-python src/main.py
+cd samples/mario-pizzeria
+python main.py
 ```
 
 Visit your application:
