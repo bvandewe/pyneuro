@@ -8,19 +8,23 @@ ENV PYTHONDONTWRITEBYTECODE=1
 # Turns off buffering for easier container logging
 ENV PYTHONUNBUFFERED=1
 
-WORKDIR /app 
+WORKDIR /app
 
 # Pip
 # COPY requirements.txt /app/
 # RUN python -m pip install -r requirements.txt
 
-# Poetry
+# Poetry - Install dependencies first
 COPY poetry.lock pyproject.toml /app/
 RUN pip install poetry
 RUN poetry config virtualenvs.create false && \
-    poetry install --no-interaction --no-ansi
+    poetry install --no-root --no-interaction --no-ansi
 
+# Copy the entire project
 COPY . /app
+
+# Install the project itself after copying all files
+RUN poetry install --only-root --no-interaction --no-ansi
 
 # Creates a non-root user with an explicit UID and adds permission to access the /app folder
 # For more info, please refer to https://aka.ms/vscode-docker-python-configure-containers

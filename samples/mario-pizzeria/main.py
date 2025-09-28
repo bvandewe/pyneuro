@@ -5,6 +5,7 @@ Mario's Pizzeria - Main Application Entry Point
 This is the complete sample application demonstrating all major Neuroglia framework features.
 """
 
+import datetime
 import logging
 import sys
 from pathlib import Path
@@ -187,7 +188,7 @@ def create_pizzeria_app(data_dir: Optional[str] = None, port: int = 8000):
     @app.get("/health")
     async def health_check():
         """Health check endpoint"""
-        return {"status": "healthy", "timestamp": "2024-01-01T00:00:00Z"}
+        return {"status": "healthy", "timestamp": datetime.datetime.now(datetime.timezone.utc)}
 
     return app
 
@@ -220,6 +221,9 @@ def main():
     # Run the server
     uvicorn.run(app, host=host, port=port)
 
+
+# Create app instance for ASGI servers (like uvicorn)
+app = create_pizzeria_app()
 
 if __name__ == "__main__":
     main()

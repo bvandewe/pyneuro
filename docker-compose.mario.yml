@@ -1,0 +1,198 @@
+name: mario-pizzeria
+services:
+  # 🍕 Mario's Pizzeria Application
+  # http://localhost:8080/api/docs
+  mario-pizzeria-app:
+    image: mario-pizzeria-app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    # For debugging (requires debugger attachment):
+    # command: ["sh", "-c", "pip install debugpy -t /tmp && cd samples/mario-pizzeria && PYTHONPATH=/app/src:/app/samples/mario-pizzeria python /tmp/debugpy --wait-for-client --listen 0.0.0.0:5678 -m uvicorn main:app --host 0.0.0.0 --port 8080 --reload"]
+    # For normal startup (no debugger required):
+    command: ["sh", "-c", "pip install debugpy -t /tmp && cd samples/mario-pizzeria && PYTHONPATH=/app/src:/app/samples/mario-pizzeria python /tmp/debugpy --listen 0.0.0.0:5678 -m uvicorn main:app --host 0.0.0.0 --port 8080 --reload"]
+    ports:
+      - 8080:8080  # Main application port
+      - 5678:5678  # Debug port
+    environment:
+      LOG_LEVEL: DEBUG
+      PYTHONPATH: "src"
+      # Database connections
+      CONNECTION_STRINGS: '{"mongo": "mongodb://mongodb:27017", "eventstore": "esdb://eventstoredb:2113?Tls=false"}'
+      # Event streaming
+      CLOUD_EVENT_SINK: http://event-player/events/pub
+      CLOUD_EVENT_SOURCE: https://mario-pizzeria.io
+      CLOUD_EVENT_TYPE_PREFIX: io.mario-pizzeria
+      # Authentication
+      KEYCLOAK_SERVER_URL: http://keycloak:8080
+      KEYCLOAK_REALM: mario-pizzeria
+      KEYCLOAK_CLIENT_ID: mario-app
+      # Application settings
+      DATA_DIR: /app/data
+      ENABLE_CORS: "true"
+    volumes:
+      - .:/app
+      - mario_data:/app/data
+    networks:
+      - mario-net
+    depends_on:
+      - mongodb
+      - eventstoredb
+      - keycloak
+      - event-player
+
+  # 🗄️ MongoDB Database
+  # mongodb://localhost:27017
+  mongodb:
+    image: mongo:6.0.21
+    restart: always
+    command: mongod --bind_ip_all
+    ports:
+      - 27017:27017
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: mario123
+      MONGO_INITDB_DATABASE: mario_pizzeria
+    volumes:
+      - mongodb_data:/data/db
+      - ./deployment/mongo/init-mario-db.js:/docker-entrypoint-initdb.d/init-mario-db.js:ro
+    networks:
+      - mario-net
+
+  # 📊 MongoDB Express (Database Admin UI)
+  # http://localhost:8081
+  mongo-express:
+    image: mongo-express:latest
+    restart: always
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_SERVER: mongodb
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: mario123
+      ME_CONFIG_MONGODB_ENABLE_ADMIN: true
+      ME_CONFIG_BASICAUTH_USERNAME: admin
+      ME_CONFIG_BASICAUTH_PASSWORD: admin123
+    networks:
+      - mario-net
+    depends_on:
+      - mongodb
+
+  # 🎪 EventStoreDB (Event Sourcing)
+  # http://localhost:2113
+  eventstoredb:
+    image: eventstore/eventstore:24.10.4
+    ports:
+      - "2113:2113" # HTTP port
+      - "1113:1113" # WebSocket port
+    volumes:
+      - eventstoredb_data:/var/lib/eventstore
+    environment:
+      EVENTSTORE_INSECURE: true
+      EVENTSTORE_RUN_PROJECTIONS: All
+      EVENTSTORE_CLUSTER_SIZE: 1
+      EVENTSTORE_START_STANDARD_PROJECTIONS: true
+      EVENTSTORE_HTTP_PORT: 2113
+      EVENTSTORE_ENABLE_ATOM_PUB_OVER_HTTP: true
+      # Security settings for development
+      EVENTSTORE_ENABLE_EXTERNAL_TCP: true
+      EVENTSTORE_GOSSIP_ON_SINGLE_NODE: true
+    networks:
+      - mario-net
+
+  # 🎬 Event Player (Event Visualization & Replay)
+  # http://localhost:8085
+  event-player:
+    image: ghcr.io/bvandewe/events-player:latest
+    ports:
+      - 8085:80
+    environment:
+      api_tag: "0.2.30"
+      api_repository_url: "https://ccie-gitlab.ccie.cisco.com/mozart/infrastructure/eventing/cloudevent-player"
+      api_log_level: DEBUG
+      api_log_format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+      api_default_generator_gateways: '{"urls": ["http://localhost/events/pub", "http://event-player/events/pub", "http://mario-pizzeria-app:8080/api/v1/events/pub"]}'
+      api_browser_queue_size: 2000
+    networks:
+      - mario-net
+
+  # 🔐 Keycloak (Authentication & Authorization)
+  # http://localhost:8090/admin (admin/admin)
+  keycloak:
+    image: quay.io/keycloak/keycloak:23.0.3
+    command: ["start-dev"]
+    ports:
+      - 8090:8080
+    environment:
+      # Admin credentials
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+      # Database connection
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://keycloak-db:5432/keycloak
+      KC_DB_USERNAME: keycloak
+      KC_DB_PASSWORD: keycloak123
+      # Development settings
+      KC_HOSTNAME_STRICT: false
+      KC_HOSTNAME_STRICT_HTTPS: false
+      KC_HTTP_ENABLED: true
+      KC_HEALTH_ENABLED: true
+      KC_METRICS_ENABLED: true
+    volumes:
+      - ./deployment/keycloak/realm-export.json:/opt/keycloak/data/import/realm-export.json:ro
+    networks:
+      - mario-net
+    depends_on:
+      - keycloak-db
+
+  # 🐘 PostgreSQL for Keycloak
+  keycloak-db:
+    image: postgres:15.5
+    restart: always
+    environment:
+      POSTGRES_DB: keycloak
+      POSTGRES_USER: keycloak
+      POSTGRES_PASSWORD: keycloak123
+    volumes:
+      - keycloak_db_data:/var/lib/postgresql/data
+    networks:
+      - mario-net
+
+  # 🔧 Keycloak Configurator (One-time setup)
+  keycloak-setup:
+    image: curlimages/curl:8.5.0
+    restart: "no"
+    command: |
+      sh -c '
+        echo "⏳ Waiting for Keycloak to be ready..."
+        until curl -f http://keycloak:8080/health/ready; do
+          sleep 5
+        done
+        echo "🔧 Keycloak is ready! Setting up Mario Pizzeria realm..."
+        echo "✅ Keycloak setup completed! Access admin console at http://localhost:8090/admin"
+        echo "   Default credentials: admin/admin"
+        echo "🍕 Mario Pizzeria realm will be available for configuration"
+      '
+    networks:
+      - mario-net
+    depends_on:
+      - keycloak
+
+volumes:
+  # Application data
+  mario_data:
+    driver: local
+  # Database volumes
+  mongodb_data:
+    driver: local
+  eventstoredb_data:
+    driver: local
+  keycloak_db_data:
+    driver: local
+
+networks:
+  mario-net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16

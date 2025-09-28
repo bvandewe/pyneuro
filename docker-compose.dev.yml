@@ -1,4 +1,9 @@
 name: pyneuro
+#
+# This is the OpenBank development environment.
+# For Mario's Pizzeria, use: docker-compose -f docker-compose.mario.yml up -d
+# Or run: ./mario-docker.sh start
+#
 services:
   # set `package-mode = false` in pyproject.toml!
   # http://localhost:8899/api/docs
@@ -41,7 +46,7 @@ services:
       EVENTSTORE_CLUSTER_SIZE: 1
       EVENTSTORE_START_STANDARD_PROJECTIONS: true
       # EVENTSTORE_EXT_TCP_PORT: 1113
-      EVENTSTORE_HTTP_PORT: 2113     
+      EVENTSTORE_HTTP_PORT: 2113
       # EVENTSTORE_ENABLE_EXTERNAL_TCP: true
       EVENTSTORE_ENABLE_ATOM_PUB_OVER_HTTP: true
     networks:
