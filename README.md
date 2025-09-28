@@ -138,10 +138,27 @@ src/
 
 Learn by example with complete sample applications:
 
-- **[🏦 OpenBank](docs/samples/openbank.md)** - Event-sourced banking domain with CQRS
+- **[� Mario's Pizzeria](samples/mario-pizzeria/)** - Complete pizzeria management system showcasing all framework features
+- **[�🏦 OpenBank](docs/samples/openbank.md)** - Event-sourced banking domain with CQRS
 - **[🧪 Lab Resource Manager](docs/samples/lab-resource-manager.md)** - Resource Oriented Architecture with watchers and reconciliation
 - **🖥️ Desktop Controller** - Remote desktop management API
 - **🚪 API Gateway** - Microservice gateway with authentication
+
+#### 🐳 Docker Development Environment
+
+Get started quickly with Mario's Pizzeria using Docker:
+
+```bash
+# Start the complete development environment
+./mario-docker.sh start
+
+# Access services:
+# 🍕 API Documentation: http://localhost:8080/api/docs
+# 🗄️ Database Admin: http://localhost:8081
+# 🔐 Authentication: http://localhost:8090/admin
+```
+
+The Docker environment includes MongoDB, EventStoreDB, Keycloak authentication, and the Event Player for a complete development experience. See [`deployment/README-mario-docker.md`](deployment/README-mario-docker.md) for full details.
 
 ## 🔧 Quick Start
 
