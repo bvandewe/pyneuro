@@ -10,6 +10,7 @@ from domain.repositories import (
 )
 
 from neuroglia.core import OperationResult
+from neuroglia.data.unit_of_work import IUnitOfWork
 from neuroglia.mapping import Mapper
 from neuroglia.mediation import Command, CommandHandler
 
@@ -30,11 +31,13 @@ class CompleteOrderCommandHandler(CommandHandler[CompleteOrderCommand, Operation
         kitchen_repository: IKitchenRepository,
         customer_repository: ICustomerRepository,
         mapper: Mapper,
+        unit_of_work: IUnitOfWork,
     ):
         self.order_repository = order_repository
         self.kitchen_repository = kitchen_repository
         self.customer_repository = customer_repository
         self.mapper = mapper
+        self.unit_of_work = unit_of_work
 
     async def handle_async(self, request: CompleteOrderCommand) -> OperationResult[OrderDto]:
         try:
@@ -53,6 +56,13 @@ class CompleteOrderCommandHandler(CommandHandler[CompleteOrderCommand, Operation
             # Save changes
             await self.order_repository.update_async(order)
             await self.kitchen_repository.update_kitchen_state_async(kitchen)
+
+            # Register order with Unit of Work for domain event dispatching
+            from typing import cast
+
+            from neuroglia.data.abstractions import AggregateRoot as NeuroAggregateRoot
+
+            self.unit_of_work.register_aggregate(cast(NeuroAggregateRoot, order))
 
             # Get customer details for DTO
             customer = await self.customer_repository.get_async(order.customer_id)

@@ -3,6 +3,7 @@
 Mario's Pizzeria - Main Application Entry Point
 
 This is the complete sample application demonstrating all major Neuroglia framework features.
+Updated to use scoped RequestHandler services.
 """
 
 import datetime
@@ -32,6 +33,8 @@ from integration.repositories import (
     FilePizzaRepository,
 )
 
+from neuroglia.data.unit_of_work import IUnitOfWork, UnitOfWork
+
 # Framework imports (must be after path manipulation)
 # pylint: disable=wrong-import-position
 from neuroglia.hosting.enhanced_web_application_builder import (
@@ -39,6 +42,12 @@ from neuroglia.hosting.enhanced_web_application_builder import (
 )
 from neuroglia.mapping import Mapper
 from neuroglia.mediation import Mediator
+from neuroglia.mediation.behaviors.domain_event_dispatching_middleware import (
+    DomainEventDispatchingMiddleware,
+)
+from neuroglia.mediation.pipeline_behavior import PipelineBehavior
+
+# Import mediator extensions to enable add_mediator() method
 
 
 def create_pizzeria_app(data_dir: Optional[str] = None, port: int = 8000):
@@ -83,8 +92,29 @@ def create_pizzeria_app(data_dir: Optional[str] = None, port: int = 8000):
         implementation_factory=lambda _: FileKitchenRepository(str(data_dir_path / "kitchen")),
     )
 
-    # Configure mediator with auto-discovery from command and query modules
-    Mediator.configure(builder, ["application.commands", "application.queries"])
+    # Configure Unit of Work for domain event collection
+    builder.services.add_scoped(
+        IUnitOfWork,
+        implementation_factory=lambda _: UnitOfWork(),
+    )
+
+    # Configure mediator with manual registration (since add_mediator extension might not be working)
+    print("🔍 DEBUG: Registering mediator manually...")
+    builder.services.add_singleton(Mediator, Mediator)  # Manual registration
+
+    print("🔍 DEBUG: Configuring automatic handler discovery...")
+    Mediator.configure(builder, ["application.commands", "application.queries", "application.event_handlers"])
+
+    print("✅ Mediator configured with automatic handler discovery and proper DI")
+
+    # Configure Domain Event Dispatching Middleware for automatic event processing
+    builder.services.add_scoped(
+        PipelineBehavior,
+        implementation_factory=lambda sp: DomainEventDispatchingMiddleware(sp.get_required_service(IUnitOfWork), sp.get_required_service(Mediator)),
+    )
+
+    # Register Mapper service for dependency injection
+    builder.services.add_singleton(Mapper)
 
     # Configure auto-mapper with custom profile
     Mapper.configure(builder, ["application.mapping", "api.dtos", "domain.entities"])

@@ -512,14 +512,37 @@ class Mediator:
 
     async def execute_async(self, request: Request) -> OperationResult:
         """Executes the specified request through the pipeline behaviors and handler"""
-        handlers: list[RequestHandler] = [candidate for candidate in self._service_provider.get_services(RequestHandler) if self._request_handler_matches(candidate, request)]
-        if handlers is None or len(handlers) < 1:
-            raise Exception(f"Failed to find a handler for request of type '{type(request).__name__}'")
-        elif len(handlers) > 1:
-            raise Exception(f"There must be exactly one handler defined for the command of type '{type(request).__name__}'")
+        log.info(f"🔍 MEDIATOR DEBUG: Starting execute_async for request: {type(request).__name__}")
+
+        # Use the original approach but get RequestHandler services and find matching concrete handlers
+        # Use a class-level handler registry approach
+        handler = None
+        request_type = type(request)
+
+        # Check if we have a handler registry
+        if not hasattr(Mediator, "_handler_registry"):
+            Mediator._handler_registry = {}
+
+        # Try to get handler from registry
+        handler_class = Mediator._handler_registry.get(request_type)
+        if handler_class:
+            # Create service scope and resolve the handler
+            scope = self._service_provider.create_scope()
+            try:
+                # Cast scope to ServiceProviderBase for get_service access
+                from neuroglia.dependency_injection import ServiceProviderBase
+
+                provider: ServiceProviderBase = scope.get_service_provider()
+                handler = provider.get_service(handler_class)
+                log.debug(f"🔍 MEDIATOR DEBUG: Successfully resolved {handler_class.__name__} from registry")
+            finally:
+                if hasattr(scope, "dispose"):
+                    scope.dispose()
+
+        if handler is None:
+            raise Exception(f"Failed to find a handler for request of type '{request_type.__name__}'. Registry has {len(Mediator._handler_registry)} handlers.")
 
         log.info(f"Executing request type {type(request).__name__}")
-        handler = handlers[0]
 
         # Get all pipeline behaviors for this request type
         behaviors = self._get_pipeline_behaviors(request)
@@ -538,11 +561,30 @@ class Mediator:
             return
         await asyncio.gather(*(handler.handle_async(notification) for handler in handlers))
 
+    def _handler_type_matches(self, handler_class, request_type) -> bool:
+        """Check if a handler class can handle the specified request type"""
+        try:
+            # Get the base classes of the handler to find the RequestHandler generic
+            for base in handler_class.__orig_bases__ if hasattr(handler_class, "__orig_bases__") else []:
+                if hasattr(base, "__origin__") and hasattr(base, "__args__"):
+                    # Check if this base is a RequestHandler generic
+                    if hasattr(base.__origin__, "__name__") and base.__origin__.__name__ in [
+                        "CommandHandler",
+                        "QueryHandler",
+                    ]:
+                        handled_request_type = base.__args__[0]
+
+                        return handled_request_type == request_type
+            return False
+        except Exception as e:
+            log.debug(f"Error checking handler type match: {e}")
+            return False
+
     def _request_handler_matches(self, candidate, request_type) -> bool:
         expected_request_type = request_type.__orig_class__ if hasattr(request_type, "__orig_class__") else request_type
         handler_type = TypeExtensions.get_generic_implementation(candidate, RequestHandler)
         handled_request_type = handler_type.__args__[0]
-        if type(handled_request_type) == type(expected_request_type):
+        if type(handled_request_type) is type(expected_request_type):
             matches = handled_request_type == expected_request_type
             return matches
         else:
@@ -646,7 +688,26 @@ class Mediator:
                 lambda cls: inspect.isclass(cls) and (not hasattr(cls, "__parameters__") or len(cls.__parameters__) < 1) and issubclass(cls, CommandHandler) and cls != CommandHandler,
                 include_sub_modules=True,
             ):
-                app.services.add_transient(RequestHandler, command_handler_type)
+                # Debug: Check for None types
+                if command_handler_type is None:
+                    log.error(f"❌ Found None command handler type in {module_name}")
+                    continue
+
+                # Register only the concrete type (for DI) and track for mediator discovery
+                log.debug(f"🔧 Registering CommandHandler: {command_handler_type.__name__} as concrete type only")
+                app.services.add_scoped(command_handler_type, command_handler_type)
+
+                # Add to class-level handler registry
+                if not hasattr(Mediator, "_handler_registry"):
+                    Mediator._handler_registry = {}
+
+                # Get the command type this handler handles
+                for base in command_handler_type.__orig_bases__:
+                    if hasattr(base, "__origin__") and base.__origin__.__name__ == "CommandHandler":
+                        command_type = base.__args__[0]
+                        Mediator._handler_registry[command_type] = command_handler_type
+                        log.debug(f"🔧 Registered {command_type.__name__} -> {command_handler_type.__name__} in registry")
+                        break
                 handlers_registered += 1
                 log.debug(f"Registered CommandHandler: {command_handler_type.__name__} from {module_name}")
 
@@ -656,7 +717,26 @@ class Mediator:
                 lambda cls: inspect.isclass(cls) and (not hasattr(cls, "__parameters__") or len(cls.__parameters__) < 1) and issubclass(cls, QueryHandler) and cls != QueryHandler,
                 include_sub_modules=True,
             ):
-                app.services.add_transient(RequestHandler, queryhandler_type)
+                # Debug: Check for None types
+                if queryhandler_type is None:
+                    log.error(f"❌ Found None query handler type in {module_name}")
+                    continue
+
+                # Register only the concrete type (for DI) and track for mediator discovery
+                log.debug(f"🔧 Registering QueryHandler: {queryhandler_type.__name__} as concrete type only")
+                app.services.add_scoped(queryhandler_type, queryhandler_type)
+
+                # Add to class-level handler registry
+                if not hasattr(Mediator, "_handler_registry"):
+                    Mediator._handler_registry = {}
+
+                # Get the query type this handler handles
+                for base in queryhandler_type.__orig_bases__:
+                    if hasattr(base, "__origin__") and base.__origin__.__name__ == "QueryHandler":
+                        query_type = base.__args__[0]
+                        Mediator._handler_registry[query_type] = queryhandler_type
+                        log.debug(f"🔧 Registered {query_type.__name__} -> {queryhandler_type.__name__} in registry")
+                        break
                 handlers_registered += 1
                 log.debug(f"Registered QueryHandler: {queryhandler_type.__name__} from {module_name}")
 

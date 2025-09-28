@@ -1,23 +1,23 @@
 from typing import List, Optional
+
+from api.dtos import CreateOrderDto, OrderDto, UpdateOrderStatusDto
+from application.commands import (
+    CompleteOrderCommand,
+    PlaceOrderCommand,
+    StartCookingCommand,
+)
+from application.queries import (
+    GetActiveOrdersQuery,
+    GetOrderByIdQuery,
+    GetOrdersByStatusQuery,
+)
+from classy_fastapi import get, post, put
 from fastapi import HTTPException
 
-from neuroglia.mvc import ControllerBase
 from neuroglia.dependency_injection import ServiceProviderBase
 from neuroglia.mapping import Mapper
 from neuroglia.mediation import Mediator
-from classy_fastapi import get, post, put
-
-from api.dtos import (
-    OrderDto,
-    CreateOrderDto,
-    UpdateOrderStatusDto,
-)
-from application.commands import PlaceOrderCommand, StartCookingCommand, CompleteOrderCommand
-from application.queries import (
-    GetOrderByIdQuery,
-    GetOrdersByStatusQuery,
-    GetActiveOrdersQuery,
-)
+from neuroglia.mvc import ControllerBase
 
 
 class OrdersController(ControllerBase):
@@ -36,11 +36,31 @@ class OrdersController(ControllerBase):
     @get("/", response_model=List[OrderDto], responses=ControllerBase.error_responses)
     async def get_orders(self, status: Optional[str] = None):
         """Get orders, optionally filtered by status"""
+        print(f"🔍 DEBUG: get_orders called with status={status}")
+
+        # Let's test if we can resolve the services that the handler needs
+        try:
+            from domain.repositories import ICustomerRepository, IOrderRepository
+
+            from neuroglia.mapping import Mapper
+
+            order_repo = self.service_provider.get_service(IOrderRepository)
+            customer_repo = self.service_provider.get_service(ICustomerRepository)
+            mapper = self.service_provider.get_service(Mapper)
+
+            print(f"🔍 DEBUG: IOrderRepository resolved: {order_repo is not None} ({type(order_repo)})")
+            print(f"🔍 DEBUG: ICustomerRepository resolved: {customer_repo is not None} ({type(customer_repo)})")
+            print(f"🔍 DEBUG: Mapper resolved: {mapper is not None} ({type(mapper)})")
+
+        except Exception as e:
+            print(f"❌ DEBUG: Service resolution failed: {e}")
+
         if status:
             query = GetOrdersByStatusQuery(status=status)
         else:
             query = GetActiveOrdersQuery()
 
+        print(f"🔍 DEBUG: About to execute query: {type(query)}")
         result = await self.mediator.execute_async(query)
         return self.process(result)
 
@@ -74,9 +94,7 @@ class OrdersController(ControllerBase):
         elif request.status.lower() == "ready":
             command = CompleteOrderCommand(order_id=order_id)
         else:
-            raise HTTPException(
-                status_code=400, detail=f"Unsupported status transition: {request.status}"
-            )
+            raise HTTPException(status_code=400, detail=f"Unsupported status transition: {request.status}")
 
         result = await self.mediator.execute_async(command)
         return self.process(result)

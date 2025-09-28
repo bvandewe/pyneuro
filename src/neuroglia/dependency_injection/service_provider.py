@@ -411,6 +411,12 @@ class ServiceProvider(ServiceProviderBase):
     def _build_service(self, service_descriptor: ServiceDescriptor) -> any:
         """Builds a new service provider based on the configured dependencies"""
         if service_descriptor.lifetime == ServiceLifetime.SCOPED:
+            print(f"🚨 SERVICE PROVIDER DEBUG: Scoped service descriptor details:")
+            print(f"  - service_type: {service_descriptor.service_type}")
+            print(f"  - implementation_type: {service_descriptor.implementation_type}")
+            print(f"  - lifetime: {service_descriptor.lifetime}")
+            print(f"  - singleton: {service_descriptor.singleton}")
+            print(f"  - implementation_factory: {service_descriptor.implementation_factory}")
             raise Exception(f"Failed to resolve scoped service of type '{service_descriptor.implementation_type}' from root service provider")
         if service_descriptor.singleton is not None:
             service = service_descriptor.singleton

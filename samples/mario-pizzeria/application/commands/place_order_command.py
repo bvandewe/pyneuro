@@ -9,6 +9,7 @@ from domain.entities import Customer, Order, Pizza, PizzaSize
 from domain.repositories import ICustomerRepository, IOrderRepository
 
 from neuroglia.core import OperationResult
+from neuroglia.data.unit_of_work import IUnitOfWork
 from neuroglia.mapping import Mapper
 from neuroglia.mapping.mapper import map_from
 from neuroglia.mediation import Command, CommandHandler
@@ -36,10 +37,12 @@ class PlaceOrderCommandHandler(CommandHandler[PlaceOrderCommand, OperationResult
         order_repository: IOrderRepository,
         customer_repository: ICustomerRepository,
         mapper: Mapper,
+        unit_of_work: IUnitOfWork,
     ):
         self.order_repository = order_repository
         self.customer_repository = customer_repository
         self.mapper = mapper
+        self.unit_of_work = unit_of_work
 
     async def handle_async(self, request: PlaceOrderCommand) -> OperationResult[OrderDto]:
         try:
@@ -87,6 +90,15 @@ class PlaceOrderCommandHandler(CommandHandler[PlaceOrderCommand, OperationResult
             # Save order
             await self.order_repository.add_async(order)
 
+            # Register aggregates with Unit of Work for domain event dispatching
+            # Note: Unit of Work uses duck typing internally to collect domain events
+            from typing import cast
+
+            from neuroglia.data.abstractions import AggregateRoot as NeuroAggregateRoot
+
+            self.unit_of_work.register_aggregate(cast(NeuroAggregateRoot, order))
+            self.unit_of_work.register_aggregate(cast(NeuroAggregateRoot, customer))
+
             # Create OrderDto with customer information
             order_dto = OrderDto(
                 id=order.id,
@@ -122,6 +134,14 @@ class PlaceOrderCommandHandler(CommandHandler[PlaceOrderCommand, OperationResult
             if request.customer_address and not existing_customer.address:
                 existing_customer.update_contact_info(address=request.customer_address)
                 await self.customer_repository.update_async(existing_customer)
+                # Register updated customer for domain events
+                from typing import cast
+
+                from neuroglia.data.abstractions import (
+                    AggregateRoot as NeuroAggregateRoot,
+                )
+
+                self.unit_of_work.register_aggregate(cast(NeuroAggregateRoot, existing_customer))
             return existing_customer
         else:
             # Create new customer
