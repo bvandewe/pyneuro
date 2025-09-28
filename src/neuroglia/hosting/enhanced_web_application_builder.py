@@ -8,28 +8,31 @@ This module provides enhanced web hosting capabilities including:
 - Controller deduplication and intelligent registration
 """
 
-from abc import abstractmethod
 import importlib
 import inspect
 import logging
 import pkgutil
-from typing import Dict, List, Optional, Set, TypeVar
+from abc import abstractmethod
+from typing import Optional, TypeVar
 
 from fastapi import FastAPI, Request, Response
-from neuroglia.dependency_injection import ServiceProviderBase
-from neuroglia.mapping.mapper import Mapper
-from neuroglia.mediation.mediator import Mediator
 from starlette.middleware.base import BaseHTTPMiddleware
 
-from neuroglia.core.problem_details import ProblemDetails
 from neuroglia.core import ModuleLoader, TypeFinder
-from neuroglia.dependency_injection.service_provider import ServiceCollection, ServiceProviderBase
+from neuroglia.core.problem_details import ProblemDetails
+from neuroglia.dependency_injection import ServiceProviderBase
+from neuroglia.dependency_injection.service_provider import (
+    ServiceCollection,
+    ServiceProviderBase,
+)
 from neuroglia.hosting.abstractions import (
     ApplicationBuilderBase,
     Host,
     HostApplicationLifetime,
     HostBase,
 )
+from neuroglia.mapping.mapper import Mapper
+from neuroglia.mediation.mediator import Mediator
 from neuroglia.serialization.json import JsonSerializer
 
 log = logging.getLogger(__name__)
@@ -41,9 +44,7 @@ class WebHostBase(HostBase, FastAPI):
     """Enhanced web host that extends the base HostBase with FastAPI integration"""
 
     def __init__(self):
-        application_lifetime: HostApplicationLifetime = self.services.get_required_service(
-            HostApplicationLifetime
-        )
+        application_lifetime: HostApplicationLifetime = self.services.get_required_service(HostApplicationLifetime)
         FastAPI.__init__(self, lifespan=application_lifetime._run_async, docs_url="/api/docs")
 
     def use_controllers(self):
@@ -108,7 +109,6 @@ class EnhancedWebHost(WebHost):
         The prefix handling is done explicitly by the builder.
         """
         # Don't add any controllers here - they're added explicitly by the builder
-        pass
 
 
 class WebApplicationBuilderBase(ApplicationBuilderBase):
@@ -117,7 +117,7 @@ class WebApplicationBuilderBase(ApplicationBuilderBase):
     def __init__(self):
         super().__init__()
 
-    def add_controllers(self, modules: List[str]) -> ServiceCollection:
+    def add_controllers(self, modules: list[str]) -> ServiceCollection:
         """Registers all API controller types, which enables automatic configuration and implicit Dependency Injection of the application's controllers (specialized router class in FastAPI)"""
         from neuroglia.mvc.controller_base import ControllerBase
 
@@ -126,9 +126,7 @@ class WebApplicationBuilderBase(ApplicationBuilderBase):
             controller_types.extend(
                 TypeFinder.get_types(
                     module,
-                    lambda t: inspect.isclass(t)
-                    and issubclass(t, ControllerBase)
-                    and t != ControllerBase,
+                    lambda t: inspect.isclass(t) and issubclass(t, ControllerBase) and t != ControllerBase,
                     include_sub_packages=True,
                 )
             )
@@ -168,8 +166,8 @@ class EnhancedWebApplicationBuilder(WebApplicationBuilder):
         super().__init__()
         self._main_app = None
         # Use a more robust tracking system that includes controller types
-        self._registered_controllers: Dict[str, Set[str]] = {}
-        self._pending_controller_modules: List[Dict] = []
+        self._registered_controllers: dict[str, set[str]] = {}
+        self._pending_controller_modules: list[dict] = []
 
     @property
     def app(self) -> Optional[FastAPI]:
@@ -187,24 +185,16 @@ class EnhancedWebApplicationBuilder(WebApplicationBuilder):
         self._main_app = host
 
         # Process any pending controller registrations that target the main app
-        pending_for_main = [
-            reg for reg in self._pending_controller_modules if reg.get("app") is None
-        ]
+        pending_for_main = [reg for reg in self._pending_controller_modules if reg.get("app") is None]
         for registration in pending_for_main:
-            self._register_controllers_to_app(
-                registration["modules"], self._main_app, registration.get("prefix")
-            )
+            self._register_controllers_to_app(registration["modules"], self._main_app, registration.get("prefix"))
 
         # Remove processed registrations
-        self._pending_controller_modules = [
-            reg for reg in self._pending_controller_modules if reg.get("app") is not None
-        ]
+        self._pending_controller_modules = [reg for reg in self._pending_controller_modules if reg.get("app") is not None]
 
         return host
 
-    def add_controllers(
-        self, modules: List[str], app: Optional[FastAPI] = None, prefix: Optional[str] = None
-    ) -> None:
+    def add_controllers(self, modules: list[str], app: Optional[FastAPI] = None, prefix: Optional[str] = None) -> None:
         """
         Add controllers from specified modules to an app.
 
@@ -221,9 +211,7 @@ class EnhancedWebApplicationBuilder(WebApplicationBuilder):
             self._register_controllers_to_app(modules, app, prefix)
         else:
             # Store for later registration when main app is built
-            self._pending_controller_modules.append(
-                {"modules": modules, "app": None, "prefix": prefix}
-            )
+            self._pending_controller_modules.append({"modules": modules, "app": None, "prefix": prefix})
 
     def add_exception_handling(self, app: Optional[FastAPI] = None):
         """
@@ -234,9 +222,7 @@ class EnhancedWebApplicationBuilder(WebApplicationBuilder):
         """
         target_app = app or self._main_app
         if target_app is None:
-            raise ValueError(
-                "No FastAPI app available. Build the application first or provide an app parameter."
-            )
+            raise ValueError("No FastAPI app available. Build the application first or provide an app parameter.")
 
         # Get the service provider
         service_provider = self.services.build()
@@ -245,7 +231,7 @@ class EnhancedWebApplicationBuilder(WebApplicationBuilder):
         target_app.add_middleware(ExceptionHandlingMiddleware, service_provider=service_provider)
         log.info("Added exception handling middleware to FastAPI app")
 
-    def _register_controller_types(self, modules: List[str]) -> None:
+    def _register_controller_types(self, modules: list[str]) -> None:
         """Register controller types with the DI container."""
         from neuroglia.mvc.controller_base import ControllerBase
 
@@ -254,9 +240,7 @@ class EnhancedWebApplicationBuilder(WebApplicationBuilder):
             controller_types.extend(
                 TypeFinder.get_types(
                     module,
-                    lambda t: inspect.isclass(t)
-                    and issubclass(t, ControllerBase)
-                    and t != ControllerBase,
+                    lambda t: inspect.isclass(t) and issubclass(t, ControllerBase) and t != ControllerBase,
                     include_sub_packages=True,
                 )
             )
@@ -264,9 +248,7 @@ class EnhancedWebApplicationBuilder(WebApplicationBuilder):
         for controller_type in set(controller_types):
             self.services.add_singleton(ControllerBase, controller_type)
 
-    def _register_controllers_to_app(
-        self, modules: List[str], app: FastAPI, prefix: Optional[str] = None
-    ) -> None:
+    def _register_controllers_to_app(self, modules: list[str], app: FastAPI, prefix: Optional[str] = None) -> None:
         """
         Register controllers from modules to the specified app.
 
@@ -277,8 +259,11 @@ class EnhancedWebApplicationBuilder(WebApplicationBuilder):
         """
         from neuroglia.mvc.controller_base import ControllerBase
 
-        # Get service provider and required services
-        service_provider = self.services.build()
+        # Get service provider from app state (if available) or build new one
+        service_provider = getattr(app.state, "services", None)
+        if service_provider is None:
+            service_provider = self.services.build()
+
         mapper = service_provider.get_service(Mapper)
         mediator = service_provider.get_service(Mediator)
 
@@ -295,14 +280,9 @@ class EnhancedWebApplicationBuilder(WebApplicationBuilder):
 
                 # Process controllers in the module
                 for _, controller_type in inspect.getmembers(module, inspect.isclass):
-                    is_valid_controller = (
-                        not inspect.isabstract(controller_type)
-                        and issubclass(controller_type, ControllerBase)
-                        and controller_type != ControllerBase
-                    )
+                    is_valid_controller = not inspect.isabstract(controller_type) and issubclass(controller_type, ControllerBase) and controller_type != ControllerBase
 
                     if is_valid_controller:
-
                         # Create a unique identifier for this controller in this app
                         controller_key = f"{controller_type.__module__}.{controller_type.__name__}"
 
@@ -312,9 +292,7 @@ class EnhancedWebApplicationBuilder(WebApplicationBuilder):
 
                         try:
                             # Instantiate controller to get its router
-                            controller_instance = controller_type(
-                                service_provider, mapper, mediator
-                            )
+                            controller_instance = controller_type(service_provider, mapper, mediator)
 
                             # Make sure router is initialized
                             router = getattr(controller_instance, "router", None)
@@ -326,22 +304,16 @@ class EnhancedWebApplicationBuilder(WebApplicationBuilder):
 
                                 # Mark this controller as registered for this app
                                 self._registered_controllers[app_id].add(controller_key)
-                                log.info(
-                                    f"Added controller {controller_type.__name__} router to app with prefix '{prefix}'"
-                                )
+                                log.info(f"Added controller {controller_type.__name__} router to app with prefix '{prefix}'")
                             else:
                                 log.warning(f"Controller {controller_type.__name__} has no router")
 
                         except Exception as ex:
-                            log.error(
-                                f"Failed to register controller {controller_type.__name__}: {ex}"
-                            )
+                            log.error(f"Failed to register controller {controller_type.__name__}: {ex}")
 
                 # Process submodules if this is a package
                 if hasattr(module, "__path__"):
-                    for _, submodule_name, is_pkg in pkgutil.iter_modules(
-                        module.__path__, module_name + "."
-                    ):
+                    for _, submodule_name, is_pkg in pkgutil.iter_modules(module.__path__, module_name + "."):
                         self._register_controllers_to_app([submodule_name], app, prefix)
 
             except ImportError as ex:
