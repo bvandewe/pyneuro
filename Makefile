@@ -123,9 +123,13 @@ docs: ## Build documentation
 	$(POETRY) run mkdocs build
 	@echo "✅ Documentation built in site/"
 
-docs-serve: ## Serve documentation locally
-	@echo "📚 Serving documentation at http://localhost:8000"
-	$(POETRY) run mkdocs serve
+docs-serve: ## Serve documentation locally (development server)
+	@echo "📚 Starting documentation server..."
+	$(eval DEV_PORT := $(shell grep '^DOCS_DEV_PORT=' .env 2>/dev/null | cut -d'=' -f2 | tr -d ' ' || echo '8000'))
+	@echo "Checking for existing servers on port $(DEV_PORT)..."
+	@lsof -ti:$(DEV_PORT) | xargs -r kill -9 2>/dev/null || true
+	@echo "✅ Open http://127.0.0.1:$(DEV_PORT) in your browser"
+	poetry run mkdocs serve --dev-addr=127.0.0.1:$(DEV_PORT)
 
 docs-deploy: ## Deploy documentation to GitHub Pages
 	@echo "🚀 Deploying documentation..."
