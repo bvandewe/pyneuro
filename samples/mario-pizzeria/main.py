@@ -136,6 +136,8 @@ def create_pizzeria_app(data_dir: Optional[str] = None, port: int = 8000):
 
     # Create the main FastAPI app directly
     from fastapi import FastAPI
+    from fastapi.responses import FileResponse
+    from fastapi.staticfiles import StaticFiles
 
     app = FastAPI(
         title="Mario's Pizzeria",
@@ -159,7 +161,7 @@ def create_pizzeria_app(data_dir: Optional[str] = None, port: int = 8000):
     # IMPORTANT: Make services available to API app as well
     api_app.state.services = service_provider
 
-    # Create UI app for future frontend
+    # Create UI app for frontend
     ui_app = FastAPI(
         title="Mario's Pizzeria UI",
         description="Pizza ordering web interface",
@@ -167,6 +169,16 @@ def create_pizzeria_app(data_dir: Optional[str] = None, port: int = 8000):
         docs_url=None,  # Disable docs for UI app
         debug=True,
     )
+
+    # Configure static file serving for UI
+    static_directory = Path(__file__).parent / "static"
+    ui_app.mount("/static", StaticFiles(directory=str(static_directory)), name="static")
+
+    # Add root route to serve index.html
+    @ui_app.get("/")
+    async def serve_ui():
+        """Serve the main UI page"""
+        return FileResponse(str(static_directory / "index.html"))
 
     # Register API controllers to the API app
     builder.add_controllers(["api.controllers"], app=api_app)
@@ -194,7 +206,7 @@ def create_pizzeria_app(data_dir: Optional[str] = None, port: int = 8000):
                 },
                 "ui": {
                     "url": "/ui",
-                    "description": "Web interface for customers and staff (coming soon)",
+                    "description": "Interactive web interface for pizza ordering and management",
                 },
             },
             "sample_requests": {
