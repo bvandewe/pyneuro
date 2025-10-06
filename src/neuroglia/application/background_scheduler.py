@@ -21,16 +21,24 @@ from neuroglia.core import ModuleLoader, TypeFinder
 from neuroglia.reactive import AsyncRx
 
 # Import APScheduler components
+
+try:
+    from apscheduler.jobstores.redis import RedisJobStore
+except ImportError:
+    RedisJobStore = None
+
+try:
+    from apscheduler.jobstores.mongodb import MongoDBJobStore
+except ImportError:
+    MongoDBJobStore = None
+
 try:
     from apscheduler.executors.asyncio import AsyncIOExecutor
-    from apscheduler.jobstores.redis import RedisJobStore
-    from apscheduler.jobstores.mongodb import MongoDBJobStore
+
     from apscheduler.schedulers.asyncio import AsyncIOScheduler
 except ImportError:
     # APScheduler is an optional dependency
     AsyncIOExecutor = None
-    RedisJobStore = None
-    MongoDBJobStore = None
     AsyncIOScheduler = None
 
 if TYPE_CHECKING:
@@ -403,7 +411,7 @@ class BackgroundTaskScheduler:
             jobstores = {}
             if hasattr(builder, "settings"):
                 job_store_config = getattr(builder.settings, "background_job_store", {})
-                
+
                 # Check for Redis configuration
                 redis_keys = ["redis_host", "redis_port", "redis_db"]
                 if all(key in job_store_config for key in redis_keys):
@@ -416,16 +424,13 @@ class BackgroundTaskScheduler:
                         log.info("Configured Redis job store for background tasks")
                     else:
                         log.warning("Redis job store requested but Redis dependencies not available")
-                
+
                 # Check for MongoDB configuration
                 elif "mongo_uri" in job_store_config or all(key in job_store_config for key in ["mongo_host", "mongo_port"]):
                     if MongoDBJobStore is not None:
                         # Support both URI and individual parameter configuration
                         if "mongo_uri" in job_store_config:
-                            jobstores["default"] = MongoDBJobStore(
-                                host=job_store_config["mongo_uri"],
-                                collection=job_store_config.get("mongo_collection", "scheduled_jobs")
-                            )
+                            jobstores["default"] = MongoDBJobStore(host=job_store_config["mongo_uri"], collection=job_store_config.get("mongo_collection", "scheduled_jobs"))
                             log.info("Configured MongoDB job store for background tasks (URI)")
                         else:
                             # Individual parameters
@@ -433,21 +438,16 @@ class BackgroundTaskScheduler:
                             mongo_port = job_store_config.get("mongo_port", 27017)
                             mongo_db = job_store_config.get("mongo_database", "scheduler")
                             mongo_collection = job_store_config.get("mongo_collection", "scheduled_jobs")
-                            
-                            jobstores["default"] = MongoDBJobStore(
-                                host=mongo_host,
-                                port=mongo_port,
-                                database=mongo_db,
-                                collection=mongo_collection
-                            )
+
+                            jobstores["default"] = MongoDBJobStore(host=mongo_host, port=mongo_port, database=mongo_db, collection=mongo_collection)
                             log.info("Configured MongoDB job store for background tasks (individual params)")
                     else:
                         log.warning("MongoDB job store requested but MongoDB dependencies not available")
-                
+
                 # Check for incomplete configurations
                 elif any(key.startswith(("redis_", "mongo_")) for key in job_store_config.keys()):
                     log.warning("Incomplete job store configuration found - check Redis or MongoDB settings")
-                
+
                 else:
                     log.info("No job store configuration found, using in-memory job store")
             else:
