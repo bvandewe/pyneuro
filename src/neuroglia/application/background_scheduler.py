@@ -24,11 +24,13 @@ from neuroglia.reactive import AsyncRx
 try:
     from apscheduler.executors.asyncio import AsyncIOExecutor
     from apscheduler.jobstores.redis import RedisJobStore
+    from apscheduler.jobstores.mongodb import MongoDBJobStore
     from apscheduler.schedulers.asyncio import AsyncIOScheduler
 except ImportError:
     # APScheduler is an optional dependency
     AsyncIOExecutor = None
     RedisJobStore = None
+    MongoDBJobStore = None
     AsyncIOScheduler = None
 
 if TYPE_CHECKING:
@@ -190,7 +192,7 @@ class BackgroundTaskScheduler:
     ):
         """Initialize the background task scheduler."""
         if AsyncIOScheduler is None:
-            raise BackgroundTaskException("APScheduler is required for background task scheduling. " "Install it with: pip install apscheduler[redis]")
+            raise BackgroundTaskException("APScheduler is required for background task scheduling. " "Install it with: pip install apscheduler[redis] or pip install apscheduler[mongodb]")
 
         self._options = options
         self._background_task_bus = background_task_bus
@@ -370,7 +372,7 @@ class BackgroundTaskScheduler:
         """Register and configure background task services in the application builder."""
         try:
             if AsyncIOScheduler is None:
-                raise BackgroundTaskException("APScheduler is required for background task scheduling. " "Install it with: pip install apscheduler[redis]")
+                raise BackgroundTaskException("APScheduler is required for background task scheduling. " "Install it with: pip install apscheduler[redis] or pip install apscheduler[mongodb]")
 
             # Create scheduler options and discover tasks
             options = BackgroundTaskSchedulerOptions()
@@ -397,11 +399,14 @@ class BackgroundTaskScheduler:
                     log.error(f"Error scanning module '{module_name}' for background tasks: {ex}")
                     continue
 
-            # Configure Redis job store if settings are available
+            # Configure job stores if settings are available
             jobstores = {}
             if hasattr(builder, "settings"):
                 job_store_config = getattr(builder.settings, "background_job_store", {})
-                if all(key in job_store_config for key in ["redis_host", "redis_port", "redis_db"]):
+                
+                # Check for Redis configuration
+                redis_keys = ["redis_host", "redis_port", "redis_db"]
+                if all(key in job_store_config for key in redis_keys):
                     if RedisJobStore is not None:
                         jobstores["default"] = RedisJobStore(
                             host=job_store_config["redis_host"],
@@ -411,10 +416,42 @@ class BackgroundTaskScheduler:
                         log.info("Configured Redis job store for background tasks")
                     else:
                         log.warning("Redis job store requested but Redis dependencies not available")
+                
+                # Check for MongoDB configuration
+                elif "mongo_uri" in job_store_config or all(key in job_store_config for key in ["mongo_host", "mongo_port"]):
+                    if MongoDBJobStore is not None:
+                        # Support both URI and individual parameter configuration
+                        if "mongo_uri" in job_store_config:
+                            jobstores["default"] = MongoDBJobStore(
+                                host=job_store_config["mongo_uri"],
+                                collection=job_store_config.get("mongo_collection", "scheduled_jobs")
+                            )
+                            log.info("Configured MongoDB job store for background tasks (URI)")
+                        else:
+                            # Individual parameters
+                            mongo_host = job_store_config.get("mongo_host", "localhost")
+                            mongo_port = job_store_config.get("mongo_port", 27017)
+                            mongo_db = job_store_config.get("mongo_database", "scheduler")
+                            mongo_collection = job_store_config.get("mongo_collection", "scheduled_jobs")
+                            
+                            jobstores["default"] = MongoDBJobStore(
+                                host=mongo_host,
+                                port=mongo_port,
+                                database=mongo_db,
+                                collection=mongo_collection
+                            )
+                            log.info("Configured MongoDB job store for background tasks (individual params)")
+                    else:
+                        log.warning("MongoDB job store requested but MongoDB dependencies not available")
+                
+                # Check for incomplete configurations
+                elif any(key.startswith(("redis_", "mongo_")) for key in job_store_config.keys()):
+                    log.warning("Incomplete job store configuration found - check Redis or MongoDB settings")
+                
                 else:
-                    log.warning("Incomplete Redis configuration for background job store")
+                    log.info("No job store configuration found, using in-memory job store")
             else:
-                log.info("No Redis configuration found, using in-memory job store")
+                log.info("No settings found, using in-memory job store")
 
             # Create and register scheduler
             if AsyncIOScheduler is not None and AsyncIOExecutor is not None:
