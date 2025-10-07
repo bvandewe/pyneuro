@@ -426,17 +426,18 @@ class BackgroundTaskScheduler:
                         log.warning("Redis job store requested but Redis dependencies not available")
 
                 # Check for MongoDB configuration
-                elif "mongo_uri" in job_store_config or all(key in job_store_config for key in ["mongo_host", "mongo_port"]):
+                elif all(key in job_store_config for key in ["mongo_uri", "mongo_db"]) in job_store_config or all(key in job_store_config for key in ["mongo_host", "mongo_port"]):
                     if MongoDBJobStore is not None:
                         # Support both URI and individual parameter configuration
                         if "mongo_uri" in job_store_config:
-                            jobstores["default"] = MongoDBJobStore(host=job_store_config["mongo_uri"], collection=job_store_config.get("mongo_collection", "scheduled_jobs"))
+                            mongo_uri = job_store_config.get("mongo_uri")
+                            jobstores["default"] = MongoDBJobStore(host=mongo_uri, database=job_store_config.get("mongo_db"), collection=job_store_config.get("mongo_collection", "scheduled_jobs"))
                             log.info("Configured MongoDB job store for background tasks (URI)")
                         else:
                             # Individual parameters
                             mongo_host = job_store_config.get("mongo_host", "localhost")
                             mongo_port = job_store_config.get("mongo_port", 27017)
-                            mongo_db = job_store_config.get("mongo_database", "scheduler")
+                            mongo_db = job_store_config.get("mongo_db")
                             mongo_collection = job_store_config.get("mongo_collection", "scheduled_jobs")
 
                             jobstores["default"] = MongoDBJobStore(host=mongo_host, port=mongo_port, database=mongo_db, collection=mongo_collection)
