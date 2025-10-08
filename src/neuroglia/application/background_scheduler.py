@@ -455,6 +455,8 @@ class BackgroundTaskScheduler:
                 log.info("No settings found, using in-memory job store")
 
             # Create and register scheduler
+            builder.services.add_singleton(AsyncIOExecutor, singleton=AsyncIOExecutor())
+            # builder.services.try_add_singleton(AsyncIOScheduler, implementation_factory=lambda provider: MosaicApiClient(provider.get_required_service(OauthClientCredentialsAuthApiOptions), provider.get_required_service(JsonSerializer)))
             if AsyncIOScheduler is not None and AsyncIOExecutor is not None:
                 scheduler = AsyncIOScheduler(executors={"default": AsyncIOExecutor()}, jobstores=jobstores)
             else:
