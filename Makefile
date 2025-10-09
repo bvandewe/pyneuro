@@ -191,7 +191,8 @@ sample-mario-status: ## Check Mario's Pizzeria status
 			echo "📖 API Documentation: http://127.0.0.1:8000/api/docs"; \
 			echo "🌐 Health check: curl http://127.0.0.1:8000/api"; \
 		else \
-			echo "❌ Mario's Pizzeria is not running (stale PID file)"; \
+			echo "❌ Mario's Pizzeria is not running (cleaning up stale PID file)"; \
+			rm $(MARIO_PIZZERIA)/pizza.pid; \
 		fi \
 	else \
 		echo "❌ Mario's Pizzeria is not running"; \

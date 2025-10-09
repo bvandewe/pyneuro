@@ -8,19 +8,17 @@ providing easy commands to start, stop, and monitor different samples.
 
 import argparse
 import json
-import logging
 import os
 import signal
-import socket
 import subprocess
 import sys
 import time
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple
+from typing import Optional
 
 
 class PyNeuroctl:
-    """Main CLI controller for Neuroglia framework sample management"""
+    """Main CLI controller for Neuroglia framework samples management"""
 
     def __init__(self):
         self.project_root = self._find_project_root()
@@ -87,7 +85,7 @@ class PyNeuroctl:
         # Fallback to relative path
         return Path(__file__).parent.parent.parent
 
-    def _load_pids(self) -> Dict[str, int]:
+    def _load_pids(self) -> dict[str, int]:
         """Load running process PIDs from file"""
         if not self.pid_file.exists():
             return {}
@@ -98,7 +96,7 @@ class PyNeuroctl:
         except (json.JSONDecodeError, IOError):
             return {}
 
-    def _save_pids(self, pids: Dict[str, int]) -> None:
+    def _save_pids(self, pids: dict[str, int]) -> None:
         """Save process PIDs to file"""
         try:
             with open(self.pid_file, "w") as f:
@@ -164,7 +162,7 @@ class PyNeuroctl:
 
         print()
 
-    def _get_sample_status(self, sample_name: str) -> Dict:
+    def _get_sample_status(self, sample_name: str) -> dict:
         """Get status information for a sample"""
         pids = self._load_pids()
         pid = pids.get(sample_name)
@@ -237,9 +235,7 @@ class PyNeuroctl:
         # Check if already running
         status = self._get_sample_status(sample_name)
         if status["running"]:
-            print(
-                f"⚠️  {self.samples[sample_name]['name']} is already running (PID: {status['pid']})"
-            )
+            print(f"⚠️  {self.samples[sample_name]['name']} is already running (PID: {status['pid']})")
             print(f"🔗 URL: http://localhost:{status['port']}")
             return
 
@@ -538,9 +534,7 @@ Examples:
     start_parser = subparsers.add_parser("start", help="Start a sample application")
     start_parser.add_argument("sample", help="Sample application to start")
     start_parser.add_argument("--port", "-p", type=int, help="Custom port number")
-    start_parser.add_argument(
-        "--foreground", "-f", action="store_true", help="Run in foreground (default: background)"
-    )
+    start_parser.add_argument("--foreground", "-f", action="store_true", help="Run in foreground (default: background)")
 
     # Stop command
     stop_parser = subparsers.add_parser("stop", help="Stop sample application(s)")
@@ -551,9 +545,7 @@ Examples:
     logs_parser = subparsers.add_parser("logs", help="Show sample application logs")
     logs_parser.add_argument("sample", help="Sample application name")
     logs_parser.add_argument("--lines", "-n", type=int, default=50, help="Number of lines to show")
-    logs_parser.add_argument(
-        "--follow", "-f", action="store_true", help="Follow logs (like tail -f)"
-    )
+    logs_parser.add_argument("--follow", "-f", action="store_true", help="Follow logs (like tail -f)")
 
     args = parser.parse_args()
 

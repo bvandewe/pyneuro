@@ -274,7 +274,18 @@ class ServiceScope(ServiceScopeBase, ServiceProviderBase):
             if any(type(service) == descriptor.service_type for service in realized_services):
                 continue
             realized_services.append(self._build_service(descriptor))
-        return realized_services + self._root_service_provider.get_services(type)
+
+        # Only get singleton and transient services from root provider
+        # Scoped services should only come from the current scope
+        root_services = []
+        try:
+            # Call a special method that only returns singleton/transient services
+            root_services = self._root_service_provider._get_non_scoped_services(type)
+        except Exception:
+            # If there's an error getting root services, just use what we have from scope
+            pass
+
+        return realized_services + root_services
 
     def _build_service(self, service_descriptor: ServiceDescriptor) -> any:
         """Builds a new scoped service"""
@@ -394,6 +405,40 @@ class ServiceProvider(ServiceProviderBase):
                 realized_services.append(self._build_service(descriptor))
         return realized_services
 
+    def _get_non_scoped_services(self, type: type) -> list:
+        """
+        Gets all singleton and transient services of the specified type,
+        excluding scoped services (which should only be resolved from a ServiceScope).
+
+        This is used by ServiceScope.get_services() to avoid trying to resolve
+        scoped services from the root provider.
+        """
+        if type == ServiceProviderBase:
+            return [self]
+
+        # Only include singleton and transient descriptors (skip scoped)
+        service_descriptors = [descriptor for descriptor in self._service_descriptors if descriptor.service_type == type and descriptor.lifetime != ServiceLifetime.SCOPED]
+
+        realized_services = self._realized_services.get(type)
+        if realized_services is None:
+            realized_services = list()
+
+        # Build services for non-scoped descriptors
+        result_services = []
+        for descriptor in service_descriptors:
+            implementation_type = descriptor.get_implementation_type()
+            realized_service = next(
+                (service for service in realized_services if self._is_service_instance_of(service, implementation_type)),
+                None,
+            )
+            if realized_service is None:
+                service = self._build_service(descriptor)
+                result_services.append(service)
+            else:
+                result_services.append(realized_service)
+
+        return result_services
+
     def _is_service_instance_of(self, service: Any, type_: type) -> bool:
         if hasattr(type_, "__origin__"):
             service_type = service.__orig_class__ if hasattr(service, "__orig_class__") else type(service)
@@ -411,12 +456,6 @@ class ServiceProvider(ServiceProviderBase):
     def _build_service(self, service_descriptor: ServiceDescriptor) -> any:
         """Builds a new service provider based on the configured dependencies"""
         if service_descriptor.lifetime == ServiceLifetime.SCOPED:
-            print(f"🚨 SERVICE PROVIDER DEBUG: Scoped service descriptor details:")
-            print(f"  - service_type: {service_descriptor.service_type}")
-            print(f"  - implementation_type: {service_descriptor.implementation_type}")
-            print(f"  - lifetime: {service_descriptor.lifetime}")
-            print(f"  - singleton: {service_descriptor.singleton}")
-            print(f"  - implementation_factory: {service_descriptor.implementation_factory}")
             raise Exception(f"Failed to resolve scoped service of type '{service_descriptor.implementation_type}' from root service provider")
         if service_descriptor.singleton is not None:
             service = service_descriptor.singleton

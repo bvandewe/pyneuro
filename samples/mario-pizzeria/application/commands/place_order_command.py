@@ -5,7 +5,7 @@ from decimal import Decimal
 from typing import Optional
 
 from api.dtos import CreateOrderDto, CreatePizzaDto, OrderDto, PizzaDto
-from domain.entities import Customer, Order, Pizza, PizzaSize
+from domain.entities import Customer, Order, PizzaSize
 from domain.repositories import ICustomerRepository, IOrderRepository
 
 from neuroglia.core import OperationResult
@@ -50,16 +50,16 @@ class PlaceOrderCommandHandler(CommandHandler[PlaceOrderCommand, OperationResult
             customer = await self._create_or_get_customer(request)
 
             # Create order with customer_id
-            order = Order(customer_id=customer.id)
+            order = Order(customer_id=customer.id())
             if request.notes:
-                order.notes = request.notes
+                order.state.notes = request.notes
 
-            # Add pizzas to order
+            # Add pizzas to order as OrderItems (value objects)
             for pizza_item in request.pizzas:
                 # Convert size string to enum
                 size = PizzaSize(pizza_item.size.lower())
 
-                # Create pizza with base pricing
+                # Determine base price based on pizza name
                 base_price = Decimal("12.99")  # Default base price
                 if pizza_item.name.lower() == "margherita":
                     base_price = Decimal("12.99")
@@ -68,20 +68,24 @@ class PlaceOrderCommandHandler(CommandHandler[PlaceOrderCommand, OperationResult
                 elif pizza_item.name.lower() == "supreme":
                     base_price = Decimal("17.99")
 
-                pizza = Pizza(
+                # Create OrderItem (value object snapshot of pizza data)
+                # Note: line_item_id is generated here as a unique identifier for this order item
+                from uuid import uuid4
+
+                from domain.entities.order_item import OrderItem
+
+                order_item = OrderItem(
+                    line_item_id=str(uuid4()),  # Generate unique ID for this line item
                     name=pizza_item.name,
-                    base_price=base_price,
                     size=size,
+                    base_price=base_price,
+                    toppings=pizza_item.toppings,
                 )
 
-                # Add toppings
-                for topping in pizza_item.toppings:
-                    pizza.add_topping(topping)
+                order.add_order_item(order_item)
 
-                order.add_pizza(pizza)
-
-            # Validate order has pizzas
-            if not order.pizzas:
+            # Validate order has items
+            if not order.state.order_items:
                 return self.bad_request("Order must contain at least one pizza")
 
             # Confirm order (raises domain event)
@@ -91,28 +95,36 @@ class PlaceOrderCommandHandler(CommandHandler[PlaceOrderCommand, OperationResult
             await self.order_repository.add_async(order)
 
             # Register aggregates with Unit of Work for domain event dispatching
-            # Note: Unit of Work uses duck typing internally to collect domain events
-            from typing import cast
-
-            from neuroglia.data.abstractions import AggregateRoot as NeuroAggregateRoot
-
-            self.unit_of_work.register_aggregate(cast(NeuroAggregateRoot, order))
-            self.unit_of_work.register_aggregate(cast(NeuroAggregateRoot, customer))
+            self.unit_of_work.register_aggregate(order)
+            self.unit_of_work.register_aggregate(customer)
 
             # Create OrderDto with customer information
+            # Map OrderItems (value objects) to PizzaDtos
+            pizza_dtos = [
+                PizzaDto(
+                    id=item.line_item_id,
+                    name=item.name,
+                    size=item.size.value,
+                    toppings=list(item.toppings),
+                    base_price=item.base_price,
+                    total_price=item.total_price,
+                )
+                for item in order.state.order_items
+            ]
+
             order_dto = OrderDto(
-                id=order.id,
-                customer_name=customer.name,
-                customer_phone=customer.phone,
-                customer_address=customer.address,
-                pizzas=[self.mapper.map(pizza, PizzaDto) for pizza in order.pizzas],
-                status=order.status.value,
-                order_time=order.order_time,
-                confirmed_time=order.confirmed_time,
-                cooking_started_time=order.cooking_started_time,
-                actual_ready_time=order.actual_ready_time,
-                estimated_ready_time=order.estimated_ready_time,
-                notes=order.notes,
+                id=order.id(),
+                customer_name=customer.state.name,
+                customer_phone=customer.state.phone,
+                customer_address=customer.state.address,
+                pizzas=pizza_dtos,
+                status=order.state.status.value,
+                order_time=order.state.order_time,
+                confirmed_time=getattr(order.state, "confirmed_time", None),
+                cooking_started_time=getattr(order.state, "cooking_started_time", None),
+                actual_ready_time=getattr(order.state, "actual_ready_time", None),
+                estimated_ready_time=getattr(order.state, "estimated_ready_time", None),
+                notes=getattr(order.state, "notes", None),
                 total_amount=order.total_amount,
                 pizza_count=order.pizza_count,
                 payment_method=request.payment_method,
@@ -131,17 +143,11 @@ class PlaceOrderCommandHandler(CommandHandler[PlaceOrderCommand, OperationResult
 
         if existing_customer:
             # Update address if provided and customer doesn't have one
-            if request.customer_address and not existing_customer.address:
+            if request.customer_address and not existing_customer.state.address:
                 existing_customer.update_contact_info(address=request.customer_address)
                 await self.customer_repository.update_async(existing_customer)
                 # Register updated customer for domain events
-                from typing import cast
-
-                from neuroglia.data.abstractions import (
-                    AggregateRoot as NeuroAggregateRoot,
-                )
-
-                self.unit_of_work.register_aggregate(cast(NeuroAggregateRoot, existing_customer))
+                self.unit_of_work.register_aggregate(existing_customer)
             return existing_customer
         else:
             # Create new customer

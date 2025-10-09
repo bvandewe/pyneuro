@@ -1,21 +1,18 @@
 """Get Menu Query and Handler for Mario's Pizzeria"""
 
 from dataclasses import dataclass
-from typing import List
-
-from neuroglia.mediation import Query, QueryHandler
-from neuroglia.core import OperationResult
-from neuroglia.mapping import Mapper
 
 from api.dtos import PizzaDto
 from domain.repositories import IPizzaRepository
+
+from neuroglia.core import OperationResult
+from neuroglia.mapping import Mapper
+from neuroglia.mediation import Query, QueryHandler
 
 
 @dataclass
 class GetMenuQuery(Query[OperationResult[List[PizzaDto]]]):
     """Query to get the complete pizza menu"""
-
-    pass
 
 
 class GetMenuQueryHandler(QueryHandler[GetMenuQuery, OperationResult[List[PizzaDto]]]):
@@ -25,10 +22,21 @@ class GetMenuQueryHandler(QueryHandler[GetMenuQuery, OperationResult[List[PizzaD
         self.pizza_repository = pizza_repository
         self.mapper = mapper
 
-    async def handle_async(self, request: GetMenuQuery) -> OperationResult[List[PizzaDto]]:
+    async def handle_async(self, request: GetMenuQuery) -> OperationResult[list[PizzaDto]]:
         try:
             pizzas = await self.pizza_repository.get_available_pizzas_async()
-            pizza_dtos = [self.mapper.map(pizza, PizzaDto) for pizza in pizzas]
+            # Pizza is an AggregateRoot, manually map from pizza.state
+            pizza_dtos = [
+                PizzaDto(
+                    id=pizza.id(),
+                    name=pizza.state.name,
+                    size=pizza.state.size.value,
+                    toppings=pizza.state.toppings,
+                    base_price=pizza.state.base_price,
+                    total_price=pizza.total_price,
+                )
+                for pizza in pizzas
+            ]
             return self.ok(pizza_dtos)
 
         except Exception as e:

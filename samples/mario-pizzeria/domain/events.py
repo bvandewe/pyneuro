@@ -30,14 +30,14 @@ class OrderCreatedEvent(DomainEvent):
 class PizzaAddedToOrderEvent(DomainEvent):
     """Event raised when a pizza is added to an order."""
 
-    def __init__(self, aggregate_id: str, pizza_id: str, pizza_name: str, pizza_size: str, price: Decimal):
+    def __init__(self, aggregate_id: str, line_item_id: str, pizza_name: str, pizza_size: str, price: Decimal):
         super().__init__(aggregate_id)
-        self.pizza_id = pizza_id
+        self.line_item_id = line_item_id
         self.pizza_name = pizza_name
         self.pizza_size = pizza_size
         self.price = price
 
-    pizza_id: str
+    line_item_id: str
     pizza_name: str
     pizza_size: str
     price: Decimal
@@ -47,11 +47,11 @@ class PizzaAddedToOrderEvent(DomainEvent):
 class PizzaRemovedFromOrderEvent(DomainEvent):
     """Event raised when a pizza is removed from an order."""
 
-    def __init__(self, aggregate_id: str, pizza_id: str):
+    def __init__(self, aggregate_id: str, line_item_id: str):
         super().__init__(aggregate_id)
-        self.pizza_id = pizza_id
+        self.line_item_id = line_item_id
 
-    pizza_id: str
+    line_item_id: str
 
 
 @dataclass
@@ -121,46 +121,59 @@ class OrderCancelledEvent(DomainEvent):
 class CustomerRegisteredEvent(DomainEvent):
     """Event raised when a new customer is registered."""
 
-    def __init__(self, aggregate_id: str, name: str, email: str, phone: str):
-        super().__init__(aggregate_id)
-        self.name = name
-        self.email = email
-        self.phone = phone
-
+    aggregate_id: str  # Must be defined here for dataclass __init__
     name: str
     email: str
     phone: str
+    address: str
+
+    def __post_init__(self):
+        """Initialize parent class fields after dataclass initialization"""
+        # Dataclasses don't automatically call parent __init__, so we need to set these manually
+        if not hasattr(self, "created_at"):
+            self.created_at = datetime.now()
+        # aggregate_version is set by the parent
+        if not hasattr(self, "aggregate_version"):
+            self.aggregate_version = 0
 
 
 @dataclass
 class CustomerContactUpdatedEvent(DomainEvent):
     """Event raised when customer contact information is updated."""
 
-    def __init__(self, aggregate_id: str, field_name: str, old_value: str, new_value: str):
+    def __init__(self, aggregate_id: str, phone: str, address: str):
         super().__init__(aggregate_id)
-        self.field_name = field_name
-        self.old_value = old_value
-        self.new_value = new_value
+        self.phone = phone
+        self.address = address
 
-    field_name: str
-    old_value: str
-    new_value: str
+    phone: str
+    address: str
 
 
 @dataclass
 class PizzaCreatedEvent(DomainEvent):
     """Event raised when a new pizza is created."""
 
-    def __init__(self, aggregate_id: str, name: str, size: str, base_price: Decimal, toppings: list[str]):
+    def __init__(
+        self,
+        aggregate_id: str,
+        name: str,
+        size: str,
+        base_price: Decimal,
+        description: str,
+        toppings: list[str],
+    ):
         super().__init__(aggregate_id)
         self.name = name
         self.size = size
         self.base_price = base_price
+        self.description = description
         self.toppings = toppings
 
     name: str
     size: str
     base_price: Decimal
+    description: str
     toppings: list[str]
 
 
@@ -168,10 +181,8 @@ class PizzaCreatedEvent(DomainEvent):
 class ToppingsUpdatedEvent(DomainEvent):
     """Event raised when pizza toppings are updated."""
 
-    def __init__(self, aggregate_id: str, old_toppings: list[str], new_toppings: list[str]):
+    def __init__(self, aggregate_id: str, toppings: list[str]):
         super().__init__(aggregate_id)
-        self.old_toppings = old_toppings
-        self.new_toppings = new_toppings
+        self.toppings = toppings
 
-    old_toppings: list[str]
-    new_toppings: list[str]
+    toppings: list[str]

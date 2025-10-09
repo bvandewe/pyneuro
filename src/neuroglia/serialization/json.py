@@ -207,6 +207,69 @@ class JsonSerializer(TextSerializer):
         - API Response Handling: https://bvandewe.github.io/pyneuro/features/mvc-controllers/
     """
 
+    def _is_aggregate_root(self, obj: Any) -> bool:
+        """
+        Check if an object is an AggregateRoot instance.
+
+        An AggregateRoot has three key characteristics:
+        - state property (contains the aggregate's data)
+        - register_event method (for domain events)
+        - domain_events property (pending events)
+
+        Args:
+            obj: The object to check
+
+        Returns:
+            True if the object is an AggregateRoot instance
+        """
+        return hasattr(obj, "state") and hasattr(obj, "register_event") and hasattr(obj, "domain_events")
+
+    def _is_aggregate_root_type(self, cls: type) -> bool:
+        """
+        Check if a type is an AggregateRoot class.
+
+        Examines the class's generic bases to determine if it inherits from AggregateRoot.
+
+        Args:
+            cls: The class to check
+
+        Returns:
+            True if the class is an AggregateRoot type
+        """
+        if not hasattr(cls, "__orig_bases__"):
+            return False
+
+        for base in cls.__orig_bases__:
+            if hasattr(base, "__origin__"):
+                base_name = getattr(base.__origin__, "__name__", "")
+                if base_name == "AggregateRoot":
+                    return True
+
+        return False
+
+    def _get_state_type(self, aggregate_type: type) -> Optional[type]:
+        """
+        Extract the state type (TState) from an AggregateRoot[TState, TKey] type.
+
+        For example, if the aggregate is Order(AggregateRoot[OrderState, str]),
+        this returns OrderState.
+
+        Args:
+            aggregate_type: The AggregateRoot class
+
+        Returns:
+            The state class (TState), or None if not found
+        """
+        if not hasattr(aggregate_type, "__orig_bases__"):
+            return None
+
+        for base in aggregate_type.__orig_bases__:
+            if hasattr(base, "__args__") and len(get_args(base)) >= 1:
+                # Return TState (first generic argument)
+                return get_args(base)[0]
+
+        return None
+
     def serialize(self, value: Any) -> bytearray:
         text = self.serialize_to_text(value)
         if text is None:
@@ -214,19 +277,139 @@ class JsonSerializer(TextSerializer):
         return text.encode()
 
     def serialize_to_text(self, value: Any) -> str:
+        """
+        Serialize a value to JSON text with automatic AggregateRoot state extraction.
+
+        For AggregateRoot instances, automatically extracts and serializes the state
+        instead of the aggregate wrapper, resulting in clean state-only storage.
+
+        Args:
+            value: The object to serialize (can be Entity, AggregateRoot, or any object)
+
+        Returns:
+            JSON string representation
+
+        Examples:
+            ```python
+            # Entity serialization (unchanged)
+            customer = Customer(id="c1", name="John")
+            json_text = serializer.serialize_to_text(customer)
+            # Result: {"id": "c1", "name": "John"}
+
+            # AggregateRoot serialization (state extracted automatically)
+            order = Order(OrderState(id="o1", status=OrderStatus.PENDING))
+            json_text = serializer.serialize_to_text(order)
+            # Result: {"id": "o1", "status": "PENDING"}  <- Just the state!
+            ```
+        """
+        # If it's an AggregateRoot, serialize the state (not the wrapper)
+        if self._is_aggregate_root(value):
+            return self.serialize_to_text(value.state)
+
+        # Otherwise serialize directly
         return json.dumps(value, cls=JsonEncoder)
 
     def deserialize(self, input: bytearray, expected_type: Any | None) -> Any:
         return self.deserialize_from_text(input.decode(), expected_type)
 
     def deserialize_from_text(self, input: str, expected_type: Optional[type] = None) -> Any:
+        """
+        Deserialize JSON text with automatic AggregateRoot reconstruction.
+
+        For AggregateRoot types, automatically deserializes the state and reconstructs
+        the aggregate wrapper with proper initialization.
+
+        Args:
+            input: JSON string to deserialize
+            expected_type: Expected type for deserialization
+
+        Returns:
+            Deserialized object (Entity, AggregateRoot, or plain object)
+
+        Examples:
+            ```python
+            # Entity deserialization (unchanged)
+            json_text = '{"id": "c1", "name": "John"}'
+            customer = serializer.deserialize_from_text(json_text, Customer)
+
+            # AggregateRoot deserialization (automatic reconstruction)
+            json_text = '{"id": "o1", "status": "PENDING"}'
+            order = serializer.deserialize_from_text(json_text, Order)
+            # Result: Order instance with state and empty event list
+            assert order.state.id == "o1"
+            assert order.domain_events == []
+            ```
+        """
         value = json.loads(input)
-        if expected_type is None or not isinstance(value, dict):
+
+        # If no expected type, return the raw parsed value
+        if expected_type is None:
+            return value
+
+        # Check for backward compatibility with old AggregateSerializer format
+        # Old format: {"aggregate_type": "Order", "state": {...}}
+        # New format: {"id": "...", ...}  (direct state)
+        if isinstance(value, dict) and "aggregate_type" in value and "state" in value:
+            # Handle old format for backward compatibility during transition
+            value = value["state"]
+            input = json.dumps(value)
+
+        # Check if expected_type is an AggregateRoot class
+        if self._is_aggregate_root_type(expected_type):
+            return self._deserialize_aggregate(value, expected_type)
+
+        # Handle list deserialization at top level
+        if isinstance(value, list) and hasattr(expected_type, "__args__"):
+            return self._deserialize_nested(value, expected_type)
+
+        # Handle dict types
+        if not isinstance(value, dict):
             return value
         elif expected_type == dict:
             return dict(value)
 
         return self._deserialize_object(value, expected_type)
+
+    def _deserialize_aggregate(self, data: dict, aggregate_type: type) -> Any:
+        """
+        Deserialize an aggregate from clean state data.
+
+        This reconstructs an AggregateRoot instance from its state data:
+        1. Get the state type from AggregateRoot[TState, TKey]
+        2. Deserialize the state data to TState instance
+        3. Create the aggregate wrapper with the state
+        4. Initialize empty pending events
+
+        Args:
+            data: Dictionary of state fields (clean, no metadata wrapper)
+            aggregate_type: The AggregateRoot class to instantiate
+
+        Returns:
+            Reconstructed aggregate instance with state and empty events
+        """
+        # Get the state type from AggregateRoot[TState, TKey]
+        state_type = self._get_state_type(aggregate_type)
+
+        if state_type is None:
+            # Fallback: create aggregate with empty state
+            aggregate = object.__new__(aggregate_type)
+            aggregate.state = object.__new__(object)
+            aggregate._pending_events = []
+            return aggregate
+
+        # Deserialize the state data to a state instance
+        state_json = json.dumps(data)
+        state_instance = self.deserialize_from_text(state_json, state_type)
+
+        # Create the aggregate instance without calling __init__
+        aggregate = object.__new__(aggregate_type)
+        aggregate.state = state_instance
+
+        # Initialize pending events as empty list
+        # (Events are ephemeral and should be dispatched immediately, not persisted)
+        aggregate._pending_events = []
+
+        return aggregate
 
     def _deserialize_object(self, data: dict, expected_type: type) -> Any:
         """Deserialize a dictionary into an object using type annotations."""
@@ -385,9 +568,11 @@ class JsonSerializer(TextSerializer):
                     if field.name in value:
                         field_value = self._deserialize_nested(value[field.name], field.type)
                         field_dict[field.name] = field_value
-                value = object.__new__(expected_type)
-                value.__dict__ = field_dict
-                return value
+                # Create instance and set fields (works for frozen and non-frozen dataclasses)
+                instance = object.__new__(expected_type)
+                for key, val in field_dict.items():
+                    object.__setattr__(instance, key, val)
+                return instance
 
             # If the expected type is a plain dict, we need to deserialize each value in the dict.
             if hasattr(expected_type, "__args__") and expected_type.__args__:
@@ -412,35 +597,43 @@ class JsonSerializer(TextSerializer):
             else:
                 item_type = type(value[0]) if value else object
 
-            # Deserialize each item in the list
-            items = [self._deserialize_nested(v, item_type) for v in value]
+            # Deserialize each item in the list, handling dataclasses properly
             values = []
-
-            for item in items:
-                if isinstance(item, (int, str, float, bool)):
-                    # For simple types, the deserialized item is already in the correct form
-                    values.append(item)
-                elif isinstance(item_type, type):
-                    # For complex types or custom classes, instantiate using __new__
-                    new_item = object.__new__(item_type)
-                    if hasattr(new_item, "__dict__"):
-                        # If the new item has a __dict__, we can directly update it
-                        new_item.__dict__.update(item)
-                    elif isinstance(item, dict):
-                        new_item = item
-                    values.append(new_item)
+            for v in value:
+                # Check if the item should be a dataclass instance
+                if isinstance(v, dict) and is_dataclass(item_type):
+                    # Deserialize dict to dataclass using proper field deserialization
+                    field_dict = {}
+                    for field in fields(item_type):
+                        if field.name in v:
+                            field_value = self._deserialize_nested(v[field.name], field.type)
+                            field_dict[field.name] = field_value
+                    # Create instance and set fields (works for frozen and non-frozen dataclasses)
+                    instance = object.__new__(item_type)
+                    for key, val in field_dict.items():
+                        object.__setattr__(instance, key, val)
+                    values.append(instance)
                 else:
-                    # If item_type is not a class type, just use the item as is
-                    values.append(item)
+                    # For non-dataclass types, use regular deserialization
+                    deserialized = self._deserialize_nested(v, item_type)
+                    values.append(deserialized)
             return values
 
         elif isinstance(value, str) and expected_type == datetime:
             return datetime.fromisoformat(value)
 
+        elif expected_type.__name__ == "Decimal" or (hasattr(expected_type, "__module__") and expected_type.__module__ == "decimal"):
+            # Handle Decimal deserialization
+            from decimal import Decimal
+
+            if isinstance(value, (str, int, float)):
+                return Decimal(str(value))
+            return value
+
         elif hasattr(expected_type, "__bases__") and expected_type.__bases__ and issubclass(expected_type, Enum):
-            # Handle Enum deserialization
+            # Handle Enum deserialization - check both value and name
             for enum_member in expected_type:
-                if enum_member.value == value:
+                if enum_member.value == value or enum_member.name == value:
                     return enum_member
             raise ValueError(f"Invalid enum value for {expected_type.__name__}: {value}")
 
