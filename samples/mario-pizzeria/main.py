@@ -75,24 +75,29 @@ def create_pizzeria_app(data_dir: Optional[str] = None, port: int = 8000):
     builder = EnhancedWebApplicationBuilder()
 
     # Register repositories with file-based implementations using generic FileSystemRepository pattern
-    builder.services.add_singleton(
+    # Note: FileSystemRepository will append entity_type.__name__.lower() to the data_directory
+    # Using scoped lifetime to ensure test isolation
+    # Capture data_dir_path immediately to avoid closure issues
+    data_dir_str = str(data_dir_path)
+    builder.services.add_scoped(
         IPizzaRepository,
-        implementation_factory=lambda _: FilePizzaRepository(str(data_dir_path / "menu")),
+        implementation_factory=lambda _: FilePizzaRepository(data_dir_str),
     )
-    builder.services.add_singleton(
+    builder.services.add_scoped(
         ICustomerRepository,
-        implementation_factory=lambda _: FileCustomerRepository(str(data_dir_path / "customers")),
+        implementation_factory=lambda _: FileCustomerRepository(data_dir_str),
     )
-    builder.services.add_singleton(
+    builder.services.add_scoped(
         IOrderRepository,
-        implementation_factory=lambda _: FileOrderRepository(str(data_dir_path / "orders")),
+        implementation_factory=lambda _: FileOrderRepository(data_dir_str),
     )
-    builder.services.add_singleton(
+    builder.services.add_scoped(
         IKitchenRepository,
-        implementation_factory=lambda _: FileKitchenRepository(str(data_dir_path / "kitchen")),
+        implementation_factory=lambda _: FileKitchenRepository(data_dir_str),
     )
 
     # Configure Unit of Work for domain event collection
+    # Scoped lifetime ensures one UnitOfWork instance per request
     builder.services.add_scoped(
         IUnitOfWork,
         implementation_factory=lambda _: UnitOfWork(),
@@ -108,6 +113,7 @@ def create_pizzeria_app(data_dir: Optional[str] = None, port: int = 8000):
     print("✅ Mediator configured with automatic handler discovery and proper DI")
 
     # Configure Domain Event Dispatching Middleware for automatic event processing
+    # Scoped lifetime allows the middleware to share the same UnitOfWork as handlers
     builder.services.add_scoped(
         PipelineBehavior,
         implementation_factory=lambda sp: DomainEventDispatchingMiddleware(sp.get_required_service(IUnitOfWork), sp.get_required_service(Mediator)),
@@ -264,7 +270,7 @@ def main():
     uvicorn.run(app, host=host, port=port)
 
 
-# Create app instance for ASGI servers (like uvicorn)
+# Create app instance and run
 app = create_pizzeria_app()
 
 if __name__ == "__main__":

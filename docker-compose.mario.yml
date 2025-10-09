@@ -1,19 +1,23 @@
 name: mario-pizzeria
 services:
   # 🍕 Mario's Pizzeria Application
+  # http://localhost:8080/ui
+  # http://localhost:8080/docs
   # http://localhost:8080/api/docs
   mario-pizzeria-app:
     image: mario-pizzeria-app
     build:
       context: .
       dockerfile: Dockerfile
-    # For debugging (requires debugger attachment):
-    # command: ["sh", "-c", "pip install debugpy -t /tmp && cd samples/mario-pizzeria && PYTHONPATH=/app/src:/app/samples/mario-pizzeria python /tmp/debugpy --wait-for-client --listen 0.0.0.0:5678 -m uvicorn main:app --host 0.0.0.0 --port 8080 --reload"]
-    # For normal startup (no debugger required):
-    command: ["sh", "-c", "pip install debugpy -t /tmp && cd samples/mario-pizzeria && PYTHONPATH=/app/src:/app/samples/mario-pizzeria python /tmp/debugpy --listen 0.0.0.0:5678 -m uvicorn main:app --host 0.0.0.0 --port 8080 --reload"]
+    command: #
+      [
+        "sh",
+        "-c",
+        "pip install debugpy -t /tmp && cd samples/mario-pizzeria && PYTHONPATH=/app/src:/app/samples/mario-pizzeria python /tmp/debugpy --listen 0.0.0.0:5678 -m uvicorn main:app --host 0.0.0.0 --port 8080 --reload",
+      ]
     ports:
-      - 8080:8080  # Main application port
-      - 5678:5678  # Debug port
+      - 8080:8080 # Main application port
+      - 5678:5678 # Debug port
     environment:
       LOG_LEVEL: DEBUG
       PYTHONPATH: "src"
@@ -32,12 +36,12 @@ services:
       ENABLE_CORS: "true"
     volumes:
       - .:/app
-      - mario_data:/app/data
+      # - mario_data:/app/data
+      - ./data/:/app/data
     networks:
       - mario-net
     depends_on:
       - mongodb
-      - eventstoredb
       - keycloak
       - event-player
 
@@ -61,6 +65,7 @@ services:
 
   # 📊 MongoDB Express (Database Admin UI)
   # http://localhost:8081
+  # No authentication required (development only!)
   mongo-express:
     image: mongo-express:latest
     restart: always
@@ -68,11 +73,12 @@ services:
       - 8081:8081
     environment:
       ME_CONFIG_MONGODB_SERVER: mongodb
+      ME_CONFIG_MONGODB_PORT: 27017
       ME_CONFIG_MONGODB_ADMINUSERNAME: root
       ME_CONFIG_MONGODB_ADMINPASSWORD: mario123
-      ME_CONFIG_MONGODB_ENABLE_ADMIN: true
-      ME_CONFIG_BASICAUTH_USERNAME: admin
-      ME_CONFIG_BASICAUTH_PASSWORD: admin123
+      ME_CONFIG_MONGODB_ENABLE_ADMIN: "true"
+      ME_CONFIG_MONGODB_AUTH_DATABASE: admin
+      ME_CONFIG_BASICAUTH: "false"
     networks:
       - mario-net
     depends_on:
@@ -80,25 +86,25 @@ services:
 
   # 🎪 EventStoreDB (Event Sourcing)
   # http://localhost:2113
-  eventstoredb:
-    image: eventstore/eventstore:24.10.4
-    ports:
-      - "2113:2113" # HTTP port
-      - "1113:1113" # WebSocket port
-    volumes:
-      - eventstoredb_data:/var/lib/eventstore
-    environment:
-      EVENTSTORE_INSECURE: true
-      EVENTSTORE_RUN_PROJECTIONS: All
-      EVENTSTORE_CLUSTER_SIZE: 1
-      EVENTSTORE_START_STANDARD_PROJECTIONS: true
-      EVENTSTORE_HTTP_PORT: 2113
-      EVENTSTORE_ENABLE_ATOM_PUB_OVER_HTTP: true
-      # Security settings for development
-      EVENTSTORE_ENABLE_EXTERNAL_TCP: true
-      EVENTSTORE_GOSSIP_ON_SINGLE_NODE: true
-    networks:
-      - mario-net
+  # eventstoredb:
+  #   image: eventstore/eventstore:24.10.4
+  #   ports:
+  #     - "2113:2113" # HTTP port
+  #     - "1113:1113" # WebSocket port
+  #   volumes:
+  #     - eventstoredb_data:/var/lib/eventstore
+  #   environment:
+  #     EVENTSTORE_INSECURE: true
+  #     EVENTSTORE_RUN_PROJECTIONS: All
+  #     EVENTSTORE_CLUSTER_SIZE: 1
+  #     EVENTSTORE_START_STANDARD_PROJECTIONS: true
+  #     EVENTSTORE_HTTP_PORT: 2113
+  #     EVENTSTORE_ENABLE_ATOM_PUB_OVER_HTTP: true
+  #     # Security settings for development
+  #     EVENTSTORE_ENABLE_EXTERNAL_TCP: true
+  #     EVENTSTORE_GOSSIP_ON_SINGLE_NODE: true
+  #   networks:
+  #     - mario-net
 
   # 🎬 Event Player (Event Visualization & Replay)
   # http://localhost:8085
@@ -120,7 +126,7 @@ services:
   # http://localhost:8090/admin (admin/admin)
   keycloak:
     image: quay.io/keycloak/keycloak:23.0.3
-    command: ["start-dev"]
+    command: ["start-dev", "--import-realm"]
     ports:
       - 8090:8080
     environment:
@@ -139,7 +145,7 @@ services:
       KC_HEALTH_ENABLED: true
       KC_METRICS_ENABLED: true
     volumes:
-      - ./deployment/keycloak/realm-export.json:/opt/keycloak/data/import/realm-export.json:ro
+      - ./deployment/keycloak/mario-pizzeria-realm-export.json:/opt/keycloak/data/import/mario-pizzeria-realm-export.json:ro
     networks:
       - mario-net
     depends_on:
@@ -157,26 +163,6 @@ services:
       - keycloak_db_data:/var/lib/postgresql/data
     networks:
       - mario-net
-
-  # 🔧 Keycloak Configurator (One-time setup)
-  keycloak-setup:
-    image: curlimages/curl:8.5.0
-    restart: "no"
-    command: |
-      sh -c '
-        echo "⏳ Waiting for Keycloak to be ready..."
-        until curl -f http://keycloak:8080/health/ready; do
-          sleep 5
-        done
-        echo "🔧 Keycloak is ready! Setting up Mario Pizzeria realm..."
-        echo "✅ Keycloak setup completed! Access admin console at http://localhost:8090/admin"
-        echo "   Default credentials: admin/admin"
-        echo "🍕 Mario Pizzeria realm will be available for configuration"
-      '
-    networks:
-      - mario-net
-    depends_on:
-      - keycloak
 
 volumes:
   # Application data
