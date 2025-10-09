@@ -29,12 +29,12 @@ except ImportError:
 
 try:
     from apscheduler.jobstores.mongodb import MongoDBJobStore
+    from pymongo import MongoClient
 except ImportError:
     MongoDBJobStore = None
 
 try:
     from apscheduler.executors.asyncio import AsyncIOExecutor
-
     from apscheduler.schedulers.asyncio import AsyncIOScheduler
 except ImportError:
     # APScheduler is an optional dependency
@@ -181,7 +181,7 @@ async def recurrent_job_wrapper(task: RecurrentBackgroundJob, **kwargs):
         raise
 
 
-class BackgroundTaskScheduler:
+class BackgroundTaskScheduler(HostedService):
     """
     Distributed task scheduler for background job processing.
 
@@ -196,7 +196,7 @@ class BackgroundTaskScheduler:
         self,
         options: BackgroundTaskSchedulerOptions,
         background_task_bus: BackgroundTasksBus,
-        scheduler=None,
+        scheduler: Optional[AsyncIOScheduler] = None,
     ):
         """Initialize the background task scheduler."""
         if AsyncIOScheduler is None:
@@ -208,6 +208,7 @@ class BackgroundTaskScheduler:
             self._scheduler = scheduler or AsyncIOScheduler(executors={"default": AsyncIOExecutor()})
         else:
             raise BackgroundTaskException("APScheduler dependencies not available")
+        self._scheduler = scheduler
         self._started = False
 
     async def start_async(self):
@@ -425,20 +426,22 @@ class BackgroundTaskScheduler:
                     else:
                         log.warning("Redis job store requested but Redis dependencies not available")
 
+                mongo_uri_keys = ["mongo_uri", "mongo_db", "mongo_collection"]
+                mongo_individual_keys = ["mongo_host", "mongo_port", "mongo_db", "mongo_collection"]
                 # Check for MongoDB configuration
-                elif all(key in job_store_config for key in ["mongo_uri", "mongo_db"]) in job_store_config or all(key in job_store_config for key in ["mongo_host", "mongo_port"]):
+                if all(key in job_store_config for key in mongo_uri_keys) or all(key in job_store_config for key in mongo_individual_keys):
                     if MongoDBJobStore is not None:
                         # Support both URI and individual parameter configuration
                         if "mongo_uri" in job_store_config:
                             mongo_uri = job_store_config.get("mongo_uri")
-                            jobstores["default"] = MongoDBJobStore(host=mongo_uri, database=job_store_config.get("mongo_db"), collection=job_store_config.get("mongo_collection", "scheduled_jobs"))
+                            jobstores["default"] = MongoDBJobStore(host=mongo_uri, database=job_store_config.get("mongo_db"), collection=job_store_config.get("mongo_collection"))
                             log.info("Configured MongoDB job store for background tasks (URI)")
                         else:
                             # Individual parameters
                             mongo_host = job_store_config.get("mongo_host", "localhost")
                             mongo_port = job_store_config.get("mongo_port", 27017)
                             mongo_db = job_store_config.get("mongo_db")
-                            mongo_collection = job_store_config.get("mongo_collection", "scheduled_jobs")
+                            mongo_collection = job_store_config.get("mongo_collection")
 
                             jobstores["default"] = MongoDBJobStore(host=mongo_host, port=mongo_port, database=mongo_db, collection=mongo_collection)
                             log.info("Configured MongoDB job store for background tasks (individual params)")
@@ -454,24 +457,15 @@ class BackgroundTaskScheduler:
             else:
                 log.info("No settings found, using in-memory job store")
 
-            # Create and register scheduler
-            builder.services.add_singleton(AsyncIOExecutor, singleton=AsyncIOExecutor())
-            # builder.services.try_add_singleton(AsyncIOScheduler, implementation_factory=lambda provider: MosaicApiClient(provider.get_required_service(OauthClientCredentialsAuthApiOptions), provider.get_required_service(JsonSerializer)))
-            if AsyncIOScheduler is not None and AsyncIOExecutor is not None:
-                scheduler = AsyncIOScheduler(executors={"default": AsyncIOExecutor()}, jobstores=jobstores)
-            else:
-                raise BackgroundTaskException("APScheduler dependencies not available")
-
             # Register services
-            builder.services.add_singleton(AsyncIOScheduler, singleton=scheduler)
-            builder.services.try_add_singleton(BackgroundTasksBus)
+            builder.services.add_singleton(AsyncIOExecutor, AsyncIOExecutor)
+            builder.services.add_singleton(AsyncIOScheduler, implementation_factory=lambda provider: AsyncIOScheduler(executors={"default": provider.get_service(AsyncIOExecutor)}, jobstores=jobstores))
+            builder.services.add_singleton(BackgroundTasksBus, BackgroundTasksBus)
             builder.services.add_singleton(BackgroundTaskSchedulerOptions, singleton=options)
 
             # Register as both HostedService and BackgroundTaskScheduler
-            if HostedService is not None:
-                builder.services.add_singleton(HostedService, BackgroundTaskScheduler)
-            builder.services.add_singleton(BackgroundTaskScheduler, BackgroundTaskScheduler)
-
+            builder.services.add_singleton(BackgroundTaskScheduler, implementation_factory=lambda provider: BackgroundTaskScheduler(provider.get_required_service(BackgroundTaskSchedulerOptions), provider.get_required_service(BackgroundTasksBus), provider.get_required_service(AsyncIOScheduler)))
+            builder.services.add_singleton(HostedService, implementation_factory=lambda provider: provider.get_service(BackgroundTaskScheduler))
             log.info("Background task scheduler services registered successfully")
 
             return builder
