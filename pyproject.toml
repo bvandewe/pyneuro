@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "neuroglia-python"
-version = "0.4.0"
+version = "0.4.1"
 description = "Port from .NET to Python of the Neuroglia Framework"
 authors = ["Charles d'Avernas <charles.davernas@neuroglia.io>"]
 license = "Apache"
@@ -16,21 +16,20 @@ python = "^3.11"
 annotated-types = "^0.7.0"
 classy-fastapi = "^0.6.1"
 fastapi = "^0.116.0"
+multipledispatch = "^1.0.0"
 pydantic-settings = "^2.0.0"
 python-dotenv = "^1.0.1"
 typing-extensions = "^4.9.0"
-
-# Optional dependencies - install with extras
+rx = { version = "^3.2.0" }
 uvicorn = { version = "^0.35.0" }
 httpx = { version = "^0.28.1" }
-rx = { version = "^3.2.0" }
 grpcio = { version = "^1.74.0" }
+
+# Optional dependencies - install with extras
 pymongo = { version = "^4.6.3", optional = true }
 esdbclient = { version = "^1.0.0", optional = true }
-mkdocs-mermaid2-plugin = "^1.2.2"
 apscheduler = "^3.11.0"
 redis = "^6.4.0"
-pre-commit = "^4.3.0"
 
 [tool.poetry.extras]
 mongodb = ["pymongo"]
@@ -40,6 +39,7 @@ all = ["pymongo", "esdbclient", "rx", "redis"]
 
 [tool.poetry.group.dev.dependencies]
 # Development and testing dependencies
+pre-commit = "^4.3.0"
 pytest = "^8.0.1"
 pytest-asyncio = "^0.26.0"
 mypy = "^1.8.0"
@@ -56,7 +56,7 @@ optional = true
 # Documentation dependencies
 mkdocs = "^1.6.1"
 mkdocs-material = "^9.5.46"
-mkdocs-mermaid2-plugin = "^1.1.1"
+mkdocs-mermaid2-plugin = "^1.2.2"
 
 [build-system]
 requires = ["poetry-core"]

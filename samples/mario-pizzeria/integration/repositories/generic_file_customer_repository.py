@@ -15,20 +15,16 @@ class FileCustomerRepository(FileSystemRepository[Customer, str], ICustomerRepos
         super().__init__(data_directory=data_directory, entity_type=Customer, key_type=str)
 
     async def get_by_phone_async(self, phone: str) -> Optional[Customer]:
-        """Get a customer by phone number"""
+        """Get customer by phone number"""
         all_customers = await self.get_all_async()
-        for customer in all_customers:
-            if customer.phone == phone:
-                return customer
-        return None
+        customers = [customer for customer in all_customers if customer.state.phone == phone]
+        return customers[0] if customers else None
 
     async def get_by_email_async(self, email: str) -> Optional[Customer]:
-        """Get a customer by email address"""
+        """Get customer by email"""
         all_customers = await self.get_all_async()
-        for customer in all_customers:
-            if customer.email == email:
-                return customer
-        return None
+        customers = [customer for customer in all_customers if customer.state.email == email]
+        return customers[0] if customers else None
 
     async def get_frequent_customers_async(self, min_orders: int = 5) -> list[Customer]:
         """Get customers with at least the specified number of orders"""

@@ -23,15 +23,15 @@ class FileOrderRepository(FileSystemRepository[Order, str], IOrderRepository):
     async def get_orders_by_status_async(self, status: OrderStatus) -> list[Order]:
         """Get all orders with a specific status"""
         all_orders = await self.get_all_async()
-        return [order for order in all_orders if order.status == status]
+        return [order for order in all_orders if order.state.status == status]
 
     async def get_orders_by_date_range_async(self, start_date: datetime, end_date: datetime) -> list[Order]:
         """Get orders within a date range"""
         all_orders = await self.get_all_async()
-        return [order for order in all_orders if start_date <= order.created_at <= end_date]
+        return [order for order in all_orders if start_date <= order.state.created_at <= end_date]
 
     async def get_active_orders_async(self) -> list[Order]:
         """Get all active orders (not delivered or cancelled)"""
         all_orders = await self.get_all_async()
         active_statuses = {OrderStatus.CONFIRMED, OrderStatus.COOKING}
-        return [order for order in all_orders if order.status in active_statuses]
+        return [order for order in all_orders if order.state.status in active_statuses]

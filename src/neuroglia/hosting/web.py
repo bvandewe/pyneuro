@@ -30,43 +30,56 @@ class WebHostBase(HostBase, FastAPI):
         FastAPI.__init__(self, lifespan=application_lifetime._run_async, docs_url="/api/docs")
 
     def use_controllers(self, module_names: Optional[list[str]] = None):
-        """Register and configure all controllers"""
+        """
+        Mount controller routes to the FastAPI application.
+
+        This method retrieves all registered controller instances from the DI container
+        and includes their routers in the FastAPI application. Controllers must be
+        registered first using WebApplicationBuilder.add_controllers().
+
+        Args:
+            module_names: Optional list of module names (currently not used, reserved for future).
+                         Controllers are retrieved from the DI container based on prior registration.
+
+        Returns:
+            self: The WebHostBase instance for method chaining
+
+        Examples:
+            ```python
+            # Standard usage (controllers already registered via builder.add_controllers())
+            app = builder.build()
+            app.use_controllers()  # Mounts all registered controllers
+
+            # Or with explicit call
+            builder = WebApplicationBuilder()
+            builder.add_controllers(["api.controllers"])
+            app = builder.build()
+            app.use_controllers()  # Explicitly mount controllers
+            ```
+
+        Note:
+            Controllers inherit from ControllerBase which extends Routable (classy-fastapi).
+            The Routable class automatically creates a 'router' attribute (FastAPI APIRouter)
+            with all decorated endpoints, which is then mounted to the application.
+
+        Warning:
+            If controllers are not registered via add_controllers() before build(),
+            this method will have no effect (no controllers to mount).
+        """
         # Late import to avoid circular dependency
         from neuroglia.mvc.controller_base import ControllerBase
 
-        controller_types = []
-        if module_names:
-            for module_name in module_names:
-                module = ModuleLoader.load(module_name)
-                controller_types.extend(
-                    TypeFinder.get_types(
-                        module,
-                        lambda t: inspect.isclass(t) and issubclass(t, ControllerBase) and t != ControllerBase,
-                        include_sub_packages=True,
-                    )
-                )
-        else:
-            # Auto-discover controllers in api.controllers package
-            try:
-                api_controllers_module = ModuleLoader.load("api.controllers")
-                controller_types.extend(
-                    TypeFinder.get_types(
-                        api_controllers_module,
-                        lambda t: inspect.isclass(t) and issubclass(t, ControllerBase) and t != ControllerBase,
-                        include_sub_packages=True,
-                    )
-                )
-            except ImportError:
-                # No controllers found, continue
-                pass
+        # Get all registered controller instances from DI container
+        # Controllers are already instantiated by the DI container with proper dependencies
+        controllers = self.services.get_services(ControllerBase)
 
-        for controller_type in controller_types:
-            # Register controller and mount its routes
-            controller_instance = controller_type()
-            self.mount(
-                f"/api/{controller_instance.get_route_prefix()}",
-                controller_instance,
-                name=controller_type.__name__,
+        # Include each controller's router in the FastAPI application
+        for controller in controllers:
+            # ControllerBase extends Routable, which has a 'router' attribute (FastAPI APIRouter)
+            # The router contains all endpoints decorated with @get, @post, @put, @delete, etc.
+            self.include_router(
+                controller.router,
+                prefix="/api",  # All controllers are mounted under /api prefix
             )
 
         return self
@@ -124,8 +137,46 @@ class WebApplicationBuilder(WebApplicationBuilderBase):
     def __init__(self):
         super().__init__()
 
-    def build(self) -> WebHostBase:
-        return WebHost(self.services.build())
+    def build(self, auto_mount_controllers: bool = True) -> WebHostBase:
+        """
+        Build the web host application with configured services and settings.
+
+        Args:
+            auto_mount_controllers: If True (default), automatically mounts all registered
+                                   controllers to the FastAPI application. Set to False if you
+                                   want to manually control when controllers are mounted.
+
+        Returns:
+            WebHostBase: The configured web host ready to run
+
+        Examples:
+            ```python
+            # Standard usage (auto-mount enabled by default)
+            builder = WebApplicationBuilder()
+            builder.add_controllers(["api.controllers"])
+            app = builder.build()  # Controllers automatically mounted
+            app.run()
+
+            # Manual control over mounting
+            builder = WebApplicationBuilder()
+            builder.add_controllers(["api.controllers"])
+            app = builder.build(auto_mount_controllers=False)
+            # ... additional configuration ...
+            app.use_controllers()  # Manually mount when ready
+            app.run()
+            ```
+
+        Note:
+            Controllers must be registered using add_controllers() before calling build()
+            for auto-mounting to work.
+        """
+        host = WebHost(self.services.build())
+
+        # Automatically mount registered controllers if requested
+        if auto_mount_controllers:
+            host.use_controllers()
+
+        return host
 
 
 class ExceptionHandlingMiddleware(BaseHTTPMiddleware):

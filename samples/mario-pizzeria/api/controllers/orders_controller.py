@@ -36,31 +36,11 @@ class OrdersController(ControllerBase):
     @get("/", response_model=List[OrderDto], responses=ControllerBase.error_responses)
     async def get_orders(self, status: Optional[str] = None):
         """Get orders, optionally filtered by status"""
-        print(f"🔍 DEBUG: get_orders called with status={status}")
-
-        # Let's test if we can resolve the services that the handler needs
-        try:
-            from domain.repositories import ICustomerRepository, IOrderRepository
-
-            from neuroglia.mapping import Mapper
-
-            order_repo = self.service_provider.get_service(IOrderRepository)
-            customer_repo = self.service_provider.get_service(ICustomerRepository)
-            mapper = self.service_provider.get_service(Mapper)
-
-            print(f"🔍 DEBUG: IOrderRepository resolved: {order_repo is not None} ({type(order_repo)})")
-            print(f"🔍 DEBUG: ICustomerRepository resolved: {customer_repo is not None} ({type(customer_repo)})")
-            print(f"🔍 DEBUG: Mapper resolved: {mapper is not None} ({type(mapper)})")
-
-        except Exception as e:
-            print(f"❌ DEBUG: Service resolution failed: {e}")
-
         if status:
             query = GetOrdersByStatusQuery(status=status)
         else:
             query = GetActiveOrdersQuery()
 
-        print(f"🔍 DEBUG: About to execute query: {type(query)}")
         result = await self.mediator.execute_async(query)
         return self.process(result)
 
