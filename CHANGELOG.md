@@ -7,6 +7,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.1] - 2025-10-19
+
+### Fixed
+
+- **Controller Routing Fix**: Fixed critical bug preventing controllers from mounting to FastAPI application
+
+  - **Root Cause**: `WebHostBase.use_controllers()` had multiple bugs:
+    - Instantiated controllers without dependency injection (`controller_type()` instead of retrieving from DI)
+    - Called non-existent `get_route_prefix()` method on controller instances
+    - Used incorrect `self.mount()` method instead of `self.include_router()`
+  - **Solution - use_controllers() Rewrite**: Complete rewrite of controller mounting logic
+    - Retrieves properly initialized controller instances from DI container via `services.get_services(ControllerBase)`
+    - Accesses existing `controller.router` attribute (from Routable base class)
+    - Uses correct FastAPI `include_router()` API with `/api` prefix
+  - **Solution - Auto-Mounting Feature**: Enhanced `WebApplicationBuilder.build()` method
+    - Added `auto_mount_controllers=True` parameter (default enabled)
+    - Automatically calls `host.use_controllers()` during build process
+    - 99% of use cases now work without manual mounting step
+    - Optional manual control available by setting parameter to False
+  - **Impact**: Controllers now properly mount to FastAPI application with all routes accessible
+    - Swagger UI at `/api/docs` now shows all controller endpoints
+    - OpenAPI spec at `/openapi.json` properly populated
+    - API endpoints return 200 responses instead of 404 errors
+  - **Migration**: No breaking changes - existing code continues to work, but explicit `use_controllers()` calls are now optional
+  - **Documentation**: Added comprehensive fix guide and troubleshooting documentation in `docs/fixes/`
+  - **Testing**: Added test suite validating DI registration, route mounting, and HTTP endpoint accessibility
+
 ### Documentation
 
 - **Mario's Pizzeria Documentation Alignment**: Comprehensive update to align all documentation with actual codebase implementation

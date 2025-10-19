@@ -1,7 +1,8 @@
-import importlib
 import inspect
 import logging
-from typing import Any, Callable, Dict, List, Optional, Tuple, Type, get_type_hints, TYPE_CHECKING
+from collections.abc import Callable
+from typing import TYPE_CHECKING, Any, Optional, get_type_hints
+
 from neuroglia.core import ModuleLoader, TypeFinder
 
 if TYPE_CHECKING:
@@ -20,7 +21,7 @@ def get_origin_safe(tp: Any) -> Optional[Any]:
         return None
 
 
-def get_args_safe(tp: Any) -> Tuple[Any, ...]:
+def get_args_safe(tp: Any) -> tuple[Any, ...]:
     """Safely get the args of a type, handling exceptions."""
     try:
         # For Python 3.8+
@@ -54,7 +55,7 @@ def labels(**kwargs):
     return decorator
 
 
-def map_to(target_type: Type):
+def map_to(target_type: type):
     """Represents a decorator used to create a mapping of the marked class to a specified type"""
 
     def decorator(cls):
@@ -64,7 +65,7 @@ def map_to(target_type: Type):
     return decorator
 
 
-def map_from(source_type: Type):
+def map_from(source_type: type):
     """Represents a decorator used to create a mapping from a specified type to the marked class"""
 
     def decorator(cls):
@@ -77,7 +78,7 @@ def map_from(source_type: Type):
 class TypeMappingContext:
     """Represents the context of a type mapping"""
 
-    def __init__(self, source: Any, source_type: Type, destination_type: Type):
+    def __init__(self, source: Any, source_type: type, destination_type: type):
         self.source = source
         self.source_type = source_type
         self.destination_type = destination_type
@@ -85,10 +86,10 @@ class TypeMappingContext:
     source: Any
     """ Gets the value to map """
 
-    source_type: Type
+    source_type: type
     """ Gets the type of the value to map """
 
-    destination_type: Type
+    destination_type: type
     """ Gets the type to map the source to """
 
 
@@ -98,8 +99,8 @@ class MemberMappingContext(TypeMappingContext):
     def __init__(
         self,
         source: Any,
-        source_type: Type,
-        destination_type: Type,
+        source_type: type,
+        destination_type: type,
         member_name: str,
         source_member_value: Any,
     ):
@@ -140,19 +141,19 @@ class TypeMapConfiguration:
 
     def __init__(
         self,
-        source_type: Type,
-        destination_type: Type,
+        source_type: type,
+        destination_type: type,
         type_converter: Optional[Callable[[Any], Any]] = None,
     ):
         self.source_type = source_type
         self.destination_type = destination_type
         self.type_converter = type_converter
-        self.member_configurations: List[MemberMapConfiguration] = []
+        self.member_configurations: list[MemberMapConfiguration] = []
 
-    source_type: Type
+    source_type: type
     """ Gets the type to convert to the specified type """
 
-    destination_type: Type
+    destination_type: type
     """ Gets the type to convert source values to """
 
     type_converter: Optional[Callable[[TypeMappingContext], Any]]
@@ -163,32 +164,20 @@ class TypeMapConfiguration:
         mapping_context = TypeMappingContext(source, self.source_type, self.destination_type)
         if self.type_converter is not None:
             return self.type_converter(mapping_context)
-        source_attributes = (
-            dict(
-                [(key, value) for key, value in source.__dict__.items() if not key.startswith("_")]
-            )
-            if hasattr(source, "__dict__")
-            else dict()
-        )
+        source_attributes = dict([(key, value) for key, value in source.__dict__.items() if not key.startswith("_")]) if hasattr(source, "__dict__") else dict()
         destination_attributes = dict()
         # Get all declared attributes including inherited ones
         declared_attributes = []
         for cls in self.destination_type.__mro__:
             if hasattr(cls, "__annotations__"):
-                declared_attributes.extend(
-                    [key for key, _ in cls.__annotations__.items() if not key.startswith("_")]
-                )
+                declared_attributes.extend([key for key, _ in cls.__annotations__.items() if not key.startswith("_")])
         declared_attributes = list(set(declared_attributes))  # Remove duplicates
 
         for source_attribute_key, source_attribute_value in source_attributes.items():
             if source_attribute_key not in declared_attributes:
                 continue
             member_map = next(
-                (
-                    member
-                    for member in self.member_configurations
-                    if member.name == source_attribute_key
-                ),
+                (member for member in self.member_configurations if member.name == source_attribute_key),
                 None,
             )
             if member_map is None:
@@ -208,24 +197,20 @@ class TypeMapConfiguration:
                     )
                 else:
                     destination_attributes[source_attribute_key] = source_attribute_value
-        for configured_attribute in [
-            attr for attr in self.member_configurations if attr.name not in source_attributes.keys()
-        ]:
+        for configured_attribute in [attr for attr in self.member_configurations if attr.name not in source_attributes.keys()]:
             if configured_attribute.is_ignored or configured_attribute.value_converter is None:
                 continue
             # Safely get source value, ensuring we have a valid value to work with
             source_value = getattr(source, configured_attribute.name, None)
             if source_value is None and hasattr(source, "__dict__"):
                 source_value = source.__dict__.get(configured_attribute.name, None)
-            destination_attributes[configured_attribute.name] = (
-                configured_attribute.value_converter(
-                    MemberMappingContext(
-                        source,
-                        self.source_type,
-                        self.destination_type,
-                        configured_attribute.name,
-                        source_value,
-                    )
+            destination_attributes[configured_attribute.name] = configured_attribute.value_converter(
+                MemberMappingContext(
+                    source,
+                    self.source_type,
+                    self.destination_type,
+                    configured_attribute.name,
+                    source_value,
                 )
             )
         destination = object.__new__(self.destination_type)
@@ -264,28 +249,21 @@ class TypeMapExpression:
             None,
         )
         if configuration is None:
-            self._configuration.member_configurations.append(
-                MemberMapConfiguration(name, value_converter=converter)
-            )
+            self._configuration.member_configurations.append(MemberMapConfiguration(name, value_converter=converter))
         else:
             configuration.value_converter = converter
         return self
 
 
 class MapperConfiguration:
-
     def __init__(self):
         """Initialize a new MapperConfiguration with isolated instance state."""
-        self.type_maps: List[TypeMapConfiguration] = []
+        self.type_maps: list[TypeMapConfiguration] = []
 
-    def create_map(self, source_type: Type, destination_type: Type) -> TypeMapExpression:
+    def create_map(self, source_type: type, destination_type: type) -> TypeMapExpression:
         """Creates a new expression used to convert how to map instances of the source type to instances of the destination type"""
         configuration: Optional[TypeMapConfiguration] = next(
-            (
-                tmc
-                for tmc in self.type_maps
-                if tmc.source_type == source_type and tmc.destination_type == destination_type
-            ),
+            (tmc for tmc in self.type_maps if tmc.source_type == source_type and tmc.destination_type == destination_type),
             None,
         )
         if configuration is None:
@@ -300,13 +278,13 @@ class MappingProfile:
     def __init__(self):
         """Initialize a new MappingProfile with isolated instance state."""
         if not hasattr(self, "_configuration_actions"):
-            self._configuration_actions: List[Callable[[MapperConfiguration], None]] = []
+            self._configuration_actions: list[Callable[[MapperConfiguration], None]] = []
 
-    def create_map(self, source_type: Type, destination_type: Type) -> TypeMapExpression:
+    def create_map(self, source_type: type, destination_type: type) -> TypeMapExpression:
         """Creates a new expression used to convert how to map instances of the source type to instances of the destination type"""
         # Ensure _configuration_actions is initialized
         if not hasattr(self, "_configuration_actions"):
-            self._configuration_actions: List[Callable[[MapperConfiguration], None]] = []
+            self._configuration_actions: list[Callable[[MapperConfiguration], None]] = []
 
         # Create a local config to build the map expression
         temp_config = MapperConfiguration()
@@ -316,12 +294,8 @@ class MappingProfile:
             # Apply the configured mapping to the actual config
             actual_expression = config.create_map(source_type, destination_type)
             # Copy over any member configurations from the temp expression
-            if hasattr(expression, "_configuration") and hasattr(
-                actual_expression, "_configuration"
-            ):
-                actual_expression._configuration.member_configurations.extend(
-                    expression._configuration.member_configurations
-                )
+            if hasattr(expression, "_configuration") and hasattr(actual_expression, "_configuration"):
+                actual_expression._configuration.member_configurations.extend(expression._configuration.member_configurations)
 
         self._configuration_actions.append(configure_map)
         return expression
@@ -342,7 +316,7 @@ class Mapper:
     options: MapperConfiguration
     """ Gets the options used to configure the mapper """
 
-    def map(self, source: Any, destination_type: Type) -> Any:
+    def map(self, source: Any, destination_type: type) -> Any:
         """
         Maps the specified value into a new instance of the destination type,
         handling nested objects recursively.
@@ -390,9 +364,7 @@ class Mapper:
                 args = get_args_safe(destination_type)
                 if len(args) == 2:
                     key_type, value_type = args
-                    return {
-                        self.map(k, key_type): self.map(v, value_type) for k, v in source.items()
-                    }
+                    return {self.map(k, key_type): self.map(v, value_type) for k, v in source.items()}
             # Fallback: return source as is
             return source
 
@@ -402,35 +374,24 @@ class Mapper:
 
         # Find a type map for direct mapping
         type_map = next(
-            (
-                tm
-                for tm in self.options.type_maps
-                if tm.source_type == source_type and tm.destination_type == destination_type
-            ),
+            (tm for tm in self.options.type_maps if tm.source_type == source_type and tm.destination_type == destination_type),
             None,
         )
 
         if type_map is None:
-            raise Exception(
-                f"Missing type map configuration or unsupported mapping. "
-                f"Mapping types: {source_type.__name__} -> {destination_type.__name__}"
-            )
+            raise Exception(f"Missing type map configuration or unsupported mapping. " f"Mapping types: {source_type.__name__} -> {destination_type.__name__}")
 
         # Use the type map to create the destination object
         destination = type_map.map(source)
 
         # After basic mapping, check for nested objects that need mapping
         if hasattr(destination, "__dict__"):
-            destination_annotations = (
-                get_type_hints(destination_type)
-                if hasattr(destination_type, "__annotations__")
-                else {}
-            )
+            destination_annotations = get_type_hints(destination_type) if hasattr(destination_type, "__annotations__") else {}
             self._map_nested_attributes(destination, destination_annotations)
 
         return destination
 
-    def _map_nested_attributes(self, obj: Any, type_annotations: Dict[str, Type]) -> None:
+    def _map_nested_attributes(self, obj: Any, type_annotations: dict[str, type]) -> None:
         """
         Maps nested attributes of an object based on type annotations.
 
@@ -463,25 +424,19 @@ class Mapper:
             elif isinstance(attr_value, dict):
                 self._map_dictionary(obj, attr_name, attr_value, expected_type)
 
-    def _map_nested_object(
-        self, obj: Any, attr_name: str, attr_value: Any, expected_type: Type
-    ) -> None:
+    def _map_nested_object(self, obj: Any, attr_name: str, attr_value: Any, expected_type: type) -> None:
         """Maps a nested object attribute if a mapping is available."""
         source_type = type(attr_value)
 
         # Try to find a mapping for this nested object
         for type_map in self.options.type_maps:
-            if type_map.source_type == source_type and issubclass(
-                type_map.destination_type, expected_type
-            ):
+            if type_map.source_type == source_type and issubclass(type_map.destination_type, expected_type):
                 # Map the nested object and update it
                 mapped_value = self.map(attr_value, type_map.destination_type)
                 setattr(obj, attr_name, mapped_value)
                 break
 
-    def _map_collection(
-        self, obj: Any, attr_name: str, collection: Any, expected_type: Type
-    ) -> None:
+    def _map_collection(self, obj: Any, attr_name: str, collection: Any, expected_type: type) -> None:
         """Maps items in a collection attribute."""
         # Get the item type from the collection type annotation
         args = get_args_safe(expected_type)
@@ -498,9 +453,7 @@ class Mapper:
             # Try to find a mapping for each item
             item_source_type = type(item)
             for type_map in self.options.type_maps:
-                if type_map.source_type == item_source_type and issubclass(
-                    type_map.destination_type, item_type
-                ):
+                if type_map.source_type == item_source_type and issubclass(type_map.destination_type, item_type):
                     mapped_item = self.map(item, type_map.destination_type)
                     mapped_items.append(mapped_item)
                     break
@@ -517,9 +470,7 @@ class Mapper:
         elif collection_type is set:
             setattr(obj, attr_name, set(mapped_items))
 
-    def _map_dictionary(
-        self, obj: Any, attr_name: str, dictionary: Dict, expected_type: Type
-    ) -> None:
+    def _map_dictionary(self, obj: Any, attr_name: str, dictionary: dict, expected_type: type) -> None:
         """Maps keys and values in a dictionary attribute."""
         args = get_args_safe(expected_type)
         if len(args) != 2:
@@ -539,9 +490,7 @@ class Mapper:
             # Try to find a mapping for the value
             v_type = type(v)
             for type_map in self.options.type_maps:
-                if type_map.source_type == v_type and issubclass(
-                    type_map.destination_type, value_type
-                ):
+                if type_map.source_type == v_type and issubclass(type_map.destination_type, value_type):
                     mapped_value = self.map(v, type_map.destination_type)
                     mapped_dict[mapped_key] = mapped_value
                     break
@@ -553,9 +502,7 @@ class Mapper:
         setattr(obj, attr_name, mapped_dict)
 
     @staticmethod
-    def configure(
-        builder: "ApplicationBuilderBase", modules: List[str] = list[str]()
-    ) -> "ApplicationBuilderBase":
+    def configure(builder: "ApplicationBuilderBase", modules: list[str] = list[str]()) -> "ApplicationBuilderBase":
         """Registers and configures mapping-related services to the specified service collection.
 
         Args:
@@ -566,9 +513,7 @@ class Mapper:
         for module in [ModuleLoader.load(module_name) for module_name in modules]:
             mapping_profile_types = TypeFinder.get_types(
                 module,
-                lambda cls: inspect.isclass(cls)
-                and issubclass(cls, MappingProfile)
-                and cls != MappingProfile,
+                lambda cls: inspect.isclass(cls) and issubclass(cls, MappingProfile) and cls != MappingProfile,
                 include_sub_packages=True,
             )
             for mapping_profile_type in mapping_profile_types:

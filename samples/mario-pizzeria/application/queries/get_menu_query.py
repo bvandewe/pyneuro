@@ -1,6 +1,7 @@
 """Get Menu Query and Handler for Mario's Pizzeria"""
 
 from dataclasses import dataclass
+from typing import List
 
 from api.dtos import PizzaDto
 from domain.repositories import IPizzaRepository
