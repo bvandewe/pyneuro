@@ -7,6 +7,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.4] - 2025-10-19
+
+### Fixed
+
+- **CRITICAL**: Fixed string annotation (forward reference) resolution in DI container
+
+  - DI container now properly resolves `"ClassName"` annotations to actual classes
+  - Fixed crash with `AttributeError: 'str' object has no attribute '__name__'`
+  - Affects AsyncCacheRepository and services using `from __future__ import annotations`
+  - Comprehensive test coverage with 6 new tests
+
+- Enhanced error message generation to handle all annotation types safely
+
+  - String annotations (forward references)
+  - Types without **name** attribute (typing constructs)
+  - Regular types
+
+- Updated CacheRepository to use parameterized types (v0.4.3)
+  - CacheRepositoryOptions[TEntity, TKey]
+  - CacheClientPool[TEntity, TKey]
+  - Full type safety with type variable substitution
+
+### Added
+
+- Comprehensive test suite for string annotation handling
+- Documentation for string annotation bug fix
+
 ## [0.4.3] - 2025-10-19
 
 ### Fixed
