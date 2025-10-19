@@ -4,8 +4,7 @@ Redis-based cache repository implementation for the Neuroglia framework.
 This module provides comprehensive Redis caching capabilities with async operations,
 distributed locks, and connection pooling.
 
-FIXED VERSION: Uses non-parameterized constructor dependencies to work around
-DI container's inability to resolve parameterized generic types in constructor parameters.
+Uses parameterized generic types in constructor parameters (requires neuroglia v0.4.3+).
 """
 
 import asyncio
@@ -42,12 +41,11 @@ class CacheRepositoryException(Exception):
 
 
 @dataclass
-class CacheRepositoryOptions:
+class CacheRepositoryOptions(Generic[TEntity, TKey]):
     """
     Represents the options used to configure a Redis cache repository.
 
-    Note: Not parameterized to work around DI resolution issues.
-    All entity types share the same configuration.
+    Parameterized by entity and key types for type safety.
     """
 
     host: str
@@ -67,30 +65,30 @@ class CacheRepositoryOptions:
 
 
 @dataclass
-class CacheClientPool:
+class CacheClientPool(Generic[TEntity, TKey]):
     """
     Redis connection pool wrapper.
 
-    Note: Not parameterized to work around DI resolution issues.
-    All entity types share the same connection pool.
+    Parameterized by entity and key types for type safety.
     """
 
     pool: Any  # redis.ConnectionPool when available
-    """The redis connection pool to use for all entity types."""
+    """The redis connection pool to use for the specified entity and key types."""
 
 
 class AsyncCacheRepository(Generic[TEntity, TKey], Repository[TEntity, TKey]):
     """
     Represents an async Redis cache repository using the asynchronous Redis client.
 
-    FIXED: Constructor uses non-parameterized types to work around DI container
-    limitations with generic type resolution in constructor parameters.
+    Uses parameterized generic types (v0.4.3+) for full type safety.
+    Constructor parameters use type variables that are substituted with concrete types
+    during dependency injection.
     """
 
     def __init__(
         self,
-        options: CacheRepositoryOptions,  # Non-parameterized - FIXED
-        redis_connection_pool: CacheClientPool,  # Non-parameterized - FIXED
+        options: CacheRepositoryOptions[TEntity, TKey],  # Parameterized with type variables!
+        redis_connection_pool: CacheClientPool[TEntity, TKey],  # Parameterized with type variables!
         serializer: "JsonSerializer",
     ):
         """Initialize a new Redis cache repository."""

@@ -317,7 +317,14 @@ class ServiceScope(ServiceScopeBase, ServiceProviderBase):
 
                 dependency = self.get_service(dependency_type)
                 if dependency is None and init_arg.default == init_arg.empty and init_arg.name != "self":
-                    raise Exception(f"Failed to build service of type '{service_descriptor.service_type.__name__}' because the service provider failed to resolve service '{dependency_type.__name__}'")
+                    # Safe error message generation - handle types without __name__ attribute
+                    service_type_name = getattr(
+                        service_descriptor.service_type,
+                        "__name__",
+                        str(service_descriptor.service_type),
+                    )
+                    dependency_type_name = getattr(dependency_type, "__name__", str(dependency_type))
+                    raise Exception(f"Failed to build service of type '{service_type_name}' because the service provider failed to resolve service '{dependency_type_name}'")
                 service_args[init_arg.name] = dependency
             service = service_descriptor.implementation_type(**service_args)
 
@@ -489,7 +496,14 @@ class ServiceProvider(ServiceProviderBase):
 
                 dependency = self.get_service(dependency_type)
                 if dependency is None and init_arg.default == init_arg.empty and init_arg.name != "self":
-                    raise Exception(f"Failed to build service of type '{service_descriptor.service_type.__name__}' because the service provider failed to resolve service '{dependency_type.__name__}'")
+                    # Safe error message generation - handle types without __name__ attribute
+                    service_type_name = getattr(
+                        service_descriptor.service_type,
+                        "__name__",
+                        str(service_descriptor.service_type),
+                    )
+                    dependency_type_name = getattr(dependency_type, "__name__", str(dependency_type))
+                    raise Exception(f"Failed to build service of type '{service_type_name}' because the service provider failed to resolve service '{dependency_type_name}'")
                 service_args[init_arg.name] = dependency
             service = service_descriptor.implementation_type(**service_args)
         if service_descriptor.lifetime != ServiceLifetime.TRANSIENT:
