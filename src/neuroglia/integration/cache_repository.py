@@ -3,6 +3,9 @@ Redis-based cache repository implementation for the Neuroglia framework.
 
 This module provides comprehensive Redis caching capabilities with async operations,
 distributed locks, and connection pooling.
+
+FIXED VERSION: Uses non-parameterized constructor dependencies to work around
+DI container's inability to resolve parameterized generic types in constructor parameters.
 """
 
 import asyncio
@@ -10,7 +13,7 @@ import json
 import logging
 import urllib.parse
 from dataclasses import dataclass
-from typing import Any, Generic, Optional, TYPE_CHECKING
+from typing import Any, Generic, Optional
 
 from neuroglia.data.abstractions import TEntity, TKey
 from neuroglia.data.infrastructure.abstractions import Repository
@@ -21,21 +24,15 @@ try:
 
     REDIS_AVAILABLE = True
 except ImportError:
-    # Redis is an optional dependency
     redis = None  # type: ignore
     REDIS_AVAILABLE = False
 
-if TYPE_CHECKING:
+try:
     from neuroglia.hosting.abstractions import ApplicationBuilderBase
     from neuroglia.serialization.json import JsonSerializer
-else:
-    # Avoid circular imports
-    try:
-        from neuroglia.hosting.abstractions import ApplicationBuilderBase
-        from neuroglia.serialization.json import JsonSerializer
-    except ImportError:
-        ApplicationBuilderBase = None
-        JsonSerializer = None
+except ImportError:
+    ApplicationBuilderBase = None  # type: ignore
+    JsonSerializer = None  # type: ignore
 
 log = logging.getLogger(__name__)
 
@@ -43,12 +40,15 @@ log = logging.getLogger(__name__)
 class CacheRepositoryException(Exception):
     """Exception raised by cache repository operations."""
 
-    pass
-
 
 @dataclass
-class CacheRepositoryOptions(Generic[TEntity, TKey]):
-    """Represents the options used to configure a Redis cache repository."""
+class CacheRepositoryOptions:
+    """
+    Represents the options used to configure a Redis cache repository.
+
+    Note: Not parameterized to work around DI resolution issues.
+    All entity types share the same configuration.
+    """
 
     host: str
     """Gets the host name of the Redis cluster to use."""
@@ -67,28 +67,35 @@ class CacheRepositoryOptions(Generic[TEntity, TKey]):
 
 
 @dataclass
-class CacheClientPool(Generic[TEntity, TKey]):
-    """Generic class to specialize a redis.ConnectionPool client to the TEntity, TKey pair."""
+class CacheClientPool:
+    """
+    Redis connection pool wrapper.
+
+    Note: Not parameterized to work around DI resolution issues.
+    All entity types share the same connection pool.
+    """
 
     pool: Any  # redis.ConnectionPool when available
-    """The redis connection pool to use for the given TEntity, TKey pair."""
+    """The redis connection pool to use for all entity types."""
 
 
 class AsyncCacheRepository(Generic[TEntity, TKey], Repository[TEntity, TKey]):
-    """Represents an async Redis cache repository using the asynchronous Redis client."""
+    """
+    Represents an async Redis cache repository using the asynchronous Redis client.
+
+    FIXED: Constructor uses non-parameterized types to work around DI container
+    limitations with generic type resolution in constructor parameters.
+    """
 
     def __init__(
         self,
-        options: CacheRepositoryOptions[TEntity, TKey],
-        redis_connection_pool: CacheClientPool[TEntity, TKey],
+        options: CacheRepositoryOptions,  # Non-parameterized - FIXED
+        redis_connection_pool: CacheClientPool,  # Non-parameterized - FIXED
         serializer: "JsonSerializer",
     ):
         """Initialize a new Redis cache repository."""
         if not REDIS_AVAILABLE:
-            raise CacheRepositoryException(
-                "Redis is required for cache repository operations. "
-                "Install it with: pip install redis"
-            )
+            raise CacheRepositoryException("Redis is required for cache repository operations. " "Install it with: pip install redis")
 
         self._options = options
         self._redis_connection_pool = redis_connection_pool
@@ -109,9 +116,7 @@ class AsyncCacheRepository(Generic[TEntity, TKey], Repository[TEntity, TKey]):
             # Verify connection health
             await self._redis_client.ping()
             self._started = True
-            log.debug(
-                f"Cache repository connected to Redis: {self._options.host}:{self._options.port}"
-            )
+            log.debug(f"Cache repository connected to Redis: {self._options.host}:{self._options.port}")
         except Exception as ex:
             log.error(f"Error connecting to Redis cache: {ex}")
             raise CacheRepositoryException(f"Failed to connect to Redis cache: {ex}")
@@ -348,12 +353,16 @@ class AsyncCacheRepository(Generic[TEntity, TKey], Repository[TEntity, TKey]):
         key_type: type,
         connection_string_name: str = "redis",
     ) -> "ApplicationBuilderBase":
-        """Configure the cache repository services in the application builder."""
+        """
+        Configure the cache repository services in the application builder.
+
+        FIXED: Registers non-parameterized singletons that are shared across all entity types.
+        This works around the DI container's inability to resolve parameterized generic types
+        in constructor parameters.
+        """
         try:
             if not REDIS_AVAILABLE:
-                raise CacheRepositoryException(
-                    "Redis is required for cache repository. " "Install it with: pip install redis"
-                )
+                raise CacheRepositoryException("Redis is required for cache repository. " "Install it with: pip install redis")
 
             # Get Redis connection string from settings
             if not hasattr(builder, "settings"):
@@ -363,10 +372,7 @@ class AsyncCacheRepository(Generic[TEntity, TKey], Repository[TEntity, TKey]):
             connection_string = connection_strings.get(connection_string_name)
 
             if not connection_string:
-                raise CacheRepositoryException(
-                    f"Missing '{connection_string_name}' connection string in application settings. "
-                    f"Expected format: redis://host:port"
-                )
+                raise CacheRepositoryException(f"Missing '{connection_string_name}' connection string in application settings. " f"Expected format: redis://host:port")
 
             # Parse Redis connection URL
             parsed_url = urllib.parse.urlparse(connection_string)
@@ -375,9 +381,7 @@ class AsyncCacheRepository(Generic[TEntity, TKey], Repository[TEntity, TKey]):
             database_name = parsed_url.path.lstrip("/") or "0"
 
             if not redis_host:
-                raise CacheRepositoryException(
-                    f"Invalid Redis connection string '{connection_string}': missing hostname"
-                )
+                raise CacheRepositoryException(f"Invalid Redis connection string '{connection_string}': missing hostname")
 
             # Build full database URL
             redis_database_url = f"{connection_string.rstrip('/')}/{database_name}"
@@ -392,8 +396,9 @@ class AsyncCacheRepository(Generic[TEntity, TKey], Repository[TEntity, TKey]):
                 decode_responses=False,  # We'll handle decoding manually
             )
 
-            # Register services
-            options = CacheRepositoryOptions[entity_type, key_type](
+            # FIXED: Register non-parameterized singletons (shared across all entity types)
+            # This works around DI container's inability to resolve parameterized constructor parameters
+            options = CacheRepositoryOptions(
                 host=redis_host,
                 port=redis_port,
                 database_name=database_name,
@@ -401,22 +406,23 @@ class AsyncCacheRepository(Generic[TEntity, TKey], Repository[TEntity, TKey]):
                 max_connections=max_connections,
             )
 
-            cache_pool = CacheClientPool[entity_type, key_type](pool=pool)
+            cache_pool = CacheClientPool(pool=pool)
 
-            builder.services.try_add_singleton(
-                CacheRepositoryOptions[entity_type, key_type], singleton=options
-            )
-            builder.services.try_add_singleton(
-                CacheClientPool[entity_type, key_type], singleton=cache_pool
-            )
+            # Use try_add_singleton so multiple configure() calls share the same instances
+            builder.services.try_add_singleton(CacheRepositoryOptions, singleton=options)
+            builder.services.try_add_singleton(CacheClientPool, singleton=cache_pool)
+
+            # Register the parameterized repository types
             builder.services.add_scoped(
                 AsyncCacheRepository[entity_type, key_type],
                 AsyncCacheRepository[entity_type, key_type],
             )
-
-            log.info(
-                f"Redis cache repository configured for {entity_type.__name__} at {redis_host}:{redis_port}"
+            builder.services.add_scoped(
+                Repository[entity_type, key_type],
+                AsyncCacheRepository[entity_type, key_type],
             )
+
+            log.info(f"Redis cache repository configured for {entity_type.__name__} at {redis_host}:{redis_port}")
             return builder
 
         except Exception as ex:

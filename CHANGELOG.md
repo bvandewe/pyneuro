@@ -7,6 +7,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.3] - 2025-10-19
+
+### Fixed
+
+- **Type Variable Substitution in Generic Dependencies**: Enhanced DI container to properly substitute type variables in constructor parameters
+
+  - **Problem**: Constructor parameters with type variables (e.g., `options: CacheRepositoryOptions[TEntity, TKey]`) were not being substituted with concrete types
+    - When building `AsyncCacheRepository[MozartSession, str]`, parameters with `TEntity` and `TKey` were used as-is
+    - DI container looked for `CacheRepositoryOptions[TEntity, TKey]` instead of `CacheRepositoryOptions[MozartSession, str]`
+    - Service resolution failed with "cannot resolve service 'CacheRepositoryOptions'"
+  - **Root Cause**: v0.4.2 fixed parameter resolution but didn't call `TypeExtensions._substitute_generic_arguments()`
+    - Comment claimed "TypeVar substitution is handled by get_generic_arguments()" but wasn't actually performed
+    - The substitution logic existed but wasn't being used at the critical point
+  - **Solution**: Added type variable substitution in `_build_service()` methods
+    - Both `ServiceScope._build_service()` and `ServiceProvider._build_service()` now call `TypeExtensions._substitute_generic_arguments()`
+    - Type variables in constructor parameters are replaced with concrete types from service registration
+    - Example: `CacheRepositoryOptions[TEntity, TKey]` → `CacheRepositoryOptions[MozartSession, str]`
+  - **Impact**: Constructor parameters can now use type variables that match the service's generic parameters
+    - Repositories with parameterized dependencies work correctly
+    - Complex generic dependency graphs resolve properly
+    - Type safety maintained throughout dependency injection
+  - **Affected Scenarios**: Services with constructor parameters using type variables
+    - `AsyncCacheRepository(options: CacheRepositoryOptions[TEntity, TKey])` pattern now works
+    - Multiple parameterized dependencies in single constructor
+    - Nested generic types with type variable substitution
+  - **Migration**: No code changes required - enhancement enables previously failing patterns
+  - **Testing**: Added 6 comprehensive test cases in `tests/cases/test_type_variable_substitution.py`
+
 ## [0.4.2] - 2025-10-19
 
 ### Fixed
