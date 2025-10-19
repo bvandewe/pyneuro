@@ -556,11 +556,55 @@ class Mediator:
         log.info(f"Executing request type {type(request).__name__}")
 
     async def publish_async(self, notification: object):
-        """Publishes the specified notification"""
-        handlers: list[NotificationHandler] = [candidate for candidate in self._service_provider.get_services(NotificationHandler) if self._notification_handler_matches(candidate, type(notification))]
-        if handlers is None or len(handlers) < 1:
-            return
-        await asyncio.gather(*(handler.handle_async(notification) for handler in handlers))
+        """
+        Publishes the specified notification to all registered handlers.
+
+        Creates a scoped service provider for this notification processing, allowing
+        handlers with scoped dependencies (like repositories) to be properly resolved.
+        All handlers are executed concurrently within the same scope, and the scope
+        is automatically disposed after all handlers complete.
+
+        This follows the same pattern as HTTP request processing, where each logical
+        operation (HTTP request or event) gets its own isolated scope.
+
+        Args:
+            notification: The notification object to publish to handlers
+
+        Examples:
+            ```python
+            # Publish domain event with scoped handler dependencies
+            event = UserCreatedEvent(user_id="123", email="user@example.com")
+            await mediator.publish_async(event)
+
+            # Handler with scoped repository (now works correctly!)
+            class UserCreatedHandler(NotificationHandler[UserCreatedEvent]):
+                def __init__(self, repo: AsyncCacheRepository[User, str]):
+                    self.repo = repo  # Scoped service resolved correctly
+
+                async def handle_async(self, event: UserCreatedEvent):
+                    async with self.repo as r:
+                        await r.add_async(user)
+            ```
+
+        See Also:
+            - Event-Driven Architecture: https://bvandewe.github.io/pyneuro/features/simple-cqrs/
+            - Scoped Services: https://bvandewe.github.io/pyneuro/patterns/dependency-injection
+        """
+        # Create a scoped service provider for this notification
+        # Similar to how web frameworks create a scope per HTTP request
+        async with self._service_provider.create_async_scope() as scope:
+            scoped_provider = scope.get_service_provider()
+
+            # Resolve handlers from the scoped provider (not root!)
+            # This allows handlers with scoped dependencies to be resolved correctly
+            handlers: list[NotificationHandler] = [candidate for candidate in scoped_provider.get_services(NotificationHandler) if self._notification_handler_matches(candidate, type(notification))]
+
+            if handlers is None or len(handlers) < 1:
+                return
+
+            # Execute all handlers concurrently within this scope
+            await asyncio.gather(*(handler.handle_async(notification) for handler in handlers))
+        # Scope automatically disposed here, including all scoped services
 
     def _handler_type_matches(self, handler_class, request_type) -> bool:
         """Check if a handler class can handle the specified request type"""
