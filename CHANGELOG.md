@@ -7,6 +7,42 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.5] - 2025-10-19
+
+### Fixed
+
+- **CacheRepository Parameterization**: `AsyncCacheRepository.configure()` now registers parameterized singleton services
+  - **BREAKING CHANGE**: Changed from non-parameterized to parameterized service registration
+  - **Problem**: All entity types shared the same `CacheRepositoryOptions` and `CacheClientPool` instances
+    - DI container couldn't distinguish between `CacheRepositoryOptions[User, str]` and `CacheRepositoryOptions[Order, int]`
+    - Potential cache collisions between different entity types
+    - Lost type safety benefits of generic repository pattern
+  - **Solution**: Register type-specific singleton instances
+    - `CacheRepositoryOptions[entity_type, key_type]` for each entity type
+    - `CacheClientPool[entity_type, key_type]` for each entity type
+    - DI container now resolves cache services independently per entity type
+  - **Benefits**:
+    - Type-safe cache resolution per entity type
+    - Prevents cache collisions between different entity types
+    - Full generic type support in DI container
+    - Each entity gets dedicated cache configuration
+  - **Requires**: neuroglia v0.4.3+ with type variable substitution support
+
+### Added
+
+- Comprehensive documentation: `notes/STRING_ANNOTATIONS_EXPLAINED.md`
+  - Explains string annotations (forward references) in Python type hints
+  - Details circular import prevention strategy
+  - Shows impact of PEP 563 and `get_type_hints()` usage
+  - Real-world Neuroglia framework examples
+  - Best practices for using string annotations
+
+### Changed
+
+- Enhanced logging in `CacheRepository.configure()` to show entity and key types
+  - Now logs: `"Redis cache repository configured for User[str] at localhost:6379"`
+  - Helps debug multi-entity cache configurations
+
 ## [0.4.4] - 2025-10-19
 
 ### Fixed
