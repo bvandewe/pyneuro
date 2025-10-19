@@ -7,6 +7,49 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.7] - 2025-10-19
+
+### Fixed
+
+- **CRITICAL**: Fixed `AsyncCacheRepository.get_all_by_pattern_async()` deserialization error
+
+  - **Problem**: Pattern-based queries failed with `AttributeError: 'str' object has no attribute 'decode'`
+
+    - Redis client may return strings (when `decode_responses=True`) or bytes (when `decode_responses=False`)
+    - `_search_by_key_pattern_async()` was returning data as-is from Redis without normalizing the type
+    - When Redis returned strings, the code expected bytes and failed during deserialization
+    - Caused cascade failures in event-driven workflows relying on pattern searches
+
+  - **Solution**: Normalize entity data to bytes in `_search_by_key_pattern_async()`
+
+    - Added type check: if `entity_data` is `str`, encode to bytes (`entity_data.encode("utf-8")`)
+    - Ensures consistent data type returned regardless of Redis client configuration
+    - Existing decode logic in `get_all_by_pattern_async()` handles bytes correctly
+
+  - **Impact**:
+
+    - Pattern searches now work with both `decode_responses=True` and `decode_responses=False`
+    - Prevents production failures in event processing that relies on cache pattern queries
+    - Maintains backward compatibility with existing code expecting bytes
+
+  - **Files Changed**: `neuroglia/integration/cache_repository.py` line 263-267
+
+  - **Testing**: Added comprehensive test suite `test_cache_repository_pattern_search_fix.py`
+    - Tests both string and bytes responses from Redis
+    - Validates handling of mixed responses
+    - Tests complex real-world patterns from production
+    - Verifies error handling and filtering
+
+### Technical Details
+
+- **Root Cause**: Modern `redis-py` (v5.x) defaults to `decode_responses=True` for Python 3 compatibility
+- **Compatibility**: Fix works with both old (`decode_responses=False`) and new (`decode_responses=True`) Redis client configurations
+- **Data Flow**:
+  1. Redis client returns data (str or bytes depending on configuration)
+  2. `_search_by_key_pattern_async()` normalizes to bytes (NEW)
+  3. `get_all_by_pattern_async()` decodes bytes to string
+  4. Serializer receives consistent string input
+
 ## [0.4.6] - 2025-10-19
 
 ### Fixed
