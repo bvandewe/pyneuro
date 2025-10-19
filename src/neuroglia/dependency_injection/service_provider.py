@@ -124,6 +124,54 @@ class ServiceProviderBase(ABC):
         """Creates a new service scope"""
         raise NotImplementedError()
 
+    def create_async_scope(self):
+        """
+        Creates an asynchronous service scope for resolving scoped services.
+
+        This method provides an async context manager that creates a service scope,
+        allowing scoped services to be properly resolved and automatically disposed
+        when the scope exits. This is essential for event-driven architectures where
+        handlers need access to scoped dependencies like repositories.
+
+        Returns:
+            An async context manager that yields a ServiceScope
+
+        Examples:
+            ```python
+            # Event processing with scoped services
+            async with service_provider.create_async_scope() as scope:
+                handler = scope.get_service(EventHandler)
+                await handler.handle_async(event)
+            # Scope automatically disposed here
+
+            # Multiple services in same scope
+            async with service_provider.create_async_scope() as scope:
+                repository = scope.get_service(Repository)
+                unit_of_work = scope.get_service(UnitOfWork)
+                await process_with_shared_context(repository, unit_of_work)
+            ```
+
+        See Also:
+            - Scoped Service Resolution: https://bvandewe.github.io/pyneuro/patterns/dependency-injection
+            - Event-Driven Architecture: https://bvandewe.github.io/pyneuro/features/simple-cqrs/
+        """
+        from contextlib import asynccontextmanager
+
+        @asynccontextmanager
+        async def _scope_context():
+            scope = self.create_scope()
+            try:
+                yield scope
+            finally:
+                # Dispose scope asynchronously if supported, otherwise synchronous
+                if hasattr(scope, "dispose_async"):
+                    await scope.dispose_async()
+                elif hasattr(scope, "dispose"):
+                    scope.dispose()
+
+        # Return the context manager itself (already callable)
+        return _scope_context()
+
 
 class ServiceScopeBase(ABC):
     """
