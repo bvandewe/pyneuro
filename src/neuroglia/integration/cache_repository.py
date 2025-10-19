@@ -260,6 +260,10 @@ class AsyncCacheRepository(Generic[TEntity, TKey], Repository[TEntity, TKey]):
 
                 entity_data = await self._redis_client.get(key)
                 if entity_data:
+                    # Ensure entity_data is bytes for consistent handling
+                    # Redis client may return str (decode_responses=True) or bytes (decode_responses=False)
+                    if isinstance(entity_data, str):
+                        entity_data = entity_data.encode("utf-8")
                     entities.append(entity_data)
 
             return entities
