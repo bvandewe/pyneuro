@@ -163,9 +163,8 @@ class AsyncCacheRepository(Generic[TEntity, TKey], Repository[TEntity, TKey]):
                 log.debug(f"No data found for key: {key}")
                 return None
 
-            if isinstance(data, bytes):
-                data = data.decode("utf-8")
-
+            # Pass data directly to serializer - it handles bytes/str conversion
+            # The serializer (JsonSerializer.deserialize) expects bytes and will decode internally
             entity = self._serializer.deserialize(data, self._get_entity_type())
             log.debug(f"Retrieved entity for key: {key}")
             return entity
@@ -217,8 +216,8 @@ class AsyncCacheRepository(Generic[TEntity, TKey], Repository[TEntity, TKey]):
 
                 for entity_data in entities:
                     try:
-                        if isinstance(entity_data, bytes):
-                            entity_data = entity_data.decode("utf-8")
+                        # Pass data directly to serializer - it handles bytes/str conversion
+                        # _search_by_key_pattern_async ensures data is bytes
                         entity = self._serializer.deserialize(entity_data, self._get_entity_type())
                         results.append(entity)
                     except Exception as ex:

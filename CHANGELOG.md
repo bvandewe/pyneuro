@@ -7,6 +7,55 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.8] - 2025-10-19
+
+### Fixed
+
+- **CRITICAL**: Fixed `AsyncCacheRepository.get_async()` deserialization error introduced in v0.4.7
+
+  - **Problem**: `get_async()` was decoding bytes to str before passing to `JsonSerializer.deserialize()`
+
+    - `JsonSerializer.deserialize()` expects `bytes` (or `bytearray`) and calls `.decode()` internally
+    - When passed `str`, it crashes with `AttributeError: 'str' object has no attribute 'decode'`
+    - This bug was introduced in v0.4.7 when trying to fix the pattern search bug
+    - Affected ALL single-entity retrievals from cache (critical production bug)
+
+  - **Solution**: Remove premature decode from cache repository methods
+
+    - Removed `data.decode("utf-8")` from `get_async()`
+    - Removed decode from `get_all_by_pattern_async()`
+    - Pass bytes directly to serializer - it handles decoding internally
+    - Serializer's `deserialize()` method is designed to accept bytes
+
+  - **Impact**:
+
+    - Single-entity cache retrieval now works correctly
+    - Pattern-based queries continue to work (from v0.4.7 fix)
+    - Session lifecycle and event processing fully functional
+    - No more cascade failures in event handlers
+
+  - **Files Changed**: `neuroglia/integration/cache_repository.py` lines 157-170, 211-220
+
+  - **Root Cause Analysis**:
+    - v0.4.6: Pattern search had decode issues
+    - v0.4.7: Fixed pattern search but introduced decode in `get_async()` (wrong layer)
+    - v0.4.8: Proper fix - let serializer handle all decoding
+
+### Technical Details
+
+- **Correct Data Flow**:
+
+  1. Redis client returns `bytes` (with `decode_responses=False`)
+  2. `_search_by_key_pattern_async()` normalizes str to bytes if needed
+  3. Cache repository methods pass bytes directly to serializer
+  4. `JsonSerializer.deserialize()` calls `.decode()` on bytes
+  5. Deserialization completes successfully
+
+- **Why Previous Fixes Failed**:
+  - Attempted to decode at wrong layer (repository instead of serializer)
+  - Created incompatibility between repository output and serializer input
+  - Serializer already has robust decode logic
+
 ## [0.4.7] - 2025-10-19
 
 ### Fixed
