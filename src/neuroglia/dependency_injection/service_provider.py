@@ -323,17 +323,35 @@ class ServiceScope(ServiceScopeBase, ServiceProviderBase):
                 continue
             realized_services.append(self._build_service(descriptor))
 
-        # Only get singleton and transient services from root provider
-        # Scoped services should only come from the current scope
-        root_services = []
-        try:
-            # Call a special method that only returns singleton/transient services
-            root_services = self._root_service_provider._get_non_scoped_services(type)
-        except Exception:
-            # If there's an error getting root services, just use what we have from scope
-            pass
+        # Get singleton services from root provider
+        # IMPORTANT: Transient services must be built in THIS scope (not root)
+        # to allow them to resolve scoped dependencies correctly
+        root_singleton_descriptors = [descriptor for descriptor in self._all_service_descriptors if descriptor.service_type == type and descriptor.lifetime == ServiceLifetime.SINGLETON]
 
-        return realized_services + root_services
+        # Build transient services in THIS scope so they can access scoped dependencies
+        transient_descriptors = [descriptor for descriptor in self._all_service_descriptors if descriptor.service_type == type and descriptor.lifetime == ServiceLifetime.TRANSIENT]
+
+        # Get realized singletons from root provider (they're cached there)
+        root_services = []
+        for descriptor in root_singleton_descriptors:
+            try:
+                service = self._root_service_provider.get_service(descriptor.service_type)
+                if service is not None:
+                    root_services.append(service)
+            except Exception:
+                pass
+
+        # Build transient services in this scope
+        transient_services = []
+        for descriptor in transient_descriptors:
+            try:
+                service = self._build_service(descriptor)
+                transient_services.append(service)
+            except Exception as ex:
+                # If building fails, skip this service
+                pass
+
+        return realized_services + root_services + transient_services
 
     def _build_service(self, service_descriptor: ServiceDescriptor) -> any:
         """Builds a new scoped service"""
@@ -409,18 +427,30 @@ class ServiceScope(ServiceScopeBase, ServiceProviderBase):
                     pass
         self._realized_scoped_services = dict[Type, List]()
 
-    def create_scope(self) -> ServiceScopeBase:
-        return self
-
-    def dispose(self):
+    async def dispose_async(self):
+        """Asynchronously dispose of scoped services"""
         for services in self._realized_scoped_services.values():
             for service in services:
                 try:
-                    if hasattr(service, "__exit__"):
+                    # Try async context manager exit first
+                    if hasattr(service, "__aexit__"):
+                        await service.__aexit__(None, None, None)
+                    # Fall back to sync context manager exit
+                    elif hasattr(service, "__exit__"):
                         service.__exit__(None, None, None)
+
+                    # Also call dispose() method if it exists (for explicit resource cleanup)
+                    if hasattr(service, "dispose"):
+                        result = service.dispose()
+                        # If dispose() returns a coroutine, await it
+                        if hasattr(result, "__await__"):
+                            await result
                 except:
                     pass
         self._realized_scoped_services = dict[Type, List]()
+
+    def create_scope(self) -> ServiceScopeBase:
+        return self
 
 
 class ServiceProvider(ServiceProviderBase):
