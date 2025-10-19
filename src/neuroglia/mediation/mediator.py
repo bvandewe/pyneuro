@@ -526,7 +526,7 @@ class Mediator:
         # Try to get handler from registry
         handler_class = Mediator._handler_registry.get(request_type)
         if handler_class:
-            # Create service scope and resolve the handler
+            # Create service scope for BOTH handler AND pipeline behaviors
             scope = self._service_provider.create_scope()
             try:
                 # Cast scope to ServiceProviderBase for get_service access
@@ -535,6 +535,17 @@ class Mediator:
                 provider: ServiceProviderBase = scope.get_service_provider()
                 handler = provider.get_service(handler_class)
                 log.debug(f"🔍 MEDIATOR DEBUG: Successfully resolved {handler_class.__name__} from registry")
+
+                # Get all pipeline behaviors for this request type from scoped provider
+                # This allows pipeline behaviors to be scoped and access scoped dependencies
+                behaviors = self._get_pipeline_behaviors(request, provider)
+
+                if not behaviors:
+                    # No behaviors, execute handler directly
+                    return await handler.handle_async(request)
+
+                # Build pipeline chain with behaviors
+                return await self._build_pipeline(request, handler, behaviors)
             finally:
                 if hasattr(scope, "dispose"):
                     scope.dispose()
@@ -543,16 +554,6 @@ class Mediator:
             raise Exception(f"Failed to find a handler for request of type '{request_type.__name__}'. Registry has {len(Mediator._handler_registry)} handlers.")
 
         log.info(f"Executing request type {type(request).__name__}")
-
-        # Get all pipeline behaviors for this request type
-        behaviors = self._get_pipeline_behaviors(request)
-
-        if not behaviors:
-            # No behaviors, execute handler directly
-            return await handler.handle_async(request)
-
-        # Build pipeline chain with behaviors
-        return await self._build_pipeline(request, handler, behaviors)
 
     async def publish_async(self, notification: object):
         """Publishes the specified notification"""
@@ -599,19 +600,35 @@ class Mediator:
         else:
             return issubclass(handled_notification_type.__origin__, request_type) if hasattr(handled_notification_type, "__origin__") else issubclass(handled_notification_type, request_type)
 
-    def _get_pipeline_behaviors(self, request: Request) -> list[PipelineBehavior]:
-        """Gets all registered pipeline behaviors that can handle the specified request type"""
+    def _get_pipeline_behaviors(self, request: Request, provider: Optional[ServiceProviderBase] = None) -> list[PipelineBehavior]:
+        """
+        Gets all registered pipeline behaviors that can handle the specified request type.
+
+        Args:
+            request: The request being processed
+            provider: Optional scoped provider to use for resolution. If not provided,
+                     falls back to root provider for backward compatibility.
+
+        Returns:
+            List of pipeline behaviors that can handle this request
+        """
         behaviors = []
         try:
-            # Get all registered pipeline behaviors
-            all_behaviors = self._service_provider.get_services(PipelineBehavior)
+            # Use provided scoped provider if available, otherwise fall back to root provider
+            # This allows pipeline behaviors to be scoped and access scoped dependencies
+            service_provider = provider if provider is not None else self._service_provider
+
+            # Get all registered pipeline behaviors from appropriate provider
+            all_behaviors = service_provider.get_services(PipelineBehavior)
             if all_behaviors:
                 # Filter behaviors that can handle this request type
                 for behavior in all_behaviors:
                     if self._pipeline_behavior_matches(behavior, request):
                         behaviors.append(behavior)
+
+            log.debug(f"Found {len(behaviors)} pipeline behaviors for {type(request).__name__}")
         except Exception as e:
-            log.debug(f"No pipeline behaviors registered or error getting behaviors: {e}")
+            log.warning(f"Error getting pipeline behaviors: {e}", exc_info=True)
 
         return behaviors
 

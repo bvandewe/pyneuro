@@ -175,7 +175,7 @@ class PizzaRemovedFromOrderEventHandler(DomainEventHandler[PizzaRemovedFromOrder
 
     async def handle_async(self, event: PizzaRemovedFromOrderEvent) -> Any:
         """Process pizza removed from order event"""
-        logger.info(f"➖ Removed pizza {event.pizza_id} from order {event.aggregate_id}")
+        logger.info(f"➖ Removed line item {event.line_item_id} from order {event.aggregate_id}")
 
         # In a real application, you might:
         # - Update real-time order display for customer
