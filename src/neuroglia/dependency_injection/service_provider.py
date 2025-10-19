@@ -308,10 +308,9 @@ class ServiceScope(ServiceScopeBase, ServiceProviderBase):
                 # Determine the dependency type to resolve
                 if origin is not None and args:
                     # It's a parameterized generic type (e.g., Repository[User, int])
-                    # Use the annotation directly - it's already properly parameterized
-                    # The DI container will match it against registered types
-                    # Note: TypeVar substitution is handled by get_generic_arguments() at service level
-                    dependency_type = init_arg.annotation
+                    # Check if it contains type variables that need substitution
+                    # (e.g., CacheRepositoryOptions[TEntity, TKey] -> CacheRepositoryOptions[MozartSession, str])
+                    dependency_type = TypeExtensions._substitute_generic_arguments(init_arg.annotation, service_generic_args)
                 else:
                     # Simple non-generic type
                     dependency_type = init_arg.annotation
@@ -481,10 +480,9 @@ class ServiceProvider(ServiceProviderBase):
                 # Determine the dependency type to resolve
                 if origin is not None and args:
                     # It's a parameterized generic type (e.g., Repository[User, int])
-                    # Use the annotation directly - it's already properly parameterized
-                    # The DI container will match it against registered types
-                    # Note: TypeVar substitution is handled by get_generic_arguments() at service level
-                    dependency_type = init_arg.annotation
+                    # Check if it contains type variables that need substitution
+                    # (e.g., CacheRepositoryOptions[TEntity, TKey] -> CacheRepositoryOptions[MozartSession, str])
+                    dependency_type = TypeExtensions._substitute_generic_arguments(init_arg.annotation, service_generic_args)
                 else:
                     # Simple non-generic type
                     dependency_type = init_arg.annotation
