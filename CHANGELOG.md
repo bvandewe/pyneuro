@@ -7,6 +7,35 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.2] - 2025-10-19
+
+### Fixed
+
+- **Generic Type Resolution in Dependency Injection**: Fixed critical bug preventing resolution of parameterized generic types
+
+  - **Root Cause**: `ServiceScope._build_service()` and `ServiceProvider._build_service()` attempted to reconstruct generic types by calling `__getitem__()` on origin class:
+    - Tried `init_arg.annotation.__origin__.__getitem__(args)` which failed
+    - `__origin__` returns the base class, not a generic alias
+    - Classes don't have `__getitem__` unless explicitly defined
+    - Manual reconstruction was unnecessary - annotation already properly parameterized
+  - **Error**: `AttributeError: type object 'AsyncStringCacheRepository' has no attribute '__getitem__'`
+  - **Solution**: Replaced manual reconstruction with Python's official typing utilities
+    - Imported `get_origin()` and `get_args()` from typing module
+    - Use annotation directly when it's a parameterized generic type
+    - Simpler, more robust, standards-compliant approach
+  - **Impact**: Generic types now resolve correctly in DI container
+    - Services can depend on `Repository[User, int]` style types
+    - Event handlers with multiple generic repositories work
+    - Query handlers can access generic data access layers
+    - Full CQRS pattern support with generic infrastructure
+  - **Affected Scenarios**: All services depending on parameterized generic classes
+    - Event handlers depending on generic repositories
+    - Query handlers depending on generic data access layers
+    - Any CQRS pattern implementation using generic infrastructure
+  - **Migration**: No code changes required - bug fix makes existing patterns work
+  - **Documentation**: Added comprehensive fix guide in `docs/fixes/GENERIC_TYPE_RESOLUTION_FIX.md`
+  - **Testing**: Added 8 comprehensive test cases covering all scenarios
+
 ## [0.4.1] - 2025-10-19
 
 ### Fixed
