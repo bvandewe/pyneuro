@@ -4,7 +4,7 @@ import inspect
 from abc import ABC, abstractmethod
 from collections.abc import Callable
 from enum import Enum
-from typing import Any, List, Optional, Type, get_args, get_origin
+from typing import Any, List, Optional, Type, get_args, get_origin, get_type_hints
 
 from neuroglia.core.type_extensions import TypeExtensions
 
@@ -297,33 +297,48 @@ class ServiceScope(ServiceScopeBase, ServiceProviderBase):
             is_service_generic = not inspect.isclass(service_descriptor.implementation_type)
             service_generic_type = service_descriptor.implementation_type.__origin__ if is_service_generic else None
             service_type = service_descriptor.implementation_type if service_generic_type is None else service_generic_type
+
+            # Resolve string annotations (forward references) to actual types
+            try:
+                type_hints = get_type_hints(service_type.__init__)
+            except Exception:
+                # If get_type_hints fails, fall back to inspecting annotations directly
+                type_hints = {}
+
             service_init_args = [param for param in inspect.signature(service_type.__init__).parameters.values() if param.name not in ["self", "args", "kwargs"]]
             service_generic_args = TypeExtensions.get_generic_arguments(service_descriptor.implementation_type)
             service_args = dict[Type, any]()
             for init_arg in service_init_args:
+                # Get the resolved type hint (handles string annotations)
+                resolved_annotation = type_hints.get(init_arg.name, init_arg.annotation)
+
                 # Use typing.get_origin() and get_args() for robust generic type handling
-                origin = get_origin(init_arg.annotation)
-                args = get_args(init_arg.annotation)
+                origin = get_origin(resolved_annotation)
+                args = get_args(resolved_annotation)
 
                 # Determine the dependency type to resolve
                 if origin is not None and args:
                     # It's a parameterized generic type (e.g., Repository[User, int])
                     # Check if it contains type variables that need substitution
                     # (e.g., CacheRepositoryOptions[TEntity, TKey] -> CacheRepositoryOptions[MozartSession, str])
-                    dependency_type = TypeExtensions._substitute_generic_arguments(init_arg.annotation, service_generic_args)
+                    dependency_type = TypeExtensions._substitute_generic_arguments(resolved_annotation, service_generic_args)
                 else:
-                    # Simple non-generic type
-                    dependency_type = init_arg.annotation
+                    # Simple non-generic type (use resolved annotation, not raw annotation)
+                    dependency_type = resolved_annotation
 
                 dependency = self.get_service(dependency_type)
                 if dependency is None and init_arg.default == init_arg.empty and init_arg.name != "self":
-                    # Safe error message generation - handle types without __name__ attribute
-                    service_type_name = getattr(
-                        service_descriptor.service_type,
-                        "__name__",
-                        str(service_descriptor.service_type),
-                    )
-                    dependency_type_name = getattr(dependency_type, "__name__", str(dependency_type))
+                    # Safe error message generation - handle all annotation types:
+                    # 1. String annotations (forward references): "ClassName"
+                    # 2. Types without __name__: typing constructs like Union, Optional
+                    # 3. Regular types with __name__: normal classes
+                    def _get_type_name(t) -> str:
+                        if isinstance(t, str):
+                            return t  # Already a string (forward reference)
+                        return getattr(t, "__name__", str(t))
+
+                    service_type_name = _get_type_name(service_descriptor.service_type)
+                    dependency_type_name = _get_type_name(dependency_type)
                     raise Exception(f"Failed to build service of type '{service_type_name}' because the service provider failed to resolve service '{dependency_type_name}'")
                 service_args[init_arg.name] = dependency
             service = service_descriptor.implementation_type(**service_args)
@@ -476,33 +491,48 @@ class ServiceProvider(ServiceProviderBase):
             is_service_generic = not inspect.isclass(service_descriptor.implementation_type)  # if implementation_type is not a class, then it must be a generic type
             service_generic_type = service_descriptor.implementation_type.__origin__ if is_service_generic else None  # retrieve the generic type, used to determine the __init__ args
             service_type = service_descriptor.implementation_type if service_generic_type is None else service_generic_type  # get the type used to determine the __init__ args: the implementation type as is or its generic type definition
+
+            # Resolve string annotations (forward references) to actual types
+            try:
+                type_hints = get_type_hints(service_type.__init__)
+            except Exception:
+                # If get_type_hints fails, fall back to inspecting annotations directly
+                type_hints = {}
+
             service_init_args = [param for param in inspect.signature(service_type.__init__).parameters.values() if param.name not in ["self", "args", "kwargs"]]  # gets the __init__ args and leave out self, args and kwargs
             service_generic_args = TypeExtensions.get_generic_arguments(service_descriptor.implementation_type)  # gets the generic args: we will need them to substitute the type args of potential generic dependencies
             service_args = dict[Type, any]()
             for init_arg in service_init_args:
+                # Get the resolved type hint (handles string annotations)
+                resolved_annotation = type_hints.get(init_arg.name, init_arg.annotation)
+
                 # Use typing.get_origin() and get_args() for robust generic type handling
-                origin = get_origin(init_arg.annotation)
-                args = get_args(init_arg.annotation)
+                origin = get_origin(resolved_annotation)
+                args = get_args(resolved_annotation)
 
                 # Determine the dependency type to resolve
                 if origin is not None and args:
                     # It's a parameterized generic type (e.g., Repository[User, int])
                     # Check if it contains type variables that need substitution
                     # (e.g., CacheRepositoryOptions[TEntity, TKey] -> CacheRepositoryOptions[MozartSession, str])
-                    dependency_type = TypeExtensions._substitute_generic_arguments(init_arg.annotation, service_generic_args)
+                    dependency_type = TypeExtensions._substitute_generic_arguments(resolved_annotation, service_generic_args)
                 else:
-                    # Simple non-generic type
-                    dependency_type = init_arg.annotation
+                    # Simple non-generic type (use resolved annotation, not raw annotation)
+                    dependency_type = resolved_annotation
 
                 dependency = self.get_service(dependency_type)
                 if dependency is None and init_arg.default == init_arg.empty and init_arg.name != "self":
-                    # Safe error message generation - handle types without __name__ attribute
-                    service_type_name = getattr(
-                        service_descriptor.service_type,
-                        "__name__",
-                        str(service_descriptor.service_type),
-                    )
-                    dependency_type_name = getattr(dependency_type, "__name__", str(dependency_type))
+                    # Safe error message generation - handle all annotation types:
+                    # 1. String annotations (forward references): "ClassName"
+                    # 2. Types without __name__: typing constructs like Union, Optional
+                    # 3. Regular types with __name__: normal classes
+                    def _get_type_name(t) -> str:
+                        if isinstance(t, str):
+                            return t  # Already a string (forward reference)
+                        return getattr(t, "__name__", str(t))
+
+                    service_type_name = _get_type_name(service_descriptor.service_type)
+                    dependency_type_name = _get_type_name(dependency_type)
                     raise Exception(f"Failed to build service of type '{service_type_name}' because the service provider failed to resolve service '{dependency_type_name}'")
                 service_args[init_arg.name] = dependency
             service = service_descriptor.implementation_type(**service_args)
