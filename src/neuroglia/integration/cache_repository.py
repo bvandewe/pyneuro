@@ -354,9 +354,17 @@ class AsyncCacheRepository(Generic[TEntity, TKey], Repository[TEntity, TKey]):
         """
         Configure the cache repository services in the application builder.
 
-        FIXED: Registers non-parameterized singletons that are shared across all entity types.
-        This works around the DI container's inability to resolve parameterized generic types
-        in constructor parameters.
+        Registers parameterized singleton services that the DI container can resolve
+        with concrete type arguments (requires neuroglia v0.4.3+ with type variable substitution).
+
+        Args:
+            builder: The application builder to configure
+            entity_type: The concrete entity type (e.g., User)
+            key_type: The concrete key type (e.g., str)
+            connection_string_name: Name of the Redis connection string in settings
+
+        Returns:
+            The configured application builder
         """
         try:
             if not REDIS_AVAILABLE:
@@ -394,9 +402,9 @@ class AsyncCacheRepository(Generic[TEntity, TKey], Repository[TEntity, TKey]):
                 decode_responses=False,  # We'll handle decoding manually
             )
 
-            # FIXED: Register non-parameterized singletons (shared across all entity types)
-            # This works around DI container's inability to resolve parameterized constructor parameters
-            options = CacheRepositoryOptions(
+            # Register PARAMETERIZED singletons (v0.4.3+ with type variable substitution)
+            # The DI container will substitute TEntity/TKey with entity_type/key_type
+            options_instance = CacheRepositoryOptions[entity_type, key_type](
                 host=redis_host,
                 port=redis_port,
                 database_name=database_name,
@@ -404,11 +412,12 @@ class AsyncCacheRepository(Generic[TEntity, TKey], Repository[TEntity, TKey]):
                 max_connections=max_connections,
             )
 
-            cache_pool = CacheClientPool(pool=pool)
+            cache_pool_instance = CacheClientPool[entity_type, key_type](pool=pool)
 
-            # Use try_add_singleton so multiple configure() calls share the same instances
-            builder.services.try_add_singleton(CacheRepositoryOptions, singleton=options)
-            builder.services.try_add_singleton(CacheClientPool, singleton=cache_pool)
+            # Register parameterized singleton services
+            # DI will resolve CacheRepositoryOptions[User, str] as the specific type
+            builder.services.add_singleton(CacheRepositoryOptions[entity_type, key_type], singleton=options_instance)
+            builder.services.add_singleton(CacheClientPool[entity_type, key_type], singleton=cache_pool_instance)
 
             # Register the parameterized repository types
             builder.services.add_scoped(
@@ -420,7 +429,7 @@ class AsyncCacheRepository(Generic[TEntity, TKey], Repository[TEntity, TKey]):
                 AsyncCacheRepository[entity_type, key_type],
             )
 
-            log.info(f"Redis cache repository configured for {entity_type.__name__} at {redis_host}:{redis_port}")
+            log.info(f"Redis cache repository configured for {entity_type.__name__}[{key_type.__name__}] at {redis_host}:{redis_port}")
             return builder
 
         except Exception as ex:
