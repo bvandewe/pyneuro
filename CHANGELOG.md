@@ -7,6 +7,56 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.6] - 2025-10-19
+
+### Fixed
+
+- **CRITICAL**: Fixed transient service resolution in scoped contexts
+
+  - **Problem**: Transient services (like notification handlers) were built from root provider, preventing them from accessing scoped dependencies
+  - **Solution**: Modified `ServiceScope.get_services()` to build transient services within scope context using `self._build_service(descriptor)`
+  - **Impact**: Enables event-driven architecture where transient handlers can depend on scoped repositories
+  - Resolves issue: "Scoped Services Cannot Be Resolved in Event Handlers"
+
+- **Async Scope Disposal**: Added proper async disposal support for scoped services
+  - Added `ServiceScope.dispose_async()` method for async resource cleanup
+  - Calls `__aexit__()` for async context managers
+  - Falls back to `__exit__()` for sync context managers
+  - Also invokes `dispose()` method if present for explicit cleanup
+  - Ensures proper resource cleanup after event processing, even in error scenarios
+
+### Added
+
+- `ServiceProviderBase.create_async_scope()` - Async context manager for scoped service resolution
+
+  - Creates isolated scope per event/operation (similar to HTTP request scopes)
+  - Automatic resource disposal on scope exit
+  - Essential for event-driven architectures with scoped dependencies
+
+- `Mediator.publish_async()` now creates async scope per notification
+
+  - All notification handlers execute within same isolated scope
+  - Handlers can depend on scoped services (repositories, UnitOfWork, DbContext)
+  - Automatic scope disposal after all handlers complete
+
+- Comprehensive test suite: `test_mediator_scoped_notification_handlers.py`
+  - 10 tests covering scoped service resolution in event handlers
+  - Tests for service isolation, sharing, disposal, and error handling
+  - Validates backward compatibility with non-scoped handlers
+
+### Technical Details
+
+- **Service Lifetime Handling in Scopes**:
+
+  - Singleton services: Retrieved from root provider (cached globally)
+  - Scoped services: Built and cached within scope
+  - Transient services: Built fresh in scope context (can access scoped dependencies)
+
+- **Event-Driven Pattern Support**:
+  - Each `CloudEvent` processed in isolated async scope
+  - Scoped repositories shared across handlers for same event
+  - Automatic cleanup prevents resource leaks
+
 ## [0.4.5] - 2025-10-19
 
 ### Fixed
