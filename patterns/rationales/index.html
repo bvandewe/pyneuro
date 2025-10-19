@@ -1,0 +1,2008 @@
+
+<!DOCTYPE html>
+
+<html class="no-js" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<meta content="A lightweight, opinionated Python framework built on FastAPI that enforces clean architecture principles" name="description"/>
+<link href="https://bvandewe.github.io/pyneuro/patterns/rationales/" rel="canonical"/>
+<link href="../../assets/images/favicon.png" rel="icon"/>
+<meta content="mkdocs-1.6.1, mkdocs-material-9.6.22" name="generator"/>
+<title>🎯 How to Choose the Right Data Modeling Patterns - Neuroglia Python Framework</title>
+<link href="../../assets/stylesheets/main.84d31ad4.min.css" rel="stylesheet"/>
+<link href="../../assets/stylesheets/palette.06af60db.min.css" rel="stylesheet"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback" rel="stylesheet"/>
+<style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+<script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+</head>
+<body data-md-color-accent="blue" data-md-color-primary="blue" data-md-color-scheme="default" dir="ltr">
+<input autocomplete="off" class="md-toggle" data-md-toggle="drawer" id="__drawer" type="checkbox"/>
+<input autocomplete="off" class="md-toggle" data-md-toggle="search" id="__search" type="checkbox"/>
+<label class="md-overlay" for="__drawer"></label>
+<div data-md-component="skip">
+<a class="md-skip" href="#how-to-choose-the-right-data-modeling-patterns">
+          Skip to content
+        </a>
+</div>
+<div data-md-component="announce">
+</div>
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+<nav aria-label="Header" class="md-header__inner md-grid">
+<a aria-label="Neuroglia Python Framework" class="md-header__button md-logo" data-md-component="logo" href="../.." title="Neuroglia Python Framework">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+</a>
+<label class="md-header__button md-icon" for="__drawer">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+</label>
+<div class="md-header__title" data-md-component="header-title">
+<div class="md-header__ellipsis">
+<div class="md-header__topic">
+<span class="md-ellipsis">
+            Neuroglia Python Framework
+          </span>
+</div>
+<div class="md-header__topic" data-md-component="header-topic">
+<span class="md-ellipsis">
+            
+              🎯 How to Choose the Right Data Modeling Patterns
+            
+          </span>
+</div>
+</div>
+</div>
+<form class="md-header__option" data-md-component="palette">
+<input aria-label="Switch to dark mode" class="md-option" data-md-color-accent="blue" data-md-color-media="" data-md-color-primary="blue" data-md-color-scheme="default" id="__palette_0" name="__palette" type="radio"/>
+<label class="md-header__button md-icon" for="__palette_1" hidden="" title="Switch to dark mode">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+</label>
+<input aria-label="Switch to light mode" class="md-option" data-md-color-accent="blue" data-md-color-media="" data-md-color-primary="blue" data-md-color-scheme="slate" id="__palette_1" name="__palette" type="radio"/>
+<label class="md-header__button md-icon" for="__palette_0" hidden="" title="Switch to light mode">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+</label>
+</form>
+<script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+<label class="md-header__button md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+</label>
+<div class="md-search" data-md-component="search" role="dialog">
+<label class="md-search__overlay" for="__search"></label>
+<div class="md-search__inner" role="search">
+<form class="md-search__form" name="search">
+<input aria-label="Search" autocapitalize="off" autocomplete="off" autocorrect="off" class="md-search__input" data-md-component="search-query" name="query" placeholder="Search" required="" spellcheck="false" type="text"/>
+<label class="md-search__icon md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+</label>
+<nav aria-label="Search" class="md-search__options">
+<a aria-label="Share" class="md-search__icon md-icon" data-clipboard="" data-clipboard-text="" data-md-component="search-share" href="javascript:void(0)" tabindex="-1" title="Share">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"></path></svg>
+</a>
+<button aria-label="Clear" class="md-search__icon md-icon" tabindex="-1" title="Clear" type="reset">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+</button>
+</nav>
+</form>
+<div class="md-search__output">
+<div class="md-search__scrollwrap" data-md-scrollfix="" tabindex="0">
+<div class="md-search-result" data-md-component="search-result">
+<div class="md-search-result__meta">
+            Initializing search
+          </div>
+<ol class="md-search-result__list" role="presentation"></ol>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="md-header__source">
+<a class="md-source" data-md-component="source" href="https://github.com/bvandewe/pyneuro" title="Go to repository">
+<div class="md-source__icon md-icon">
+<svg viewbox="0 0 448 512" xmlns="http://www.w3.org/2000/svg"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"></path></svg>
+</div>
+<div class="md-source__repository">
+    bvandewe/pyneuro
+  </div>
+</a>
+</div>
+</nav>
+<nav aria-label="Tabs" class="md-tabs" data-md-component="tabs">
+<div class="md-grid">
+<ul class="md-tabs__list">
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../..">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../getting-started/">
+          
+  
+  
+  Getting Started
+
+        </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../mario-pizzeria/">
+          
+  
+  
+  Mario's Pizzeria
+
+        </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../">
+          
+  
+  
+  Patterns
+
+        </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../features/">
+          
+  
+  
+  Features
+
+        </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../guides/">
+          
+  
+  
+  Guides
+
+        </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../samples/">
+          
+  
+  
+  Samples
+
+        </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../references/persistence-documentation-guide/">
+          
+  
+  
+  References
+
+        </a>
+</li>
+</ul>
+</div>
+</nav>
+</header>
+<div class="md-container" data-md-component="container">
+<main class="md-main" data-md-component="main">
+<div class="md-main__inner md-grid">
+<div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="Navigation" class="md-nav md-nav--primary md-nav--lifted" data-md-level="0">
+<label class="md-nav__title" for="__drawer">
+<a aria-label="Neuroglia Python Framework" class="md-nav__button md-logo" data-md-component="logo" href="../.." title="Neuroglia Python Framework">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+</a>
+    Neuroglia Python Framework
+  </label>
+<div class="md-nav__source">
+<a class="md-source" data-md-component="source" href="https://github.com/bvandewe/pyneuro" title="Go to repository">
+<div class="md-source__icon md-icon">
+<svg viewbox="0 0 448 512" xmlns="http://www.w3.org/2000/svg"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"></path></svg>
+</div>
+<div class="md-source__repository">
+    bvandewe/pyneuro
+  </div>
+</a>
+</div>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../..">
+<span class="md-ellipsis">
+    Home
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_2" type="checkbox"/>
+<label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+<span class="md-ellipsis">
+    Getting Started
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_2_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_2">
+<span class="md-nav__icon md-icon"></span>
+            Getting Started
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../getting-started/">
+<span class="md-ellipsis">
+    Overview
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../guides/3-min-bootstrap/">
+<span class="md-ellipsis">
+    3-Minute Bootstrap
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../guides/local-development/">
+<span class="md-ellipsis">
+    Local Development Setup
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../guides/mario-pizzeria-tutorial/">
+<span class="md-ellipsis">
+    Mario's Pizzeria Tutorial
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_3" type="checkbox"/>
+<label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+<span class="md-ellipsis">
+    Mario's Pizzeria
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_3_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_3">
+<span class="md-nav__icon md-icon"></span>
+            Mario's Pizzeria
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../mario-pizzeria/">
+<span class="md-ellipsis">
+    Case Study Overview
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../mario-pizzeria/business-analysis/">
+<span class="md-ellipsis">
+    Business Analysis
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../mario-pizzeria/technical-architecture/">
+<span class="md-ellipsis">
+    Technical Architecture
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../mario-pizzeria/domain-design/">
+<span class="md-ellipsis">
+    Domain Design
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../mario-pizzeria/implementation-guide/">
+<span class="md-ellipsis">
+    Implementation Guide
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../mario-pizzeria/testing-deployment/">
+<span class="md-ellipsis">
+    Testing &amp; Deployment
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_4" type="checkbox"/>
+<label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+<span class="md-ellipsis">
+    Patterns
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_4_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_4">
+<span class="md-nav__icon md-icon"></span>
+            Patterns
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../">
+<span class="md-ellipsis">
+    🎯 Architecture Patterns
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../clean-architecture/">
+<span class="md-ellipsis">
+    Clean Architecture
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../domain-driven-design/">
+<span class="md-ellipsis">
+    Domain-Driven Design
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../event-driven/">
+<span class="md-ellipsis">
+    Event-Driven Architecture
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../resource-oriented-architecture/">
+<span class="md-ellipsis">
+    Resource-Oriented Architecture
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../cqrs/">
+<span class="md-ellipsis">
+    CQRS
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../persistence-patterns/">
+<span class="md-ellipsis">
+    Persistence Patterns
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../event-sourcing/">
+<span class="md-ellipsis">
+    Event Sourcing
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../repository/">
+<span class="md-ellipsis">
+    Repository Pattern
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../unit-of-work/">
+<span class="md-ellipsis">
+    Unit of Work
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../pipeline-behaviors/">
+<span class="md-ellipsis">
+    Pipeline Behaviors
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../dependency-injection/">
+<span class="md-ellipsis">
+    Dependency Injection
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../reactive-programming/">
+<span class="md-ellipsis">
+    Reactive Programming
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../watcher-reconciliation-patterns/">
+<span class="md-ellipsis">
+    Watcher-Reconciliation Patterns
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../watcher-reconciliation-execution/">
+<span class="md-ellipsis">
+    Watcher-Reconciliation Execution
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_5" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+<span class="md-ellipsis">
+    Features
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_5_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_5">
+<span class="md-nav__icon md-icon"></span>
+            Features
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/">
+<span class="md-ellipsis">
+    🚀 Framework Features
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/simple-cqrs/">
+<span class="md-ellipsis">
+    Simple CQRS
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/mvc-controllers/">
+<span class="md-ellipsis">
+    MVC Controllers
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/data-access/">
+<span class="md-ellipsis">
+    Data Access
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/object-mapping/">
+<span class="md-ellipsis">
+    Object Mapping
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/serialization/">
+<span class="md-ellipsis">
+    Serialization
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/enhanced-model-validation/">
+<span class="md-ellipsis">
+    Enhanced Model Validation
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/case-conversion-utilities/">
+<span class="md-ellipsis">
+    Case Conversion Utilities
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/http-service-client/">
+<span class="md-ellipsis">
+    HTTP Service Client
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/redis-cache-repository/">
+<span class="md-ellipsis">
+    Redis Cache Repository
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/background-task-scheduling/">
+<span class="md-ellipsis">
+    Background Task Scheduling
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/resilient-handler-discovery/">
+<span class="md-ellipsis">
+    Resilient Handler Discovery
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/configurable-type-discovery/">
+<span class="md-ellipsis">
+    Configurable Type Discovery
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/mermaid-diagrams/">
+<span class="md-ellipsis">
+    Mermaid Diagrams
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_6" type="checkbox"/>
+<label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+<span class="md-ellipsis">
+    Guides
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_6_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_6">
+<span class="md-nav__icon md-icon"></span>
+            Guides
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../guides/">
+<span class="md-ellipsis">
+    Overview
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../guides/project-setup/">
+<span class="md-ellipsis">
+    Project Setup
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../guides/testing-setup/">
+<span class="md-ellipsis">
+    Testing Setup
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../guides/jsonserializer-configuration/">
+<span class="md-ellipsis">
+    JsonSerializer Configuration
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_7" type="checkbox"/>
+<label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+<span class="md-ellipsis">
+    Samples
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_7_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_7">
+<span class="md-nav__icon md-icon"></span>
+            Samples
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../samples/">
+<span class="md-ellipsis">
+    Overview
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../samples/openbank/">
+<span class="md-ellipsis">
+    OpenBank
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../samples/api_gateway/">
+<span class="md-ellipsis">
+    API Gateway
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../samples/desktop_controller/">
+<span class="md-ellipsis">
+    Desktop Controller
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_8" type="checkbox"/>
+<label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+<span class="md-ellipsis">
+    References
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_8_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_8">
+<span class="md-nav__icon md-icon"></span>
+            References
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../references/persistence-documentation-guide/">
+<span class="md-ellipsis">
+    Persistence Documentation Guide
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../references/oauth-oidc-jwt/">
+<span class="md-ellipsis">
+    OAuth, OIDC &amp; JWT
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../references/source_code_naming_convention/">
+<span class="md-ellipsis">
+    Source Code Naming Conventions
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../references/12-factor-app/">
+<span class="md-ellipsis">
+    12-Factor App
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../references/python_typing_guide/">
+<span class="md-ellipsis">
+    Python Typing Guide
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../references/python_modular_code/">
+<span class="md-ellipsis">
+    Python Modular Code
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../references/python_object_oriented/">
+<span class="md-ellipsis">
+    Python Object-Oriented Programming
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../references/test-mermaid/">
+<span class="md-ellipsis">
+    Mermaid References
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../ai-agent-guide/">
+<span class="md-ellipsis">
+    AI Agent Instructions
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#the-evolution-path">
+<span class="md-ellipsis">
+      🎯 The Evolution Path
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#pattern-progression-from-simple-to-complex">
+<span class="md-ellipsis">
+      🏗️ Pattern Progression: From Simple to Complex
+    </span>
+</a>
+<nav aria-label="🏗️ Pattern Progression: From Simple to Complex" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#stage-1-simple-entities-with-direct-repository-access">
+<span class="md-ellipsis">
+      📝 Stage 1: Simple Entities with Direct Repository Access
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#stage-2-ddd-aggregates-with-unitofwork-pattern">
+<span class="md-ellipsis">
+      🏛️ Stage 2: DDD Aggregates with UnitOfWork Pattern
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#stage-3-event-sourcing-with-read-model-separation">
+<span class="md-ellipsis">
+      📚 Stage 3: Event Sourcing with Read Model Separation
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#stage-4-declarative-resources-with-autonomous-reconciliation">
+<span class="md-ellipsis">
+      🌐 Stage 4: Declarative Resources with Autonomous Reconciliation
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#multi-stage-system-example">
+<span class="md-ellipsis">
+      💡 Multi-Stage System Example
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#decision-framework-when-to-use-each-pattern">
+<span class="md-ellipsis">
+      🎯 Decision Framework: When to Use Each Pattern
+    </span>
+</a>
+<nav aria-label="🎯 Decision Framework: When to Use Each Pattern" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#pattern-selection-matrix">
+<span class="md-ellipsis">
+      📊 Pattern Selection Matrix
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#decision-tree">
+<span class="md-ellipsis">
+      🚦 Decision Tree
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#progression-guidelines">
+<span class="md-ellipsis">
+      🎯 Progression Guidelines
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#testing-strategy-by-pattern">
+<span class="md-ellipsis">
+      🧪 Testing Strategy by Pattern
+    </span>
+</a>
+<nav aria-label="🧪 Testing Strategy by Pattern" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#simple-entities-testing">
+<span class="md-ellipsis">
+      🧪 Simple Entities Testing
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#ddd-unitofwork-testing">
+<span class="md-ellipsis">
+      🧪 DDD + UnitOfWork Testing
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#event-sourcing-testing">
+<span class="md-ellipsis">
+      🧪 Event Sourcing Testing
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#declarative-resources-testing">
+<span class="md-ellipsis">
+      🧪 Declarative Resources Testing
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#common-anti-patterns-and-solutions">
+<span class="md-ellipsis">
+      🎯 Common Anti-Patterns and Solutions
+    </span>
+</a>
+<nav aria-label="🎯 Common Anti-Patterns and Solutions" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#anti-pattern-1-wrong-pattern-for-complexity-level">
+<span class="md-ellipsis">
+      ❌ Anti-Pattern 1: Wrong Pattern for Complexity Level
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#anti-pattern-2-missing-transactional-boundaries">
+<span class="md-ellipsis">
+      ❌ Anti-Pattern 2: Missing Transactional Boundaries
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#anti-pattern-3-event-sourcing-without-read-models">
+<span class="md-ellipsis">
+      ❌ Anti-Pattern 3: Event Sourcing Without Read Models
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#best-practices-summary">
+<span class="md-ellipsis">
+      🏆 Best Practices Summary
+    </span>
+</a>
+<nav aria-label="🏆 Best Practices Summary" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#pattern-selection-checklist">
+<span class="md-ellipsis">
+      📋 Pattern Selection Checklist
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#testing-implications">
+<span class="md-ellipsis">
+      🧪 Testing Implications
+    </span>
+</a>
+<nav aria-label="🧪 Testing Implications" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#testing-both-patterns-together">
+<span class="md-ellipsis">
+      Testing Both Patterns Together
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#decision-framework">
+<span class="md-ellipsis">
+      🎯 Decision Framework
+    </span>
+</a>
+<nav aria-label="🎯 Decision Framework" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#choose-your-pattern-combination">
+<span class="md-ellipsis">
+      Choose Your Pattern Combination
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#pattern-selection-criteria">
+<span class="md-ellipsis">
+      Pattern Selection Criteria
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#migration-strategies">
+<span class="md-ellipsis">
+      🚀 Migration Strategies
+    </span>
+</a>
+<nav aria-label="🚀 Migration Strategies" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#from-simple-to-complex">
+<span class="md-ellipsis">
+      From Simple to Complex
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#framework-support-matrix">
+<span class="md-ellipsis">
+      📚 Framework Support Matrix
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#conclusion-the-progressive-data-modeling-approach">
+<span class="md-ellipsis">
+      🎯 Conclusion: The Progressive Data Modeling Approach
+    </span>
+</a>
+<nav aria-label="🎯 Conclusion: The Progressive Data Modeling Approach" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#the-evolution-principle">
+<span class="md-ellipsis">
+      🔄 The Evolution Principle
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#pattern-synergy">
+<span class="md-ellipsis">
+      🎯 Pattern Synergy
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#practical-recommendations">
+<span class="md-ellipsis">
+      🚀 Practical Recommendations
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#key-success-factors">
+<span class="md-ellipsis">
+      💡 Key Success Factors
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#related-documentation">
+<span class="md-ellipsis">
+      🔗 Related Documentation
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div class="md-content" data-md-component="content">
+<article class="md-content__inner md-typeset">
+<h1 id="how-to-choose-the-right-data-modeling-patterns">🎯 How to Choose the Right Data Modeling Patterns<a class="headerlink" href="#how-to-choose-the-right-data-modeling-patterns" title="Permanent link">¶</a></h1>
+<p>This document provides a comprehensive guide for choosing and progressing through different data modeling patterns in the Neuroglia framework, from simple entities to complex event-sourced aggregates with declarative resource management. It shows the natural evolution path and when to adopt each pattern based on system complexity and requirements.</p>
+<h2 id="the-evolution-path">🎯 The Evolution Path<a class="headerlink" href="#the-evolution-path" title="Permanent link">¶</a></h2>
+<p>Data modeling in complex systems naturally evolves through distinct stages, each adding capabilities to handle increasing complexity. The Neuroglia framework supports this progression seamlessly:</p>
+<p><strong>🔄 Evolution Stages:</strong></p>
+<ol>
+<li><strong>Simple Entities</strong> → Basic CRUD operations with direct repository access</li>
+<li><strong>DDD Aggregates + UnitOfWork</strong> → Rich domain models with transactional consistency and side effects</li>
+<li><strong>Event Sourcing</strong> → Complete audit trail with write/read model separation</li>
+<li><strong>Declarative Resources</strong> → Autonomous infrastructure management and reconciliation</li>
+</ol>
+<p><strong>🎯 Key Insight</strong>: Each stage builds upon the previous one, and you can adopt them incrementally as your system's complexity grows. Most systems benefit from combining multiple patterns for different aspects of the domain.</p>
+<h2 id="pattern-progression-from-simple-to-complex">🏗️ Pattern Progression: From Simple to Complex<a class="headerlink" href="#pattern-progression-from-simple-to-complex" title="Permanent link">¶</a></h2>
+<h3 id="stage-1-simple-entities-with-direct-repository-access">📝 Stage 1: Simple Entities with Direct Repository Access<a class="headerlink" href="#stage-1-simple-entities-with-direct-repository-access" title="Permanent link">¶</a></h3>
+<p><strong>When to use</strong>: Simple CRUD applications, minimal business logic, straightforward data operations.</p>
+<p><strong>Implementation Pattern:</strong></p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a href="#__codelineno-0-1" id="__codelineno-0-1" name="__codelineno-0-1"></a><span class="c1"># Simple entity - just data structure</span>
+</span><span id="__span-0-2"><a href="#__codelineno-0-2" id="__codelineno-0-2" name="__codelineno-0-2"></a><span class="k">class</span><span class="w"> </span><span class="nc">Order</span><span class="p">(</span><span class="n">Entity</span><span class="p">):</span>
+</span><span id="__span-0-3"><a href="#__codelineno-0-3" id="__codelineno-0-3" name="__codelineno-0-3"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">customer_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">items</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">OrderItem</span><span class="p">]):</span>
+</span><span id="__span-0-4"><a href="#__codelineno-0-4" id="__codelineno-0-4" name="__codelineno-0-4"></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+</span><span id="__span-0-5"><a href="#__codelineno-0-5" id="__codelineno-0-5" name="__codelineno-0-5"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">customer_id</span> <span class="o">=</span> <span class="n">customer_id</span>
+</span><span id="__span-0-6"><a href="#__codelineno-0-6" id="__codelineno-0-6" name="__codelineno-0-6"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">items</span> <span class="o">=</span> <span class="n">items</span>
+</span><span id="__span-0-7"><a href="#__codelineno-0-7" id="__codelineno-0-7" name="__codelineno-0-7"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">OrderStatus</span><span class="o">.</span><span class="n">PENDING</span>
+</span><span id="__span-0-8"><a href="#__codelineno-0-8" id="__codelineno-0-8" name="__codelineno-0-8"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">total</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">price</span> <span class="o">*</span> <span class="n">item</span><span class="o">.</span><span class="n">quantity</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">items</span><span class="p">)</span>
+</span><span id="__span-0-9"><a href="#__codelineno-0-9" id="__codelineno-0-9" name="__codelineno-0-9"></a>
+</span><span id="__span-0-10"><a href="#__codelineno-0-10" id="__codelineno-0-10" name="__codelineno-0-10"></a><span class="c1"># Generic repository for basic persistence</span>
+</span><span id="__span-0-11"><a href="#__codelineno-0-11" id="__codelineno-0-11" name="__codelineno-0-11"></a><span class="k">class</span><span class="w"> </span><span class="nc">OrderRepository</span><span class="p">(</span><span class="n">Repository</span><span class="p">[</span><span class="n">Order</span><span class="p">,</span> <span class="nb">str</span><span class="p">]):</span>
+</span><span id="__span-0-12"><a href="#__codelineno-0-12" id="__codelineno-0-12" name="__codelineno-0-12"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">order</span><span class="p">:</span> <span class="n">Order</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-0-13"><a href="#__codelineno-0-13" id="__codelineno-0-13" name="__codelineno-0-13"></a>        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">collection</span><span class="o">.</span><span class="n">replace_one</span><span class="p">({</span><span class="s2">"_id"</span><span class="p">:</span> <span class="n">order</span><span class="o">.</span><span class="n">id</span><span class="p">},</span> <span class="n">order</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(),</span> <span class="n">upsert</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="__span-0-14"><a href="#__codelineno-0-14" id="__codelineno-0-14" name="__codelineno-0-14"></a>
+</span><span id="__span-0-15"><a href="#__codelineno-0-15" id="__codelineno-0-15" name="__codelineno-0-15"></a><span class="c1"># Direct command handler - no transactions, no events</span>
+</span><span id="__span-0-16"><a href="#__codelineno-0-16" id="__codelineno-0-16" name="__codelineno-0-16"></a><span class="k">class</span><span class="w"> </span><span class="nc">CreateOrderHandler</span><span class="p">(</span><span class="n">CommandHandler</span><span class="p">[</span><span class="n">CreateOrderCommand</span><span class="p">,</span> <span class="n">OperationResult</span><span class="p">[</span><span class="n">OrderDto</span><span class="p">]]):</span>
+</span><span id="__span-0-17"><a href="#__codelineno-0-17" id="__codelineno-0-17" name="__codelineno-0-17"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">order_repository</span><span class="p">:</span> <span class="n">OrderRepository</span><span class="p">,</span> <span class="n">mapper</span><span class="p">:</span> <span class="n">Mapper</span><span class="p">):</span>
+</span><span id="__span-0-18"><a href="#__codelineno-0-18" id="__codelineno-0-18" name="__codelineno-0-18"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">order_repository</span> <span class="o">=</span> <span class="n">order_repository</span>
+</span><span id="__span-0-19"><a href="#__codelineno-0-19" id="__codelineno-0-19" name="__codelineno-0-19"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">mapper</span> <span class="o">=</span> <span class="n">mapper</span>
+</span><span id="__span-0-20"><a href="#__codelineno-0-20" id="__codelineno-0-20" name="__codelineno-0-20"></a>
+</span><span id="__span-0-21"><a href="#__codelineno-0-21" id="__codelineno-0-21" name="__codelineno-0-21"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">handle_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command</span><span class="p">:</span> <span class="n">CreateOrderCommand</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">OperationResult</span><span class="p">[</span><span class="n">OrderDto</span><span class="p">]:</span>
+</span><span id="__span-0-22"><a href="#__codelineno-0-22" id="__codelineno-0-22" name="__codelineno-0-22"></a>        <span class="c1"># Simple: create entity and save directly</span>
+</span><span id="__span-0-23"><a href="#__codelineno-0-23" id="__codelineno-0-23" name="__codelineno-0-23"></a>        <span class="n">order</span> <span class="o">=</span> <span class="n">Order</span><span class="p">(</span><span class="n">command</span><span class="o">.</span><span class="n">customer_id</span><span class="p">,</span> <span class="n">command</span><span class="o">.</span><span class="n">items</span><span class="p">)</span>
+</span><span id="__span-0-24"><a href="#__codelineno-0-24" id="__codelineno-0-24" name="__codelineno-0-24"></a>        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">order_repository</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">order</span><span class="p">)</span>
+</span><span id="__span-0-25"><a href="#__codelineno-0-25" id="__codelineno-0-25" name="__codelineno-0-25"></a>
+</span><span id="__span-0-26"><a href="#__codelineno-0-26" id="__codelineno-0-26" name="__codelineno-0-26"></a>        <span class="n">order_dto</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mapper</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">order</span><span class="p">,</span> <span class="n">OrderDto</span><span class="p">)</span>
+</span><span id="__span-0-27"><a href="#__codelineno-0-27" id="__codelineno-0-27" name="__codelineno-0-27"></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">created</span><span class="p">(</span><span class="n">order_dto</span><span class="p">)</span>
+</span></code></pre></div>
+<p><strong>Characteristics:</strong></p>
+<ul>
+<li>✅ <strong>Simplicity</strong>: Minimal complexity, easy to understand</li>
+<li>✅ <strong>Performance</strong>: Direct database operations, no overhead</li>
+<li>❌ <strong>No Transactions</strong>: Each operation is isolated</li>
+<li>❌ <strong>No Events</strong>: No side effects or integration capabilities</li>
+<li>❌ <strong>Limited Business Logic</strong>: Basic validation only</li>
+</ul>
+<h3 id="stage-2-ddd-aggregates-with-unitofwork-pattern">🏛️ Stage 2: DDD Aggregates with UnitOfWork Pattern<a class="headerlink" href="#stage-2-ddd-aggregates-with-unitofwork-pattern" title="Permanent link">¶</a></h3>
+<p><strong>When to use</strong>: Complex business rules, need for transactional consistency, side effects coordination.</p>
+<p><strong>Implementation Pattern:</strong></p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a href="#__codelineno-1-1" id="__codelineno-1-1" name="__codelineno-1-1"></a><span class="c1"># Rich aggregate root with business logic and domain events</span>
+</span><span id="__span-1-2"><a href="#__codelineno-1-2" id="__codelineno-1-2" name="__codelineno-1-2"></a><span class="k">class</span><span class="w"> </span><span class="nc">Order</span><span class="p">(</span><span class="n">AggregateRoot</span><span class="p">):</span>
+</span><span id="__span-1-3"><a href="#__codelineno-1-3" id="__codelineno-1-3" name="__codelineno-1-3"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">customer_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">items</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">OrderItem</span><span class="p">]):</span>
+</span><span id="__span-1-4"><a href="#__codelineno-1-4" id="__codelineno-1-4" name="__codelineno-1-4"></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+</span><span id="__span-1-5"><a href="#__codelineno-1-5" id="__codelineno-1-5" name="__codelineno-1-5"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">customer_id</span> <span class="o">=</span> <span class="n">customer_id</span>
+</span><span id="__span-1-6"><a href="#__codelineno-1-6" id="__codelineno-1-6" name="__codelineno-1-6"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">items</span> <span class="o">=</span> <span class="n">items</span>
+</span><span id="__span-1-7"><a href="#__codelineno-1-7" id="__codelineno-1-7" name="__codelineno-1-7"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">OrderStatus</span><span class="o">.</span><span class="n">PENDING</span>
+</span><span id="__span-1-8"><a href="#__codelineno-1-8" id="__codelineno-1-8" name="__codelineno-1-8"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">total</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_calculate_total</span><span class="p">()</span>
+</span><span id="__span-1-9"><a href="#__codelineno-1-9" id="__codelineno-1-9" name="__codelineno-1-9"></a>
+</span><span id="__span-1-10"><a href="#__codelineno-1-10" id="__codelineno-1-10" name="__codelineno-1-10"></a>        <span class="c1"># Domain event for side effects</span>
+</span><span id="__span-1-11"><a href="#__codelineno-1-11" id="__codelineno-1-11" name="__codelineno-1-11"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">raise_event</span><span class="p">(</span><span class="n">OrderCreatedEvent</span><span class="p">(</span>
+</span><span id="__span-1-12"><a href="#__codelineno-1-12" id="__codelineno-1-12" name="__codelineno-1-12"></a>            <span class="n">order_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+</span><span id="__span-1-13"><a href="#__codelineno-1-13" id="__codelineno-1-13" name="__codelineno-1-13"></a>            <span class="n">customer_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">customer_id</span><span class="p">,</span>
+</span><span id="__span-1-14"><a href="#__codelineno-1-14" id="__codelineno-1-14" name="__codelineno-1-14"></a>            <span class="n">total_amount</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">total</span>
+</span><span id="__span-1-15"><a href="#__codelineno-1-15" id="__codelineno-1-15" name="__codelineno-1-15"></a>        <span class="p">))</span>
+</span><span id="__span-1-16"><a href="#__codelineno-1-16" id="__codelineno-1-16" name="__codelineno-1-16"></a>
+</span><span id="__span-1-17"><a href="#__codelineno-1-17" id="__codelineno-1-17" name="__codelineno-1-17"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">confirm_payment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">payment_method</span><span class="p">:</span> <span class="n">PaymentMethod</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-1-18"><a href="#__codelineno-1-18" id="__codelineno-1-18" name="__codelineno-1-18"></a>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">status</span> <span class="o">!=</span> <span class="n">OrderStatus</span><span class="o">.</span><span class="n">PENDING</span><span class="p">:</span>
+</span><span id="__span-1-19"><a href="#__codelineno-1-19" id="__codelineno-1-19" name="__codelineno-1-19"></a>            <span class="k">raise</span> <span class="n">BusinessRuleViolationError</span><span class="p">(</span><span class="s2">"Can only confirm pending orders"</span><span class="p">)</span>
+</span><span id="__span-1-20"><a href="#__codelineno-1-20" id="__codelineno-1-20" name="__codelineno-1-20"></a>
+</span><span id="__span-1-21"><a href="#__codelineno-1-21" id="__codelineno-1-21" name="__codelineno-1-21"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">OrderStatus</span><span class="o">.</span><span class="n">CONFIRMED</span>
+</span><span id="__span-1-22"><a href="#__codelineno-1-22" id="__codelineno-1-22" name="__codelineno-1-22"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">payment_method</span> <span class="o">=</span> <span class="n">payment_method</span>
+</span><span id="__span-1-23"><a href="#__codelineno-1-23" id="__codelineno-1-23" name="__codelineno-1-23"></a>
+</span><span id="__span-1-24"><a href="#__codelineno-1-24" id="__codelineno-1-24" name="__codelineno-1-24"></a>        <span class="c1"># Business event triggers kitchen workflow</span>
+</span><span id="__span-1-25"><a href="#__codelineno-1-25" id="__codelineno-1-25" name="__codelineno-1-25"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">raise_event</span><span class="p">(</span><span class="n">OrderPaymentConfirmedEvent</span><span class="p">(</span>
+</span><span id="__span-1-26"><a href="#__codelineno-1-26" id="__codelineno-1-26" name="__codelineno-1-26"></a>            <span class="n">order_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+</span><span id="__span-1-27"><a href="#__codelineno-1-27" id="__codelineno-1-27" name="__codelineno-1-27"></a>            <span class="n">total_amount</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">total</span>
+</span><span id="__span-1-28"><a href="#__codelineno-1-28" id="__codelineno-1-28" name="__codelineno-1-28"></a>        <span class="p">))</span>
+</span><span id="__span-1-29"><a href="#__codelineno-1-29" id="__codelineno-1-29" name="__codelineno-1-29"></a>
+</span><span id="__span-1-30"><a href="#__codelineno-1-30" id="__codelineno-1-30" name="__codelineno-1-30"></a><span class="c1"># Command handler with UnitOfWork for transactional consistency</span>
+</span><span id="__span-1-31"><a href="#__codelineno-1-31" id="__codelineno-1-31" name="__codelineno-1-31"></a><span class="k">class</span><span class="w"> </span><span class="nc">ConfirmPaymentHandler</span><span class="p">(</span><span class="n">CommandHandler</span><span class="p">[</span><span class="n">ConfirmPaymentCommand</span><span class="p">,</span> <span class="n">OperationResult</span><span class="p">]):</span>
+</span><span id="__span-1-32"><a href="#__codelineno-1-32" id="__codelineno-1-32" name="__codelineno-1-32"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">order_repository</span><span class="p">:</span> <span class="n">OrderRepository</span><span class="p">,</span> <span class="n">unit_of_work</span><span class="p">:</span> <span class="n">IUnitOfWork</span><span class="p">):</span>
+</span><span id="__span-1-33"><a href="#__codelineno-1-33" id="__codelineno-1-33" name="__codelineno-1-33"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">order_repository</span> <span class="o">=</span> <span class="n">order_repository</span>
+</span><span id="__span-1-34"><a href="#__codelineno-1-34" id="__codelineno-1-34" name="__codelineno-1-34"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">unit_of_work</span> <span class="o">=</span> <span class="n">unit_of_work</span>
+</span><span id="__span-1-35"><a href="#__codelineno-1-35" id="__codelineno-1-35" name="__codelineno-1-35"></a>
+</span><span id="__span-1-36"><a href="#__codelineno-1-36" id="__codelineno-1-36" name="__codelineno-1-36"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">handle_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command</span><span class="p">:</span> <span class="n">ConfirmPaymentCommand</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">OperationResult</span><span class="p">:</span>
+</span><span id="__span-1-37"><a href="#__codelineno-1-37" id="__codelineno-1-37" name="__codelineno-1-37"></a>        <span class="c1"># Load aggregate</span>
+</span><span id="__span-1-38"><a href="#__codelineno-1-38" id="__codelineno-1-38" name="__codelineno-1-38"></a>        <span class="n">order</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">order_repository</span><span class="o">.</span><span class="n">get_by_id_async</span><span class="p">(</span><span class="n">command</span><span class="o">.</span><span class="n">order_id</span><span class="p">)</span>
+</span><span id="__span-1-39"><a href="#__codelineno-1-39" id="__codelineno-1-39" name="__codelineno-1-39"></a>
+</span><span id="__span-1-40"><a href="#__codelineno-1-40" id="__codelineno-1-40" name="__codelineno-1-40"></a>        <span class="c1"># Execute business logic (generates domain events)</span>
+</span><span id="__span-1-41"><a href="#__codelineno-1-41" id="__codelineno-1-41" name="__codelineno-1-41"></a>        <span class="n">order</span><span class="o">.</span><span class="n">confirm_payment</span><span class="p">(</span><span class="n">command</span><span class="o">.</span><span class="n">payment_method</span><span class="p">)</span>
+</span><span id="__span-1-42"><a href="#__codelineno-1-42" id="__codelineno-1-42" name="__codelineno-1-42"></a>
+</span><span id="__span-1-43"><a href="#__codelineno-1-43" id="__codelineno-1-43" name="__codelineno-1-43"></a>        <span class="c1"># Save state changes</span>
+</span><span id="__span-1-44"><a href="#__codelineno-1-44" id="__codelineno-1-44" name="__codelineno-1-44"></a>        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">order_repository</span><span class="o">.</span><span class="n">save_async</span><span class="p">(</span><span class="n">order</span><span class="p">)</span>
+</span><span id="__span-1-45"><a href="#__codelineno-1-45" id="__codelineno-1-45" name="__codelineno-1-45"></a>
+</span><span id="__span-1-46"><a href="#__codelineno-1-46" id="__codelineno-1-46" name="__codelineno-1-46"></a>        <span class="c1"># Register aggregate for event collection and dispatch</span>
+</span><span id="__span-1-47"><a href="#__codelineno-1-47" id="__codelineno-1-47" name="__codelineno-1-47"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">unit_of_work</span><span class="o">.</span><span class="n">register_aggregate</span><span class="p">(</span><span class="n">order</span><span class="p">)</span>
+</span><span id="__span-1-48"><a href="#__codelineno-1-48" id="__codelineno-1-48" name="__codelineno-1-48"></a>
+</span><span id="__span-1-49"><a href="#__codelineno-1-49" id="__codelineno-1-49" name="__codelineno-1-49"></a>        <span class="c1"># Events automatically dispatched after successful persistence</span>
+</span><span id="__span-1-50"><a href="#__codelineno-1-50" id="__codelineno-1-50" name="__codelineno-1-50"></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">success</span><span class="p">()</span>
+</span></code></pre></div>
+<p><strong>Characteristics:</strong></p>
+<ul>
+<li>✅ <strong>Rich Business Logic</strong>: Complex domain rules and validation</li>
+<li>✅ <strong>Transactional Consistency</strong>: UnitOfWork coordinates persistence and events</li>
+<li>✅ <strong>Domain Events</strong>: Side effects triggered after successful persistence</li>
+<li>✅ <strong>State-Based Storage</strong>: Current aggregate state saved to database</li>
+<li>❌ <strong>No Audit Trail</strong>: Historical changes not preserved</li>
+<li>❌ <strong>Tight Coupling</strong>: Write and read models are the same</li>
+</ul>
+<h3 id="stage-3-event-sourcing-with-read-model-separation">📚 Stage 3: Event Sourcing with Read Model Separation<a class="headerlink" href="#stage-3-event-sourcing-with-read-model-separation" title="Permanent link">¶</a></h3>
+<p><strong>When to use</strong>: Audit requirements, temporal queries, complex read models, regulatory compliance.</p>
+<p><strong>Implementation Pattern:</strong></p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a href="#__codelineno-2-1" id="__codelineno-2-1" name="__codelineno-2-1"></a><span class="c1"># Event-sourced aggregate - state derived from events</span>
+</span><span id="__span-2-2"><a href="#__codelineno-2-2" id="__codelineno-2-2" name="__codelineno-2-2"></a><span class="k">class</span><span class="w"> </span><span class="nc">Order</span><span class="p">(</span><span class="n">EventSourcedAggregateRoot</span><span class="p">):</span>
+</span><span id="__span-2-3"><a href="#__codelineno-2-3" id="__codelineno-2-3" name="__codelineno-2-3"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">order_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+</span><span id="__span-2-4"><a href="#__codelineno-2-4" id="__codelineno-2-4" name="__codelineno-2-4"></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">order_id</span><span class="p">)</span>
+</span><span id="__span-2-5"><a href="#__codelineno-2-5" id="__codelineno-2-5" name="__codelineno-2-5"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">customer_id</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="__span-2-6"><a href="#__codelineno-2-6" id="__codelineno-2-6" name="__codelineno-2-6"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">items</span> <span class="o">=</span> <span class="p">[]</span>
+</span><span id="__span-2-7"><a href="#__codelineno-2-7" id="__codelineno-2-7" name="__codelineno-2-7"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">OrderStatus</span><span class="o">.</span><span class="n">PENDING</span>
+</span><span id="__span-2-8"><a href="#__codelineno-2-8" id="__codelineno-2-8" name="__codelineno-2-8"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">total</span> <span class="o">=</span> <span class="n">Decimal</span><span class="p">(</span><span class="s1">'0.00'</span><span class="p">)</span>
+</span><span id="__span-2-9"><a href="#__codelineno-2-9" id="__codelineno-2-9" name="__codelineno-2-9"></a>
+</span><span id="__span-2-10"><a href="#__codelineno-2-10" id="__codelineno-2-10" name="__codelineno-2-10"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">create_order</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">customer_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">items</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">OrderItem</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-2-11"><a href="#__codelineno-2-11" id="__codelineno-2-11" name="__codelineno-2-11"></a>        <span class="c1"># Generate event instead of directly modifying state</span>
+</span><span id="__span-2-12"><a href="#__codelineno-2-12" id="__codelineno-2-12" name="__codelineno-2-12"></a>        <span class="n">event</span> <span class="o">=</span> <span class="n">OrderCreatedEvent</span><span class="p">(</span>
+</span><span id="__span-2-13"><a href="#__codelineno-2-13" id="__codelineno-2-13" name="__codelineno-2-13"></a>            <span class="n">order_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+</span><span id="__span-2-14"><a href="#__codelineno-2-14" id="__codelineno-2-14" name="__codelineno-2-14"></a>            <span class="n">customer_id</span><span class="o">=</span><span class="n">customer_id</span><span class="p">,</span>
+</span><span id="__span-2-15"><a href="#__codelineno-2-15" id="__codelineno-2-15" name="__codelineno-2-15"></a>            <span class="n">items</span><span class="o">=</span><span class="n">items</span><span class="p">,</span>
+</span><span id="__span-2-16"><a href="#__codelineno-2-16" id="__codelineno-2-16" name="__codelineno-2-16"></a>            <span class="n">total_amount</span><span class="o">=</span><span class="nb">sum</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">price</span> <span class="o">*</span> <span class="n">item</span><span class="o">.</span><span class="n">quantity</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">items</span><span class="p">)</span>
+</span><span id="__span-2-17"><a href="#__codelineno-2-17" id="__codelineno-2-17" name="__codelineno-2-17"></a>        <span class="p">)</span>
+</span><span id="__span-2-18"><a href="#__codelineno-2-18" id="__codelineno-2-18" name="__codelineno-2-18"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">apply_event</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+</span><span id="__span-2-19"><a href="#__codelineno-2-19" id="__codelineno-2-19" name="__codelineno-2-19"></a>
+</span><span id="__span-2-20"><a href="#__codelineno-2-20" id="__codelineno-2-20" name="__codelineno-2-20"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">confirm_payment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">payment_method</span><span class="p">:</span> <span class="n">PaymentMethod</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-2-21"><a href="#__codelineno-2-21" id="__codelineno-2-21" name="__codelineno-2-21"></a>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">status</span> <span class="o">!=</span> <span class="n">OrderStatus</span><span class="o">.</span><span class="n">PENDING</span><span class="p">:</span>
+</span><span id="__span-2-22"><a href="#__codelineno-2-22" id="__codelineno-2-22" name="__codelineno-2-22"></a>            <span class="k">raise</span> <span class="n">BusinessRuleViolationError</span><span class="p">(</span><span class="s2">"Can only confirm pending orders"</span><span class="p">)</span>
+</span><span id="__span-2-23"><a href="#__codelineno-2-23" id="__codelineno-2-23" name="__codelineno-2-23"></a>
+</span><span id="__span-2-24"><a href="#__codelineno-2-24" id="__codelineno-2-24" name="__codelineno-2-24"></a>        <span class="n">event</span> <span class="o">=</span> <span class="n">OrderPaymentConfirmedEvent</span><span class="p">(</span>
+</span><span id="__span-2-25"><a href="#__codelineno-2-25" id="__codelineno-2-25" name="__codelineno-2-25"></a>            <span class="n">order_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+</span><span id="__span-2-26"><a href="#__codelineno-2-26" id="__codelineno-2-26" name="__codelineno-2-26"></a>            <span class="n">payment_method</span><span class="o">=</span><span class="n">payment_method</span><span class="p">,</span>
+</span><span id="__span-2-27"><a href="#__codelineno-2-27" id="__codelineno-2-27" name="__codelineno-2-27"></a>            <span class="n">confirmed_at</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span>
+</span><span id="__span-2-28"><a href="#__codelineno-2-28" id="__codelineno-2-28" name="__codelineno-2-28"></a>        <span class="p">)</span>
+</span><span id="__span-2-29"><a href="#__codelineno-2-29" id="__codelineno-2-29" name="__codelineno-2-29"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">apply_event</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+</span><span id="__span-2-30"><a href="#__codelineno-2-30" id="__codelineno-2-30" name="__codelineno-2-30"></a>
+</span><span id="__span-2-31"><a href="#__codelineno-2-31" id="__codelineno-2-31" name="__codelineno-2-31"></a>    <span class="c1"># Event application methods (state transitions)</span>
+</span><span id="__span-2-32"><a href="#__codelineno-2-32" id="__codelineno-2-32" name="__codelineno-2-32"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">_apply_order_created_event</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">OrderCreatedEvent</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-2-33"><a href="#__codelineno-2-33" id="__codelineno-2-33" name="__codelineno-2-33"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">customer_id</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">customer_id</span>
+</span><span id="__span-2-34"><a href="#__codelineno-2-34" id="__codelineno-2-34" name="__codelineno-2-34"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">items</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">items</span>
+</span><span id="__span-2-35"><a href="#__codelineno-2-35" id="__codelineno-2-35" name="__codelineno-2-35"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">total</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">total_amount</span>
+</span><span id="__span-2-36"><a href="#__codelineno-2-36" id="__codelineno-2-36" name="__codelineno-2-36"></a>
+</span><span id="__span-2-37"><a href="#__codelineno-2-37" id="__codelineno-2-37" name="__codelineno-2-37"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">_apply_order_payment_confirmed_event</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">OrderPaymentConfirmedEvent</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-2-38"><a href="#__codelineno-2-38" id="__codelineno-2-38" name="__codelineno-2-38"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">OrderStatus</span><span class="o">.</span><span class="n">CONFIRMED</span>
+</span><span id="__span-2-39"><a href="#__codelineno-2-39" id="__codelineno-2-39" name="__codelineno-2-39"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">payment_method</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">payment_method</span>
+</span><span id="__span-2-40"><a href="#__codelineno-2-40" id="__codelineno-2-40" name="__codelineno-2-40"></a>
+</span><span id="__span-2-41"><a href="#__codelineno-2-41" id="__codelineno-2-41" name="__codelineno-2-41"></a><span class="c1"># Event store for write model (stores events, not state)</span>
+</span><span id="__span-2-42"><a href="#__codelineno-2-42" id="__codelineno-2-42" name="__codelineno-2-42"></a><span class="k">class</span><span class="w"> </span><span class="nc">EventSourcedOrderRepository</span><span class="p">(</span><span class="n">EventStore</span><span class="p">[</span><span class="n">Order</span><span class="p">]):</span>
+</span><span id="__span-2-43"><a href="#__codelineno-2-43" id="__codelineno-2-43" name="__codelineno-2-43"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">save_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">aggregate</span><span class="p">:</span> <span class="n">Order</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-2-44"><a href="#__codelineno-2-44" id="__codelineno-2-44" name="__codelineno-2-44"></a>        <span class="c1"># Store all uncommitted events</span>
+</span><span id="__span-2-45"><a href="#__codelineno-2-45" id="__codelineno-2-45" name="__codelineno-2-45"></a>        <span class="n">events</span> <span class="o">=</span> <span class="n">aggregate</span><span class="o">.</span><span class="n">get_uncommitted_events</span><span class="p">()</span>
+</span><span id="__span-2-46"><a href="#__codelineno-2-46" id="__codelineno-2-46" name="__codelineno-2-46"></a>        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">append_events_async</span><span class="p">(</span><span class="n">aggregate</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">events</span><span class="p">,</span> <span class="n">aggregate</span><span class="o">.</span><span class="n">version</span><span class="p">)</span>
+</span><span id="__span-2-47"><a href="#__codelineno-2-47" id="__codelineno-2-47" name="__codelineno-2-47"></a>        <span class="n">aggregate</span><span class="o">.</span><span class="n">mark_events_as_committed</span><span class="p">()</span>
+</span><span id="__span-2-48"><a href="#__codelineno-2-48" id="__codelineno-2-48" name="__codelineno-2-48"></a>
+</span><span id="__span-2-49"><a href="#__codelineno-2-49" id="__codelineno-2-49" name="__codelineno-2-49"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_by_id_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">order_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Order</span><span class="p">:</span>
+</span><span id="__span-2-50"><a href="#__codelineno-2-50" id="__codelineno-2-50" name="__codelineno-2-50"></a>        <span class="c1"># Rebuild aggregate from stored events</span>
+</span><span id="__span-2-51"><a href="#__codelineno-2-51" id="__codelineno-2-51" name="__codelineno-2-51"></a>        <span class="n">events</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_events_async</span><span class="p">(</span><span class="n">order_id</span><span class="p">)</span>
+</span><span id="__span-2-52"><a href="#__codelineno-2-52" id="__codelineno-2-52" name="__codelineno-2-52"></a>        <span class="n">order</span> <span class="o">=</span> <span class="n">Order</span><span class="p">(</span><span class="n">order_id</span><span class="p">)</span>
+</span><span id="__span-2-53"><a href="#__codelineno-2-53" id="__codelineno-2-53" name="__codelineno-2-53"></a>        <span class="n">order</span><span class="o">.</span><span class="n">load_from_history</span><span class="p">(</span><span class="n">events</span><span class="p">)</span>
+</span><span id="__span-2-54"><a href="#__codelineno-2-54" id="__codelineno-2-54" name="__codelineno-2-54"></a>        <span class="k">return</span> <span class="n">order</span>
+</span><span id="__span-2-55"><a href="#__codelineno-2-55" id="__codelineno-2-55" name="__codelineno-2-55"></a>
+</span><span id="__span-2-56"><a href="#__codelineno-2-56" id="__codelineno-2-56" name="__codelineno-2-56"></a><span class="c1"># Separate read model for queries</span>
+</span><span id="__span-2-57"><a href="#__codelineno-2-57" id="__codelineno-2-57" name="__codelineno-2-57"></a><span class="nd">@dataclass</span>
+</span><span id="__span-2-58"><a href="#__codelineno-2-58" id="__codelineno-2-58" name="__codelineno-2-58"></a><span class="k">class</span><span class="w"> </span><span class="nc">OrderReadModel</span><span class="p">:</span>
+</span><span id="__span-2-59"><a href="#__codelineno-2-59" id="__codelineno-2-59" name="__codelineno-2-59"></a>    <span class="n">order_id</span><span class="p">:</span> <span class="nb">str</span>
+</span><span id="__span-2-60"><a href="#__codelineno-2-60" id="__codelineno-2-60" name="__codelineno-2-60"></a>    <span class="n">customer_id</span><span class="p">:</span> <span class="nb">str</span>
+</span><span id="__span-2-61"><a href="#__codelineno-2-61" id="__codelineno-2-61" name="__codelineno-2-61"></a>    <span class="n">status</span><span class="p">:</span> <span class="nb">str</span>
+</span><span id="__span-2-62"><a href="#__codelineno-2-62" id="__codelineno-2-62" name="__codelineno-2-62"></a>    <span class="n">total_amount</span><span class="p">:</span> <span class="n">Decimal</span>
+</span><span id="__span-2-63"><a href="#__codelineno-2-63" id="__codelineno-2-63" name="__codelineno-2-63"></a>    <span class="n">created_at</span><span class="p">:</span> <span class="n">datetime</span>
+</span><span id="__span-2-64"><a href="#__codelineno-2-64" id="__codelineno-2-64" name="__codelineno-2-64"></a>    <span class="n">confirmed_at</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">datetime</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="__span-2-65"><a href="#__codelineno-2-65" id="__codelineno-2-65" name="__codelineno-2-65"></a>
+</span><span id="__span-2-66"><a href="#__codelineno-2-66" id="__codelineno-2-66" name="__codelineno-2-66"></a><span class="c1"># Read model projector (rebuilds read models when events occur)</span>
+</span><span id="__span-2-67"><a href="#__codelineno-2-67" id="__codelineno-2-67" name="__codelineno-2-67"></a><span class="k">class</span><span class="w"> </span><span class="nc">OrderReadModelProjector</span><span class="p">(</span><span class="n">DomainEventHandler</span><span class="p">[</span><span class="n">OrderCreatedEvent</span><span class="p">,</span> <span class="n">OrderPaymentConfirmedEvent</span><span class="p">]):</span>
+</span><span id="__span-2-68"><a href="#__codelineno-2-68" id="__codelineno-2-68" name="__codelineno-2-68"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">read_model_repository</span><span class="p">:</span> <span class="n">Repository</span><span class="p">[</span><span class="n">OrderReadModel</span><span class="p">,</span> <span class="nb">str</span><span class="p">]):</span>
+</span><span id="__span-2-69"><a href="#__codelineno-2-69" id="__codelineno-2-69" name="__codelineno-2-69"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">read_model_repository</span> <span class="o">=</span> <span class="n">read_model_repository</span>
+</span><span id="__span-2-70"><a href="#__codelineno-2-70" id="__codelineno-2-70" name="__codelineno-2-70"></a>
+</span><span id="__span-2-71"><a href="#__codelineno-2-71" id="__codelineno-2-71" name="__codelineno-2-71"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">handle_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">OrderCreatedEvent</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-2-72"><a href="#__codelineno-2-72" id="__codelineno-2-72" name="__codelineno-2-72"></a>        <span class="n">read_model</span> <span class="o">=</span> <span class="n">OrderReadModel</span><span class="p">(</span>
+</span><span id="__span-2-73"><a href="#__codelineno-2-73" id="__codelineno-2-73" name="__codelineno-2-73"></a>            <span class="n">order_id</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">order_id</span><span class="p">,</span>
+</span><span id="__span-2-74"><a href="#__codelineno-2-74" id="__codelineno-2-74" name="__codelineno-2-74"></a>            <span class="n">customer_id</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">customer_id</span><span class="p">,</span>
+</span><span id="__span-2-75"><a href="#__codelineno-2-75" id="__codelineno-2-75" name="__codelineno-2-75"></a>            <span class="n">status</span><span class="o">=</span><span class="n">OrderStatus</span><span class="o">.</span><span class="n">PENDING</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+</span><span id="__span-2-76"><a href="#__codelineno-2-76" id="__codelineno-2-76" name="__codelineno-2-76"></a>            <span class="n">total_amount</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">total_amount</span><span class="p">,</span>
+</span><span id="__span-2-77"><a href="#__codelineno-2-77" id="__codelineno-2-77" name="__codelineno-2-77"></a>            <span class="n">created_at</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">occurred_at</span>
+</span><span id="__span-2-78"><a href="#__codelineno-2-78" id="__codelineno-2-78" name="__codelineno-2-78"></a>        <span class="p">)</span>
+</span><span id="__span-2-79"><a href="#__codelineno-2-79" id="__codelineno-2-79" name="__codelineno-2-79"></a>        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_model_repository</span><span class="o">.</span><span class="n">save_async</span><span class="p">(</span><span class="n">read_model</span><span class="p">)</span>
+</span><span id="__span-2-80"><a href="#__codelineno-2-80" id="__codelineno-2-80" name="__codelineno-2-80"></a>
+</span><span id="__span-2-81"><a href="#__codelineno-2-81" id="__codelineno-2-81" name="__codelineno-2-81"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">handle_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">OrderPaymentConfirmedEvent</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-2-82"><a href="#__codelineno-2-82" id="__codelineno-2-82" name="__codelineno-2-82"></a>        <span class="n">read_model</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_model_repository</span><span class="o">.</span><span class="n">get_by_id_async</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">order_id</span><span class="p">)</span>
+</span><span id="__span-2-83"><a href="#__codelineno-2-83" id="__codelineno-2-83" name="__codelineno-2-83"></a>        <span class="n">read_model</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">OrderStatus</span><span class="o">.</span><span class="n">CONFIRMED</span><span class="o">.</span><span class="n">value</span>
+</span><span id="__span-2-84"><a href="#__codelineno-2-84" id="__codelineno-2-84" name="__codelineno-2-84"></a>        <span class="n">read_model</span><span class="o">.</span><span class="n">confirmed_at</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">occurred_at</span>
+</span><span id="__span-2-85"><a href="#__codelineno-2-85" id="__codelineno-2-85" name="__codelineno-2-85"></a>        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_model_repository</span><span class="o">.</span><span class="n">save_async</span><span class="p">(</span><span class="n">read_model</span><span class="p">)</span>
+</span></code></pre></div>
+<p><strong>Characteristics:</strong></p>
+<ul>
+<li>✅ <strong>Complete Audit Trail</strong>: Every change preserved as immutable events</li>
+<li>✅ <strong>Temporal Queries</strong>: Can reconstruct state at any point in time</li>
+<li>✅ <strong>Optimized Read Models</strong>: Separate, specialized views for queries</li>
+<li>✅ <strong>Event Replay</strong>: Can rebuild read models from scratch</li>
+<li>❌ <strong>Increased Complexity</strong>: Event application, projections, eventual consistency</li>
+<li>❌ <strong>Storage Overhead</strong>: Events accumulate over time</li>
+</ul>
+<h3 id="stage-4-declarative-resources-with-autonomous-reconciliation">🌐 Stage 4: Declarative Resources with Autonomous Reconciliation<a class="headerlink" href="#stage-4-declarative-resources-with-autonomous-reconciliation" title="Permanent link">¶</a></h3>
+<p><strong>When to use</strong>: Infrastructure management, autonomous operations, complex system coordination.</p>
+<p><strong>Implementation Pattern:</strong></p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a href="#__codelineno-3-1" id="__codelineno-3-1" name="__codelineno-3-1"></a><span class="c1"># Declarative resource - desired vs actual state</span>
+</span><span id="__span-3-2"><a href="#__codelineno-3-2" id="__codelineno-3-2" name="__codelineno-3-2"></a><span class="nd">@dataclass</span>
+</span><span id="__span-3-3"><a href="#__codelineno-3-3" id="__codelineno-3-3" name="__codelineno-3-3"></a><span class="k">class</span><span class="w"> </span><span class="nc">KitchenCapacityResource</span><span class="p">(</span><span class="n">Resource</span><span class="p">):</span>
+</span><span id="__span-3-4"><a href="#__codelineno-3-4" id="__codelineno-3-4" name="__codelineno-3-4"></a>    <span class="n">spec</span><span class="p">:</span> <span class="n">KitchenCapacitySpec</span>
+</span><span id="__span-3-5"><a href="#__codelineno-3-5" id="__codelineno-3-5" name="__codelineno-3-5"></a>    <span class="n">status</span><span class="p">:</span> <span class="n">KitchenCapacityStatus</span>
+</span><span id="__span-3-6"><a href="#__codelineno-3-6" id="__codelineno-3-6" name="__codelineno-3-6"></a>
+</span><span id="__span-3-7"><a href="#__codelineno-3-7" id="__codelineno-3-7" name="__codelineno-3-7"></a>    <span class="nd">@classmethod</span>
+</span><span id="__span-3-8"><a href="#__codelineno-3-8" id="__codelineno-3-8" name="__codelineno-3-8"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">increase_capacity_for_order</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">order_value</span><span class="p">:</span> <span class="n">Decimal</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">'KitchenCapacityResource'</span><span class="p">:</span>
+</span><span id="__span-3-9"><a href="#__codelineno-3-9" id="__codelineno-3-9" name="__codelineno-3-9"></a>        <span class="c1"># Calculate required capacity based on business rules</span>
+</span><span id="__span-3-10"><a href="#__codelineno-3-10" id="__codelineno-3-10" name="__codelineno-3-10"></a>        <span class="n">required_ovens</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">order_value</span> <span class="o">/</span> <span class="n">Decimal</span><span class="p">(</span><span class="s1">'100.00'</span><span class="p">))</span>
+</span><span id="__span-3-11"><a href="#__codelineno-3-11" id="__codelineno-3-11" name="__codelineno-3-11"></a>
+</span><span id="__span-3-12"><a href="#__codelineno-3-12" id="__codelineno-3-12" name="__codelineno-3-12"></a>        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span>
+</span><span id="__span-3-13"><a href="#__codelineno-3-13" id="__codelineno-3-13" name="__codelineno-3-13"></a>            <span class="n">spec</span><span class="o">=</span><span class="n">KitchenCapacitySpec</span><span class="p">(</span>
+</span><span id="__span-3-14"><a href="#__codelineno-3-14" id="__codelineno-3-14" name="__codelineno-3-14"></a>                <span class="n">required_ovens</span><span class="o">=</span><span class="n">required_ovens</span><span class="p">,</span>
+</span><span id="__span-3-15"><a href="#__codelineno-3-15" id="__codelineno-3-15" name="__codelineno-3-15"></a>                <span class="n">target_throughput</span><span class="o">=</span><span class="n">order_value</span> <span class="o">*</span> <span class="n">Decimal</span><span class="p">(</span><span class="s1">'0.1'</span><span class="p">)</span>
+</span><span id="__span-3-16"><a href="#__codelineno-3-16" id="__codelineno-3-16" name="__codelineno-3-16"></a>            <span class="p">),</span>
+</span><span id="__span-3-17"><a href="#__codelineno-3-17" id="__codelineno-3-17" name="__codelineno-3-17"></a>            <span class="n">status</span><span class="o">=</span><span class="n">KitchenCapacityStatus</span><span class="p">(</span>
+</span><span id="__span-3-18"><a href="#__codelineno-3-18" id="__codelineno-3-18" name="__codelineno-3-18"></a>                <span class="n">current_ovens</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+</span><span id="__span-3-19"><a href="#__codelineno-3-19" id="__codelineno-3-19" name="__codelineno-3-19"></a>                <span class="n">current_throughput</span><span class="o">=</span><span class="n">Decimal</span><span class="p">(</span><span class="s1">'0.00'</span><span class="p">),</span>
+</span><span id="__span-3-20"><a href="#__codelineno-3-20" id="__codelineno-3-20" name="__codelineno-3-20"></a>                <span class="n">reconciliation_state</span><span class="o">=</span><span class="s2">"pending"</span>
+</span><span id="__span-3-21"><a href="#__codelineno-3-21" id="__codelineno-3-21" name="__codelineno-3-21"></a>            <span class="p">)</span>
+</span><span id="__span-3-22"><a href="#__codelineno-3-22" id="__codelineno-3-22" name="__codelineno-3-22"></a>        <span class="p">)</span>
+</span><span id="__span-3-23"><a href="#__codelineno-3-23" id="__codelineno-3-23" name="__codelineno-3-23"></a>
+</span><span id="__span-3-24"><a href="#__codelineno-3-24" id="__codelineno-3-24" name="__codelineno-3-24"></a><span class="c1"># Resource controller - autonomous reconciliation engine</span>
+</span><span id="__span-3-25"><a href="#__codelineno-3-25" id="__codelineno-3-25" name="__codelineno-3-25"></a><span class="k">class</span><span class="w"> </span><span class="nc">KitchenCapacityController</span><span class="p">(</span><span class="n">ResourceControllerBase</span><span class="p">[</span><span class="n">KitchenCapacityResource</span><span class="p">]):</span>
+</span><span id="__span-3-26"><a href="#__codelineno-3-26" id="__codelineno-3-26" name="__codelineno-3-26"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">infrastructure_client</span><span class="p">:</span> <span class="n">InfrastructureClient</span><span class="p">,</span> <span class="n">event_bus</span><span class="p">:</span> <span class="n">EventBus</span><span class="p">):</span>
+</span><span id="__span-3-27"><a href="#__codelineno-3-27" id="__codelineno-3-27" name="__codelineno-3-27"></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+</span><span id="__span-3-28"><a href="#__codelineno-3-28" id="__codelineno-3-28" name="__codelineno-3-28"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">infrastructure_client</span> <span class="o">=</span> <span class="n">infrastructure_client</span>
+</span><span id="__span-3-29"><a href="#__codelineno-3-29" id="__codelineno-3-29" name="__codelineno-3-29"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">event_bus</span> <span class="o">=</span> <span class="n">event_bus</span>
+</span><span id="__span-3-30"><a href="#__codelineno-3-30" id="__codelineno-3-30" name="__codelineno-3-30"></a>
+</span><span id="__span-3-31"><a href="#__codelineno-3-31" id="__codelineno-3-31" name="__codelineno-3-31"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_do_reconcile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resource</span><span class="p">:</span> <span class="n">KitchenCapacityResource</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ReconciliationResult</span><span class="p">:</span>
+</span><span id="__span-3-32"><a href="#__codelineno-3-32" id="__codelineno-3-32" name="__codelineno-3-32"></a>        <span class="n">desired_ovens</span> <span class="o">=</span> <span class="n">resource</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">required_ovens</span>
+</span><span id="__span-3-33"><a href="#__codelineno-3-33" id="__codelineno-3-33" name="__codelineno-3-33"></a>        <span class="n">current_ovens</span> <span class="o">=</span> <span class="n">resource</span><span class="o">.</span><span class="n">status</span><span class="o">.</span><span class="n">current_ovens</span>
+</span><span id="__span-3-34"><a href="#__codelineno-3-34" id="__codelineno-3-34" name="__codelineno-3-34"></a>
+</span><span id="__span-3-35"><a href="#__codelineno-3-35" id="__codelineno-3-35" name="__codelineno-3-35"></a>        <span class="k">if</span> <span class="n">desired_ovens</span> <span class="o">&gt;</span> <span class="n">current_ovens</span><span class="p">:</span>
+</span><span id="__span-3-36"><a href="#__codelineno-3-36" id="__codelineno-3-36" name="__codelineno-3-36"></a>            <span class="c1"># Provision additional capacity</span>
+</span><span id="__span-3-37"><a href="#__codelineno-3-37" id="__codelineno-3-37" name="__codelineno-3-37"></a>            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">infrastructure_client</span><span class="o">.</span><span class="n">provision_oven</span><span class="p">()</span>
+</span><span id="__span-3-38"><a href="#__codelineno-3-38" id="__codelineno-3-38" name="__codelineno-3-38"></a>            <span class="n">resource</span><span class="o">.</span><span class="n">status</span><span class="o">.</span><span class="n">current_ovens</span> <span class="o">+=</span> <span class="mi">1</span>
+</span><span id="__span-3-39"><a href="#__codelineno-3-39" id="__codelineno-3-39" name="__codelineno-3-39"></a>            <span class="n">resource</span><span class="o">.</span><span class="n">status</span><span class="o">.</span><span class="n">reconciliation_state</span> <span class="o">=</span> <span class="s2">"provisioning"</span>
+</span><span id="__span-3-40"><a href="#__codelineno-3-40" id="__codelineno-3-40" name="__codelineno-3-40"></a>
+</span><span id="__span-3-41"><a href="#__codelineno-3-41" id="__codelineno-3-41" name="__codelineno-3-41"></a>            <span class="c1"># Publish integration event</span>
+</span><span id="__span-3-42"><a href="#__codelineno-3-42" id="__codelineno-3-42" name="__codelineno-3-42"></a>            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">event_bus</span><span class="o">.</span><span class="n">publish</span><span class="p">(</span><span class="n">KitchenCapacityIncreasedEvent</span><span class="p">(</span>
+</span><span id="__span-3-43"><a href="#__codelineno-3-43" id="__codelineno-3-43" name="__codelineno-3-43"></a>                <span class="n">resource_id</span><span class="o">=</span><span class="n">resource</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+</span><span id="__span-3-44"><a href="#__codelineno-3-44" id="__codelineno-3-44" name="__codelineno-3-44"></a>                <span class="n">new_capacity</span><span class="o">=</span><span class="n">resource</span><span class="o">.</span><span class="n">status</span><span class="o">.</span><span class="n">current_ovens</span>
+</span><span id="__span-3-45"><a href="#__codelineno-3-45" id="__codelineno-3-45" name="__codelineno-3-45"></a>            <span class="p">))</span>
+</span><span id="__span-3-46"><a href="#__codelineno-3-46" id="__codelineno-3-46" name="__codelineno-3-46"></a>
+</span><span id="__span-3-47"><a href="#__codelineno-3-47" id="__codelineno-3-47" name="__codelineno-3-47"></a>        <span class="k">elif</span> <span class="n">desired_ovens</span> <span class="o">&lt;</span> <span class="n">current_ovens</span><span class="p">:</span>
+</span><span id="__span-3-48"><a href="#__codelineno-3-48" id="__codelineno-3-48" name="__codelineno-3-48"></a>            <span class="c1"># Scale down capacity</span>
+</span><span id="__span-3-49"><a href="#__codelineno-3-49" id="__codelineno-3-49" name="__codelineno-3-49"></a>            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">infrastructure_client</span><span class="o">.</span><span class="n">decommission_oven</span><span class="p">()</span>
+</span><span id="__span-3-50"><a href="#__codelineno-3-50" id="__codelineno-3-50" name="__codelineno-3-50"></a>            <span class="n">resource</span><span class="o">.</span><span class="n">status</span><span class="o">.</span><span class="n">current_ovens</span> <span class="o">-=</span> <span class="mi">1</span>
+</span><span id="__span-3-51"><a href="#__codelineno-3-51" id="__codelineno-3-51" name="__codelineno-3-51"></a>            <span class="n">resource</span><span class="o">.</span><span class="n">status</span><span class="o">.</span><span class="n">reconciliation_state</span> <span class="o">=</span> <span class="s2">"scaling_down"</span>
+</span><span id="__span-3-52"><a href="#__codelineno-3-52" id="__codelineno-3-52" name="__codelineno-3-52"></a>
+</span><span id="__span-3-53"><a href="#__codelineno-3-53" id="__codelineno-3-53" name="__codelineno-3-53"></a>        <span class="k">else</span><span class="p">:</span>
+</span><span id="__span-3-54"><a href="#__codelineno-3-54" id="__codelineno-3-54" name="__codelineno-3-54"></a>            <span class="n">resource</span><span class="o">.</span><span class="n">status</span><span class="o">.</span><span class="n">reconciliation_state</span> <span class="o">=</span> <span class="s2">"stable"</span>
+</span><span id="__span-3-55"><a href="#__codelineno-3-55" id="__codelineno-3-55" name="__codelineno-3-55"></a>
+</span><span id="__span-3-56"><a href="#__codelineno-3-56" id="__codelineno-3-56" name="__codelineno-3-56"></a>        <span class="k">return</span> <span class="n">ReconciliationResult</span><span class="o">.</span><span class="n">success</span><span class="p">()</span>
+</span><span id="__span-3-57"><a href="#__codelineno-3-57" id="__codelineno-3-57" name="__codelineno-3-57"></a>
+</span><span id="__span-3-58"><a href="#__codelineno-3-58" id="__codelineno-3-58" name="__codelineno-3-58"></a><span class="c1"># Integration event handler - bridges business domain to infrastructure</span>
+</span><span id="__span-3-59"><a href="#__codelineno-3-59" id="__codelineno-3-59" name="__codelineno-3-59"></a><span class="k">class</span><span class="w"> </span><span class="nc">OrderPaymentConfirmedIntegrationHandler</span><span class="p">(</span><span class="n">IntegrationEventHandler</span><span class="p">[</span><span class="n">OrderPaymentConfirmedEvent</span><span class="p">]):</span>
+</span><span id="__span-3-60"><a href="#__codelineno-3-60" id="__codelineno-3-60" name="__codelineno-3-60"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resource_repository</span><span class="p">:</span> <span class="n">Repository</span><span class="p">[</span><span class="n">KitchenCapacityResource</span><span class="p">,</span> <span class="nb">str</span><span class="p">]):</span>
+</span><span id="__span-3-61"><a href="#__codelineno-3-61" id="__codelineno-3-61" name="__codelineno-3-61"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">resource_repository</span> <span class="o">=</span> <span class="n">resource_repository</span>
+</span><span id="__span-3-62"><a href="#__codelineno-3-62" id="__codelineno-3-62" name="__codelineno-3-62"></a>
+</span><span id="__span-3-63"><a href="#__codelineno-3-63" id="__codelineno-3-63" name="__codelineno-3-63"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">handle_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">OrderPaymentConfirmedEvent</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-3-64"><a href="#__codelineno-3-64" id="__codelineno-3-64" name="__codelineno-3-64"></a>        <span class="c1"># Business event triggers infrastructure adaptation</span>
+</span><span id="__span-3-65"><a href="#__codelineno-3-65" id="__codelineno-3-65" name="__codelineno-3-65"></a>        <span class="n">capacity_resource</span> <span class="o">=</span> <span class="n">KitchenCapacityResource</span><span class="o">.</span><span class="n">increase_capacity_for_order</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">total_amount</span><span class="p">)</span>
+</span><span id="__span-3-66"><a href="#__codelineno-3-66" id="__codelineno-3-66" name="__codelineno-3-66"></a>        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">resource_repository</span><span class="o">.</span><span class="n">save_async</span><span class="p">(</span><span class="n">capacity_resource</span><span class="p">)</span>
+</span><span id="__span-3-67"><a href="#__codelineno-3-67" id="__codelineno-3-67" name="__codelineno-3-67"></a>
+</span><span id="__span-3-68"><a href="#__codelineno-3-68" id="__codelineno-3-68" name="__codelineno-3-68"></a>        <span class="c1"># Resource controller will automatically reconcile the infrastructure</span>
+</span></code></pre></div>
+<p><strong>Characteristics:</strong></p>
+<ul>
+<li>✅ <strong>Autonomous Operations</strong>: Self-healing, self-scaling infrastructure</li>
+<li>✅ <strong>Declarative Management</strong>: Specify desired state, system achieves it</li>
+<li>✅ <strong>Integration Events</strong>: Bridge between business domain and infrastructure</li>
+<li>✅ <strong>Eventual Consistency</strong>: Continuous reconciliation toward desired state</li>
+<li>❌ <strong>Operational Complexity</strong>: Requires robust monitoring and error handling</li>
+<li>❌ <strong>Debugging Complexity</strong>: Async reconciliation can be harder to trace## � Combining Patterns: Real-World Integration</li>
+</ul>
+<h3 id="multi-stage-system-example">💡 Multi-Stage System Example<a class="headerlink" href="#multi-stage-system-example" title="Permanent link">¶</a></h3>
+<p>Most complex systems benefit from using different patterns for different aspects. Here's how they work together:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a href="#__codelineno-4-1" id="__codelineno-4-1" name="__codelineno-4-1"></a><span class="c1"># Stage 1: Simple entities for basic data (User profiles, settings)</span>
+</span><span id="__span-4-2"><a href="#__codelineno-4-2" id="__codelineno-4-2" name="__codelineno-4-2"></a><span class="k">class</span><span class="w"> </span><span class="nc">UserProfile</span><span class="p">(</span><span class="n">Entity</span><span class="p">):</span>
+</span><span id="__span-4-3"><a href="#__codelineno-4-3" id="__codelineno-4-3" name="__codelineno-4-3"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">update_email</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_email</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-4-4"><a href="#__codelineno-4-4" id="__codelineno-4-4" name="__codelineno-4-4"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">email</span> <span class="o">=</span> <span class="n">new_email</span>
+</span><span id="__span-4-5"><a href="#__codelineno-4-5" id="__codelineno-4-5" name="__codelineno-4-5"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">updated_at</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span>
+</span><span id="__span-4-6"><a href="#__codelineno-4-6" id="__codelineno-4-6" name="__codelineno-4-6"></a>
+</span><span id="__span-4-7"><a href="#__codelineno-4-7" id="__codelineno-4-7" name="__codelineno-4-7"></a><span class="c1"># Stage 2: DDD aggregates for core business logic (Orders, payments)</span>
+</span><span id="__span-4-8"><a href="#__codelineno-4-8" id="__codelineno-4-8" name="__codelineno-4-8"></a><span class="k">class</span><span class="w"> </span><span class="nc">Order</span><span class="p">(</span><span class="n">AggregateRoot</span><span class="p">):</span>
+</span><span id="__span-4-9"><a href="#__codelineno-4-9" id="__codelineno-4-9" name="__codelineno-4-9"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">confirm_payment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">payment_info</span><span class="p">:</span> <span class="n">PaymentInfo</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-4-10"><a href="#__codelineno-4-10" id="__codelineno-4-10" name="__codelineno-4-10"></a>        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_validate_payment</span><span class="p">(</span><span class="n">payment_info</span><span class="p">):</span>
+</span><span id="__span-4-11"><a href="#__codelineno-4-11" id="__codelineno-4-11" name="__codelineno-4-11"></a>            <span class="k">raise</span> <span class="n">InvalidPaymentError</span><span class="p">(</span><span class="s2">"Payment validation failed"</span><span class="p">)</span>
+</span><span id="__span-4-12"><a href="#__codelineno-4-12" id="__codelineno-4-12" name="__codelineno-4-12"></a>
+</span><span id="__span-4-13"><a href="#__codelineno-4-13" id="__codelineno-4-13" name="__codelineno-4-13"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">OrderStatus</span><span class="o">.</span><span class="n">CONFIRMED</span>
+</span><span id="__span-4-14"><a href="#__codelineno-4-14" id="__codelineno-4-14" name="__codelineno-4-14"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">raise_event</span><span class="p">(</span><span class="n">OrderPaymentConfirmedEvent</span><span class="p">(</span>
+</span><span id="__span-4-15"><a href="#__codelineno-4-15" id="__codelineno-4-15" name="__codelineno-4-15"></a>            <span class="n">order_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+</span><span id="__span-4-16"><a href="#__codelineno-4-16" id="__codelineno-4-16" name="__codelineno-4-16"></a>            <span class="n">amount</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">total_amount</span>
+</span><span id="__span-4-17"><a href="#__codelineno-4-17" id="__codelineno-4-17" name="__codelineno-4-17"></a>        <span class="p">))</span>
+</span><span id="__span-4-18"><a href="#__codelineno-4-18" id="__codelineno-4-18" name="__codelineno-4-18"></a>
+</span><span id="__span-4-19"><a href="#__codelineno-4-19" id="__codelineno-4-19" name="__codelineno-4-19"></a><span class="c1"># Stage 3: Event sourcing for audit-critical domains (Financial transactions)</span>
+</span><span id="__span-4-20"><a href="#__codelineno-4-20" id="__codelineno-4-20" name="__codelineno-4-20"></a><span class="k">class</span><span class="w"> </span><span class="nc">PaymentTransaction</span><span class="p">(</span><span class="n">EventSourcedAggregateRoot</span><span class="p">):</span>
+</span><span id="__span-4-21"><a href="#__codelineno-4-21" id="__codelineno-4-21" name="__codelineno-4-21"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">process_payment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">amount</span><span class="p">:</span> <span class="n">Decimal</span><span class="p">,</span> <span class="n">method</span><span class="p">:</span> <span class="n">PaymentMethod</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-4-22"><a href="#__codelineno-4-22" id="__codelineno-4-22" name="__codelineno-4-22"></a>        <span class="n">event</span> <span class="o">=</span> <span class="n">PaymentProcessedEvent</span><span class="p">(</span>
+</span><span id="__span-4-23"><a href="#__codelineno-4-23" id="__codelineno-4-23" name="__codelineno-4-23"></a>            <span class="n">transaction_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+</span><span id="__span-4-24"><a href="#__codelineno-4-24" id="__codelineno-4-24" name="__codelineno-4-24"></a>            <span class="n">amount</span><span class="o">=</span><span class="n">amount</span><span class="p">,</span>
+</span><span id="__span-4-25"><a href="#__codelineno-4-25" id="__codelineno-4-25" name="__codelineno-4-25"></a>            <span class="n">method</span><span class="o">=</span><span class="n">method</span><span class="p">,</span>
+</span><span id="__span-4-26"><a href="#__codelineno-4-26" id="__codelineno-4-26" name="__codelineno-4-26"></a>            <span class="n">processed_at</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span>
+</span><span id="__span-4-27"><a href="#__codelineno-4-27" id="__codelineno-4-27" name="__codelineno-4-27"></a>        <span class="p">)</span>
+</span><span id="__span-4-28"><a href="#__codelineno-4-28" id="__codelineno-4-28" name="__codelineno-4-28"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">apply_event</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+</span><span id="__span-4-29"><a href="#__codelineno-4-29" id="__codelineno-4-29" name="__codelineno-4-29"></a>
+</span><span id="__span-4-30"><a href="#__codelineno-4-30" id="__codelineno-4-30" name="__codelineno-4-30"></a><span class="c1"># Stage 4: Declarative resources for infrastructure (Kitchen capacity, delivery routes)</span>
+</span><span id="__span-4-31"><a href="#__codelineno-4-31" id="__codelineno-4-31" name="__codelineno-4-31"></a><span class="k">class</span><span class="w"> </span><span class="nc">DeliveryRouteResource</span><span class="p">(</span><span class="n">Resource</span><span class="p">):</span>
+</span><span id="__span-4-32"><a href="#__codelineno-4-32" id="__codelineno-4-32" name="__codelineno-4-32"></a>    <span class="n">spec</span><span class="p">:</span> <span class="n">DeliveryRouteSpec</span>      <span class="c1"># Desired route optimization</span>
+</span><span id="__span-4-33"><a href="#__codelineno-4-33" id="__codelineno-4-33" name="__codelineno-4-33"></a>    <span class="n">status</span><span class="p">:</span> <span class="n">DeliveryRouteStatus</span>  <span class="c1"># Current route state</span>
+</span><span id="__span-4-34"><a href="#__codelineno-4-34" id="__codelineno-4-34" name="__codelineno-4-34"></a>
+</span><span id="__span-4-35"><a href="#__codelineno-4-35" id="__codelineno-4-35" name="__codelineno-4-35"></a><span class="c1"># Integration through events and shared UnitOfWork</span>
+</span><span id="__span-4-36"><a href="#__codelineno-4-36" id="__codelineno-4-36" name="__codelineno-4-36"></a><span class="k">class</span><span class="w"> </span><span class="nc">OrderConfirmationHandler</span><span class="p">(</span><span class="n">DomainEventHandler</span><span class="p">[</span><span class="n">OrderPaymentConfirmedEvent</span><span class="p">]):</span>
+</span><span id="__span-4-37"><a href="#__codelineno-4-37" id="__codelineno-4-37" name="__codelineno-4-37"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">handle_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">OrderPaymentConfirmedEvent</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-4-38"><a href="#__codelineno-4-38" id="__codelineno-4-38" name="__codelineno-4-38"></a>        <span class="c1"># Trigger financial transaction (event sourced)</span>
+</span><span id="__span-4-39"><a href="#__codelineno-4-39" id="__codelineno-4-39" name="__codelineno-4-39"></a>        <span class="n">transaction</span> <span class="o">=</span> <span class="n">PaymentTransaction</span><span class="o">.</span><span class="n">create_for_order</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">order_id</span><span class="p">,</span> <span class="n">event</span><span class="o">.</span><span class="n">amount</span><span class="p">)</span>
+</span><span id="__span-4-40"><a href="#__codelineno-4-40" id="__codelineno-4-40" name="__codelineno-4-40"></a>        <span class="n">transaction</span><span class="o">.</span><span class="n">process_payment</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">amount</span><span class="p">,</span> <span class="n">PaymentMethod</span><span class="o">.</span><span class="n">CREDIT_CARD</span><span class="p">)</span>
+</span><span id="__span-4-41"><a href="#__codelineno-4-41" id="__codelineno-4-41" name="__codelineno-4-41"></a>
+</span><span id="__span-4-42"><a href="#__codelineno-4-42" id="__codelineno-4-42" name="__codelineno-4-42"></a>        <span class="c1"># Update delivery capacity (declarative resource)</span>
+</span><span id="__span-4-43"><a href="#__codelineno-4-43" id="__codelineno-4-43" name="__codelineno-4-43"></a>        <span class="n">delivery_resource</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_delivery_resource</span><span class="p">()</span>
+</span><span id="__span-4-44"><a href="#__codelineno-4-44" id="__codelineno-4-44" name="__codelineno-4-44"></a>        <span class="n">delivery_resource</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">add_delivery_requirement</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">order_id</span><span class="p">)</span>
+</span><span id="__span-4-45"><a href="#__codelineno-4-45" id="__codelineno-4-45" name="__codelineno-4-45"></a>
+</span><span id="__span-4-46"><a href="#__codelineno-4-46" id="__codelineno-4-46" name="__codelineno-4-46"></a>        <span class="c1"># Both handled by UnitOfWork for transactional consistency</span>
+</span><span id="__span-4-47"><a href="#__codelineno-4-47" id="__codelineno-4-47" name="__codelineno-4-47"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">unit_of_work</span><span class="o">.</span><span class="n">register_aggregate</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span>
+</span><span id="__span-4-48"><a href="#__codelineno-4-48" id="__codelineno-4-48" name="__codelineno-4-48"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">unit_of_work</span><span class="o">.</span><span class="n">register_aggregate</span><span class="p">(</span><span class="n">delivery_resource</span><span class="p">)</span>
+</span></code></pre></div>
+<h2 id="decision-framework-when-to-use-each-pattern">🎯 Decision Framework: When to Use Each Pattern<a class="headerlink" href="#decision-framework-when-to-use-each-pattern" title="Permanent link">¶</a></h2>
+<h3 id="pattern-selection-matrix">📊 Pattern Selection Matrix<a class="headerlink" href="#pattern-selection-matrix" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Criteria</th>
+<th>Simple Entities</th>
+<th>DDD + UnitOfWork</th>
+<th>Event Sourcing</th>
+<th>Declarative Resources</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Business Complexity</strong></td>
+<td>Low</td>
+<td>High</td>
+<td>High</td>
+<td>N/A (Infrastructure)</td>
+</tr>
+<tr>
+<td><strong>Audit Requirements</strong></td>
+<td>None</td>
+<td>Basic</td>
+<td>Complete</td>
+<td>Operational only</td>
+</tr>
+<tr>
+<td><strong>Team Experience</strong></td>
+<td>Any</td>
+<td>Intermediate</td>
+<td>Advanced</td>
+<td>Advanced</td>
+</tr>
+<tr>
+<td><strong>Performance Needs</strong></td>
+<td>High</td>
+<td>Good</td>
+<td>Complex</td>
+<td>Excellent</td>
+</tr>
+<tr>
+<td><strong>Consistency Requirements</strong></td>
+<td>Eventual</td>
+<td>Strong</td>
+<td>Strong</td>
+<td>Eventual</td>
+</tr>
+<tr>
+<td><strong>Infrastructure Complexity</strong></td>
+<td>Manual</td>
+<td>Manual</td>
+<td>Manual</td>
+<td>Autonomous</td>
+</tr>
+</tbody>
+</table>
+<h3 id="decision-tree">🚦 Decision Tree<a class="headerlink" href="#decision-tree" title="Permanent link">¶</a></h3>
+<pre class="mermaid"><code>flowchart TD
+    A[New System/Feature] --&gt; B{Complex Business Rules?}
+    B --&gt;|No| C[Simple Entities]
+    B --&gt;|Yes| D{Audit Requirements?}
+
+    D --&gt;|Heavy| E[Event Sourcing]
+    D --&gt;|Normal| F[DDD + UnitOfWork]
+
+    C --&gt; G{Infrastructure Management?}
+    F --&gt; G
+    E --&gt; G
+
+    G --&gt;|Manual| H[Traditional Ops]
+    G --&gt;|Autonomous| I[Add Declarative Resources]
+
+    style C fill:#90EE90
+    style F fill:#FFD700
+    style E fill:#FF6B6B
+    style I fill:#87CEEB</code></pre>
+<h3 id="progression-guidelines">🎯 Progression Guidelines<a class="headerlink" href="#progression-guidelines" title="Permanent link">¶</a></h3>
+<p><strong>🚀 Start Simple, Evolve Gradually</strong></p>
+<ol>
+<li><strong>Begin with Simple Entities</strong> for basic CRUD operations</li>
+<li><strong>Add DDD + UnitOfWork</strong> when business complexity grows</li>
+<li><strong>Consider Event Sourcing</strong> when audit trails become critical</li>
+<li><strong>Introduce Declarative Resources</strong> for infrastructure automation</li>
+</ol>
+<p><strong>⚡ Migration Strategies</strong></p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a href="#__codelineno-5-1" id="__codelineno-5-1" name="__codelineno-5-1"></a><span class="c1"># Phase 1: Simple Entity</span>
+</span><span id="__span-5-2"><a href="#__codelineno-5-2" id="__codelineno-5-2" name="__codelineno-5-2"></a><span class="k">class</span><span class="w"> </span><span class="nc">Order</span><span class="p">(</span><span class="n">Entity</span><span class="p">):</span>
+</span><span id="__span-5-3"><a href="#__codelineno-5-3" id="__codelineno-5-3" name="__codelineno-5-3"></a>    <span class="n">status</span><span class="p">:</span> <span class="n">OrderStatus</span>
+</span><span id="__span-5-4"><a href="#__codelineno-5-4" id="__codelineno-5-4" name="__codelineno-5-4"></a>    <span class="n">items</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">OrderItem</span><span class="p">]</span>
+</span><span id="__span-5-5"><a href="#__codelineno-5-5" id="__codelineno-5-5" name="__codelineno-5-5"></a>
+</span><span id="__span-5-6"><a href="#__codelineno-5-6" id="__codelineno-5-6" name="__codelineno-5-6"></a><span class="c1"># Phase 2: Add Domain Events (DDD)</span>
+</span><span id="__span-5-7"><a href="#__codelineno-5-7" id="__codelineno-5-7" name="__codelineno-5-7"></a><span class="k">class</span><span class="w"> </span><span class="nc">Order</span><span class="p">(</span><span class="n">AggregateRoot</span><span class="p">):</span>
+</span><span id="__span-5-8"><a href="#__codelineno-5-8" id="__codelineno-5-8" name="__codelineno-5-8"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">confirm_order</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="__span-5-9"><a href="#__codelineno-5-9" id="__codelineno-5-9" name="__codelineno-5-9"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">OrderStatus</span><span class="o">.</span><span class="n">CONFIRMED</span>
+</span><span id="__span-5-10"><a href="#__codelineno-5-10" id="__codelineno-5-10" name="__codelineno-5-10"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">raise_event</span><span class="p">(</span><span class="n">OrderConfirmedEvent</span><span class="p">(</span><span class="o">...</span><span class="p">))</span>
+</span><span id="__span-5-11"><a href="#__codelineno-5-11" id="__codelineno-5-11" name="__codelineno-5-11"></a>
+</span><span id="__span-5-12"><a href="#__codelineno-5-12" id="__codelineno-5-12" name="__codelineno-5-12"></a><span class="c1"># Phase 3: Add Event Sourcing (if needed)</span>
+</span><span id="__span-5-13"><a href="#__codelineno-5-13" id="__codelineno-5-13" name="__codelineno-5-13"></a><span class="k">class</span><span class="w"> </span><span class="nc">Order</span><span class="p">(</span><span class="n">EventSourcedAggregateRoot</span><span class="p">):</span>
+</span><span id="__span-5-14"><a href="#__codelineno-5-14" id="__codelineno-5-14" name="__codelineno-5-14"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">confirm_order</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="__span-5-15"><a href="#__codelineno-5-15" id="__codelineno-5-15" name="__codelineno-5-15"></a>        <span class="n">event</span> <span class="o">=</span> <span class="n">OrderConfirmedEvent</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+</span><span id="__span-5-16"><a href="#__codelineno-5-16" id="__codelineno-5-16" name="__codelineno-5-16"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">apply_event</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+</span><span id="__span-5-17"><a href="#__codelineno-5-17" id="__codelineno-5-17" name="__codelineno-5-17"></a>
+</span><span id="__span-5-18"><a href="#__codelineno-5-18" id="__codelineno-5-18" name="__codelineno-5-18"></a><span class="c1"># Phase 4: Add Infrastructure Resources</span>
+</span><span id="__span-5-19"><a href="#__codelineno-5-19" id="__codelineno-5-19" name="__codelineno-5-19"></a><span class="k">class</span><span class="w"> </span><span class="nc">OrderProcessingResource</span><span class="p">(</span><span class="n">Resource</span><span class="p">):</span>
+</span><span id="__span-5-20"><a href="#__codelineno-5-20" id="__codelineno-5-20" name="__codelineno-5-20"></a>    <span class="n">spec</span><span class="p">:</span> <span class="n">ProcessingCapacitySpec</span>
+</span><span id="__span-5-21"><a href="#__codelineno-5-21" id="__codelineno-5-21" name="__codelineno-5-21"></a>    <span class="n">status</span><span class="p">:</span> <span class="n">ProcessingCapacityStatus</span>
+</span></code></pre></div>
+<h2 id="testing-strategy-by-pattern">🧪 Testing Strategy by Pattern<a class="headerlink" href="#testing-strategy-by-pattern" title="Permanent link">¶</a></h2>
+<h3 id="simple-entities-testing">🧪 Simple Entities Testing<a class="headerlink" href="#simple-entities-testing" title="Permanent link">¶</a></h3>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a href="#__codelineno-6-1" id="__codelineno-6-1" name="__codelineno-6-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">TestUserProfile</span><span class="p">:</span>
+</span><span id="__span-6-2"><a href="#__codelineno-6-2" id="__codelineno-6-2" name="__codelineno-6-2"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">test_update_email</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="__span-6-3"><a href="#__codelineno-6-3" id="__codelineno-6-3" name="__codelineno-6-3"></a>        <span class="c1"># Arrange</span>
+</span><span id="__span-6-4"><a href="#__codelineno-6-4" id="__codelineno-6-4" name="__codelineno-6-4"></a>        <span class="n">profile</span> <span class="o">=</span> <span class="n">UserProfile</span><span class="p">(</span><span class="n">user_id</span><span class="o">=</span><span class="s2">"123"</span><span class="p">,</span> <span class="n">email</span><span class="o">=</span><span class="s2">"old@example.com"</span><span class="p">)</span>
+</span><span id="__span-6-5"><a href="#__codelineno-6-5" id="__codelineno-6-5" name="__codelineno-6-5"></a>
+</span><span id="__span-6-6"><a href="#__codelineno-6-6" id="__codelineno-6-6" name="__codelineno-6-6"></a>        <span class="c1"># Act</span>
+</span><span id="__span-6-7"><a href="#__codelineno-6-7" id="__codelineno-6-7" name="__codelineno-6-7"></a>        <span class="n">profile</span><span class="o">.</span><span class="n">update_email</span><span class="p">(</span><span class="s2">"new@example.com"</span><span class="p">)</span>
+</span><span id="__span-6-8"><a href="#__codelineno-6-8" id="__codelineno-6-8" name="__codelineno-6-8"></a>
+</span><span id="__span-6-9"><a href="#__codelineno-6-9" id="__codelineno-6-9" name="__codelineno-6-9"></a>        <span class="c1"># Assert</span>
+</span><span id="__span-6-10"><a href="#__codelineno-6-10" id="__codelineno-6-10" name="__codelineno-6-10"></a>        <span class="k">assert</span> <span class="n">profile</span><span class="o">.</span><span class="n">email</span> <span class="o">==</span> <span class="s2">"new@example.com"</span>
+</span><span id="__span-6-11"><a href="#__codelineno-6-11" id="__codelineno-6-11" name="__codelineno-6-11"></a>        <span class="k">assert</span> <span class="n">profile</span><span class="o">.</span><span class="n">updated_at</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+</span></code></pre></div>
+<h3 id="ddd-unitofwork-testing">🧪 DDD + UnitOfWork Testing<a class="headerlink" href="#ddd-unitofwork-testing" title="Permanent link">¶</a></h3>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-7-1"><a href="#__codelineno-7-1" id="__codelineno-7-1" name="__codelineno-7-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">TestOrderAggregate</span><span class="p">:</span>
+</span><span id="__span-7-2"><a href="#__codelineno-7-2" id="__codelineno-7-2" name="__codelineno-7-2"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">test_confirm_payment_with_events</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="__span-7-3"><a href="#__codelineno-7-3" id="__codelineno-7-3" name="__codelineno-7-3"></a>        <span class="c1"># Arrange</span>
+</span><span id="__span-7-4"><a href="#__codelineno-7-4" id="__codelineno-7-4" name="__codelineno-7-4"></a>        <span class="n">order</span> <span class="o">=</span> <span class="n">Order</span><span class="p">(</span><span class="n">customer_id</span><span class="o">=</span><span class="s2">"123"</span><span class="p">,</span> <span class="n">items</span><span class="o">=</span><span class="p">[</span><span class="n">pizza_item</span><span class="p">])</span>
+</span><span id="__span-7-5"><a href="#__codelineno-7-5" id="__codelineno-7-5" name="__codelineno-7-5"></a>        <span class="n">payment_handler</span> <span class="o">=</span> <span class="n">ConfirmPaymentHandler</span><span class="p">(</span><span class="n">order_repo</span><span class="p">,</span> <span class="n">unit_of_work</span><span class="p">)</span>
+</span><span id="__span-7-6"><a href="#__codelineno-7-6" id="__codelineno-7-6" name="__codelineno-7-6"></a>
+</span><span id="__span-7-7"><a href="#__codelineno-7-7" id="__codelineno-7-7" name="__codelineno-7-7"></a>        <span class="c1"># Act</span>
+</span><span id="__span-7-8"><a href="#__codelineno-7-8" id="__codelineno-7-8" name="__codelineno-7-8"></a>        <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">payment_handler</span><span class="o">.</span><span class="n">handle_async</span><span class="p">(</span><span class="n">ConfirmPaymentCommand</span><span class="p">(</span>
+</span><span id="__span-7-9"><a href="#__codelineno-7-9" id="__codelineno-7-9" name="__codelineno-7-9"></a>            <span class="n">order_id</span><span class="o">=</span><span class="n">order</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+</span><span id="__span-7-10"><a href="#__codelineno-7-10" id="__codelineno-7-10" name="__codelineno-7-10"></a>            <span class="n">payment_method</span><span class="o">=</span><span class="n">PaymentMethod</span><span class="o">.</span><span class="n">CREDIT_CARD</span>
+</span><span id="__span-7-11"><a href="#__codelineno-7-11" id="__codelineno-7-11" name="__codelineno-7-11"></a>        <span class="p">))</span>
+</span><span id="__span-7-12"><a href="#__codelineno-7-12" id="__codelineno-7-12" name="__codelineno-7-12"></a>
+</span><span id="__span-7-13"><a href="#__codelineno-7-13" id="__codelineno-7-13" name="__codelineno-7-13"></a>        <span class="c1"># Assert - Business logic</span>
+</span><span id="__span-7-14"><a href="#__codelineno-7-14" id="__codelineno-7-14" name="__codelineno-7-14"></a>        <span class="k">assert</span> <span class="n">result</span><span class="o">.</span><span class="n">is_success</span>
+</span><span id="__span-7-15"><a href="#__codelineno-7-15" id="__codelineno-7-15" name="__codelineno-7-15"></a>        <span class="k">assert</span> <span class="n">order</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="n">OrderStatus</span><span class="o">.</span><span class="n">CONFIRMED</span>
+</span><span id="__span-7-16"><a href="#__codelineno-7-16" id="__codelineno-7-16" name="__codelineno-7-16"></a>
+</span><span id="__span-7-17"><a href="#__codelineno-7-17" id="__codelineno-7-17" name="__codelineno-7-17"></a>        <span class="c1"># Assert - Domain events</span>
+</span><span id="__span-7-18"><a href="#__codelineno-7-18" id="__codelineno-7-18" name="__codelineno-7-18"></a>        <span class="n">events</span> <span class="o">=</span> <span class="n">order</span><span class="o">.</span><span class="n">get_uncommitted_events</span><span class="p">()</span>
+</span><span id="__span-7-19"><a href="#__codelineno-7-19" id="__codelineno-7-19" name="__codelineno-7-19"></a>        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">events</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
+</span><span id="__span-7-20"><a href="#__codelineno-7-20" id="__codelineno-7-20" name="__codelineno-7-20"></a>        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">events</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">OrderPaymentConfirmedEvent</span><span class="p">)</span>
+</span><span id="__span-7-21"><a href="#__codelineno-7-21" id="__codelineno-7-21" name="__codelineno-7-21"></a>
+</span><span id="__span-7-22"><a href="#__codelineno-7-22" id="__codelineno-7-22" name="__codelineno-7-22"></a>        <span class="c1"># Assert - Side effects triggered</span>
+</span><span id="__span-7-23"><a href="#__codelineno-7-23" id="__codelineno-7-23" name="__codelineno-7-23"></a>        <span class="n">mock_event_bus</span><span class="o">.</span><span class="n">publish</span><span class="o">.</span><span class="n">assert_called_with</span><span class="p">(</span><span class="n">events</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+</span></code></pre></div>
+<h3 id="event-sourcing-testing">🧪 Event Sourcing Testing<a class="headerlink" href="#event-sourcing-testing" title="Permanent link">¶</a></h3>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-8-1"><a href="#__codelineno-8-1" id="__codelineno-8-1" name="__codelineno-8-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">TestEventSourcedOrder</span><span class="p">:</span>
+</span><span id="__span-8-2"><a href="#__codelineno-8-2" id="__codelineno-8-2" name="__codelineno-8-2"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">test_event_application_and_replay</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="__span-8-3"><a href="#__codelineno-8-3" id="__codelineno-8-3" name="__codelineno-8-3"></a>        <span class="c1"># Arrange - Create events</span>
+</span><span id="__span-8-4"><a href="#__codelineno-8-4" id="__codelineno-8-4" name="__codelineno-8-4"></a>        <span class="n">events</span> <span class="o">=</span> <span class="p">[</span>
+</span><span id="__span-8-5"><a href="#__codelineno-8-5" id="__codelineno-8-5" name="__codelineno-8-5"></a>            <span class="n">OrderCreatedEvent</span><span class="p">(</span><span class="n">order_id</span><span class="o">=</span><span class="s2">"123"</span><span class="p">,</span> <span class="n">customer_id</span><span class="o">=</span><span class="s2">"456"</span><span class="p">,</span> <span class="n">items</span><span class="o">=</span><span class="p">[</span><span class="o">...</span><span class="p">]),</span>
+</span><span id="__span-8-6"><a href="#__codelineno-8-6" id="__codelineno-8-6" name="__codelineno-8-6"></a>            <span class="n">OrderPaymentConfirmedEvent</span><span class="p">(</span><span class="n">order_id</span><span class="o">=</span><span class="s2">"123"</span><span class="p">,</span> <span class="n">payment_method</span><span class="o">=</span><span class="s2">"CREDIT"</span><span class="p">)</span>
+</span><span id="__span-8-7"><a href="#__codelineno-8-7" id="__codelineno-8-7" name="__codelineno-8-7"></a>        <span class="p">]</span>
+</span><span id="__span-8-8"><a href="#__codelineno-8-8" id="__codelineno-8-8" name="__codelineno-8-8"></a>
+</span><span id="__span-8-9"><a href="#__codelineno-8-9" id="__codelineno-8-9" name="__codelineno-8-9"></a>        <span class="c1"># Act - Replay events</span>
+</span><span id="__span-8-10"><a href="#__codelineno-8-10" id="__codelineno-8-10" name="__codelineno-8-10"></a>        <span class="n">order</span> <span class="o">=</span> <span class="n">Order</span><span class="p">(</span><span class="s2">"123"</span><span class="p">)</span>
+</span><span id="__span-8-11"><a href="#__codelineno-8-11" id="__codelineno-8-11" name="__codelineno-8-11"></a>        <span class="n">order</span><span class="o">.</span><span class="n">load_from_history</span><span class="p">(</span><span class="n">events</span><span class="p">)</span>
+</span><span id="__span-8-12"><a href="#__codelineno-8-12" id="__codelineno-8-12" name="__codelineno-8-12"></a>
+</span><span id="__span-8-13"><a href="#__codelineno-8-13" id="__codelineno-8-13" name="__codelineno-8-13"></a>        <span class="c1"># Assert - State derived from events</span>
+</span><span id="__span-8-14"><a href="#__codelineno-8-14" id="__codelineno-8-14" name="__codelineno-8-14"></a>        <span class="k">assert</span> <span class="n">order</span><span class="o">.</span><span class="n">customer_id</span> <span class="o">==</span> <span class="s2">"456"</span>
+</span><span id="__span-8-15"><a href="#__codelineno-8-15" id="__codelineno-8-15" name="__codelineno-8-15"></a>        <span class="k">assert</span> <span class="n">order</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="n">OrderStatus</span><span class="o">.</span><span class="n">CONFIRMED</span>
+</span><span id="__span-8-16"><a href="#__codelineno-8-16" id="__codelineno-8-16" name="__codelineno-8-16"></a>
+</span><span id="__span-8-17"><a href="#__codelineno-8-17" id="__codelineno-8-17" name="__codelineno-8-17"></a>        <span class="c1"># Test new event application</span>
+</span><span id="__span-8-18"><a href="#__codelineno-8-18" id="__codelineno-8-18" name="__codelineno-8-18"></a>        <span class="n">order</span><span class="o">.</span><span class="n">ship_order</span><span class="p">()</span>
+</span><span id="__span-8-19"><a href="#__codelineno-8-19" id="__codelineno-8-19" name="__codelineno-8-19"></a>        <span class="n">new_events</span> <span class="o">=</span> <span class="n">order</span><span class="o">.</span><span class="n">get_uncommitted_events</span><span class="p">()</span>
+</span><span id="__span-8-20"><a href="#__codelineno-8-20" id="__codelineno-8-20" name="__codelineno-8-20"></a>        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">new_events</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
+</span><span id="__span-8-21"><a href="#__codelineno-8-21" id="__codelineno-8-21" name="__codelineno-8-21"></a>        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">new_events</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">OrderShippedEvent</span><span class="p">)</span>
+</span></code></pre></div>
+<h3 id="declarative-resources-testing">🧪 Declarative Resources Testing<a class="headerlink" href="#declarative-resources-testing" title="Permanent link">¶</a></h3>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-9-1"><a href="#__codelineno-9-1" id="__codelineno-9-1" name="__codelineno-9-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">TestKitchenCapacityController</span><span class="p">:</span>
+</span><span id="__span-9-2"><a href="#__codelineno-9-2" id="__codelineno-9-2" name="__codelineno-9-2"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">test_reconciliation_scales_up</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="__span-9-3"><a href="#__codelineno-9-3" id="__codelineno-9-3" name="__codelineno-9-3"></a>        <span class="c1"># Arrange - Resource needs more capacity</span>
+</span><span id="__span-9-4"><a href="#__codelineno-9-4" id="__codelineno-9-4" name="__codelineno-9-4"></a>        <span class="n">resource</span> <span class="o">=</span> <span class="n">KitchenCapacityResource</span><span class="p">(</span>
+</span><span id="__span-9-5"><a href="#__codelineno-9-5" id="__codelineno-9-5" name="__codelineno-9-5"></a>            <span class="n">spec</span><span class="o">=</span><span class="n">KitchenCapacitySpec</span><span class="p">(</span><span class="n">required_ovens</span><span class="o">=</span><span class="mi">5</span><span class="p">),</span>
+</span><span id="__span-9-6"><a href="#__codelineno-9-6" id="__codelineno-9-6" name="__codelineno-9-6"></a>            <span class="n">status</span><span class="o">=</span><span class="n">KitchenCapacityStatus</span><span class="p">(</span><span class="n">current_ovens</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+</span><span id="__span-9-7"><a href="#__codelineno-9-7" id="__codelineno-9-7" name="__codelineno-9-7"></a>        <span class="p">)</span>
+</span><span id="__span-9-8"><a href="#__codelineno-9-8" id="__codelineno-9-8" name="__codelineno-9-8"></a>
+</span><span id="__span-9-9"><a href="#__codelineno-9-9" id="__codelineno-9-9" name="__codelineno-9-9"></a>        <span class="n">controller</span> <span class="o">=</span> <span class="n">KitchenCapacityController</span><span class="p">(</span><span class="n">mock_infra_client</span><span class="p">,</span> <span class="n">event_bus</span><span class="p">)</span>
+</span><span id="__span-9-10"><a href="#__codelineno-9-10" id="__codelineno-9-10" name="__codelineno-9-10"></a>
+</span><span id="__span-9-11"><a href="#__codelineno-9-11" id="__codelineno-9-11" name="__codelineno-9-11"></a>        <span class="c1"># Act - Trigger reconciliation</span>
+</span><span id="__span-9-12"><a href="#__codelineno-9-12" id="__codelineno-9-12" name="__codelineno-9-12"></a>        <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">controller</span><span class="o">.</span><span class="n">_do_reconcile</span><span class="p">(</span><span class="n">resource</span><span class="p">)</span>
+</span><span id="__span-9-13"><a href="#__codelineno-9-13" id="__codelineno-9-13" name="__codelineno-9-13"></a>
+</span><span id="__span-9-14"><a href="#__codelineno-9-14" id="__codelineno-9-14" name="__codelineno-9-14"></a>        <span class="c1"># Assert - Infrastructure provisioned</span>
+</span><span id="__span-9-15"><a href="#__codelineno-9-15" id="__codelineno-9-15" name="__codelineno-9-15"></a>        <span class="k">assert</span> <span class="n">result</span><span class="o">.</span><span class="n">is_success</span>
+</span><span id="__span-9-16"><a href="#__codelineno-9-16" id="__codelineno-9-16" name="__codelineno-9-16"></a>        <span class="n">mock_infra_client</span><span class="o">.</span><span class="n">provision_oven</span><span class="o">.</span><span class="n">assert_called</span><span class="p">()</span>
+</span><span id="__span-9-17"><a href="#__codelineno-9-17" id="__codelineno-9-17" name="__codelineno-9-17"></a>
+</span><span id="__span-9-18"><a href="#__codelineno-9-18" id="__codelineno-9-18" name="__codelineno-9-18"></a>        <span class="c1"># Assert - Status updated</span>
+</span><span id="__span-9-19"><a href="#__codelineno-9-19" id="__codelineno-9-19" name="__codelineno-9-19"></a>        <span class="k">assert</span> <span class="n">resource</span><span class="o">.</span><span class="n">status</span><span class="o">.</span><span class="n">current_ovens</span> <span class="o">==</span> <span class="mi">3</span>
+</span><span id="__span-9-20"><a href="#__codelineno-9-20" id="__codelineno-9-20" name="__codelineno-9-20"></a>        <span class="k">assert</span> <span class="n">resource</span><span class="o">.</span><span class="n">status</span><span class="o">.</span><span class="n">reconciliation_state</span> <span class="o">==</span> <span class="s2">"provisioning"</span>
+</span><span id="__span-9-21"><a href="#__codelineno-9-21" id="__codelineno-9-21" name="__codelineno-9-21"></a>
+</span><span id="__span-9-22"><a href="#__codelineno-9-22" id="__codelineno-9-22" name="__codelineno-9-22"></a>        <span class="c1"># Assert - Integration event published</span>
+</span><span id="__span-9-23"><a href="#__codelineno-9-23" id="__codelineno-9-23" name="__codelineno-9-23"></a>        <span class="n">event_bus</span><span class="o">.</span><span class="n">publish</span><span class="o">.</span><span class="n">assert_called_with</span><span class="p">(</span>
+</span><span id="__span-9-24"><a href="#__codelineno-9-24" id="__codelineno-9-24" name="__codelineno-9-24"></a>            <span class="n">KitchenCapacityIncreasedEvent</span><span class="p">(</span><span class="n">resource_id</span><span class="o">=</span><span class="n">resource</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">new_capacity</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+</span><span id="__span-9-25"><a href="#__codelineno-9-25" id="__codelineno-9-25" name="__codelineno-9-25"></a>        <span class="p">)</span>
+</span></code></pre></div>
+<h2 id="common-anti-patterns-and-solutions">🎯 Common Anti-Patterns and Solutions<a class="headerlink" href="#common-anti-patterns-and-solutions" title="Permanent link">¶</a></h2>
+<h3 id="anti-pattern-1-wrong-pattern-for-complexity-level">❌ Anti-Pattern 1: Wrong Pattern for Complexity Level<a class="headerlink" href="#anti-pattern-1-wrong-pattern-for-complexity-level" title="Permanent link">¶</a></h3>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-10-1"><a href="#__codelineno-10-1" id="__codelineno-10-1" name="__codelineno-10-1"></a><span class="c1"># ❌ Using DDD for simple CRUD</span>
+</span><span id="__span-10-2"><a href="#__codelineno-10-2" id="__codelineno-10-2" name="__codelineno-10-2"></a><span class="k">class</span><span class="w"> </span><span class="nc">UserSettings</span><span class="p">(</span><span class="n">AggregateRoot</span><span class="p">):</span>  <span class="c1"># Overkill!</span>
+</span><span id="__span-10-3"><a href="#__codelineno-10-3" id="__codelineno-10-3" name="__codelineno-10-3"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">update_theme</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theme</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+</span><span id="__span-10-4"><a href="#__codelineno-10-4" id="__codelineno-10-4" name="__codelineno-10-4"></a>        <span class="k">if</span> <span class="n">theme</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">VALID_THEMES</span><span class="p">:</span>
+</span><span id="__span-10-5"><a href="#__codelineno-10-5" id="__codelineno-10-5" name="__codelineno-10-5"></a>            <span class="k">raise</span> <span class="n">InvalidThemeError</span><span class="p">()</span>
+</span><span id="__span-10-6"><a href="#__codelineno-10-6" id="__codelineno-10-6" name="__codelineno-10-6"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">theme</span> <span class="o">=</span> <span class="n">theme</span>
+</span><span id="__span-10-7"><a href="#__codelineno-10-7" id="__codelineno-10-7" name="__codelineno-10-7"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">raise_event</span><span class="p">(</span><span class="n">UserThemeChangedEvent</span><span class="p">(</span><span class="o">...</span><span class="p">))</span>  <span class="c1"># Unnecessary complexity</span>
+</span><span id="__span-10-8"><a href="#__codelineno-10-8" id="__codelineno-10-8" name="__codelineno-10-8"></a>
+</span><span id="__span-10-9"><a href="#__codelineno-10-9" id="__codelineno-10-9" name="__codelineno-10-9"></a><span class="c1"># ✅ Simple entity is sufficient</span>
+</span><span id="__span-10-10"><a href="#__codelineno-10-10" id="__codelineno-10-10" name="__codelineno-10-10"></a><span class="k">class</span><span class="w"> </span><span class="nc">UserSettings</span><span class="p">(</span><span class="n">Entity</span><span class="p">):</span>
+</span><span id="__span-10-11"><a href="#__codelineno-10-11" id="__codelineno-10-11" name="__codelineno-10-11"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">update_theme</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theme</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+</span><span id="__span-10-12"><a href="#__codelineno-10-12" id="__codelineno-10-12" name="__codelineno-10-12"></a>        <span class="k">if</span> <span class="n">theme</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">VALID_THEMES</span><span class="p">:</span>
+</span><span id="__span-10-13"><a href="#__codelineno-10-13" id="__codelineno-10-13" name="__codelineno-10-13"></a>            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Invalid theme: </span><span class="si">{</span><span class="n">theme</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span><span id="__span-10-14"><a href="#__codelineno-10-14" id="__codelineno-10-14" name="__codelineno-10-14"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">theme</span> <span class="o">=</span> <span class="n">theme</span>
+</span></code></pre></div>
+<h3 id="anti-pattern-2-missing-transactional-boundaries">❌ Anti-Pattern 2: Missing Transactional Boundaries<a class="headerlink" href="#anti-pattern-2-missing-transactional-boundaries" title="Permanent link">¶</a></h3>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-11-1"><a href="#__codelineno-11-1" id="__codelineno-11-1" name="__codelineno-11-1"></a><span class="c1"># ❌ No UnitOfWork - events fired before persistence</span>
+</span><span id="__span-11-2"><a href="#__codelineno-11-2" id="__codelineno-11-2" name="__codelineno-11-2"></a><span class="k">class</span><span class="w"> </span><span class="nc">BadOrderHandler</span><span class="p">:</span>
+</span><span id="__span-11-3"><a href="#__codelineno-11-3" id="__codelineno-11-3" name="__codelineno-11-3"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">handle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command</span><span class="p">:</span> <span class="n">CreateOrderCommand</span><span class="p">):</span>
+</span><span id="__span-11-4"><a href="#__codelineno-11-4" id="__codelineno-11-4" name="__codelineno-11-4"></a>        <span class="n">order</span> <span class="o">=</span> <span class="n">Order</span><span class="p">(</span><span class="n">command</span><span class="o">.</span><span class="n">customer_id</span><span class="p">,</span> <span class="n">command</span><span class="o">.</span><span class="n">items</span><span class="p">)</span>
+</span><span id="__span-11-5"><a href="#__codelineno-11-5" id="__codelineno-11-5" name="__codelineno-11-5"></a>
+</span><span id="__span-11-6"><a href="#__codelineno-11-6" id="__codelineno-11-6" name="__codelineno-11-6"></a>        <span class="c1"># Events fired immediately - could fail before save!</span>
+</span><span id="__span-11-7"><a href="#__codelineno-11-7" id="__codelineno-11-7" name="__codelineno-11-7"></a>        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">event_bus</span><span class="o">.</span><span class="n">publish_all</span><span class="p">(</span><span class="n">order</span><span class="o">.</span><span class="n">get_uncommitted_events</span><span class="p">())</span>
+</span><span id="__span-11-8"><a href="#__codelineno-11-8" id="__codelineno-11-8" name="__codelineno-11-8"></a>        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">order_repo</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">order</span><span class="p">)</span>  <span class="c1"># Could fail!</span>
+</span><span id="__span-11-9"><a href="#__codelineno-11-9" id="__codelineno-11-9" name="__codelineno-11-9"></a>
+</span><span id="__span-11-10"><a href="#__codelineno-11-10" id="__codelineno-11-10" name="__codelineno-11-10"></a><span class="c1"># ✅ UnitOfWork ensures events only fire after successful persistence</span>
+</span><span id="__span-11-11"><a href="#__codelineno-11-11" id="__codelineno-11-11" name="__codelineno-11-11"></a><span class="k">class</span><span class="w"> </span><span class="nc">GoodOrderHandler</span><span class="p">:</span>
+</span><span id="__span-11-12"><a href="#__codelineno-11-12" id="__codelineno-11-12" name="__codelineno-11-12"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">handle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command</span><span class="p">:</span> <span class="n">CreateOrderCommand</span><span class="p">):</span>
+</span><span id="__span-11-13"><a href="#__codelineno-11-13" id="__codelineno-11-13" name="__codelineno-11-13"></a>        <span class="n">order</span> <span class="o">=</span> <span class="n">Order</span><span class="p">(</span><span class="n">command</span><span class="o">.</span><span class="n">customer_id</span><span class="p">,</span> <span class="n">command</span><span class="o">.</span><span class="n">items</span><span class="p">)</span>
+</span><span id="__span-11-14"><a href="#__codelineno-11-14" id="__codelineno-11-14" name="__codelineno-11-14"></a>        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">order_repo</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">order</span><span class="p">)</span>
+</span><span id="__span-11-15"><a href="#__codelineno-11-15" id="__codelineno-11-15" name="__codelineno-11-15"></a>
+</span><span id="__span-11-16"><a href="#__codelineno-11-16" id="__codelineno-11-16" name="__codelineno-11-16"></a>        <span class="c1"># UnitOfWork handles event dispatch after commit</span>
+</span><span id="__span-11-17"><a href="#__codelineno-11-17" id="__codelineno-11-17" name="__codelineno-11-17"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">unit_of_work</span><span class="o">.</span><span class="n">register_aggregate</span><span class="p">(</span><span class="n">order</span><span class="p">)</span>
+</span></code></pre></div>
+<h3 id="anti-pattern-3-event-sourcing-without-read-models">❌ Anti-Pattern 3: Event Sourcing Without Read Models<a class="headerlink" href="#anti-pattern-3-event-sourcing-without-read-models" title="Permanent link">¶</a></h3>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-12-1"><a href="#__codelineno-12-1" id="__codelineno-12-1" name="__codelineno-12-1"></a><span class="c1"># ❌ Querying event store directly for read operations</span>
+</span><span id="__span-12-2"><a href="#__codelineno-12-2" id="__codelineno-12-2" name="__codelineno-12-2"></a><span class="k">class</span><span class="w"> </span><span class="nc">BadOrderQueryHandler</span><span class="p">:</span>
+</span><span id="__span-12-3"><a href="#__codelineno-12-3" id="__codelineno-12-3" name="__codelineno-12-3"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_orders_by_customer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">customer_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+</span><span id="__span-12-4"><a href="#__codelineno-12-4" id="__codelineno-12-4" name="__codelineno-12-4"></a>        <span class="c1"># Terrible performance - rebuilding aggregates for queries!</span>
+</span><span id="__span-12-5"><a href="#__codelineno-12-5" id="__codelineno-12-5" name="__codelineno-12-5"></a>        <span class="n">orders</span> <span class="o">=</span> <span class="p">[]</span>
+</span><span id="__span-12-6"><a href="#__codelineno-12-6" id="__codelineno-12-6" name="__codelineno-12-6"></a>        <span class="k">for</span> <span class="n">order_id</span> <span class="ow">in</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_order_ids_by_customer</span><span class="p">(</span><span class="n">customer_id</span><span class="p">):</span>
+</span><span id="__span-12-7"><a href="#__codelineno-12-7" id="__codelineno-12-7" name="__codelineno-12-7"></a>            <span class="n">events</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">event_store</span><span class="o">.</span><span class="n">get_events</span><span class="p">(</span><span class="n">order_id</span><span class="p">)</span>
+</span><span id="__span-12-8"><a href="#__codelineno-12-8" id="__codelineno-12-8" name="__codelineno-12-8"></a>            <span class="n">order</span> <span class="o">=</span> <span class="n">Order</span><span class="p">(</span><span class="n">order_id</span><span class="p">)</span>
+</span><span id="__span-12-9"><a href="#__codelineno-12-9" id="__codelineno-12-9" name="__codelineno-12-9"></a>            <span class="n">order</span><span class="o">.</span><span class="n">load_from_history</span><span class="p">(</span><span class="n">events</span><span class="p">)</span>
+</span><span id="__span-12-10"><a href="#__codelineno-12-10" id="__codelineno-12-10" name="__codelineno-12-10"></a>            <span class="n">orders</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">order</span><span class="p">)</span>
+</span><span id="__span-12-11"><a href="#__codelineno-12-11" id="__codelineno-12-11" name="__codelineno-12-11"></a>        <span class="k">return</span> <span class="n">orders</span>
+</span><span id="__span-12-12"><a href="#__codelineno-12-12" id="__codelineno-12-12" name="__codelineno-12-12"></a>
+</span><span id="__span-12-13"><a href="#__codelineno-12-13" id="__codelineno-12-13" name="__codelineno-12-13"></a><span class="c1"># ✅ Dedicated read models for efficient queries</span>
+</span><span id="__span-12-14"><a href="#__codelineno-12-14" id="__codelineno-12-14" name="__codelineno-12-14"></a><span class="k">class</span><span class="w"> </span><span class="nc">GoodOrderQueryHandler</span><span class="p">:</span>
+</span><span id="__span-12-15"><a href="#__codelineno-12-15" id="__codelineno-12-15" name="__codelineno-12-15"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_orders_by_customer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">customer_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+</span><span id="__span-12-16"><a href="#__codelineno-12-16" id="__codelineno-12-16" name="__codelineno-12-16"></a>        <span class="c1"># Fast query against optimized read model</span>
+</span><span id="__span-12-17"><a href="#__codelineno-12-17" id="__codelineno-12-17" name="__codelineno-12-17"></a>        <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">order_read_model_repo</span><span class="o">.</span><span class="n">find_by_customer</span><span class="p">(</span><span class="n">customer_id</span><span class="p">)</span>
+</span></code></pre></div>
+<h2 id="best-practices-summary">🏆 Best Practices Summary<a class="headerlink" href="#best-practices-summary" title="Permanent link">¶</a></h2>
+<h3 id="pattern-selection-checklist">📋 Pattern Selection Checklist<a class="headerlink" href="#pattern-selection-checklist" title="Permanent link">¶</a></h3>
+<p><strong>Before choosing a pattern, ask:</strong></p>
+<ol>
+<li>
+<p><strong>Business Complexity</strong>: How complex are the business rules?</p>
+</li>
+<li>
+<p>Simple → Simple Entities</p>
+</li>
+<li>
+<p>Complex → DDD Aggregates</p>
+</li>
+<li>
+<p><strong>Audit Requirements</strong>: Do you need complete history?</p>
+</li>
+<li>
+<p>No → State-based persistence</p>
+</li>
+<li>
+<p>Yes → Event Sourcing</p>
+</li>
+<li>
+<p><strong>Infrastructure Complexity</strong>: How much operational automation is needed?</p>
+</li>
+<li>
+<p>Manual → Traditional repositories</p>
+</li>
+<li>
+<p>Autonomous → Declarative Resources</p>
+</li>
+<li>
+<p><strong>Team Experience</strong>: What's the team's skill level?</p>
+</li>
+<li>
+<p>Junior → Start simple, evolve gradually</p>
+</li>
+<li>
+<p>Senior → Can adopt complex patterns immediately</p>
+</li>
+<li>
+<p><strong>Performance Requirements</strong>: What are the latency/throughput needs?</p>
+</li>
+<li>High performance → Avoid event sourcing complexity</li>
+<li>Audit critical → Accept event sourcing overhead</li>
+</ol>
+<h2 id="testing-implications">🧪 Testing Implications<a class="headerlink" href="#testing-implications" title="Permanent link">¶</a></h2>
+<h3 id="testing-both-patterns-together">Testing Both Patterns Together<a class="headerlink" href="#testing-both-patterns-together" title="Permanent link">¶</a></h3>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-13-1"><a href="#__codelineno-13-1" id="__codelineno-13-1" name="__codelineno-13-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">TestOrderWithInfrastructure</span><span class="p">:</span>
+</span><span id="__span-13-2"><a href="#__codelineno-13-2" id="__codelineno-13-2" name="__codelineno-13-2"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">test_order_placement_triggers_infrastructure_scaling</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="__span-13-3"><a href="#__codelineno-13-3" id="__codelineno-13-3" name="__codelineno-13-3"></a>        <span class="c1"># Arrange: Setup both domain and infrastructure</span>
+</span><span id="__span-13-4"><a href="#__codelineno-13-4" id="__codelineno-13-4" name="__codelineno-13-4"></a>        <span class="n">order_service</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_service</span><span class="p">(</span><span class="n">OrderService</span><span class="p">)</span>
+</span><span id="__span-13-5"><a href="#__codelineno-13-5" id="__codelineno-13-5" name="__codelineno-13-5"></a>        <span class="n">kitchen_controller</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_service</span><span class="p">(</span><span class="n">KitchenCapacityController</span><span class="p">)</span>
+</span><span id="__span-13-6"><a href="#__codelineno-13-6" id="__codelineno-13-6" name="__codelineno-13-6"></a>
+</span><span id="__span-13-7"><a href="#__codelineno-13-7" id="__codelineno-13-7" name="__codelineno-13-7"></a>        <span class="c1"># Act: Domain operation</span>
+</span><span id="__span-13-8"><a href="#__codelineno-13-8" id="__codelineno-13-8" name="__codelineno-13-8"></a>        <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">order_service</span><span class="o">.</span><span class="n">place_order</span><span class="p">(</span><span class="n">large_order_command</span><span class="p">)</span>
+</span><span id="__span-13-9"><a href="#__codelineno-13-9" id="__codelineno-13-9" name="__codelineno-13-9"></a>
+</span><span id="__span-13-10"><a href="#__codelineno-13-10" id="__codelineno-13-10" name="__codelineno-13-10"></a>        <span class="c1"># Assert: Both business and infrastructure effects</span>
+</span><span id="__span-13-11"><a href="#__codelineno-13-11" id="__codelineno-13-11" name="__codelineno-13-11"></a>        <span class="k">assert</span> <span class="n">result</span><span class="o">.</span><span class="n">is_success</span>
+</span><span id="__span-13-12"><a href="#__codelineno-13-12" id="__codelineno-13-12" name="__codelineno-13-12"></a>
+</span><span id="__span-13-13"><a href="#__codelineno-13-13" id="__codelineno-13-13" name="__codelineno-13-13"></a>        <span class="c1"># Business assertion (DDD)</span>
+</span><span id="__span-13-14"><a href="#__codelineno-13-14" id="__codelineno-13-14" name="__codelineno-13-14"></a>        <span class="n">order</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">order_repo</span><span class="o">.</span><span class="n">get_by_id</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">order_id</span><span class="p">)</span>
+</span><span id="__span-13-15"><a href="#__codelineno-13-15" id="__codelineno-13-15" name="__codelineno-13-15"></a>        <span class="k">assert</span> <span class="n">order</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="n">OrderStatus</span><span class="o">.</span><span class="n">CONFIRMED</span>
+</span><span id="__span-13-16"><a href="#__codelineno-13-16" id="__codelineno-13-16" name="__codelineno-13-16"></a>
+</span><span id="__span-13-17"><a href="#__codelineno-13-17" id="__codelineno-13-17" name="__codelineno-13-17"></a>        <span class="c1"># Infrastructure assertion (Declarative)</span>
+</span><span id="__span-13-18"><a href="#__codelineno-13-18" id="__codelineno-13-18" name="__codelineno-13-18"></a>        <span class="n">kitchen_resource</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">resource_repo</span><span class="o">.</span><span class="n">get_kitchen_capacity</span><span class="p">()</span>
+</span><span id="__span-13-19"><a href="#__codelineno-13-19" id="__codelineno-13-19" name="__codelineno-13-19"></a>        <span class="k">assert</span> <span class="n">kitchen_resource</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">required_capacity</span> <span class="o">&gt;</span> <span class="n">initial_capacity</span>
+</span><span id="__span-13-20"><a href="#__codelineno-13-20" id="__codelineno-13-20" name="__codelineno-13-20"></a>
+</span><span id="__span-13-21"><a href="#__codelineno-13-21" id="__codelineno-13-21" name="__codelineno-13-21"></a>        <span class="c1"># Event coordination assertion</span>
+</span><span id="__span-13-22"><a href="#__codelineno-13-22" id="__codelineno-13-22" name="__codelineno-13-22"></a>        <span class="n">events</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">event_collector</span><span class="o">.</span><span class="n">get_events</span><span class="p">()</span>
+</span><span id="__span-13-23"><a href="#__codelineno-13-23" id="__codelineno-13-23" name="__codelineno-13-23"></a>        <span class="k">assert</span> <span class="nb">any</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">OrderPlacedEvent</span><span class="p">)</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">events</span><span class="p">)</span>
+</span><span id="__span-13-24"><a href="#__codelineno-13-24" id="__codelineno-13-24" name="__codelineno-13-24"></a>        <span class="k">assert</span> <span class="nb">any</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">KitchenCapacityUpdatedEvent</span><span class="p">)</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">events</span><span class="p">)</span>
+</span></code></pre></div>
+<h2 id="decision-framework">🎯 Decision Framework<a class="headerlink" href="#decision-framework" title="Permanent link">¶</a></h2>
+<h3 id="choose-your-pattern-combination">Choose Your Pattern Combination<a class="headerlink" href="#choose-your-pattern-combination" title="Permanent link">¶</a></h3>
+<pre class="mermaid"><code>flowchart TD
+    A[System Analysis] --&gt; B{Complex Business Logic?}
+    B --&gt;|Yes| C[Use DDD]
+    B --&gt;|No| D[Use Simple Entities]
+
+    C --&gt; E{Infrastructure Complexity?}
+    D --&gt; E
+
+    E --&gt;|High| F[Add Declarative Resources]
+    E --&gt;|Low| G[Manual Infrastructure]
+
+    F --&gt; H{Audit Requirements?}
+    G --&gt; H
+
+    H --&gt;|Heavy| I[Use Event Sourcing]
+    H --&gt;|Normal| J[Use State-Based Persistence]
+
+    I --&gt; K[Enterprise Pattern Stack]
+    J --&gt; L[Balanced Pattern Stack]
+
+    style K fill:#ff9999
+    style L fill:#99ff99</code></pre>
+<h3 id="pattern-selection-criteria">Pattern Selection Criteria<a class="headerlink" href="#pattern-selection-criteria" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Criteria</th>
+<th>Weight</th>
+<th>DDD</th>
+<th>Declarative</th>
+<th>Event Sourcing</th>
+<th>State-Based</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Business Complexity</td>
+<td>High</td>
+<td>✅ Essential</td>
+<td>➖ Optional</td>
+<td>⚠️ Consider</td>
+<td>✅ Good</td>
+</tr>
+<tr>
+<td>Infrastructure Complexity</td>
+<td>High</td>
+<td>➖ Optional</td>
+<td>✅ Essential</td>
+<td>➖ Optional</td>
+<td>✅ Good</td>
+</tr>
+<tr>
+<td>Audit Requirements</td>
+<td>High</td>
+<td>✅ Good</td>
+<td>➖ Optional</td>
+<td>✅ Essential</td>
+<td>⚠️ Limited</td>
+</tr>
+<tr>
+<td>Team Experience</td>
+<td>Medium</td>
+<td>⚠️ Learning curve</td>
+<td>⚠️ Learning curve</td>
+<td>❌ Complex</td>
+<td>✅ Familiar</td>
+</tr>
+<tr>
+<td>Performance Requirements</td>
+<td>Medium</td>
+<td>✅ Good</td>
+<td>✅ Excellent</td>
+<td>⚠️ Complex</td>
+<td>✅ Excellent</td>
+</tr>
+<tr>
+<td>Operational Complexity</td>
+<td>Medium</td>
+<td>➖ Manual</td>
+<td>✅ Autonomous</td>
+<td>⚠️ Complex</td>
+<td>✅ Simple</td>
+</tr>
+</tbody>
+</table>
+<h2 id="migration-strategies">🚀 Migration Strategies<a class="headerlink" href="#migration-strategies" title="Permanent link">¶</a></h2>
+<h3 id="from-simple-to-complex">From Simple to Complex<a class="headerlink" href="#from-simple-to-complex" title="Permanent link">¶</a></h3>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-14-1"><a href="#__codelineno-14-1" id="__codelineno-14-1" name="__codelineno-14-1"></a><span class="c1"># Phase 1: Start with simple entities</span>
+</span><span id="__span-14-2"><a href="#__codelineno-14-2" id="__codelineno-14-2" name="__codelineno-14-2"></a><span class="k">class</span><span class="w"> </span><span class="nc">Order</span><span class="p">(</span><span class="n">Entity</span><span class="p">):</span>
+</span><span id="__span-14-3"><a href="#__codelineno-14-3" id="__codelineno-14-3" name="__codelineno-14-3"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">add_pizza</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pizza</span><span class="p">):</span>
+</span><span id="__span-14-4"><a href="#__codelineno-14-4" id="__codelineno-14-4" name="__codelineno-14-4"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">pizzas</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pizza</span><span class="p">)</span>
+</span><span id="__span-14-5"><a href="#__codelineno-14-5" id="__codelineno-14-5" name="__codelineno-14-5"></a>        <span class="c1"># Direct database save</span>
+</span><span id="__span-14-6"><a href="#__codelineno-14-6" id="__codelineno-14-6" name="__codelineno-14-6"></a>
+</span><span id="__span-14-7"><a href="#__codelineno-14-7" id="__codelineno-14-7" name="__codelineno-14-7"></a><span class="c1"># Phase 2: Add domain events (still state-based)</span>
+</span><span id="__span-14-8"><a href="#__codelineno-14-8" id="__codelineno-14-8" name="__codelineno-14-8"></a><span class="k">class</span><span class="w"> </span><span class="nc">Order</span><span class="p">(</span><span class="n">AggregateRoot</span><span class="p">):</span>
+</span><span id="__span-14-9"><a href="#__codelineno-14-9" id="__codelineno-14-9" name="__codelineno-14-9"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">add_pizza</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pizza</span><span class="p">):</span>
+</span><span id="__span-14-10"><a href="#__codelineno-14-10" id="__codelineno-14-10" name="__codelineno-14-10"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">pizzas</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pizza</span><span class="p">)</span>
+</span><span id="__span-14-11"><a href="#__codelineno-14-11" id="__codelineno-14-11" name="__codelineno-14-11"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">raise_event</span><span class="p">(</span><span class="n">PizzaAddedEvent</span><span class="p">(</span><span class="o">...</span><span class="p">))</span>  <span class="c1"># Added events</span>
+</span><span id="__span-14-12"><a href="#__codelineno-14-12" id="__codelineno-14-12" name="__codelineno-14-12"></a>
+</span><span id="__span-14-13"><a href="#__codelineno-14-13" id="__codelineno-14-13" name="__codelineno-14-13"></a><span class="c1"># Phase 3: Add declarative infrastructure</span>
+</span><span id="__span-14-14"><a href="#__codelineno-14-14" id="__codelineno-14-14" name="__codelineno-14-14"></a><span class="k">class</span><span class="w"> </span><span class="nc">KitchenCapacityResource</span><span class="p">:</span>
+</span><span id="__span-14-15"><a href="#__codelineno-14-15" id="__codelineno-14-15" name="__codelineno-14-15"></a>    <span class="n">spec</span><span class="p">:</span> <span class="n">KitchenCapacitySpec</span>
+</span><span id="__span-14-16"><a href="#__codelineno-14-16" id="__codelineno-14-16" name="__codelineno-14-16"></a>    <span class="n">status</span><span class="p">:</span> <span class="n">KitchenCapacityStatus</span>
+</span><span id="__span-14-17"><a href="#__codelineno-14-17" id="__codelineno-14-17" name="__codelineno-14-17"></a>    <span class="c1"># Autonomous scaling based on order events</span>
+</span><span id="__span-14-18"><a href="#__codelineno-14-18" id="__codelineno-14-18" name="__codelineno-14-18"></a>
+</span><span id="__span-14-19"><a href="#__codelineno-14-19" id="__codelineno-14-19" name="__codelineno-14-19"></a><span class="c1"># Phase 4: Consider event sourcing (if needed)</span>
+</span><span id="__span-14-20"><a href="#__codelineno-14-20" id="__codelineno-14-20" name="__codelineno-14-20"></a><span class="k">class</span><span class="w"> </span><span class="nc">Order</span><span class="p">(</span><span class="n">EventSourcedAggregateRoot</span><span class="p">):</span>
+</span><span id="__span-14-21"><a href="#__codelineno-14-21" id="__codelineno-14-21" name="__codelineno-14-21"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">add_pizza</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pizza</span><span class="p">):</span>
+</span><span id="__span-14-22"><a href="#__codelineno-14-22" id="__codelineno-14-22" name="__codelineno-14-22"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">apply_event</span><span class="p">(</span><span class="n">PizzaAddedEvent</span><span class="p">(</span><span class="o">...</span><span class="p">))</span>  <span class="c1"># Event-sourced</span>
+</span></code></pre></div>
+<h2 id="framework-support-matrix">📚 Framework Support Matrix<a class="headerlink" href="#framework-support-matrix" title="Permanent link">¶</a></h2>
+<table>
+<thead>
+<tr>
+<th>Pattern</th>
+<th>Neuroglia Support</th>
+<th>Implementation Effort</th>
+<th>Learning Curve</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>DDD + State-Based</strong></td>
+<td>✅ Full support</td>
+<td>⭐⭐⭐ Medium</td>
+<td>⭐⭐⭐ Medium</td>
+</tr>
+<tr>
+<td><strong>Declarative Resources</strong></td>
+<td>✅ Full support</td>
+<td>⭐⭐⭐⭐ High</td>
+<td>⭐⭐⭐⭐ High</td>
+</tr>
+<tr>
+<td><strong>Event Sourcing</strong></td>
+<td>✅ Full support</td>
+<td>⭐⭐⭐⭐⭐ Very High</td>
+<td>⭐⭐⭐⭐⭐ Very High</td>
+</tr>
+<tr>
+<td><strong>Combined Approach</strong></td>
+<td>✅ Full support</td>
+<td>⭐⭐⭐⭐ High</td>
+<td>⭐⭐⭐⭐ High</td>
+</tr>
+</tbody>
+</table>
+<h2 id="conclusion-the-progressive-data-modeling-approach">🎯 Conclusion: The Progressive Data Modeling Approach<a class="headerlink" href="#conclusion-the-progressive-data-modeling-approach" title="Permanent link">¶</a></h2>
+<p>The key insight from this analysis is that <strong>data modeling patterns form a natural progression</strong> rather than competing alternatives. Each pattern builds upon the previous one, adding capabilities to handle increasing system complexity:</p>
+<h3 id="the-evolution-principle">🔄 The Evolution Principle<a class="headerlink" href="#the-evolution-principle" title="Permanent link">¶</a></h3>
+<ol>
+<li><strong>Start Simple</strong>: Begin with simple entities for basic functionality</li>
+<li><strong>Add Sophistication</strong>: Introduce DDD when business rules become complex</li>
+<li><strong>Enable Auditability</strong>: Add event sourcing when history tracking is critical</li>
+<li><strong>Automate Operations</strong>: Include declarative resources for infrastructure management</li>
+</ol>
+<h3 id="pattern-synergy">🎯 Pattern Synergy<a class="headerlink" href="#pattern-synergy" title="Permanent link">¶</a></h3>
+<p>The most powerful systems combine multiple patterns strategically:</p>
+<ul>
+<li><strong>Simple Entities</strong> for basic data (user preferences, configuration)</li>
+<li><strong>DDD Aggregates</strong> for core business logic (orders, payments, workflows)</li>
+<li><strong>Event Sourcing</strong> for audit-critical domains (financial transactions, compliance)</li>
+<li><strong>Declarative Resources</strong> for infrastructure (scaling, provisioning, monitoring)</li>
+</ul>
+<h3 id="practical-recommendations">🚀 Practical Recommendations<a class="headerlink" href="#practical-recommendations" title="Permanent link">¶</a></h3>
+<p><strong>For New Projects:</strong></p>
+<ol>
+<li><strong>Start with Stage 1</strong> (Simple Entities) to validate core functionality</li>
+<li><strong>Evolve to Stage 2</strong> (DDD + UnitOfWork) as business complexity grows</li>
+<li><strong>Consider Stage 3</strong> (Event Sourcing) only when audit requirements are clear</li>
+<li><strong>Add Stage 4</strong> (Declarative Resources) when operational complexity demands automation</li>
+</ol>
+<p><strong>For Existing Projects:</strong></p>
+<ul>
+<li><strong>Assess current pain points</strong> to determine which pattern addresses them</li>
+<li><strong>Migrate incrementally</strong> - don't try to adopt all patterns simultaneously</li>
+<li><strong>Focus on the biggest problem first</strong> (business complexity vs operational complexity)</li>
+</ul>
+<h3 id="key-success-factors">💡 Key Success Factors<a class="headerlink" href="#key-success-factors" title="Permanent link">¶</a></h3>
+<ol>
+<li><strong>Match Pattern to Problem</strong>: Don't use complex patterns for simple problems</li>
+<li><strong>Embrace Progressive Enhancement</strong>: Each stage adds capabilities without breaking existing functionality</li>
+<li><strong>Leverage Neuroglia's Integration</strong>: The framework handles the coordination between patterns seamlessly</li>
+<li><strong>Test Thoroughly</strong>: Each pattern has specific testing requirements and techniques</li>
+</ol>
+<p>The Neuroglia framework's strength lies in supporting this evolutionary approach, allowing teams to adopt sophisticated patterns gradually while maintaining system stability and developer productivity.</p>
+<h2 id="related-documentation">🔗 Related Documentation<a class="headerlink" href="#related-documentation" title="Permanent link">¶</a></h2>
+<ul>
+<li><a href="../clean-architecture/">🏗️ Clean Architecture</a> - Structural foundation for all patterns</li>
+<li><a href="../domain-driven-design/">🏛️ Domain Driven Design</a> - Rich domain modeling with aggregates</li>
+<li><a href="../event-sourcing/">📚 Event Sourcing</a> - Complete audit trails and temporal queries</li>
+<li><a href="../resource-oriented-architecture/">� Resource Oriented Architecture</a> - Declarative infrastructure management</li>
+<li><a href="../unit-of-work/">🔄 Unit of Work Pattern</a> - Transactional consistency across patterns</li>
+<li><a href="../event-driven/">📡 Event-Driven Architecture</a> - Integration foundation for all approaches</li>
+</ul>
+</article>
+</div>
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+</div>
+<button class="md-top md-icon" data-md-component="top" hidden="" type="button">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"></path></svg>
+  Back to top
+</button>
+</main>
+<footer class="md-footer">
+<div class="md-footer-meta md-typeset">
+<div class="md-footer-meta__inner md-grid">
+<div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" rel="noopener" target="_blank">
+      Material for MkDocs
+    </a>
+</div>
+<div class="md-social">
+<a class="md-social__link" href="https://github.com/bvandewe/pyneuro" rel="noopener" target="_blank" title="github.com">
+<svg viewbox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"></path></svg>
+</a>
+</div>
+</div>
+</div>
+</footer>
+</div>
+<div class="md-dialog" data-md-component="dialog">
+<div class="md-dialog__inner md-typeset"></div>
+</div>
+<script id="__config" type="application/json">{"base": "../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.expand", "navigation.top", "search.highlight", "search.share"], "search": "../../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+<script src="../../assets/javascripts/bundle.f55a23d4.min.js"></script>
+</body>
+</html>
