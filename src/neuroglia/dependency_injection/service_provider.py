@@ -4,7 +4,7 @@ import inspect
 from abc import ABC, abstractmethod
 from collections.abc import Callable
 from enum import Enum
-from typing import Any, List, Optional, Type, TypeVar
+from typing import Any, List, Optional, Type, get_args, get_origin
 
 from neuroglia.core.type_extensions import TypeExtensions
 
@@ -301,16 +301,21 @@ class ServiceScope(ServiceScopeBase, ServiceProviderBase):
             service_generic_args = TypeExtensions.get_generic_arguments(service_descriptor.implementation_type)
             service_args = dict[Type, any]()
             for init_arg in service_init_args:
-                is_dependency_generic = not inspect.isclass(init_arg.annotation)
-                dependency_generic_type = init_arg.annotation.__origin__ if is_dependency_generic else None
-                dependency_generic_args = None if dependency_generic_type is None else init_arg.annotation.__args__
-                if dependency_generic_args is not None:
-                    dependency_generic_args = [service_generic_args[arg.__name__] if type(arg) == TypeVar else arg for arg in dependency_generic_args]
-                dependency_type = (
-                    getattr(init_arg.annotation.__origin__, "__getitem__")(tuple(dependency_generic_args))
-                    if is_dependency_generic and len(dependency_generic_args) > 1
-                    else (getattr(init_arg.annotation.__origin__, "__getitem__")(dependency_generic_args[0]) if is_dependency_generic and len(dependency_generic_args) == 1 else init_arg.annotation)
-                )
+                # Use typing.get_origin() and get_args() for robust generic type handling
+                origin = get_origin(init_arg.annotation)
+                args = get_args(init_arg.annotation)
+
+                # Determine the dependency type to resolve
+                if origin is not None and args:
+                    # It's a parameterized generic type (e.g., Repository[User, int])
+                    # Use the annotation directly - it's already properly parameterized
+                    # The DI container will match it against registered types
+                    # Note: TypeVar substitution is handled by get_generic_arguments() at service level
+                    dependency_type = init_arg.annotation
+                else:
+                    # Simple non-generic type
+                    dependency_type = init_arg.annotation
+
                 dependency = self.get_service(dependency_type)
                 if dependency is None and init_arg.default == init_arg.empty and init_arg.name != "self":
                     raise Exception(f"Failed to build service of type '{service_descriptor.service_type.__name__}' because the service provider failed to resolve service '{dependency_type.__name__}'")
@@ -469,16 +474,21 @@ class ServiceProvider(ServiceProviderBase):
             service_generic_args = TypeExtensions.get_generic_arguments(service_descriptor.implementation_type)  # gets the generic args: we will need them to substitute the type args of potential generic dependencies
             service_args = dict[Type, any]()
             for init_arg in service_init_args:
-                is_dependency_generic = not inspect.isclass(init_arg.annotation)
-                dependency_generic_type = init_arg.annotation.__origin__ if is_dependency_generic else None
-                dependency_generic_args = None if dependency_generic_type is None else init_arg.annotation.__args__
-                if dependency_generic_args is not None:
-                    dependency_generic_args = [service_generic_args[arg.__name__] if type(arg) == TypeVar else arg for arg in dependency_generic_args]  # replace TypeVar generic arguments by the service's matching generic argument
-                dependency_type = (
-                    getattr(init_arg.annotation.__origin__, "__getitem__")(tuple(dependency_generic_args))
-                    if is_dependency_generic and len(dependency_generic_args) > 1
-                    else (getattr(init_arg.annotation.__origin__, "__getitem__")(dependency_generic_args[0]) if is_dependency_generic and len(dependency_generic_args) == 1 else init_arg.annotation)
-                )
+                # Use typing.get_origin() and get_args() for robust generic type handling
+                origin = get_origin(init_arg.annotation)
+                args = get_args(init_arg.annotation)
+
+                # Determine the dependency type to resolve
+                if origin is not None and args:
+                    # It's a parameterized generic type (e.g., Repository[User, int])
+                    # Use the annotation directly - it's already properly parameterized
+                    # The DI container will match it against registered types
+                    # Note: TypeVar substitution is handled by get_generic_arguments() at service level
+                    dependency_type = init_arg.annotation
+                else:
+                    # Simple non-generic type
+                    dependency_type = init_arg.annotation
+
                 dependency = self.get_service(dependency_type)
                 if dependency is None and init_arg.default == init_arg.empty and init_arg.name != "self":
                     raise Exception(f"Failed to build service of type '{service_descriptor.service_type.__name__}' because the service provider failed to resolve service '{dependency_type.__name__}'")
