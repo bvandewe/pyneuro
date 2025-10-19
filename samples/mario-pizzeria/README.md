@@ -2,6 +2,9 @@
 
 A comprehensive sample application demonstrating all major Neuroglia framework features through a realistic pizza ordering and management system.
 
+> **📢 Framework Compatibility**: This sample is fully compatible with Neuroglia v0.4.6+
+> See [UPGRADE_NOTES_v0.4.6.md](./UPGRADE_NOTES_v0.4.6.md) for details on the latest framework improvements.
+
 ## 🎯 Overview
 
 Mario's Pizzeria showcases the complete Neuroglia framework implementation including:
