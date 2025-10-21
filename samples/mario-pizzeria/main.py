@@ -142,12 +142,36 @@ def create_pizzeria_app(data_dir: Optional[str] = None, port: int = 8000):
     # Make DI services available to the app
     app.state.services = service_provider
 
-    # Configure session middleware for UI authentication (on main app)
+    # Create separate API app for backend REST API
+    api_app = FastAPI(
+        title="Mario's Pizzeria API",
+        description="Pizza ordering and management API",
+        version="1.0.0",
+        docs_url="/docs",
+        debug=True,
+    )
+
+    # IMPORTANT: Make services available to API app as well
+    api_app.state.services = service_provider
+
+    # Create UI app for frontend with session-based authentication
+    ui_app = FastAPI(
+        title="Mario's Pizzeria UI",
+        description="Pizza ordering web interface",
+        version="1.0.0",
+        docs_url=None,  # Disable docs for UI app
+        debug=True,
+    )
+
+    # IMPORTANT: Make services available to UI app
+    ui_app.state.services = service_provider
+
+    # Configure session middleware for UI authentication
     from application.settings import ApplicationSettings
     from starlette.middleware.sessions import SessionMiddleware
 
     settings = ApplicationSettings()
-    app.add_middleware(
+    ui_app.add_middleware(
         SessionMiddleware,
         secret_key=settings.session_secret_key,
         session_cookie="mario_session",
@@ -162,35 +186,26 @@ def create_pizzeria_app(data_dir: Optional[str] = None, port: int = 8000):
     templates_directory = Path(__file__).parent / "ui" / "templates"
     templates = Jinja2Templates(directory=str(templates_directory))
 
-    # Make templates available to all controllers via main app
-    app.state.templates = templates
+    # Make templates available to UI controllers
+    ui_app.state.templates = templates
 
     # Configure static file serving for UI (including Parcel-built assets)
     static_directory = Path(__file__).parent / "ui" / "static"
-    app.mount("/static", StaticFiles(directory=str(static_directory)), name="static")
+    ui_app.mount("/static", StaticFiles(directory=str(static_directory)), name="static")
 
-    # Create separate API app for backend REST API (mounted at /api)
-    api_app = FastAPI(
-        title="Mario's Pizzeria API",
-        description="Pizza ordering and management API",
-        version="1.0.0",
-        docs_url="/docs",
-        debug=True,
-    )
-
-    # Make services available to API app
-    api_app.state.services = service_provider
-
-    # Register API controllers to the API app (will be available at /api/*)
+    # Register API controllers to the API app
     builder.add_controllers(["api.controllers"], app=api_app)
+
+    # Register UI controllers to the UI app
+    builder.add_controllers(["ui.controllers"], app=ui_app)
+
+    # Add exception handling to both apps
     builder.add_exception_handling(api_app)
+    builder.add_exception_handling(ui_app)
 
-    # Mount API app at /api prefix
+    # Mount the apps
     app.mount("/api", api_app, name="api")
-
-    # Register UI controllers directly to main app (available at root)
-    builder.add_controllers(["ui.controllers"], app=app)
-    builder.add_exception_handling(app)
+    app.mount("/", ui_app, name="ui")  # Mount UI at root
 
     # Add health check endpoint to main app
     @app.get("/health")
