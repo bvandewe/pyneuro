@@ -1,6 +1,26 @@
 name: mario-pizzeria
 services:
-  # 🍕 Mario's Pizzeria Application
+  # � UI Builder (Parcel Watch Mode)
+  # Automatically rebuilds UI assets on file changes
+  ui-builder:
+    image: node:20-alpine
+    working_dir: /app/samples/mario-pizzeria/ui
+    command: npm run dev
+    volumes:
+      - .:/app
+      - /app/samples/mario-pizzeria/ui/node_modules # Anonymous volume for node_modules
+    networks:
+      - mario-net
+    environment:
+      NODE_ENV: development
+    # Ensure node_modules is installed first
+    entrypoint: >
+      sh -c "
+      npm install &&
+      npm run dev
+      "
+
+  # �🍕 Mario's Pizzeria Application
   # http://localhost:8080/ui
   # http://localhost:8080/docs
   # http://localhost:8080/api/docs
@@ -44,6 +64,7 @@ services:
       - mongodb
       - keycloak
       - event-player
+      - ui-builder # Ensure UI is built before app starts
 
   # 🗄️ MongoDB Database
   # mongodb://localhost:27017
