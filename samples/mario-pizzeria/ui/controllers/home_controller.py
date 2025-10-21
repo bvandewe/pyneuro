@@ -19,9 +19,26 @@ class HomeController(ControllerBase):
     """Controller for home UI views."""
 
     def __init__(self, service_provider: ServiceProviderBase, mapper: Mapper, mediator: Mediator):
-        ControllerBase.__init__(self, service_provider, mapper, mediator)
-        # Override class name to avoid path issues with classy_fastapi
-        self.router.prefix = ""  # Reset the router prefix that gets auto-set to class name
+        # Store DI services first
+        from neuroglia.serialization.json import JsonSerializer
+
+        self.service_provider = service_provider
+        self.mapper = mapper
+        self.mediator = mediator
+        self.json_serializer = service_provider.get_required_service(JsonSerializer)
+        self.name = "Home"
+
+        # Call Routable.__init__ directly with empty prefix for root routes
+        from classy_fastapi import Routable
+
+        from neuroglia.mvc.controller_base import generate_unique_id_function
+
+        Routable.__init__(
+            self,
+            prefix="",  # Empty prefix for root routes
+            tags=["UI"],
+            generate_unique_id_function=generate_unique_id_function,
+        )
 
     @get("/", response_class=HTMLResponse)
     async def home_view(self, request: Request) -> Any:
