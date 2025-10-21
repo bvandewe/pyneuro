@@ -1,0 +1,73 @@
+{% extends "layouts/base.html" %}
+
+{% set active_page = "home" %}
+{% set authenticated = authenticated %}
+{% set username = username %}
+
+{% block content %}
+<div class="home-container">
+    <div class="text-center bg-light rounded">
+        <!-- Content visible only when not authenticated -->
+        <div id="unauthenticated-content">
+            <div class="row my-3 justify-content-center">
+                <h3>Explore Immutable Data Records</h3>
+            </div>
+            <hr class="my-4 w-50 mx-auto">
+        </div>
+
+        <!-- Login container (shows when not authenticated) -->
+        <div id="login-container" class="d-none">
+            <p class="my-3">Please log in to access the application features.</p>
+            <button id="login-btn" class="btn btn-primary btn-lg">
+                <i class="bi bi-box-arrow-in-right"></i> Log in
+            </button>
+        </div>
+
+        <!-- User info container (shows when authenticated) -->
+        <div id="user-info" class="d-none">
+            <p class="lead">Hey {{ username }}, welcome back!</p>
+        </div>
+    </div>
+    <!-- Content visible only when authenticated -->
+    <div id="authenticated-content" class="d-none">
+        <div class="row row-cols-1 row-cols-md-3 g-4 mt-4">
+            <div class="col">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title"><i class="bi bi-chat-left-text"></i> Comments</h5>
+                        <p class="card-text">View and manage comments about various subjects in the system.</p>
+                        <a href="/comments" class="btn btn-primary">Go to Comments</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title"><i class="bi bi-gear"></i> API Documentation</h5>
+                        <p class="card-text">Explore the API documentation for developers.</p>
+                        <a href="/api/v1/docs" class="btn btn-primary">View API Docs</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title"><i class="bi bi-person-circle"></i> Your Account</h5>
+                        <p class="card-text">Manage your account settings and preferences.</p>
+                        <button id="logout-btn" class="btn btn-outline-danger">
+                            <i class="bi bi-box-arrow-right"></i> Log out
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script type="module" src="/static/js/home/index.js"></script>
+{% endblock %}

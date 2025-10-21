@@ -79,22 +79,10 @@ def create_pizzeria_app(data_dir: Optional[str] = None, port: int = 8000):
     # Using scoped lifetime to ensure test isolation
     # Capture data_dir_path immediately to avoid closure issues
     data_dir_str = str(data_dir_path)
-    builder.services.add_scoped(
-        IPizzaRepository,
-        implementation_factory=lambda _: FilePizzaRepository(data_dir_str),
-    )
-    builder.services.add_scoped(
-        ICustomerRepository,
-        implementation_factory=lambda _: FileCustomerRepository(data_dir_str),
-    )
-    builder.services.add_scoped(
-        IOrderRepository,
-        implementation_factory=lambda _: FileOrderRepository(data_dir_str),
-    )
-    builder.services.add_scoped(
-        IKitchenRepository,
-        implementation_factory=lambda _: FileKitchenRepository(data_dir_str),
-    )
+    builder.services.add_scoped(IPizzaRepository, implementation_factory=lambda _: FilePizzaRepository(data_dir_str))
+    builder.services.add_scoped(ICustomerRepository, implementation_factory=lambda _: FileCustomerRepository(data_dir_str))
+    builder.services.add_scoped(IOrderRepository, implementation_factory=lambda _: FileOrderRepository(data_dir_str))
+    builder.services.add_scoped(IKitchenRepository, implementation_factory=lambda _: FileKitchenRepository(data_dir_str))
 
     # Configure Unit of Work for domain event collection
     # Scoped lifetime ensures one UnitOfWork instance per request
@@ -168,6 +156,7 @@ def create_pizzeria_app(data_dir: Optional[str] = None, port: int = 8000):
     api_app.state.services = service_provider
 
     # Create UI app for frontend
+    # This prepares for future API endpoints dedicated to the UI with its own Security
     ui_app = FastAPI(
         title="Mario's Pizzeria UI",
         description="Pizza ordering web interface",
@@ -199,38 +188,7 @@ def create_pizzeria_app(data_dir: Optional[str] = None, port: int = 8000):
     # Add welcome endpoint to main app
     @app.get("/")
     async def welcome():
-        """Welcome endpoint with API information"""
-        return {
-            "name": "Mario's Pizzeria",
-            "version": "1.0.0",
-            "description": "Complete pizza ordering and management system built with Neuroglia framework",
-            "apps": {
-                "api": {
-                    "url": "/api",
-                    "docs": "/api/docs",
-                    "description": "REST API for pizza ordering and management",
-                },
-                "ui": {
-                    "url": "/ui",
-                    "description": "Interactive web interface for pizza ordering and management",
-                },
-            },
-            "sample_requests": {
-                "place_order": {
-                    "method": "POST",
-                    "url": "/api/orders",
-                    "body": {
-                        "customer_name": "Mario Rossi",
-                        "customer_phone": "+1-555-0123",
-                        "customer_address": "123 Pizza Street, Little Italy",
-                        "pizzas": [{"name": "Margherita", "size": "large", "toppings": ["extra cheese"]}],
-                        "payment_method": "credit_card",
-                    },
-                },
-                "get_menu": {"method": "GET", "url": "/api/menu"},
-                "kitchen_status": {"method": "GET", "url": "/api/kitchen/status"},
-            },
-        }
+        return FileResponse(str(static_directory / "index.html"))
 
     # Add health check endpoint
     @app.get("/health")
@@ -264,7 +222,7 @@ def main():
 
     print(f"🍕 Starting Mario's Pizzeria on http://{host}:{port}")
     print(f"📖 API Documentation available at http://{host}:{port}/api/docs")
-    print(f"🌐 UI will be available at http://{host}:{port}/ui (coming soon)")
+    print(f"🌐 UI is available at http://{host}:{port}/ui")
 
     # Run the server
     uvicorn.run(app, host=host, port=port)
