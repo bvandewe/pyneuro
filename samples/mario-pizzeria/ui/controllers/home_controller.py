@@ -19,9 +19,9 @@ class HomeController(ControllerBase):
     """Controller for home UI views."""
 
     def __init__(self, service_provider: ServiceProviderBase, mapper: Mapper, mediator: Mediator):
-        ControllerBase.__init__(self, service_provider, mapper, mediator)
-        # Override class name to avoid path issues with classy_fastapi
-        self.router.prefix = ""  # Reset the router prefix that gets auto-set to class name
+        super().__init__(service_provider, mapper, mediator)
+        # Override default prefix to serve at root
+        self.prefix = ""
 
     @get("/", response_class=HTMLResponse)
     async def home_view(self, request: Request) -> Any:

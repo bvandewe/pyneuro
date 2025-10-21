@@ -22,7 +22,8 @@ class UIAuthController(ControllerBase):
     def __init__(self, service_provider: ServiceProviderBase, mapper: Mapper, mediator: Mediator):
         super().__init__(service_provider, mapper, mediator)
         self.auth_service = AuthService()
-        self.router.prefix = "/auth"
+        # Override default prefix for clean auth routes
+        self.prefix = "/auth"
 
     @get("/login", response_class=HTMLResponse)
     async def login_page(self, request: Request) -> HTMLResponse:
