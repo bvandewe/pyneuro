@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **Mario's Pizzeria UI/API Separation Architecture**: Comprehensive implementation plan for hybrid authentication
+  - **IMPLEMENTATION_PLAN.md**: Complete roadmap for separating UI (session cookies) and API (JWT) authentication
+  - **Parcel Build Pipeline**: Modern frontend build system with tree-shaking and asset optimization
+  - **Hybrid Authentication Strategy**: Session-based auth for web UI, JWT for programmatic API access
+  - **Multi-App Architecture**: Clear separation between customer-facing UI and external API integrations
+  - **Security Best Practices**: HttpOnly cookies, CSRF protection, JWT with proper expiration
+  - **Phase-by-Phase Implementation**: Detailed steps from build setup to production deployment
+
 ## [0.4.8] - 2025-10-19
 
 ### Fixed

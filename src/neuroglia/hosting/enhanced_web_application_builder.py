@@ -117,7 +117,7 @@ class WebApplicationBuilderBase(ApplicationBuilderBase):
     def __init__(self):
         super().__init__()
 
-    def add_controllers(self, modules: list[str]) -> ServiceCollection:
+    def add_controllers(self, modules: list[str], app: Optional[FastAPI] = None, prefix: Optional[str] = None) -> ServiceCollection:
         """Registers all API controller types, which enables automatic configuration and implicit Dependency Injection of the application's controllers (specialized router class in FastAPI)"""
         from neuroglia.mvc.controller_base import ControllerBase
 
@@ -194,7 +194,7 @@ class EnhancedWebApplicationBuilder(WebApplicationBuilder):
 
         return host
 
-    def add_controllers(self, modules: list[str], app: Optional[FastAPI] = None, prefix: Optional[str] = None) -> None:
+    def add_controllers(self, modules: list[str], app: Optional[FastAPI] = None, prefix: Optional[str] = None) -> ServiceCollection:
         """
         Add controllers from specified modules to an app.
 
@@ -212,6 +212,7 @@ class EnhancedWebApplicationBuilder(WebApplicationBuilder):
         else:
             # Store for later registration when main app is built
             self._pending_controller_modules.append({"modules": modules, "app": None, "prefix": prefix})
+        return self.services
 
     def add_exception_handling(self, app: Optional[FastAPI] = None):
         """

@@ -94,6 +94,7 @@ start_services() {
     print_success "Mario's Pizzeria is starting up!"
     print_info ""
     print_info "🌐 Access your services at:"
+    print_info "  ${PIZZA} Mario's Pizzeria UI: http://localhost:8080/ui"
     print_info "  ${PIZZA} Mario's Pizzeria API: http://localhost:8080/api/docs"
     print_info "  🗄️  MongoDB Express:      http://localhost:8081 (admin/admin123)"
     print_info "  🎪 EventStoreDB:         http://localhost:2113"
