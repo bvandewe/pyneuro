@@ -20,9 +20,29 @@ class UIAuthController(ControllerBase):
     """UI authentication controller - session cookies"""
 
     def __init__(self, service_provider: ServiceProviderBase, mapper: Mapper, mediator: Mediator):
-        super().__init__(service_provider, mapper, mediator)
+        # Store DI services first
+        from neuroglia.serialization.json import JsonSerializer
+
+        self.service_provider = service_provider
+        self.mapper = mapper
+        self.mediator = mediator
+        self.json_serializer = service_provider.get_required_service(JsonSerializer)
+        self.name = "Auth"
+
+        # Initialize auth service
         self.auth_service = AuthService()
-        self.router.prefix = "/auth"
+
+        # Call Routable.__init__ directly with /auth prefix
+        from classy_fastapi import Routable
+
+        from neuroglia.mvc.controller_base import generate_unique_id_function
+
+        Routable.__init__(
+            self,
+            prefix="/auth",  # Auth routes prefix
+            tags=["UI Auth"],
+            generate_unique_id_function=generate_unique_id_function,
+        )
 
     @get("/login", response_class=HTMLResponse)
     async def login_page(self, request: Request) -> HTMLResponse:
