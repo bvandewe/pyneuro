@@ -130,7 +130,6 @@ def create_pizzeria_app(data_dir: Optional[str] = None, port: int = 8000):
 
     # Create the main FastAPI app directly
     from fastapi import FastAPI
-    from fastapi.responses import FileResponse
     from fastapi.staticfiles import StaticFiles
 
     app = FastAPI(
@@ -155,8 +154,7 @@ def create_pizzeria_app(data_dir: Optional[str] = None, port: int = 8000):
     # IMPORTANT: Make services available to API app as well
     api_app.state.services = service_provider
 
-    # Create UI app for frontend
-    # This prepares for future API endpoints dedicated to the UI with its own Security
+    # Create UI app for frontend with session-based authentication
     ui_app = FastAPI(
         title="Mario's Pizzeria UI",
         description="Pizza ordering web interface",
@@ -165,32 +163,51 @@ def create_pizzeria_app(data_dir: Optional[str] = None, port: int = 8000):
         debug=True,
     )
 
-    # Configure static file serving for UI
-    static_directory = Path(__file__).parent / "static"
-    ui_app.mount("/static", StaticFiles(directory=str(static_directory)), name="static")
+    # IMPORTANT: Make services available to UI app
+    ui_app.state.services = service_provider
 
-    # Add root route to serve index.html
-    @ui_app.get("/")
-    async def serve_ui():
-        """Serve the main UI page"""
-        return FileResponse(str(static_directory / "index.html"))
+    # Configure session middleware for UI authentication
+    from application.settings import ApplicationSettings
+    from starlette.middleware.sessions import SessionMiddleware
+
+    settings = ApplicationSettings()
+    ui_app.add_middleware(
+        SessionMiddleware,
+        secret_key=settings.session_secret_key,
+        session_cookie="mario_session",
+        max_age=3600,  # 1 hour
+        same_site="lax",
+        https_only=False,  # Set to True in production
+    )
+
+    # Configure Jinja2 templates for UI
+    from fastapi.templating import Jinja2Templates
+
+    templates_directory = Path(__file__).parent / "ui" / "templates"
+    templates = Jinja2Templates(directory=str(templates_directory))
+
+    # Make templates available to UI controllers
+    ui_app.state.templates = templates
+
+    # Configure static file serving for UI (including Parcel-built assets)
+    static_directory = Path(__file__).parent / "ui" / "static"
+    ui_app.mount("/static", StaticFiles(directory=str(static_directory)), name="static")
 
     # Register API controllers to the API app
     builder.add_controllers(["api.controllers"], app=api_app)
 
-    # Add exception handling to API app
+    # Register UI controllers to the UI app
+    builder.add_controllers(["ui.controllers"], app=ui_app)
+
+    # Add exception handling to both apps
     builder.add_exception_handling(api_app)
+    builder.add_exception_handling(ui_app)
 
     # Mount the apps
     app.mount("/api", api_app, name="api")
-    app.mount("/ui", ui_app, name="ui")
+    app.mount("/", ui_app, name="ui")  # Mount UI at root
 
-    # Add welcome endpoint to main app
-    @app.get("/")
-    async def welcome():
-        return FileResponse(str(static_directory / "index.html"))
-
-    # Add health check endpoint
+    # Add health check endpoint to main app
     @app.get("/health")
     async def health_check():
         """Health check endpoint"""
@@ -222,7 +239,8 @@ def main():
 
     print(f"🍕 Starting Mario's Pizzeria on http://{host}:{port}")
     print(f"📖 API Documentation available at http://{host}:{port}/api/docs")
-    print(f"🌐 UI is available at http://{host}:{port}/ui")
+    print(f"🌐 UI available at http://{host}:{port}/")
+    print(f"🔐 Login at http://{host}:{port}/auth/login (demo/demo123)")
 
     # Run the server
     uvicorn.run(app, host=host, port=port)
