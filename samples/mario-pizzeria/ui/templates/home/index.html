@@ -1,73 +1,102 @@
 {% extends "layouts/base.html" %}
 
-{% set active_page = "home" %}
-{% set authenticated = authenticated %}
-{% set username = username %}
-
 {% block content %}
 <div class="home-container">
-    <div class="text-center bg-light rounded">
-        <!-- Content visible only when not authenticated -->
-        <div id="unauthenticated-content">
-            <div class="row my-3 justify-content-center">
-                <h3>Explore Immutable Data Records</h3>
-            </div>
-            <hr class="my-4 w-50 mx-auto">
-        </div>
+    <!-- Hero Section -->
+    <div class="text-center py-5 mb-4 bg-white rounded shadow-sm">
+        <h1 class="display-4 mb-3">🍕 Welcome to Mario's Pizzeria!</h1>
+        <p class="lead text-muted">Authentic Italian Pizza Made Fresh Daily</p>
 
-        <!-- Login container (shows when not authenticated) -->
-        <div id="login-container" class="d-none">
-            <p class="my-3">Please log in to access the application features.</p>
-            <button id="login-btn" class="btn btn-primary btn-lg">
-                <i class="bi bi-box-arrow-in-right"></i> Log in
-            </button>
+        {% if not authenticated %}
+        <div class="mt-4">
+            <p class="mb-3">Sign in to order your favorite pizzas and track your orders</p>
+            <a href="/auth/login" class="btn btn-primary btn-lg">
+                <i class="bi bi-box-arrow-in-right"></i> Sign In to Order
+            </a>
         </div>
-
-        <!-- User info container (shows when authenticated) -->
-        <div id="user-info" class="d-none">
-            <p class="lead">Hey {{ username }}, welcome back!</p>
+        {% else %}
+        <div class="mt-4">
+            <p class="lead">Welcome back, <strong>{{ username }}</strong>!</p>
+            <a href="/menu" class="btn btn-primary btn-lg">
+                <i class="bi bi-list-ul"></i> View Menu
+            </a>
         </div>
-    </div>
-    <!-- Content visible only when authenticated -->
-    <div id="authenticated-content" class="d-none">
-        <div class="row row-cols-1 row-cols-md-3 g-4 mt-4">
-            <div class="col">
-                <div class="card h-100">
-                    <div class="card-body">
-                        <h5 class="card-title"><i class="bi bi-chat-left-text"></i> Comments</h5>
-                        <p class="card-text">View and manage comments about various subjects in the system.</p>
-                        <a href="/comments" class="btn btn-primary">Go to Comments</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col">
-                <div class="card h-100">
-                    <div class="card-body">
-                        <h5 class="card-title"><i class="bi bi-gear"></i> API Documentation</h5>
-                        <p class="card-text">Explore the API documentation for developers.</p>
-                        <a href="/api/v1/docs" class="btn btn-primary">View API Docs</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col">
-                <div class="card h-100">
-                    <div class="card-body">
-                        <h5 class="card-title"><i class="bi bi-person-circle"></i> Your Account</h5>
-                        <p class="card-text">Manage your account settings and preferences.</p>
-                        <button id="logout-btn" class="btn btn-outline-danger">
-                            <i class="bi bi-box-arrow-right"></i> Log out
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
+        {% endif %}
     </div>
 
+    <!-- Features Section -->
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        <div class="col">
+            <div class="card h-100 pizza-card">
+                <div class="card-body text-center">
+                    <div class="mb-3" style="font-size: 3rem;">🍕</div>
+                    <h5 class="card-title">Browse Our Menu</h5>
+                    <p class="card-text">Explore our delicious selection of pizzas, from classic Margherita to specialty creations.</p>
+                    <a href="/menu" class="btn btn-primary">View Menu</a>
+                </div>
+            </div>
+        </div>
+
+        {% if authenticated %}
+        <div class="col">
+            <div class="card h-100 pizza-card">
+                <div class="card-body text-center">
+                    <div class="mb-3" style="font-size: 3rem;">📦</div>
+                    <h5 class="card-title">My Orders</h5>
+                    <p class="card-text">Track your current orders and view your order history.</p>
+                    <a href="/orders" class="btn btn-primary">View Orders</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col">
+            <div class="card h-100 pizza-card">
+                <div class="card-body text-center">
+                    <div class="mb-3" style="font-size: 3rem;">👨‍🍳</div>
+                    <h5 class="card-title">Kitchen Status</h5>
+                    <p class="card-text">See what's cooking in our kitchen right now!</p>
+                    <a href="/kitchen" class="btn btn-primary">View Kitchen</a>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="col">
+            <div class="card h-100 pizza-card">
+                <div class="card-body text-center">
+                    <div class="mb-3" style="font-size: 3rem;">⚡</div>
+                    <h5 class="card-title">Fast Delivery</h5>
+                    <p class="card-text">Hot and fresh pizza delivered to your door in 30 minutes or less!</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col">
+            <div class="card h-100 pizza-card">
+                <div class="card-body text-center">
+                    <div class="mb-3" style="font-size: 3rem;">🔥</div>
+                    <h5 class="card-title">Fresh Ingredients</h5>
+                    <p class="card-text">We use only the finest, locally-sourced ingredients for authentic taste.</p>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- API Documentation Card (for developers) -->
+    <div class="row mt-4">
+        <div class="col-md-6 mx-auto">
+            <div class="card border-secondary">
+                <div class="card-body text-center">
+                    <h5 class="card-title">
+                        <i class="bi bi-code-square"></i> For Developers
+                    </h5>
+                    <p class="card-text">Integrate with our ordering API for custom applications</p>
+                    <a href="/api/docs" class="btn btn-outline-secondary" target="_blank">
+                        View API Documentation
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
-{% endblock %}
-
-{% block scripts %}
-<script type="module" src="/static/js/home/index.js"></script>
 {% endblock %}
