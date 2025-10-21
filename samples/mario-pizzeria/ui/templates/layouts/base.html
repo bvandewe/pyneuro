@@ -3,88 +3,68 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ title }} - Exam Record Manager</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 16 16%22 fill=%22%230d6efd%22><path d=%22M5 10.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5zm0-2a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm0-2a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5z%22/><path d=%22M3 0h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-1h1v1a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v1H1V2a2 2 0 0 1 2-2z%22/><path d=%22M1 5v-.5a.5.5 0 0 1 1 0V5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 3v-.5a.5.5 0 0 1 1 0V8h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 3v-.5a.5.5 0 0 1 1 0v.5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1z%22/></svg>">
+    <title>{{ title }} - Mario's Pizzeria</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 16 16%22 fill=%22%23d32f2f%22><text x=%228%22 y=%2212%22 text-anchor=%22middle%22 font-size=%2214%22>🍕</text></svg>">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-    <link rel="stylesheet" href="/static/styles/main.css">
+    <link rel="stylesheet" href="/static/dist/styles/main.css">
     {% block head %}{% endblock %}
 </head>
-<body class="bg-light text-dark">
-    {% if not is_embed  %}
+<body>
     <header>
-        <nav class="navbar navbar-expand-lg navbar bg">
+        <nav class="navbar navbar-expand-lg navbar-dark">
             <div class="container-fluid">
-                <div class="navbar-brand text-primary">
-                    <a class="nav-link" href="/">
-                        <i class="bi bi-journal-text me-2 text-primary"></i>Exam Record Manager
-                    </a>
-                </div>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
+                <a class="navbar-brand" href="/">
+                    🍕 Mario's Pizzeria
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav me-auto">
                         <li class="nav-item">
                             <a class="nav-link {% if active_page == 'home' %}active{% endif %}" href="/">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link {% if active_page == 'comments' %}active{% endif %}" href="/comments">Comments</a>
+                            <a class="nav-link {% if active_page == 'menu' %}active{% endif %}" href="/menu">Menu</a>
                         </li>
-                        <!-- Add more navigation items here -->
+                        {% if authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link {% if active_page == 'orders' %}active{% endif %}" href="/orders">My Orders</a>
+                        </li>
+                        {% endif %}
                     </ul>
                     <div class="d-flex align-items-center">
-                        <!-- Theme Toggle Switch -->
-                        <div class="theme-switch-wrapper me-3">
-                            <div class="form-check form-switch">
-                                <input class="form-check-input" type="checkbox" id="themeSwitch" checked>
-                                <label class="form-check-label" for="themeSwitch">
-                                    <i class="bi bi-moon-fill"></i>
-                                </label>
-                            </div>
-                        </div>
-                        <span class="navbar-text me-3">
+                        <span class="navbar-text me-3 text-white">
                             <i class="bi bi-person-fill"></i> {{ username if authenticated else 'Guest' }}
                         </span>
                         {% if authenticated %}
-                        <!-- Logout Button -->
-                        <a href="/auth/logout" class="btn btn-outline btn-sm">Logout</a>
+                        <a href="/auth/logout" class="btn btn-outline-light btn-sm">
+                            <i class="bi bi-box-arrow-right"></i> Logout
+                        </a>
                         {% else %}
-                        <!-- Login Button -->
-                        <a href="/auth/login" class="btn btn-outline btn-sm">Login</a>
+                        <a href="/auth/login" class="btn btn-outline-light btn-sm">
+                            <i class="bi bi-box-arrow-in-right"></i> Login
+                        </a>
                         {% endif %}
                     </div>
                 </div>
             </div>
         </nav>
     </header>
-    {% endif %}
 
-    <main {% if not is_embed %}class="container py-4" {% else %}class="container-fluid p-0"{% endif %}>
-        <div class="row">
-            <div class="col">
-                {% block content %}{% endblock %}
-            </div>
-        </div>
+    <main class="container py-4">
+        {% block content %}{% endblock %}
     </main>
 
-    {% if not is_embed %}
     <footer class="footer bg-dark text-light py-3 mt-auto">
-        <div class="container">
-            <div class="row">
-                <div class="col text-center">
-                    <p class="mb-0">
-                        <span>v{{ app_version }}</span> - <span>Support</span> - <span>© 2025 Exam Record Manager</span>
-                    </p>
-                </div>
-            </div>
+        <div class="container text-center">
+            <p class="mb-0">
+                © 2025 Mario's Pizzeria - Authentic Italian Pizza Since 1985 - v{{ app_version }}
+            </p>
         </div>
     </footer>
-    {% endif %}
 
-    <!-- Common JS -->
-    <script src="/static/js/common.js"></script>
-    <!-- Theme Switcher JS -->
-    <script src="/static/js/common/theme-switcher.js"></script>
+    <script src="/static/dist/scripts/app.js"></script>
     {% block scripts %}{% endblock %}
 </body>
 </html>
