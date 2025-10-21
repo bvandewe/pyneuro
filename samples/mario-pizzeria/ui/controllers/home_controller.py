@@ -3,6 +3,7 @@ from typing import Any
 
 import jwt
 from application.settings import app_settings
+from classy_fastapi import Routable
 from classy_fastapi.decorators import get
 from fastapi import Request
 from fastapi.responses import HTMLResponse
@@ -10,7 +11,8 @@ from fastapi.responses import HTMLResponse
 from neuroglia.dependency_injection import ServiceProviderBase
 from neuroglia.mapping.mapper import Mapper
 from neuroglia.mediation.mediator import Mediator
-from neuroglia.mvc.controller_base import ControllerBase
+from neuroglia.mvc.controller_base import ControllerBase, generate_unique_id_function
+from neuroglia.serialization.json import JsonSerializer
 
 log = logging.getLogger(__name__)
 
@@ -20,8 +22,6 @@ class HomeController(ControllerBase):
 
     def __init__(self, service_provider: ServiceProviderBase, mapper: Mapper, mediator: Mediator):
         # Store DI services first
-        from neuroglia.serialization.json import JsonSerializer
-
         self.service_provider = service_provider
         self.mapper = mapper
         self.mediator = mediator
@@ -29,10 +29,6 @@ class HomeController(ControllerBase):
         self.name = "Home"
 
         # Call Routable.__init__ directly with empty prefix for root routes
-        from classy_fastapi import Routable
-
-        from neuroglia.mvc.controller_base import generate_unique_id_function
-
         Routable.__init__(
             self,
             prefix="",  # Empty prefix for root routes
