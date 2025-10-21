@@ -144,7 +144,7 @@ services:
       - mario-net
 
   # 🔐 Keycloak (Authentication & Authorization)
-  # http://localhost:8090/admin (admin/admin)
+  # http://localhost:8090 (admin/admin)
   keycloak:
     image: quay.io/keycloak/keycloak:23.0.3
     command: ["start-dev", "--import-realm"]
@@ -154,12 +154,8 @@ services:
       # Admin credentials
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: admin
-      # Database connection
-      KC_DB: postgres
-      KC_DB_URL: jdbc:postgresql://keycloak-db:5432/keycloak
-      KC_DB_USERNAME: keycloak
-      KC_DB_PASSWORD: keycloak123
-      # Development settings
+      # Development settings (no external DB, uses H2)
+      KC_HTTP_PORT: 8080
       KC_HOSTNAME_STRICT: false
       KC_HOSTNAME_STRICT_HTTPS: false
       KC_HTTP_ENABLED: true
@@ -167,21 +163,6 @@ services:
       KC_METRICS_ENABLED: true
     volumes:
       - ./deployment/keycloak/mario-pizzeria-realm-export.json:/opt/keycloak/data/import/mario-pizzeria-realm-export.json:ro
-    networks:
-      - mario-net
-    depends_on:
-      - keycloak-db
-
-  # 🐘 PostgreSQL for Keycloak
-  keycloak-db:
-    image: postgres:15.5
-    restart: always
-    environment:
-      POSTGRES_DB: keycloak
-      POSTGRES_USER: keycloak
-      POSTGRES_PASSWORD: keycloak123
-    volumes:
-      - keycloak_db_data:/var/lib/postgresql/data
     networks:
       - mario-net
 
@@ -193,8 +174,6 @@ volumes:
   mongodb_data:
     driver: local
   eventstoredb_data:
-    driver: local
-  keycloak_db_data:
     driver: local
 
 networks:

@@ -190,7 +190,8 @@ def create_pizzeria_app(data_dir: Optional[str] = None, port: int = 8000):
     ui_app.state.templates = templates
 
     # Configure static file serving for UI (including Parcel-built assets)
-    static_directory = Path(__file__).parent / "ui" / "static"
+    # Note: Parcel builds to samples/mario-pizzeria/static/dist/
+    static_directory = Path(__file__).parent / "static"
     ui_app.mount("/static", StaticFiles(directory=str(static_directory)), name="static")
 
     # Register API controllers to the API app
