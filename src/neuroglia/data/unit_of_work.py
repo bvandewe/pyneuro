@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 
 from neuroglia.data.abstractions import AggregateRoot, DomainEvent
+from neuroglia.hosting.abstractions import ApplicationBuilderBase
 
 
 class IUnitOfWork(ABC):
@@ -242,3 +243,14 @@ class UnitOfWork(IUnitOfWork):
                     return True
 
         return False
+
+    @staticmethod
+    def configure(builder: ApplicationBuilderBase) -> ApplicationBuilderBase:
+        """Registers and configures UnitOfWork services to the specified service collection.
+
+        Args:
+            services (ServiceCollection): the service collection to configure
+
+        """
+        builder.services.add_scoped(IUnitOfWork, implementation_factory=lambda _: UnitOfWork())
+        return builder

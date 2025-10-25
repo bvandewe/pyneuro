@@ -59,7 +59,7 @@ class JsonEncoder(json.JSONEncoder):
     and custom objects with intelligent fallback mechanisms.
 
     Supported Types:
-        - Enums: Converted to their name value for human readability
+        - Enums: Converted to their value (e.g., "active" for Status.ACTIVE)
         - DateTime: Converted to ISO format strings
         - Custom Objects: Serialized using their __dict__ with private field filtering
         - Unsupported Types: Gracefully converted to string representation
@@ -89,7 +89,7 @@ class JsonEncoder(json.JSONEncoder):
         # Result:
         # {
         #   "id": "123",
-        #   "status": "ACTIVE",
+        #   "status": "active",  # Uses enum value, not name
         #   "total": "99.99",
         #   "created_at": "2025-09-27T10:30:00.123456"
         #   // Note: _internal_field is filtered out
@@ -103,7 +103,7 @@ class JsonEncoder(json.JSONEncoder):
 
     def default(self, obj):
         if issubclass(type(obj), Enum):
-            return obj.name
+            return obj.value  # Use value instead of name for consistent lowercase storage
         elif issubclass(type(obj), datetime):
             return obj.isoformat()
         elif hasattr(obj, "__dict__"):
@@ -642,7 +642,7 @@ class JsonSerializer(TextSerializer):
             return value
 
     @staticmethod
-    def configure(builder: "ApplicationBuilderBase", type_modules: Optional[list[str]] = None) -> "ApplicationBuilderBase":
+    def configure(builder: "ApplicationBuilderBase", modules: Optional[list[str]] = None) -> "ApplicationBuilderBase":
         """
         Configures the specified application builder to use the JsonSerializer.
 
@@ -662,12 +662,12 @@ class JsonSerializer(TextSerializer):
         )
 
         # Register type modules for enum discovery if provided
-        if type_modules:
+        if modules:
             try:
                 from neuroglia.core.type_registry import get_type_registry
 
                 type_registry = get_type_registry()
-                type_registry.register_modules(type_modules)
+                type_registry.register_modules(modules)
             except ImportError:
                 # TypeRegistry not available, silently continue
                 pass

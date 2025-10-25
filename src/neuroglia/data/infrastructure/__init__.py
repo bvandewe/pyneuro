@@ -38,3 +38,11 @@ try:
     __all__.append("FileSystemRepository")
 except ImportError:
     pass
+
+# Tracing mixin - optional OpenTelemetry support
+try:
+    from .tracing_mixin import TracedRepositoryMixin
+
+    __all__.append("TracedRepositoryMixin")
+except ImportError:
+    pass

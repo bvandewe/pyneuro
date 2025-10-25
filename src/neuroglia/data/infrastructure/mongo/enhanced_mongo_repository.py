@@ -1,4 +1,6 @@
 """
+THIS IS DEPRECATED - USE MOTOR BASED REPOSITORY INSTEAD
+
 Enhanced MongoDB repository implementation with advanced querying capabilities.
 
 This module provides an enhanced MongoDB repository that extends the base MongoRepository
@@ -7,15 +9,17 @@ and comprehensive serialization handling for complex domain objects.
 """
 
 import logging
-from typing import TypeVar, Generic, List, Type, Dict, Any, Optional
+from typing import Any, Generic, Optional, TypeVar
+
 from pymongo import MongoClient
 from pymongo.collection import Collection
 
 from neuroglia.data.abstractions import TEntity, TKey
 from neuroglia.data.infrastructure.abstractions import Repository
 from neuroglia.data.infrastructure.mongo.mongo_repository import MongoRepositoryOptions
-from neuroglia.data.infrastructure.mongo.serialization_helper import MongoSerializationHelper
-from neuroglia.serialization.json import JsonSerializer
+from neuroglia.data.infrastructure.mongo.serialization_helper import (
+    MongoSerializationHelper,
+)
 from neuroglia.hosting.abstractions import ApplicationBuilderBase
 
 log = logging.getLogger(__name__)
@@ -27,7 +31,7 @@ class EnhancedMongoRepository(Generic[TEntity, TKey], Repository[TEntity, TKey])
     """
     An enhanced MongoDB repository implementation with advanced querying capabilities
     and proper type handling for complex domain objects.
-    
+
     This repository provides:
     - Advanced MongoDB operations (bulk operations, aggregation, upserts)
     - Comprehensive serialization for complex types (enums, value objects, nested entities)
@@ -35,8 +39,12 @@ class EnhancedMongoRepository(Generic[TEntity, TKey], Repository[TEntity, TKey])
     - Production-ready features (pagination, sorting, counting)
     """
 
-    def __init__(self, mongo_client: MongoClient, options: MongoRepositoryOptions[TEntity, TKey],
-                 entity_type: Optional[Type[TEntity]] = None):
+    def __init__(
+        self,
+        mongo_client: MongoClient,
+        options: MongoRepositoryOptions[TEntity, TKey],
+        entity_type: Optional[type[TEntity]] = None,
+    ):
         """
         Initialize the enhanced MongoDB repository.
 
@@ -72,7 +80,7 @@ class EnhancedMongoRepository(Generic[TEntity, TKey], Repository[TEntity, TKey])
             collection_name = collection_name[:-3]
         self._collection_name = collection_name
 
-    def _get_entity_type(self) -> Type[TEntity]:
+    def _get_entity_type(self) -> type[TEntity]:
         """Get the entity type for this repository"""
         return self._entity_type
 
@@ -133,8 +141,13 @@ class EnhancedMongoRepository(Generic[TEntity, TKey], Repository[TEntity, TKey])
 
     # Enhanced MongoDB querying capabilities
 
-    async def find_async(self, filter_dict: Dict[str, Any], skip: int = 0,
-                         limit: Optional[int] = None, sort_by: Optional[Dict[str, int]] = None) -> List[TEntity]:
+    async def find_async(
+        self,
+        filter_dict: dict[str, Any],
+        skip: int = 0,
+        limit: Optional[int] = None,
+        sort_by: Optional[dict[str, int]] = None,
+    ) -> list[TEntity]:
         """
         Find entities using MongoDB native filtering.
 
@@ -168,7 +181,7 @@ class EnhancedMongoRepository(Generic[TEntity, TKey], Repository[TEntity, TKey])
 
         return results
 
-    async def find_one_async(self, filter_dict: Dict[str, Any]) -> Optional[TEntity]:
+    async def find_one_async(self, filter_dict: dict[str, Any]) -> Optional[TEntity]:
         """
         Find a single entity using MongoDB native filtering.
 
@@ -184,7 +197,7 @@ class EnhancedMongoRepository(Generic[TEntity, TKey], Repository[TEntity, TKey])
 
         return MongoSerializationHelper.deserialize_to_entity(doc, self._entity_type)
 
-    async def count_async(self, filter_dict: Dict[str, Any]) -> int:
+    async def count_async(self, filter_dict: dict[str, Any]) -> int:
         """
         Count documents matching a filter.
 
@@ -196,7 +209,7 @@ class EnhancedMongoRepository(Generic[TEntity, TKey], Repository[TEntity, TKey])
         """
         return self._get_mongo_collection().count_documents(filter_dict)
 
-    async def aggregate_async(self, pipeline: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    async def aggregate_async(self, pipeline: list[dict[str, Any]]) -> list[dict[str, Any]]:
         """
         Execute a MongoDB aggregation pipeline.
 
@@ -219,13 +232,11 @@ class EnhancedMongoRepository(Generic[TEntity, TKey], Repository[TEntity, TKey])
             The upserted entity
         """
         entity_dict = MongoSerializationHelper.serialize_to_dict(entity)
-        result = self._get_mongo_collection().replace_one(
-            {"id": entity.id}, entity_dict, upsert=True)  # type: ignore
-        log.info(f"Upserted entity with ID {entity.id}, modified count: {result.modified_count}, "
-                 f"upserted ID: {result.upserted_id}")  # type: ignore
+        result = self._get_mongo_collection().replace_one({"id": entity.id}, entity_dict, upsert=True)  # type: ignore
+        log.info(f"Upserted entity with ID {entity.id}, modified count: {result.modified_count}, " f"upserted ID: {result.upserted_id}")  # type: ignore
         return entity
 
-    async def bulk_insert_async(self, entities: List[TEntity]) -> List[TEntity]:
+    async def bulk_insert_async(self, entities: list[TEntity]) -> list[TEntity]:
         """
         Insert multiple entities in bulk operation.
 
@@ -243,7 +254,7 @@ class EnhancedMongoRepository(Generic[TEntity, TKey], Repository[TEntity, TKey])
         log.info(f"Bulk inserted {len(result.inserted_ids)} entities")
         return entities
 
-    async def update_many_async(self, filter_dict: Dict[str, Any], update_dict: Dict[str, Any]) -> int:
+    async def update_many_async(self, filter_dict: dict[str, Any], update_dict: dict[str, Any]) -> int:
         """
         Update many documents matching a filter.
 
@@ -258,7 +269,7 @@ class EnhancedMongoRepository(Generic[TEntity, TKey], Repository[TEntity, TKey])
         log.info(f"Updated {result.modified_count} documents matching filter {filter_dict}")
         return result.modified_count
 
-    async def delete_many_async(self, filter_dict: Dict[str, Any]) -> int:
+    async def delete_many_async(self, filter_dict: dict[str, Any]) -> int:
         """
         Delete many documents matching a filter.
 
@@ -272,7 +283,7 @@ class EnhancedMongoRepository(Generic[TEntity, TKey], Repository[TEntity, TKey])
         log.info(f"Deleted {result.deleted_count} documents matching filter {filter_dict}")
         return result.deleted_count
 
-    async def distinct_async(self, field: str, filter_dict: Optional[Dict[str, Any]] = None) -> List[Any]:
+    async def distinct_async(self, field: str, filter_dict: Optional[dict[str, Any]] = None) -> list[Any]:
         """
         Get distinct values for a field.
 
@@ -286,8 +297,7 @@ class EnhancedMongoRepository(Generic[TEntity, TKey], Repository[TEntity, TKey])
         return self._get_mongo_collection().distinct(field, filter_dict)
 
     @staticmethod
-    def configure(builder: ApplicationBuilderBase, entity_type: Type, key_type: Type,
-                  database_name: str) -> ApplicationBuilderBase:
+    def configure(builder: ApplicationBuilderBase, entity_type: type, key_type: type, database_name: str) -> ApplicationBuilderBase:
         """
         Configure the application to use EnhancedMongoRepository.
 
@@ -322,7 +332,7 @@ class EnhancedMongoRepository(Generic[TEntity, TKey], Repository[TEntity, TKey])
             return EnhancedMongoRepository(
                 mongo_client=sp.get_required_service(MongoClient),
                 options=sp.get_required_service(MongoRepositoryOptions[entity_type, key_type]),
-                entity_type=entity_type
+                entity_type=entity_type,
             )
 
         def get_repository_interface(sp):

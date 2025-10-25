@@ -194,6 +194,56 @@ class EnhancedWebApplicationBuilder(WebApplicationBuilder):
 
         return host
 
+    def build_app_with_lifespan(self, title: str = "FastAPI Application", description: str = "", version: str = "1.0.0", debug: bool = False) -> FastAPI:
+        """
+        Build a FastAPI application with integrated Host lifespan support.
+
+        This method:
+        1. Builds the WebHost (which manages HostedServices)
+        2. Creates a FastAPI app with a lifespan that starts/stops the Host
+        3. Ensures all HostedServices are properly started and stopped
+
+        Args:
+            title: FastAPI application title
+            description: FastAPI application description
+            version: Application version
+            debug: Enable debug mode
+
+        Returns:
+            FastAPI app with Host lifespan support for HostedServices
+        """
+        import logging
+        from contextlib import asynccontextmanager
+
+        log = logging.getLogger(__name__)
+
+        # Build the WebHost (which has start_async/stop_async for HostedServices)
+        web_host = self.build()
+
+        @asynccontextmanager
+        async def host_lifespan(app: FastAPI):
+            """
+            Lifespan context manager that starts and stops the Host.
+            This ensures all registered HostedServices are properly managed.
+            """
+            log.info("🚀 Starting Host and HostedServices...")
+            await web_host.start_async()  # Starts all HostedServices
+            log.info("✅ Host and HostedServices started")
+
+            yield  # Application runs here
+
+            log.info("🛑 Stopping Host and HostedServices...")
+            await web_host.stop_async()  # Stops all HostedServices
+            log.info("✅ Host and HostedServices stopped")
+
+        # Create FastAPI app with the Host lifespan
+        app = FastAPI(title=title, description=description, version=version, debug=debug, lifespan=host_lifespan)
+
+        # Make service provider available to the app
+        app.state.services = web_host.services
+
+        return app
+
     def add_controllers(self, modules: list[str], app: Optional[FastAPI] = None, prefix: Optional[str] = None) -> ServiceCollection:
         """
         Add controllers from specified modules to an app.
