@@ -12,11 +12,13 @@ Domain-Driven Design, CQRS, repository patterns, and architectural principles.
 - **DDD_recommendations.md** - Best practices for DDD implementation
 - **FLAT_STATE_STORAGE_PATTERN.md** - State storage optimization pattern
 - **REPOSITORY_SWAPPABILITY_ANALYSIS.md** - Repository abstraction and swappability
+- **HOSTING_ARCHITECTURE.md** - ✨ Hosting system architecture and design
 
 ### `/framework` - Core Framework Implementation
 
 Dependency injection, service lifetimes, mediator pattern, and core framework features.
 
+- **APPLICATION_BUILDER_UNIFICATION_COMPLETE.md** - ✨ WebApplicationBuilder unification status
 - Dependency injection refactoring and enhancements
 - Service lifetime management (Singleton, Scoped, Transient)
 - Pipeline behaviors for cross-cutting concerns
@@ -50,6 +52,7 @@ Distributed tracing, metrics, logging, and observability patterns.
 - OpenTelemetry integration guides
 - Automatic instrumentation documentation
 - Grafana dashboard setup
+- Multi-app instrumentation fixes
 
 ### `/testing` - Test Strategies
 
@@ -58,14 +61,15 @@ Unit testing, integration testing, and test utilities.
 - Type equality testing
 - Framework test utilities
 
-### `/migrations` - Version Migrations
+### `/migrations` - Version Migrations & Historical Plans
 
-Version upgrade guides and breaking changes documentation.
+Version upgrade guides, breaking changes documentation, and archived planning documents.
 
 - **V042_VALIDATION_SUMMARY.md** - Version 0.4.2 changes
 - **V043_RELEASE_SUMMARY.md** - Version 0.4.3 release notes
 - **VERSION_ATTRIBUTE_UPDATE.md** - Version attribute updates
 - **VERSION_MANAGEMENT.md** - Version management strategy
+- **APPLICATION_BUILDER_ARCHITECTURE_UNIFICATION_PLAN.md** - ✨ Archived planning document
 
 ### `/tools` - Development Tools
 
@@ -82,6 +86,26 @@ Quick reference guides and documentation updates.
 - **DOCSTRING_UPDATES.md** - Documentation standards
 - **DOCUMENTATION_UPDATES.md** - Ongoing documentation changes
 
+## 📝 Recent Updates (October 2025)
+
+### ✅ WebApplicationBuilder Unification
+
+The framework has completed a major architectural improvement by unifying `WebApplicationBuilder` and `EnhancedWebApplicationBuilder` into a single, adaptive builder class.
+
+**Key Changes**:
+
+- ✅ Single builder supporting both simple and advanced modes
+- ✅ Automatic mode detection based on configuration
+- ✅ Backward compatibility maintained via alias
+- ✅ Enhanced documentation and type safety
+- ✅ `enhanced_web_application_builder.py` module removed
+
+**Documentation**:
+
+- Implementation: `/framework/APPLICATION_BUILDER_UNIFICATION_COMPLETE.md`
+- Architecture: `/architecture/hosting_architecture.md`
+- Original Plan: `/migrations/APPLICATION_BUILDER_ARCHITECTURE_UNIFICATION_PLAN.md` (archived)
+
 ## 🎯 Usage
 
 These notes serve multiple purposes:
@@ -94,8 +118,9 @@ These notes serve multiple purposes:
 ## 📚 Related Documentation
 
 - **Application Examples**: See `/samples/mario-pizzeria/notes/` for real-world application patterns
-- **MkDocs Site**: Comprehensive framework documentation (to be generated from these notes)
+- **MkDocs Site**: Comprehensive framework documentation at `/docs/`
 - **Quick Start**: See `/docs/getting-started.md` for framework introduction
+- **Public Docs**: https://bvandewe.github.io/pyneuro/
 
 ## 🔄 Maintenance
 
