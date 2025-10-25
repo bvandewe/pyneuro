@@ -1,4 +1,4 @@
-FROM python:3.12-slim as python-base
+FROM python:3.12-slim AS python-base
 
 EXPOSE 80
 
@@ -18,7 +18,7 @@ WORKDIR /app
 COPY poetry.lock pyproject.toml /app/
 RUN pip install poetry
 RUN poetry config virtualenvs.create false && \
-    poetry install --no-root --no-interaction --no-ansi
+    poetry install --no-root --no-interaction --no-ansi --extras mongodb
 
 # Copy the entire project
 COPY . /app

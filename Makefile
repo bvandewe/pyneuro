@@ -3,7 +3,7 @@
 # This Makefile provides convenient commands for building, testing, and managing
 # the Neuroglia Python framework and its sample applications.
 
-.PHONY: help install dev-install build test test-coverage lint format clean docs docs-serve docs-build publish sample-mario sample-openbank sample-gateway
+.PHONY: help install dev-install build test test-coverage lint format clean docs docs-serve docs-build publish sample-mario sample-openbank sample-gateway mario-start mario-stop mario-restart mario-status mario-logs mario-clean mario-reset mario-open mario-test-data mario-clean-orders mario-create-menu mario-remove-validation
 
 # Default target
 help: ## Show this help message
@@ -152,52 +152,6 @@ publish: build ## Publish to PyPI
 
 ##@ Sample Applications
 
-sample-mario: ## Run Mario's Pizzeria sample
-	@echo "🍕 Starting Mario's Pizzeria..."
-	cd $(MARIO_PIZZERIA) && $(POETRY) run $(PYTHON) main.py
-
-sample-mario-bg: ## Run Mario's Pizzeria in background
-	@echo "🍕 Starting Mario's Pizzeria in background..."
-	@cd $(MARIO_PIZZERIA) && \
-		(nohup $(POETRY) run $(PYTHON) main.py > pizza.log 2>&1 & echo $$! > pizza.pid)
-	@sleep 0.5
-	@if [ -f $(MARIO_PIZZERIA)/pizza.pid ]; then \
-		echo "🍕 Mario's Pizzeria running in background (PID: $$(cat $(MARIO_PIZZERIA)/pizza.pid))"; \
-		echo "📖 API Documentation: http://127.0.0.1:8000/api/docs"; \
-	else \
-		echo "❌ Failed to start Mario's Pizzeria - PID file not found"; \
-		echo "📋 Check $(MARIO_PIZZERIA)/pizza.log for errors"; \
-	fi
-
-sample-mario-stop: ## Stop Mario's Pizzeria background process
-	@echo "🛑 Stopping Mario's Pizzeria..."
-	@if [ -f $(MARIO_PIZZERIA)/pizza.pid ]; then \
-		PID=$$(cat $(MARIO_PIZZERIA)/pizza.pid); \
-		if kill -0 $$PID 2>/dev/null; then \
-			kill $$PID && echo "✅ Mario's Pizzeria stopped (PID: $$PID)"; \
-		else \
-			echo "⚠️  Process $$PID not running - cleaning up PID file"; \
-		fi; \
-		rm $(MARIO_PIZZERIA)/pizza.pid; \
-	else \
-		echo "⚠️  No PID file found - Mario's Pizzeria may not be running"; \
-	fi
-
-sample-mario-status: ## Check Mario's Pizzeria status
-	@if [ -f $(MARIO_PIZZERIA)/pizza.pid ]; then \
-		PID=$$(cat $(MARIO_PIZZERIA)/pizza.pid); \
-		if kill -0 $$PID 2>/dev/null; then \
-			echo "🍕 Mario's Pizzeria is running (PID: $$PID)"; \
-			echo "📖 API Documentation: http://127.0.0.1:8000/api/docs"; \
-			echo "🌐 Health check: curl http://127.0.0.1:8000/api"; \
-		else \
-			echo "❌ Mario's Pizzeria is not running (cleaning up stale PID file)"; \
-			rm $(MARIO_PIZZERIA)/pizza.pid; \
-		fi \
-	else \
-		echo "❌ Mario's Pizzeria is not running"; \
-	fi
-
 sample-openbank: ## Run OpenBank sample
 	@echo "🏦 Starting OpenBank..."
 	cd $(OPENBANK) && $(POETRY) run $(PYTHON) main.py
@@ -228,14 +182,46 @@ samples-stop: ## Stop all running samples
 	@echo "⏹️  Stopping all sample applications..."
 	@$(PYTHON) $(SRC_DIR)/cli/pyneuroctl.py stop --all
 
-mario-start: ## Start Mario's Pizzeria using CLI
-	@$(PYTHON) $(SRC_DIR)/cli/pyneuroctl.py start mario-pizzeria
+mario-start: ## Start Mario's Pizzeria with full observability stack
+	@./mario-docker.sh start
 
-mario-stop: ## Stop Mario's Pizzeria using CLI
-	@$(PYTHON) $(SRC_DIR)/cli/pyneuroctl.py stop mario-pizzeria
+mario-stop: ## Stop Mario's Pizzeria and observability stack
+	@./mario-docker.sh stop
 
-mario-status: ## Check Mario's Pizzeria status
-	@$(PYTHON) $(SRC_DIR)/cli/pyneuroctl.py status mario-pizzeria
+mario-restart: ## Restart Mario's Pizzeria and observability stack
+	@./mario-docker.sh restart
+
+mario-status: ## Check Mario's Pizzeria and observability stack status
+	@./mario-docker.sh status
+
+mario-logs: ## View logs for Mario's Pizzeria and observability stack
+	@./mario-docker.sh logs
+
+mario-clean: ## Stop and clean Mario's Pizzeria environment (destructive)
+	@./mario-docker.sh clean
+
+mario-reset: ## Complete reset of Mario's Pizzeria environment (destructive)
+	@./mario-docker.sh reset
+
+mario-open: ## Open key Mario's Pizzeria services in browser
+	@echo "🌐 Opening Mario's Pizzeria services in browser..."
+	@open http://localhost:8080 &
+	@open http://localhost:3001 &
+	@sleep 1
+	@echo "✅ Opened Mario's Pizzeria UI and Grafana dashboards"
+
+mario-test-data: ## Generate test data for Mario's Pizzeria observability dashboards
+	@echo "🍕 Generating test data for Mario's Pizzeria..."
+	@$(POETRY) run python samples/mario-pizzeria/scripts/generate_test_data.py --count 10
+
+mario-clean-orders: ## Remove all order data from Mario's Pizzeria MongoDB
+	@./mario-docker.sh clean-orders
+
+mario-create-menu: ## Create default pizza menu in Mario's Pizzeria
+	@./mario-docker.sh create-menu
+
+mario-remove-validation: ## Remove MongoDB validation schemas (use app validation only)
+	@./mario-docker.sh remove-validation
 
 openbank-start: ## Start OpenBank using CLI
 	@$(PYTHON) $(SRC_DIR)/cli/pyneuroctl.py start openbank
@@ -278,6 +264,32 @@ docker-logs: ## Show Docker container logs
 docker-stop: ## Stop Docker containers
 	@echo "⏹️  Stopping Docker containers..."
 	docker-compose -f docker-compose.dev.yml down
+
+##@ Keycloak Management
+
+keycloak-setup: ## Configure Keycloak master realm SSL (run after first startup)
+	@echo "🔐 Configuring Keycloak master realm..."
+	@sleep 5
+	@./deployment/keycloak/configure-master-realm.sh
+
+keycloak-reset: ## Reset Keycloak (removes volume and recreates)
+	@echo "🔐 Resetting Keycloak..."
+	@docker-compose -f docker-compose.mario.yml down -v
+	@sleep 2
+	@docker volume ls | grep mario-pizzeria_keycloak_data && docker volume rm -f mario-pizzeria_keycloak_data || echo "Volume already removed"
+	@docker-compose -f docker-compose.mario.yml up -d
+	@echo "⏳ Waiting for services to start..."
+	@sleep 30
+	@./deployment/keycloak/configure-master-realm.sh
+	@echo "✅ Keycloak reset complete!"
+
+keycloak-verify: ## Verify Keycloak master realm configuration
+	@echo "🔍 Checking Keycloak configuration..."
+	@docker exec mario-pizzeria-keycloak-1 /opt/keycloak/bin/kcadm.sh get realms/master 2>/dev/null | grep sslRequired || echo "❌ Keycloak not running"
+
+keycloak-logs: ## Show Keycloak container logs
+	@echo "📝 Keycloak logs:"
+	@docker logs mario-pizzeria-keycloak-1 --tail 50 -f
 
 ##@ Utilities
 

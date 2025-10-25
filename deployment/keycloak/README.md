@@ -106,9 +106,9 @@ The imported realm includes:
   - `mario-app` (confidential client with client secret)
   - `mario-public-app` (public client for frontend)
 - **Pre-configured Users**:
-  - `customer` / `password123` (customer role)
-  - `chef` / `password123` (chef role)
-  - `manager` / `password123` (manager + chef roles)
+  - `customer` / `test` (customer role)
+  - `chef` / `test` (chef role)
+  - `manager` / `test` (manager + chef roles)
 - **Roles**: `customer`, `chef`, `manager`
 - **Groups**: `customers`, `staff`, `management`
 - **Client Scopes**: Standard OpenID Connect scopes + `mario-pizza` custom scope
@@ -135,7 +135,7 @@ open http://localhost:8090/admin
 # - mario-pizzeria
 
 # Switch to mario-pizzeria realm and verify:
-# - Users: customer, chef, manager (all with password123)
+# - Users: customer, chef, manager (all with test)
 # - Clients: mario-app, mario-public-app
 # - Roles: customer, chef, manager
 ```

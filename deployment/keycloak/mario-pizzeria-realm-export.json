@@ -2,7 +2,7 @@
   "realm": "mario-pizzeria",
   "displayName": "Mario's Pizzeria",
   "enabled": true,
-  "sslRequired": "external",
+  "sslRequired": "none",
   "registrationAllowed": true,
   "loginWithEmailAllowed": true,
   "duplicateEmailsAllowed": false,
@@ -20,6 +20,10 @@
       {
         "name": "customer",
         "description": "Customer role for ordering pizzas"
+      },
+      {
+        "name": "driver",
+        "description": "Driver role for delivering pizzas"
       },
       {
         "name": "chef",
@@ -42,11 +46,31 @@
       "credentials": [
         {
           "type": "password",
-          "value": "password123",
+          "value": "test",
           "temporary": false
         }
       ],
-      "realmRoles": ["customer"]
+      "realmRoles": [
+        "customer"
+      ]
+    },
+    {
+      "username": "driver",
+      "email": "driver@mario-pizzeria.com",
+      "firstName": "Mario",
+      "lastName": "Driver",
+      "enabled": true,
+      "emailVerified": true,
+      "credentials": [
+        {
+          "type": "password",
+          "value": "test",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "driver"
+      ]
     },
     {
       "username": "chef",
@@ -58,11 +82,13 @@
       "credentials": [
         {
           "type": "password",
-          "value": "password123",
+          "value": "test",
           "temporary": false
         }
       ],
-      "realmRoles": ["chef"]
+      "realmRoles": [
+        "chef"
+      ]
     },
     {
       "username": "manager",
@@ -74,11 +100,13 @@
       "credentials": [
         {
           "type": "password",
-          "value": "password123",
+          "value": "test",
           "temporary": false
         }
       ],
-      "realmRoles": ["manager", "chef"]
+      "realmRoles": [
+        "manager"
+      ]
     }
   ],
   "clients": [

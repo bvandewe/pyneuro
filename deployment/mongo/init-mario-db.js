@@ -11,26 +11,23 @@ db.createCollection('customers', {
     validator: {
         $jsonSchema: {
             bsonType: 'object',
-            required: ['_id', 'email', 'firstName', 'lastName'],
+            required: ['id', 'email'],
             properties: {
-                _id: { bsonType: 'string' },
+                id: { bsonType: 'string' },
                 email: { bsonType: 'string', pattern: '^.+@.+\..+$' },
-                firstName: { bsonType: 'string', minLength: 1 },
-                lastName: { bsonType: 'string', minLength: 1 },
-                phone: { bsonType: 'string' },
-                address: {
+                state: {
                     bsonType: 'object',
+                    required: ['id', 'email'],
                     properties: {
-                        street: { bsonType: 'string' },
-                        city: { bsonType: 'string' },
-                        zipCode: { bsonType: 'string' },
-                        country: { bsonType: 'string' }
+                        id: { bsonType: 'string' },
+                        name: { bsonType: ['string', 'null'] },
+                        email: { bsonType: 'string' },
+                        phone: { bsonType: 'string' },
+                        address: { bsonType: 'string' },
+                        user_id: { bsonType: ['string', 'null'] }
                     }
                 },
-                loyaltyPoints: { bsonType: 'int', minimum: 0 },
-                isActive: { bsonType: 'bool' },
-                createdAt: { bsonType: 'date' },
-                updatedAt: { bsonType: 'date' }
+                version: { bsonType: 'int' }
             }
         }
     }

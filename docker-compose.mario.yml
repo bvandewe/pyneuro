@@ -21,7 +21,7 @@ services:
       "
 
   # �🍕 Mario's Pizzeria Application
-  # http://localhost:8080/ui
+  # http://localhost:8080/
   # http://localhost:8080/docs
   # http://localhost:8080/api/docs
   mario-pizzeria-app:
@@ -29,7 +29,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    command: #
+    command:
       [
         "sh",
         "-c",
@@ -39,12 +39,13 @@ services:
       - 8080:8080 # Main application port
       - 5678:5678 # Debug port
     environment:
-      LOG_LEVEL: DEBUG
+      LOCAL_DEV: true
+      LOG_LEVEL: INFO
       PYTHONPATH: "src"
       # Database connections
-      CONNECTION_STRINGS: '{"mongo": "mongodb://mongodb:27017", "eventstore": "esdb://eventstoredb:2113?Tls=false"}'
+      CONNECTION_STRINGS: '{"mongo": "mongodb://root:mario123@mongodb:27017/?authSource=admin", "eventstore": "esdb://eventstoredb:2113?Tls=false"}'
       # Event streaming
-      CLOUD_EVENT_SINK: http://event-player/events/pub
+      CLOUD_EVENT_SINK: http://event-player:8080/events/pub
       CLOUD_EVENT_SOURCE: https://mario-pizzeria.io
       CLOUD_EVENT_TYPE_PREFIX: io.mario-pizzeria
       # Authentication
@@ -54,6 +55,17 @@ services:
       # Application settings
       DATA_DIR: /app/data
       ENABLE_CORS: "true"
+      # OpenTelemetry configuration - Metrics & Traces only (no logging)
+      OTEL_SERVICE_NAME: mario-pizzeria
+      OTEL_SERVICE_VERSION: 1.0.0
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4317
+      OTEL_EXPORTER_OTLP_PROTOCOL: grpc
+      OTEL_TRACES_EXPORTER: otlp
+      OTEL_METRICS_EXPORTER: otlp
+      # Performance optimizations - DISABLED resource-heavy features:
+      # OTEL_LOGS_EXPORTER: none (no log export)
+      # OTEL_PYTHON_LOGGING_AUTO_INSTRUMENTATION_ENABLED: false (no auto-logging)
+      # OTEL_INSTRUMENTATION_HTTP_CAPTURE_HEADERS_*: not set (no header capture)
     volumes:
       - .:/app
       # - mario_data:/app/data
@@ -71,6 +83,7 @@ services:
   mongodb:
     image: mongo:6.0.21
     restart: always
+    runtime: runc
     command: mongod --bind_ip_all
     ports:
       - 27017:27017
@@ -80,7 +93,8 @@ services:
       MONGO_INITDB_DATABASE: mario_pizzeria
     volumes:
       - mongodb_data:/data/db
-      - ./deployment/mongo/init-mario-db.js:/docker-entrypoint-initdb.d/init-mario-db.js:ro
+      # Temporarily removed file mount to test
+      # - ./deployment/mongo/init-mario-db.js:/docker-entrypoint-initdb.d/init-mario-db.js:ro
     networks:
       - mario-net
 
@@ -132,13 +146,13 @@ services:
   event-player:
     image: ghcr.io/bvandewe/events-player:latest
     ports:
-      - 8085:80
+      - 8085:8080
     environment:
       api_tag: "0.2.30"
       api_repository_url: "https://ccie-gitlab.ccie.cisco.com/mozart/infrastructure/eventing/cloudevent-player"
       api_log_level: DEBUG
       api_log_format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
-      api_default_generator_gateways: '{"urls": ["http://localhost/events/pub", "http://event-player/events/pub", "http://mario-pizzeria-app:8080/api/v1/events/pub"]}'
+      api_default_generator_gateways: '{"urls": ["http://localhost:8085/events/pub", "http://event-player:8080/events/pub", "http://mario-pizzeria-app:8080/api/v1/events/pub"]}'
       api_browser_queue_size: 2000
     networks:
       - mario-net
@@ -146,7 +160,8 @@ services:
   # 🔐 Keycloak (Authentication & Authorization)
   # http://localhost:8090 (admin/admin)
   keycloak:
-    image: quay.io/keycloak/keycloak:23.0.3
+    image: quay.io/keycloak/keycloak:22.0.5
+    runtime: runc
     command: ["start-dev", "--import-realm"]
     ports:
       - 8090:8080
@@ -161,8 +176,119 @@ services:
       KC_HTTP_ENABLED: true
       KC_HEALTH_ENABLED: true
       KC_METRICS_ENABLED: true
+      # Disable HTTPS requirement for admin console (development only!)
+      KC_HOSTNAME_URL: http://localhost:8090
+      KC_HOSTNAME_ADMIN_URL: http://localhost:8090
+      KC_PROXY: edge
     volumes:
+      # Persist H2 database to maintain Keycloak configuration across container restarts
+      - keycloak_data:/opt/keycloak/data
+      # Import realm configuration on first startup only
       - ./deployment/keycloak/mario-pizzeria-realm-export.json:/opt/keycloak/data/import/mario-pizzeria-realm-export.json:ro
+    networks:
+      - mario-net
+
+  # 🔭 OpenTelemetry Collector (All-in-One)
+  # Receives, processes, and exports telemetry data (traces, metrics, logs)
+  # Ports: 4317 (OTLP gRPC), 4318 (OTLP HTTP), 8888 (Prometheus metrics), 13133 (health)
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib:0.110.0
+    runtime: runc
+    command: ["--config=/etc/otel-collector-config.yaml"]
+    ports:
+      - 4317:4317 # OTLP gRPC receiver
+      - 4318:4318 # OTLP HTTP receiver
+      - 8888:8888 # Prometheus metrics about the collector itself
+      - 13133:13133 # Health check endpoint
+    volumes:
+      - ./deployment/otel/otel-collector-config.yaml:/etc/otel-collector-config.yaml:ro
+    networks:
+      - mario-net
+    depends_on:
+      - tempo
+      - loki
+      - prometheus
+
+  # 📊 Grafana (Observability Dashboard)
+  # http://localhost:3001 (admin/admin - change on first login)
+  # Unified dashboard for traces (Tempo), metrics (Prometheus), and logs (Loki)
+  # Upgraded to latest Grafana 12.x with full TraceQL dashboard support
+  grafana:
+    image: grafana/grafana-enterprise:latest
+    runtime: runc
+    ports:
+      - 3001:3000
+    environment:
+      GF_AUTH_ANONYMOUS_ENABLED: "true"
+      GF_AUTH_ANONYMOUS_ORG_ROLE: Admin
+      GF_AUTH_DISABLE_LOGIN_FORM: "false"
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: admin
+      GF_FEATURE_TOGGLES_ENABLE: traceqlEditor
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./deployment/grafana/datasources:/etc/grafana/provisioning/datasources:ro
+      - ./deployment/grafana/dashboards:/etc/grafana/provisioning/dashboards:ro
+    networks:
+      - mario-net
+    depends_on:
+      - tempo
+      - loki
+      - prometheus
+
+  # 🔍 Grafana Tempo (Distributed Tracing Backend)
+  # Stores and queries distributed traces
+  # http://localhost:3200
+  # Upgraded to latest Tempo 2.9.x with enhanced TraceQL metrics and local-blocks processor
+  tempo:
+    image: grafana/tempo:2.9.0
+    runtime: runc
+    command: ["-config.file=/etc/tempo.yaml"]
+    user: root
+    ports:
+      - 3200:3200 # Tempo HTTP API
+      - 9095:9095 # Tempo gRPC
+      - 4317 # OTLP gRPC receiver (internal)
+      - 4318 # OTLP HTTP receiver (internal)
+    volumes:
+      - ./deployment/tempo/tempo.yaml:/etc/tempo.yaml:ro
+      - tempo_data:/tmp/tempo
+    networks:
+      - mario-net
+
+  # 📈 Prometheus (Metrics Storage & Query)
+  # Time-series database for metrics
+  # http://localhost:9090
+  prometheus:
+    image: prom/prometheus:v2.55.1
+    runtime: runc
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.path=/prometheus"
+      - "--web.console.libraries=/usr/share/prometheus/console_libraries"
+      - "--web.console.templates=/usr/share/prometheus/consoles"
+      - "--web.enable-lifecycle"
+      - "--storage.tsdb.retention.time=30d"
+    ports:
+      - 9090:9090
+    volumes:
+      - ./deployment/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+    networks:
+      - mario-net
+
+  # 📝 Grafana Loki (Log Aggregation)
+  # Stores and queries logs with trace correlation
+  # http://localhost:3100
+  loki:
+    image: grafana/loki:3.2.0
+    runtime: runc
+    command: ["-config.file=/etc/loki/local-config.yaml"]
+    ports:
+      - 3100:3100
+    volumes:
+      - ./deployment/loki/loki-config.yaml:/etc/loki/local-config.yaml:ro
+      - loki_data:/loki
     networks:
       - mario-net
 
@@ -173,12 +299,21 @@ volumes:
   # Database volumes
   mongodb_data:
     driver: local
-  eventstoredb_data:
+  # eventstoredb_data:
+  #   driver: local
+  # Keycloak H2 database (persists configuration across container restarts)
+  keycloak_data:
+    driver: local
+  # OpenTelemetry & Observability volumes
+  grafana_data:
+    driver: local
+  tempo_data:
+    driver: local
+  prometheus_data:
+    driver: local
+  loki_data:
     driver: local
 
 networks:
   mario-net:
     driver: bridge
-    ipam:
-      config:
-        - subnet: 172.20.0.0/16
