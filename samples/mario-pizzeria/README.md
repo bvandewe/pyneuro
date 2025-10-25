@@ -22,6 +22,42 @@ Mario's Pizzeria showcases the complete Neuroglia framework implementation inclu
 
 ## 🏗️ Architecture
 
+### Framework Integration
+
+The application uses `EnhancedWebApplicationBuilder` with comprehensive observability:
+
+```python
+def create_pizzeria_app():
+    # Enhanced builder with automatic observability integration
+    builder = EnhancedWebApplicationBuilder(app_settings)
+
+    # Core Framework Services
+    Mediator.configure(builder, ["application.commands", "application.queries", "application.events"])
+    Mapper.configure(builder, ["application.mapping", "api.dtos", "domain.entities"])
+    JsonSerializer.configure(builder, ["domain.entities.enums", "domain.entities"])
+    UnitOfWork.configure(builder)
+    DomainEventDispatchingMiddleware.configure(builder)
+
+    # CloudEvent Integration
+    CloudEventPublisher.configure(builder)
+    CloudEventIngestor.configure(builder, ["application.events.integration"])
+
+    # Comprehensive Observability (Three Pillars + Standard Endpoints + TracingPipelineBehavior)
+    Observability.configure(builder)  # Auto-configures from app_settings
+
+    # MongoDB Motor Integration
+    MotorRepository.configure(builder, Customer, str, "mario_pizzeria", "customers")
+    MotorRepository.configure(builder, Order, str, "mario_pizzeria", "orders")
+    # ... additional entities
+
+    # Multi-app architecture with separate authentication strategies
+    app = builder.build_app_with_lifespan(title="Mario's Pizzeria")
+    api_app = FastAPI(title="Mario's Pizzeria API")  # OAuth2/JWT
+    ui_app = FastAPI(title="Mario's Pizzeria UI")    # Session-based
+```
+
+### Directory Structure
+
 ```
 mario-pizzeria/
 ├── api/                     # 🌐 API Layer (OAuth2/JWT)
@@ -29,11 +65,11 @@ mario-pizzeria/
 │   ├── dtos/               # Data transfer objects
 │   └── services/           # OpenAPI configuration
 ├── application/            # 💼 Application Layer
-│   ├── commands/           # Write operations with tracing
+│   ├── commands/           # Write operations with auto-tracing
 │   ├── queries/            # Read operations with metrics
 │   ├── events/             # Integration event handlers
 │   ├── services/           # Application services (auth, etc.)
-│   └── settings.py         # Configuration management
+│   └── settings.py         # Enhanced configuration with observability
 ├── domain/                 # 🏛️ Domain Layer
 │   ├── entities/           # Business entities with event sourcing
 │   ├── events.py           # CloudEvent-decorated domain events
@@ -49,7 +85,9 @@ mario-pizzeria/
 │   └── metrics.py         # Business-specific metrics
 └── deployment/            # 🐳 Infrastructure
     ├── keycloak/          # Identity provider config
-    └── mongo/             # Database initialization
+    ├── mongo/             # Database initialization
+    ├── prometheus/        # Metrics collection config
+    └── otel/              # OpenTelemetry collector config
 ```
 
 ## 🚀 Features
@@ -116,13 +154,16 @@ mario-pizzeria/
 - **Real-time Updates**: WebSocket integration for live order status
 - **Progressive Web App**: Offline capability and push notifications
 
-### Observability & Monitoring
+### Observability & Monitoring (Three Pillars)
 
-- **OpenTelemetry Integration**: Distributed tracing across all operations
-- **Prometheus Metrics**: Business and system metrics collection
+- **OpenTelemetry Integration**: Comprehensive tracing, metrics, and logging
+- **Prometheus Metrics**: Business and system metrics at `/metrics`
 - **Grafana Dashboards**: Pre-configured visualization dashboards
 - **Structured Logging**: Loki log aggregation with trace correlation
-- **Health Checks**: Comprehensive application health monitoring
+- **Health Checks**: Dependency-aware health monitoring at `/health`
+- **Readiness Probes**: Kubernetes-ready health checks at `/ready`
+- **Automatic Instrumentation**: HTTP requests, database operations, and CQRS pipeline
+- **TracingPipelineBehavior**: Automatic tracing for all Commands and Queries
 
 ## 🏃‍♂️ Quick Start
 
@@ -147,7 +188,10 @@ make mario-test-data
 
 - **🍕 Web UI**: http://localhost:8080/ (Keycloak SSO login)
 - **📖 API Docs**: http://localhost:8080/api/docs (OAuth2 authentication)
-- **📊 Grafana**: http://localhost:3001 (admin/admin)
+- **🏥 Health Check**: http://localhost:8080/health (service health status)
+- **📊 Metrics**: http://localhost:8080/metrics (Prometheus metrics endpoint)
+- **🚀 Ready Check**: http://localhost:8080/ready (Kubernetes readiness probe)
+- **� Grafana**: http://localhost:3001 (admin/admin)
 - **🔐 Keycloak Admin**: http://localhost:8090/admin (admin/admin)
 
 ### 4. Alternative: Development Mode
@@ -248,34 +292,146 @@ The application uses **MongoDB** with async Motor driver for all persistence:
 - **Database**: `mario_pizzeria`
 - **Collections**: `customers`, `orders`, `pizzas`, `kitchen`
 
-## 🔧 Configuration
+## 🔧 Configuration & Settings
+
+The application uses comprehensive configuration management with environment variable support and computed properties.
+
+### Core Application Settings (`MarioPizzeriaApplicationSettings`)
+
+The main configuration class inherits from `ApplicationSettingsWithObservability`, providing:
+
+#### **Application Identity**
+
+```python
+service_name: str = "mario-pizzeria"          # Used by observability systems
+service_version: str = "1.0.0"               # Application version
+deployment_environment: str = "development"   # Environment identifier
+```
+
+#### **Application Configuration**
+
+```python
+app_name: str = "Mario's Pizzeria"           # Display name
+debug: bool = True                           # Debug mode
+log_level: str = "DEBUG"                     # Logging level
+local_dev: bool = True                       # Development mode flag
+app_url: str = "http://localhost:8080"       # External application URL
+```
+
+#### **Authentication & Security**
+
+```python
+# Keycloak Configuration (Internal Docker network URLs)
+keycloak_server_url: str = "http://keycloak:8080"
+keycloak_realm: str = "mario-pizzeria"
+keycloak_client_id: str = "mario-app"
+keycloak_client_secret: str = "mario-secret-123"
+
+# JWT Validation
+jwt_audience: str = "mario-app"
+required_scope: str = "openid profile email"
+
+# Session Management
+session_secret_key: str = "change-me-in-production"
+session_max_age: int = 3600  # 1 hour
+```
+
+#### **CloudEvent Configuration**
+
+```python
+cloud_event_sink: str = "http://event-player:8080/events/pub"
+cloud_event_source: str = "https://mario-pizzeria.io"
+cloud_event_type_prefix: str = "io.mario-pizzeria"
+cloud_event_retry_attempts: int = 5
+cloud_event_retry_delay: float = 1.0
+```
+
+#### **Observability Configuration (Three Pillars)**
+
+```python
+# Main Toggle
+observability_enabled: bool = True
+
+# Three Pillars Control
+observability_metrics_enabled: bool = True
+observability_tracing_enabled: bool = True
+observability_logging_enabled: bool = True
+
+# Standard Endpoints
+observability_health_endpoint: bool = True      # /health
+observability_metrics_endpoint: bool = True    # /metrics
+observability_ready_endpoint: bool = True      # /ready
+
+# Health Check Dependencies
+observability_health_checks: List[str] = ["mongodb", "keycloak"]
+
+# OpenTelemetry Configuration
+otel_endpoint: str = "http://otel-collector:4317"  # OTLP endpoint
+otel_console_export: bool = False                  # Debug console output
+```
+
+#### **Computed Properties**
+
+The settings class includes computed fields that automatically generate URLs:
+
+```python
+@computed_field
+def jwt_authority(self) -> str:
+    """Internal Keycloak authority for backend token validation"""
+    return f"{self.keycloak_server_url}/realms/{self.keycloak_realm}"
+
+@computed_field
+def swagger_ui_jwt_authority(self) -> str:
+    """External Keycloak authority for browser/Swagger UI"""
+    if self.local_dev:
+        return f"http://localhost:8090/realms/{self.keycloak_realm}"
+    else:
+        return f"{self.keycloak_server_url}/realms/{self.keycloak_realm}"
+```
 
 ### Docker Environment Variables
 
-- `LOCAL_DEV`: Enable development mode (default: true)
-- `LOG_LEVEL`: Logging level (DEBUG, INFO, WARNING, ERROR)
-- `CONNECTION_STRINGS`: JSON object with database connections
-- `CLOUD_EVENT_SINK`: CloudEvent publishing endpoint
-- `CLOUD_EVENT_SOURCE`: Source identifier for events
+The application supports configuration via environment variables:
 
-### Keycloak Configuration
+```bash
+# Application
+LOCAL_DEV=true
+LOG_LEVEL=DEBUG
+APP_NAME="Mario's Pizzeria"
 
-- `KEYCLOAK_SERVER_URL`: Internal Keycloak server URL
-- `KEYCLOAK_REALM`: Realm name (default: mario-pizzeria)
-- `KEYCLOAK_CLIENT_ID`: OAuth2 client ID (default: mario-app)
-- `KEYCLOAK_CLIENT_SECRET`: OAuth2 client secret
+# Database
+CONNECTION_STRINGS='{"mongo": "mongodb://root:mario123@mongodb:27017/?authSource=admin"}'
 
-### Application Settings
+# Observability
+OBSERVABILITY_ENABLED=true
+OTEL_ENDPOINT=http://otel-collector:4317
+OBSERVABILITY_HEALTH_CHECKS='["mongodb", "keycloak"]'
 
-Key settings in `application/settings.py`:
+# Authentication
+KEYCLOAK_SERVER_URL=http://keycloak:8080
+KEYCLOAK_CLIENT_SECRET=mario-secret-123
 
-- **Authentication**: Keycloak URLs, JWT validation, OAuth2 scopes
-- **Database**: MongoDB connection strings and collection names
-- **CloudEvents**: Event publishing configuration and retry policies
-- **Session Management**: Secret keys, timeouts, security settings
-- **Observability**: OpenTelemetry service configuration
+# CloudEvents
+CLOUD_EVENT_SINK=http://event-player:8080/events/pub
+```
+
+### Framework Integration
+
+The application uses `EnhancedWebApplicationBuilder` with automatic observability integration:
+
+```python
+# Create builder with settings
+builder = EnhancedWebApplicationBuilder(app_settings)
+
+# Framework automatically configures observability based on settings
+Observability.configure(builder)  # Uses settings.observability_* fields
+```
 
 ### Command Line Options (Development Mode)
+
+```bash
+python main.py --port 8080 --host 0.0.0.0
+```
 
 - `--port <port>`: Set the application port (default: 8080)
 - `--host <host>`: Set the bind address (default: 0.0.0.0)
@@ -365,7 +521,12 @@ All API endpoints require OAuth2 Bearer token authentication and are prefixed wi
 - `GET /api/reports/sales` - Sales analytics
 - `GET /api/reports/performance` - Kitchen performance metrics
 - `GET /api/reports/customers` - Customer analytics
-- `GET /api/metrics` - Prometheus metrics endpoint
+
+### Observability Endpoints (No authentication required)
+
+- `GET /health` - Application health with dependency checks
+- `GET /ready` - Kubernetes readiness probe
+- `GET /metrics` - Prometheus metrics endpoint
 
 ## 🎨 Domain Model
 
@@ -442,7 +603,7 @@ All API endpoints require OAuth2 Bearer token authentication and are prefixed wi
 - `OrderReadyHandler` - Trigger delivery assignment, customer notification
 - `DeliveryCompletedHandler` - Process payment completion, update loyalty points
 
-All commands and queries are traced with OpenTelemetry and include comprehensive error handling with typed results.
+All commands and queries are automatically traced with OpenTelemetry via `TracingPipelineBehavior` and include comprehensive error handling with typed results. The observability framework provides three pillars integration with standard endpoints.
 
 ## 🎯 Learning Objectives
 
@@ -483,12 +644,15 @@ This sample demonstrates:
    - Shared services and dependency injection
    - FastAPI sub-application mounting patterns
 
-6. **Production-Ready Observability**
+6. **Production-Ready Observability (Three Pillars)**
 
-   - OpenTelemetry integration (tracing, metrics, logs)
+   - Comprehensive OpenTelemetry integration (metrics, tracing, logging)
+   - Standard endpoints: `/health`, `/ready`, `/metrics`
+   - TracingPipelineBehavior for automatic CQRS tracing
+   - Dependency-aware health checks (MongoDB, Keycloak)
    - Grafana dashboards with business KPIs
    - Prometheus metrics collection and alerting
-   - Distributed tracing across all operations
+   - OTLP export to centralized collectors
 
 7. **Async Data Persistence**
 
@@ -569,8 +733,17 @@ This sample is part of the Neuroglia Python framework ecosystem:
 
 ### Development Notes
 
-- **Framework Version**: Neuroglia v0.4.8+
+- **Framework Version**: Neuroglia v0.4.8+ with enhanced observability
 - **Python Version**: 3.11+
 - **Key Dependencies**: FastAPI, MongoDB Motor, Keycloak, OpenTelemetry
+- **Observability Stack**: Grafana, Prometheus, Loki, Tempo, OTEL Collector
 - **Development Setup**: Docker Compose with hot reload support
-- **Production Ready**: Includes security, monitoring, and deployment configurations
+- **Production Ready**: Complete observability, security, and deployment configurations
+
+### Recent Updates
+
+- **Enhanced Observability**: Integrated three pillars (metrics, tracing, logging)
+- **Standard Endpoints**: `/health`, `/ready`, `/metrics` for modern deployment
+- **TracingPipelineBehavior**: Automatic CQRS operation tracing
+- **ApplicationSettingsWithObservability**: Comprehensive configuration management
+- **OTLP Export**: Proper OpenTelemetry collector integration
