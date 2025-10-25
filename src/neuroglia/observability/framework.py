@@ -13,7 +13,7 @@ from typing import TYPE_CHECKING
 from fastapi import FastAPI, Response
 
 if TYPE_CHECKING:
-    from neuroglia.hosting.enhanced_web_application_builder import EnhancedWebApplicationBuilder
+    from neuroglia.hosting.web import WebApplicationBuilder
 
 from neuroglia.observability.settings import (
     ObservabilityConfig,
@@ -33,7 +33,7 @@ class Observability:
     - Logging: Structured logging with trace correlation
 
     Usage:
-        builder = EnhancedWebApplicationBuilder(app_settings)
+        builder = WebApplicationBuilder(app_settings)
         Observability.configure(builder)  # Uses settings from app_settings
 
         # Optional overrides
@@ -44,7 +44,7 @@ class Observability:
     """
 
     @classmethod
-    def configure(cls, builder: "EnhancedWebApplicationBuilder", **overrides) -> None:
+    def configure(cls, builder: "WebApplicationBuilder", **overrides) -> None:
         """
         Configure comprehensive observability for the application.
 
@@ -92,7 +92,7 @@ class Observability:
         return isinstance(settings, ObservabilitySettingsMixin) or hasattr(settings, "observability_enabled")
 
     @classmethod
-    def _configure_opentelemetry(cls, builder: "EnhancedWebApplicationBuilder", config: ObservabilityConfig) -> None:
+    def _configure_opentelemetry(cls, builder: "WebApplicationBuilder", config: ObservabilityConfig) -> None:
         """Configure OpenTelemetry SDK based on enabled pillars"""
         try:
             from neuroglia.observability.otel_sdk import configure_opentelemetry
@@ -130,7 +130,7 @@ class Observability:
             log.error(f"❌ OpenTelemetry configuration error: {e}")
 
     @classmethod
-    def _register_standard_endpoints(cls, builder: "EnhancedWebApplicationBuilder", config: ObservabilityConfig) -> None:
+    def _register_standard_endpoints(cls, builder: "WebApplicationBuilder", config: ObservabilityConfig) -> None:
         """Register standard endpoints for automatic addition to main app during build"""
 
         # Store configuration for later use during app building

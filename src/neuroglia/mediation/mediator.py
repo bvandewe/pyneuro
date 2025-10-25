@@ -755,7 +755,6 @@ class Mediator:
                     continue
 
                 # Register only the concrete type (for DI) and track for mediator discovery
-                log.debug(f"🔧 Registering CommandHandler: {command_handler_type.__name__} as concrete type only")
                 app.services.add_scoped(command_handler_type, command_handler_type)
 
                 # Add to class-level handler registry
@@ -767,10 +766,9 @@ class Mediator:
                     if hasattr(base, "__origin__") and base.__origin__.__name__ == "CommandHandler":
                         command_type = base.__args__[0]
                         Mediator._handler_registry[command_type] = command_handler_type
-                        log.debug(f"🔧 Registered {command_type.__name__} -> {command_handler_type.__name__} in registry")
+                        log.debug(f"🔧 Registered {command_type.__name__} -> {command_handler_type.__name__} in registry from {module_name}")
                         break
                 handlers_registered += 1
-                log.debug(f"Registered CommandHandler: {command_handler_type.__name__} from {module_name}")
 
             # Query handlers
             for queryhandler_type in TypeFinder.get_types(
@@ -784,7 +782,6 @@ class Mediator:
                     continue
 
                 # Register only the concrete type (for DI) and track for mediator discovery
-                log.debug(f"🔧 Registering QueryHandler: {queryhandler_type.__name__} as concrete type only")
                 app.services.add_scoped(queryhandler_type, queryhandler_type)
 
                 # Add to class-level handler registry
@@ -796,10 +793,9 @@ class Mediator:
                     if hasattr(base, "__origin__") and base.__origin__.__name__ == "QueryHandler":
                         query_type = base.__args__[0]
                         Mediator._handler_registry[query_type] = queryhandler_type
-                        log.debug(f"🔧 Registered {query_type.__name__} -> {queryhandler_type.__name__} in registry")
+                        log.debug(f"🔧 Registered {query_type.__name__} -> {queryhandler_type.__name__} in registry from {module_name}")
                         break
                 handlers_registered += 1
-                log.debug(f"Registered QueryHandler: {queryhandler_type.__name__} from {module_name}")
 
             # Domain event handlers
             for domain_event_handler_type in TypeFinder.get_types(
