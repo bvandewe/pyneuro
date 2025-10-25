@@ -637,12 +637,17 @@ class Mediator:
 
     def _notification_handler_matches(self, candidate, request_type) -> bool:
         candidate_type = type(candidate)
-        handler_type = next(base for base in candidate_type.__orig_bases__ if (issubclass(base.__origin__, NotificationHandler) if hasattr(base, "__origin__") else issubclass(base, NotificationHandler)))
-        handled_notification_type = handler_type.__args__[0]
-        if isinstance(handled_notification_type, UnionType):
-            return any(issubclass(t, request_type) for t in handled_notification_type.__args__)
-        else:
-            return issubclass(handled_notification_type.__origin__, request_type) if hasattr(handled_notification_type, "__origin__") else issubclass(handled_notification_type, request_type)
+        try:
+            handler_type = next(base for base in candidate_type.__orig_bases__ if (issubclass(base.__origin__, NotificationHandler) if hasattr(base, "__origin__") else issubclass(base, NotificationHandler)))
+            handled_notification_type = handler_type.__args__[0]
+
+            if isinstance(handled_notification_type, UnionType):
+                return any(issubclass(t, request_type) for t in handled_notification_type.__args__)
+            else:
+                return issubclass(handled_notification_type.__origin__, request_type) if hasattr(handled_notification_type, "__origin__") else issubclass(handled_notification_type, request_type)
+        except Exception as e:
+            log.debug(f"Error matching notification handler {candidate_type.__name__} to {request_type.__name__}: {e}")
+            return False
 
     def _get_pipeline_behaviors(self, request: Request, provider: Optional[ServiceProviderBase] = None) -> list[PipelineBehavior]:
         """
