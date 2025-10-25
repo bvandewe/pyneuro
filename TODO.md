@@ -2,7 +2,23 @@
 
 ## In Progress
 
-- [-] Add functional sample_app/mario-pizzeria with DDD/CQRS (no event-sourcing)
+- [-] Clean up and integrate notes into mkdos site
+- Add event on menu' changes
+
+## Next
+
+- [ ] Add alerts
+- [ ] Protect endpoints
+- [ ] Mark new order as delivery or take-away
+- [ ] Mark take-away orders as delivered
+- [ ] Mark ready_orders as completed after expiration time
+- [ ] Add sample ROA app with telemetry
+- [ ] Add CLI to bootstrap and manipulate src code
+- [ ] Add CI/CD pipeline configuration
+
+## Completed
+
+- [x] Add functional sample_app/mario-pizzeria with DDD/CQRS (no event-sourcing)
   - OAuth 2.0 authentication (as mentioned in the requirements doc)
   - MongoDB repository implementations
   - Event sourcing with domain events
@@ -11,16 +27,7 @@
   - Advanced reporting and analytics
 - [x] Add extensive MkDocs documentation
 - [x] Add extensive tests coverage
-
-## Next
-
-- [ ] Add sample ROA app with telemetry
-- [ ] Add Telemetry Features and docs
-- [ ] Add CI/CD pipeline configuration
-- [ ] Add CLI to bootstrap and manipulate src code
-
-## Completed
-
+- [x] Add Telemetry Features and docs
 - [x] Integrate enhanced API Client
 - [x] Integrate enhanced repositories
 - [x] Integrate background scheduler
