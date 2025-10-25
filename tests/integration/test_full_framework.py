@@ -2,29 +2,34 @@
 Integration tests for Neuroglia framework components working together.
 """
 
-import pytest
-from typing import List, Dict, Optional
 from dataclasses import dataclass
-from datetime import datetime
-from uuid import uuid4
+from datetime import datetime, timezone
 from decimal import Decimal
+from typing import Optional
+from uuid import uuid4
 
+import pytest
+
+from neuroglia.core.operation_result import OperationResult
+from neuroglia.data.abstractions import (
+    AggregateRoot,
+    AggregateState,
+    DomainEvent,
+    Entity,
+)
+from neuroglia.data.infrastructure.abstractions import Repository
 from neuroglia.dependency_injection.service_provider import ServiceCollection
+from neuroglia.mapping.mapper import Mapper, MapperConfiguration
 from neuroglia.mediation.mediator import (
-    Mediator,
     Command,
+    DomainEventHandler,
+    Mediator,
+    NotificationHandler,
     Query,
     QueryHandler,
-    DomainEventHandler,
     RequestHandler,
-    NotificationHandler,
 )
-from neuroglia.core.operation_result import OperationResult
-from neuroglia.mapping.mapper import Mapper, MapperConfiguration
-from neuroglia.data.abstractions import Entity, AggregateRoot, AggregateState, DomainEvent
-from neuroglia.data.infrastructure.abstractions import Repository
 from tests.fixtures.test_fixtures import TestEmailService
-
 
 # Integration test models
 
@@ -112,9 +117,7 @@ class MoneyDepositedEvent(DomainEvent[str]):
     new_balance: Decimal
     transaction_id: str
 
-    def __init__(
-        self, aggregate_id: str, amount: Decimal, new_balance: Decimal, transaction_id: str
-    ):
+    def __init__(self, aggregate_id: str, amount: Decimal, new_balance: Decimal, transaction_id: str):
         super().__init__(aggregate_id)
         self.amount = amount
         self.new_balance = new_balance
@@ -129,9 +132,7 @@ class MoneyWithdrawnEvent(DomainEvent[str]):
     new_balance: Decimal
     transaction_id: str
 
-    def __init__(
-        self, aggregate_id: str, amount: Decimal, new_balance: Decimal, transaction_id: str
-    ):
+    def __init__(self, aggregate_id: str, amount: Decimal, new_balance: Decimal, transaction_id: str):
         super().__init__(aggregate_id)
         self.amount = amount
         self.new_balance = new_balance
@@ -175,9 +176,7 @@ class BankAccountAggregate(AggregateRoot[BankAccountState, str]):
         # Clear any pending events since we're loading existing state
         self._pending_events.clear()
 
-    def create_account(
-        self, account_number: str, owner_name: str, initial_balance: Decimal, account_type: str
-    ):
+    def create_account(self, account_number: str, owner_name: str, initial_balance: Decimal, account_type: str):
         """Create a new bank account"""
         if not account_number or not account_number.strip():
             raise ValueError("Account number is required")
@@ -343,7 +342,7 @@ class InMemoryAccountRepository(Repository[Account, str]):
     """In-memory account repository"""
 
     def __init__(self):
-        self._accounts: Dict[str, Account] = {}
+        self._accounts: dict[str, Account] = {}
 
     async def contains_async(self, id: str) -> bool:
         return id in self._accounts
@@ -368,7 +367,7 @@ class InMemoryAccountRepository(Repository[Account, str]):
         if id in self._accounts:
             del self._accounts[id]
 
-    async def find_async(self, predicate) -> List[Account]:
+    async def find_async(self, predicate) -> list[Account]:
         return [account for account in self._accounts.values() if predicate(account)]
 
     async def get_by_account_number_async(self, account_number: str) -> Optional[Account]:
@@ -386,7 +385,7 @@ class InMemoryTransactionRepository(Repository[Transaction, str]):
     """In-memory transaction repository"""
 
     def __init__(self):
-        self._transactions: Dict[str, Transaction] = {}
+        self._transactions: dict[str, Transaction] = {}
 
     async def contains_async(self, id: str) -> bool:
         return id in self._transactions
@@ -411,12 +410,10 @@ class InMemoryTransactionRepository(Repository[Transaction, str]):
         if id in self._transactions:
             del self._transactions[id]
 
-    async def find_async(self, predicate) -> List[Transaction]:
-        return [
-            transaction for transaction in self._transactions.values() if predicate(transaction)
-        ]
+    async def find_async(self, predicate) -> list[Transaction]:
+        return [transaction for transaction in self._transactions.values() if predicate(transaction)]
 
-    async def get_by_account_id_async(self, account_id: str) -> List[Transaction]:
+    async def get_by_account_id_async(self, account_id: str) -> list[Transaction]:
         transactions = [tx for tx in self._transactions.values() if tx.account_id == account_id]
         return transactions
 
@@ -433,15 +430,13 @@ class AccountCreatedEventHandler(DomainEventHandler[AccountCreatedEvent]):
 
     def __init__(self, email_service):
         self.email_service = email_service
-        self.handled_events: List[AccountCreatedEvent] = []
+        self.handled_events: list[AccountCreatedEvent] = []
 
     async def handle_async(self, notification: AccountCreatedEvent) -> None:
         self.handled_events.append(notification)
 
         # Send welcome email
-        await self.email_service.send_welcome_email(
-            f"{notification.owner_name}@example.com", notification.owner_name
-        )
+        await self.email_service.send_welcome_email(f"{notification.owner_name}@example.com", notification.owner_name)
 
 
 class MoneyDepositedEventHandler(DomainEventHandler[MoneyDepositedEvent]):
@@ -449,7 +444,7 @@ class MoneyDepositedEventHandler(DomainEventHandler[MoneyDepositedEvent]):
 
     def __init__(self, transaction_repo: InMemoryTransactionRepository):
         self.transaction_repo = transaction_repo
-        self.handled_events: List[MoneyDepositedEvent] = []
+        self.handled_events: list[MoneyDepositedEvent] = []
 
     async def handle_async(self, notification: MoneyDepositedEvent) -> None:
         self.handled_events.append(notification)
@@ -470,7 +465,7 @@ class MoneyWithdrawnEventHandler(DomainEventHandler[MoneyWithdrawnEvent]):
 
     def __init__(self, transaction_repo: InMemoryTransactionRepository):
         self.transaction_repo = transaction_repo
-        self.handled_events: List[MoneyWithdrawnEvent] = []
+        self.handled_events: list[MoneyWithdrawnEvent] = []
 
     async def handle_async(self, notification: MoneyWithdrawnEvent) -> None:
         self.handled_events.append(notification)
@@ -489,9 +484,7 @@ class MoneyWithdrawnEventHandler(DomainEventHandler[MoneyWithdrawnEvent]):
 # Command handlers
 
 
-class CreateAccountCommandHandler(
-    RequestHandler[CreateAccountCommand, OperationResult[AccountDto]]
-):
+class CreateAccountCommandHandler(RequestHandler[CreateAccountCommand, OperationResult[AccountDto]]):
     """Handler for create account command"""
 
     def __init__(self, account_repo: InMemoryAccountRepository, mapper: Mapper, mediator: Mediator):
@@ -588,9 +581,7 @@ class DepositMoneyCommandHandler(RequestHandler[DepositMoneyCommand, OperationRe
             return OperationResult("Internal Server Error", 500, f"Failed to deposit money: {e}")
 
 
-class WithdrawMoneyCommandHandler(
-    RequestHandler[WithdrawMoneyCommand, OperationResult[AccountDto]]
-):
+class WithdrawMoneyCommandHandler(RequestHandler[WithdrawMoneyCommand, OperationResult[AccountDto]]):
     """Handler for withdraw money command"""
 
     def __init__(self, account_repo: InMemoryAccountRepository, mapper: Mapper, mediator: Mediator):
@@ -655,18 +646,14 @@ class GetAccountQueryHandler(RequestHandler[GetAccountQuery, OperationResult[Acc
         return result
 
 
-class GetAccountsByOwnerQueryHandler(
-    QueryHandler[GetAccountsByOwnerQuery, OperationResult[List[AccountDto]]]
-):
+class GetAccountsByOwnerQueryHandler(QueryHandler[GetAccountsByOwnerQuery, OperationResult[List[AccountDto]]]):
     """Handler for get accounts by owner query"""
 
     def __init__(self, account_repo: InMemoryAccountRepository, mapper: Mapper):
         self.account_repo = account_repo
         self.mapper = mapper
 
-    async def handle_async(
-        self, request: GetAccountsByOwnerQuery
-    ) -> OperationResult[List[AccountDto]]:
+    async def handle_async(self, request: GetAccountsByOwnerQuery) -> OperationResult[list[AccountDto]]:
         accounts = await self.account_repo.find_async(lambda a: a.owner_name == request.owner_name)
         account_dtos = [self.mapper.map(account, AccountDto) for account in accounts]
         result = OperationResult("OK", 200)
@@ -695,10 +682,9 @@ class GetAccountBalanceQueryHandler(QueryHandler[GetAccountBalanceQuery, Operati
 
 
 class TestNeurogliaIntegration:
-
     def setup_method(self):
         """Set up integration test environment"""
-        # Create service collection
+        # Create NEW service collection for each test to avoid accumulation
         self.service_collection = ServiceCollection()
 
         # Create repositories
@@ -714,18 +700,12 @@ class TestNeurogliaIntegration:
         # Create mapper with configuration
         mapper_config = MapperConfiguration()
         # Configure type mappings as needed
-        mapper_config.create_map(Account, AccountDto).for_member(
-            "balance", lambda ctx: float(ctx.source.balance)
-        ).for_member("formatted_balance", lambda ctx: f"${ctx.source.balance:.2f}")
+        mapper_config.create_map(Account, AccountDto).for_member("balance", lambda ctx: float(ctx.source.balance)).for_member("formatted_balance", lambda ctx: f"${ctx.source.balance:.2f}")
         self.mapper = Mapper(mapper_config)
 
         # Register services
-        self.service_collection.add_singleton(
-            InMemoryAccountRepository, singleton=self.account_repo
-        )
-        self.service_collection.add_singleton(
-            InMemoryTransactionRepository, singleton=self.transaction_repo
-        )
+        self.service_collection.add_singleton(InMemoryAccountRepository, singleton=self.account_repo)
+        self.service_collection.add_singleton(InMemoryTransactionRepository, singleton=self.transaction_repo)
         self.service_collection.add_singleton(TestEmailService, singleton=self.email_service)
         self.service_collection.add_singleton(Mapper, singleton=self.mapper)
 
@@ -739,48 +719,24 @@ class TestNeurogliaIntegration:
         self.money_withdrawn_handler = MoneyWithdrawnEventHandler(self.transaction_repo)
 
         # Register by concrete type for dependency injection
-        self.service_collection.add_singleton(
-            AccountCreatedEventHandler, singleton=self.account_created_handler
-        )
-        self.service_collection.add_singleton(
-            MoneyDepositedEventHandler, singleton=self.money_deposited_handler
-        )
-        self.service_collection.add_singleton(
-            MoneyWithdrawnEventHandler, singleton=self.money_withdrawn_handler
-        )
+        self.service_collection.add_singleton(AccountCreatedEventHandler, singleton=self.account_created_handler)
+        self.service_collection.add_singleton(MoneyDepositedEventHandler, singleton=self.money_deposited_handler)
+        self.service_collection.add_singleton(MoneyWithdrawnEventHandler, singleton=self.money_withdrawn_handler)
 
         # Also register by base type for mediator discovery
-        self.service_collection.add_singleton(
-            NotificationHandler, singleton=self.account_created_handler
-        )
-        self.service_collection.add_singleton(
-            NotificationHandler, singleton=self.money_deposited_handler
-        )
-        self.service_collection.add_singleton(
-            NotificationHandler, singleton=self.money_withdrawn_handler
-        )
+        self.service_collection.add_singleton(NotificationHandler, singleton=self.account_created_handler)
+        self.service_collection.add_singleton(NotificationHandler, singleton=self.money_deposited_handler)
+        self.service_collection.add_singleton(NotificationHandler, singleton=self.money_withdrawn_handler)
 
         # Register command handlers
-        self.create_account_handler = CreateAccountCommandHandler(
-            self.account_repo, self.mapper, self.mediator
-        )
-        self.deposit_money_handler = DepositMoneyCommandHandler(
-            self.account_repo, self.mapper, self.mediator
-        )
-        self.withdraw_money_handler = WithdrawMoneyCommandHandler(
-            self.account_repo, self.mapper, self.mediator
-        )
+        self.create_account_handler = CreateAccountCommandHandler(self.account_repo, self.mapper, self.mediator)
+        self.deposit_money_handler = DepositMoneyCommandHandler(self.account_repo, self.mapper, self.mediator)
+        self.withdraw_money_handler = WithdrawMoneyCommandHandler(self.account_repo, self.mapper, self.mediator)
 
         # Register by concrete type for dependency injection
-        self.service_collection.add_singleton(
-            CreateAccountCommandHandler, singleton=self.create_account_handler
-        )
-        self.service_collection.add_singleton(
-            DepositMoneyCommandHandler, singleton=self.deposit_money_handler
-        )
-        self.service_collection.add_singleton(
-            WithdrawMoneyCommandHandler, singleton=self.withdraw_money_handler
-        )
+        self.service_collection.add_singleton(CreateAccountCommandHandler, singleton=self.create_account_handler)
+        self.service_collection.add_singleton(DepositMoneyCommandHandler, singleton=self.deposit_money_handler)
+        self.service_collection.add_singleton(WithdrawMoneyCommandHandler, singleton=self.withdraw_money_handler)
 
         # Also register by base type for mediator discovery
         self.service_collection.add_singleton(RequestHandler, singleton=self.create_account_handler)
@@ -793,32 +749,36 @@ class TestNeurogliaIntegration:
 
         # Register query handlers
         self.get_account_handler = GetAccountQueryHandler(self.account_repo, self.mapper)
-        self.get_accounts_by_owner_handler = GetAccountsByOwnerQueryHandler(
-            self.account_repo, self.mapper
-        )
+        self.get_accounts_by_owner_handler = GetAccountsByOwnerQueryHandler(self.account_repo, self.mapper)
         self.get_balance_handler = GetAccountBalanceQueryHandler(self.account_repo)
 
         # Register by concrete type for dependency injection
-        self.service_collection.add_singleton(
-            GetAccountQueryHandler, singleton=self.get_account_handler
-        )
-        self.service_collection.add_singleton(
-            GetAccountsByOwnerQueryHandler, singleton=self.get_accounts_by_owner_handler
-        )
-        self.service_collection.add_singleton(
-            GetAccountBalanceQueryHandler, singleton=self.get_balance_handler
-        )
+        self.service_collection.add_singleton(GetAccountQueryHandler, singleton=self.get_account_handler)
+        self.service_collection.add_singleton(GetAccountsByOwnerQueryHandler, singleton=self.get_accounts_by_owner_handler)
+        self.service_collection.add_singleton(GetAccountBalanceQueryHandler, singleton=self.get_balance_handler)
 
         # Also register by base type for mediator discovery
         self.service_collection.add_singleton(RequestHandler, singleton=self.get_account_handler)
-        self.service_collection.add_singleton(
-            RequestHandler, singleton=self.get_accounts_by_owner_handler
-        )
+        self.service_collection.add_singleton(RequestHandler, singleton=self.get_accounts_by_owner_handler)
         self.service_collection.add_singleton(RequestHandler, singleton=self.get_balance_handler)
 
         # Rebuild service provider with all handlers
         self.service_provider = self.service_collection.build()
         self.mediator = Mediator(self.service_provider)
+
+        # Clear and manually register handlers in mediator's static registry
+        # This is needed because handlers are created directly instead of via module discovery
+        Mediator._handler_registry = {}  # Always clear first to prevent accumulation across tests
+
+        # Register command handlers
+        Mediator._handler_registry[CreateAccountCommand] = CreateAccountCommandHandler
+        Mediator._handler_registry[DepositMoneyCommand] = DepositMoneyCommandHandler
+        Mediator._handler_registry[WithdrawMoneyCommand] = WithdrawMoneyCommandHandler
+
+        # Register query handlers
+        Mediator._handler_registry[GetAccountQuery] = GetAccountQueryHandler
+        Mediator._handler_registry[GetAccountsByOwnerQuery] = GetAccountsByOwnerQueryHandler
+        Mediator._handler_registry[GetAccountBalanceQuery] = GetAccountBalanceQueryHandler
 
     @pytest.mark.asyncio
     async def test_complete_banking_workflow(self):
@@ -842,13 +802,11 @@ class TestNeurogliaIntegration:
         account_id = create_result.data.id
 
         # Verify welcome email was sent
-        assert len(self.email_service.sent_emails) == 1
+        assert len(self.email_service.sent_emails) == 1, f"Expected 1 email, got {len(self.email_service.sent_emails)}"
         assert self.email_service.sent_emails[0]["type"] == "welcome"
 
         # 2. Deposit money
-        deposit_command = DepositMoneyCommand(
-            account_id=account_id, amount=500.0, description="Salary deposit"
-        )
+        deposit_command = DepositMoneyCommand(account_id=account_id, amount=500.0, description="Salary deposit")
 
         deposit_result = await self.mediator.execute_async(deposit_command)
 
@@ -863,9 +821,7 @@ class TestNeurogliaIntegration:
         assert deposit_transactions[0].amount == Decimal("500.00")
 
         # 3. Withdraw money
-        withdraw_command = WithdrawMoneyCommand(
-            account_id=account_id, amount=200.0, description="ATM withdrawal"
-        )
+        withdraw_command = WithdrawMoneyCommand(account_id=account_id, amount=200.0, description="ATM withdrawal")
 
         withdraw_result = await self.mediator.execute_async(withdraw_command)
 
@@ -945,9 +901,7 @@ class TestNeurogliaIntegration:
         assert result.status_code == 400  # Bad Request
 
         # 2. Try to withdraw from non-existent account
-        withdraw_command = WithdrawMoneyCommand(
-            account_id="nonexistent", amount=100.0, description="Test withdrawal"
-        )
+        withdraw_command = WithdrawMoneyCommand(account_id="nonexistent", amount=100.0, description="Test withdrawal")
 
         result = await self.mediator.execute_async(withdraw_command)
         assert not result.is_success
@@ -994,33 +948,29 @@ class TestNeurogliaIntegration:
         # Verify account created event was handled
         assert len(self.account_created_handler.handled_events) == 1
         event = self.account_created_handler.handled_events[0]
-        assert event.account_id == account_id
+        assert event.aggregate_id == account_id  # DomainEvent uses aggregate_id, not account_id
         assert event.owner_name == "John Doe"
 
         # Deposit money (triggers MoneyDeposited event)
-        deposit_command = DepositMoneyCommand(
-            account_id=account_id, amount=500.0, description="Deposit"
-        )
+        deposit_command = DepositMoneyCommand(account_id=account_id, amount=500.0, description="Deposit")
 
         await self.mediator.execute_async(deposit_command)
 
         # Verify deposit event was handled
         assert len(self.money_deposited_handler.handled_events) == 1
         deposit_event = self.money_deposited_handler.handled_events[0]
-        assert deposit_event.account_id == account_id
+        assert deposit_event.aggregate_id == account_id  # DomainEvent uses aggregate_id
         assert deposit_event.amount == Decimal("500.00")
 
         # Withdraw money (triggers MoneyWithdrawn event)
-        withdraw_command = WithdrawMoneyCommand(
-            account_id=account_id, amount=200.0, description="Withdrawal"
-        )
+        withdraw_command = WithdrawMoneyCommand(account_id=account_id, amount=200.0, description="Withdrawal")
 
         await self.mediator.execute_async(withdraw_command)
 
         # Verify withdrawal event was handled
         assert len(self.money_withdrawn_handler.handled_events) == 1
         withdrawal_event = self.money_withdrawn_handler.handled_events[0]
-        assert withdrawal_event.account_id == account_id
+        assert withdrawal_event.aggregate_id == account_id  # DomainEvent uses aggregate_id
         assert withdrawal_event.amount == Decimal("200.00")
 
         # Verify all transactions were recorded by event handlers

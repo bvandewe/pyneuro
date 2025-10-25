@@ -25,7 +25,7 @@ class UserCreatedEvent(DomainEvent):
     """Domain event raised when a user is created."""
 
     def __init__(self, user_id: str, email: str):
-        super().__init__()
+        super().__init__(aggregate_id=user_id)
         self.user_id = user_id
         self.email = email
 
@@ -34,7 +34,7 @@ class UserActivatedEvent(DomainEvent):
     """Domain event raised when a user is activated."""
 
     def __init__(self, user_id: str):
-        super().__init__()
+        super().__init__(aggregate_id=user_id)
         self.user_id = user_id
 
 
