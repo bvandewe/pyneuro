@@ -218,6 +218,167 @@ async def process_order(order_id: str):
 }
 ```
 
+## ⚙️ FastAPI Multi-Application Instrumentation
+
+### 🚨 Critical Configuration for Multi-App Architectures
+
+When building applications with multiple mounted FastAPI apps (main app + sub-apps), **proper OpenTelemetry instrumentation configuration is crucial** to avoid duplicate metrics warnings and ensure complete observability coverage.
+
+#### **The Problem: Duplicate Instrumentation**
+
+**❌ WRONG - Causes duplicate metric warnings:**
+
+```python
+# This creates duplicate HTTP metrics instruments
+from neuroglia.observability import instrument_fastapi_app
+
+# Main application
+app = FastAPI(title="Mario's Pizzeria")
+
+# Sub-applications
+api_app = FastAPI(title="API")
+ui_app = FastAPI(title="UI")
+
+# ❌ DON'T DO THIS - Causes warnings
+instrument_fastapi_app(app, "main-app")
+instrument_fastapi_app(api_app, "api-app")    # ⚠️ Duplicate metrics
+instrument_fastapi_app(ui_app, "ui-app")      # ⚠️ Duplicate metrics
+
+# Mount sub-apps
+app.mount("/api", api_app)
+app.mount("/", ui_app)
+```
+
+**Error Messages You'll See:**
+
+```
+WARNING  An instrument with name http.server.duration, type Histogram...
+has been created already.
+WARNING  An instrument with name http.server.request.size, type Histogram...
+has been created already.
+```
+
+#### **✅ CORRECT - Single Main App Instrumentation**
+
+**The solution: Only instrument the main app that contains mounted sub-apps**
+
+```python
+from neuroglia.observability import configure_opentelemetry, instrument_fastapi_app
+
+# 1. Initialize OpenTelemetry first (once per application)
+configure_opentelemetry(
+    service_name="mario-pizzeria",
+    service_version="1.0.0",
+    otlp_endpoint="http://otel-collector:4317"
+)
+
+# 2. Create applications
+app = FastAPI(title="Mario's Pizzeria")
+api_app = FastAPI(title="API")
+ui_app = FastAPI(title="UI")
+
+# 3. Define endpoints BEFORE mounting (important for health checks)
+@app.get("/health")
+async def health_check():
+    return {"status": "healthy"}
+
+# 4. Mount sub-applications
+app.mount("/api", api_app, name="api")
+app.mount("/", ui_app, name="ui")
+
+# 5. ✅ ONLY instrument the main app
+instrument_fastapi_app(app, "mario-pizzeria-main")
+```
+
+#### **📊 Complete Coverage Verification**
+
+This single instrumentation captures **ALL endpoints across all mounted applications**:
+
+**Example Tracked Endpoints:**
+
+```python
+# All these endpoints are automatically instrumented:
+✅ /health                (main app)
+✅ /                      (UI sub-app root)
+✅ /menu                  (UI sub-app)
+✅ /orders                (UI sub-app)
+✅ /api/menu/             (API sub-app)
+✅ /api/orders/           (API sub-app)
+✅ /api/kitchen/status    (API sub-app)
+✅ /api/docs              (API sub-app)
+✅ /api/metrics           (API sub-app)
+```
+
+**HTTP Status Codes Tracked:**
+
+```python
+✅ 200 OK                (successful requests)
+✅ 307 Temporary Redirect (FastAPI automatic redirects)
+✅ 404 Not Found          (missing endpoints)
+✅ 401 Unauthorized       (auth failures)
+✅ 500 Internal Error     (application errors)
+```
+
+#### **🔍 How It Works**
+
+1. **Request Flow**: All HTTP requests reach the main app first
+2. **Middleware Order**: OpenTelemetry middleware intercepts requests before routing
+3. **Sub-App Processing**: Requests are then routed to appropriate mounted sub-apps
+4. **Metric Collection**: Single point of HTTP metric collection with complete coverage
+
+```
+HTTP Request → Main App (instrumented) → Mounted Sub-App → Response
+                  ↑
+            Metrics captured here
+```
+
+#### **🎯 Best Practices**
+
+1. **Single Instrumentation Point**: Only instrument the main FastAPI app
+2. **Timing Matters**: Mount sub-apps before instrumenting the main app
+3. **Health Endpoints**: Define main app endpoints before mounting to avoid 404s
+4. **Service Naming**: Use descriptive names for the instrumented app
+5. **Verification**: Check `/metrics` endpoint to confirm all routes are tracked
+
+#### **🚨 Common Pitfalls**
+
+1. **Instrumenting Sub-Apps**: Never instrument mounted sub-applications directly
+2. **Order of Operations**: Don't instrument before mounting sub-apps
+3. **Missing Routes**: Define health/metrics endpoints on main app, not sub-apps
+4. **Duplicate Names**: Use unique service names for different instrumentation calls
+
+#### **📈 Metrics Verification**
+
+Verify your instrumentation is working correctly:
+
+```bash
+# Check all tracked endpoints
+curl -s "http://localhost:8080/api/metrics" | \
+  grep 'http_target=' | \
+  sed 's/.*http_target="\([^"]*\)".*/\1/' | \
+  sort | uniq
+
+# Expected output:
+# /
+# /api/menu/
+# /api/orders/
+# /health
+# /api/metrics
+```
+
+#### **📋 Integration Checklist**
+
+- [ ] ✅ Initialize OpenTelemetry once at startup
+- [ ] ✅ Create all FastAPI apps (main + sub-apps)
+- [ ] ✅ Define main app endpoints (health, metrics)
+- [ ] ✅ Mount all sub-applications to main app
+- [ ] ✅ Instrument ONLY the main app
+- [ ] ✅ Verify no duplicate metric warnings in logs
+- [ ] ✅ Confirm all endpoints appear in metrics
+- [ ] ✅ Test trace propagation across all routes
+
+This configuration ensures **complete observability coverage** without duplicate instrumentation warnings, providing clean metrics collection across your entire multi-application architecture.
+
 ## 🚀 Key Benefits
 
 ### For Development

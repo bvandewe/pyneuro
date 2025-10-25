@@ -12,6 +12,19 @@ Key Features:
 - Configurable exporters (OTLP, Console, Jaeger compatibility)
 - Decorators for easy manual instrumentation
 
+Multi-App FastAPI Instrumentation:
+    For applications with mounted sub-apps, only instrument the main app:
+
+    # ✅ Correct - only instrument main app
+    app = FastAPI()
+    api_app = FastAPI()
+    app.mount("/api", api_app)
+    instrument_fastapi_app(app, "my-service")  # Captures all endpoints
+
+    # ❌ Wrong - causes duplicate metrics warnings
+    instrument_fastapi_app(app, "main")
+    instrument_fastapi_app(api_app, "api")    # Don't do this!
+
 Usage:
     from neuroglia.observability import configure_opentelemetry, get_tracer, trace_async
 
@@ -31,12 +44,7 @@ Usage:
         pass
 """
 
-from neuroglia.observability.config import (
-    OpenTelemetryConfig,
-    configure_opentelemetry,
-    instrument_fastapi_app,
-    shutdown_opentelemetry,
-)
+from neuroglia.observability.framework import Observability
 from neuroglia.observability.logging import (
     configure_logging,
     get_logger_with_trace_context,
@@ -51,6 +59,17 @@ from neuroglia.observability.metrics import (
     get_meter,
     record_metric,
 )
+from neuroglia.observability.otel_sdk import (
+    OpenTelemetryConfig,
+    configure_opentelemetry,
+    instrument_fastapi_app,
+    shutdown_opentelemetry,
+)
+from neuroglia.observability.settings import (
+    ApplicationSettingsWithObservability,
+    ObservabilityConfig,
+    ObservabilitySettingsMixin,
+)
 from neuroglia.observability.tracing import (
     add_span_attributes,
     add_span_event,
@@ -62,7 +81,12 @@ from neuroglia.observability.tracing import (
 )
 
 __all__ = [
-    # Configuration
+    # New Framework-Style Configuration
+    "Observability",
+    "ObservabilityConfig",
+    "ObservabilitySettingsMixin",
+    "ApplicationSettingsWithObservability",
+    # Legacy Configuration (still supported)
     "OpenTelemetryConfig",
     "configure_opentelemetry",
     "shutdown_opentelemetry",

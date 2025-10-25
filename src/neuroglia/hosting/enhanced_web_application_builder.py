@@ -160,14 +160,29 @@ class EnhancedWebApplicationBuilder(WebApplicationBuilder):
     - Flexible URL prefix management
     - Controller deduplication tracking
     - Advanced exception handling middleware
+    - Integrated observability configuration
+    - Application settings management
     """
 
-    def __init__(self):
+    def __init__(self, app_settings):
+        """
+        Initialize the enhanced builder with application settings.
+
+        Args:
+            app_settings: Application configuration object containing service settings
+        """
         super().__init__()
+        self.app_settings = app_settings
         self._main_app = None
         # Use a more robust tracking system that includes controller types
         self._registered_controllers: dict[str, set[str]] = {}
         self._pending_controller_modules: list[dict] = []
+
+        # Observability configuration (set by Observability.configure())
+        self._observability_config = None
+
+        # Automatically register app_settings in DI container
+        self.services.add_singleton(type(app_settings), lambda: app_settings)
 
     @property
     def app(self) -> Optional[FastAPI]:
@@ -194,23 +209,25 @@ class EnhancedWebApplicationBuilder(WebApplicationBuilder):
 
         return host
 
-    def build_app_with_lifespan(self, title: str = "FastAPI Application", description: str = "", version: str = "1.0.0", debug: bool = False) -> FastAPI:
+    def build_app_with_lifespan(self, title: str = None, description: str = "", version: str = None, debug: bool = None) -> FastAPI:
         """
-        Build a FastAPI application with integrated Host lifespan support.
+        Build a FastAPI application with integrated Host lifespan support and observability.
 
         This method:
         1. Builds the WebHost (which manages HostedServices)
         2. Creates a FastAPI app with a lifespan that starts/stops the Host
         3. Ensures all HostedServices are properly started and stopped
+        4. Automatically adds observability endpoints if configured
+        5. Applies OpenTelemetry instrumentation if enabled
 
         Args:
-            title: FastAPI application title
+            title: FastAPI application title (defaults to app_settings.service_name)
             description: FastAPI application description
-            version: Application version
-            debug: Enable debug mode
+            version: Application version (defaults to app_settings.service_version)
+            debug: Enable debug mode (defaults to app_settings.debug)
 
         Returns:
-            FastAPI app with Host lifespan support for HostedServices
+            FastAPI app with Host lifespan support and integrated observability
         """
         import logging
         from contextlib import asynccontextmanager
@@ -236,11 +253,21 @@ class EnhancedWebApplicationBuilder(WebApplicationBuilder):
             await web_host.stop_async()  # Stops all HostedServices
             log.info("✅ Host and HostedServices stopped")
 
+        # Smart defaults from app_settings
+        app_title = title or getattr(self.app_settings, "service_name", "FastAPI Application")
+        app_version = version or getattr(self.app_settings, "service_version", "1.0.0")
+        app_debug = debug if debug is not None else getattr(self.app_settings, "debug", False)
+
         # Create FastAPI app with the Host lifespan
-        app = FastAPI(title=title, description=description, version=version, debug=debug, lifespan=host_lifespan)
+        app = FastAPI(title=app_title, description=description, version=app_version, debug=app_debug, lifespan=host_lifespan)
 
         # Make service provider available to the app
         app.state.services = web_host.services
+
+        # Add observability endpoints and instrumentation if configured
+        if self._observability_config:
+            self._setup_observability_endpoints(app)
+            self._setup_observability_instrumentation(app)
 
         return app
 
@@ -369,3 +396,44 @@ class EnhancedWebApplicationBuilder(WebApplicationBuilder):
 
             except ImportError as ex:
                 log.error(f"Failed to import module {module_name}: {ex}")
+
+    def _setup_observability_endpoints(self, app: FastAPI) -> None:
+        """Add standard observability endpoints to the FastAPI app"""
+        try:
+            from neuroglia.observability.framework import StandardEndpoints
+
+            config = self._observability_config
+
+            if config.health_endpoint:
+                StandardEndpoints.add_health_endpoint(app, config)
+                log.info(f"📊 Health endpoint added at {config.health_path}")
+
+            if config.ready_endpoint:
+                StandardEndpoints.add_ready_endpoint(app, config)
+                log.info(f"📊 Ready endpoint added at {config.ready_path}")
+
+            if config.metrics_endpoint:
+                StandardEndpoints.add_metrics_endpoint(app, config)
+                log.info(f"📊 Metrics endpoint added at {config.metrics_path}")
+
+        except ImportError as e:
+            log.warning(f"⚠️ Could not add observability endpoints: {e}")
+        except Exception as e:
+            log.error(f"❌ Error adding observability endpoints: {e}")
+
+    def _setup_observability_instrumentation(self, app: FastAPI) -> None:
+        """Apply OpenTelemetry instrumentation to the FastAPI app"""
+        try:
+            from neuroglia.observability.otel_sdk import instrument_fastapi_app
+
+            config = self._observability_config
+
+            # Apply FastAPI instrumentation if tracing is enabled
+            if config.tracing_enabled and config.instrument_fastapi:
+                instrument_fastapi_app(app, f"{config.service_name}-main")
+                log.info(f"🔭 FastAPI instrumentation applied to main app")
+
+        except ImportError as e:
+            log.warning(f"⚠️ Could not apply OpenTelemetry instrumentation: {e}")
+        except Exception as e:
+            log.error(f"❌ Error applying instrumentation: {e}")
