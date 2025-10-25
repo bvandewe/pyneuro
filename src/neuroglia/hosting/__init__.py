@@ -88,7 +88,12 @@ See Also:
 """
 
 from .abstractions import ApplicationBuilderBase, HostedService
-from .web import EnhancedWebHost, ExceptionHandlingMiddleware, WebApplicationBuilder
+from .web import (
+    EnhancedWebHost,
+    ExceptionHandlingMiddleware,
+    SubAppConfig,
+    WebApplicationBuilder,
+)
 
 # Backward compatibility alias (deprecated)
 EnhancedWebApplicationBuilder = WebApplicationBuilder
@@ -100,4 +105,5 @@ __all__ = [
     "EnhancedWebApplicationBuilder",  # Deprecated alias
     "ExceptionHandlingMiddleware",
     "EnhancedWebHost",
+    "SubAppConfig",  # Sub-application configuration
 ]
