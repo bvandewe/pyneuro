@@ -94,10 +94,14 @@ start_services() {
     print_success "Mario's Pizzeria is starting up!"
     print_info ""
     print_info "🌐 Access your services at:"
-    print_info "  ${PIZZA} Mario's Pizzeria UI: http://localhost:8080/ui"
+    print_info "  ${PIZZA} Mario's Pizzeria UI: http://localhost:8080/"
     print_info "  ${PIZZA} Mario's Pizzeria API: http://localhost:8080/api/docs"
+    print_info "  � Grafana Dashboards:   http://localhost:3001 (admin/admin)"
+    print_info "  📈 Prometheus Metrics:   http://localhost:9090"
+    print_info "  🔍 Tempo Traces:         http://localhost:3200"
+    print_info "  📝 Loki Logs:            http://localhost:3100"
+    print_info "  📡 OTEL Collector:       http://localhost:8888"
     print_info "  🗄️  MongoDB Express:      http://localhost:8081 (admin/admin123)"
-    print_info "  🎪 EventStoreDB:         http://localhost:2113"
     print_info "  🎬 Event Player:         http://localhost:8085"
     print_info "  🔐 Keycloak Admin:       http://localhost:8090/admin (admin/admin)"
     print_info ""
@@ -183,6 +187,88 @@ clean_environment() {
     print_info "All data has been removed. Run './mario-docker.sh start' to create a fresh environment."
 }
 
+clean_orders() {
+    print_header
+    print_warning "This will remove ALL ORDER DATA from MongoDB!"
+    print_warning "This action cannot be undone."
+
+    read -p "Are you sure? Type 'yes' to continue: " -r
+    if [[ $REPLY != "yes" ]]; then
+        print_info "Operation cancelled."
+        exit 0
+    fi
+
+    print_info "${CLEAN} Cleaning order data from MongoDB..."
+
+    # Check if MongoDB container is running
+    if docker-compose -f $COMPOSE_FILE ps mongodb | grep -q "Up"; then
+        # Clean only orders and kitchen data, preserve pizzas (menu) and customers
+        docker-compose -f $COMPOSE_FILE exec -T mongodb mongosh mario_pizzeria --username root --password mario123 --authenticationDatabase admin --quiet --eval "
+            db.orders.deleteMany({});
+            db.kitchen.deleteMany({});
+            print('Order and kitchen data cleared from Mario Pizzeria database');
+            print('Pizzas (menu) and customers preserved');
+        "
+        print_success "Order data cleared from MongoDB!"
+        print_info "You can now generate fresh test data with: make mario-test-data"
+    else
+        print_error "MongoDB container is not running. Start services first with: ./mario-docker.sh start"
+        exit 1
+    fi
+}
+
+create_menu() {
+    print_header
+    print_info "🍕 Initializing default pizza menu..."
+
+    # Check if MongoDB container is running
+    if docker-compose -f $COMPOSE_FILE ps mongodb | grep -q "Up"; then
+        # Clear existing pizzas and let the application auto-initialize the default menu
+        docker-compose -f $COMPOSE_FILE exec -T mongodb mongosh mario_pizzeria --username root --password mario123 --authenticationDatabase admin --quiet --eval "
+            // Clear existing pizzas to trigger re-initialization
+            db.pizzas.deleteMany({});
+            print('Cleared pizzas collection - application will auto-initialize menu on next API call');
+        "
+        # Trigger menu initialization by calling the API
+        print_info "🔄 Triggering menu initialization..."
+        if curl -s http://localhost:8080/api/menu/ > /dev/null 2>&1; then
+            print_success "Default pizza menu initialized!"
+            print_info "Menu available at: http://localhost:8080/menu/"
+        else
+            print_warning "Menu initialization triggered, but API call failed. Try accessing http://localhost:8080/menu/ to initialize."
+        fi
+    else
+        print_error "MongoDB container is not running. Start services first with: ./mario-docker.sh start"
+        exit 1
+    fi
+}
+
+remove_mongo_validation() {
+    print_header
+    print_info "🔧 Removing MongoDB validation schemas..."
+
+    # Check if MongoDB container is running
+    if docker-compose -f $COMPOSE_FILE ps mongodb | grep -q "Up"; then
+        docker-compose -f $COMPOSE_FILE exec -T mongodb mongosh mario_pizzeria --username root --password mario123 --authenticationDatabase admin --quiet --eval "
+            // Remove validation from all collections
+            db.getCollectionNames().forEach(function(collName) {
+                try {
+                    db.runCommand({collMod: collName, validator: {}, validationLevel: 'off'});
+                    print('Removed validation from collection: ' + collName);
+                } catch (e) {
+                    // Collection may not exist, ignore error
+                }
+            });
+            print('MongoDB validation schemas removed from all collections');
+        "
+        print_success "MongoDB validation schemas removed!"
+        print_info "All collections now use application-level validation only"
+    else
+        print_error "MongoDB container is not running. Start services first with: ./mario-docker.sh start"
+        exit 1
+    fi
+}
+
 reset_environment() {
     print_header
     print_warning "This will completely reset Mario's Pizzeria environment!"
@@ -216,6 +302,9 @@ show_help() {
     echo -e "  ${GREEN}restart${NC}   - Restart all services"
     echo -e "  ${GREEN}logs${NC}      - View logs for all services (follow mode)"
     echo -e "  ${GREEN}status${NC}    - Check status and health of all services"
+    echo -e "  ${YELLOW}clean-orders${NC} - Remove all order data from MongoDB"
+    echo -e "  ${GREEN}create-menu${NC} - Initialize default pizza menu"
+    echo -e "  ${CYAN}remove-validation${NC} - Remove MongoDB validation schemas"
     echo -e "  ${RED}clean${NC}     - Stop and remove all data (destructive!)"
     echo -e "  ${RED}reset${NC}     - Complete reset and rebuild (destructive!)"
     echo -e "  ${GREEN}help${NC}      - Show this help message"
@@ -227,10 +316,11 @@ show_help() {
     echo ""
     echo -e "${YELLOW}Services included:${NC}"
     echo -e "  ${PIZZA} Mario's Pizzeria API (FastAPI + Neuroglia)"
+    echo -e "  📊 Observability Stack (Grafana, Tempo, Prometheus, Loki)"
+    echo -e "  📡 OpenTelemetry Collector"
     echo -e "  🗄️  MongoDB + MongoDB Express"
-    echo -e "  🎪 EventStoreDB"
     echo -e "  🎬 Event Player"
-    echo -e "  🔐 Keycloak + PostgreSQL"
+    echo -e "  🔐 Keycloak"
     echo ""
 }
 
@@ -253,6 +343,15 @@ case "${1:-help}" in
         ;;
     status)
         show_status
+        ;;
+    clean-orders)
+        clean_orders
+        ;;
+    create-menu)
+        create_menu
+        ;;
+    remove-validation)
+        remove_mongo_validation
         ;;
     clean)
         clean_environment
