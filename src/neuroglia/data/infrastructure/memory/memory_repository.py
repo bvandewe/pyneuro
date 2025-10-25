@@ -48,5 +48,9 @@ class MemoryRepository(Repository[TEntity, TKey]):
 
         Returns:
             An iterable of matching entities
+
+        Example:
+            # Find all products in Electronics category with price < 100
+            results = repository.find(lambda p: p.category == "Electronics" and p.price < 100)
         """
         return (entity for entity in self.entities.values() if predicate(entity))
