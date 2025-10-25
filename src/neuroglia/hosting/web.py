@@ -3,8 +3,11 @@ import inspect
 import logging
 import pkgutil
 from abc import abstractmethod
+from collections.abc import Callable
 from contextlib import asynccontextmanager
-from typing import TYPE_CHECKING, Optional, TypeVar, Union
+from dataclasses import dataclass, field
+from pathlib import Path
+from typing import TYPE_CHECKING, Any, Optional, TypeVar, Union
 
 from fastapi import FastAPI, Request, Response
 from starlette.middleware.base import BaseHTTPMiddleware
@@ -32,6 +35,68 @@ log = logging.getLogger(__name__)
 # Type variable for application settings - accepts ApplicationSettings or ApplicationSettingsWithObservability
 # Using TypeVar with Union allows proper type checking for both base and enhanced settings
 TAppSettings = TypeVar("TAppSettings", ApplicationSettings, "ApplicationSettingsWithObservability")
+
+
+@dataclass
+class SubAppConfig:
+    """
+    Configuration for a sub-application to be mounted to the main application.
+
+    This provides a declarative way to configure sub-apps, reducing boilerplate code
+    and ensuring consistent configuration across the application.
+
+    Attributes:
+        path: URL path where the sub-app will be mounted (e.g., "/api", "/")
+        name: Name identifier for the sub-app (e.g., "api", "ui")
+        controllers: List of module names containing controllers to register
+        title: Title for the sub-app (shown in OpenAPI docs)
+        description: Description for the sub-app
+        version: Version string for the sub-app
+        docs_url: URL for OpenAPI docs (None to disable)
+        debug: Enable debug mode
+        middleware: List of (middleware_class, kwargs_dict) tuples to add
+        static_files: Dict mapping mount_path to directory path for static file serving
+        templates_dir: Directory path for Jinja2 templates (relative to app)
+        custom_setup: Optional callable for custom app configuration (receives app and settings)
+
+    Examples:
+        ```python
+        # API sub-app with middleware
+        api_config = SubAppConfig(
+            path="/api",
+            name="api",
+            controllers=["api.controllers"],
+            title="My API",
+            middleware=[
+                (CloudEventMiddleware, {"service_provider": None}),  # None = auto-inject
+            ]
+        )
+
+        # UI sub-app with static files and templates
+        ui_config = SubAppConfig(
+            path="/",
+            name="ui",
+            controllers=["ui.controllers"],
+            title="My UI",
+            docs_url=None,  # Disable docs for UI
+            static_files={"/static": "static"},
+            templates_dir="ui/templates"
+        )
+        ```
+    """
+
+    path: str
+    name: str
+    controllers: list[str]
+    title: str = ""
+    description: str = ""
+    version: str = "1.0.0"
+    docs_url: Optional[str] = "/docs"
+    debug: bool = True
+    middleware: list[tuple[type, dict[str, Any]]] = field(default_factory=list)
+    static_files: dict[str, str] = field(default_factory=dict)
+    templates_dir: Optional[str] = None
+    custom_setup: Optional[Callable[[FastAPI, Any], None]] = None
 
 
 class WebHostBase(HostBase, FastAPI):
@@ -295,6 +360,7 @@ class WebApplicationBuilder(WebApplicationBuilderBase):
         self._pending_controller_modules: list[dict] = []
         self._observability_config = None
         self._advanced_mode_enabled = app_settings is not None
+        self._sub_app_configs: list[SubAppConfig] = []  # Store sub-app configurations
 
         # Auto-register app_settings in DI container if provided
         if app_settings:
@@ -421,10 +487,50 @@ class WebApplicationBuilder(WebApplicationBuilderBase):
         # Make service provider available to the app
         app.state.services = web_host.services
 
-        # Add observability endpoints and instrumentation if configured
+        # Store main app reference
+        self._main_app = app
+
+        # Add CloudEventMiddleware if CloudEventPublisher is configured
+        # This must be done before sub-apps are mounted to ensure all requests are processed
+        self._add_cloud_event_middleware_if_configured(app, web_host.services)
+
+        # Add observability endpoints and instrumentation FIRST (before mounting sub-apps)
+        # This ensures /metrics, /health, /ready are registered on the main app
+        # before sub-apps can intercept them
         if self._observability_config:
             self._setup_observability_endpoints(app)
             self._setup_observability_instrumentation(app)
+
+        # Process and mount sub-apps if configured
+        if self._sub_app_configs:
+            log.info(f"🏗️ Configuring {len(self._sub_app_configs)} sub-application(s)...")
+
+            # Determine base directory for resolving relative paths
+            import inspect
+
+            # Try to get the calling module's directory
+            frame = inspect.currentframe()
+            if frame and frame.f_back and frame.f_back.f_back:
+                caller_file = frame.f_back.f_back.f_globals.get("__file__")
+                if caller_file:
+                    app_dir = Path(caller_file).parent
+                else:
+                    app_dir = Path.cwd()
+            else:
+                app_dir = Path.cwd()
+
+            # Create and configure each sub-app
+            for config in self._sub_app_configs:
+                log.info(f"📦 Configuring sub-app '{config.name}' at '{config.path}':")
+                sub_app = self._create_and_configure_sub_app(config, web_host.services, app_dir)
+
+                # Mount the sub-app to the main app
+                app.mount(config.path, sub_app, name=config.name)
+                log.info(f"✅ Sub-app '{config.name}' mounted at '{config.path}'")
+
+            # Add exception handling to main app (covers all sub-apps)
+            self.add_exception_handling(app)
+            log.info("✅ Exception handling configured for main app (covers all sub-apps)")
 
         return app
 
@@ -486,6 +592,70 @@ class WebApplicationBuilder(WebApplicationBuilderBase):
         target_app.add_middleware(ExceptionHandlingMiddleware, service_provider=service_provider)
         log.info("Added exception handling middleware to FastAPI app")
 
+    def add_sub_app(self, config: SubAppConfig) -> "WebApplicationBuilder":
+        """
+        Register a sub-application configuration for automatic setup.
+
+        This method provides a declarative way to configure sub-apps, eliminating
+        boilerplate code for creating FastAPI instances, registering middleware,
+        mounting static files, and configuring controllers.
+
+        The actual sub-app creation and mounting happens during `build_app_with_lifespan()`.
+
+        Args:
+            config: SubAppConfig instance with all sub-app configuration
+
+        Returns:
+            Self for method chaining
+
+        Examples:
+            ```python
+            builder = WebApplicationBuilder(app_settings)
+
+            # Configure API sub-app
+            builder.add_sub_app(SubAppConfig(
+                path="/api",
+                name="api",
+                title="My API",
+                controllers=["api.controllers"],
+                middleware=[
+                    (CloudEventMiddleware, {"service_provider": None}),  # None = auto-inject
+                ],
+                custom_setup=lambda app, settings: set_oas_description(app, settings)
+            ))
+
+            # Configure UI sub-app
+            builder.add_sub_app(SubAppConfig(
+                path="/",
+                name="ui",
+                title="My UI",
+                controllers=["ui.controllers"],
+                middleware=[
+                    (SessionMiddleware, {
+                        "secret_key": app_settings.session_secret_key,
+                        "max_age": 3600
+                    })
+                ],
+                static_files={"/static": "static"},
+                templates_dir="ui/templates",
+                docs_url=None
+            ))
+
+            # Build creates and mounts all sub-apps automatically
+            app = builder.build_app_with_lifespan()
+            ```
+
+        Note:
+            - Service provider is automatically injected to app.state.services
+            - Middleware with None values are auto-injected with service_provider
+            - Static file and template paths are relative to the application
+            - Custom setup callable receives (app, app_settings) for custom configuration
+        """
+        self._advanced_mode_enabled = True
+        self._sub_app_configs.append(config)
+        log.info(f"📦 Sub-app '{config.name}' registered for mounting at '{config.path}'")
+        return self
+
     # Private helper methods for advanced features
 
     def _register_controller_types(self, modules: list[str]) -> None:
@@ -505,14 +675,15 @@ class WebApplicationBuilder(WebApplicationBuilderBase):
         for controller_type in set(controller_types):
             self.services.add_singleton(ControllerBase, controller_type)
 
-    def _register_controllers_to_app(self, modules: list[str], app: FastAPI, prefix: Optional[str] = None) -> None:
+    def _register_controllers_to_app(self, modules: list[str], app: FastAPI, prefix: Optional[str] = None, mount_path: Optional[str] = None) -> None:
         """
         Register controllers from modules to the specified app with deduplication.
 
         Args:
             modules: List of module names to search for controllers
             app: FastAPI app to add controllers to
-            prefix: Optional URL prefix for the controllers
+            prefix: Optional URL prefix for the controllers within the app
+            mount_path: Optional mount path of the app (for logging full paths)
         """
         from neuroglia.mapping.mapper import Mapper
         from neuroglia.mediation.mediator import Mediator
@@ -563,7 +734,26 @@ class WebApplicationBuilder(WebApplicationBuilderBase):
 
                                 # Mark this controller as registered for this app
                                 self._registered_controllers[app_id].add(controller_key)
-                                log.info(f"Added controller {controller_type.__name__} router to app " f"with prefix '{prefix}'")
+
+                                # Get the controller's own route prefix (e.g., /delivery for DeliveryController)
+                                controller_prefix = getattr(router, "prefix", "")
+
+                                # Log with full path including mount_path and controller namespace
+                                if mount_path and mount_path != "/":
+                                    # Sub-app mounted at a specific path (e.g., /api)
+                                    full_path = f"{mount_path}{prefix if prefix else ''}{controller_prefix}"
+                                    log.info(f"Added controller {controller_type.__name__} router to app at '{full_path}/*'")
+                                elif prefix:
+                                    # Controller with explicit prefix
+                                    full_path = f"{prefix}{controller_prefix}"
+                                    log.info(f"Added controller {controller_type.__name__} router to app at '{full_path}/*'")
+                                else:
+                                    # Root path with controller namespace
+                                    full_path = controller_prefix if controller_prefix else "/"
+                                    if full_path != "/":
+                                        log.info(f"Added controller {controller_type.__name__} router to app at '{full_path}/*'")
+                                    else:
+                                        log.info(f"Added controller {controller_type.__name__} router to app at '/' (root)")
                             else:
                                 log.warning(f"Controller {controller_type.__name__} has no router")
 
@@ -590,6 +780,109 @@ class WebApplicationBuilder(WebApplicationBuilderBase):
 
         # Remove processed registrations
         self._pending_controller_modules = [reg for reg in self._pending_controller_modules if reg.get("app") is not None]
+
+    def _create_and_configure_sub_app(self, config: SubAppConfig, service_provider: ServiceProviderBase, app_dir: Path) -> FastAPI:
+        """
+        Create and configure a sub-application based on SubAppConfig.
+
+        Args:
+            config: SubAppConfig with all configuration
+            service_provider: Service provider to inject
+            app_dir: Base directory for resolving relative paths
+
+        Returns:
+            Configured FastAPI sub-application
+        """
+        # Create the FastAPI sub-app
+        sub_app = FastAPI(title=config.title, description=config.description, version=config.version, docs_url=config.docs_url, debug=config.debug)
+
+        # Inject service provider to app state
+        sub_app.state.services = service_provider
+
+        # Add middleware in order
+        for middleware_class, kwargs in config.middleware:
+            # Auto-inject service_provider if value is None
+            final_kwargs = {}
+            for key, value in kwargs.items():
+                if value is None and key == "service_provider":
+                    final_kwargs[key] = service_provider
+                else:
+                    final_kwargs[key] = value
+
+            sub_app.add_middleware(middleware_class, **final_kwargs)
+            log.info(f"  ✓ Added {middleware_class.__name__} middleware to '{config.name}'")
+
+        # Configure static file serving
+        for mount_path, directory in config.static_files.items():
+            from fastapi.staticfiles import StaticFiles
+
+            static_dir = app_dir / directory
+            if static_dir.exists():
+                sub_app.mount(mount_path, StaticFiles(directory=str(static_dir)), name=f"{config.name}_static")
+                log.info(f"  ✓ Mounted static files at '{mount_path}' from '{directory}'")
+            else:
+                log.warning(f"  ⚠️ Static directory not found: {static_dir}")
+
+        # Configure Jinja2 templates
+        if config.templates_dir:
+            from fastapi.templating import Jinja2Templates
+
+            templates_dir = app_dir / config.templates_dir
+            if templates_dir.exists():
+                templates = Jinja2Templates(directory=str(templates_dir))
+                sub_app.state.templates = templates
+                log.info(f"  ✓ Configured templates from '{config.templates_dir}'")
+            else:
+                log.warning(f"  ⚠️ Templates directory not found: {templates_dir}")
+
+        # Register controllers to this sub-app
+        if config.controllers:
+            self._register_controllers_to_app(config.controllers, sub_app, prefix=None, mount_path=config.path)
+            log.info(f"  ✓ Registered controllers: {', '.join(config.controllers)}")
+
+        # Run custom setup if provided
+        if config.custom_setup:
+            config.custom_setup(sub_app, self._app_settings)
+            log.info(f"  ✓ Applied custom setup for '{config.name}'")
+
+        return sub_app
+
+    def _add_cloud_event_middleware_if_configured(self, app: FastAPI, service_provider: ServiceProviderBase) -> None:
+        """
+        Add CloudEventMiddleware to the main app if CloudEventIngestor is configured.
+
+        This middleware handles incoming HTTP requests containing cloud events and pushes them
+        to the CloudEventBus input stream, where the CloudEventIngestor processes them.
+
+        The middleware should be on the main app to handle incoming cloud events for all sub-apps.
+
+        Args:
+            app: The main FastAPI application
+            service_provider: Service provider to check for CloudEventIngestor
+        """
+        try:
+            from neuroglia.eventing.cloud_events.infrastructure.cloud_event_ingestor import (
+                CloudEventIngestor,
+            )
+            from neuroglia.eventing.cloud_events.infrastructure.cloud_event_middleware import (
+                CloudEventMiddleware,
+            )
+
+            # Check if CloudEventIngestor is registered (it's a HostedService)
+            # We need to check if any HostedService is a CloudEventIngestor
+            from neuroglia.hosting.abstractions import HostedService
+
+            hosted_services = service_provider.get_services(HostedService)
+            has_ingestor = any(isinstance(svc, CloudEventIngestor) for svc in hosted_services)
+
+            if has_ingestor:
+                # Add CloudEventMiddleware to main app
+                app.add_middleware(CloudEventMiddleware, service_provider)
+                log.info("☁️ CloudEventMiddleware added to main app (handles incoming cloud events for all sub-apps)")
+
+        except Exception as e:
+            # CloudEventIngestor not configured or import failed - this is fine, not all apps consume cloud events
+            log.debug(f"CloudEventMiddleware not added: {e}")
 
     def _setup_observability_endpoints(self, app: FastAPI) -> None:
         """Add standard observability endpoints to the FastAPI app."""

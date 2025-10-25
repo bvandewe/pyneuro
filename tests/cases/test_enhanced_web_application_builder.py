@@ -25,27 +25,6 @@ class TestEnhancedWebApplicationBuilder:
         """Setup method called before each test"""
         self.builder = WebApplicationBuilder()
 
-
-from unittest.mock import Mock, patch
-
-import pytest
-from fastapi import FastAPI
-
-from neuroglia.dependency_injection import ServiceCollection
-from neuroglia.hosting.enhanced_web_application_builder import (
-    EnhancedWebApplicationBuilder,
-    EnhancedWebHost,
-    ExceptionHandlingMiddleware,
-)
-
-
-class TestEnhancedWebApplicationBuilder:
-    """Test suite for EnhancedWebApplicationBuilder"""
-
-    def setup_method(self):
-        """Setup test environment for each test"""
-        self.builder = EnhancedWebApplicationBuilder()
-
     def test_builder_initialization(self):
         """Test builder initialization with proper defaults"""
         assert isinstance(self.builder.services, ServiceCollection)

@@ -3,7 +3,7 @@
 Mario's Pizzeria - Main Application Entry Point
 
 This is the complete sample application demonstrating all major Neuroglia framework features.
-Updated with Motor async MongoDB integration for customers and orders.
+
 """
 
 import logging
@@ -11,19 +11,13 @@ import sys
 from pathlib import Path
 from typing import Optional
 
-from fastapi import FastAPI
-from fastapi.staticfiles import StaticFiles
-from fastapi.templating import Jinja2Templates
 from starlette.middleware.sessions import SessionMiddleware
-
-from neuroglia.eventing.cloud_events.infrastructure.cloud_event_middleware import (
-    CloudEventMiddleware,
-)
 
 # Add the project root to Python path so we can import neuroglia
 project_root = Path(__file__).parent.parent.parent.parent
 sys.path.insert(0, str(project_root / "src"))
 
+# Framework imports (must be after path manipulation)
 from api.services.openapi import set_oas_description
 from application.services import AuthService, configure_logging
 from application.settings import app_settings
@@ -47,9 +41,7 @@ from neuroglia.eventing.cloud_events.infrastructure import (
     CloudEventIngestor,
     CloudEventPublisher,
 )
-from neuroglia.hosting.enhanced_web_application_builder import (
-    EnhancedWebApplicationBuilder,
-)
+from neuroglia.hosting.web import SubAppConfig, WebApplicationBuilder
 from neuroglia.mapping import Mapper
 from neuroglia.mediation import Mediator
 from neuroglia.mediation.behaviors.domain_event_dispatching_middleware import (
@@ -57,9 +49,6 @@ from neuroglia.mediation.behaviors.domain_event_dispatching_middleware import (
 )
 from neuroglia.observability import Observability
 from neuroglia.serialization.json import JsonSerializer
-
-# Framework imports (must be after path manipulation)
-
 
 configure_logging(log_level=app_settings.log_level.upper())
 log = logging.getLogger(__name__)
@@ -82,8 +71,8 @@ def create_pizzeria_app(data_dir: Optional[str] = None, port: int = 8080):
         Configured FastAPI application with multiple mounted apps
     """
 
-    # Create enhanced web application builder with app_settings
-    builder = EnhancedWebApplicationBuilder(app_settings)
+    # Create web application builder with app_settings (enables advanced features)
+    builder = WebApplicationBuilder(app_settings)
 
     # Configure Core services
     Mediator.configure(builder, ["application.commands", "application.queries", "application.events"])
@@ -114,54 +103,45 @@ def create_pizzeria_app(data_dir: Optional[str] = None, port: int = 8080):
     # Register application services
     builder.services.add_scoped(AuthService)
 
-    # Build the service provider
-    service_provider = builder.services.build()
-
-    # Create the main FastAPI app with Host lifespan support using the builder
-    # This automatically handles starting/stopping all HostedServices
-    app = builder.build_app_with_lifespan(title="Mario's Pizzeria", description="Complete pizza ordering and management system with Keycloak auth", version="1.0.0", debug=True)
-
-    # Create separate API app for backend REST API with OAuth2 security
-    api_app = FastAPI(title="Mario's Pizzeria API", description="Pizza ordering and management API with OAuth2/JWT authentication", version="1.0.0", docs_url="/docs", debug=True)
-    api_app.add_middleware(CloudEventMiddleware, service_provider)
-    set_oas_description(api_app, app_settings)
-    api_app.state.services = service_provider  # IMPORTANT: Make services available to API app as well
-
-    # Create UI app for frontend with session-based authentication
-    ui_app = FastAPI(
-        title="Mario's Pizzeria UI",
-        description="Pizza ordering web interface with Keycloak SSO",
-        version="1.0.0",
-        docs_url=None,  # Disable docs for UI app
-        debug=True,
+    # Configure sub-applications declaratively
+    # API sub-app: REST API with OAuth2/JWT authentication
+    builder.add_sub_app(
+        SubAppConfig(
+            path="/api",
+            name="api",
+            title="Mario's Pizzeria API",
+            description="Pizza ordering and management API with OAuth2/JWT authentication",
+            version="1.0.0",
+            controllers=["api.controllers"],
+            custom_setup=lambda app, settings: set_oas_description(app, settings),
+            docs_url="/docs",
+        )
     )
-    ui_app.add_middleware(SessionMiddleware, secret_key=app_settings.session_secret_key, session_cookie="mario_session", max_age=3600, same_site="lax", https_only=not app_settings.local_dev)  # 1 hour
-    ui_app.state.services = service_provider  # IMPORTANT: Make services available to UI app
 
-    # Configure Jinja2 templates for UI
-    templates_directory = Path(__file__).parent / "ui" / "templates"
-    templates = Jinja2Templates(directory=str(templates_directory))
+    # UI sub-app: Web interface with Keycloak SSO
+    builder.add_sub_app(
+        SubAppConfig(
+            path="/",
+            name="ui",
+            title="Mario's Pizzeria UI",
+            description="Pizza ordering web interface with Keycloak SSO",
+            version="1.0.0",
+            controllers=["ui.controllers"],
+            middleware=[(SessionMiddleware, {"secret_key": app_settings.session_secret_key, "session_cookie": "mario_session", "max_age": 3600, "same_site": "lax", "https_only": not app_settings.local_dev})],
+            static_files={"/static": "static"},
+            templates_dir="ui/templates",
+            docs_url=None,
+        )
+    )  # Disable docs for UI
 
-    # Make templates available to UI controllers
-    ui_app.state.templates = templates
-
-    # Configure static file serving for UI (including Parcel-built assets)
-    static_directory = Path(__file__).parent / "static"
-    ui_app.mount("/static", StaticFiles(directory=str(static_directory)), name="static")
-
-    # Register API controllers to the API app
-    builder.add_controllers(["api.controllers"], app=api_app)
-
-    # Register UI controllers to the UI app
-    builder.add_controllers(["ui.controllers"], app=ui_app)
-
-    # Add exception handling to both apps
-    builder.add_exception_handling(api_app)
-    builder.add_exception_handling(ui_app)
-
-    # Mount the sub-apps onto the main app
-    app.mount("/api", api_app, name="api")
-    app.mount("/", ui_app, name="ui")  # Mount UI at root
+    # Build the complete application with all sub-apps mounted and configured
+    # This automatically:
+    # - Creates the main FastAPI app with Host lifespan
+    # - Creates and configures both sub-apps
+    # - Mounts sub-apps to main app
+    # - Adds exception handling
+    # - Injects service provider to all apps
+    app = builder.build_app_with_lifespan(title="Mario's Pizzeria", description="Complete pizza ordering and management system with Keycloak auth", version="1.0.0", debug=True)
 
     log.info("App is ready to rock.")
     return app
