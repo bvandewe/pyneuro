@@ -1,6 +1,7 @@
 """Complete Order Command and Handler for Mario's Pizzeria"""
 
 from dataclasses import dataclass
+from typing import Optional
 
 from api.dtos import OrderDto, PizzaDto
 from domain.repositories import (
@@ -14,12 +15,26 @@ from neuroglia.data.unit_of_work import IUnitOfWork
 from neuroglia.mapping import Mapper
 from neuroglia.mediation import Command, CommandHandler
 
+# OpenTelemetry imports for business metrics and span attributes
+try:
+    from datetime import datetime
+    from neuroglia.observability.tracing import add_span_attributes
+    from observability.metrics import orders_completed, cooking_duration, orders_in_progress
+
+    OTEL_AVAILABLE = True
+except ImportError:
+    from datetime import datetime
+
+    OTEL_AVAILABLE = False
+
 
 @dataclass
 class CompleteOrderCommand(Command[OperationResult[OrderDto]]):
     """Command to mark an order as ready"""
 
     order_id: str
+    user_id: Optional[str] = None
+    user_name: Optional[str] = None
 
 
 class CompleteOrderCommandHandler(CommandHandler[CompleteOrderCommand, OperationResult[OrderDto]]):
@@ -41,6 +56,16 @@ class CompleteOrderCommandHandler(CommandHandler[CompleteOrderCommand, Operation
 
     async def handle_async(self, request: CompleteOrderCommand) -> OperationResult[OrderDto]:
         try:
+            # Add business context to span
+            if OTEL_AVAILABLE:
+                add_span_attributes(
+                    {
+                        "order.id": request.order_id,
+                        "kitchen.user_id": request.user_id or "system",
+                        "kitchen.user_name": request.user_name or "System",
+                    }
+                )
+
             # Get order
             order = await self.order_repository.get_async(request.order_id)
             if not order:
@@ -49,8 +74,18 @@ class CompleteOrderCommandHandler(CommandHandler[CompleteOrderCommand, Operation
             # Get kitchen state
             kitchen = await self.kitchen_repository.get_kitchen_state_async()
 
-            # Mark order ready
-            order.mark_ready()
+            # Get user info from command or use defaults
+            user_id = request.user_id or "system"
+            user_name = request.user_name or "System"
+
+            # Calculate cooking duration before marking ready (if we have started cooking)
+            cooking_duration_seconds = 0.0
+            if order.state.cooking_started_time:
+                # Calculate duration from cooking start to now
+                cooking_duration_seconds = (datetime.now() - order.state.cooking_started_time).total_seconds()
+
+            # Mark order ready with user tracking
+            order.mark_ready(user_id, user_name)
             kitchen.complete_order(order.id())
 
             # Save changes
@@ -59,6 +94,39 @@ class CompleteOrderCommandHandler(CommandHandler[CompleteOrderCommand, Operation
 
             # Register order with Unit of Work for domain event dispatching
             self.unit_of_work.register_aggregate(order)
+
+            # Record business metrics
+            if OTEL_AVAILABLE:
+                # Record completion metrics
+                orders_completed.add(
+                    1,
+                    {
+                        "pizza_count": str(len(order.state.order_items)),
+                    },
+                )
+
+                # Record cooking duration
+                if cooking_duration_seconds > 0:
+                    cooking_duration.record(
+                        cooking_duration_seconds,
+                        {
+                            "pizza_count": str(len(order.state.order_items)),
+                        },
+                    )
+
+                # Note: orders_in_progress tracking disabled - needs observable gauge pattern
+                # Update kitchen capacity gauge
+                # orders_in_progress.set(kitchen.current_capacity)
+
+                # Add completion details to span
+                add_span_attributes(
+                    {
+                        "order.status": order.state.status.value,
+                        "order.pizza_count": len(order.state.order_items),
+                        "order.cooking_duration_seconds": cooking_duration_seconds,
+                        "kitchen.active_orders": kitchen.current_capacity,
+                    }
+                )
 
             # Get customer details for DTO
             customer = await self.customer_repository.get_async(order.state.customer_id)
@@ -91,6 +159,9 @@ class CompleteOrderCommandHandler(CommandHandler[CompleteOrderCommand, Operation
                 notes=getattr(order.state, "notes", None),
                 total_amount=order.total_amount,
                 pizza_count=order.pizza_count,
+                chef_name=getattr(order.state, "chef_name", None),
+                ready_by_name=getattr(order.state, "ready_by_name", None),
+                delivery_name=getattr(order.state, "delivery_name", None),
             )
             return self.ok(order_dto)
 

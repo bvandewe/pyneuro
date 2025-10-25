@@ -73,6 +73,9 @@ class GetOrderByIdQueryHandler(QueryHandler[GetOrderByIdQuery, OperationResult[O
                 notes=getattr(order.state, "notes", None),
                 total_amount=order.total_amount,  # Now works because items have .total_price
                 pizza_count=order.pizza_count,  # Now works because items are proper instances
+                chef_name=getattr(order.state, "chef_name", None),
+                ready_by_name=getattr(order.state, "ready_by_name", None),
+                delivery_name=getattr(order.state, "delivery_name", None),
             )
             return self.ok(order_dto)
 

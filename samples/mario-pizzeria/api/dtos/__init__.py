@@ -15,6 +15,9 @@ from .order_dtos import (
     UpdateOrderStatusDto,
 )
 
+# Profile DTOs
+from .profile_dtos import CreateProfileDto, CustomerProfileDto, UpdateProfileDto
+
 __all__ = [
     # Order DTOs
     "OrderDto",
@@ -32,4 +35,8 @@ __all__ = [
     "KitchenStatusDto",
     "KitchenOrderDto",
     "UpdateKitchenOrderDto",
+    # Profile DTOs
+    "CustomerProfileDto",
+    "CreateProfileDto",
+    "UpdateProfileDto",
 ]

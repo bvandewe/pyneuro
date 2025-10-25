@@ -3,9 +3,11 @@
 from dataclasses import dataclass, field
 from decimal import Decimal
 from typing import Optional
+from uuid import uuid4
 
 from api.dtos import CreateOrderDto, CreatePizzaDto, OrderDto, PizzaDto
 from domain.entities import Customer, Order, PizzaSize
+from domain.entities.order_item import OrderItem
 from domain.repositories import ICustomerRepository, IOrderRepository
 
 from neuroglia.core import OperationResult
@@ -13,6 +15,15 @@ from neuroglia.data.unit_of_work import IUnitOfWork
 from neuroglia.mapping import Mapper
 from neuroglia.mapping.mapper import map_from
 from neuroglia.mediation import Command, CommandHandler
+
+# OpenTelemetry imports for business metrics and span attributes
+try:
+    from neuroglia.observability.tracing import add_span_attributes
+    from observability.metrics import orders_created, order_value, pizzas_ordered, pizzas_by_size, customers_returning
+
+    OTEL_AVAILABLE = True
+except ImportError:
+    OTEL_AVAILABLE = False
 
 
 @dataclass
@@ -27,6 +38,7 @@ class PlaceOrderCommand(Command[OperationResult[OrderDto]]):
     pizzas: list[CreatePizzaDto] = field(default_factory=list)
     payment_method: str = "cash"
     notes: Optional[str] = None
+    customer_id: Optional[str] = None  # Optional - will be created/retrieved in handler
 
 
 class PlaceOrderCommandHandler(CommandHandler[PlaceOrderCommand, OperationResult[OrderDto]]):
@@ -46,8 +58,22 @@ class PlaceOrderCommandHandler(CommandHandler[PlaceOrderCommand, OperationResult
 
     async def handle_async(self, request: PlaceOrderCommand) -> OperationResult[OrderDto]:
         try:
-            # First create or get customer
+            # Add business context to span (automatic tracing via TracingPipelineBehavior)
+            if OTEL_AVAILABLE:
+                add_span_attributes(
+                    {
+                        "order.customer_name": request.customer_name,
+                        "order.customer_phone": request.customer_phone,
+                        "order.pizza_count": len(request.pizzas),
+                        "order.payment_method": request.payment_method,
+                    }
+                )
+
+            # Get or create customer profile
             customer = await self._create_or_get_customer(request)
+
+            if not customer:
+                return self.bad_request("Failed to create or retrieve customer profile")
 
             # Create order with customer_id
             order = Order(customer_id=customer.id())
@@ -70,10 +96,6 @@ class PlaceOrderCommandHandler(CommandHandler[PlaceOrderCommand, OperationResult
 
                 # Create OrderItem (value object snapshot of pizza data)
                 # Note: line_item_id is generated here as a unique identifier for this order item
-                from uuid import uuid4
-
-                from domain.entities.order_item import OrderItem
-
                 order_item = OrderItem(
                     line_item_id=str(uuid4()),  # Generate unique ID for this line item
                     name=pizza_item.name,
@@ -83,6 +105,11 @@ class PlaceOrderCommandHandler(CommandHandler[PlaceOrderCommand, OperationResult
                 )
 
                 order.add_order_item(order_item)
+
+                # Record pizza metrics
+                if OTEL_AVAILABLE:
+                    pizzas_ordered.add(1, {"pizza_name": pizza_item.name})
+                    pizzas_by_size.add(1, {"size": size.value})
 
             # Validate order has items
             if not order.state.order_items:
@@ -97,6 +124,31 @@ class PlaceOrderCommandHandler(CommandHandler[PlaceOrderCommand, OperationResult
             # Register aggregates with Unit of Work for domain event dispatching
             self.unit_of_work.register_aggregate(order)
             self.unit_of_work.register_aggregate(customer)
+
+            # Record business metrics
+            if OTEL_AVAILABLE:
+                orders_created.add(
+                    1,
+                    {
+                        "status": order.state.status.value,
+                        "payment_method": request.payment_method,
+                    },
+                )
+                order_value.record(
+                    float(order.total_amount),
+                    {
+                        "payment_method": request.payment_method,
+                    },
+                )
+                # Add order details to span
+                add_span_attributes(
+                    {
+                        "order.id": order.id(),
+                        "order.total_amount": float(order.total_amount),
+                        "order.item_count": len(order.state.order_items),
+                        "order.status": order.state.status.value,
+                    }
+                )
 
             # Create OrderDto with customer information
             # Map OrderItems (value objects) to PizzaDtos
@@ -142,6 +194,15 @@ class PlaceOrderCommandHandler(CommandHandler[PlaceOrderCommand, OperationResult
         existing_customer = await self.customer_repository.get_by_phone_async(request.customer_phone)
 
         if existing_customer:
+            # Record returning customer metric
+            if OTEL_AVAILABLE:
+                customers_returning.add(
+                    1,
+                    {
+                        "customer_type": "phone_match",
+                    },
+                )
+
             # Update address if provided and customer doesn't have one
             if request.customer_address and not existing_customer.state.address:
                 existing_customer.update_contact_info(address=request.customer_address)

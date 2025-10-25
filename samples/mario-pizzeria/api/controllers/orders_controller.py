@@ -2,6 +2,7 @@ from typing import List, Optional
 
 from api.dtos import CreateOrderDto, OrderDto, UpdateOrderStatusDto
 from application.commands import (
+    AssignOrderToDeliveryCommand,
     CompleteOrderCommand,
     PlaceOrderCommand,
     StartCookingCommand,
@@ -62,6 +63,13 @@ class OrdersController(ControllerBase):
     async def complete_order(self, order_id: str):
         """Mark order as ready for pickup/delivery"""
         command = CompleteOrderCommand(order_id=order_id)
+        result = await self.mediator.execute_async(command)
+        return self.process(result)
+
+    @put("/{order_id}/assign", response_model=OrderDto, responses=ControllerBase.error_responses)
+    async def assign_to_delivery(self, order_id: str, delivery_person_id: str):
+        """Assign order to a delivery person"""
+        command = AssignOrderToDeliveryCommand(order_id=order_id, delivery_person_id=delivery_person_id)
         result = await self.mediator.execute_async(command)
         return self.process(result)
 

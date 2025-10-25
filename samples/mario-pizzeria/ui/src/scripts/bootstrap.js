@@ -8,12 +8,14 @@
 import Modal from 'bootstrap/js/dist/modal';
 import Toast from 'bootstrap/js/dist/toast';
 import Collapse from 'bootstrap/js/dist/collapse';
+import Dropdown from 'bootstrap/js/dist/dropdown';
 
 // Make components available globally with the same structure expected in the code
 const bootstrap = {
   Modal,
   Toast,
-  Collapse
+  Collapse,
+  Dropdown
 };
 
 // Expose to window for global access (maintains compatibility with existing code)

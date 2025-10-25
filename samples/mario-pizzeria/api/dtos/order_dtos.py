@@ -80,6 +80,11 @@ class OrderDto(BaseModel):
     pizza_count: int
     payment_method: Optional[str] = None
 
+    # User tracking fields - who performed each operation
+    chef_name: Optional[str] = None
+    ready_by_name: Optional[str] = None
+    delivery_name: Optional[str] = None
+
     class Config:
         from_attributes = True
 

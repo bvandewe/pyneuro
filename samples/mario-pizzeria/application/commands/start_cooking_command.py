@@ -1,6 +1,7 @@
 """Start Cooking Command and Handler for Mario's Pizzeria"""
 
 from dataclasses import dataclass
+from typing import Optional
 
 from api.dtos import OrderDto, PizzaDto
 from domain.repositories import (
@@ -14,12 +15,23 @@ from neuroglia.data.unit_of_work import IUnitOfWork
 from neuroglia.mapping import Mapper
 from neuroglia.mediation import Command, CommandHandler
 
+# OpenTelemetry imports for business metrics and span attributes
+try:
+    from neuroglia.observability.tracing import add_span_attributes
+    from observability.metrics import kitchen_capacity, orders_in_progress
+
+    OTEL_AVAILABLE = True
+except ImportError:
+    OTEL_AVAILABLE = False
+
 
 @dataclass
 class StartCookingCommand(Command[OperationResult[OrderDto]]):
     """Command to start cooking an order"""
 
     order_id: str
+    user_id: Optional[str] = None
+    user_name: Optional[str] = None
 
 
 class StartCookingCommandHandler(CommandHandler[StartCookingCommand, OperationResult[OrderDto]]):
@@ -41,6 +53,16 @@ class StartCookingCommandHandler(CommandHandler[StartCookingCommand, OperationRe
 
     async def handle_async(self, request: StartCookingCommand) -> OperationResult[OrderDto]:
         try:
+            # Add business context to span
+            if OTEL_AVAILABLE:
+                add_span_attributes(
+                    {
+                        "order.id": request.order_id,
+                        "kitchen.user_id": request.user_id or "system",
+                        "kitchen.user_name": request.user_name or "System",
+                    }
+                )
+
             # Get order
             order = await self.order_repository.get_async(request.order_id)
             if not order:
@@ -53,8 +75,16 @@ class StartCookingCommandHandler(CommandHandler[StartCookingCommand, OperationRe
             if kitchen.is_at_capacity:
                 return self.bad_request("Kitchen is at capacity")
 
-            # Start cooking order
-            order.start_cooking()
+            # Record kitchen capacity metrics
+            if OTEL_AVAILABLE:
+                kitchen_capacity.set(kitchen.current_capacity, {"status": "active", "at_capacity": str(kitchen.is_at_capacity).lower()})
+
+            # Get user info from command or use defaults
+            user_id = request.user_id or "system"
+            user_name = request.user_name or "System"
+
+            # Start cooking order with user tracking
+            order.start_cooking(user_id, user_name)
             kitchen.start_order(order.id())
 
             # Save changes
@@ -64,6 +94,17 @@ class StartCookingCommandHandler(CommandHandler[StartCookingCommand, OperationRe
             # Register order with Unit of Work for domain event dispatching
             self.unit_of_work.register_aggregate(order)
 
+            # Record metrics
+            if OTEL_AVAILABLE:
+                # Note: orders_in_progress tracking disabled - needs observable gauge pattern
+                # orders_in_progress.set(kitchen.current_capacity)
+                add_span_attributes(
+                    {
+                        "order.status": order.state.status.value,
+                        "order.pizza_count": len(order.state.order_items),
+                        "kitchen.active_orders": kitchen.current_capacity,
+                    }
+                )
             # Get customer details for DTO
             customer = await self.customer_repository.get_async(order.state.customer_id)
 
@@ -95,6 +136,9 @@ class StartCookingCommandHandler(CommandHandler[StartCookingCommand, OperationRe
                 notes=getattr(order.state, "notes", None),
                 total_amount=order.total_amount,
                 pizza_count=order.pizza_count,
+                chef_name=getattr(order.state, "chef_name", None),
+                ready_by_name=getattr(order.state, "ready_by_name", None),
+                delivery_name=getattr(order.state, "delivery_name", None),
             )
             return self.ok(order_dto)
 

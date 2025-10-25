@@ -30,6 +30,7 @@ class CustomerState(AggregateState[str]):
     email: Optional[str] = None
     phone: str = ""
     address: str = ""
+    user_id: Optional[str] = None  # Keycloak user ID for profile linkage
 
     @dispatch(CustomerRegisteredEvent)
     def on(self, event: CustomerRegisteredEvent) -> None:
@@ -39,6 +40,7 @@ class CustomerState(AggregateState[str]):
         self.email = event.email
         self.phone = event.phone
         self.address = event.address
+        self.user_id = event.user_id
 
     @dispatch(CustomerContactUpdatedEvent)
     def on(self, event: CustomerContactUpdatedEvent) -> None:
@@ -61,7 +63,14 @@ class Customer(AggregateRoot[CustomerState, str]):
     Pattern: self.state.on(self.register_event(Event(...)))
     """
 
-    def __init__(self, name: str, email: str, phone: Optional[str] = None, address: Optional[str] = None):
+    def __init__(
+        self,
+        name: str,
+        email: str,
+        phone: Optional[str] = None,
+        address: Optional[str] = None,
+        user_id: Optional[str] = None,
+    ):
         super().__init__()
 
         # Register event and apply it to state using multipledispatch
@@ -71,6 +80,7 @@ class Customer(AggregateRoot[CustomerState, str]):
             email=email,
             phone=phone or "",
             address=address or "",
+            user_id=user_id,
         )
 
         self.state.on(self.register_event(event))

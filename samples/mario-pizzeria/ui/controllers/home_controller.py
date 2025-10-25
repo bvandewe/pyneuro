@@ -1,7 +1,6 @@
 import logging
 from typing import Any
 
-import jwt
 from application.settings import app_settings
 from classy_fastapi import Routable
 from classy_fastapi.decorators import get
@@ -41,23 +40,16 @@ class HomeController(ControllerBase):
         """
         Render the home page.
 
-        Authentication is handled client-side via JavaScript.
-        The template includes elements that will be shown/hidden based on auth state.
+        Shows authenticated UI if user is logged in with session.
         """
-        access_token = request.session.get("access_token", None)
-        token_payload = None
-        if access_token:
-            try:
-                # Decode without verifying signature (for extracting claims only)
-                token_payload = jwt.decode(access_token, options={"verify_signature": False})
-                if not isinstance(token_payload, dict):
-                    log.warning("Decoded access token is not a valid dictionary")
-                    token_payload = None
-            except Exception as e:
-                log.warning(f"Failed to decode access token: {e}")
+        # Get session data
+        authenticated = request.session.get("authenticated", False)
+        username = request.session.get("username", "Guest")
+        name = request.session.get("name")
+        email = request.session.get("email")
+        roles = request.session.get("roles", [])
 
         try:
-            username = token_payload.get("preferred_username", token_payload.get("username", "Guest")) if token_payload else "Guest"
             return request.app.state.templates.TemplateResponse(
                 "home/index.html",
                 {
@@ -65,8 +57,11 @@ class HomeController(ControllerBase):
                     "title": "Home",
                     "active_page": "home",
                     "app_version": app_settings.app_version,
-                    "authenticated": token_payload is not None,
+                    "authenticated": authenticated,
                     "username": username,
+                    "name": name,
+                    "email": email,
+                    "roles": roles,
                 },
             )
 

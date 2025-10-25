@@ -1,5 +1,10 @@
-"""File-based implementation of kitchen repository using generic FileSystemRepository"""
+"""File-based implementation of kitchen repository using generic FileSystemRepository
 
+DEPRECATED: This file-based repository is deprecated in favor of MongoKitchenRepository.
+Use MongoKitchenRepository for production deployments.
+"""
+
+import warnings
 from typing import Optional
 
 from domain.entities import Kitchen
@@ -9,9 +14,19 @@ from neuroglia.data.infrastructure.filesystem import FileSystemRepository
 
 
 class FileKitchenRepository(FileSystemRepository[Kitchen, str], IKitchenRepository):
-    """File-based implementation of kitchen repository using generic FileSystemRepository"""
+    """
+    File-based implementation of kitchen repository using generic FileSystemRepository
+
+    DEPRECATED: Use MongoKitchenRepository instead.
+    This repository is maintained for backward compatibility only.
+    """
 
     def __init__(self, data_directory: str = "data"):
+        warnings.warn(
+            "FileKitchenRepository is deprecated. Use MongoKitchenRepository instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         super().__init__(data_directory=data_directory, entity_type=Kitchen, key_type=str)
 
     async def get_kitchen_async(self) -> Optional[Kitchen]:
