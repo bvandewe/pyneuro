@@ -5,7 +5,7 @@ Integration tests for Neuroglia framework components working together.
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from decimal import Decimal
-from typing import Optional
+from typing import List, Optional
 from uuid import uuid4
 
 import pytest
