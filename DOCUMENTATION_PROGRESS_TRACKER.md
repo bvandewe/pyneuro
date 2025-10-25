@@ -6,14 +6,14 @@
 
 ## 📊 Overall Progress
 
-- [x] Phase 1: Foundation (32 hours) - **PHASES 1.1 & 1.2 COMPLETE**
+- [x] Phase 1: Foundation (32 hours) - **✅ COMPLETE**
 - [ ] Phase 2: Feature Documentation (18 hours)
 - [ ] Phase 3: Pattern Improvements (16 hours)
 - [ ] Phase 4: Mario's Pizzeria Showcase (16 hours)
 - [ ] Phase 5: Navigation & Polish (11 hours)
 - [ ] Phase 6: Quality Assurance (10 hours)
 
-**Total Progress**: 19% (20/103 hours completed)
+**Total Progress**: 31% (32/103 hours completed)
 
 ---
 
@@ -69,18 +69,48 @@
 
 **Total Tutorial Content**: ~4,000 lines across 10 files
 
-### 1.3 Core Concepts (12 hours)
+### 1.3 Core Concepts (12 hours) ✅ COMPLETE
 
-- [ ] Create `docs/concepts/index.md`
-- [ ] Clean Architecture (`clean-architecture.md`)
-- [ ] Domain-Driven Design (`domain-driven-design.md`)
-- [ ] CQRS (`cqrs.md`)
-- [ ] Event-Driven Architecture (`event-driven.md`)
-- [ ] Dependency Injection (`dependency-injection.md`)
-- [ ] Pattern Selection Guide (`when-to-use.md`)
+- [x] Create `docs/concepts/index.md`
+- [x] Clean Architecture (`clean-architecture.md`)
+- [x] Dependency Injection (`dependency-injection.md`)
+- [x] Domain-Driven Design (`domain-driven-design.md`)
+- [x] Aggregates & Entities (`aggregates-entities.md`)
+- [x] CQRS (`cqrs.md`)
+- [x] Mediator Pattern (`mediator.md`)
+- [x] Event-Driven Architecture (`event-driven.md`)
+- [x] Repository Pattern (`repository.md`)
 
-**Status**: Not Started
-**Approach**: Beginner-friendly, Mario's examples, anti-patterns
+**Status**: ✅ Completed (Session 2 - Oct 25, 2025)
+**Files**: `docs/concepts/*.md` (9 files)
+
+**Commits**:
+
+- 9fae70b: Index + first 5 concepts (clean-architecture, DI, DDD, aggregates, CQRS)
+- f49ce03: Final 3 concepts (mediator, event-driven, repository)
+
+**Content Created**:
+
+- **Index**: 120 lines - Overview, learning path, concept summaries
+- **Clean Architecture**: 330 lines - Layers, dependency rule, project structure
+- **Dependency Injection**: 400 lines - Service lifetimes, constructor injection, testing
+- **Domain-Driven Design**: 460 lines - Rich models, ubiquitous language, bounded contexts
+- **Aggregates & Entities**: 450 lines - Consistency boundaries, aggregate roots, event sourcing
+- **CQRS**: 420 lines - Commands vs queries, handlers, separate models
+- **Mediator**: 370 lines - Request routing, pipeline behaviors, loose coupling
+- **Event-Driven**: 450 lines - Domain events, integration events, CloudEvents
+- **Repository**: 380 lines - Abstraction, testability, implementation patterns
+
+**Total Concepts Content**: ~3,200 lines across 9 files
+
+Each guide includes:
+
+- Problem/Solution format
+- Real Mario's Pizzeria examples
+- Testing strategies
+- Common mistakes
+- When NOT to use pattern
+- Links to tutorials and features
 
 ---
 
@@ -260,24 +290,75 @@ Priority items for immediate impact:
 
 ## 📅 Session Log
 
-### Session 1: October 25, 2025
+### Session 1: October 25, 2025 (Morning)
 
-**Duration**: 1 hour
+**Duration**: 3 hours
 **Work Done**:
 
 - Created new branch `docs/refactor-documentation`
-- Analyzed current documentation state
+- Analyzed current documentation state (128 docs/ files, 370 notes/ files)
 - Identified critical gaps (7 undocumented modules)
 - Created comprehensive refactoring plan (DOCUMENTATION_REFACTORING_PLAN.md)
 - Created this progress tracker
+- **Phase 1.1 Complete**: Rewrote Getting Started guide
+- **Phase 1.2 Complete**: Created complete tutorial series (9 parts, ~4,000 lines)
 
-**Next Session**: Begin Phase 1.1 - Getting Started rewrite
+**Commits**:
+
+- aeebfdb: Planning documents
+- 306444f: Getting Started rewrite
+- 7db73b5: Tutorial index
+- f942844: Tutorial parts 1-2
+- bd1580d: Tutorial part 3
+- 5f4b9cd: Tutorial parts 4-5
+- e8262f4: Tutorial parts 6-9
+- 41f9b3f: Progress tracker update
+
+**Output**: 20 hours of planned work completed (19%)
+
+### Session 2: October 25, 2025 (Afternoon)
+
+**Duration**: 2 hours
+**Work Done**:
+
+- **Phase 1.3 Complete**: Created Core Concepts section
+- Created concepts/index.md with learning path
+- Created 8 comprehensive concept guides:
+  - Clean Architecture (330 lines)
+  - Dependency Injection (400 lines)
+  - Domain-Driven Design (460 lines)
+  - Aggregates & Entities (450 lines)
+  - CQRS (420 lines)
+  - Mediator Pattern (370 lines)
+  - Event-Driven Architecture (450 lines)
+  - Repository Pattern (380 lines)
+
+**Commits**:
+
+- 9fae70b: First 5 concept guides
+- f49ce03: Final 3 concept guides
+
+**Output**: 12 hours of planned work completed (31% total)
+
+**Next Session**: Begin Phase 2.1 - Missing Framework Modules
 
 ---
 
 ## 🚩 Decisions & Trade-offs
 
 _Document key decisions made during refactoring_
+
+### Concept Guides Structure
+
+**Decision**: Use Problem → Solution → Implementation → Testing → Mistakes → When NOT to use pattern
+**Rationale**: Provides context (problem), solution, practical usage, and guidance on limitations
+**Trade-off**: Longer documents (~300-450 lines each), but more comprehensive and beginner-friendly
+
+### Tutorial Extraction from Mario's Pizzeria
+
+**Decision**: Base all tutorials on Mario's Pizzeria sample application
+**Rationale**: User explicitly requested focus on Mario's Pizzeria; provides consistent, realistic examples
+**Trade-off**: Other samples (OpenBank, API Gateway) less prominent, but ensures coherent learning path
 
 1. **Focus on Mario's Pizzeria**: Decided to make Mario's Pizzeria the primary teaching tool, relegating other samples to secondary status.
 
