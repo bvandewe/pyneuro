@@ -1,9 +1,173 @@
 # 🎯 CQRS & Mediation Pattern
 
+**Estimated reading time: 25 minutes**
+
 Command Query Responsibility Segregation (CQRS) with Mediation separates read and write operations into distinct
 models while using a mediator to decouple application logic and promote clean separation between commands, queries,
 and their handlers. This pattern combines the scalability benefits of CQRS with the architectural benefits of the
 mediator pattern.
+
+## 🎯 What & Why
+
+### The Problem: Mixed Read/Write Concerns
+
+Without CQRS, controllers directly call services that handle both reads and writes, creating tight coupling and performance bottlenecks:
+
+```python
+# ❌ Problem: Single service handles both reads and writes
+class OrderService:
+    def __init__(
+        self,
+        order_repository: OrderRepository,
+        payment_service: PaymentService,
+        inventory_service: InventoryService,
+        kitchen_service: KitchenService,
+        notification_service: NotificationService,
+        analytics_service: AnalyticsService
+    ):
+        # Service has too many responsibilities
+        self._order_repo = order_repository
+        self._payment = payment_service
+        self._inventory = inventory_service
+        self._kitchen = kitchen_service
+        self._notification = notification_service
+        self._analytics = analytics_service
+
+    async def place_order(self, order_data: dict) -> Order:
+        # ❌ Complex write operation mixed with business logic
+        order = Order(**order_data)
+        await self._payment.process_payment(order)
+        await self._inventory.reserve_ingredients(order)
+        await self._order_repo.save(order)
+        await self._kitchen.add_to_queue(order)
+        await self._notification.send_confirmation(order)
+        return order
+
+    async def get_order_history(self, customer_id: str) -> List[Order]:
+        # ❌ Simple read operation uses same service as complex writes
+        orders = await self._order_repo.find_by_customer(customer_id)
+        # ❌ Returns full entities even when only summary data needed
+        return orders
+
+    async def get_menu(self) -> List[Pizza]:
+        # ❌ Can't cache or optimize reads separately from writes
+        return await self._pizza_repo.find_all()
+
+# Controller tightly coupled to service
+class OrdersController:
+    def __init__(self, order_service: OrderService):
+        self._order_service = order_service
+
+    async def place_order(self, request: dict):
+        # ❌ Controller knows about service implementation details
+        return await self._order_service.place_order(request)
+
+    async def get_orders(self, customer_id: str):
+        # ❌ Same service for reads and writes - can't scale independently
+        return await self._order_service.get_order_history(customer_id)
+```
+
+**Problems with this approach:**
+
+1. **Mixed Responsibilities**: Service handles both reads and writes
+2. **No Optimization**: Can't optimize reads separately from writes
+3. **Tight Coupling**: Controller depends directly on service
+4. **Poor Testability**: Must mock entire service for simple tests
+5. **No Cross-Cutting Concerns**: Validation, caching, logging duplicated everywhere
+6. **Scaling Issues**: Read-heavy operations slow down writes
+
+### The Solution: CQRS with Mediation
+
+Separate commands (writes) from queries (reads) and use a mediator to route requests:
+
+```python
+# ✅ Solution: Separate command for writes
+@dataclass
+class PlaceOrderCommand(Command[OperationResult[OrderDto]]):
+    customer_id: str
+    items: List[OrderItemDto]
+    delivery_address: str
+    payment_method: str
+
+class PlaceOrderHandler(CommandHandler[PlaceOrderCommand, OperationResult[OrderDto]]):
+    def __init__(
+        self,
+        repository: IOrderRepository,
+        mapper: Mapper
+    ):
+        # ✅ Handler only depends on what it needs
+        self._repository = repository
+        self._mapper = mapper
+
+    async def handle_async(self, command: PlaceOrderCommand):
+        # ✅ Focused on single responsibility: order placement
+        order = Order.create(
+            command.customer_id,
+            command.items,
+            command.delivery_address
+        )
+
+        await self._repository.save_async(order)
+
+        # ✅ Domain events automatically published
+        return self.created(self._mapper.map(order, OrderDto))
+
+# ✅ Solution: Separate query for reads
+@dataclass
+class GetOrderHistoryQuery(Query[List[OrderSummaryDto]]):
+    customer_id: str
+    page: int = 1
+    page_size: int = 20
+
+class GetOrderHistoryHandler(QueryHandler[GetOrderHistoryQuery, List[OrderSummaryDto]]):
+    def __init__(self, read_repository: IOrderReadRepository):
+        # ✅ Uses optimized read repository
+        self._read_repo = read_repository
+
+    async def handle_async(self, query: GetOrderHistoryQuery):
+        # ✅ Optimized for reading with denormalized data
+        orders = await self._read_repo.get_customer_history_async(
+            query.customer_id,
+            query.page,
+            query.page_size
+        )
+
+        # ✅ Returns lightweight DTOs, not full entities
+        return [OrderSummaryDto(
+            order_id=o.id,
+            total=o.total,
+            status=o.status,
+            order_date=o.created_at
+        ) for o in orders]
+
+# ✅ Controller uses mediator - no direct dependencies
+class OrdersController(ControllerBase):
+    # ✅ No service dependencies - only mediator
+
+    @post("/", response_model=OrderDto, status_code=201)
+    async def place_order(self, request: PlaceOrderRequest):
+        # ✅ Mediator routes to appropriate handler
+        command = self.mapper.map(request, PlaceOrderCommand)
+        result = await self.mediator.execute_async(command)
+        return self.process(result)
+
+    @get("/history", response_model=List[OrderSummaryDto])
+    async def get_history(self, customer_id: str, page: int = 1):
+        # ✅ Separate query handler with optimized read model
+        query = GetOrderHistoryQuery(customer_id=customer_id, page=page)
+        result = await self.mediator.execute_async(query)
+        return result
+```
+
+**Benefits of CQRS with Mediation:**
+
+1. **Clear Separation**: Commands write, queries read - single responsibility
+2. **Independent Optimization**: Optimize reads and writes separately
+3. **Loose Coupling**: Controllers don't know about handlers
+4. **Easy Testing**: Test handlers in isolation with minimal mocks
+5. **Cross-Cutting Concerns**: Pipeline behaviors handle validation, caching, logging
+6. **Independent Scaling**: Scale read and write sides independently
+7. **Event-Driven**: Commands naturally produce domain events
 
 ## 🎯 Overview
 
@@ -847,22 +1011,21 @@ from unittest.mock import Mock, AsyncMock
 @pytest.mark.asyncio
 async def test_place_order_command_handler_success():
     # Arrange
-    mock_order_repo = Mock()
-    mock_pizza_repo = Mock()
-    mock_payment_service = Mock()
-    mock_notification_service = Mock()
+    mock_order_repo = AsyncMock(spec=IOrderRepository)
+    mock_mapper = Mock(spec=Mapper)
+    mock_mapper.map.return_value = OrderDto(order_id="123", total=Decimal("25.99"))
 
     handler = PlaceOrderCommandHandler(
         order_repository=mock_order_repo,
-        pizza_repository=mock_pizza_repo,
-        mapper=Mock(),
-        payment_service=mock_payment_service,
-        notification_service=mock_notification_service
+        pizza_repository=Mock(),
+        mapper=mock_mapper,
+        payment_service=Mock(),
+        notification_service=Mock()
     )
 
     # Mock pizza availability
     margherita = Pizza("margherita", "Margherita", "medium", Decimal("12.99"), [], 15)
-    mock_pizza_repo.get_by_ids_async.return_value = [margherita]
+    handler.pizza_repository.get_by_ids_async = AsyncMock(return_value=[margherita])
 
     command = PlaceOrderCommand(
         customer_name="John Doe",
@@ -880,12 +1043,13 @@ async def test_place_order_command_handler_success():
     assert "order_id" in result.data
     assert "total_amount" in result.data
     mock_order_repo.save_async.assert_called_once()
-    mock_notification_service.send_order_confirmation.assert_called_once()
 
 @pytest.mark.asyncio
 async def test_place_order_command_handler_validation_failure():
     # Arrange
-    handler = PlaceOrderCommandHandler(Mock(), Mock(), Mock(), Mock(), Mock())
+    handler = PlaceOrderCommandHandler(
+        Mock(), Mock(), Mock(), Mock(), Mock()
+    )
 
     command = PlaceOrderCommand(
         customer_name="John Doe",
@@ -901,6 +1065,33 @@ async def test_place_order_command_handler_validation_failure():
     # Assert
     assert not result.is_success
     assert "at least one pizza" in result.error_message
+```
+
+### Query Handler Testing
+
+```python
+@pytest.mark.asyncio
+async def test_get_menu_query_handler():
+    # Arrange
+    mock_read_repo = AsyncMock(spec=IMenuReadRepository)
+    mock_read_repo.get_menu_items_async.return_value = [
+        MenuItem(id="1", name="Margherita", category="Pizza", price=Decimal("12.99")),
+        MenuItem(id="2", name="Pepperoni", category="Pizza", price=Decimal("14.99"))
+    ]
+
+    handler = GetMenuHandler(mock_read_repo)
+    query = GetMenuQuery(category="Pizza")
+
+    # Act
+    result = await handler.handle_async(query)
+
+    # Assert
+    assert len(result) == 2
+    assert all(item.category == "Pizza" for item in result)
+    mock_read_repo.get_menu_items_async.assert_called_once_with(
+        category="Pizza",
+        include_unavailable=False
+    )
 ```
 
 ### Integration Testing
@@ -948,6 +1139,298 @@ async def test_complete_order_workflow():
     assert status_data["customer_name"] == "John Doe"
 ```
 
+## ⚠️ Common Mistakes
+
+### 1. Queries That Modify State
+
+```python
+# ❌ Wrong - query should not modify data
+@dataclass
+class GetOrderQuery(Query[OrderDto]):
+    order_id: str
+    mark_as_viewed: bool = True  # ❌ Side effect in query!
+
+class GetOrderHandler(QueryHandler[GetOrderQuery, OrderDto]):
+    async def handle_async(self, query: GetOrderQuery):
+        order = await self._repository.get_by_id_async(query.order_id)
+
+        # ❌ Query modifying state!
+        if query.mark_as_viewed:
+            order.mark_as_viewed()
+            await self._repository.save_async(order)
+
+        return self._mapper.map(order, OrderDto)
+
+# ✅ Correct - queries only read, commands modify
+@dataclass
+class GetOrderQuery(Query[OrderDto]):
+    order_id: str  # ✅ No side effects
+
+@dataclass
+class MarkOrderAsViewedCommand(Command[OperationResult]):
+    order_id: str  # ✅ Separate command for modification
+
+class GetOrderHandler(QueryHandler[GetOrderQuery, OrderDto]):
+    async def handle_async(self, query: GetOrderQuery):
+        order = await self._read_repository.get_by_id_async(query.order_id)
+        return self._mapper.map(order, OrderDto)  # ✅ Read-only
+```
+
+### 2. Commands That Return Domain Entities
+
+```python
+# ❌ Wrong - command returns full entity
+@dataclass
+class PlaceOrderCommand(Command[Order]):  # ❌ Returns entity
+    customer_id: str
+    items: List[OrderItemDto]
+
+class PlaceOrderHandler(CommandHandler[PlaceOrderCommand, Order]):
+    async def handle_async(self, command: PlaceOrderCommand) -> Order:
+        order = Order.create(command.customer_id, command.items)
+        await self._repository.save_async(order)
+        return order  # ❌ Exposing domain entity to API layer
+
+# ✅ Correct - command returns DTO or result object
+@dataclass
+class PlaceOrderCommand(Command[OperationResult[OrderDto]]):  # ✅ Returns DTO
+    customer_id: str
+    items: List[OrderItemDto]
+
+class PlaceOrderHandler(CommandHandler[PlaceOrderCommand, OperationResult[OrderDto]]):
+    async def handle_async(self, command: PlaceOrderCommand):
+        order = Order.create(command.customer_id, command.items)
+        await self._repository.save_async(order)
+
+        # ✅ Map to DTO before returning
+        dto = self._mapper.map(order, OrderDto)
+        return self.created(dto)
+```
+
+### 3. Not Using Mediator - Direct Handler Calls
+
+```python
+# ❌ Wrong - controller directly instantiates and calls handler
+class OrdersController:
+    def __init__(self, repository: IOrderRepository):
+        self._repository = repository
+
+    async def place_order(self, request: dict):
+        # ❌ Manually creating handler
+        handler = PlaceOrderHandler(self._repository, mapper, ...)
+        command = PlaceOrderCommand(**request)
+
+        # ❌ Direct call bypasses pipeline behaviors
+        result = await handler.handle_async(command)
+        return result
+
+# ✅ Correct - use mediator for routing
+class OrdersController(ControllerBase):
+    # ✅ No handler dependencies
+
+    async def place_order(self, request: PlaceOrderRequest):
+        # ✅ Map request to command
+        command = self.mapper.map(request, PlaceOrderCommand)
+
+        # ✅ Mediator handles routing and pipeline behaviors
+        result = await self.mediator.execute_async(command)
+        return self.process(result)
+```
+
+### 4. Shared Models Between Commands and Queries
+
+```python
+# ❌ Wrong - using same DTO for both commands and queries
+class OrderDto:
+    # Used for both reading and writing
+    order_id: str
+    customer_id: str
+    items: List[OrderItemDto]
+    total: Decimal
+    status: str
+    created_at: datetime
+    updated_at: datetime
+    # ❌ Write operations don't need all these fields
+    # ❌ Read operations might need different fields
+
+# ✅ Correct - separate DTOs for commands and queries
+@dataclass
+class CreateOrderDto:
+    """DTO for order creation command"""
+    customer_id: str
+    items: List[OrderItemDto]
+    delivery_address: str
+    # ✅ Only fields needed for creation
+
+@dataclass
+class OrderSummaryDto:
+    """DTO for order list query"""
+    order_id: str
+    customer_name: str  # Denormalized
+    total: Decimal
+    status: str
+    order_date: datetime
+    # ✅ Optimized for display
+
+@dataclass
+class OrderDetailDto:
+    """DTO for single order query"""
+    order_id: str
+    customer: CustomerDto  # Full customer info
+    items: List[OrderItemDetailDto]  # Expanded items
+    payment: PaymentDetailDto
+    timeline: List[OrderEventDto]
+    # ✅ Complete information for detail view
+```
+
+### 5. Missing Validation in Pipeline
+
+```python
+# ❌ Wrong - validation scattered across handlers
+class PlaceOrderHandler(CommandHandler):
+    async def handle_async(self, command: PlaceOrderCommand):
+        # ❌ Validation logic in handler
+        if not command.items:
+            return self.bad_request("No items")
+        if not command.customer_id:
+            return self.bad_request("No customer")
+
+        # Business logic...
+
+# ✅ Correct - validation in pipeline behavior
+class ValidationBehavior(PipelineBehavior):
+    async def handle_async(self, request, next_handler):
+        # ✅ Centralized validation
+        if isinstance(request, PlaceOrderCommand):
+            if not request.items:
+                return OperationResult.validation_error("Order must contain items")
+            if not request.customer_id:
+                return OperationResult.validation_error("Customer ID required")
+
+        return await next_handler()
+
+class PlaceOrderHandler(CommandHandler):
+    async def handle_async(self, command: PlaceOrderCommand):
+        # ✅ Handler focuses on business logic only
+        order = Order.create(command.customer_id, command.items)
+        await self._repository.save_async(order)
+        return self.created(order_dto)
+```
+
+### 6. Not Leveraging Caching for Queries
+
+```python
+# ❌ Wrong - expensive query executed every time
+class GetPopularPizzasHandler(QueryHandler):
+    async def handle_async(self, query: GetPopularPizzasQuery):
+        # ❌ Expensive aggregation query runs every request
+        result = await self._repository.calculate_popular_pizzas_async(
+            days=30
+        )
+        return result
+
+# ✅ Correct - caching behavior for expensive queries
+class CachingBehavior(PipelineBehavior):
+    async def handle_async(self, request, next_handler):
+        if not isinstance(request, Query):
+            return await next_handler()
+
+        # ✅ Check cache first
+        cache_key = self._generate_key(request)
+        cached = await self._cache.get_async(cache_key)
+        if cached:
+            return cached
+
+        # Execute query
+        result = await next_handler()
+
+        # ✅ Cache result with appropriate TTL
+        ttl = self._get_ttl(type(request))
+        await self._cache.set_async(cache_key, result, ttl)
+
+        return result
+```
+
+## 🚫 When NOT to Use
+
+### 1. Simple CRUD Applications
+
+For basic create, read, update, delete operations without complex business logic:
+
+```python
+# CQRS is overkill for simple CRUD
+@app.get("/pizzas")
+async def get_pizzas(db: Database):
+    # Simple read - no need for query handler
+    return await db.pizzas.find().to_list(None)
+
+@app.post("/pizzas")
+async def create_pizza(pizza: PizzaDto, db: Database):
+    # Simple write - no need for command handler
+    return await db.pizzas.insert_one(pizza.dict())
+```
+
+### 2. Applications with Identical Read/Write Models
+
+When your read and write operations use the same data structure:
+
+```python
+# If you're just saving and retrieving the same structure,
+# CQRS separation doesn't provide value
+class CustomerService:
+    async def save_customer(self, customer: Customer):
+        await self._db.save(customer)
+
+    async def get_customer(self, id: str) -> Customer:
+        return await self._db.get(id)
+    # No need for CQRS - same model for both operations
+```
+
+### 3. Small Teams Without CQRS Experience
+
+The pattern adds complexity that may not be worth it for small teams:
+
+```python
+# Simple service pattern may be better for small teams
+class OrderService:
+    async def place_order(self, data: dict) -> Order:
+        order = Order(**data)
+        await self._db.save(order)
+        return order
+
+    async def get_order(self, order_id: str) -> Order:
+        return await self._db.get(order_id)
+    # Simpler pattern, easier to understand and maintain
+```
+
+### 4. Real-Time Systems Requiring Immediate Consistency
+
+When reads must immediately reflect writes:
+
+```python
+# CQRS with eventual consistency won't work
+async def transfer_funds(from_account: str, to_account: str, amount: Decimal):
+    # Need immediate consistency - both operations must succeed or fail together
+    await debit_account(from_account, amount)
+    await credit_account(to_account, amount)
+
+    # Next read MUST show updated balances immediately
+    # Eventual consistency is not acceptable
+```
+
+## 📝 Key Takeaways
+
+1. **Separation of Concerns**: Commands modify state, queries read state - never mix
+2. **Mediator Pattern**: Centralized routing eliminates direct dependencies
+3. **Pipeline Behaviors**: Cross-cutting concerns (validation, caching, logging) in one place
+4. **Independent Optimization**: Optimize reads and writes separately for performance
+5. **Testability**: Test handlers in isolation with minimal mocking
+6. **Event-Driven**: Commands naturally produce domain events for other handlers
+7. **DTOs Not Entities**: Commands and queries work with DTOs, not domain entities
+8. **Caching for Queries**: Leverage pipeline behaviors to cache expensive queries
+9. **Validation First**: Use pipeline behaviors for consistent validation
+10. **Know When Not To Use**: Simple CRUD doesn't need CQRS complexity
+
 ## 🎯 Pattern Benefits
 
 ### CQRS with Mediation Advantages
@@ -968,28 +1451,14 @@ async def test_complete_order_workflow():
 - Event-driven systems where domain events drive business processes
 - Teams wanting to enforce consistent patterns and reduce coupling
 
-### When Not to Use
-
-- Simple CRUD applications with minimal business logic
-- Systems where the overhead of commands/queries exceeds the benefits
-- Applications with very simple read/write patterns
-- Teams lacking experience with CQRS and mediation patterns
-- Systems where synchronous, tightly-coupled operations are preferred
-
 ## 🔗 Related Patterns
 
-### Complementary Patterns
-
-- **[Event Sourcing](event-sourcing.md)** - Commands naturally produce events for event sourcing
-- **[Repository](repository.md)** - Separate repositories for command and query sides
-- **[Domain-Driven Design](domain-driven-design.md)** - Aggregates and domain events align with CQRS
-- **[Dependency Injection](dependency-injection.md)** - Service registration for handlers and behaviors
-- **[Clean Architecture](clean-architecture.md)** - CQRS fits naturally in the application layer
-
-### Integration Examples
-
-CQRS with Mediation integrates well with event sourcing for write models and materialized views for read models, while the mediator handles the orchestration and cross-cutting concerns consistently across both sides.
+- [Event-Driven Architecture](event-driven.md) - Commands produce events consumed by event handlers
+- [Repository Pattern](repository.md) - Separate repositories for command and query sides
+- [Domain-Driven Design](domain-driven-design.md) - Aggregates and domain events align with CQRS
+- [Clean Architecture](clean-architecture.md) - CQRS handlers belong in application layer
+- [Event Sourcing](event-sourcing.md) - Commands naturally produce events for event sourcing
 
 ---
 
-**Next Steps**: Explore [Event Sourcing](event-sourcing.md) for event-driven write models or [Repository](repository.md) for data access patterns that support CQRS separation.
+_This pattern guide demonstrates CQRS with Mediation using Mario's Pizzeria's order management system, showing clear separation between commands and queries with centralized request routing._ 🎯
