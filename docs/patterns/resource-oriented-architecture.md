@@ -1,5 +1,7 @@
 # 🎯 Resource Oriented Architecture (ROA)
 
+> **🚧 Work in Progress**: This documentation is being updated to include beginner-friendly explanations with What & Why sections, Common Mistakes, and When NOT to Use guidance. The content below is accurate but will be enhanced soon.
+
 Resource Oriented Architecture is a powerful pattern for building systems that manage resources through their lifecycle,
 similar to how Kubernetes manages cluster resources. Neuroglia provides comprehensive support for ROA patterns including
 watchers, controllers, and reconciliation loops.

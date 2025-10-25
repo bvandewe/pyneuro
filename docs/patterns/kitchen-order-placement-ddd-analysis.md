@@ -1,5 +1,7 @@
 # DDD Analysis: Where Should Kitchen Orders Be Added?
 
+> **🚧 Work in Progress**: This documentation is being updated to include beginner-friendly explanations with What & Why sections, Common Mistakes, and When NOT to Use guidance. The content below is accurate but will be enhanced soon.
+
 ## Question
 
 In the Mario Pizzeria sample app, where should an order be added to the Kitchen's pending orders list:

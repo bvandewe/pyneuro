@@ -1,5 +1,7 @@
 # 🎯 How to Choose the Right Data Modeling Patterns
 
+> **🚧 Work in Progress**: This documentation is being updated to include beginner-friendly explanations with What & Why sections, Common Mistakes, and When NOT to Use guidance. The content below is accurate but will be enhanced soon.
+
 This document provides a comprehensive guide for choosing and progressing through different data modeling patterns in the Neuroglia framework, from simple entities to complex event-sourced aggregates with declarative resource management. It shows the natural evolution path and when to adopt each pattern based on system complexity and requirements.
 
 ## 🎯 The Evolution Path
