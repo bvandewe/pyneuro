@@ -347,12 +347,24 @@ class ServiceScope(ServiceScopeBase, ServiceProviderBase):
         # Build transient services in THIS scope so they can access scoped dependencies
         transient_descriptors = [descriptor for descriptor in self._all_service_descriptors if descriptor.service_type == type and descriptor.lifetime == ServiceLifetime.TRANSIENT]
 
-        # Get realized singletons from root provider (they're cached there)
+        # Get realized singletons - build each descriptor separately to get distinct instances
+        # This is critical when multiple services are registered with the same base type
+        # (e.g., NotificationHandler) - we need ALL distinct instances, not just the first one
         root_services = []
         for descriptor in root_singleton_descriptors:
             try:
-                service = self._root_service_provider.get_service(descriptor.service_type)
-                if service is not None:
+                # For singletons, use the singleton instance directly from the descriptor
+                # or build it if needed. Do NOT use get_service(descriptor.service_type)
+                # as that returns only the first registered service for that type
+                if descriptor.singleton is not None:
+                    root_services.append(descriptor.singleton)
+                elif descriptor.implementation_factory is not None:
+                    service = descriptor.implementation_factory(self._root_service_provider)
+                    root_services.append(service)
+                else:
+                    # For non-singleton, non-factory services, we need to build them
+                    # Cast to access _build_service (it exists but typing doesn't know)
+                    service = self._root_service_provider._build_service(descriptor)  # type: ignore
                     root_services.append(service)
             except Exception:
                 pass
