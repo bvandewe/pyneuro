@@ -116,11 +116,9 @@ class PersonMappingProfile(MappingProfile):
 
     def configure(self):
         # Person mapping with custom transformations
-        self.create_map(SourcePerson, DestinationPerson).add_member_mapping(lambda src: src.id, lambda dst: dst.person_id).add_member_mapping(lambda src: f"{src.first_name} {src.last_name}", lambda dst: dst.full_name).add_member_mapping(
-            lambda src: src.email, lambda dst: dst.email_address
-        ).add_member_mapping(lambda src: self.calculate_age(src.birth_date), lambda dst: dst.age).add_member_mapping(lambda src: float(src.salary), lambda dst: dst.annual_salary).add_member_mapping(lambda src: "Active" if src.is_active else "Inactive", lambda dst: dst.status).add_member_mapping(
-            lambda src: src.tags, lambda dst: dst.tag_list
-        )
+        self.create_map(SourcePerson, DestinationPerson).add_member_mapping(lambda src: src.id, lambda dst: dst.person_id).add_member_mapping(lambda src: f"{src.first_name} {src.last_name}", lambda dst: dst.full_name).add_member_mapping(lambda src: src.email, lambda dst: dst.email_address).add_member_mapping(lambda src: self.calculate_age(src.birth_date), lambda dst: dst.age).add_member_mapping(lambda src: float(src.salary), lambda dst: dst.annual_salary).add_member_mapping(
+            lambda src: "Active" if src.is_active else "Inactive", lambda dst: dst.status
+        ).add_member_mapping(lambda src: src.tags, lambda dst: dst.tag_list)
 
         # Address mapping
         self.create_map(SourceAddress, DestinationAddress).add_member_mapping(lambda src: f"{src.street}, {src.city}", lambda dst: dst.full_address).add_member_mapping(lambda src: src.postal_code, lambda dst: dst.zip_code).add_member_mapping(lambda src: src.country, lambda dst: dst.country_name)
@@ -131,7 +129,9 @@ class PersonMappingProfile(MappingProfile):
             lambda dst: dst.person_name,
         ).add_member_mapping(
             lambda src: src.person.email, lambda dst: dst.person_email
-        ).add_member_mapping(lambda src: src.address.street, lambda dst: dst.address_street).add_member_mapping(lambda src: src.address.city, lambda dst: dst.address_city).add_member_mapping(lambda src: src.address.country, lambda dst: dst.address_country)
+        ).add_member_mapping(lambda src: src.address.street, lambda dst: dst.address_street).add_member_mapping(
+            lambda src: src.address.city, lambda dst: dst.address_city
+        ).add_member_mapping(lambda src: src.address.country, lambda dst: dst.address_country)
 
     def calculate_age(self, birth_date: date) -> int:
         """Calculate age from birth date"""
@@ -442,9 +442,7 @@ class TestMappingConfiguration:
 
     def test_chaining_member_mappings(self):
         """Test chaining member mapping calls"""
-        config = (
-            MappingConfiguration(SourcePerson, DestinationPerson).add_member_mapping(lambda src: src.id, lambda dst: dst.person_id).add_member_mapping(lambda src: src.email, lambda dst: dst.email_address).add_member_mapping(lambda src: f"{src.first_name} {src.last_name}", lambda dst: dst.full_name)
-        )
+        config = MappingConfiguration(SourcePerson, DestinationPerson).add_member_mapping(lambda src: src.id, lambda dst: dst.person_id).add_member_mapping(lambda src: src.email, lambda dst: dst.email_address).add_member_mapping(lambda src: f"{src.first_name} {src.last_name}", lambda dst: dst.full_name)
 
         assert len(config.member_mappings) == 3
 
