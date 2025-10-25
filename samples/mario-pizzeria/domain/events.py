@@ -11,8 +11,10 @@ from decimal import Decimal
 from typing import Optional
 
 from neuroglia.data.abstractions import DomainEvent
+from neuroglia.eventing.cloud_events.decorators import cloudevent
 
 
+@cloudevent("order.created.v1")
 @dataclass
 class OrderCreatedEvent(DomainEvent):
     """Event raised when a new order is created."""
@@ -26,6 +28,7 @@ class OrderCreatedEvent(DomainEvent):
     order_time: datetime
 
 
+@cloudevent("order.pizza.added.v1")
 @dataclass
 class PizzaAddedToOrderEvent(DomainEvent):
     """Event raised when a pizza is added to an order."""
@@ -43,6 +46,7 @@ class PizzaAddedToOrderEvent(DomainEvent):
     price: Decimal
 
 
+@cloudevent("order.pizza.removed.v1")
 @dataclass
 class PizzaRemovedFromOrderEvent(DomainEvent):
     """Event raised when a pizza is removed from an order."""
@@ -54,6 +58,7 @@ class PizzaRemovedFromOrderEvent(DomainEvent):
     line_item_id: str
 
 
+@cloudevent("order.confirmed.v1")
 @dataclass
 class OrderConfirmedEvent(DomainEvent):
     """Event raised when an order is confirmed."""
@@ -69,41 +74,102 @@ class OrderConfirmedEvent(DomainEvent):
     pizza_count: int
 
 
+@cloudevent("order.cooking.started.v1")
 @dataclass
 class CookingStartedEvent(DomainEvent):
     """Event raised when cooking starts for an order."""
 
-    def __init__(self, aggregate_id: str, cooking_started_time: datetime):
+    def __init__(
+        self,
+        aggregate_id: str,
+        cooking_started_time: datetime,
+        user_id: str,
+        user_name: str,
+    ):
         super().__init__(aggregate_id)
         self.cooking_started_time = cooking_started_time
+        self.user_id = user_id
+        self.user_name = user_name
 
     cooking_started_time: datetime
+    user_id: str
+    user_name: str
 
 
+@cloudevent("order.ready.v1")
 @dataclass
 class OrderReadyEvent(DomainEvent):
     """Event raised when an order is ready for pickup/delivery."""
 
-    def __init__(self, aggregate_id: str, ready_time: datetime, estimated_ready_time: Optional[datetime]):
+    def __init__(
+        self,
+        aggregate_id: str,
+        ready_time: datetime,
+        estimated_ready_time: Optional[datetime],
+        user_id: str,
+        user_name: str,
+    ):
         super().__init__(aggregate_id)
         self.ready_time = ready_time
         self.estimated_ready_time = estimated_ready_time
+        self.user_id = user_id
+        self.user_name = user_name
 
     ready_time: datetime
     estimated_ready_time: Optional[datetime]
+    user_id: str
+    user_name: str
 
 
+@cloudevent("order.delivery.driver.assigned.v1")
+@dataclass
+class OrderAssignedToDeliveryEvent(DomainEvent):
+    """Event raised when an order is assigned to a delivery driver."""
+
+    def __init__(self, aggregate_id: str, delivery_person_id: str, assignment_time: datetime):
+        super().__init__(aggregate_id)
+        self.delivery_person_id = delivery_person_id
+        self.assignment_time = assignment_time
+
+    delivery_person_id: str
+    assignment_time: datetime
+
+
+@cloudevent("order.delivery.started.v1")
+@dataclass
+class OrderOutForDeliveryEvent(DomainEvent):
+    """Event raised when an order is out for delivery."""
+
+    def __init__(self, aggregate_id: str, out_for_delivery_time: datetime):
+        super().__init__(aggregate_id)
+        self.out_for_delivery_time = out_for_delivery_time
+
+    out_for_delivery_time: datetime
+
+
+@cloudevent("order.delivered.v1")
 @dataclass
 class OrderDeliveredEvent(DomainEvent):
     """Event raised when an order is delivered."""
 
-    def __init__(self, aggregate_id: str, delivered_time: datetime):
+    def __init__(
+        self,
+        aggregate_id: str,
+        delivered_time: datetime,
+        user_id: str,
+        user_name: str,
+    ):
         super().__init__(aggregate_id)
         self.delivered_time = delivered_time
+        self.user_id = user_id
+        self.user_name = user_name
 
     delivered_time: datetime
+    user_id: str
+    user_name: str
 
 
+@cloudevent("order.cancelled.v1")
 @dataclass
 class OrderCancelledEvent(DomainEvent):
     """Event raised when an order is cancelled."""
@@ -126,6 +192,7 @@ class CustomerRegisteredEvent(DomainEvent):
     email: str
     phone: str
     address: str
+    user_id: Optional[str] = None  # Keycloak user ID for profile linkage
 
     def __post_init__(self):
         """Initialize parent class fields after dataclass initialization"""
@@ -148,6 +215,30 @@ class CustomerContactUpdatedEvent(DomainEvent):
 
     phone: str
     address: str
+
+
+@dataclass
+class CustomerProfileCreatedEvent(DomainEvent):
+    """
+    Event raised when a customer profile is created (either explicitly or auto-created from Keycloak).
+
+    This is distinct from CustomerRegisteredEvent - this specifically indicates
+    profile creation which may trigger welcome emails, onboarding workflows, etc.
+    """
+
+    aggregate_id: str  # Customer ID
+    user_id: str  # Keycloak user ID
+    name: str
+    email: str
+    phone: Optional[str] = None
+    address: Optional[str] = None
+
+    def __post_init__(self):
+        """Initialize parent class fields after dataclass initialization"""
+        if not hasattr(self, "created_at"):
+            self.created_at = datetime.now()
+        if not hasattr(self, "aggregate_version"):
+            self.aggregate_version = 0
 
 
 @dataclass

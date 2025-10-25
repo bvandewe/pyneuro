@@ -70,6 +70,9 @@ class GetOrdersByStatusQueryHandler(QueryHandler[GetOrdersByStatusQuery, Operati
                     notes=getattr(order.state, "notes", None),
                     total_amount=order.total_amount,
                     pizza_count=order.pizza_count,
+                    chef_name=getattr(order.state, "chef_name", None),
+                    ready_by_name=getattr(order.state, "ready_by_name", None),
+                    delivery_name=getattr(order.state, "delivery_name", None),
                 )
                 order_dtos.append(order_dto)
 

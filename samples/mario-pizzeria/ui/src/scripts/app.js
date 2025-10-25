@@ -11,12 +11,18 @@ import bootstrap from './bootstrap.js';
 // Import utilities
 import * as utils from './common.js';
 
+// Import feature modules
+import * as kitchen from './kitchen.js';
+import * as delivery from './delivery.js';
+
 // Import styles (Parcel will process SCSS and inject into page)
 import '../styles/main.scss';
 
 // Make utilities available globally for inline scripts and templates
 window.pizzeriaUtils = utils;
 window.bootstrap = bootstrap;
+window.kitchenModule = kitchen;
+window.deliveryModule = delivery;
 
 // Initialize application
 document.addEventListener('DOMContentLoaded', () => {

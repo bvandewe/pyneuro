@@ -1,5 +1,10 @@
-"""File-based implementation of pizza repository using generic FileSystemRepository"""
+"""File-based implementation of pizza repository using generic FileSystemRepository
 
+DEPRECATED: This file-based repository is deprecated in favor of MongoPizzaRepository.
+Use MongoPizzaRepository for production deployments.
+"""
+
+import warnings
 from decimal import Decimal
 from typing import Optional
 
@@ -10,9 +15,19 @@ from neuroglia.data.infrastructure.filesystem import FileSystemRepository
 
 
 class FilePizzaRepository(FileSystemRepository[Pizza, str], IPizzaRepository):
-    """File-based implementation of pizza repository using generic FileSystemRepository"""
+    """
+    File-based implementation of pizza repository using generic FileSystemRepository
+
+    DEPRECATED: Use MongoPizzaRepository instead.
+    This repository is maintained for backward compatibility only.
+    """
 
     def __init__(self, data_directory: str = "data"):
+        warnings.warn(
+            "FilePizzaRepository is deprecated. Use MongoPizzaRepository instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         super().__init__(data_directory=data_directory, entity_type=Pizza, key_type=str)
         # Flag to track if initialization has been attempted
         self._initialized = False

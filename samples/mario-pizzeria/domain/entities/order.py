@@ -8,10 +8,12 @@ from uuid import uuid4
 from api.dtos import OrderDto
 from domain.events import (
     CookingStartedEvent,
+    OrderAssignedToDeliveryEvent,
     OrderCancelledEvent,
     OrderConfirmedEvent,
     OrderCreatedEvent,
     OrderDeliveredEvent,
+    OrderOutForDeliveryEvent,
     OrderReadyEvent,
     PizzaAddedToOrderEvent,
     PizzaRemovedFromOrderEvent,
@@ -37,7 +39,17 @@ class OrderState(AggregateState[str]):
     cooking_started_time: Optional[datetime]
     actual_ready_time: Optional[datetime]
     estimated_ready_time: Optional[datetime]
+    delivery_person_id: Optional[str]  # Track who is delivering
+    out_for_delivery_time: Optional[datetime]  # When order left for delivery
     notes: Optional[str]
+
+    # User tracking fields - who performed each action
+    chef_user_id: Optional[str]  # User who started cooking
+    chef_name: Optional[str]  # Name of chef who started cooking
+    ready_by_user_id: Optional[str]  # User who marked order as ready
+    ready_by_name: Optional[str]  # Name of user who marked as ready
+    delivery_user_id: Optional[str]  # User who delivered the order
+    delivery_name: Optional[str]  # Name of delivery person
 
     def __init__(self):
         super().__init__()
@@ -49,7 +61,18 @@ class OrderState(AggregateState[str]):
         self.cooking_started_time = None
         self.actual_ready_time = None
         self.estimated_ready_time = None
+        self.delivery_person_id = None
+        self.out_for_delivery_time = None
+        self.delivered_time = None
         self.notes = None
+
+        # Initialize user tracking fields
+        self.chef_user_id = None
+        self.chef_name = None
+        self.ready_by_user_id = None
+        self.ready_by_name = None
+        self.delivery_user_id = None
+        self.delivery_name = None
 
     @dispatch(OrderCreatedEvent)
     def on(self, event: OrderCreatedEvent) -> None:
@@ -82,17 +105,35 @@ class OrderState(AggregateState[str]):
         """Handle cooking started event"""
         self.status = OrderStatus.COOKING
         self.cooking_started_time = event.cooking_started_time
+        self.chef_user_id = event.user_id
+        self.chef_name = event.user_name
 
     @dispatch(OrderReadyEvent)
     def on(self, event: OrderReadyEvent) -> None:
         """Handle order ready event"""
         self.status = OrderStatus.READY
         self.actual_ready_time = event.ready_time
+        self.ready_by_user_id = event.user_id
+        self.ready_by_name = event.user_name
+
+    @dispatch(OrderAssignedToDeliveryEvent)
+    def on(self, event: OrderAssignedToDeliveryEvent) -> None:
+        """Handle order assigned to delivery event"""
+        self.delivery_person_id = event.delivery_person_id
+
+    @dispatch(OrderOutForDeliveryEvent)
+    def on(self, event: OrderOutForDeliveryEvent) -> None:
+        """Handle order out for delivery event"""
+        self.status = OrderStatus.DELIVERING
+        self.out_for_delivery_time = event.out_for_delivery_time
 
     @dispatch(OrderDeliveredEvent)
     def on(self, event: OrderDeliveredEvent) -> None:
         """Handle order delivered event"""
         self.status = OrderStatus.DELIVERED
+        self.delivered_time = event.delivered_time
+        self.delivery_user_id = event.user_id
+        self.delivery_name = event.user_name
 
     @dispatch(OrderCancelledEvent)
     def on(self, event: OrderCancelledEvent) -> None:
@@ -111,15 +152,7 @@ class Order(AggregateRoot[OrderState, str]):
         super().__init__()
 
         # Register event and apply it to state
-        self.state.on(
-            self.register_event(
-                OrderCreatedEvent(
-                    aggregate_id=str(uuid4()),
-                    customer_id=customer_id,
-                    order_time=datetime.now(timezone.utc),
-                )
-            )
-        )
+        self.state.on(self.register_event(OrderCreatedEvent(aggregate_id=str(uuid4()), customer_id=customer_id, order_time=datetime.now(timezone.utc))))
 
         # Set estimated ready time if provided
         if estimated_ready_time:
@@ -144,17 +177,7 @@ class Order(AggregateRoot[OrderState, str]):
         self.state.order_items.append(order_item)
 
         # Register event
-        self.state.on(
-            self.register_event(
-                PizzaAddedToOrderEvent(
-                    aggregate_id=self.id(),
-                    line_item_id=order_item.line_item_id,
-                    pizza_name=order_item.name,
-                    pizza_size=order_item.size.value,
-                    price=order_item.total_price,
-                )
-            )
-        )
+        self.state.on(self.register_event(PizzaAddedToOrderEvent(aggregate_id=self.id(), line_item_id=order_item.line_item_id, pizza_name=order_item.name, pizza_size=order_item.size.value, price=order_item.total_price)))
 
     def remove_pizza(self, line_item_id: str) -> None:
         """Remove a pizza from the order by line_item_id"""
@@ -180,18 +203,9 @@ class Order(AggregateRoot[OrderState, str]):
             raise ValueError("Cannot confirm empty order")
 
         # Register event and apply to state
-        self.state.on(
-            self.register_event(
-                OrderConfirmedEvent(
-                    aggregate_id=self.id(),
-                    confirmed_time=datetime.now(timezone.utc),
-                    total_amount=self.total_amount,
-                    pizza_count=self.pizza_count,
-                )
-            )
-        )
+        self.state.on(self.register_event(OrderConfirmedEvent(aggregate_id=self.id(), confirmed_time=datetime.now(timezone.utc), total_amount=self.total_amount, pizza_count=self.pizza_count)))
 
-    def start_cooking(self) -> None:
+    def start_cooking(self, user_id: str, user_name: str) -> None:
         """Start cooking the order"""
         if self.state.status != OrderStatus.CONFIRMED:
             raise ValueError("Only confirmed orders can start cooking")
@@ -199,9 +213,9 @@ class Order(AggregateRoot[OrderState, str]):
         cooking_time = datetime.now(timezone.utc)
 
         # Register event and apply to state
-        self.state.on(self.register_event(CookingStartedEvent(aggregate_id=self.id(), cooking_started_time=cooking_time)))
+        self.state.on(self.register_event(CookingStartedEvent(aggregate_id=self.id(), cooking_started_time=cooking_time, user_id=user_id, user_name=user_name)))
 
-    def mark_ready(self) -> None:
+    def mark_ready(self, user_id: str, user_name: str) -> None:
         """Mark order as ready for pickup/delivery"""
         if self.state.status != OrderStatus.COOKING:
             raise ValueError("Only cooking orders can be marked ready")
@@ -209,25 +223,40 @@ class Order(AggregateRoot[OrderState, str]):
         ready_time = datetime.now(timezone.utc)
 
         # Register event and apply to state
-        self.state.on(
-            self.register_event(
-                OrderReadyEvent(
-                    aggregate_id=self.id(),
-                    ready_time=ready_time,
-                    estimated_ready_time=self.state.estimated_ready_time,
-                )
-            )
-        )
+        self.state.on(self.register_event(OrderReadyEvent(aggregate_id=self.id(), ready_time=ready_time, estimated_ready_time=getattr(self.state, "estimated_ready_time", None), user_id=user_id, user_name=user_name)))
 
-    def deliver_order(self) -> None:
-        """Mark order as delivered"""
+    def assign_to_delivery(self, delivery_person_id: str) -> None:
+        """Assign order to a delivery driver"""
         if self.state.status != OrderStatus.READY:
-            raise ValueError("Only ready orders can be delivered")
+            raise ValueError("Only ready orders can be assigned to delivery")
+
+        assignment_time = datetime.now(timezone.utc)
+
+        # Register event and apply to state
+        self.state.on(self.register_event(OrderAssignedToDeliveryEvent(aggregate_id=self.id(), delivery_person_id=delivery_person_id, assignment_time=assignment_time)))
+
+    def mark_out_for_delivery(self) -> None:
+        """Mark order as out for delivery"""
+        if self.state.status != OrderStatus.READY:
+            raise ValueError("Only ready orders can be marked out for delivery")
+
+        if not self.state.delivery_person_id:
+            raise ValueError("Order must be assigned to a delivery person first")
+
+        out_for_delivery_time = datetime.now(timezone.utc)
+
+        # Register event and apply to state
+        self.state.on(self.register_event(OrderOutForDeliveryEvent(aggregate_id=self.id(), out_for_delivery_time=out_for_delivery_time)))
+
+    def deliver_order(self, user_id: str, user_name: str) -> None:
+        """Mark order as delivered"""
+        if self.state.status != OrderStatus.DELIVERING:
+            raise ValueError("Only orders out for delivery can be marked as delivered")
 
         delivered_time = datetime.now(timezone.utc)
 
         # Register event and apply to state
-        self.state.on(self.register_event(OrderDeliveredEvent(aggregate_id=self.id(), delivered_time=delivered_time)))
+        self.state.on(self.register_event(OrderDeliveredEvent(aggregate_id=self.id(), delivered_time=delivered_time, user_id=user_id, user_name=user_name)))
 
     def cancel_order(self, reason: Optional[str] = None) -> None:
         """Cancel the order"""
