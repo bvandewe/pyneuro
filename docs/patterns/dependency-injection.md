@@ -1,8 +1,230 @@
 # 🔧 Dependency Injection Pattern
 
+_Estimated reading time: 30 minutes_
+
 Dependency Injection (DI) is a design pattern that implements Inversion of Control (IoC) by injecting dependencies
 rather than creating them internally. Neuroglia provides a comprehensive DI container that manages service registration,
 lifetime, and resolution, demonstrated through **Mario's Pizzeria** implementation.
+
+## 💡 What & Why
+
+### ❌ The Problem: Tight Coupling and Hard-to-Test Code
+
+When classes create their own dependencies directly, they become tightly coupled and difficult to test:
+
+```python
+# ❌ PROBLEM: Tight coupling with hardcoded dependencies
+from pymongo import MongoClient
+
+class OrderService:
+    def __init__(self):
+        # Creating dependencies directly = TIGHT COUPLING!
+        self.mongo_client = MongoClient("mongodb://localhost:27017")
+        self.db = self.mongo_client.pizzeria
+        self.email_service = EmailService("smtp.gmail.com", 587)
+        self.payment_gateway = StripePaymentGateway("sk_live_secret_key")
+        self.logger = FileLogger("/var/log/orders.log")
+
+    async def create_order(self, customer_id: str, items: List[dict]):
+        # Use hardcoded dependencies
+        order = Order(customer_id, items)
+        await self.db.orders.insert_one(order.__dict__)
+        await self.email_service.send_confirmation(order)
+        return order
+
+# Problems with this approach:
+# ❌ Cannot test without real MongoDB, SMTP, Stripe, file system
+# ❌ Cannot swap implementations (e.g., test email service)
+# ❌ Configuration hardcoded in constructor
+# ❌ Difficult to change database or payment provider
+# ❌ Violates Single Responsibility Principle
+# ❌ Cannot reuse service with different dependencies
+
+# Testing is a NIGHTMARE:
+class TestOrderService:
+    def test_create_order(self):
+        # Need REAL MongoDB running!
+        # Need REAL SMTP server!
+        # Need REAL Stripe account!
+        # Need file system write permissions!
+        service = OrderService()
+        # This test hits REAL external systems - TERRIBLE!
+        result = await service.create_order("customer-123", [])
+```
+
+**Problems with Tight Coupling:**
+
+- ❌ **Untestable**: Cannot mock dependencies for unit testing
+- ❌ **Inflexible**: Hard to swap implementations (e.g., MongoDB → PostgreSQL)
+- ❌ **Configuration Hell**: Connection strings and keys hardcoded
+- ❌ **Violates SRP**: Service creates AND uses dependencies
+- ❌ **Difficult to Maintain**: Changes ripple through codebase
+- ❌ **No Reusability**: Cannot reuse service in different contexts
+
+### ✅ The Solution: Dependency Injection with IoC Container
+
+Inject dependencies through constructors, allowing flexibility and testability:
+
+```python
+# ✅ SOLUTION: Dependency Injection with interfaces and IoC container
+from abc import ABC, abstractmethod
+from neuroglia.dependency_injection import ServiceCollection, ServiceLifetime
+
+# Define interfaces (contracts)
+class IOrderRepository(ABC):
+    @abstractmethod
+    async def save_async(self, order: Order):
+        pass
+
+    @abstractmethod
+    async def get_by_id_async(self, order_id: str) -> Order:
+        pass
+
+class IEmailService(ABC):
+    @abstractmethod
+    async def send_confirmation_async(self, order: Order):
+        pass
+
+class IPaymentGateway(ABC):
+    @abstractmethod
+    async def process_payment_async(self, amount: Decimal) -> str:
+        pass
+
+# Service receives dependencies through constructor
+class OrderService:
+    def __init__(self,
+                 order_repository: IOrderRepository,
+                 email_service: IEmailService,
+                 payment_gateway: IPaymentGateway,
+                 logger: ILogger):
+        # Dependencies injected, not created!
+        self.order_repository = order_repository
+        self.email_service = email_service
+        self.payment_gateway = payment_gateway
+        self.logger = logger
+
+    async def create_order(self, customer_id: str, items: List[dict]):
+        try:
+            # Create order
+            order = Order(customer_id, items)
+
+            # Process payment
+            transaction_id = await self.payment_gateway.process_payment_async(order.total)
+            order.mark_as_paid(transaction_id)
+
+            # Save order
+            await self.order_repository.save_async(order)
+
+            # Send confirmation
+            await self.email_service.send_confirmation_async(order)
+
+            self.logger.info(f"Order {order.id} created successfully")
+            return order
+
+        except Exception as ex:
+            self.logger.error(f"Failed to create order: {ex}")
+            raise
+
+# Real implementations
+class MongoOrderRepository(IOrderRepository):
+    def __init__(self, mongo_client: MongoClient):
+        self.collection = mongo_client.pizzeria.orders
+
+    async def save_async(self, order: Order):
+        await self.collection.insert_one(order.__dict__)
+
+    async def get_by_id_async(self, order_id: str) -> Order:
+        doc = await self.collection.find_one({"id": order_id})
+        return Order.from_dict(doc)
+
+class SmtpEmailService(IEmailService):
+    def __init__(self, smtp_config: SmtpConfig):
+        self.config = smtp_config
+
+    async def send_confirmation_async(self, order: Order):
+        # Send email via SMTP
+        pass
+
+class StripePaymentGateway(IPaymentGateway):
+    def __init__(self, stripe_config: StripeConfig):
+        self.config = stripe_config
+
+    async def process_payment_async(self, amount: Decimal) -> str:
+        # Process payment via Stripe
+        return "txn_abc123"
+
+# Configure DI container
+services = ServiceCollection()
+
+# Register dependencies with appropriate lifetimes
+services.add_singleton(MongoClient, lambda: MongoClient("mongodb://localhost:27017"))
+services.add_scoped(IOrderRepository, MongoOrderRepository)
+services.add_singleton(IEmailService, SmtpEmailService)
+services.add_singleton(IPaymentGateway, StripePaymentGateway)
+services.add_singleton(ILogger, FileLogger)
+services.add_scoped(OrderService)
+
+# Build provider
+provider = services.build_provider()
+
+# Resolve service (all dependencies injected automatically!)
+order_service = provider.get_service(OrderService)
+await order_service.create_order("customer-123", items)
+
+# Testing is now EASY with mocks!
+class TestOrderService:
+    def setup_method(self):
+        # Create mock dependencies
+        self.mock_repository = Mock(spec=IOrderRepository)
+        self.mock_email = Mock(spec=IEmailService)
+        self.mock_payment = Mock(spec=IPaymentGateway)
+        self.mock_logger = Mock(spec=ILogger)
+
+        # Inject mocks into service
+        self.service = OrderService(
+            self.mock_repository,
+            self.mock_email,
+            self.mock_payment,
+            self.mock_logger
+        )
+
+    async def test_create_order_success(self):
+        # Configure mock behavior
+        self.mock_payment.process_payment_async.return_value = "txn_123"
+
+        # Test with NO external dependencies!
+        order = await self.service.create_order("customer-123", [
+            {"name": "Margherita", "price": 12.99}
+        ])
+
+        # Verify interactions
+        assert order is not None
+        self.mock_repository.save_async.assert_called_once()
+        self.mock_email.send_confirmation_async.assert_called_once()
+        self.mock_payment.process_payment_async.assert_called_once()
+
+# Swapping implementations is EASY!
+# Want to use PostgreSQL instead of MongoDB?
+services.add_scoped(IOrderRepository, PostgresOrderRepository)
+
+# Want to use SendGrid instead of SMTP?
+services.add_singleton(IEmailService, SendGridEmailService)
+
+# Want test implementations for development?
+if config.environment == "development":
+    services.add_singleton(IPaymentGateway, FakePaymentGateway)
+    services.add_singleton(IEmailService, ConsoleEmailService)
+```
+
+**Benefits of Dependency Injection:**
+
+- ✅ **Testability**: Easy to mock dependencies for unit tests
+- ✅ **Flexibility**: Swap implementations without changing code
+- ✅ **Separation of Concerns**: Service uses dependencies, doesn't create them
+- ✅ **Configuration**: Centralized service registration
+- ✅ **Reusability**: Same service works with different dependencies
+- ✅ **Maintainability**: Changes isolated to service registration
+- ✅ **Follows SOLID**: Dependency Inversion Principle
 
 ## 🎯 Pattern Overview
 
@@ -405,6 +627,242 @@ class OrderRepository(IOrderRepository):
         self.logger = logger
         self.cache = cache
 ```
+
+## ⚠️ Common Mistakes
+
+### 1. **Service Locator Anti-Pattern**
+
+```python
+# ❌ WRONG: Service Locator (anti-pattern)
+class OrderService:
+    def __init__(self, service_locator: ServiceProvider):
+        # Service locator is DI's evil twin!
+        self.service_locator = service_locator
+
+    async def create_order(self, customer_id: str):
+        # Hides dependencies - what does this service need?
+        repository = self.service_locator.get_service(IOrderRepository)
+        email = self.service_locator.get_service(IEmailService)
+        payment = self.service_locator.get_service(IPaymentGateway)
+        # Dependencies are HIDDEN!
+
+# ✅ CORRECT: Constructor injection (explicit dependencies)
+class OrderService:
+    def __init__(self,
+                 order_repository: IOrderRepository,
+                 email_service: IEmailService,
+                 payment_gateway: IPaymentGateway):
+        # Dependencies are EXPLICIT and visible!
+        self.order_repository = order_repository
+        self.email_service = email_service
+        self.payment_gateway = payment_gateway
+```
+
+### 2. **Incorrect Service Lifetimes**
+
+```python
+# ❌ WRONG: Database connection as transient (creates new connection every time!)
+services.add_transient(MongoClient, lambda: MongoClient("mongodb://localhost"))
+# This creates a NEW MongoDB connection for EVERY service that needs it!
+
+# ❌ WRONG: Request-specific service as singleton (shared across all requests!)
+services.add_singleton(CurrentUserService)
+# This shares the SAME user across all requests!
+
+# ✅ CORRECT: Appropriate lifetimes
+services.add_singleton(MongoClient, lambda: MongoClient("mongodb://localhost"))
+services.add_scoped(CurrentUserService)  # One per request
+services.add_transient(OrderValidator)   # Stateless, new instance each time
+```
+
+### 3. **Circular Dependencies**
+
+```python
+# ❌ WRONG: Circular dependency (A needs B, B needs A)
+class OrderService:
+    def __init__(self, customer_service: CustomerService):
+        self.customer_service = customer_service
+
+class CustomerService:
+    def __init__(self, order_service: OrderService):
+        self.order_service = order_service  # Circular!
+
+# ✅ CORRECT: Extract shared logic or use events
+class OrderService:
+    def __init__(self, customer_repository: ICustomerRepository):
+        self.customer_repository = customer_repository
+
+class CustomerService:
+    def __init__(self, customer_repository: ICustomerRepository):
+        self.customer_repository = customer_repository
+
+# Both use repository, no circular dependency!
+```
+
+### 4. **Not Using Interfaces**
+
+```python
+# ❌ WRONG: Depending on concrete implementations
+class OrderService:
+    def __init__(self, mongo_repository: MongoOrderRepository):
+        # Coupled to MongoDB implementation!
+        self.repository = mongo_repository
+
+# ✅ CORRECT: Depend on abstractions
+class OrderService:
+    def __init__(self, order_repository: IOrderRepository):
+        # Can use ANY repository implementation!
+        self.repository = order_repository
+
+# Register concrete implementation
+services.add_scoped(IOrderRepository, MongoOrderRepository)
+# Easy to swap: services.add_scoped(IOrderRepository, PostgresOrderRepository)
+```
+
+### 5. **Fat Constructors (Too Many Dependencies)**
+
+```python
+# ❌ WRONG: Service with too many dependencies (code smell!)
+class OrderService:
+    def __init__(self,
+                 order_repository: IOrderRepository,
+                 customer_repository: ICustomerRepository,
+                 product_repository: IProductRepository,
+                 payment_gateway: IPaymentGateway,
+                 email_service: IEmailService,
+                 sms_service: ISmsService,
+                 inventory_service: IInventoryService,
+                 loyalty_service: ILoyaltyService,
+                 analytics_service: IAnalyticsService,
+                 audit_service: IAuditService):
+        # 10 dependencies = this class does TOO MUCH!
+        pass
+
+# ✅ CORRECT: Split into focused services
+class OrderService:
+    def __init__(self,
+                 order_repository: IOrderRepository,
+                 order_processor: IOrderProcessor):
+        # Delegate to specialized services
+        self.repository = order_repository
+        self.processor = order_processor
+
+class OrderProcessor:
+    def __init__(self,
+                 payment_gateway: IPaymentGateway,
+                 notification_service: INotificationService):
+        # Focused responsibility
+        self.payment = payment_gateway
+        self.notifications = notification_service
+```
+
+### 6. **Not Disposing Resources**
+
+```python
+# ❌ WRONG: Not disposing scoped services
+async def handle_request():
+    provider = services.build_provider()
+    service = provider.get_service(OrderService)
+    await service.create_order(...)
+    # Provider never disposed - resource leak!
+
+# ✅ CORRECT: Dispose scoped services properly
+async def handle_request():
+    scope = services.create_scope()
+    try:
+        service = scope.service_provider.get_service(OrderService)
+        await service.create_order(...)
+    finally:
+        scope.dispose()  # Clean up resources!
+```
+
+## 🚫 When NOT to Use
+
+### 1. **Simple Scripts and Utilities**
+
+```python
+# DI adds unnecessary complexity for simple scripts
+class DataMigrationScript:
+    """One-time data migration script"""
+    def run(self):
+        # Just create what you need directly
+        source_db = MongoClient("mongodb://localhost:27017")
+        target_db = PostgresClient("postgresql://localhost:5432")
+
+        # No need for DI container for a simple script
+        data = source_db.old_db.collection.find()
+        for item in data:
+            target_db.new_db.table.insert(item)
+```
+
+### 2. **Framework Entry Points (Already Have DI)**
+
+```python
+# FastAPI already has dependency injection built-in
+from fastapi import Depends
+
+@app.get("/orders/{order_id}")
+async def get_order(
+    order_id: str,
+    repository: IOrderRepository = Depends(get_order_repository)
+):
+    # FastAPI's Depends() is DI - don't add Neuroglia DI on top
+    return await repository.get_by_id_async(order_id)
+```
+
+### 3. **Value Objects and DTOs**
+
+```python
+# Value objects shouldn't use DI - they should be simple data
+@dataclass
+class Address:
+    """Simple value object - no dependencies needed"""
+    street: str
+    city: str
+    zip_code: str
+
+    # No constructor injection - just data!
+```
+
+### 4. **Static Utility Classes**
+
+```python
+# Static utilities don't need DI
+class StringUtils:
+    """Stateless utility functions"""
+    @staticmethod
+    def to_kebab_case(text: str) -> str:
+        return text.lower().replace("_", "-")
+
+    # No dependencies, no state, no need for DI
+```
+
+### 5. **Very Small Applications (< 100 lines)**
+
+```python
+# For tiny apps, DI is overkill
+class TinyBot:
+    """Simple Discord bot with 3 commands"""
+    def __init__(self):
+        # Just create what you need
+        self.client = discord.Client()
+        self.commands = ["!help", "!ping", "!joke"]
+
+    # No need for DI container for such a small app
+```
+
+## 📝 Key Takeaways
+
+- **Dependency Injection inverts control**: Dependencies injected, not created internally
+- **Use constructor injection** for explicit, testable dependencies
+- **Register services with appropriate lifetimes**: Singleton, Scoped, or Transient
+- **Depend on abstractions (interfaces)**, not concrete implementations
+- **Service Locator is an anti-pattern** - use constructor injection instead
+- **Avoid circular dependencies** - extract shared logic or use events
+- **Fat constructors indicate too many responsibilities** - split services
+- **DI enables testability** by allowing easy mocking
+- **Framework provides ServiceCollection and ServiceProvider** for DI management
+- **Dispose scoped services properly** to prevent resource leaks
 
 ## 📚 Related Patterns
 
