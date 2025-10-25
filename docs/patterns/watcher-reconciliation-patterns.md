@@ -1,5 +1,7 @@
 # Resource Watcher and Reconciliation Loop Patterns
 
+> **🚧 Work in Progress**: This documentation is being updated to include beginner-friendly explanations with What & Why sections, Common Mistakes, and When NOT to Use guidance. The content below is accurate but will be enhanced soon.
+
 This document explains how the **Resource Watcher** and **Reconciliation Loop** patterns work in our Resource Oriented Architecture (ROA) implementation, providing the foundation for Kubernetes-style declarative resource management.
 
 ## 🎯 Overview

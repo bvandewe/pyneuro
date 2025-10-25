@@ -1,5 +1,7 @@
 # How Watcher and Reconciliation Loop Execute
 
+> **🚧 Work in Progress**: This documentation is being updated to include beginner-friendly explanations with What & Why sections, Common Mistakes, and When NOT to Use guidance. The content below is accurate but will be enhanced soon.
+
 This document provides a detailed explanation of how the **Resource Watcher** and **Reconciliation Loop** patterns execute in our Resource Oriented Architecture (ROA) implementation.
 
 ## 🔄 Execution Flow Overview
