@@ -1,8 +1,180 @@
 # 🏛️ Domain Driven Design Pattern
 
+**Estimated reading time: 45 minutes**
+
 Domain Driven Design (DDD) forms the architectural foundation of the Neuroglia framework, providing core abstractions and patterns that enable rich, expressive domain models while maintaining clean separation of concerns.
 
 This pattern serves as the primary reference for understanding how domain logic flows through the API, Application, Domain, and Integration layers.
+
+## 🎯 What & Why
+
+### The Problem: Anemic Domain Models
+
+Without DDD, business logic scatters across services and controllers, resulting in anemic domain models:
+
+```python
+# ❌ Problem: Anemic domain model - just a data bag
+class Order:
+    def __init__(self):
+        self.id = None
+        self.customer_id = None
+        self.items = []
+        self.total = 0
+        self.status = "pending"
+        # ❌ No behavior, just properties
+
+# ❌ Business logic scattered in service
+class OrderService:
+    async def place_order(self, order_data: dict):
+        # ❌ Business rules in service layer
+        order = Order()
+        order.customer_id = order_data["customer_id"]
+        order.items = order_data["items"]
+
+        # ❌ Total calculation logic here
+        subtotal = sum(item["price"] * item["quantity"] for item in order.items)
+        tax = subtotal * 0.08
+        order.total = subtotal + tax
+
+        # ❌ Validation logic here
+        if order.total > 1000:
+            raise ValueError("Order exceeds maximum amount")
+
+        # ❌ Business rule enforcement here
+        if len(order.items) == 0:
+            raise ValueError("Order must have items")
+
+        await self._db.save(order)
+
+        # ❌ Events created manually, not from domain
+        await self._event_bus.publish({"type": "OrderPlaced", "order_id": order.id})
+
+# ❌ Different service duplicates same logic
+class ReportingService:
+    async def calculate_revenue(self, orders: List[Order]):
+        # ❌ Duplicating total calculation logic
+        total_revenue = 0
+        for order in orders:
+            subtotal = sum(item["price"] * item["quantity"] for item in order.items)
+            tax = subtotal * 0.08
+            total_revenue += subtotal + tax
+        return total_revenue
+```
+
+**Problems with this approach:**
+
+1. **Scattered Business Logic**: Rules spread across services, controllers, utilities
+2. **Duplication**: Same calculations repeated in multiple places
+3. **No Encapsulation**: Anyone can modify order state without validation
+4. **Hard to Test**: Must test through services with infrastructure dependencies
+5. **Lost Domain Knowledge**: Business rules not expressed in domain language
+6. **Difficult Maintenance**: Changes require hunting through multiple files
+
+### The Solution: Rich Domain Models with DDD
+
+Encapsulate business logic in domain entities with clear behavior:
+
+```python
+# ✅ Solution: Rich domain model with behavior
+from neuroglia.data.abstractions import Entity
+from decimal import Decimal
+
+class Order(Entity):
+    """Rich domain entity with business logic and validation"""
+
+    def __init__(self, customer_id: str, items: List[OrderItem]):
+        super().__init__()
+
+        # ✅ Business rule validation at construction
+        if not items:
+            raise ValueError("Order must contain at least one item")
+
+        self.customer_id = customer_id
+        self.items = items
+        self.status = OrderStatus.PENDING
+        self.total = self._calculate_total()  # ✅ Encapsulated calculation
+
+        # ✅ Business rule enforcement
+        if self.total > Decimal("1000.00"):
+            raise ValueError("Order exceeds maximum allowed amount")
+
+        # ✅ Domain event automatically raised
+        self.raise_event(OrderPlacedEvent(
+            order_id=self.id,
+            customer_id=customer_id,
+            total=self.total,
+            items=[item.to_dto() for item in items]
+        ))
+
+    def _calculate_total(self) -> Decimal:
+        """✅ Business rule: Calculate total with tax"""
+        subtotal = sum(item.price * item.quantity for item in self.items)
+        tax = subtotal * Decimal("0.08")  # 8% tax rate
+        return subtotal + tax
+
+    def add_item(self, item: OrderItem):
+        """✅ Business operation with validation"""
+        if self.status != OrderStatus.PENDING:
+            raise InvalidOperationError("Cannot modify confirmed order")
+
+        # ✅ Check business constraint
+        new_total = self.total + (item.price * item.quantity * Decimal("1.08"))
+        if new_total > Decimal("1000.00"):
+            raise ValueError("Adding item would exceed maximum order amount")
+
+        self.items.append(item)
+        self.total = self._calculate_total()
+
+        # ✅ Domain event for business occurrence
+        self.raise_event(OrderItemAddedEvent(
+            order_id=self.id,
+            item=item.to_dto()
+        ))
+
+    def confirm(self, payment_transaction_id: str):
+        """✅ Business workflow encapsulated"""
+        if self.status != OrderStatus.PENDING:
+            raise InvalidOperationError(f"Cannot confirm order in {self.status} status")
+
+        self.status = OrderStatus.CONFIRMED
+        self.payment_transaction_id = payment_transaction_id
+        self.confirmed_at = datetime.utcnow()
+
+        # ✅ Domain event for state change
+        self.raise_event(OrderConfirmedEvent(
+            order_id=self.id,
+            transaction_id=payment_transaction_id
+        ))
+
+# ✅ Service layer is thin - just orchestration
+class PlaceOrderHandler(CommandHandler):
+    async def handle_async(self, command: PlaceOrderCommand):
+        # ✅ Domain entity handles all business logic
+        order = Order(command.customer_id, command.items)
+
+        # ✅ Process payment (external concern)
+        payment = await self._payment_service.process_async(order.total)
+        if not payment.success:
+            return self.bad_request("Payment failed")
+
+        order.confirm(payment.transaction_id)
+
+        # ✅ Persist (infrastructure concern)
+        await self._repository.save_async(order)
+
+        # ✅ Events automatically published by framework
+        return self.created(self._mapper.map(order, OrderDto))
+```
+
+**Benefits of DDD approach:**
+
+1. **Encapsulated Business Logic**: All rules in domain entities
+2. **Single Source of Truth**: Business calculations in one place
+3. **Self-Validating**: Entities enforce invariants automatically
+4. **Easy Testing**: Test pure domain logic without infrastructure
+5. **Ubiquitous Language**: Code matches business terminology
+6. **Maintainability**: Changes localized to domain entities
+7. **Domain Events**: First-class representation of business occurrences
 
 ## 🎯 Pattern Overview
 
@@ -1859,6 +2031,255 @@ class TestDomainEventIntegration:
 5. **🛡️ Regression Protection**: Changes that break domain rules fail tests immediately
 6. **🔄 Event Replay Testing**: Verify aggregates can be reconstructed from events
 7. **⚡ Fast Execution**: Pure domain tests run quickly without I/O
+
+## ⚠️ Common Mistakes
+
+### 1. Anemic Domain Models (Data Bags)
+
+```python
+# ❌ Wrong - entity with no behavior
+class Order:
+    def __init__(self):
+        self.id = None
+        self.customer_id = None
+        self.items = []
+        self.total = 0
+        # ❌ Just properties, no business logic
+
+# ✅ Correct - rich entity with behavior
+class Order(Entity):
+    def __init__(self, customer_id: str, items: List[OrderItem]):
+        super().__init__()
+        self.customer_id = customer_id
+        self.items = items
+        self.total = self._calculate_total()  # ✅ Business logic
+        self.raise_event(OrderPlacedEvent(...))  # ✅ Domain events
+
+    def _calculate_total(self) -> Decimal:
+        # ✅ Business rule encapsulated
+        return sum(item.subtotal for item in self.items) * Decimal("1.08")
+```
+
+### 2. Business Logic in Application Layer
+
+```python
+# ❌ Wrong - business logic in handler
+class PlaceOrderHandler(CommandHandler):
+    async def handle_async(self, command: PlaceOrderCommand):
+        # ❌ Calculation in handler
+        total = sum(item.price for item in command.items)
+        tax = total * 0.08
+
+        # ❌ Validation in handler
+        if total > 1000:
+            return self.bad_request("Too expensive")
+
+        order = Order()
+        order.total = total + tax
+        await self._repository.save_async(order)
+
+# ✅ Correct - business logic in domain
+class PlaceOrderHandler(CommandHandler):
+    async def handle_async(self, command: PlaceOrderCommand):
+        # ✅ Entity handles all business logic
+        order = Order(command.customer_id, command.items)
+        await self._repository.save_async(order)
+        return self.created(order_dto)
+```
+
+### 3. Not Using Value Objects for Concepts
+
+```python
+# ❌ Wrong - primitive obsession
+class Order(Entity):
+    def __init__(self, customer_id: str, delivery_address: str):
+        self.customer_id = customer_id
+        self.delivery_address = delivery_address  # ❌ String for address
+        self.delivery_city = None
+        self.delivery_zip = None
+        # ❌ Address logic scattered
+
+# ✅ Correct - value object for address concept
+@dataclass(frozen=True)
+class Address:
+    """Value object representing delivery address"""
+    street: str
+    city: str
+    state: str
+    zip_code: str
+
+    def __post_init__(self):
+        if not self.zip_code or len(self.zip_code) != 5:
+            raise ValueError("Invalid ZIP code")
+
+class Order(Entity):
+    def __init__(self, customer_id: str, delivery_address: Address):
+        self.customer_id = customer_id
+        self.delivery_address = delivery_address  # ✅ Rich value object
+```
+
+### 4. Aggregate Boundaries Too Large
+
+```python
+# ❌ Wrong - massive aggregate with everything
+class Restaurant(AggregateRoot):
+    def __init__(self):
+        self.orders = []  # ❌ All orders
+        self.menu_items = []  # ❌ All menu items
+        self.employees = []  # ❌ All employees
+        self.inventory = []  # ❌ All inventory
+        # ❌ Too much in one aggregate - performance issues
+
+# ✅ Correct - focused aggregates with clear boundaries
+class Order(AggregateRoot):
+    """Aggregate for order lifecycle"""
+    def __init__(self, customer_id: str, items: List[OrderItem]):
+        # ✅ Only order-related data
+        pass
+
+class MenuItem(AggregateRoot):
+    """Aggregate for menu management"""
+    def __init__(self, name: str, price: Decimal):
+        # ✅ Only menu item data
+        pass
+
+# Aggregates reference each other by ID, not by object
+class Order(AggregateRoot):
+    def __init__(self, customer_id: str, menu_item_ids: List[str]):
+        self.menu_item_ids = menu_item_ids  # ✅ Reference by ID
+```
+
+### 5. Not Raising Domain Events
+
+```python
+# ❌ Wrong - state changes without events
+class Order(Entity):
+    def confirm(self):
+        self.status = OrderStatus.CONFIRMED
+        # ❌ No event raised - other systems don't know
+
+# ✅ Correct - domain events for business occurrences
+class Order(Entity):
+    def confirm(self, payment_transaction_id: str):
+        self.status = OrderStatus.CONFIRMED
+        self.payment_transaction_id = payment_transaction_id
+
+        # ✅ Event raised for important business occurrence
+        self.raise_event(OrderConfirmedEvent(
+            order_id=self.id,
+            transaction_id=payment_transaction_id
+        ))
+```
+
+### 6. Domain Layer Depending on Infrastructure
+
+```python
+# ❌ Wrong - domain imports infrastructure
+from pymongo import Collection  # ❌ Infrastructure in domain
+
+class Order(Entity):
+    def save_to_database(self, collection: Collection):
+        # ❌ Domain entity knows about MongoDB
+        collection.insert_one(self.__dict__)
+
+# ✅ Correct - domain has no infrastructure dependencies
+class Order(Entity):
+    def __init__(self, customer_id: str, items: List[OrderItem]):
+        # ✅ Pure business logic
+        self.customer_id = customer_id
+        self.items = items
+
+# Infrastructure in integration layer
+class MongoOrderRepository(IOrderRepository):
+    async def save_async(self, order: Order):
+        # ✅ Repository handles persistence
+        doc = self._entity_to_document(order)
+        await self._collection.insert_one(doc)
+```
+
+## 🚫 When NOT to Use
+
+### 1. Simple CRUD Applications
+
+For basic data management without complex business rules:
+
+```python
+# DDD is overkill for simple CRUD
+@app.get("/customers")
+async def get_customers(db: Database):
+    return await db.customers.find().to_list(None)
+
+@app.post("/customers")
+async def create_customer(customer: dict, db: Database):
+    result = await db.customers.insert_one(customer)
+    return {"id": str(result.inserted_id)}
+```
+
+### 2. Prototypes and Throwaway Code
+
+When building quick prototypes or spikes:
+
+```python
+# Quick prototype doesn't need DDD structure
+async def process_order(order_data: dict):
+    # Direct implementation without domain modeling
+    total = sum(item["price"] for item in order_data["items"])
+    await db.orders.insert_one({"total": total})
+```
+
+### 3. Data-Centric Applications (Reporting/Analytics)
+
+When application is primarily about data transformation:
+
+```python
+# Analytics queries don't need domain models
+async def generate_sales_report(start_date: date, end_date: date):
+    # Direct database aggregation
+    pipeline = [
+        {"$match": {"date": {"$gte": start_date, "$lte": end_date}}},
+        {"$group": {"_id": "$category", "total": {"$sum": "$amount"}}}
+    ]
+    return await db.sales.aggregate(pipeline).to_list(None)
+```
+
+### 4. Small Teams Without DDD Experience
+
+When team lacks DDD knowledge and time to learn:
+
+```python
+# Simple service pattern may be more appropriate
+class OrderService:
+    async def create_order(self, order_data: dict):
+        # Traditional service approach
+        order = Order(**order_data)
+        return await self._db.save(order)
+```
+
+### 5. Performance-Critical Systems
+
+When microsecond-level performance is critical:
+
+```python
+# Rich domain models add overhead
+# For high-frequency trading or real-time systems,
+# procedural code may be more appropriate
+def process_tick(price: float, volume: int):
+    # Direct calculation without object overhead
+    return price * volume * commission_rate
+```
+
+## 📝 Key Takeaways
+
+1. **Rich Domain Models**: Business logic belongs in domain entities, not services
+2. **Ubiquitous Language**: Use business terminology in code
+3. **Aggregate Boundaries**: Define clear consistency boundaries
+4. **Domain Events**: First-class representation of business occurrences
+5. **Value Objects**: Immutable objects for domain concepts
+6. **Entity Identity**: Entities have identity that persists over time
+7. **No Infrastructure Dependencies**: Domain layer is pure business logic
+8. **Bounded Contexts**: Clear boundaries around cohesive models
+9. **Testing**: Test domain logic in isolation without infrastructure
+10. **Framework Support**: Neuroglia provides abstractions for both Entity and AggregateRoot patterns
 
 ## 🔗 Related Patterns
 
