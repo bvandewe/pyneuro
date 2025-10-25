@@ -1,11 +1,19 @@
 from typing import Optional
-from neuroglia.data.infrastructure.abstractions import Repository
+
 from neuroglia.data.abstractions import TEntity, TKey
+from neuroglia.data.infrastructure.abstractions import Repository
 
 
 class MemoryRepository(Repository[TEntity, TKey]):
-
     entities: dict = {}
+
+    def _get_entity_id(self, entity: TEntity) -> TKey:
+        """Get the entity's ID, handling both property and method access."""
+        entity_id = entity.id
+        # If id is a method, call it to get the actual ID value
+        if callable(entity_id):
+            entity_id = entity_id()
+        return entity_id
 
     async def contains_async(self, id: TKey) -> bool:
         return self.entities.get(id) is not None
@@ -14,16 +22,18 @@ class MemoryRepository(Repository[TEntity, TKey]):
         return self.entities.get(id, None)
 
     async def add_async(self, entity: TEntity) -> TEntity:
-        if entity.id in self.entities:
+        entity_id = self._get_entity_id(entity)
+        if entity_id in self.entities:
             raise Exception()
-        self.entities[entity.id] = entity
+        self.entities[entity_id] = entity
         return entity
 
     async def update_async(self, entity: TEntity) -> TEntity:
-        self.entities[entity.id] = entity
+        entity_id = self._get_entity_id(entity)
+        self.entities[entity_id] = entity
         return entity
 
     async def remove_async(self, id: TKey) -> None:
-        if not id in self.entities:
+        if id not in self.entities:
             raise Exception()
         del self.entities[id]
