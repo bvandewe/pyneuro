@@ -940,6 +940,84 @@
 </nav>
 </li>
 <li class="md-nav__item">
+<a class="md-nav__link" href="#fastapi-multi-application-instrumentation">
+<span class="md-ellipsis">
+      ⚙️ FastAPI Multi-Application Instrumentation
+    </span>
+</a>
+<nav aria-label="⚙️ FastAPI Multi-Application Instrumentation" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#critical-configuration-for-multi-app-architectures">
+<span class="md-ellipsis">
+      🚨 Critical Configuration for Multi-App Architectures
+    </span>
+</a>
+<nav aria-label="🚨 Critical Configuration for Multi-App Architectures" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#the-problem-duplicate-instrumentation">
+<span class="md-ellipsis">
+      The Problem: Duplicate Instrumentation
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#correct-single-main-app-instrumentation">
+<span class="md-ellipsis">
+      ✅ CORRECT - Single Main App Instrumentation
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#complete-coverage-verification">
+<span class="md-ellipsis">
+      📊 Complete Coverage Verification
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#how-it-works">
+<span class="md-ellipsis">
+      🔍 How It Works
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#best-practices">
+<span class="md-ellipsis">
+      🎯 Best Practices
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#common-pitfalls">
+<span class="md-ellipsis">
+      🚨 Common Pitfalls
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#metrics-verification">
+<span class="md-ellipsis">
+      📈 Metrics Verification
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#integration-checklist">
+<span class="md-ellipsis">
+      📋 Integration Checklist
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
 <a class="md-nav__link" href="#key-benefits">
 <span class="md-ellipsis">
       🚀 Key Benefits
@@ -1323,6 +1401,138 @@
 </span><span id="__span-2-10"><a href="#__codelineno-2-10" id="__codelineno-2-10" name="__codelineno-2-10"></a><span class="w">  </span><span class="nt">"total_amount"</span><span class="p">:</span><span class="w"> </span><span class="mf">25.5</span>
 </span><span id="__span-2-11"><a href="#__codelineno-2-11" id="__codelineno-2-11" name="__codelineno-2-11"></a><span class="p">}</span>
 </span></code></pre></div>
+<h2 id="fastapi-multi-application-instrumentation">⚙️ FastAPI Multi-Application Instrumentation<a class="headerlink" href="#fastapi-multi-application-instrumentation" title="Permanent link">¶</a></h2>
+<h3 id="critical-configuration-for-multi-app-architectures">🚨 Critical Configuration for Multi-App Architectures<a class="headerlink" href="#critical-configuration-for-multi-app-architectures" title="Permanent link">¶</a></h3>
+<p>When building applications with multiple mounted FastAPI apps (main app + sub-apps), <strong>proper OpenTelemetry instrumentation configuration is crucial</strong> to avoid duplicate metrics warnings and ensure complete observability coverage.</p>
+<h4 id="the-problem-duplicate-instrumentation"><strong>The Problem: Duplicate Instrumentation</strong><a class="headerlink" href="#the-problem-duplicate-instrumentation" title="Permanent link">¶</a></h4>
+<p><strong>❌ WRONG - Causes duplicate metric warnings:</strong></p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a href="#__codelineno-3-1" id="__codelineno-3-1" name="__codelineno-3-1"></a><span class="c1"># This creates duplicate HTTP metrics instruments</span>
+</span><span id="__span-3-2"><a href="#__codelineno-3-2" id="__codelineno-3-2" name="__codelineno-3-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.observability</span><span class="w"> </span><span class="kn">import</span> <span class="n">instrument_fastapi_app</span>
+</span><span id="__span-3-3"><a href="#__codelineno-3-3" id="__codelineno-3-3" name="__codelineno-3-3"></a>
+</span><span id="__span-3-4"><a href="#__codelineno-3-4" id="__codelineno-3-4" name="__codelineno-3-4"></a><span class="c1"># Main application</span>
+</span><span id="__span-3-5"><a href="#__codelineno-3-5" id="__codelineno-3-5" name="__codelineno-3-5"></a><span class="n">app</span> <span class="o">=</span> <span class="n">FastAPI</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">"Mario's Pizzeria"</span><span class="p">)</span>
+</span><span id="__span-3-6"><a href="#__codelineno-3-6" id="__codelineno-3-6" name="__codelineno-3-6"></a>
+</span><span id="__span-3-7"><a href="#__codelineno-3-7" id="__codelineno-3-7" name="__codelineno-3-7"></a><span class="c1"># Sub-applications</span>
+</span><span id="__span-3-8"><a href="#__codelineno-3-8" id="__codelineno-3-8" name="__codelineno-3-8"></a><span class="n">api_app</span> <span class="o">=</span> <span class="n">FastAPI</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">"API"</span><span class="p">)</span>
+</span><span id="__span-3-9"><a href="#__codelineno-3-9" id="__codelineno-3-9" name="__codelineno-3-9"></a><span class="n">ui_app</span> <span class="o">=</span> <span class="n">FastAPI</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">"UI"</span><span class="p">)</span>
+</span><span id="__span-3-10"><a href="#__codelineno-3-10" id="__codelineno-3-10" name="__codelineno-3-10"></a>
+</span><span id="__span-3-11"><a href="#__codelineno-3-11" id="__codelineno-3-11" name="__codelineno-3-11"></a><span class="c1"># ❌ DON'T DO THIS - Causes warnings</span>
+</span><span id="__span-3-12"><a href="#__codelineno-3-12" id="__codelineno-3-12" name="__codelineno-3-12"></a><span class="n">instrument_fastapi_app</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="s2">"main-app"</span><span class="p">)</span>
+</span><span id="__span-3-13"><a href="#__codelineno-3-13" id="__codelineno-3-13" name="__codelineno-3-13"></a><span class="n">instrument_fastapi_app</span><span class="p">(</span><span class="n">api_app</span><span class="p">,</span> <span class="s2">"api-app"</span><span class="p">)</span>    <span class="c1"># ⚠️ Duplicate metrics</span>
+</span><span id="__span-3-14"><a href="#__codelineno-3-14" id="__codelineno-3-14" name="__codelineno-3-14"></a><span class="n">instrument_fastapi_app</span><span class="p">(</span><span class="n">ui_app</span><span class="p">,</span> <span class="s2">"ui-app"</span><span class="p">)</span>      <span class="c1"># ⚠️ Duplicate metrics</span>
+</span><span id="__span-3-15"><a href="#__codelineno-3-15" id="__codelineno-3-15" name="__codelineno-3-15"></a>
+</span><span id="__span-3-16"><a href="#__codelineno-3-16" id="__codelineno-3-16" name="__codelineno-3-16"></a><span class="c1"># Mount sub-apps</span>
+</span><span id="__span-3-17"><a href="#__codelineno-3-17" id="__codelineno-3-17" name="__codelineno-3-17"></a><span class="n">app</span><span class="o">.</span><span class="n">mount</span><span class="p">(</span><span class="s2">"/api"</span><span class="p">,</span> <span class="n">api_app</span><span class="p">)</span>
+</span><span id="__span-3-18"><a href="#__codelineno-3-18" id="__codelineno-3-18" name="__codelineno-3-18"></a><span class="n">app</span><span class="o">.</span><span class="n">mount</span><span class="p">(</span><span class="s2">"/"</span><span class="p">,</span> <span class="n">ui_app</span><span class="p">)</span>
+</span></code></pre></div>
+<p><strong>Error Messages You'll See:</strong></p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a href="#__codelineno-4-1" id="__codelineno-4-1" name="__codelineno-4-1"></a>WARNING  An instrument with name http.server.duration, type Histogram...
+</span><span id="__span-4-2"><a href="#__codelineno-4-2" id="__codelineno-4-2" name="__codelineno-4-2"></a>has been created already.
+</span><span id="__span-4-3"><a href="#__codelineno-4-3" id="__codelineno-4-3" name="__codelineno-4-3"></a>WARNING  An instrument with name http.server.request.size, type Histogram...
+</span><span id="__span-4-4"><a href="#__codelineno-4-4" id="__codelineno-4-4" name="__codelineno-4-4"></a>has been created already.
+</span></code></pre></div>
+<h4 id="correct-single-main-app-instrumentation"><strong>✅ CORRECT - Single Main App Instrumentation</strong><a class="headerlink" href="#correct-single-main-app-instrumentation" title="Permanent link">¶</a></h4>
+<p><strong>The solution: Only instrument the main app that contains mounted sub-apps</strong></p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a href="#__codelineno-5-1" id="__codelineno-5-1" name="__codelineno-5-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.observability</span><span class="w"> </span><span class="kn">import</span> <span class="n">configure_opentelemetry</span><span class="p">,</span> <span class="n">instrument_fastapi_app</span>
+</span><span id="__span-5-2"><a href="#__codelineno-5-2" id="__codelineno-5-2" name="__codelineno-5-2"></a>
+</span><span id="__span-5-3"><a href="#__codelineno-5-3" id="__codelineno-5-3" name="__codelineno-5-3"></a><span class="c1"># 1. Initialize OpenTelemetry first (once per application)</span>
+</span><span id="__span-5-4"><a href="#__codelineno-5-4" id="__codelineno-5-4" name="__codelineno-5-4"></a><span class="n">configure_opentelemetry</span><span class="p">(</span>
+</span><span id="__span-5-5"><a href="#__codelineno-5-5" id="__codelineno-5-5" name="__codelineno-5-5"></a>    <span class="n">service_name</span><span class="o">=</span><span class="s2">"mario-pizzeria"</span><span class="p">,</span>
+</span><span id="__span-5-6"><a href="#__codelineno-5-6" id="__codelineno-5-6" name="__codelineno-5-6"></a>    <span class="n">service_version</span><span class="o">=</span><span class="s2">"1.0.0"</span><span class="p">,</span>
+</span><span id="__span-5-7"><a href="#__codelineno-5-7" id="__codelineno-5-7" name="__codelineno-5-7"></a>    <span class="n">otlp_endpoint</span><span class="o">=</span><span class="s2">"http://otel-collector:4317"</span>
+</span><span id="__span-5-8"><a href="#__codelineno-5-8" id="__codelineno-5-8" name="__codelineno-5-8"></a><span class="p">)</span>
+</span><span id="__span-5-9"><a href="#__codelineno-5-9" id="__codelineno-5-9" name="__codelineno-5-9"></a>
+</span><span id="__span-5-10"><a href="#__codelineno-5-10" id="__codelineno-5-10" name="__codelineno-5-10"></a><span class="c1"># 2. Create applications</span>
+</span><span id="__span-5-11"><a href="#__codelineno-5-11" id="__codelineno-5-11" name="__codelineno-5-11"></a><span class="n">app</span> <span class="o">=</span> <span class="n">FastAPI</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">"Mario's Pizzeria"</span><span class="p">)</span>
+</span><span id="__span-5-12"><a href="#__codelineno-5-12" id="__codelineno-5-12" name="__codelineno-5-12"></a><span class="n">api_app</span> <span class="o">=</span> <span class="n">FastAPI</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">"API"</span><span class="p">)</span>
+</span><span id="__span-5-13"><a href="#__codelineno-5-13" id="__codelineno-5-13" name="__codelineno-5-13"></a><span class="n">ui_app</span> <span class="o">=</span> <span class="n">FastAPI</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">"UI"</span><span class="p">)</span>
+</span><span id="__span-5-14"><a href="#__codelineno-5-14" id="__codelineno-5-14" name="__codelineno-5-14"></a>
+</span><span id="__span-5-15"><a href="#__codelineno-5-15" id="__codelineno-5-15" name="__codelineno-5-15"></a><span class="c1"># 3. Define endpoints BEFORE mounting (important for health checks)</span>
+</span><span id="__span-5-16"><a href="#__codelineno-5-16" id="__codelineno-5-16" name="__codelineno-5-16"></a><span class="nd">@app</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"/health"</span><span class="p">)</span>
+</span><span id="__span-5-17"><a href="#__codelineno-5-17" id="__codelineno-5-17" name="__codelineno-5-17"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">health_check</span><span class="p">():</span>
+</span><span id="__span-5-18"><a href="#__codelineno-5-18" id="__codelineno-5-18" name="__codelineno-5-18"></a>    <span class="k">return</span> <span class="p">{</span><span class="s2">"status"</span><span class="p">:</span> <span class="s2">"healthy"</span><span class="p">}</span>
+</span><span id="__span-5-19"><a href="#__codelineno-5-19" id="__codelineno-5-19" name="__codelineno-5-19"></a>
+</span><span id="__span-5-20"><a href="#__codelineno-5-20" id="__codelineno-5-20" name="__codelineno-5-20"></a><span class="c1"># 4. Mount sub-applications</span>
+</span><span id="__span-5-21"><a href="#__codelineno-5-21" id="__codelineno-5-21" name="__codelineno-5-21"></a><span class="n">app</span><span class="o">.</span><span class="n">mount</span><span class="p">(</span><span class="s2">"/api"</span><span class="p">,</span> <span class="n">api_app</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"api"</span><span class="p">)</span>
+</span><span id="__span-5-22"><a href="#__codelineno-5-22" id="__codelineno-5-22" name="__codelineno-5-22"></a><span class="n">app</span><span class="o">.</span><span class="n">mount</span><span class="p">(</span><span class="s2">"/"</span><span class="p">,</span> <span class="n">ui_app</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"ui"</span><span class="p">)</span>
+</span><span id="__span-5-23"><a href="#__codelineno-5-23" id="__codelineno-5-23" name="__codelineno-5-23"></a>
+</span><span id="__span-5-24"><a href="#__codelineno-5-24" id="__codelineno-5-24" name="__codelineno-5-24"></a><span class="c1"># 5. ✅ ONLY instrument the main app</span>
+</span><span id="__span-5-25"><a href="#__codelineno-5-25" id="__codelineno-5-25" name="__codelineno-5-25"></a><span class="n">instrument_fastapi_app</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="s2">"mario-pizzeria-main"</span><span class="p">)</span>
+</span></code></pre></div>
+<h4 id="complete-coverage-verification"><strong>📊 Complete Coverage Verification</strong><a class="headerlink" href="#complete-coverage-verification" title="Permanent link">¶</a></h4>
+<p>This single instrumentation captures <strong>ALL endpoints across all mounted applications</strong>:</p>
+<p><strong>Example Tracked Endpoints:</strong></p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a href="#__codelineno-6-1" id="__codelineno-6-1" name="__codelineno-6-1"></a><span class="c1"># All these endpoints are automatically instrumented:</span>
+</span><span id="__span-6-2"><a href="#__codelineno-6-2" id="__codelineno-6-2" name="__codelineno-6-2"></a><span class="err">✅</span> <span class="o">/</span><span class="n">health</span>                <span class="p">(</span><span class="n">main</span> <span class="n">app</span><span class="p">)</span>
+</span><span id="__span-6-3"><a href="#__codelineno-6-3" id="__codelineno-6-3" name="__codelineno-6-3"></a><span class="err">✅</span> <span class="o">/</span>                      <span class="p">(</span><span class="n">UI</span> <span class="n">sub</span><span class="o">-</span><span class="n">app</span> <span class="n">root</span><span class="p">)</span>
+</span><span id="__span-6-4"><a href="#__codelineno-6-4" id="__codelineno-6-4" name="__codelineno-6-4"></a><span class="err">✅</span> <span class="o">/</span><span class="n">menu</span>                  <span class="p">(</span><span class="n">UI</span> <span class="n">sub</span><span class="o">-</span><span class="n">app</span><span class="p">)</span>
+</span><span id="__span-6-5"><a href="#__codelineno-6-5" id="__codelineno-6-5" name="__codelineno-6-5"></a><span class="err">✅</span> <span class="o">/</span><span class="n">orders</span>                <span class="p">(</span><span class="n">UI</span> <span class="n">sub</span><span class="o">-</span><span class="n">app</span><span class="p">)</span>
+</span><span id="__span-6-6"><a href="#__codelineno-6-6" id="__codelineno-6-6" name="__codelineno-6-6"></a><span class="err">✅</span> <span class="o">/</span><span class="n">api</span><span class="o">/</span><span class="n">menu</span><span class="o">/</span>             <span class="p">(</span><span class="n">API</span> <span class="n">sub</span><span class="o">-</span><span class="n">app</span><span class="p">)</span>
+</span><span id="__span-6-7"><a href="#__codelineno-6-7" id="__codelineno-6-7" name="__codelineno-6-7"></a><span class="err">✅</span> <span class="o">/</span><span class="n">api</span><span class="o">/</span><span class="n">orders</span><span class="o">/</span>           <span class="p">(</span><span class="n">API</span> <span class="n">sub</span><span class="o">-</span><span class="n">app</span><span class="p">)</span>
+</span><span id="__span-6-8"><a href="#__codelineno-6-8" id="__codelineno-6-8" name="__codelineno-6-8"></a><span class="err">✅</span> <span class="o">/</span><span class="n">api</span><span class="o">/</span><span class="n">kitchen</span><span class="o">/</span><span class="n">status</span>    <span class="p">(</span><span class="n">API</span> <span class="n">sub</span><span class="o">-</span><span class="n">app</span><span class="p">)</span>
+</span><span id="__span-6-9"><a href="#__codelineno-6-9" id="__codelineno-6-9" name="__codelineno-6-9"></a><span class="err">✅</span> <span class="o">/</span><span class="n">api</span><span class="o">/</span><span class="n">docs</span>              <span class="p">(</span><span class="n">API</span> <span class="n">sub</span><span class="o">-</span><span class="n">app</span><span class="p">)</span>
+</span><span id="__span-6-10"><a href="#__codelineno-6-10" id="__codelineno-6-10" name="__codelineno-6-10"></a><span class="err">✅</span> <span class="o">/</span><span class="n">api</span><span class="o">/</span><span class="n">metrics</span>           <span class="p">(</span><span class="n">API</span> <span class="n">sub</span><span class="o">-</span><span class="n">app</span><span class="p">)</span>
+</span></code></pre></div>
+<p><strong>HTTP Status Codes Tracked:</strong></p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-7-1"><a href="#__codelineno-7-1" id="__codelineno-7-1" name="__codelineno-7-1"></a><span class="err">✅</span> <span class="mi">200</span> <span class="n">OK</span>                <span class="p">(</span><span class="n">successful</span> <span class="n">requests</span><span class="p">)</span>
+</span><span id="__span-7-2"><a href="#__codelineno-7-2" id="__codelineno-7-2" name="__codelineno-7-2"></a><span class="err">✅</span> <span class="mi">307</span> <span class="n">Temporary</span> <span class="n">Redirect</span> <span class="p">(</span><span class="n">FastAPI</span> <span class="n">automatic</span> <span class="n">redirects</span><span class="p">)</span>
+</span><span id="__span-7-3"><a href="#__codelineno-7-3" id="__codelineno-7-3" name="__codelineno-7-3"></a><span class="err">✅</span> <span class="mi">404</span> <span class="n">Not</span> <span class="n">Found</span>          <span class="p">(</span><span class="n">missing</span> <span class="n">endpoints</span><span class="p">)</span>
+</span><span id="__span-7-4"><a href="#__codelineno-7-4" id="__codelineno-7-4" name="__codelineno-7-4"></a><span class="err">✅</span> <span class="mi">401</span> <span class="n">Unauthorized</span>       <span class="p">(</span><span class="n">auth</span> <span class="n">failures</span><span class="p">)</span>
+</span><span id="__span-7-5"><a href="#__codelineno-7-5" id="__codelineno-7-5" name="__codelineno-7-5"></a><span class="err">✅</span> <span class="mi">500</span> <span class="n">Internal</span> <span class="n">Error</span>     <span class="p">(</span><span class="n">application</span> <span class="n">errors</span><span class="p">)</span>
+</span></code></pre></div>
+<h4 id="how-it-works"><strong>🔍 How It Works</strong><a class="headerlink" href="#how-it-works" title="Permanent link">¶</a></h4>
+<ol>
+<li><strong>Request Flow</strong>: All HTTP requests reach the main app first</li>
+<li><strong>Middleware Order</strong>: OpenTelemetry middleware intercepts requests before routing</li>
+<li><strong>Sub-App Processing</strong>: Requests are then routed to appropriate mounted sub-apps</li>
+<li><strong>Metric Collection</strong>: Single point of HTTP metric collection with complete coverage</li>
+</ol>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-8-1"><a href="#__codelineno-8-1" id="__codelineno-8-1" name="__codelineno-8-1"></a>HTTP Request → Main App (instrumented) → Mounted Sub-App → Response
+</span><span id="__span-8-2"><a href="#__codelineno-8-2" id="__codelineno-8-2" name="__codelineno-8-2"></a>                  ↑
+</span><span id="__span-8-3"><a href="#__codelineno-8-3" id="__codelineno-8-3" name="__codelineno-8-3"></a>            Metrics captured here
+</span></code></pre></div>
+<h4 id="best-practices"><strong>🎯 Best Practices</strong><a class="headerlink" href="#best-practices" title="Permanent link">¶</a></h4>
+<ol>
+<li><strong>Single Instrumentation Point</strong>: Only instrument the main FastAPI app</li>
+<li><strong>Timing Matters</strong>: Mount sub-apps before instrumenting the main app</li>
+<li><strong>Health Endpoints</strong>: Define main app endpoints before mounting to avoid 404s</li>
+<li><strong>Service Naming</strong>: Use descriptive names for the instrumented app</li>
+<li><strong>Verification</strong>: Check <code>/metrics</code> endpoint to confirm all routes are tracked</li>
+</ol>
+<h4 id="common-pitfalls"><strong>🚨 Common Pitfalls</strong><a class="headerlink" href="#common-pitfalls" title="Permanent link">¶</a></h4>
+<ol>
+<li><strong>Instrumenting Sub-Apps</strong>: Never instrument mounted sub-applications directly</li>
+<li><strong>Order of Operations</strong>: Don't instrument before mounting sub-apps</li>
+<li><strong>Missing Routes</strong>: Define health/metrics endpoints on main app, not sub-apps</li>
+<li><strong>Duplicate Names</strong>: Use unique service names for different instrumentation calls</li>
+</ol>
+<h4 id="metrics-verification"><strong>📈 Metrics Verification</strong><a class="headerlink" href="#metrics-verification" title="Permanent link">¶</a></h4>
+<p>Verify your instrumentation is working correctly:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a href="#__codelineno-9-1" id="__codelineno-9-1" name="__codelineno-9-1"></a><span class="c1"># Check all tracked endpoints</span>
+</span><span id="__span-9-2"><a href="#__codelineno-9-2" id="__codelineno-9-2" name="__codelineno-9-2"></a>curl<span class="w"> </span>-s<span class="w"> </span><span class="s2">"http://localhost:8080/api/metrics"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-9-3"><a href="#__codelineno-9-3" id="__codelineno-9-3" name="__codelineno-9-3"></a><span class="w">  </span>grep<span class="w"> </span><span class="s1">'http_target='</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-9-4"><a href="#__codelineno-9-4" id="__codelineno-9-4" name="__codelineno-9-4"></a><span class="w">  </span>sed<span class="w"> </span><span class="s1">'s/.*http_target="\([^"]*\)".*/\1/'</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-9-5"><a href="#__codelineno-9-5" id="__codelineno-9-5" name="__codelineno-9-5"></a><span class="w">  </span>sort<span class="w"> </span><span class="p">|</span><span class="w"> </span>uniq
+</span><span id="__span-9-6"><a href="#__codelineno-9-6" id="__codelineno-9-6" name="__codelineno-9-6"></a>
+</span><span id="__span-9-7"><a href="#__codelineno-9-7" id="__codelineno-9-7" name="__codelineno-9-7"></a><span class="c1"># Expected output:</span>
+</span><span id="__span-9-8"><a href="#__codelineno-9-8" id="__codelineno-9-8" name="__codelineno-9-8"></a><span class="c1"># /</span>
+</span><span id="__span-9-9"><a href="#__codelineno-9-9" id="__codelineno-9-9" name="__codelineno-9-9"></a><span class="c1"># /api/menu/</span>
+</span><span id="__span-9-10"><a href="#__codelineno-9-10" id="__codelineno-9-10" name="__codelineno-9-10"></a><span class="c1"># /api/orders/</span>
+</span><span id="__span-9-11"><a href="#__codelineno-9-11" id="__codelineno-9-11" name="__codelineno-9-11"></a><span class="c1"># /health</span>
+</span><span id="__span-9-12"><a href="#__codelineno-9-12" id="__codelineno-9-12" name="__codelineno-9-12"></a><span class="c1"># /api/metrics</span>
+</span></code></pre></div>
+<h4 id="integration-checklist"><strong>📋 Integration Checklist</strong><a class="headerlink" href="#integration-checklist" title="Permanent link">¶</a></h4>
+<ul>
+<li>[ ] ✅ Initialize OpenTelemetry once at startup</li>
+<li>[ ] ✅ Create all FastAPI apps (main + sub-apps)</li>
+<li>[ ] ✅ Define main app endpoints (health, metrics)</li>
+<li>[ ] ✅ Mount all sub-applications to main app</li>
+<li>[ ] ✅ Instrument ONLY the main app</li>
+<li>[ ] ✅ Verify no duplicate metric warnings in logs</li>
+<li>[ ] ✅ Confirm all endpoints appear in metrics</li>
+<li>[ ] ✅ Test trace propagation across all routes</li>
+</ul>
+<p>This configuration ensures <strong>complete observability coverage</strong> without duplicate instrumentation warnings, providing clean metrics collection across your entire multi-application architecture.</p>
 <h2 id="key-benefits">🚀 Key Benefits<a class="headerlink" href="#key-benefits" title="Permanent link">¶</a></h2>
 <h3 id="for-development">For Development<a class="headerlink" href="#for-development" title="Permanent link">¶</a></h3>
 <ol>
@@ -1387,8 +1597,8 @@
 <h2 id="trace-context-propagation">📊 Trace Context Propagation<a class="headerlink" href="#trace-context-propagation" title="Permanent link">¶</a></h2>
 <p>OpenTelemetry uses W3C Trace Context for propagating trace information:</p>
 <p><strong>HTTP Headers</strong>:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a href="#__codelineno-3-1" id="__codelineno-3-1" name="__codelineno-3-1"></a>traceparent: 00-4bf92f3577b34da6a3ce929d0e0e4736-00f067aa0ba902b7-01
-</span><span id="__span-3-2"><a href="#__codelineno-3-2" id="__codelineno-3-2" name="__codelineno-3-2"></a>tracestate: vendor1=value1,vendor2=value2
+<div class="language-text highlight"><pre><span></span><code><span id="__span-10-1"><a href="#__codelineno-10-1" id="__codelineno-10-1" name="__codelineno-10-1"></a>traceparent: 00-4bf92f3577b34da6a3ce929d0e0e4736-00f067aa0ba902b7-01
+</span><span id="__span-10-2"><a href="#__codelineno-10-2" id="__codelineno-10-2" name="__codelineno-10-2"></a>tracestate: vendor1=value1,vendor2=value2
 </span></code></pre></div>
 <p><strong>Propagation Flow</strong>:</p>
 <ol>
@@ -1422,29 +1632,29 @@
 </ul>
 <h2 id="testing-otel-integration">🧪 Testing OTEL Integration<a class="headerlink" href="#testing-otel-integration" title="Permanent link">¶</a></h2>
 <h3 id="manual-testing">Manual Testing<a class="headerlink" href="#manual-testing" title="Permanent link">¶</a></h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a href="#__codelineno-4-1" id="__codelineno-4-1" name="__codelineno-4-1"></a><span class="c1"># 1. Start services</span>
-</span><span id="__span-4-2"><a href="#__codelineno-4-2" id="__codelineno-4-2" name="__codelineno-4-2"></a>./mario-docker.sh<span class="w"> </span>start
-</span><span id="__span-4-3"><a href="#__codelineno-4-3" id="__codelineno-4-3" name="__codelineno-4-3"></a>
-</span><span id="__span-4-4"><a href="#__codelineno-4-4" id="__codelineno-4-4" name="__codelineno-4-4"></a><span class="c1"># 2. Generate some traffic</span>
-</span><span id="__span-4-5"><a href="#__codelineno-4-5" id="__codelineno-4-5" name="__codelineno-4-5"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://localhost:8000/api/orders<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-4-6"><a href="#__codelineno-4-6" id="__codelineno-4-6" name="__codelineno-4-6"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/json"</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-4-7"><a href="#__codelineno-4-7" id="__codelineno-4-7" name="__codelineno-4-7"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">'{</span>
-</span><span id="__span-4-8"><a href="#__codelineno-4-8" id="__codelineno-4-8" name="__codelineno-4-8"></a><span class="s1">    "customer_id": "cust_123",</span>
-</span><span id="__span-4-9"><a href="#__codelineno-4-9" id="__codelineno-4-9" name="__codelineno-4-9"></a><span class="s1">    "items": [{"pizza_id": "margherita", "quantity": 2}]</span>
-</span><span id="__span-4-10"><a href="#__codelineno-4-10" id="__codelineno-4-10" name="__codelineno-4-10"></a><span class="s1">  }'</span>
-</span><span id="__span-4-11"><a href="#__codelineno-4-11" id="__codelineno-4-11" name="__codelineno-4-11"></a>
-</span><span id="__span-4-12"><a href="#__codelineno-4-12" id="__codelineno-4-12" name="__codelineno-4-12"></a><span class="c1"># 3. Check OTEL collector health</span>
-</span><span id="__span-4-13"><a href="#__codelineno-4-13" id="__codelineno-4-13" name="__codelineno-4-13"></a>curl<span class="w"> </span>http://localhost:13133/
-</span><span id="__span-4-14"><a href="#__codelineno-4-14" id="__codelineno-4-14" name="__codelineno-4-14"></a>
-</span><span id="__span-4-15"><a href="#__codelineno-4-15" id="__codelineno-4-15" name="__codelineno-4-15"></a><span class="c1"># 4. View Grafana dashboards</span>
-</span><span id="__span-4-16"><a href="#__codelineno-4-16" id="__codelineno-4-16" name="__codelineno-4-16"></a>open<span class="w"> </span>http://localhost:3001
-</span><span id="__span-4-17"><a href="#__codelineno-4-17" id="__codelineno-4-17" name="__codelineno-4-17"></a><span class="c1"># Login: admin/admin</span>
-</span><span id="__span-4-18"><a href="#__codelineno-4-18" id="__codelineno-4-18" name="__codelineno-4-18"></a><span class="c1"># Navigate: Explore → Tempo (traces)</span>
-</span><span id="__span-4-19"><a href="#__codelineno-4-19" id="__codelineno-4-19" name="__codelineno-4-19"></a><span class="c1"># Navigate: Explore → Prometheus (metrics)</span>
-</span><span id="__span-4-20"><a href="#__codelineno-4-20" id="__codelineno-4-20" name="__codelineno-4-20"></a><span class="c1"># Navigate: Explore → Loki (logs)</span>
-</span><span id="__span-4-21"><a href="#__codelineno-4-21" id="__codelineno-4-21" name="__codelineno-4-21"></a>
-</span><span id="__span-4-22"><a href="#__codelineno-4-22" id="__codelineno-4-22" name="__codelineno-4-22"></a><span class="c1"># 5. Check collector logs</span>
-</span><span id="__span-4-23"><a href="#__codelineno-4-23" id="__codelineno-4-23" name="__codelineno-4-23"></a>docker<span class="w"> </span>logs<span class="w"> </span>mario-pizzeria-otel-collector-1
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a href="#__codelineno-11-1" id="__codelineno-11-1" name="__codelineno-11-1"></a><span class="c1"># 1. Start services</span>
+</span><span id="__span-11-2"><a href="#__codelineno-11-2" id="__codelineno-11-2" name="__codelineno-11-2"></a>./mario-docker.sh<span class="w"> </span>start
+</span><span id="__span-11-3"><a href="#__codelineno-11-3" id="__codelineno-11-3" name="__codelineno-11-3"></a>
+</span><span id="__span-11-4"><a href="#__codelineno-11-4" id="__codelineno-11-4" name="__codelineno-11-4"></a><span class="c1"># 2. Generate some traffic</span>
+</span><span id="__span-11-5"><a href="#__codelineno-11-5" id="__codelineno-11-5" name="__codelineno-11-5"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://localhost:8000/api/orders<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-11-6"><a href="#__codelineno-11-6" id="__codelineno-11-6" name="__codelineno-11-6"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/json"</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-11-7"><a href="#__codelineno-11-7" id="__codelineno-11-7" name="__codelineno-11-7"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">'{</span>
+</span><span id="__span-11-8"><a href="#__codelineno-11-8" id="__codelineno-11-8" name="__codelineno-11-8"></a><span class="s1">    "customer_id": "cust_123",</span>
+</span><span id="__span-11-9"><a href="#__codelineno-11-9" id="__codelineno-11-9" name="__codelineno-11-9"></a><span class="s1">    "items": [{"pizza_id": "margherita", "quantity": 2}]</span>
+</span><span id="__span-11-10"><a href="#__codelineno-11-10" id="__codelineno-11-10" name="__codelineno-11-10"></a><span class="s1">  }'</span>
+</span><span id="__span-11-11"><a href="#__codelineno-11-11" id="__codelineno-11-11" name="__codelineno-11-11"></a>
+</span><span id="__span-11-12"><a href="#__codelineno-11-12" id="__codelineno-11-12" name="__codelineno-11-12"></a><span class="c1"># 3. Check OTEL collector health</span>
+</span><span id="__span-11-13"><a href="#__codelineno-11-13" id="__codelineno-11-13" name="__codelineno-11-13"></a>curl<span class="w"> </span>http://localhost:13133/
+</span><span id="__span-11-14"><a href="#__codelineno-11-14" id="__codelineno-11-14" name="__codelineno-11-14"></a>
+</span><span id="__span-11-15"><a href="#__codelineno-11-15" id="__codelineno-11-15" name="__codelineno-11-15"></a><span class="c1"># 4. View Grafana dashboards</span>
+</span><span id="__span-11-16"><a href="#__codelineno-11-16" id="__codelineno-11-16" name="__codelineno-11-16"></a>open<span class="w"> </span>http://localhost:3001
+</span><span id="__span-11-17"><a href="#__codelineno-11-17" id="__codelineno-11-17" name="__codelineno-11-17"></a><span class="c1"># Login: admin/admin</span>
+</span><span id="__span-11-18"><a href="#__codelineno-11-18" id="__codelineno-11-18" name="__codelineno-11-18"></a><span class="c1"># Navigate: Explore → Tempo (traces)</span>
+</span><span id="__span-11-19"><a href="#__codelineno-11-19" id="__codelineno-11-19" name="__codelineno-11-19"></a><span class="c1"># Navigate: Explore → Prometheus (metrics)</span>
+</span><span id="__span-11-20"><a href="#__codelineno-11-20" id="__codelineno-11-20" name="__codelineno-11-20"></a><span class="c1"># Navigate: Explore → Loki (logs)</span>
+</span><span id="__span-11-21"><a href="#__codelineno-11-21" id="__codelineno-11-21" name="__codelineno-11-21"></a>
+</span><span id="__span-11-22"><a href="#__codelineno-11-22" id="__codelineno-11-22" name="__codelineno-11-22"></a><span class="c1"># 5. Check collector logs</span>
+</span><span id="__span-11-23"><a href="#__codelineno-11-23" id="__codelineno-11-23" name="__codelineno-11-23"></a>docker<span class="w"> </span>logs<span class="w"> </span>mario-pizzeria-otel-collector-1
 </span></code></pre></div>
 <h3 id="verify-trace-flow">Verify Trace Flow<a class="headerlink" href="#verify-trace-flow" title="Permanent link">¶</a></h3>
 <ol>
