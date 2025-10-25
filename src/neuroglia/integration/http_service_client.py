@@ -81,6 +81,7 @@ See Also:
     - Integration Patterns: https://bvandewe.github.io/pyneuro/patterns/
     - Resilience Patterns: https://bvandewe.github.io/pyneuro/features/
 """
+
 import asyncio
 import json
 import logging
@@ -535,7 +536,7 @@ class HttpServiceClientBuilder:
         def create_http_client(sp) -> HttpServiceClient:
             return HttpServiceClient(base_url=base_url, options=options or HttpRequestOptions())
 
-        builder.services.add_scoped(HttpServiceClient, factory=create_http_client)
+        builder.services.add_scoped(HttpServiceClient, implementation_factory=create_http_client)
 
         return builder
 
