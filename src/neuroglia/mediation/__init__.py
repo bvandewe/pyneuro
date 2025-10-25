@@ -2,6 +2,7 @@
 from neuroglia.extensions.mediator_extensions import add_mediator
 
 from .mediator import *
+from .metrics_middleware import MetricsPipelineBehavior, add_cqrs_metrics
 from .simple import (
     InMemoryRepository,
     SimpleApplicationSettings,

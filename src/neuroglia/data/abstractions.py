@@ -1,5 +1,5 @@
 from abc import ABC
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Generic, TypeVar
 
 TKey = TypeVar("TKey")
@@ -52,7 +52,10 @@ class Entity(Generic[TKey], Identifiable[TKey], ABC):
 
     def __init__(self) -> None:
         super().__init__()
-        self.created_at = datetime.now()
+        # Initialize created_at only if not already set (e.g., during deserialization)
+        # Use timezone-aware UTC timestamp for consistency
+        if not hasattr(self, "created_at") or self.created_at is None:
+            self.created_at = datetime.now(timezone.utc)
 
     created_at: datetime
     """ Gets the date and time the entity has been created at """
@@ -141,6 +144,12 @@ class AggregateState(Generic[TKey], Identifiable[TKey], VersionedState, ABC):
 
     def __init__(self):
         super().__init__()
+        # Initialize timestamp tracking fields only if not already set (e.g., during deserialization)
+        # Use timezone-aware UTC timestamps for consistency across the application
+        if not hasattr(self, "created_at") or self.created_at is None:
+            self.created_at = datetime.now(timezone.utc)
+        if not hasattr(self, "last_modified") or self.last_modified is None:
+            self.last_modified = self.created_at
 
     id: TKey
     """ Gets the id of the aggregate the state belongs to """

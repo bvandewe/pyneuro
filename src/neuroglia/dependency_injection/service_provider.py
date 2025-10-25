@@ -319,8 +319,24 @@ class ServiceScope(ServiceScopeBase, ServiceProviderBase):
         if realized_services is None:
             realized_services = list()
         for descriptor in service_descriptors:
-            if any(type(service) == descriptor.service_type for service in realized_services):
+            # Avoid instantiation issues with abstract base classes
+            # Check if service is already in realized_services by identity/type matching
+            already_exists = False
+            for service in realized_services:
+                try:
+                    if type(service) == descriptor.service_type:
+                        already_exists = True
+                        break
+                    if isinstance(service, descriptor.service_type):
+                        already_exists = True
+                        break
+                except (TypeError, AttributeError):
+                    # Handle cases where type comparison fails (e.g., with ABCs)
+                    continue
+
+            if already_exists:
                 continue
+
             realized_services.append(self._build_service(descriptor))
 
         # Get singleton services from root provider

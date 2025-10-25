@@ -37,7 +37,7 @@ def configure_ddd_application(
         f"{domain_module_prefix}.aggregates",
     ]
 
-    JsonSerializer.configure(builder, type_modules=type_modules)
+    JsonSerializer.configure(builder, modules=type_modules)
     return builder
 
 
@@ -56,7 +56,7 @@ def configure_flat_structure(module_names: list[str] = None) -> EnhancedWebAppli
     if module_names is None:
         module_names = ["models", "enums", "types", "constants"]
 
-    JsonSerializer.configure(builder, type_modules=module_names)
+    JsonSerializer.configure(builder, modules=module_names)
     return builder
 
 

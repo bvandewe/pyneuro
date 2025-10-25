@@ -3,6 +3,7 @@ from collections.abc import Awaitable, Callable
 
 from neuroglia.core import OperationResult
 from neuroglia.data.unit_of_work import IUnitOfWork
+from neuroglia.hosting.abstractions import ApplicationBuilderBase
 from neuroglia.mediation import Command
 from neuroglia.mediation.mediator import Mediator
 from neuroglia.mediation.pipeline_behavior import PipelineBehavior
@@ -158,6 +159,17 @@ class DomainEventDispatchingMiddleware(PipelineBehavior[Command, OperationResult
         except Exception as e:
             # Log dispatch errors but don't fail the command
             log.error(f"Error during domain event dispatching for command {command_name}: {e}")
+
+    @staticmethod
+    def configure(builder: ApplicationBuilderBase) -> ApplicationBuilderBase:
+        """Registers and configures DomainEventDispatchingMiddleware services to the specified service collection.
+
+        Args:
+            services (ServiceCollection): the service collection to configure
+
+        """
+        builder.services.add_scoped(PipelineBehavior, implementation_factory=lambda sp: DomainEventDispatchingMiddleware(sp.get_required_service(IUnitOfWork), sp.get_required_service(Mediator)))
+        return builder
 
 
 class TransactionBehavior(PipelineBehavior[Command, OperationResult]):

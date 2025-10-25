@@ -9,13 +9,119 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- **Mario's Pizzeria UI/API Separation Architecture**: Comprehensive implementation plan for hybrid authentication
+#### **Framework Enhancements**
+
+- **CloudEvent Decorator System**: Enhanced `@cloudevent` decorator for event handler registration
+
+  - **Type-based Handler Discovery**: Automatic registration of event handlers based on CloudEvent types
+  - **Metadata Attachment**: `__cloudevent__type__` attribute for handler identification
+  - **Integration with Event Bus**: Seamless integration with CloudEventIngestor and event routing
+  - **Documentation**: Comprehensive examples for event-driven architecture patterns
+
+- **Integration Event Base Class**: New `IntegrationEvent[TKey]` generic base class for domain events
+
+  - **Generic Type Support**: Parameterized by aggregate ID type (`str`, `int`, etc.)
+  - **Standard Metadata**: `created_at` timestamp and `aggregate_id` fields
+  - **Abstract Base**: Enforces consistent integration event structure across applications
+
+- **OpenTelemetry Observability Module**: Complete `neuroglia.observability` package for distributed tracing, metrics, and logging
+
+  - **Configuration Management**: `OpenTelemetryConfig` dataclass with environment variable defaults and one-line initialization
+  - **Automatic Instrumentation**: FastAPI, HTTPX, logging, and system metrics instrumentation out-of-the-box
+  - **TracerProvider Setup**: Configurable OTLP gRPC exporters with batch processing and console debugging
+  - **MeterProvider Integration**: Prometheus metrics endpoint with periodic export and custom metric creation
+  - **Graceful Shutdown**: Proper resource cleanup with `shutdown_opentelemetry()` function
+
+- **CQRS Tracing Middleware**: `TracingPipelineBehavior` for automatic command and query instrumentation
+
+  - **Automatic Span Creation**: All commands and queries automatically traced with operation metadata
+  - **Performance Metrics**: Built-in duration histograms for `command.duration` and `query.duration`
+  - **Error Tracking**: Exception handling with span status and error attributes
+  - **Zero-Code Instrumentation**: Add `services.add_pipeline_behavior(TracingPipelineBehavior)` for full CQRS tracing
+
+- **Event Handler Tracing**: `TracedEventHandler` wrapper for domain event processing instrumentation
+
+  - **Event Processing Spans**: Automatic tracing for all domain event handlers with event metadata
+  - **Handler Performance**: Duration metrics and error tracking for event processing operations
+  - **Context Propagation**: Trace context carried through event-driven workflows
+
+- **Repository Tracing Mixin**: `TracedRepositoryMixin` for data access layer observability
+  - **Database Operation Tracing**: Automatic spans for repository methods (get, save, delete, query)
+  - **Query Performance**: Duration metrics for database operations with entity type metadata
+  - **Error Handling**: Database exception tracking with proper span status codes
+
+#### **Detailed Framework Component Enhancements**
+
+- **Data Abstractions**: Enhanced Entity and VersionedState with timezone-aware UTC timestamps and comprehensive documentation
+- **Infrastructure Module**: Added optional dependency handling with graceful imports for MongoDB, EventSourcing, FileSystem, and TracingMixin
+- **Repository Abstractions**: Enhanced Repository and QueryableRepository base classes with improved async method signatures
+- **MongoDB Integration**: Expanded MongoDB exports including EnhancedMongoRepository, MotorRepository, and query utilities
+- **Enhanced MongoDB Repository**: Advanced repository with bulk operations, aggregation support, and comprehensive type handling
+- **Unit of Work**: Enhanced IUnitOfWork with comprehensive documentation and automatic domain event collection patterns
+- **Service Provider**: Enhanced ServiceLifetime with improved documentation and comprehensive service registration examples
+- **CloudEvent Ingestor**: Added CloudEventIngestor hosted service with automatic type mapping and reactive stream processing
+- **CloudEvent Publisher**: Enhanced CloudEventPublisher with HTTP publishing, retry logic, and comprehensive configuration options
+- **Hosting Abstractions**: Enhanced HostBase and HostedService with improved lifecycle management and documentation
+- **Enhanced Web Application Builder**: Multi-app support, advanced controller management, and intelligent registration capabilities
+- **Mediation Module**: Enhanced exports including metrics middleware, simple mediator patterns, and comprehensive extension support
+- **Domain Event Dispatching**: Enhanced middleware with outbox pattern implementation and comprehensive transactional consistency
+- **JSON Serialization**: Enterprise-grade JSON serialization with intelligent type handling, enum support, and configurable type discovery
+
+#### **Sample Application - Mario's Pizzeria Complete Rewrite**
+
+- **UI/API Separation Architecture**: Comprehensive hybrid authentication and modern frontend
+
   - **IMPLEMENTATION_PLAN.md**: Complete roadmap for separating UI (session cookies) and API (JWT) authentication
   - **Parcel Build Pipeline**: Modern frontend build system with tree-shaking and asset optimization
   - **Hybrid Authentication Strategy**: Session-based auth for web UI, JWT for programmatic API access
   - **Multi-App Architecture**: Clear separation between customer-facing UI and external API integrations
   - **Security Best Practices**: HttpOnly cookies, CSRF protection, JWT with proper expiration
   - **Phase-by-Phase Implementation**: Detailed steps from build setup to production deployment
+
+- **Complete Frontend UI Implementation**: Modern web interface for all user roles
+
+  - **Customer Interface**: Menu browsing, cart management, order placement, order history
+  - **Kitchen Dashboard**: Real-time order management with status updates and cooking workflow
+  - **Delivery Dashboard**: Ready orders, delivery tour management, address handling
+  - **Management Dashboard**: Operations monitoring, analytics, menu management, staff performance
+  - **Role-Based Navigation**: Conditional menus and features based on user roles
+
+- **Advanced Styling System**: Comprehensive SCSS architecture
+
+  - **Component-Based Styles**: Separate stylesheets for management, kitchen, delivery, and menu components
+  - **Bootstrap Integration**: Custom Bootstrap overrides with brand colors and animations
+  - **Responsive Design**: Mobile-first approach with adaptive layouts
+  - **Interactive Elements**: Hover effects, animations, and state-based styling
+
+- **Authentication & Authorization**: Multi-role user system with demo accounts
+
+  - **Role-Based Access Control**: Customer, chef, delivery driver, and manager roles
+  - **Demo Credentials**: Pre-configured test accounts for each role type
+  - **Session Management**: Secure session handling with role persistence
+  - **Access Protection**: Route-level authorization with 403 error pages
+
+- **Real-Time Features**: WebSocket integration for live updates
+
+  - **Kitchen Order Updates**: Real-time order status changes for kitchen staff
+  - **Delivery Notifications**: Live updates for ready orders and delivery assignments
+  - **Management Dashboards**: Real-time metrics and operational monitoring
+  - **Connection Status Indicators**: Visual feedback for WebSocket connectivity
+
+- **Advanced Analytics**: Comprehensive business intelligence features
+  - **Sales Analytics**: Revenue trends, order volumes, and performance metrics
+  - **Pizza Popularity**: Ranking and analysis of menu item performance
+  - **Staff Performance**: Kitchen and delivery team productivity tracking
+  - **Customer Insights**: Order history, preferences, and VIP customer identification
+
+### Fixed
+
+- **Observability Stack - Grafana Traces Panel Issue Resolution**:
+  - **Root Cause**: Discovered Grafana traces panels only support single trace IDs, not TraceQL search queries
+  - **Solution**: Converted all traces panels to table view for multiple trace display
+  - **Performance**: Disabled OTEL logging auto-instrumentation (was causing workstation slowdown)
+  - **Documentation**: Added comprehensive TraceQL/PromQL cheat sheets and usage guides
+  - **Files Updated**: All Grafana dashboard JSONs, Tempo configuration, observability documentation
+  - **Impact**: Full distributed tracing operational with proper table views and Explore interface integration
 
 ## [0.4.8] - 2025-10-19
 
