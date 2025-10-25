@@ -1,9 +1,227 @@
 # 🎯 Event Sourcing Pattern
 
+_Estimated reading time: 35 minutes_
+
 Event Sourcing is a data storage pattern where state changes are stored as a sequence of immutable events rather
 than updating data in place. Instead of persisting current state directly, the pattern captures all changes as
 events that can be replayed to reconstruct state at any point in time, providing complete audit trails, temporal
 queries, and business intelligence capabilities.
+
+## 💡 What & Why
+
+### ❌ The Problem: Lost History with State-Based Persistence
+
+Traditional state-based persistence overwrites data, losing the history of how we arrived at the current state:
+
+```python
+# ❌ PROBLEM: Traditional state-based persistence loses history
+class Order:
+    def __init__(self, order_id: str):
+        self.order_id = order_id
+        self.status = "pending"
+        self.total = Decimal("0.00")
+        self.updated_at = datetime.now()
+
+class OrderRepository:
+    async def save_async(self, order: Order):
+        # Overwrites existing record - history is LOST!
+        await self.db.orders.update_one(
+            {"order_id": order.order_id},
+            {"$set": {
+                "status": order.status,
+                "total": order.total,
+                "updated_at": order.updated_at
+            }},
+            upsert=True
+        )
+
+# Usage in handler
+async def confirm_order(order_id: str):
+    order = await repository.get_by_id(order_id)
+    order.status = "confirmed"  # Previous status LOST forever!
+    order.total = Decimal("45.99")
+    order.updated_at = datetime.now()
+    await repository.save_async(order)  # Overwrites, no history
+
+# Questions we CANNOT answer:
+# - When was the order placed?
+# - What was the original total before discounts?
+# - Who changed the status and when?
+# - What was the sequence of status changes?
+# - Why was the order modified?
+```
+
+**Problems with State-Based Persistence:**
+
+- ❌ **Lost History**: No record of what happened, only current state
+- ❌ **No Audit Trail**: Cannot prove compliance or answer "who did what when?"
+- ❌ **No Time Travel**: Cannot reconstruct state at any point in the past
+- ❌ **No Business Intelligence**: Cannot analyze trends or patterns over time
+- ❌ **Data Loss**: Accidental updates or deletes destroy information permanently
+- ❌ **Debugging Nightmares**: Cannot replay events to reproduce bugs
+
+### ✅ The Solution: Event Sourcing with Immutable Event Log
+
+Event sourcing stores every state change as an immutable event, preserving complete history:
+
+```python
+# ✅ SOLUTION: Event sourcing preserves complete history
+from neuroglia.data.abstractions import AggregateRoot, DomainEvent
+from dataclasses import dataclass
+from typing import List
+
+# Domain Events - Immutable facts about what happened
+@dataclass
+class OrderPlacedEvent(DomainEvent):
+    order_id: str
+    customer_id: str
+    items: List[dict]
+    total: Decimal
+    placed_at: datetime
+
+@dataclass
+class OrderConfirmedEvent(DomainEvent):
+    order_id: str
+    confirmed_by: str
+    confirmed_at: datetime
+
+@dataclass
+class DiscountAppliedEvent(DomainEvent):
+    order_id: str
+    discount_code: str
+    original_total: Decimal
+    discount_amount: Decimal
+    new_total: Decimal
+    applied_at: datetime
+
+# Event-Sourced Aggregate
+class Order(AggregateRoot):
+    def __init__(self, order_id: str):
+        super().__init__()
+        self.order_id = order_id
+        self.status = "pending"
+        self.total = Decimal("0.00")
+        self.customer_id = None
+        self.items = []
+
+    @staticmethod
+    def place(customer_id: str, items: List[dict]) -> "Order":
+        """Factory method to create new order"""
+        order = Order(str(uuid.uuid4()))
+        total = sum(Decimal(str(item["price"])) * item["quantity"] for item in items)
+
+        # Raise event - this is stored forever!
+        order.raise_event(OrderPlacedEvent(
+            order_id=order.order_id,
+            customer_id=customer_id,
+            items=items,
+            total=total,
+            placed_at=datetime.now()
+        ))
+        return order
+
+    def confirm(self, confirmed_by: str):
+        """Confirm the order"""
+        if self.status != "pending":
+            raise ValueError(f"Cannot confirm order in status {self.status}")
+
+        # Raise event - immutable record!
+        self.raise_event(OrderConfirmedEvent(
+            order_id=self.order_id,
+            confirmed_by=confirmed_by,
+            confirmed_at=datetime.now()
+        ))
+
+    def apply_discount(self, discount_code: str, discount_amount: Decimal):
+        """Apply discount to order"""
+        original_total = self.total
+        new_total = original_total - discount_amount
+
+        # Raise event - preserves original price!
+        self.raise_event(DiscountAppliedEvent(
+            order_id=self.order_id,
+            discount_code=discount_code,
+            original_total=original_total,
+            discount_amount=discount_amount,
+            new_total=new_total,
+            applied_at=datetime.now()
+        ))
+
+    # Event handlers - apply events to update state
+    def on_order_placed(self, event: OrderPlacedEvent):
+        self.customer_id = event.customer_id
+        self.items = event.items
+        self.total = event.total
+
+    def on_order_confirmed(self, event: OrderConfirmedEvent):
+        self.status = "confirmed"
+
+    def on_discount_applied(self, event: DiscountAppliedEvent):
+        self.total = event.new_total
+
+# Event Store Repository
+class EventSourcedOrderRepository:
+    def __init__(self, event_store: IEventStore):
+        self.event_store = event_store
+
+    async def save_async(self, order: Order):
+        """Save events, not state!"""
+        events = order.get_uncommitted_events()
+        await self.event_store.append_async(order.order_id, events)
+        order.mark_events_as_committed()
+
+    async def get_by_id_async(self, order_id: str) -> Order:
+        """Reconstruct state from events!"""
+        events = await self.event_store.get_events_async(order_id)
+        order = Order(order_id)
+
+        # Replay events to rebuild current state
+        for event in events:
+            if isinstance(event, OrderPlacedEvent):
+                order.on_order_placed(event)
+            elif isinstance(event, OrderConfirmedEvent):
+                order.on_order_confirmed(event)
+            elif isinstance(event, DiscountAppliedEvent):
+                order.on_discount_applied(event)
+
+        return order
+
+# Usage - Complete history preserved!
+async def process_order():
+    # Create and place order
+    order = Order.place("customer-123", [
+        {"name": "Margherita", "price": "12.99", "quantity": 2}
+    ])
+    await repository.save_async(order)  # Events stored!
+
+    # Confirm order
+    order = await repository.get_by_id_async(order.order_id)
+    order.confirm("employee-456")
+    await repository.save_async(order)  # More events stored!
+
+    # Apply discount
+    order = await repository.get_by_id_async(order.order_id)
+    order.apply_discount("WELCOME10", Decimal("2.60"))
+    await repository.save_async(order)  # Even more events!
+
+    # Now we can answer ALL these questions:
+    # ✅ When was the order placed? (OrderPlacedEvent.placed_at)
+    # ✅ What was the original total? (OrderPlacedEvent.total)
+    # ✅ Who confirmed it? (OrderConfirmedEvent.confirmed_by)
+    # ✅ What discount was applied? (DiscountAppliedEvent.discount_code)
+    # ✅ What was the price before discount? (DiscountAppliedEvent.original_total)
+    # ✅ Complete audit trail for compliance!
+```
+
+**Benefits of Event Sourcing:**
+
+- ✅ **Complete History**: Every change is recorded as an immutable event
+- ✅ **Audit Trail**: Know exactly who did what and when for compliance
+- ✅ **Time Travel**: Reconstruct state at any point in the past
+- ✅ **Business Intelligence**: Analyze trends, patterns, and behaviors over time
+- ✅ **Debugging**: Replay events to reproduce and fix bugs
+- ✅ **Event-Driven Integration**: Events naturally integrate with other systems
+- ✅ **Projections**: Build specialized read models from event streams
 
 ## 🎯 Pattern Intent
 
@@ -867,6 +1085,335 @@ def create_event_sourced_application():
 - Applications where eventual consistency is not acceptable
 - Teams lacking experience with event-driven architecture and eventual consistency
 - Systems where the complexity of event sourcing outweighs the benefits
+
+## ⚠️ Common Mistakes
+
+### 1. **Storing Mutable State Instead of Events**
+
+```python
+# ❌ WRONG: Storing state snapshots, not events
+class OrderRepository:
+    async def save_async(self, order: Order):
+        # This is NOT event sourcing - it's just state persistence!
+        await self.event_store.save_state(order.order_id, {
+            "status": order.status,
+            "total": order.total,
+            "items": order.items
+        })
+
+# ✅ CORRECT: Store immutable events
+class OrderRepository:
+    async def save_async(self, order: Order):
+        # Store the events that describe what happened
+        events = order.get_uncommitted_events()
+        await self.event_store.append_async(order.order_id, events)
+        order.mark_events_as_committed()
+```
+
+### 2. **Large, Unfocused Events (Fat Events)**
+
+```python
+# ❌ WRONG: One massive event with everything
+@dataclass
+class OrderChangedEvent(DomainEvent):
+    order_id: str
+    customer_id: str
+    items: List[dict]
+    status: str
+    payment_method: str
+    delivery_address: dict
+    discount_code: str
+    total: Decimal
+    notes: str
+    # What actually changed??? Who knows!
+
+# ✅ CORRECT: Focused, specific events
+@dataclass
+class OrderPlacedEvent(DomainEvent):
+    order_id: str
+    customer_id: str
+    items: List[dict]
+    total: Decimal
+
+@dataclass
+class DeliveryAddressChangedEvent(DomainEvent):
+    order_id: str
+    old_address: dict
+    new_address: dict
+
+@dataclass
+class DiscountAppliedEvent(DomainEvent):
+    order_id: str
+    discount_code: str
+    discount_amount: Decimal
+```
+
+### 3. **Not Versioning Events**
+
+```python
+# ❌ WRONG: Changing event structure without versioning
+@dataclass
+class OrderPlacedEvent(DomainEvent):
+    order_id: str
+    customer_id: str
+    items: List[dict]
+    # Later, someone adds a field - breaks old events!
+    customer_email: str  # New field breaks event replay!
+
+# ✅ CORRECT: Version events properly
+@dataclass
+class OrderPlacedEventV1(DomainEvent):
+    version: int = 1
+    order_id: str
+    customer_id: str
+    items: List[dict]
+
+@dataclass
+class OrderPlacedEventV2(DomainEvent):
+    version: int = 2
+    order_id: str
+    customer_id: str
+    customer_email: str  # New field in V2
+    items: List[dict]
+
+# Event upcasting for old events
+class EventUpcaster:
+    def upcast(self, event: DomainEvent) -> DomainEvent:
+        if isinstance(event, OrderPlacedEventV1):
+            # Convert V1 to V2
+            return OrderPlacedEventV2(
+                order_id=event.order_id,
+                customer_id=event.customer_id,
+                customer_email="unknown@example.com",  # Default for old events
+                items=event.items
+            )
+        return event
+```
+
+### 4. **Rebuilding State from Events Every Time (No Snapshots)**
+
+```python
+# ❌ WRONG: Always replaying ALL events (slow for old aggregates)
+class OrderRepository:
+    async def get_by_id_async(self, order_id: str) -> Order:
+        # If order has 10,000 events, this is SLOW!
+        events = await self.event_store.get_events_async(order_id)
+        order = Order(order_id)
+        for event in events:  # Replaying 10,000 events every time!
+            order.apply(event)
+        return order
+
+# ✅ CORRECT: Use snapshots for performance
+class OrderRepository:
+    async def get_by_id_async(self, order_id: str) -> Order:
+        # Try to load snapshot first
+        snapshot = await self.snapshot_store.get_snapshot_async(order_id)
+
+        if snapshot:
+            order = snapshot.aggregate
+            # Only replay events AFTER the snapshot
+            events = await self.event_store.get_events_async(
+                order_id,
+                from_version=snapshot.version
+            )
+        else:
+            order = Order(order_id)
+            # No snapshot, replay all events
+            events = await self.event_store.get_events_async(order_id)
+
+        for event in events:
+            order.apply(event)
+
+        return order
+
+    async def save_async(self, order: Order):
+        events = order.get_uncommitted_events()
+        await self.event_store.append_async(order.order_id, events)
+
+        # Create snapshot every 100 events
+        if order.version % 100 == 0:
+            await self.snapshot_store.save_snapshot_async(order)
+
+        order.mark_events_as_committed()
+```
+
+### 5. **Not Handling Event Store Failures**
+
+```python
+# ❌ WRONG: No error handling for event persistence
+async def handle_async(self, command: PlaceOrderCommand):
+    order = Order.place(command.customer_id, command.items)
+    await self.repository.save_async(order)  # What if this fails?
+    return self.created(order)
+
+# ✅ CORRECT: Handle event store failures gracefully
+async def handle_async(self, command: PlaceOrderCommand):
+    try:
+        order = Order.place(command.customer_id, command.items)
+        await self.repository.save_async(order)
+        return self.created(order)
+
+    except EventStoreConnectionError as ex:
+        logger.error(f"Event store unavailable: {ex}")
+        return self.internal_server_error("Unable to process order. Please try again.")
+
+    except EventStoreConcurrencyError as ex:
+        logger.warning(f"Concurrency conflict for order {order.order_id}")
+        return self.conflict("Order was modified by another process. Please retry.")
+
+    except Exception as ex:
+        logger.exception(f"Unexpected error saving order events: {ex}")
+        return self.internal_server_error("An unexpected error occurred.")
+```
+
+### 6. **Querying Event Store Directly Instead of Projections**
+
+```python
+# ❌ WRONG: Querying by replaying events (very slow!)
+async def get_orders_by_customer(customer_id: str) -> List[Order]:
+    # This is TERRIBLE for performance!
+    all_orders = []
+    order_ids = await self.event_store.get_all_aggregate_ids()
+
+    for order_id in order_ids:  # Could be thousands!
+        events = await self.event_store.get_events_async(order_id)
+        order = Order(order_id)
+        for event in events:
+            order.apply(event)
+
+        if order.customer_id == customer_id:
+            all_orders.append(order)
+
+    return all_orders
+
+# ✅ CORRECT: Use projections for queries
+class OrderReadModel:
+    """Projection built from events for fast queries"""
+    order_id: str
+    customer_id: str
+    status: str
+    total: Decimal
+    placed_at: datetime
+
+class OrderProjection:
+    """Builds read models from events"""
+    def __init__(self, read_model_repository: OrderReadModelRepository):
+        self.repository = read_model_repository
+
+    async def handle(self, event: OrderPlacedEvent):
+        """Update read model when order placed"""
+        read_model = OrderReadModel(
+            order_id=event.order_id,
+            customer_id=event.customer_id,
+            status="placed",
+            total=event.total,
+            placed_at=event.placed_at
+        )
+        await self.repository.save_async(read_model)
+
+    async def handle(self, event: OrderConfirmedEvent):
+        """Update read model when order confirmed"""
+        read_model = await self.repository.get_by_id_async(event.order_id)
+        read_model.status = "confirmed"
+        await self.repository.save_async(read_model)
+
+# Now queries are fast!
+async def get_orders_by_customer(customer_id: str) -> List[OrderReadModel]:
+    # Query optimized read model, not event store!
+    return await self.read_model_repository.find_by_customer_async(customer_id)
+```
+
+## 🚫 When NOT to Use
+
+### 1. **Simple CRUD Applications**
+
+```python
+# Event sourcing adds unnecessary complexity for simple data management
+class ContactListApplication:
+    """Simple contact management doesn't need event sourcing"""
+    async def add_contact(self, name: str, email: str):
+        # Just save the contact - no need for events
+        contact = Contact(name=name, email=email)
+        await self.db.contacts.insert_one(contact.__dict__)
+
+    async def update_email(self, contact_id: str, new_email: str):
+        # Direct update is fine - no need to store history
+        await self.db.contacts.update_one(
+            {"_id": contact_id},
+            {"$set": {"email": new_email}}
+        )
+```
+
+### 2. **High-Volume Write Systems (Without Proper Infrastructure)**
+
+```python
+# Event sourcing can become a bottleneck with very high write volumes
+class RealTimeAnalytics:
+    """Processing millions of events per second"""
+    async def record_metric(self, metric: Metric):
+        # For high-volume metrics, event sourcing may be overkill
+        # Consider time-series databases or streaming platforms instead
+        await self.timeseries_db.write_point(metric)
+```
+
+### 3. **Systems Requiring Immediate Consistency**
+
+```python
+# Event sourcing typically involves eventual consistency
+class BankingTransfer:
+    """Financial transactions requiring immediate consistency"""
+    async def transfer_money(self, from_account: str, to_account: str, amount: Decimal):
+        # Banking transfers need immediate consistency
+        # Event sourcing's eventual consistency is problematic here
+        # Use traditional ACID transactions instead
+        async with self.db.begin_transaction() as tx:
+            await tx.debit(from_account, amount)
+            await tx.credit(to_account, amount)
+            await tx.commit()
+```
+
+### 4. **Small Teams Without Event Sourcing Experience**
+
+```python
+# Event sourcing has a steep learning curve
+class StartupMVP:
+    """Early-stage product with small team"""
+    # Avoid event sourcing initially - focus on shipping features
+    # Add event sourcing later if audit trail becomes critical
+    async def create_user(self, user_data: dict):
+        # Simple state-based persistence is fine for MVPs
+        user = User(**user_data)
+        await self.db.users.insert_one(user.__dict__)
+```
+
+### 5. **Data That Truly Doesn't Need History**
+
+```python
+# Not all data benefits from historical tracking
+class UserPreferences:
+    """User UI preferences that don't need history"""
+    async def update_theme(self, user_id: str, theme: str):
+        # Who cares what theme the user had yesterday?
+        # Just store current preference
+        await self.db.preferences.update_one(
+            {"user_id": user_id},
+            {"$set": {"theme": theme}},
+            upsert=True
+        )
+```
+
+## 📝 Key Takeaways
+
+- **Event sourcing stores state changes as immutable events**, preserving complete history
+- **Every state change is an event** that can be replayed to reconstruct state
+- **Audit trails and compliance** are automatic benefits of event sourcing
+- **Projections enable optimized read models** built from event streams
+- **Snapshots improve performance** by avoiding full event replay for old aggregates
+- **Event versioning is critical** to handle schema evolution over time
+- **Use projections for queries**, not direct event store queries
+- **Event sourcing adds complexity** - only use when benefits outweigh costs
+- **Best for domains with complex workflows** and audit requirements
+- **Framework provides EventStore and AggregateRoot** for event sourcing support
 
 ## 🔗 Related Patterns
 
