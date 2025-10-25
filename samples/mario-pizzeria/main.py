@@ -6,7 +6,6 @@ This is the complete sample application demonstrating all major Neuroglia framew
 Updated with Motor async MongoDB integration for customers and orders.
 """
 
-import datetime
 import logging
 import sys
 from pathlib import Path
@@ -43,8 +42,6 @@ from integration.repositories import (
 )
 
 from neuroglia.data.infrastructure.mongo import MotorRepository
-
-# Framework imports (must be after path manipulation)
 from neuroglia.data.unit_of_work import UnitOfWork
 from neuroglia.eventing.cloud_events.infrastructure import (
     CloudEventIngestor,
@@ -58,14 +55,11 @@ from neuroglia.mediation import Mediator
 from neuroglia.mediation.behaviors.domain_event_dispatching_middleware import (
     DomainEventDispatchingMiddleware,
 )
-from neuroglia.mediation.tracing_middleware import TracingPipelineBehavior
-
-# Import CQRS metrics extension to register add_cqrs_metrics method
-from neuroglia.extensions.cqrs_metrics_extensions import add_cqrs_metrics
-
-# OpenTelemetry integration
-from neuroglia.observability import configure_opentelemetry, instrument_fastapi_app, add_metrics_endpoint
+from neuroglia.observability import Observability
 from neuroglia.serialization.json import JsonSerializer
+
+# Framework imports (must be after path manipulation)
+
 
 configure_logging(log_level=app_settings.log_level.upper())
 log = logging.getLogger(__name__)
@@ -87,31 +81,27 @@ def create_pizzeria_app(data_dir: Optional[str] = None, port: int = 8080):
     Returns:
         Configured FastAPI application with multiple mounted apps
     """
-    # Initialize OpenTelemetry for distributed tracing
-    log.info("Initializing OpenTelemetry...")
-    configure_opentelemetry(
-        service_name="mario-pizzeria",
-        service_version="1.0.0",
-    )
-    log.info("OpenTelemetry configured successfully")
 
-    # Create enhanced web application builder
-    builder = EnhancedWebApplicationBuilder()
-    builder.settings = app_settings  # Required by CloudEventPublisher
+    # Create enhanced web application builder with app_settings
+    builder = EnhancedWebApplicationBuilder(app_settings)
 
     # Configure Core services
     Mediator.configure(builder, ["application.commands", "application.queries", "application.events"])
     Mapper.configure(builder, ["application.mapping", "api.dtos", "domain.entities"])
     JsonSerializer.configure(builder, ["domain.entities.enums", "domain.entities"])
+
+    # Optional: configure UnitOfWork and middleware (as we use AggregateRoot)
     UnitOfWork.configure(builder)
     DomainEventDispatchingMiddleware.configure(builder)
-    TracingPipelineBehavior.configure(builder)
-    # Add CQRS-level metrics collection
-    builder.services.add_cqrs_metrics()
+
+    # Optional: configure CloudEvent emission and consumption
     CloudEventPublisher.configure(builder)
     CloudEventIngestor.configure(builder, ["application.events.integration"])
 
-    # Configure persistence settings
+    # Optional: configure Observability
+    Observability.configure(builder)
+
+    # Optional: configure persistence settings
     MotorRepository.configure(builder, entity_type=Customer, key_type=str, database_name="mario_pizzeria", collection_name="customers")
     MotorRepository.configure(builder, entity_type=Order, key_type=str, database_name="mario_pizzeria", collection_name="orders")
     MotorRepository.configure(builder, entity_type=Pizza, key_type=str, database_name="mario_pizzeria", collection_name="pizzas")
@@ -169,25 +159,9 @@ def create_pizzeria_app(data_dir: Optional[str] = None, port: int = 8080):
     builder.add_exception_handling(api_app)
     builder.add_exception_handling(ui_app)
 
-    # 🔭 Instrument FastAPI apps for HTTP metrics
-    log.info("🔭 Instrumenting FastAPI apps for HTTP observability...")
-    instrument_fastapi_app(app, "main-app")
-    instrument_fastapi_app(api_app, "api-app")
-    instrument_fastapi_app(ui_app, "ui-app")
-
-    # 📊 Add Prometheus metrics endpoint to API app
-    add_metrics_endpoint(api_app, "/metrics")
-    log.info("📊 Prometheus metrics endpoint added at /api/metrics")
-
     # Mount the sub-apps onto the main app
     app.mount("/api", api_app, name="api")
     app.mount("/", ui_app, name="ui")  # Mount UI at root
-
-    # Standard health check endpoint
-    @app.get("/health")
-    async def health_check():
-        """Health check endpoint"""
-        return {"status": "healthy", "timestamp": datetime.datetime.now(datetime.timezone.utc), "mongodb": "async (Motor)", "keycloak": "enabled"}
 
     log.info("App is ready to rock.")
     return app

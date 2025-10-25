@@ -5,20 +5,29 @@ from typing import Optional
 from pydantic import computed_field
 from pydantic_settings import SettingsConfigDict
 
-from neuroglia.hosting.abstractions import ApplicationSettings
+from neuroglia.observability.settings import ApplicationSettingsWithObservability
 
 
-class MarioPizzeriaApplicationSettings(ApplicationSettings):
-    """Application configuration for Mario's Pizzeria
+class MarioPizzeriaApplicationSettings(ApplicationSettingsWithObservability):
+    """Application configuration for Mario's Pizzeria with integrated observability
 
     Key URL Concepts:
     - Internal URLs (keycloak_*): Used by backend services running in Docker network
     - External URLs (swagger_ui_*): Used by browser/Swagger UI for OAuth2 flows
+
+    Observability Features:
+    - Comprehensive three pillars: metrics, tracing, logging
+    - Standard endpoints: /health, /ready, /metrics
+    - Health checks for MongoDB and Keycloak dependencies
     """
 
-    # Application
+    # Application Identity (used by observability)
+    service_name: str = "mario-pizzeria"
+    service_version: str = "1.0.0"
+    deployment_environment: str = "development"
+
+    # Application Configuration
     app_name: str = "Mario's Pizzeria"
-    app_version: str = "1.0.0"
     debug: bool = True
     log_level: str = "DEBUG"  # Options: DEBUG, INFO, WARNING, ERROR, CRITICAL
     local_dev: bool = True  # True = development mode with localhost URLs for browser
@@ -43,8 +52,8 @@ class MarioPizzeriaApplicationSettings(ApplicationSettings):
     oauth2_scheme: Optional[str] = "authorization_code"  # "client_credentials" or "authorization_code"
 
     # CloudEvent Publishing Configuration (override base class defaults)
-    cloud_event_sink: Optional[str] = "http://localhost:8080/events"  # Where to publish CloudEvents
-    cloud_event_source: Optional[str] = "https://mario-pizzeria.com"  # Source identifier for events
+    cloud_event_sink: str = "http://localhost:8080/events"  # Where to publish CloudEvents
+    cloud_event_source: str = "https://mario-pizzeria.com"  # Source identifier for events
     cloud_event_type_prefix: str = "com.mario-pizzeria"  # Prefix for event types
     cloud_event_retry_attempts: int = 5  # Number of retry attempts
     cloud_event_retry_delay: float = 1.0  # Delay between retries (seconds)
@@ -52,6 +61,24 @@ class MarioPizzeriaApplicationSettings(ApplicationSettings):
     # Swagger UI OAuth Configuration (External URLs - used by browser)
     swagger_ui_client_id: str = "mario-app"  # Must match keycloak_client_id
     swagger_ui_client_secret: str = ""  # Leave empty for public clients
+
+    # Observability Configuration (Three Pillars)
+    observability_enabled: bool = True
+    observability_metrics_enabled: bool = True
+    observability_tracing_enabled: bool = True
+    observability_logging_enabled: bool = False  # Disable for local development (as its very resource intensive)
+
+    # Standard Endpoints
+    observability_health_endpoint: bool = True
+    observability_metrics_endpoint: bool = True
+    observability_ready_endpoint: bool = True
+
+    # Health Check Dependencies
+    observability_health_checks: list[str] = ["mongodb", "keycloak"]
+
+    # OpenTelemetry Configuration
+    otel_endpoint: str = "http://otel-collector:4317"  # Docker network endpoint
+    otel_console_export: bool = False  # Enable for debugging
 
     # Computed Fields - Auto-generate URLs from base configuration
     @computed_field
@@ -88,6 +115,11 @@ class MarioPizzeriaApplicationSettings(ApplicationSettings):
     def swagger_ui_token_url(self) -> str:
         """External OAuth2 token URL (for browser)"""
         return f"{self.swagger_ui_jwt_authority}/protocol/openid-connect/token"
+
+    @computed_field
+    def app_version(self) -> str:
+        """Application version (alias for service_version for backward compatibility)"""
+        return self.service_version
 
     model_config = SettingsConfigDict(
         env_file=".env",
