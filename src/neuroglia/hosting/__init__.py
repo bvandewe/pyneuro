@@ -3,15 +3,22 @@ Comprehensive hosting infrastructure for building and managing Neuroglia applica
 
 This module provides enterprise-grade application hosting capabilities including web
 application builders, hosted services, application lifecycle management, configuration
-management, and enhanced multi-application support with advanced controller and
-middleware management for production-ready microservices.
+management, and multi-application support with advanced controller and middleware
+management for production-ready microservices.
 
 Key Components:
-    - WebApplicationBuilder: Standard web application bootstrap and configuration
-    - EnhancedWebApplicationBuilder: Advanced multi-application hosting with shared services
+    - WebApplicationBuilder: Unified builder supporting both simple and advanced scenarios
     - ApplicationBuilderBase: Base abstraction for custom application builders
     - HostedService: Background services and application lifecycle management
     - ExceptionHandlingMiddleware: Global error handling and response formatting
+    - EnhancedWebHost: Advanced host with multi-app support and lifecycle management
+
+Architecture:
+    The hosting system has been unified around WebApplicationBuilder, which automatically
+    detects and enables advanced features based on configuration:
+
+    - Simple Mode: WebApplicationBuilder() - Basic FastAPI hosting
+    - Advanced Mode: WebApplicationBuilder(app_settings) - Multi-app, observability, etc.
 
 Features:
     - Dependency injection container integration
@@ -22,49 +29,56 @@ Features:
     - Multi-application hosting on single process
     - Health checks and monitoring endpoints
     - Graceful shutdown and startup handling
+    - OpenTelemetry observability integration
+    - Controller deduplication across apps
 
 Examples:
     ```python
     from neuroglia.hosting import WebApplicationBuilder, HostedService
-    from neuroglia.dependency_injection import ServiceCollection
+    from neuroglia.hosting.abstractions import ApplicationSettings
 
-    # Basic application setup
+    # Simple Mode - Basic web application
     builder = WebApplicationBuilder()
+    builder.services.add_scoped(UserService)
+    builder.services.add_controllers(['api.controllers'])
+
+    app = builder.build()
+    app.run(host="0.0.0.0", port=8000)
+
+    # Advanced Mode - Multi-app with observability
+    app_settings = ApplicationSettings()
+    builder = WebApplicationBuilder(app_settings)
 
     # Configure services
-    services = builder.services
-    services.add_scoped(UserService)
-    services.add_singleton(DatabaseConnection)
-    services.add_controllers(['api.controllers'])
+    builder.services.add_scoped(UserService)
+    builder.services.add_singleton(DatabaseConnection)
+
+    # Add controllers to specific apps
+    builder.add_controllers(['api.controllers'], prefix="/api")
+    builder.add_controllers(['admin.controllers'], prefix="/admin")
 
     # Add hosted services
-    services.add_hosted_service(BackgroundTaskService)
-    services.add_hosted_service(EventProcessorService)
+    builder.services.add_hosted_service(BackgroundTaskService)
 
-    # Build and run application
-    app = builder.build()
-    app.use_controllers()
-    app.use_exception_handling()
+    # Build with integrated lifecycle management
+    app = builder.build_app_with_lifespan(
+        title="My Microservice",
+        version="1.0.0"
+    )
 
-    if __name__ == "__main__":
-        app.run(host="0.0.0.0", port=8000)
+    # Controllers are automatically mounted
+    app.run(host="0.0.0.0", port=8000)
+    ```
 
-    # Enhanced multi-application hosting
+Migration from EnhancedWebApplicationBuilder:
+    ```python
+    # Old (deprecated but still works via alias)
     from neuroglia.hosting import EnhancedWebApplicationBuilder
+    builder = EnhancedWebApplicationBuilder(app_settings)
 
-    enhanced_builder = EnhancedWebApplicationBuilder()
-
-    # Register multiple applications
-    enhanced_builder.add_application("api", ApiApplication, "/api")
-    enhanced_builder.add_application("admin", AdminApplication, "/admin")
-
-    # Shared services
-    enhanced_builder.add_shared_service(DatabaseService)
-    enhanced_builder.add_shared_service(CacheService)
-
-    # Run multi-application host
-    host = enhanced_builder.build()
-    await host.start_async()
+    # New (recommended)
+    from neuroglia.hosting import WebApplicationBuilder
+    builder = WebApplicationBuilder(app_settings)
     ```
 
 See Also:
@@ -74,18 +88,16 @@ See Also:
 """
 
 from .abstractions import ApplicationBuilderBase, HostedService
-from .enhanced_web_application_builder import (
-    EnhancedWebApplicationBuilder,
-    EnhancedWebHost,
-    ExceptionHandlingMiddleware,
-)
-from .web import WebApplicationBuilder
+from .web import EnhancedWebHost, ExceptionHandlingMiddleware, WebApplicationBuilder
+
+# Backward compatibility alias (deprecated)
+EnhancedWebApplicationBuilder = WebApplicationBuilder
 
 __all__ = [
     "WebApplicationBuilder",
     "ApplicationBuilderBase",
     "HostedService",
-    "EnhancedWebApplicationBuilder",
+    "EnhancedWebApplicationBuilder",  # Deprecated alias
     "ExceptionHandlingMiddleware",
     "EnhancedWebHost",
 ]
