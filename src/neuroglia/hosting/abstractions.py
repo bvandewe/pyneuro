@@ -133,6 +133,10 @@ class ApplicationSettings(BaseSettings):
     """Delay between cloud event retry attempts in seconds."""
 
 
+# Note: ApplicationSettingsWithObservability is defined in observability/settings.py
+# to avoid circular import issues. Import it from there when needed.
+
+
 class ApplicationBuilderBase:
     """Defines the fundamentals of a service used to build applications"""
 
