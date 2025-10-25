@@ -1,6 +1,194 @@
 # 🔄 Unit of Work Pattern
 
+_Estimated reading time: 25 minutes_
+
 The Unit of Work pattern maintains a list of objects affected by a business transaction and coordinates writing out changes while resolving concurrency problems. In the Neuroglia framework, it provides automatic domain event collection and dispatching, enabling both **event-sourced** and **state-based persistence** patterns.
+
+## 💡 What & Why
+
+### ❌ The Problem: Manual Event Management and Inconsistent Transactions
+
+Without Unit of Work, managing domain events and transactional consistency is manual and error-prone:
+
+```python
+# ❌ PROBLEM: Manual event management and inconsistent transactions
+class CreateOrderHandler(CommandHandler[CreateOrderCommand, OperationResult[OrderDto]]):
+    def __init__(self,
+                 order_repository: OrderRepository,
+                 event_bus: EventBus):
+        self.order_repository = order_repository
+        self.event_bus = event_bus
+
+    async def handle_async(self, command: CreateOrderCommand):
+        # Create order (raises domain events)
+        order = Order.create(command.customer_id, command.items)
+
+        # Save order
+        await self.order_repository.save_async(order)
+
+        # PROBLEM: Must manually extract and publish events!
+        events = order.get_uncommitted_events()
+        for event in events:
+            await self.event_bus.publish_async(event)
+        order.mark_events_as_committed()
+
+        # PROBLEMS:
+        # ❌ What if save succeeds but event publishing fails?
+        # ❌ Events published even if transaction rolls back!
+        # ❌ Must remember to publish events in EVERY handler!
+        # ❌ Easy to forget to mark events as committed!
+        # ❌ No coordination between multiple aggregates!
+
+        return self.created(order)
+
+# Another handler with the SAME manual code!
+class ConfirmOrderHandler(CommandHandler[ConfirmOrderCommand, OperationResult[OrderDto]]):
+    async def handle_async(self, command: ConfirmOrderCommand):
+        order = await self.order_repository.get_by_id_async(command.order_id)
+        order.confirm()
+        await self.order_repository.save_async(order)
+
+        # Copy-pasted event management code - DUPLICATION!
+        events = order.get_uncommitted_events()
+        for event in events:
+            await self.event_bus.publish_async(event)
+        order.mark_events_as_committed()
+
+        return self.ok(order)
+
+# Multi-aggregate scenario is even WORSE!
+class TransferInventoryHandler(CommandHandler[TransferInventoryCommand, OperationResult]):
+    async def handle_async(self, command: TransferInventoryCommand):
+        source = await self.warehouse_repository.get_by_id_async(command.source_id)
+        target = await self.warehouse_repository.get_by_id_async(command.target_id)
+
+        # Modify both aggregates
+        source.remove_inventory(command.product_id, command.quantity)
+        target.add_inventory(command.product_id, command.quantity)
+
+        # Save both
+        await self.warehouse_repository.save_async(source)
+        await self.warehouse_repository.save_async(target)
+
+        # PROBLEM: Must manually collect events from BOTH aggregates!
+        all_events = []
+        all_events.extend(source.get_uncommitted_events())
+        all_events.extend(target.get_uncommitted_events())
+
+        for event in all_events:
+            await self.event_bus.publish_async(event)
+
+        source.mark_events_as_committed()
+        target.mark_events_as_committed()
+
+        # This is TEDIOUS and ERROR-PRONE!
+        return self.ok()
+```
+
+**Problems with Manual Event Management:**
+
+- ❌ **Event Publishing Scattered**: Every handler must remember to publish events
+- ❌ **Duplication**: Same event management code copy-pasted everywhere
+- ❌ **Inconsistency Risk**: Events published even if transaction fails
+- ❌ **Multi-Aggregate Complexity**: Collecting events from multiple aggregates is tedious
+- ❌ **Easy to Forget**: Developers forget to publish events or mark as committed
+- ❌ **No Coordination**: No central mechanism to track modified aggregates
+
+### ✅ The Solution: Unit of Work for Automatic Event Coordination
+
+Unit of Work automatically tracks aggregates and coordinates event dispatching:
+
+```python
+# ✅ SOLUTION: Unit of Work handles event coordination automatically
+from neuroglia.data.abstractions import IUnitOfWork
+
+class CreateOrderHandler(CommandHandler[CreateOrderCommand, OperationResult[OrderDto]]):
+    def __init__(self,
+                 order_repository: OrderRepository,
+                 unit_of_work: IUnitOfWork):
+        self.order_repository = order_repository
+        self.unit_of_work = unit_of_work
+
+    async def handle_async(self, command: CreateOrderCommand):
+        # 1. Create order (raises domain events)
+        order = Order.create(command.customer_id, command.items)
+
+        # 2. Save order
+        await self.order_repository.save_async(order)
+
+        # 3. Register aggregate with Unit of Work
+        self.unit_of_work.register_aggregate(order)
+
+        # That's IT! Pipeline behavior handles the rest:
+        # - Extracts events from registered aggregates
+        # - Publishes events ONLY if transaction succeeds
+        # - Marks events as committed automatically
+        # - Clears unit of work for next request
+
+        return self.created(order)
+
+# Multi-aggregate scenario is SIMPLE!
+class TransferInventoryHandler(CommandHandler[TransferInventoryCommand, OperationResult]):
+    async def handle_async(self, command: TransferInventoryCommand):
+        source = await self.warehouse_repository.get_by_id_async(command.source_id)
+        target = await self.warehouse_repository.get_by_id_async(command.target_id)
+
+        # Modify both aggregates
+        source.remove_inventory(command.product_id, command.quantity)
+        target.add_inventory(command.product_id, command.quantity)
+
+        # Save both
+        await self.warehouse_repository.save_async(source)
+        await self.warehouse_repository.save_async(target)
+
+        # Register both aggregates
+        self.unit_of_work.register_aggregate(source)
+        self.unit_of_work.register_aggregate(target)
+
+        # Unit of Work collects events from BOTH automatically!
+        return self.ok()
+
+# Pipeline Behavior handles event dispatching automatically
+class DomainEventDispatcherBehavior(PipelineBehavior):
+    def __init__(self,
+                 unit_of_work: IUnitOfWork,
+                 event_bus: EventBus):
+        self.unit_of_work = unit_of_work
+        self.event_bus = event_bus
+
+    async def handle_async(self, request, next_handler):
+        # Execute handler
+        result = await next_handler()
+
+        # Only publish events if handler succeeded
+        if result.is_success:
+            # Get ALL events from ALL registered aggregates
+            events = self.unit_of_work.get_domain_events()
+
+            # Publish events
+            for event in events:
+                await self.event_bus.publish_async(event)
+
+            # Clear unit of work for next request
+            self.unit_of_work.clear()
+
+        return result
+
+# Register in DI container
+services = ServiceCollection()
+services.add_scoped(IUnitOfWork, UnitOfWork)
+services.add_scoped(PipelineBehavior, DomainEventDispatcherBehavior)
+```
+
+**Benefits of Unit of Work:**
+
+- ✅ **Automatic Event Collection**: No manual event extraction needed
+- ✅ **Centralized Coordination**: Single place to track modified aggregates
+- ✅ **Consistent Event Publishing**: Events only published if transaction succeeds
+- ✅ **Multi-Aggregate Support**: Easily handle multiple aggregates in one transaction
+- ✅ **Reduced Duplication**: Event management code in one place (pipeline)
+- ✅ **Hard to Forget**: Framework handles event lifecycle automatically
+- ✅ **Testability**: Unit of Work can be mocked for testing
 
 ## 🎯 Pattern Overview
 
@@ -565,6 +753,236 @@ async def handle_async(self, command):
     order.add_items(command.items)              # Business logic after registration
     return self.created(order)
 ```
+
+## ⚠️ Common Mistakes
+
+### 1. **Forgetting to Register Aggregates**
+
+```python
+# ❌ WRONG: Forget to register aggregate (events never dispatched!)
+async def handle_async(self, command: CreateOrderCommand):
+    order = Order.create(command.customer_id, command.items)
+    await self.repository.save_async(order)
+    # Forgot to register! Events will NOT be published!
+    return self.created(order)
+
+# ✅ CORRECT: Always register aggregates that raise events
+async def handle_async(self, command: CreateOrderCommand):
+    order = Order.create(command.customer_id, command.items)
+    await self.repository.save_async(order)
+    self.unit_of_work.register_aggregate(order)  # Events will be published!
+    return self.created(order)
+```
+
+### 2. **Registering Aggregates Before Operations Complete**
+
+```python
+# ❌ WRONG: Register too early (captures partial state)
+async def handle_async(self, command: CreateOrderCommand):
+    order = Order(command.customer_id)
+    self.unit_of_work.register_aggregate(order)  # TOO EARLY!
+
+    # These events won't be captured by unit of work!
+    order.add_items(command.items)
+    order.apply_discount(command.discount_code)
+
+    await self.repository.save_async(order)
+    return self.created(order)
+
+# ✅ CORRECT: Register after all business operations
+async def handle_async(self, command: CreateOrderCommand):
+    order = Order(command.customer_id)
+    order.add_items(command.items)
+    order.apply_discount(command.discount_code)
+
+    await self.repository.save_async(order)
+    self.unit_of_work.register_aggregate(order)  # Captures ALL events!
+    return self.created(order)
+```
+
+### 3. **Not Clearing Unit of Work Between Requests**
+
+```python
+# ❌ WRONG: Reusing same Unit of Work without clearing
+class MyPipelineBehavior(PipelineBehavior):
+    async def handle_async(self, request, next_handler):
+        result = await next_handler()
+
+        if result.is_success:
+            events = self.unit_of_work.get_domain_events()
+            for event in events:
+                await self.event_bus.publish_async(event)
+            # FORGOT to clear! Events accumulate across requests!
+
+        return result
+
+# ✅ CORRECT: Always clear after processing
+class MyPipelineBehavior(PipelineBehavior):
+    async def handle_async(self, request, next_handler):
+        try:
+            result = await next_handler()
+
+            if result.is_success:
+                events = self.unit_of_work.get_domain_events()
+                for event in events:
+                    await self.event_bus.publish_async(event)
+
+            return result
+        finally:
+            self.unit_of_work.clear()  # Always clear!
+```
+
+### 4. **Using Singleton Lifetime for Unit of Work**
+
+```python
+# ❌ WRONG: Singleton lifetime (shared across all requests!)
+services.add_singleton(IUnitOfWork, UnitOfWork)
+# All requests share the same Unit of Work - DISASTER!
+
+# ✅ CORRECT: Scoped lifetime (one per request)
+services.add_scoped(IUnitOfWork, UnitOfWork)
+# Each request gets its own Unit of Work instance
+```
+
+### 5. **Publishing Events Before Transaction Commits**
+
+```python
+# ❌ WRONG: Publishing events before save completes
+async def handle_async(self, command: CreateOrderCommand):
+    order = Order.create(command.customer_id, command.items)
+
+    # Publishing BEFORE save!
+    events = order.get_uncommitted_events()
+    for event in events:
+        await self.event_bus.publish_async(event)
+
+    # What if save fails? Events already published!
+    await self.repository.save_async(order)
+    return self.created(order)
+
+# ✅ CORRECT: Let pipeline behavior publish AFTER save
+async def handle_async(self, command: CreateOrderCommand):
+    order = Order.create(command.customer_id, command.items)
+    await self.repository.save_async(order)
+    self.unit_of_work.register_aggregate(order)
+    # Pipeline publishes events ONLY if handler succeeds
+    return self.created(order)
+```
+
+### 6. **Not Handling Event Publishing Failures**
+
+```python
+# ❌ WRONG: No error handling for event publishing
+class EventDispatcherBehavior(PipelineBehavior):
+    async def handle_async(self, request, next_handler):
+        result = await next_handler()
+
+        events = self.unit_of_work.get_domain_events()
+        for event in events:
+            await self.event_bus.publish_async(event)  # What if this fails?
+
+        return result
+
+# ✅ CORRECT: Handle publishing failures gracefully
+class EventDispatcherBehavior(PipelineBehavior):
+    async def handle_async(self, request, next_handler):
+        result = await next_handler()
+
+        if not result.is_success:
+            return result
+
+        events = self.unit_of_work.get_domain_events()
+
+        try:
+            for event in events:
+                await self.event_bus.publish_async(event)
+        except Exception as ex:
+            self.logger.error(f"Failed to publish events: {ex}")
+            # Consider: retry, dead letter queue, or compensating transaction
+            # For now, log and continue (events are stored with aggregate)
+        finally:
+            self.unit_of_work.clear()
+
+        return result
+```
+
+## 🚫 When NOT to Use
+
+### 1. **Simple CRUD Operations Without Domain Events**
+
+```python
+# Unit of Work is overkill for simple data updates
+class UpdateCustomerEmailHandler:
+    async def handle_async(self, command: UpdateEmailCommand):
+        # Simple update, no domain events needed
+        await self.db.customers.update_one(
+            {"id": command.customer_id},
+            {"$set": {"email": command.new_email}}
+        )
+        # No need for Unit of Work here
+```
+
+### 2. **Read-Only Queries**
+
+```python
+# Unit of Work is for WRITE operations, not queries
+class GetOrderByIdHandler:
+    async def handle_async(self, query: GetOrderByIdQuery):
+        # Just reading data, no events to coordinate
+        return await self.repository.get_by_id_async(query.order_id)
+        # No Unit of Work needed
+```
+
+### 3. **Stateless Services Without Aggregates**
+
+```python
+# Services that don't work with domain aggregates
+class PriceCalculationService:
+    def calculate_total(self, items: List[OrderItem]) -> Decimal:
+        # Pure calculation, no state changes, no events
+        return sum(item.price * item.quantity for item in items)
+        # No Unit of Work needed
+```
+
+### 4. **External API Integration**
+
+```python
+# Unit of Work is for domain aggregates, not external APIs
+class SendEmailHandler:
+    async def handle_async(self, command: SendEmailCommand):
+        # Calling external API, not modifying aggregates
+        await self.email_api.send_async(
+            to=command.recipient,
+            subject=command.subject,
+            body=command.body
+        )
+        # No aggregates, no Unit of Work needed
+```
+
+### 5. **Background Jobs Without Domain Logic**
+
+```python
+# Simple background tasks without domain events
+class CleanupOldLogsJob:
+    async def execute_async(self):
+        # Deleting old data, not raising domain events
+        cutoff = datetime.now() - timedelta(days=90)
+        await self.db.logs.delete_many({"created_at": {"$lt": cutoff}})
+        # No domain events, no Unit of Work needed
+```
+
+## 📝 Key Takeaways
+
+- **Unit of Work coordinates aggregate changes** and event dispatching
+- **Automatically collects domain events** from registered aggregates
+- **Ensures transactional consistency** by publishing events only after save succeeds
+- **Reduces boilerplate** by eliminating manual event management in every handler
+- **Supports multi-aggregate transactions** with centralized coordination
+- **Always register aggregates** after business operations complete
+- **Use scoped lifetime** (one Unit of Work per request)
+- **Clear Unit of Work** after each request to prevent event accumulation
+- **Pipeline behaviors** typically handle event dispatching automatically
+- **Framework provides IUnitOfWork interface** and implementation
 
 ## 📚 Related Documentation
 
