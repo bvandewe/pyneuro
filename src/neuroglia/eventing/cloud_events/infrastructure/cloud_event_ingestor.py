@@ -1,6 +1,7 @@
 import asyncio
 import inspect
 import logging
+from typing import Type
 
 from neuroglia.core import ModuleLoader, TypeFinder
 from neuroglia.eventing.cloud_events import CloudEvent
