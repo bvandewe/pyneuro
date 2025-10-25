@@ -1,3 +1,4 @@
+from collections.abc import Callable, Iterable
 from typing import Optional
 
 from neuroglia.data.abstractions import TEntity, TKey
@@ -37,3 +38,15 @@ class MemoryRepository(Repository[TEntity, TKey]):
         if id not in self.entities:
             raise Exception()
         del self.entities[id]
+
+    def find(self, predicate: Callable[[TEntity], bool]) -> Iterable[TEntity]:
+        """
+        Find entities matching a predicate.
+
+        Args:
+            predicate: A function that takes an entity and returns True if it matches
+
+        Returns:
+            An iterable of matching entities
+        """
+        return (entity for entity in self.entities.values() if predicate(entity))
