@@ -4,19 +4,25 @@
 > **Technology Stack**: FastAPI, Python, MongoDB, OAuth 2.0
 > **Status**: Production Ready
 
+---
+
+> 💡 **Pattern in Action**: This document demonstrates **[Clean Architecture](../patterns/clean-architecture.md)** layer separation with the **[Repository Pattern](../patterns/repository.md)** for data access abstraction and **[Event-Driven Architecture](../patterns/event-driven.md)** for scalability.
+
+---
+
 ## 📋 Architecture Overview
 
-Mario's Pizzeria implements a modern, scalable architecture following clean architecture principles with CQRS (Command
-Query Responsibility Segregation) and event-driven patterns. This design ensures maintainability, testability, and
-scalability for a growing restaurant business.
+Mario's Pizzeria implements a modern, scalable architecture following **[clean architecture principles](../patterns/clean-architecture.md)** with **[CQRS](../patterns/cqrs.md)** (Command Query Responsibility Segregation) and **[event-driven patterns](../patterns/event-driven.md)**. This design ensures maintainability, testability, and scalability for a growing restaurant business.
 
 **Key Architectural Decisions**:
 
-- **Clean Architecture**: Clear separation of concerns across four distinct layers
-- **CQRS Pattern**: Separate models for read and write operations
-- **Event-Driven Design**: Asynchronous processing and loose coupling
-- **Repository Pattern**: Abstracted data access with multiple storage options
-- **Dependency Injection**: Testable and maintainable service management
+- **[Clean Architecture](../patterns/clean-architecture.md)**: Clear separation of concerns across four distinct layers
+- **[CQRS Pattern](../patterns/cqrs.md)**: Separate models for read and write operations
+- **[Event-Driven Design](../patterns/event-driven.md)**: Asynchronous processing and loose coupling
+- **[Repository Pattern](../patterns/repository.md)**: Abstracted data access with multiple storage options
+- **[Dependency Injection](../patterns/dependency-injection.md)**: Testable and maintainable service management
+
+> ⚠️ **Architecture Principle**: Dependencies point INWARD only (API → Application → Domain ← Integration). The domain layer has ZERO dependencies on outer layers! See [Clean Architecture](../patterns/clean-architecture.md#what--why-clean-architecture) for why this matters.
 
 ---
 
@@ -218,31 +224,38 @@ SCOPES = {
 
 ### Horizontal Scaling
 
-- **API Layer**: Stateless controllers scale horizontally behind load balancer
-- **Application Layer**: Event handlers can be distributed across multiple instances
-- **Database Layer**: MongoDB supports sharding and replica sets
+- **API Layer**: Stateless controllers scale horizontally behind load balancer (see [Clean Architecture](../patterns/clean-architecture.md))
+- **Application Layer**: Event handlers can be distributed across multiple instances (see [Event-Driven Architecture](../patterns/event-driven.md))
+- **Database Layer**: MongoDB supports sharding and replica sets (see [Repository Pattern](../patterns/repository.md))
 - **External Services**: Circuit breakers prevent cascade failures
+
+> 💡 **Event-Driven Scalability**: Kitchen event handlers can run on separate servers from order handlers, scaling independently based on load! Learn more: [Event-Driven Architecture Benefits](../patterns/event-driven.md#what--why-the-event-driven-pattern).
 
 ### Performance Optimizations
 
 - **Caching**: Redis for frequently accessed menu items and customer data
-- **Background Processing**: Async event handling for notifications and reporting
+- **Background Processing**: **[Event-driven](../patterns/event-driven.md)** async handling for notifications and reporting
 - **Database Indexing**: Optimized queries for order status and customer lookups
 - **CDN**: Static assets (images, CSS) served from edge locations
+- **Read Models**: Separate **[CQRS](../patterns/cqrs.md)** read models optimized for queries
 
 ### Monitoring & Observability
 
 - **Health Checks**: Endpoint monitoring for all critical services
 - **Metrics**: Custom business metrics (orders/hour, kitchen efficiency)
-- **Logging**: Structured logging with correlation IDs
+- **Logging**: Structured logging with correlation IDs using **[Pipeline Behaviors](../patterns/pipeline-behaviors.md)**
 - **Tracing**: Distributed tracing for request flows
+
+> 💡 **Cross-Cutting Concerns**: Logging, metrics, and tracing are implemented as [Pipeline Behaviors](../patterns/pipeline-behaviors.md) that automatically wrap all command and query handlers!
+
+---
 
 ## 🔧 Infrastructure Requirements
 
 ### Development Environment
 
 - **Python**: 3.9+ with FastAPI and Neuroglia framework
-- **Storage**: Local JSON files for rapid development
+- **Storage**: Local JSON files for rapid development (see [Repository Pattern](../patterns/repository.md))
 - **Authentication**: Development OAuth server (Keycloak)
 
 ### Production Environment
@@ -253,11 +266,32 @@ SCOPES = {
 - **Load Balancer**: NGINX or cloud load balancer
 - **Authentication**: Production OAuth provider (Auth0, Keycloak)
 
+---
+
 ## 🔗 Related Documentation
+
+### Case Study Documents
 
 - [Business Analysis](business-analysis.md) - Requirements and stakeholder analysis
 - [Domain Design](domain-design.md) - Business logic and data models
 - [Implementation Guide](implementation-guide.md) - Development patterns and APIs
+- [Testing & Deployment](testing-deployment.md) - Quality assurance and operations
+
+### Framework Patterns Used
+
+- **[Clean Architecture](../patterns/clean-architecture.md)** - Four-layer separation with dependency rules
+- **[CQRS Pattern](../patterns/cqrs.md)** - Separate read and write models for scalability
+- **[Event-Driven Architecture](../patterns/event-driven.md)** - Async workflows and loose coupling
+- **[Repository Pattern](../patterns/repository.md)** - Multiple storage implementations (File, MongoDB)
+- **[Dependency Injection](../patterns/dependency-injection.md)** - Service lifetimes and testability
+- **[Pipeline Behaviors](../patterns/pipeline-behaviors.md)** - Logging, validation, error handling
+
+> 💡 **Architecture Learning**: See how Mario's Pizzeria avoids [common clean architecture mistakes](../patterns/clean-architecture.md#common-mistakes) like mixing layers and breaking dependency rules!
+
+---
+
+_This technical architecture provides a scalable, maintainable foundation for Mario's Pizzeria using proven patterns from the Neuroglia framework._
+
 - [Testing & Deployment](testing-deployment.md) - Quality assurance and operations
 
 ---
