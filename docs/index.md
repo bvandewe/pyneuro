@@ -1,5 +1,7 @@
 # 🧠 Neuroglia Python Framework
 
+> **Keywords**: Python microservices, FastAPI framework, clean architecture Python, CQRS Python, domain-driven design Python, event-driven architecture, dependency injection Python, microservices patterns
+
 A lightweight, opinionated Python framework built on [FastAPI](https://fastapi.tiangolo.com/) that enforces clean architecture principles and provides comprehensive tooling for building production-ready microservices.
 
 ## 🎯 Perfect For
@@ -9,6 +11,8 @@ A lightweight, opinionated Python framework built on [FastAPI](https://fastapi.t
 - **API Development**: FastAPI-based with automatic OpenAPI documentation
 - **Domain-Driven Design**: Enforce DDD patterns and bounded contexts
 - **Clean Code**: Opinionated structure that promotes maintainable code
+
+---
 
 ## 🚀 What's Included
 
@@ -20,9 +24,18 @@ Clean architecture patterns with dependency injection, CQRS, event-driven design
 
 Complete production examples like [Mario's Pizzeria](mario-pizzeria.md) demonstrating every framework feature in realistic business scenarios.
 
+### 📚 **Comprehensive Documentation**
+
+- **[9-Part Tutorial Series](tutorials/index.md)** - Step-by-step hands-on learning
+- **[Core Concepts Guide](concepts/index.md)** - Architectural pattern explanations
+- **[Pattern Documentation](patterns/index.md)** - Includes "Common Mistakes" and "When NOT to Use"
+- **[Complete Case Study](mario-pizzeria.md)** - From business analysis to production deployment
+
 ### ⚙️ **CLI Tooling**
 
 PyNeuroctl command-line interface for managing, testing, and deploying your applications with zero configuration.
+
+---
 
 ## Why Neuroglia?
 
@@ -155,18 +168,42 @@ Visit `http://localhost:8000/docs` to explore the auto-generated API documentati
 
 ## 📚 Learn More
 
-- **[Getting Started](getting-started.md)** - Step-by-step tutorial building your first application
-- **[Mario's Pizzeria](mario-pizzeria.md)** - Complete bounded context with visual architecture diagrams
-- **[Patterns](patterns/)** - Software design patterns and best practices
-- **[Features](features/)** - Deep dive into framework capabilities
-- **[Guides](guides/)** - How-to procedures and troubleshooting
+### 🎓 Learning Paths
+
+**New to the Framework?**
+
+1. Start with **[Getting Started](getting-started.md)** - Build your first app in 30 minutes
+2. Follow the **[9-Part Tutorial Series](tutorials/index.md)** - Comprehensive hands-on guide
+3. Study **[Core Concepts](concepts/index.md)** - Understand the architectural patterns
+
+**Ready to Build?**
+
+1. Explore **[Mario's Pizzeria Case Study](mario-pizzeria.md)** - Complete real-world example
+2. Review **[Architectural Patterns](patterns/index.md)** - Design patterns with anti-patterns to avoid
+3. Browse **[Framework Features](features/index.md)** - Detailed feature documentation
+
+**Need Help?**
+
+1. Check **[Guides & How-Tos](guides/index.md)** - Practical procedures and troubleshooting
+2. See **[Sample Applications](samples/index.md)** - More complete working examples
+3. Consult **[Reference Documentation](references/oauth-oidc-jwt.md)** - Technical specifications
+
+### 📖 Quick Links
+
+- **[Tutorials](tutorials/index.md)** - Step-by-step learning with the 9-part Mario's Pizzeria tutorial
+- **[Core Concepts](concepts/index.md)** - Understand Clean Architecture, DDD, CQRS, and more
+- **[Mario's Pizzeria](mario-pizzeria.md)** - Complete case study with business analysis and implementation
+- **[Patterns](patterns/index.md)** - Architectural patterns with "What & Why" and "Common Mistakes"
+- **[Features](features/index.md)** - Framework capabilities and how to use them
+- **[Guides](guides/index.md)** - Practical how-to procedures
+- **[Samples](samples/index.md)** - Working code examples (OpenBank, API Gateway, Desktop Controller)
 
 ### 📖 Reference Documentation
 
-- **[Source Code Naming Conventions](references/source_code_naming_convention.md)** - Comprehensive naming patterns for maintainable codebases
-- **[12-Factor App Compliance](references/12-factor-app.md)** - How Neuroglia meets cloud-native application standards
-- **[Python Typing Guide](references/python_typing_guide.md)** - Complete guide to type hints, generics, and advanced typing patterns
-- OAuth OIDC
+- **[OAuth, OIDC & JWT](references/oauth-oidc-jwt.md)** - Authentication and authorization patterns
+- **[12-Factor App Compliance](references/12-factor-app.md)** - Cloud-native application standards
+- **[Source Code Naming Conventions](references/source_code_naming_convention.md)** - Maintainable code patterns
+- **[Python Typing Guide](references/python_typing_guide.md)** - Type hints, generics, and advanced typing
 
 ---
 
