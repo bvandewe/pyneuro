@@ -2,7 +2,9 @@
 
 Architecture patterns form the foundation of maintainable, scalable software systems. The Neuroglia framework implements and promotes proven architectural patterns that support clean code principles, testability, and long-term maintainability.
 
-## �️ Architectural Approaches: A Comparative Introduction
+> **📖 Documentation Status**: Pattern documentation has been enhanced with beginner-friendly **What & Why** sections showing problems and solutions, **Common Mistakes** with anti-patterns, and **When NOT to Use** guidance. Look for the ✨ symbol to identify fully updated patterns.
+
+## 🏗️ Architectural Approaches: A Comparative Introduction
 
 Before diving into specific patterns, it's essential to understand the different architectural philosophies that drive modern system design. The Neuroglia framework draws from multiple architectural approaches, each with distinct strengths and use cases.
 
