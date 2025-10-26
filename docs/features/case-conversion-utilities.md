@@ -843,11 +843,11 @@ class PerformanceOptimizedConverter:
 
 ## 🔗 Related Documentation
 
-- [🔧 Dependency Injection](dependency-injection.md) - Service registration patterns
+- [🔧 Dependency Injection](../patterns/dependency-injection.md) - Service registration patterns
 - [🌐 HTTP Service Client](http-service-client.md) - API request/response transformation
 - [📊 Enhanced Model Validation](enhanced-model-validation.md) - Model field validation
 - [📁 Data Access](data-access.md) - Database field mapping
-- [📨 CQRS & Mediation](cqrs-mediation.md) - Command/query object conversion
+- [📨 CQRS & Mediation](../patterns/cqrs.md) - Command/query object conversion
 
 ---
 

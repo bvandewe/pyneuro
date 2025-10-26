@@ -798,9 +798,9 @@ def create_optimized_http_config():
 
 - [⏰ Background Task Scheduling](background-task-scheduling.md) - Scheduling external API calls
 - [⚡ Redis Cache Repository](redis-cache-repository.md) - Caching API responses
-- [🔧 Dependency Injection](dependency-injection.md) - Service registration patterns
+- [🔧 Dependency Injection](../patterns/dependency-injection.md) - Service registration patterns
 - [📊 Enhanced Model Validation](enhanced-model-validation.md) - Request/response validation
-- [📨 Event Sourcing](event-sourcing.md) - Event-driven external service integration
+- [📨 Event Sourcing](../patterns/event-sourcing.md) - Event-driven external service integration
 
 ---
 

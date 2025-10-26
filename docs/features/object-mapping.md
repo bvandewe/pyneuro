@@ -732,16 +732,16 @@ class MenuController(ControllerBase):
 Object mapping integrates seamlessly with:
 
 - **[Serialization](serialization.md)** - Map objects before serialization/after deserialization
-- **[CQRS & Mediation](cqrs-mediation.md)** - Map requests to commands and queries
+- **[CQRS & Mediation](../patterns/cqrs.md)** - Map requests to commands and queries
 - **[MVC Controllers](mvc-controllers.md)** - Automatic request/response mapping
-- **[Event Sourcing](event-sourcing.md)** - Transform domain events to external formats
+- **[Event Sourcing](../patterns/event-sourcing.md)** - Transform domain events to external formats
 
 ## 📚 Next Steps
 
 Explore related Neuroglia features:
 
 - **[Serialization](serialization.md)** - Convert mapped objects to JSON
-- **[CQRS & Mediation](cqrs-mediation.md)** - Use mapping in command/query handlers
+- **[CQRS & Mediation](../patterns/cqrs.md)** - Use mapping in command/query handlers
 - **[MVC Controllers](mvc-controllers.md)** - Automatic API object mapping
 - **[Getting Started Guide](../guides/mario-pizzeria-tutorial.md)** - Complete pizzeria implementation
 

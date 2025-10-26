@@ -102,8 +102,8 @@ Now that you have the basics working:
 
 1. **[🛠️ Local Development Setup](local-development.md)** - Set up a proper development environment
 2. **[🍕 Mario's Pizzeria Tutorial](mario-pizzeria-tutorial.md)** - Build a complete application (1 hour)
-3. **[🎯 Architecture Patterns](../patterns/)** - Learn the design principles
-4. **[🚀 Framework Features](../features/)** - Explore advanced capabilities
+3. **[🎯 Architecture Patterns](../patterns/index.md)** - Learn the design principles
+4. **[🚀 Framework Features](../features/index.md)** - Explore advanced capabilities
 
 ## 🔗 Key Concepts Introduced
 

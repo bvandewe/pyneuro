@@ -319,7 +319,7 @@ def configure_application():
 
 - [Data Access](data-access.md) - Repository patterns and serialization
 - [Domain-Driven Design](../getting-started.md#domain-driven-design) - Domain layer organization
-- [Dependency Injection](dependency-injection.md) - Service configuration patterns
+- [Dependency Injection](../patterns/dependency-injection.md) - Service configuration patterns
 
 ## 🧪 Testing Configuration
 

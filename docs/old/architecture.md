@@ -10,7 +10,7 @@
     - **[CQRS Pattern](patterns/cqrs.md)** - Command Query Responsibility Segregation
     - **[Event-Driven Pattern](patterns/event-driven.md)** - Domain events and messaging
     - **[Mario's Pizzeria](mario-pizzeria.md)** - Complete bounded context example
-    - **[Features](features/)** - Framework-specific implementation details
+    - **[Features](features/index.md)** - Framework-specific implementation details
 
     Please use the new structure for the most up-to-date documentation.
 
