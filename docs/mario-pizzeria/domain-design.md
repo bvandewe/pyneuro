@@ -376,29 +376,37 @@ class Order(AggregateRoot[OrderState, str]):
 
 The Kitchen entity manages cooking capacity and workflow coordination:
 
-```python
-@dataclass
-class Kitchen(Entity[str]):
-    """Kitchen state and cooking capacity management"""
-    id: str
-    active_orders: List[str]  # Order IDs being cooked
-    max_concurrent_orders: int = 3
-    staff_count: int = 2
+> 📋 **[View Source Code](https://github.com/bvandewe/pyneuro/blob/main/samples/mario-pizzeria/domain/entities/kitchen.py)**
 
-    @property
-    def is_at_capacity(self) -> bool:
-        """Check if kitchen is at maximum capacity"""
-        return len(self.active_orders) >= self.max_concurrent_orders
+```python
+from neuroglia.data.abstractions import Entity
+
+@map_from(KitchenStatusDto)
+@map_to(KitchenStatusDto)
+class Kitchen(Entity[str]):
+    """Kitchen state and capacity management"""
+
+    def __init__(self, max_concurrent_orders: int = 3):
+        super().__init__()
+        self.id = "kitchen"  # Singleton kitchen
+        self.active_orders: list[str] = []  # Order IDs currently being prepared
+        self.max_concurrent_orders = max_concurrent_orders
+        self.total_orders_processed = 0
 
     @property
     def current_capacity(self) -> int:
-        """Current number of orders being processed"""
+        """Get current number of orders being prepared"""
         return len(self.active_orders)
 
     @property
     def available_capacity(self) -> int:
-        """Remaining cooking slots available"""
-        return self.max_concurrent_orders - len(self.active_orders)
+        """Get remaining capacity for new orders"""
+        return self.max_concurrent_orders - self.current_capacity
+
+    @property
+    def is_at_capacity(self) -> bool:
+        """Check if kitchen is at maximum capacity"""
+        return self.current_capacity >= self.max_concurrent_orders
 
     def start_order(self, order_id: str) -> bool:
         """Start cooking an order if capacity allows"""
@@ -406,29 +414,13 @@ class Kitchen(Entity[str]):
             return False
 
         self.active_orders.append(order_id)
-
-        # Raise domain event
-        self.raise_event(KitchenOrderStartedEvent(
-            kitchen_id=self.id,
-            order_id=order_id,
-            remaining_capacity=self.available_capacity
-        ))
-
         return True
 
     def complete_order(self, order_id: str) -> None:
-        """Complete cooking an order"""
-        if order_id not in self.active_orders:
-            raise OrderNotInKitchenError(f"Order {order_id} not in kitchen")
-
-        self.active_orders.remove(order_id)
-
-        # Raise domain event
-        self.raise_event(KitchenOrderCompletedEvent(
-            kitchen_id=self.id,
-            order_id=order_id,
-            available_capacity=self.available_capacity
-        ))
+        """Complete cooking an order and free up capacity"""
+        if order_id in self.active_orders:
+            self.active_orders.remove(order_id)
+            self.total_orders_processed += 1
 
     def adjust_capacity(self, new_max: int) -> None:
         """Adjust maximum capacity based on staffing"""

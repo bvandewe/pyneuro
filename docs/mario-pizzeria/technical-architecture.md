@@ -4,6 +4,8 @@
 > **Technology Stack**: FastAPI, Python, MongoDB, OAuth 2.0
 > **Status**: Production Ready
 
+> 📋 **Source Code**: [View Complete Implementation](https://github.com/bvandewe/pyneuro/tree/main/samples/mario-pizzeria)
+
 ---
 
 > 💡 **Pattern in Action**: This document demonstrates **[Clean Architecture](../patterns/clean-architecture.md)** layer separation with the **[Repository Pattern](../patterns/repository.md)** for data access abstraction and **[Event-Driven Architecture](../patterns/event-driven.md)** for scalability.
@@ -50,9 +52,9 @@ graph TB
 
     %% Domain Layer
     subgraph DomainLayer["🏛️ Domain Layer"]
-        OrderEntity["📋 Order<br/>Entity<br/>Order business logic"]
-        PizzaEntity["🍕 Pizza<br/>Entity<br/>Pizza with pricing"]
-        CustomerEntity["👤 Customer<br/>Entity<br/>Customer information"]
+        OrderEntity["📋 Order<br/>AggregateRoot<br/>Order business logic"]
+        PizzaEntity["🍕 Pizza<br/>AggregateRoot<br/>Pizza with pricing"]
+        CustomerEntity["👤 Customer<br/>AggregateRoot<br/>Customer information"]
         KitchenEntity["🏠 Kitchen<br/>Entity<br/>Kitchen capacity"]
         DomainEvents["⚡ Domain Events<br/>Events<br/>OrderPlaced, OrderReady"]
     end

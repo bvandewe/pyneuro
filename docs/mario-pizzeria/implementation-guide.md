@@ -3,6 +3,8 @@
 > **Development Guide** | **Patterns**: CQRS, Event Sourcing, OAuth 2.0
 > **Framework**: Neuroglia + FastAPI | **Status**: Production Examples
 
+> 📋 **Source Code**: [View Complete Implementation](https://github.com/bvandewe/pyneuro/tree/main/samples/mario-pizzeria)
+
 ---
 
 > 💡 **Pattern in Action**: This guide demonstrates **[CQRS](../patterns/cqrs.md)**, **[Dependency Injection](../patterns/dependency-injection.md)**, **[Pipeline Behaviors](../patterns/pipeline-behaviors.md)**, and **[Event-Driven Architecture](../patterns/event-driven.md)** working together in production code.
@@ -30,94 +32,77 @@ This guide provides comprehensive implementation details for building Mario's Pi
 
 The system uses **[CQRS pattern](../patterns/cqrs.md)** with clear separation between write and read operations:
 
+> 📋 **Commands Source**: [application/commands/](https://github.com/bvandewe/pyneuro/tree/main/samples/mario-pizzeria/application/commands)
+>
+> 📋 **Queries Source**: [application/queries/](https://github.com/bvandewe/pyneuro/tree/main/samples/mario-pizzeria/application/queries)
+
 > 🎯 **Why CQRS?**: Commands handle write operations (like placing an order) with validation and business logic. Queries handle read operations optimized for display. This separation enables independent scaling and optimization. Learn more: [CQRS Pattern](../patterns/cqrs.md#what--why-the-cqrs-pattern).
 
 ---
 
+### Commands (Write Operations)
+
+> 📋 **[PlaceOrderCommand Source](https://github.com/bvandewe/pyneuro/blob/main/samples/mario-pizzeria/application/commands/place_order_command.py)**
+
 ```python
+from neuroglia.mediation import Command, CommandHandler
+from neuroglia.core import OperationResult
+from api.dtos import CreateOrderDto, OrderDto, CreatePizzaDto
+
 @dataclass
+@map_from(CreateOrderDto)
 class PlaceOrderCommand(Command[OperationResult[OrderDto]]):
     """Command to place a new pizza order"""
+
     customer_name: str
     customer_phone: str
-    customer_address: str
-    pizzas: List[PizzaOrderDto]
-    payment_method: str
-    special_instructions: Optional[str] = None
-
-    def validate(self) -> List[str]:
-        errors = []
-        if not self.customer_name.strip():
-            errors.append("Customer name is required")
-        if not self.customer_phone.strip():
-            errors.append("Customer phone is required")
-        if not self.pizzas:
-            errors.append("At least one pizza is required")
-        return errors
+    customer_address: Optional[str] = None
+    customer_email: Optional[str] = None
+    pizzas: list[CreatePizzaDto] = field(default_factory=list)
+    payment_method: str = "cash"
+    notes: Optional[str] = None
+    customer_id: Optional[str] = None  # Optional - will be created/retrieved
 
 @dataclass
 class StartCookingCommand(Command[OperationResult[OrderDto]]):
     """Command to start cooking an order"""
     order_id: str
-    kitchen_staff_id: str
-    estimated_cooking_time: Optional[int] = None
+    user_id: str  # Chef who is starting cooking
+    user_name: str  # Chef's name
 
 @dataclass
 class CompleteOrderCommand(Command[OperationResult[OrderDto]]):
     """Command to mark order as ready"""
     order_id: str
-    completion_time: Optional[datetime] = None
-    quality_notes: Optional[str] = None
-
-@dataclass
-class UpdateMenuCommand(Command[OperationResult[PizzaDto]]):
-    """Command to update menu item"""
-    pizza_id: str
-    name: Optional[str] = None
-    base_price: Optional[Decimal] = None
-    available: Optional[bool] = None
+    user_id: str  # Who marked order ready
+    user_name: str  # User's name
 ```
+
+> 📋 **More Commands**: [start_cooking_command.py](https://github.com/bvandewe/pyneuro/blob/main/samples/mario-pizzeria/application/commands/start_cooking_command.py), [complete_order_command.py](https://github.com/bvandewe/pyneuro/blob/main/samples/mario-pizzeria/application/commands/complete_order_command.py), [assign_order_to_delivery_command.py](https://github.com/bvandewe/pyneuro/blob/main/samples/mario-pizzeria/application/commands/assign_order_to_delivery_command.py)
 
 ### Queries (Read Operations)
 
 Queries retrieve data without side effects:
 
+> 📋 **[GetActiveOrdersQuery Source](https://github.com/bvandewe/pyneuro/blob/main/samples/mario-pizzeria/application/queries/get_active_orders_query.py)**
+
 ```python
-@dataclass
-class GetOrderByIdQuery(Query[Optional[OrderDto]]):
-    """Query to get specific order details"""
-    order_id: str
+from neuroglia.mediation import Query, QueryHandler
+from neuroglia.core import OperationResult
 
 @dataclass
-class GetOrdersByCustomerQuery(Query[List[OrderDto]]):
+class GetActiveOrdersQuery(Query[OperationResult[List[OrderDto]]]):
+    """Query to get all active orders (not delivered or cancelled)"""
+    pass
+
+@dataclass
+class GetOrdersByCustomerQuery(Query[OperationResult[List[OrderDto]]]):
     """Query to get customer's order history"""
-    customer_phone: str
+    customer_id: str
     limit: int = 10
-    status_filter: Optional[str] = None
-
-@dataclass
-class GetMenuQuery(Query[List[PizzaDto]]):
-    """Query to get available menu items"""
-    category: Optional[str] = None
-    available_only: bool = True
-
-@dataclass
-class GetKitchenStatusQuery(Query[KitchenStatusDto]):
-    """Query to get current kitchen status"""
-    pass
-
-@dataclass
-class GetActiveOrdersQuery(Query[List[OrderDto]]):
-    """Query to get orders currently being prepared"""
-    pass
-
-@dataclass
-class GetOrderAnalyticsQuery(Query[OrderAnalyticsDto]):
-    """Query to get business analytics"""
-    start_date: datetime
-    end_date: datetime
-    group_by: str = "day"  # day, week, month
 ```
+
+> 📋 **More Queries**: [get_ready_orders_query.py](https://github.com/bvandewe/pyneuro/blob/main/samples/mario-pizzeria/application/queries/get_ready_orders_query.py), [get_orders_by_customer_query.py](https://github.com/bvandewe/pyneuro/blob/main/samples/mario-pizzeria/application/queries/get_orders_by_customer_query.py), [get_customer_profile_query.py](https://github.com/bvandewe/pyneuro/blob/main/samples/mario-pizzeria/application/queries/get_customer_profile_query.py)
 
 ---
 
