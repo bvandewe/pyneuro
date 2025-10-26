@@ -7,8 +7,8 @@
 <meta content="width=device-width,initial-scale=1" name="viewport"/>
 <meta content="A lightweight, opinionated Python framework built on FastAPI that enforces clean architecture principles" name="description"/>
 <link href="https://bvandewe.github.io/pyneuro/mario-pizzeria/domain-design/" rel="canonical"/>
-<link href="../technical-architecture/" rel="prev"/>
-<link href="../implementation-guide/" rel="next"/>
+<link href="../business-analysis/" rel="prev"/>
+<link href="../technical-architecture/" rel="next"/>
 <link href="../../assets/images/favicon.png" rel="icon"/>
 <meta content="mkdocs-1.6.1, mkdocs-material-9.6.22" name="generator"/>
 <title>Domain Design - Neuroglia Python Framework</title>
@@ -112,32 +112,12 @@
 <nav aria-label="Tabs" class="md-tabs" data-md-component="tabs">
 <div class="md-grid">
 <ul class="md-tabs__list">
-<li class="md-tabs__item">
+<li class="md-tabs__item md-tabs__item--active">
 <a class="md-tabs__link" href="../..">
-        
+          
   
-  
-    
   
   Home
-
-      </a>
-</li>
-<li class="md-tabs__item">
-<a class="md-tabs__link" href="../../getting-started/">
-          
-  
-  
-  Getting Started
-
-        </a>
-</li>
-<li class="md-tabs__item md-tabs__item--active">
-<a class="md-tabs__link" href="../">
-          
-  
-  
-  Mario's Pizzeria
 
         </a>
 </li>
@@ -169,16 +149,7 @@
         </a>
 </li>
 <li class="md-tabs__item">
-<a class="md-tabs__link" href="../../samples/">
-          
-  
-  
-  Samples
-
-        </a>
-</li>
-<li class="md-tabs__item">
-<a class="md-tabs__link" href="../../references/persistence-documentation-guide/">
+<a class="md-tabs__link" href="../../concepts/">
           
   
   
@@ -214,33 +185,33 @@
 </a>
 </div>
 <ul class="md-nav__list" data-md-scrollfix="">
-<li class="md-nav__item">
-<a class="md-nav__link" href="../..">
+<li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+<input checked="" class="md-nav__toggle md-toggle" id="__nav_1" type="checkbox"/>
+<label class="md-nav__link" for="__nav_1" id="__nav_1_label" tabindex="">
 <span class="md-ellipsis">
     Home
     
   </span>
-</a>
-</li>
-<li class="md-nav__item md-nav__item--nested">
-<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_2" type="checkbox"/>
-<label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
-<span class="md-ellipsis">
-    Getting Started
-    
-  </span>
 <span class="md-nav__icon md-icon"></span>
 </label>
-<nav aria-expanded="false" aria-labelledby="__nav_2_label" class="md-nav" data-md-level="1">
-<label class="md-nav__title" for="__nav_2">
+<nav aria-expanded="true" aria-labelledby="__nav_1_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_1">
 <span class="md-nav__icon md-icon"></span>
-            Getting Started
+            Home
           </label>
 <ul class="md-nav__list" data-md-scrollfix="">
 <li class="md-nav__item">
+<a class="md-nav__link" href="../..">
+<span class="md-ellipsis">
+    Welcome
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
 <a class="md-nav__link" href="../../getting-started/">
 <span class="md-ellipsis">
-    Overview
+    Getting Started
     
   </span>
 </a>
@@ -248,7 +219,7 @@
 <li class="md-nav__item">
 <a class="md-nav__link" href="../../guides/3-min-bootstrap/">
 <span class="md-ellipsis">
-    3-Minute Bootstrap
+    Quick Bootstrap
     
   </span>
 </a>
@@ -256,15 +227,152 @@
 <li class="md-nav__item">
 <a class="md-nav__link" href="../../guides/local-development/">
 <span class="md-ellipsis">
-    Local Development Setup
+    Local Dev Setup
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--section md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_1_5" type="checkbox"/>
+<label class="md-nav__link" for="__nav_1_5" id="__nav_1_5_label" tabindex="">
+<span class="md-ellipsis">
+    Tutorials
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_1_5_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_1_5">
+<span class="md-nav__icon md-icon"></span>
+            Tutorials
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../tutorials/">
+<span class="md-ellipsis">
+    Overview
     
   </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../guides/mario-pizzeria-tutorial/">
+<a class="md-nav__link" href="../../tutorials/mario-pizzeria-01-setup/">
 <span class="md-ellipsis">
-    Mario's Pizzeria Tutorial
+    1. Project Setup
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../tutorials/mario-pizzeria-02-domain/">
+<span class="md-ellipsis">
+    2. Domain Model
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../tutorials/mario-pizzeria-03-cqrs/">
+<span class="md-ellipsis">
+    3. CQRS &amp; Commands
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../tutorials/mario-pizzeria-04-api/">
+<span class="md-ellipsis">
+    4. API Controllers
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../tutorials/mario-pizzeria-05-events/">
+<span class="md-ellipsis">
+    5. Event-Driven Workflows
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../tutorials/mario-pizzeria-06-persistence/">
+<span class="md-ellipsis">
+    6. Data Persistence
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../tutorials/mario-pizzeria-07-auth/">
+<span class="md-ellipsis">
+    7. Authentication &amp; Security
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../tutorials/mario-pizzeria-08-observability/">
+<span class="md-ellipsis">
+    8. Observability
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../tutorials/mario-pizzeria-09-deployment/">
+<span class="md-ellipsis">
+    9. Production Deployment
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--section md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_1_6" type="checkbox"/>
+<label class="md-nav__link" for="__nav_1_6" id="__nav_1_6_label" tabindex="">
+<span class="md-ellipsis">
+    Sample Applications
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_1_6_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_1_6">
+<span class="md-nav__icon md-icon"></span>
+            Sample Applications
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../samples/">
+<span class="md-ellipsis">
+    Overview
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../samples/openbank/">
+<span class="md-ellipsis">
+    OpenBank
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../samples/api_gateway/">
+<span class="md-ellipsis">
+    API Gateway
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../samples/desktop_controller/">
+<span class="md-ellipsis">
+    Desktop Controller
     
   </span>
 </a>
@@ -273,24 +381,24 @@
 </nav>
 </li>
 <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
-<input checked="" class="md-nav__toggle md-toggle" id="__nav_3" type="checkbox"/>
-<label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+<input checked="" class="md-nav__toggle md-toggle" id="__nav_1_7" type="checkbox"/>
+<label class="md-nav__link" for="__nav_1_7" id="__nav_1_7_label" tabindex="">
 <span class="md-ellipsis">
-    Mario's Pizzeria
+    Mario's Pizzeria Case Study
     
   </span>
 <span class="md-nav__icon md-icon"></span>
 </label>
-<nav aria-expanded="true" aria-labelledby="__nav_3_label" class="md-nav" data-md-level="1">
-<label class="md-nav__title" for="__nav_3">
+<nav aria-expanded="true" aria-labelledby="__nav_1_7_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_1_7">
 <span class="md-nav__icon md-icon"></span>
-            Mario's Pizzeria
+            Mario's Pizzeria Case Study
           </label>
 <ul class="md-nav__list" data-md-scrollfix="">
 <li class="md-nav__item">
 <a class="md-nav__link" href="../">
 <span class="md-ellipsis">
-    Case Study Overview
+    Overview
     
   </span>
 </a>
@@ -299,14 +407,6 @@
 <a class="md-nav__link" href="../business-analysis/">
 <span class="md-ellipsis">
     Business Analysis
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../technical-architecture/">
-<span class="md-ellipsis">
-    Technical Architecture
     
   </span>
 </a>
@@ -425,17 +525,6 @@
     </span>
 </a>
 </li>
-</ul>
-</nav>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#domain-enums-value-objects">
-<span class="md-ellipsis">
-      📊 Domain Enums &amp; Value Objects
-    </span>
-</a>
-<nav aria-label="📊 Domain Enums &amp; Value Objects" class="md-nav">
-<ul class="md-nav__list">
 <li class="md-nav__item">
 <a class="md-nav__link" href="#pizza-size-enumeration">
 <span class="md-ellipsis">
@@ -491,9 +580,35 @@
       🔗 Related Documentation
     </span>
 </a>
+<nav aria-label="🔗 Related Documentation" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#case-study-documents">
+<span class="md-ellipsis">
+      Case Study Documents
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#framework-patterns-demonstrated">
+<span class="md-ellipsis">
+      Framework Patterns Demonstrated
+    </span>
+</a>
 </li>
 </ul>
 </nav>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../technical-architecture/">
+<span class="md-ellipsis">
+    Technical Architecture
+    
+  </span>
+</a>
 </li>
 <li class="md-nav__item">
 <a class="md-nav__link" href="../implementation-guide/">
@@ -514,17 +629,20 @@
 </ul>
 </nav>
 </li>
+</ul>
+</nav>
+</li>
 <li class="md-nav__item md-nav__item--nested">
-<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_4" type="checkbox"/>
-<label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_2" type="checkbox"/>
+<label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
 <span class="md-ellipsis">
     Patterns
     
   </span>
 <span class="md-nav__icon md-icon"></span>
 </label>
-<nav aria-expanded="false" aria-labelledby="__nav_4_label" class="md-nav" data-md-level="1">
-<label class="md-nav__title" for="__nav_4">
+<nav aria-expanded="false" aria-labelledby="__nav_2_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_2">
 <span class="md-nav__icon md-icon"></span>
             Patterns
           </label>
@@ -532,11 +650,26 @@
 <li class="md-nav__item">
 <a class="md-nav__link" href="../../patterns/">
 <span class="md-ellipsis">
-    🎯 Architecture Patterns
+    Overview
     
   </span>
 </a>
 </li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_2_2" type="checkbox"/>
+<label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="0">
+<span class="md-ellipsis">
+    Foundation
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_2_2_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_2_2">
+<span class="md-nav__icon md-icon"></span>
+            Foundation
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
 <li class="md-nav__item">
 <a class="md-nav__link" href="../../patterns/clean-architecture/">
 <span class="md-ellipsis">
@@ -554,22 +687,6 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../patterns/event-driven/">
-<span class="md-ellipsis">
-    Event-Driven Architecture
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../../patterns/resource-oriented-architecture/">
-<span class="md-ellipsis">
-    Resource-Oriented Architecture
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
 <a class="md-nav__link" href="../../patterns/cqrs/">
 <span class="md-ellipsis">
     CQRS
@@ -578,17 +695,9 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../patterns/persistence-patterns/">
+<a class="md-nav__link" href="../../patterns/event-driven/">
 <span class="md-ellipsis">
-    Persistence Patterns
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../../patterns/event-sourcing/">
-<span class="md-ellipsis">
-    Event Sourcing
+    Event-Driven Architecture
     
   </span>
 </a>
@@ -601,6 +710,32 @@
   </span>
 </a>
 </li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../patterns/dependency-injection/">
+<span class="md-ellipsis">
+    Dependency Injection
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_2_3" type="checkbox"/>
+<label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="0">
+<span class="md-ellipsis">
+    Implementation
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_2_3_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_2_3">
+<span class="md-nav__icon md-icon"></span>
+            Implementation
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
 <li class="md-nav__item">
 <a class="md-nav__link" href="../../patterns/unit-of-work/">
 <span class="md-ellipsis">
@@ -618,9 +753,9 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../patterns/dependency-injection/">
+<a class="md-nav__link" href="../../patterns/event-sourcing/">
 <span class="md-ellipsis">
-    Dependency Injection
+    Event Sourcing
     
   </span>
 </a>
@@ -629,6 +764,32 @@
 <a class="md-nav__link" href="../../patterns/reactive-programming/">
 <span class="md-ellipsis">
     Reactive Programming
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_2_4" type="checkbox"/>
+<label class="md-nav__link" for="__nav_2_4" id="__nav_2_4_label" tabindex="0">
+<span class="md-ellipsis">
+    Advanced
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_2_4_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_2_4">
+<span class="md-nav__icon md-icon"></span>
+            Advanced
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../patterns/resource-oriented-architecture/">
+<span class="md-ellipsis">
+    Resource-Oriented Architecture
     
   </span>
 </a>
@@ -649,20 +810,31 @@
   </span>
 </a>
 </li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../patterns/persistence-patterns/">
+<span class="md-ellipsis">
+    Persistence Patterns
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
 </ul>
 </nav>
 </li>
 <li class="md-nav__item md-nav__item--nested">
-<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_5" type="checkbox"/>
-<label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_3" type="checkbox"/>
+<label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
 <span class="md-ellipsis">
     Features
     
   </span>
 <span class="md-nav__icon md-icon"></span>
 </label>
-<nav aria-expanded="false" aria-labelledby="__nav_5_label" class="md-nav" data-md-level="1">
-<label class="md-nav__title" for="__nav_5">
+<nav aria-expanded="false" aria-labelledby="__nav_3_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_3">
 <span class="md-nav__icon md-icon"></span>
             Features
           </label>
@@ -670,11 +842,26 @@
 <li class="md-nav__item">
 <a class="md-nav__link" href="../../features/">
 <span class="md-ellipsis">
-    🚀 Framework Features
+    Overview
     
   </span>
 </a>
 </li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_3_2" type="checkbox"/>
+<label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
+<span class="md-ellipsis">
+    Core
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_3_2_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_3_2">
+<span class="md-nav__icon md-icon"></span>
+            Core
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
 <li class="md-nav__item">
 <a class="md-nav__link" href="../../features/simple-cqrs/">
 <span class="md-ellipsis">
@@ -715,10 +902,28 @@
   </span>
 </a>
 </li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_3_3" type="checkbox"/>
+<label class="md-nav__link" for="__nav_3_3" id="__nav_3_3_label" tabindex="0">
+<span class="md-ellipsis">
+    Validation &amp; Utilities
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_3_3_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_3_3">
+<span class="md-nav__icon md-icon"></span>
+            Validation &amp; Utilities
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
 <li class="md-nav__item">
 <a class="md-nav__link" href="../../features/enhanced-model-validation/">
 <span class="md-ellipsis">
-    Enhanced Model Validation
+    Model Validation
     
   </span>
 </a>
@@ -726,39 +931,7 @@
 <li class="md-nav__item">
 <a class="md-nav__link" href="../../features/case-conversion-utilities/">
 <span class="md-ellipsis">
-    Case Conversion Utilities
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../../features/http-service-client/">
-<span class="md-ellipsis">
-    HTTP Service Client
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../../features/redis-cache-repository/">
-<span class="md-ellipsis">
-    Redis Cache Repository
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../../features/background-task-scheduling/">
-<span class="md-ellipsis">
-    Background Task Scheduling
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../../features/resilient-handler-discovery/">
-<span class="md-ellipsis">
-    Resilient Handler Discovery
+    Case Conversion
     
   </span>
 </a>
@@ -766,7 +939,75 @@
 <li class="md-nav__item">
 <a class="md-nav__link" href="../../features/configurable-type-discovery/">
 <span class="md-ellipsis">
-    Configurable Type Discovery
+    Type Discovery
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_3_4" type="checkbox"/>
+<label class="md-nav__link" for="__nav_3_4" id="__nav_3_4_label" tabindex="0">
+<span class="md-ellipsis">
+    Integration
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_3_4_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_3_4">
+<span class="md-nav__icon md-icon"></span>
+            Integration
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/http-service-client/">
+<span class="md-ellipsis">
+    HTTP Client
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/redis-cache-repository/">
+<span class="md-ellipsis">
+    Redis Cache
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/background-task-scheduling/">
+<span class="md-ellipsis">
+    Background Tasks
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_3_5" type="checkbox"/>
+<label class="md-nav__link" for="__nav_3_5" id="__nav_3_5_label" tabindex="0">
+<span class="md-ellipsis">
+    Dev Tools
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_3_5_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_3_5">
+<span class="md-nav__icon md-icon"></span>
+            Dev Tools
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/resilient-handler-discovery/">
+<span class="md-ellipsis">
+    Handler Discovery
     
   </span>
 </a>
@@ -782,17 +1023,20 @@
 </ul>
 </nav>
 </li>
+</ul>
+</nav>
+</li>
 <li class="md-nav__item md-nav__item--nested">
-<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_6" type="checkbox"/>
-<label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_4" type="checkbox"/>
+<label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
 <span class="md-ellipsis">
     Guides
     
   </span>
 <span class="md-nav__icon md-icon"></span>
 </label>
-<nav aria-expanded="false" aria-labelledby="__nav_6_label" class="md-nav" data-md-level="1">
-<label class="md-nav__title" for="__nav_6">
+<nav aria-expanded="false" aria-labelledby="__nav_4_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_4">
 <span class="md-nav__icon md-icon"></span>
             Guides
           </label>
@@ -824,7 +1068,15 @@
 <li class="md-nav__item">
 <a class="md-nav__link" href="../../guides/jsonserializer-configuration/">
 <span class="md-ellipsis">
-    JsonSerializer Configuration
+    JsonSerializer Config
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../guides/mario-pizzeria-tutorial/">
+<span class="md-ellipsis">
+    Mario's Tutorial
     
   </span>
 </a>
@@ -833,22 +1085,37 @@
 </nav>
 </li>
 <li class="md-nav__item md-nav__item--nested">
-<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_7" type="checkbox"/>
-<label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_5" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
 <span class="md-ellipsis">
-    Samples
+    References
     
   </span>
 <span class="md-nav__icon md-icon"></span>
 </label>
-<nav aria-expanded="false" aria-labelledby="__nav_7_label" class="md-nav" data-md-level="1">
-<label class="md-nav__title" for="__nav_7">
+<nav aria-expanded="false" aria-labelledby="__nav_5_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_5">
 <span class="md-nav__icon md-icon"></span>
-            Samples
+            References
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_5_1" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5_1" id="__nav_5_1_label" tabindex="0">
+<span class="md-ellipsis">
+    Core Concepts
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_5_1_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_5_1">
+<span class="md-nav__icon md-icon"></span>
+            Core Concepts
           </label>
 <ul class="md-nav__list" data-md-scrollfix="">
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../samples/">
+<a class="md-nav__link" href="../../concepts/">
 <span class="md-ellipsis">
     Overview
     
@@ -856,25 +1123,65 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../samples/openbank/">
+<a class="md-nav__link" href="../../concepts/clean-architecture/">
 <span class="md-ellipsis">
-    OpenBank
+    Clean Architecture
     
   </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../samples/api_gateway/">
+<a class="md-nav__link" href="../../concepts/domain-driven-design/">
 <span class="md-ellipsis">
-    API Gateway
+    Domain-Driven Design
     
   </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../samples/desktop_controller/">
+<a class="md-nav__link" href="../../concepts/cqrs/">
 <span class="md-ellipsis">
-    Desktop Controller
+    CQRS Pattern
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../concepts/mediator/">
+<span class="md-ellipsis">
+    Mediator Pattern
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../concepts/event-driven/">
+<span class="md-ellipsis">
+    Event-Driven Architecture
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../concepts/repository/">
+<span class="md-ellipsis">
+    Repository Pattern
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../concepts/aggregates-entities/">
+<span class="md-ellipsis">
+    Aggregates &amp; Entities
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../concepts/dependency-injection/">
+<span class="md-ellipsis">
+    Dependency Injection
     
   </span>
 </a>
@@ -883,40 +1190,24 @@
 </nav>
 </li>
 <li class="md-nav__item md-nav__item--nested">
-<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_8" type="checkbox"/>
-<label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_5_2" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5_2" id="__nav_5_2_label" tabindex="0">
 <span class="md-ellipsis">
-    References
+    Technical References
     
   </span>
 <span class="md-nav__icon md-icon"></span>
 </label>
-<nav aria-expanded="false" aria-labelledby="__nav_8_label" class="md-nav" data-md-level="1">
-<label class="md-nav__title" for="__nav_8">
+<nav aria-expanded="false" aria-labelledby="__nav_5_2_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_5_2">
 <span class="md-nav__icon md-icon"></span>
-            References
+            Technical References
           </label>
 <ul class="md-nav__list" data-md-scrollfix="">
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../references/persistence-documentation-guide/">
-<span class="md-ellipsis">
-    Persistence Documentation Guide
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
 <a class="md-nav__link" href="../../references/oauth-oidc-jwt/">
 <span class="md-ellipsis">
-    OAuth, OIDC &amp; JWT
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../../references/source_code_naming_convention/">
-<span class="md-ellipsis">
-    Source Code Naming Conventions
+    OAuth &amp; JWT
     
   </span>
 </a>
@@ -930,9 +1221,25 @@
 </a>
 </li>
 <li class="md-nav__item">
+<a class="md-nav__link" href="../../references/persistence-documentation-guide/">
+<span class="md-ellipsis">
+    Persistence Guide
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../references/source_code_naming_convention/">
+<span class="md-ellipsis">
+    Naming Conventions
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
 <a class="md-nav__link" href="../../references/python_typing_guide/">
 <span class="md-ellipsis">
-    Python Typing Guide
+    Python Typing
     
   </span>
 </a>
@@ -940,7 +1247,7 @@
 <li class="md-nav__item">
 <a class="md-nav__link" href="../../references/python_modular_code/">
 <span class="md-ellipsis">
-    Python Modular Code
+    Modular Code
     
   </span>
 </a>
@@ -948,7 +1255,7 @@
 <li class="md-nav__item">
 <a class="md-nav__link" href="../../references/python_object_oriented/">
 <span class="md-ellipsis">
-    Python Object-Oriented Programming
+    OOP Guide
     
   </span>
 </a>
@@ -956,7 +1263,7 @@
 <li class="md-nav__item">
 <a class="md-nav__link" href="../../references/test-mermaid/">
 <span class="md-ellipsis">
-    Mermaid References
+    Mermaid Reference
     
   </span>
 </a>
@@ -964,10 +1271,13 @@
 <li class="md-nav__item">
 <a class="md-nav__link" href="../../ai-agent-guide/">
 <span class="md-ellipsis">
-    AI Agent Instructions
+    AI Agent Guide
     
   </span>
 </a>
+</li>
+</ul>
+</nav>
 </li>
 </ul>
 </nav>
@@ -1079,17 +1389,6 @@
     </span>
 </a>
 </li>
-</ul>
-</nav>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#domain-enums-value-objects">
-<span class="md-ellipsis">
-      📊 Domain Enums &amp; Value Objects
-    </span>
-</a>
-<nav aria-label="📊 Domain Enums &amp; Value Objects" class="md-nav">
-<ul class="md-nav__list">
 <li class="md-nav__item">
 <a class="md-nav__link" href="#pizza-size-enumeration">
 <span class="md-ellipsis">
@@ -1145,6 +1444,24 @@
       🔗 Related Documentation
     </span>
 </a>
+<nav aria-label="🔗 Related Documentation" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#case-study-documents">
+<span class="md-ellipsis">
+      Case Study Documents
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#framework-patterns-demonstrated">
+<span class="md-ellipsis">
+      Framework Patterns Demonstrated
+    </span>
+</a>
+</li>
+</ul>
+</nav>
 </li>
 </ul>
 </nav>
@@ -1158,8 +1475,13 @@
 <p><strong>Domain Modeling Document</strong> | <strong>Approach</strong>: Domain-Driven Design (DDD)
 <strong>Patterns</strong>: Rich Domain Models, Value Objects, Domain Events | <strong>Status</strong>: Reference Implementation</p>
 </blockquote>
+<hr/>
+<blockquote>
+<p>💡 <strong>Pattern in Action</strong>: This document demonstrates <strong><a href="../../patterns/domain-driven-design/">Domain-Driven Design</a></strong> with rich domain models that contain business logic, not just data. See how Mario's Pizzeria avoids the <a href="../../patterns/domain-driven-design/#common-mistakes">anemic domain model anti-pattern</a>.</p>
+</blockquote>
+<hr/>
 <h2 id="domain-overview">🎯 Domain Overview<a class="headerlink" href="#domain-overview" title="Permanent link">¶</a></h2>
-<p>The Mario's Pizzeria domain captures the essential business concepts and workflows of a pizza restaurant operation. Using Domain-Driven Design principles, we model the core business entities with rich behavior, clear boundaries, and event-driven workflows.</p>
+<p>The Mario's Pizzeria domain captures the essential business concepts and workflows of a pizza restaurant operation. Using <strong><a href="../../patterns/domain-driven-design/">Domain-Driven Design</a></strong> principles, we model the core business entities with rich behavior, clear boundaries, and event-driven workflows.</p>
 <p><strong>Core Domain Concepts</strong>:</p>
 <ul>
 <li><strong>Orders</strong>: Central to the business, capturing customer requests and tracking fulfillment</li>
@@ -1167,6 +1489,17 @@
 <li><strong>Kitchen</strong>: Resource management and capacity planning</li>
 <li><strong>Customer</strong>: Contact information and order history</li>
 </ul>
+<p><strong>Key Patterns Demonstrated</strong>:</p>
+<ul>
+<li>✅ <strong>Rich Domain Models</strong> - Entities contain business logic, not just data</li>
+<li>✅ <strong>Aggregate Roots</strong> - Kitchen controls order processing boundaries</li>
+<li>✅ <strong>Value Objects</strong> - Money, Address with equality semantics</li>
+<li>✅ <strong>Domain Events</strong> - OrderPlaced, OrderReady for workflow automation</li>
+<li>✅ <strong><a href="../../patterns/repository/">Repository Pattern</a></strong> - Data access abstraction</li>
+</ul>
+<blockquote>
+<p>⚠️ <strong>Avoid Common Mistake</strong>: Don't create anemic domain models with only getters/setters! Our Order entity has methods like <code>confirmOrder()</code> and <code>startCooking()</code> that enforce business rules. Learn more in <a href="../../patterns/domain-driven-design/#common-mistakes">DDD Common Mistakes</a>.</p>
+</blockquote>
 <hr/>
 <h2 id="domain-model">📊 Domain Model<a class="headerlink" href="#domain-model" title="Permanent link">¶</a></h2>
 <p>The core business entities and their relationships:</p>
@@ -1542,8 +1875,13 @@
 </span><span id="__span-4-21"><a href="#__codelineno-4-21" id="__codelineno-4-21" name="__codelineno-4-21"></a><span class="w">        </span><span class="sd">"""Check if amount is positive"""</span>
 </span><span id="__span-4-22"><a href="#__codelineno-4-22" id="__codelineno-4-22" name="__codelineno-4-22"></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">amount</span> <span class="o">&gt;</span> <span class="mi">0</span>
 </span></code></pre></div>
+<hr/>
 <h2 id="domain-events">📡 Domain Events<a class="headerlink" href="#domain-events" title="Permanent link">¶</a></h2>
-<p>Domain events capture important business occurrences and enable loose coupling:</p>
+<p>Domain events capture important business occurrences and enable loose coupling through <strong><a href="../../patterns/event-driven/">event-driven architecture</a></strong>:</p>
+<blockquote>
+<p>🎯 <strong>Why Domain Events?</strong>: Events decouple the order placement from kitchen processing and customer notifications. The order handler doesn't need to know about the kitchen or SMS service! Learn more about <a href="../../patterns/event-driven/#what--why-the-event-driven-pattern">Event-Driven Architecture</a>.</p>
+<p>⚠️ <strong>Common Mistake Alert</strong>: Don't forget to use <strong><a href="../../patterns/unit-of-work/">Unit of Work</a></strong> to automatically collect and dispatch events! See the <a href="../../patterns/unit-of-work/#common-mistakes">Unit of Work pattern</a> to avoid manual event management.</p>
+</blockquote>
 <h3 id="order-lifecycle-events">Order Lifecycle Events<a class="headerlink" href="#order-lifecycle-events" title="Permanent link">¶</a></h3>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a href="#__codelineno-5-1" id="__codelineno-5-1" name="__codelineno-5-1"></a><span class="nd">@dataclass</span>
 </span><span id="__span-5-2"><a href="#__codelineno-5-2" id="__codelineno-5-2" name="__codelineno-5-2"></a><span class="k">class</span><span class="w"> </span><span class="nc">OrderPlacedEvent</span><span class="p">(</span><span class="n">DomainEvent</span><span class="p">):</span>
@@ -1592,7 +1930,7 @@
 </span><span id="__span-6-13"><a href="#__codelineno-6-13" id="__codelineno-6-13" name="__codelineno-6-13"></a>    <span class="n">new_capacity</span><span class="p">:</span> <span class="nb">int</span>
 </span><span id="__span-6-14"><a href="#__codelineno-6-14" id="__codelineno-6-14" name="__codelineno-6-14"></a>    <span class="n">reason</span><span class="p">:</span> <span class="nb">str</span>
 </span></code></pre></div>
-<h2 id="domain-enums-value-objects">📊 Domain Enums &amp; Value Objects<a class="headerlink" href="#domain-enums-value-objects" title="Permanent link">¶</a></h2>
+<hr/>
 <h3 id="pizza-size-enumeration">Pizza Size Enumeration<a class="headerlink" href="#pizza-size-enumeration" title="Permanent link">¶</a></h3>
 <p>The pizza size enumeration defines the available size options with clear business values:</p>
 <p><strong>Source</strong>: <a href="https://github.com/bvandewe/pyneuro/blob/main/samples/mario-pizzeria/domain/entities/enums.py"><code>samples/mario-pizzeria/domain/entities/enums.py</code></a></p>
@@ -1651,12 +1989,24 @@
 <li>Pricing must include all applicable taxes and fees</li>
 </ul>
 <h2 id="related-documentation">🔗 Related Documentation<a class="headerlink" href="#related-documentation" title="Permanent link">¶</a></h2>
+<h3 id="case-study-documents">Case Study Documents<a class="headerlink" href="#case-study-documents" title="Permanent link">¶</a></h3>
 <ul>
 <li><a href="../business-analysis/">Business Analysis</a> - Requirements and stakeholder analysis</li>
 <li><a href="../technical-architecture/">Technical Architecture</a> - System design and infrastructure</li>
 <li><a href="../implementation-guide/">Implementation Guide</a> - Development patterns and APIs</li>
 <li><a href="../testing-deployment/">Testing &amp; Deployment</a> - Quality assurance and operations</li>
 </ul>
+<h3 id="framework-patterns-demonstrated">Framework Patterns Demonstrated<a class="headerlink" href="#framework-patterns-demonstrated" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong><a href="../../patterns/domain-driven-design/">Domain-Driven Design</a></strong> - Rich domain models with business logic</li>
+<li><strong><a href="../../patterns/event-driven/">Event-Driven Architecture</a></strong> - Domain events for workflow automation</li>
+<li><strong><a href="../../patterns/repository/">Repository Pattern</a></strong> - Data access abstraction for entities</li>
+<li><strong><a href="../../patterns/unit-of-work/">Unit of Work</a></strong> - Automatic domain event collection and dispatching</li>
+<li><strong><a href="../../patterns/clean-architecture/">Clean Architecture</a></strong> - Domain layer independence</li>
+</ul>
+<blockquote>
+<p>💡 <strong>Learning Tip</strong>: See how Mario's Pizzeria domain entities avoid the <a href="../../patterns/domain-driven-design/#common-mistakes">anemic domain model anti-pattern</a> by keeping business logic where it belongs - in the domain!</p>
+</blockquote>
 <hr/>
 <p><em>This domain model provides a solid foundation for implementing Mario's Pizzeria using Domain-Driven Design principles, ensuring the code reflects the actual business operations.</em></p>
 </article>
