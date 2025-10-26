@@ -1,163 +1,312 @@
-# 🎯 Simple CQRS Patterns
+# 🎯 CQRS with Mediator Pattern
 
-This guide shows how to use Neuroglia's simplified CQRS patterns for applications that need clean command/query separation without complex event sourcing or cloud events infrastructure.
+_Estimated reading time: 12 minutes_
 
-## 🎯 When to Use Simple CQRS
+## 🎯 What & Why
 
-Use the simple CQRS patterns when you need:
+**CQRS (Command Query Responsibility Segregation)** separates write operations (Commands) from read operations (Queries). The **Mediator Pattern** decouples request senders from handlers, creating a clean, testable architecture.
 
-- **Clean separation** of read and write operations
-- **Basic validation** and business logic handling
-- **In-memory testing** or simple database operations
-- **Minimal setup** without event sourcing complexity
-- **Rapid prototyping** of business logic
-
-**Don't use simple patterns when you need:**
-
-- Event sourcing and domain events
-- Cloud events integration
-- Complex workflow orchestration
-- Advanced audit trails
-
-## 🏗️ Basic Setup
-
-### Minimal Example (5 lines of setup)
+### The Problem Without CQRS
 
 ```python
-from neuroglia.mediation import (
-    Command, Query, CommandHandler, QueryHandler,
-    create_simple_app, InMemoryRepository
-)
+# ❌ Without CQRS - business logic mixed in controller
+@app.post("/orders")
+async def create_order(order_data: dict, db: Database):
+    # Validation in controller
+    if not order_data.get("customer_id"):
+        return {"error": "Customer required"}, 400
 
-# One-line app creation
-provider = create_simple_app(CreateTaskHandler, GetTaskHandler,
-                           repositories=[InMemoryRepository[Task]])
-mediator = provider.get_service(Mediator)
+    # Business logic in controller
+    order = Order(**order_data)
+    order.calculate_total()
+
+    # Data access in controller
+    await db.orders.insert_one(order.__dict__)
+
+    # Side effects in controller
+    await send_email(order.customer_email, "Order confirmed")
+
+    return {"id": order.id}, 201
 ```
 
-### Standard Setup
+**Problems:**
+
+- Controller has too many responsibilities
+- Business logic can't be reused
+- Testing requires mocking HTTP layer
+- Difficult to add behaviors (logging, validation, caching)
+
+### The Solution With CQRS + Mediator
 
 ```python
-from neuroglia.mediation import (
-    add_simple_mediator, register_simple_handlers
-)
-from neuroglia.dependency_injection import ServiceCollection
+# ✅ With CQRS - clean separation of concerns
+@app.post("/orders")
+async def create_order(dto: CreateOrderDto):
+    command = CreateOrderCommand(
+        customer_id=dto.customer_id,
+        items=dto.items
+    )
+    result = await self.mediator.execute_async(command)
+    return self.process(result)
 
-# Create service collection
-services = ServiceCollection()
-
-# Add simple mediator (no cloud events)
-add_simple_mediator(services)
-
-# Add repositories
-services.add_singleton(InMemoryRepository[Task])
-
-# Register handlers
-register_simple_handlers(services, CreateTaskHandler, GetTaskHandler)
-
-# Build provider
-provider = services.build()
+# Business logic in handler (testable, reusable)
+class CreateOrderHandler(CommandHandler):
+    async def handle_async(self, command: CreateOrderCommand):
+        # Validation, business logic, persistence all in one place
+        ...
 ```
 
-## 🚀 Complete Working Example
+**Benefits:**
 
-### 1. Define Your Models
+- Controllers are thin (orchestration only)
+- Business logic is isolated and testable
+- Easy to add cross-cutting concerns (validation, logging, caching)
+- Handlers are reusable across different entry points
+
+## 🚀 Getting Started
+
+### Basic Setup
+
+```python
+from neuroglia.hosting.web import WebApplicationBuilder
+from neuroglia.mediation import Mediator, Command, Query, CommandHandler, QueryHandler
+from neuroglia.core.operation_result import OperationResult
+
+# Step 1: Create application builder
+builder = WebApplicationBuilder()
+
+# Step 2: Add mediator (includes all CQRS infrastructure)
+builder.services.add_mediator()
+
+# Step 3: Mediator automatically discovers and registers handlers
+# Just import your handler modules and they're auto-registered!
+
+# Step 4: Build app
+app = builder.build()
+```
+
+### Your First Command and Handler
 
 ```python
 from dataclasses import dataclass
-
-# Domain model
-@dataclass
-class Task:
-    id: str
-    title: str
-    completed: bool = False
-
-# DTO for API responses
-@dataclass
-class TaskDto:
-    id: str
-    title: str
-    completed: bool
-```
-
-### 2. Define Commands and Queries
-
-```python
-from neuroglia.mediation import Command, Query
+from neuroglia.mediation import Command, CommandHandler
 from neuroglia.core.operation_result import OperationResult
 
+# Define the command (what you want to do)
 @dataclass
-class CreateTaskCommand(Command[OperationResult[TaskDto]]):
-    title: str
+class CreatePizzaCommand(Command[OperationResult[dict]]):
+    customer_id: str
+    pizza_type: str
+    size: str
 
-@dataclass
-class GetTaskQuery(Query[OperationResult[TaskDto]]):
-    task_id: str
-
-@dataclass
-class CompleteTaskCommand(Command[OperationResult[TaskDto]]):
-    task_id: str
-```
-
-### 3. Implement Handlers
-
-```python
-import uuid
-from neuroglia.mediation import CommandHandler, QueryHandler
-
-class CreateTaskHandler(CommandHandler[CreateTaskCommand, OperationResult[TaskDto]]):
-    def __init__(self, repository: InMemoryRepository[Task]):
-        self.repository = repository
-
-    async def handle_async(self, request: CreateTaskCommand) -> OperationResult[TaskDto]:
+# Implement the handler (how to do it)
+class CreatePizzaHandler(CommandHandler[CreatePizzaCommand, OperationResult[dict]]):
+    async def handle_async(self, command: CreatePizzaCommand) -> OperationResult[dict]:
         # Validation
-        if not request.title.strip():
-            return self.bad_request("Title cannot be empty")
+        if command.size not in ["small", "medium", "large"]:
+            return self.bad_request("Invalid pizza size")
 
         # Business logic
-        task = Task(str(uuid.uuid4()), request.title.strip())
-        await self.repository.save_async(task)
+        pizza = {
+            "id": str(uuid.uuid4()),
+            "customer_id": command.customer_id,
+            "type": command.pizza_type,
+            "size": command.size,
+            "price": self.calculate_price(command.size)
+        }
 
         # Return result
-        dto = TaskDto(task.id, task.title, task.completed)
-        return self.created(dto)
+        return self.created(pizza)
 
-class GetTaskHandler(QueryHandler[GetTaskQuery, OperationResult[TaskDto]]):
-    def __init__(self, repository: InMemoryRepository[Task]):
-        self.repository = repository
+    def calculate_price(self, size: str) -> float:
+        prices = {"small": 10.0, "medium": 15.0, "large": 20.0}
+        return prices[size]
 
-    async def handle_async(self, request: GetTaskQuery) -> OperationResult[TaskDto]:
-        task = await self.repository.get_by_id_async(request.task_id)
-
-        if not task:
-            return self.not_found(Task, request.task_id)
-
-        dto = TaskDto(task.id, task.title, task.completed)
-        return self.ok(dto)
-
-class CompleteTaskHandler(CommandHandler[CompleteTaskCommand, OperationResult[TaskDto]]):
-    def __init__(self, repository: InMemoryRepository[Task]):
-        self.repository = repository
-
-    async def handle_async(self, request: CompleteTaskCommand) -> OperationResult[TaskDto]:
-        task = await self.repository.get_by_id_async(request.task_id)
-
-        if not task:
-            return self.not_found(Task, request.task_id)
-
-        if task.completed:
-            return self.bad_request("Task is already completed")
-
-        # Business logic
-        task.completed = True
-        await self.repository.save_async(task)
-
-        dto = TaskDto(task.id, task.title, task.completed)
-        return self.ok(dto)
+# Use in controller
+class PizzaController(ControllerBase):
+    @post("/pizzas")
+    async def create_pizza(self, dto: CreatePizzaDto):
+        command = self.mapper.map(dto, CreatePizzaCommand)
+        result = await self.mediator.execute_async(command)
+        return self.process(result)  # Automatically converts to HTTP response
 ```
 
-### 4. Create and Use Your Application
+## 🏗️ Core Components
+
+### 1. Commands (Write Operations)
+
+Commands represent **intentions to change state**:
+
+```python
+from dataclasses import dataclass
+from neuroglia.mediation import Command
+from neuroglia.core.operation_result import OperationResult
+
+# Command naming: <Verb><Noun>Command
+@dataclass
+class PlaceOrderCommand(Command[OperationResult[OrderDto]]):
+    customer_id: str
+    items: list[OrderItemDto]
+    delivery_address: str
+    payment_method: str
+
+@dataclass
+class CancelOrderCommand(Command[OperationResult[OrderDto]]):
+    order_id: str
+    reason: str
+
+@dataclass
+class UpdateOrderStatusCommand(Command[OperationResult[OrderDto]]):
+    order_id: str
+    new_status: str
+```
+
+**Command Characteristics:**
+
+- Represent user intentions ("Place an order", "Cancel order")
+- May fail (validation, business rules)
+- Should not return data (use queries for reading)
+- Named with verbs: `PlaceOrder`, `CancelOrder`, `UpdateInventory`
+
+### 2. Queries (Read Operations)
+
+Queries represent **requests for data**:
+
+```python
+# Query naming: <Verb><Noun>Query or Get<Noun>Query
+@dataclass
+class GetOrderQuery(Query[OperationResult[OrderDto]]):
+    order_id: str
+
+@dataclass
+class ListCustomerOrdersQuery(Query[OperationResult[list[OrderDto]]]):
+    customer_id: str
+    status: Optional[str] = None
+    page: int = 1
+    page_size: int = 20
+
+@dataclass
+class SearchPizzasQuery(Query[OperationResult[list[PizzaDto]]]):
+    search_term: str
+    category: Optional[str] = None
+```
+
+**Query Characteristics:**
+
+- Never modify state (idempotent)
+- Always succeed or return empty results
+- Named with questions: `GetOrder`, `ListOrders`, `SearchPizzas`
+- Can be cached aggressively
+
+### 3. Command Handlers
+
+Command handlers contain write-side business logic:
+
+```python
+from neuroglia.mediation import CommandHandler
+from neuroglia.core.operation_result import OperationResult
+
+class PlaceOrderHandler(CommandHandler[PlaceOrderCommand, OperationResult[OrderDto]]):
+    def __init__(
+        self,
+        order_repository: IOrderRepository,
+        customer_repository: ICustomerRepository,
+        inventory_service: InventoryService,
+        payment_service: PaymentService,
+        mapper: Mapper
+    ):
+        super().__init__()
+        self.order_repository = order_repository
+        self.customer_repository = customer_repository
+        self.inventory_service = inventory_service
+        self.payment_service = payment_service
+        self.mapper = mapper
+
+    async def handle_async(self, command: PlaceOrderCommand) -> OperationResult[OrderDto]:
+        # Step 1: Validation
+        customer = await self.customer_repository.get_by_id_async(command.customer_id)
+        if not customer:
+            return self.not_found("Customer", command.customer_id)
+
+        if not command.items:
+            return self.bad_request("Order must have at least one item")
+
+        # Step 2: Business Rules
+        if not await self.inventory_service.check_availability(command.items):
+            return self.bad_request("Some items are out of stock")
+
+        # Step 3: Calculate totals
+        subtotal = sum(item.price * item.quantity for item in command.items)
+        tax = subtotal * 0.08
+        total = subtotal + tax
+
+        # Step 4: Process payment
+        payment_result = await self.payment_service.charge_async(
+            customer.payment_method,
+            total
+        )
+
+        if not payment_result.success:
+            return self.bad_request(f"Payment failed: {payment_result.error}")
+
+        # Step 5: Create order entity
+        order = Order(
+            customer_id=command.customer_id,
+            items=command.items,
+            delivery_address=command.delivery_address,
+            subtotal=subtotal,
+            tax=tax,
+            total=total,
+            payment_transaction_id=payment_result.transaction_id
+        )
+
+        # Step 6: Reserve inventory
+        await self.inventory_service.reserve_items(command.items, order.id)
+
+        # Step 7: Persist
+        await self.order_repository.save_async(order)
+
+        # Step 8: Return result
+        return self.created(self.mapper.map(order, OrderDto))
+```
+
+### 4. Query Handlers
+
+Query handlers contain read-side logic:
+
+```python
+from neuroglia.mediation import QueryHandler
+
+class ListCustomerOrdersHandler(QueryHandler[ListCustomerOrdersQuery, OperationResult[list[OrderDto]]]):
+    def __init__(
+        self,
+        order_repository: IOrderRepository,
+        mapper: Mapper
+    ):
+        super().__init__()
+        self.order_repository = order_repository
+        self.mapper = mapper
+
+    async def handle_async(self, query: ListCustomerOrdersQuery) -> OperationResult[list[OrderDto]]:
+        # Queries use optimized read models
+        orders = await self.order_repository.list_by_customer_async(
+            customer_id=query.customer_id,
+            status=query.status,
+            page=query.page,
+            page_size=query.page_size
+        )
+
+        # Map to DTOs
+        dtos = [self.mapper.map(order, OrderDto) for order in orders]
+
+        return self.ok(dtos)
+```
+
+## 💡 Real-World Example: Mario's Pizzeria
+
+Complete CQRS implementation for pizza ordering:
+
+### Domain Layer
 
 ```python
 import asyncio
