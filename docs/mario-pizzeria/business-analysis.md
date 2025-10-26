@@ -5,11 +5,19 @@
 > **Consultant**: Neuroglia Architecture Team
 > **Date**: 2025
 
+---
+
+> 💡 **Pattern in Action**: This document demonstrates how [**Clean Architecture**](../patterns/clean-architecture.md) and [**Domain-Driven Design**](../patterns/domain-driven-design.md) principles translate business requirements into maintainable software architecture.
+
+---
+
 ## 📊 Executive Summary
 
 Mario's Pizzeria represents a typical small business digital transformation case study. This family-owned restaurant requires a modern ordering system to compete in today's digital marketplace while maintaining operational efficiency and customer satisfaction.
 
 **Project Scope**: Design and implement a comprehensive digital ordering platform that streamlines operations, improves customer experience, and provides real-time visibility into business operations.
+
+**Architectural Approach**: This project demonstrates **[event-driven architecture](../patterns/event-driven.md)** where business workflows (like kitchen operations) respond automatically to domain events, reducing coupling and improving scalability.
 
 ---
 
@@ -34,7 +42,9 @@ The pizzeria demonstrates how a simple restaurant business can be modeled using 
 
 ## 🏗️ System Architecture
 
-The pizzeria system demonstrates clean architecture with clear layer separation:
+The pizzeria system demonstrates **[clean architecture](../patterns/clean-architecture.md)** with clear layer separation and dependency rules:
+
+> 🎯 **Why This Matters**: Clean architecture ensures business logic remains independent of frameworks, databases, and UI choices. See the [Common Mistakes](../patterns/clean-architecture.md#common-mistakes) section to learn why mixing layers causes maintenance nightmares.
 
 ```mermaid
 graph TB
@@ -71,14 +81,78 @@ graph TB
     class Customer,KitchenStaff,Manager customer
     class PizzeriaApp system
     class PaymentSystem,SMSService external
-    class FileStorage storage
+        class FileStorage storage
 ```
+
+---
 
 ## 🔄 Main System Interactions
 
-The following sequence diagram illustrates the complete pizza ordering workflow:
+The following sequence diagram illustrates the complete pizza ordering workflow using **[CQRS](../patterns/cqrs.md)** (commands for writes) and **[event-driven architecture](../patterns/event-driven.md)** (events for workflow automation):
+
+> 🎯 **Why Commands and Events?**: Commands represent intent ("place this order"), while events represent facts ("order was placed"). This separation enables loose coupling and better scalability. Learn more in [CQRS Pattern](../patterns/cqrs.md#what--why-the-cqrs-pattern).
 
 ```mermaid
+sequenceDiagram
+    participant C as Customer
+    participant API as Orders Controller
+    participant M as Mediator
+    participant PH as PlaceOrder Handler
+    participant OR as Order Repository
+    participant PS as Payment Service
+    participant K as Kitchen
+    participant SMS as SMS Service
+
+    Note over C,SMS: Complete Pizza Ordering Workflow
+
+    C->>+API: POST /orders (pizza order)
+    API->>+M: Execute PlaceOrderCommand
+    M->>+PH: Handle command
+
+    PH->>PH: Validate order & calculate total
+    PH->>+PS: Process payment
+    PS-->>-PH: Payment successful
+
+    PH->>+OR: Save order
+    OR-->>-PH: Order saved
+
+    PH->>PH: Raise OrderPlacedEvent
+    PH-->>-M: Return OrderDto
+    M-->>-API: Return result
+    API-->>-C: 201 Created + OrderDto
+
+    Note over K,SMS: Event-Driven Kitchen Workflow
+
+    M->>+K: OrderPlacedEvent → Add to queue
+    K-->>-M: Order queued
+
+    rect rgb(255, 245, 235)
+        Note over K: Kitchen processes order
+        K->>K: Start cooking
+        K->>+M: Publish OrderCookingEvent
+        M-->>-K: Event processed
+    end
+
+    rect rgb(240, 255, 240)
+        Note over K: Order ready
+        K->>+M: Publish OrderReadyEvent
+        M->>+SMS: Send ready notification
+        SMS->>C: "Your order is ready!"
+        SMS-->>-M: Notification sent
+        M-->>-K: Event processed
+    end
+
+    C->>+API: GET /orders/{id}
+    API->>+M: Execute GetOrderQuery
+    M-->>-API: Return OrderDto
+    API-->>-C: Order details
+```
+
+--- storage
+
+```
+
+---mermaid
 sequenceDiagram
     participant C as Customer
     participant API as Orders Controller
@@ -186,10 +260,21 @@ sequenceDiagram
 
 ## 🔗 Related Documentation
 
+### Case Study Documents
+
 - [Technical Architecture](technical-architecture.md) - System design and infrastructure
 - [Domain Design](domain-design.md) - Business logic and data models
 - [Implementation Guide](implementation-guide.md) - Development patterns and APIs
 - [Testing & Deployment](testing-deployment.md) - Quality assurance and operations
+
+### Framework Patterns Demonstrated
+
+- **[Clean Architecture](../patterns/clean-architecture.md)** - Four-layer separation seen throughout the system
+- **[Event-Driven Architecture](../patterns/event-driven.md)** - Kitchen workflow automation with domain events
+- **[CQRS Pattern](../patterns/cqrs.md)** - Commands (PlaceOrder) vs Queries (GetOrder) separation
+- **[Domain-Driven Design](../patterns/domain-driven-design.md)** - Business concepts as rich domain models
+
+> 💡 **Learning Tip**: Each pattern page includes "Common Mistakes" and "When NOT to Use" sections derived from real-world implementations like Mario's Pizzeria!
 
 ---
 
