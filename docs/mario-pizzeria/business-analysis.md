@@ -5,6 +5,8 @@
 > **Consultant**: Neuroglia Architecture Team
 > **Date**: 2025
 
+📂 **[View Complete Implementation on GitHub](https://github.com/bvandewe/pyneuro/tree/main/samples/mario-pizzeria)**
+
 ---
 
 > 💡 **Pattern in Action**: This document demonstrates how [**Clean Architecture**](../patterns/clean-architecture.md) and [**Domain-Driven Design**](../patterns/domain-driven-design.md) principles translate business requirements into maintainable software architecture.
