@@ -3,9 +3,15 @@
 > **Domain Modeling Document** | **Approach**: Domain-Driven Design (DDD)
 > **Patterns**: Rich Domain Models, Value Objects, Domain Events | **Status**: Reference Implementation
 
+---
+
+> 💡 **Pattern in Action**: This document demonstrates **[Domain-Driven Design](../patterns/domain-driven-design.md)** with rich domain models that contain business logic, not just data. See how Mario's Pizzeria avoids the [anemic domain model anti-pattern](../patterns/domain-driven-design.md#common-mistakes).
+
+---
+
 ## 🎯 Domain Overview
 
-The Mario's Pizzeria domain captures the essential business concepts and workflows of a pizza restaurant operation. Using Domain-Driven Design principles, we model the core business entities with rich behavior, clear boundaries, and event-driven workflows.
+The Mario's Pizzeria domain captures the essential business concepts and workflows of a pizza restaurant operation. Using **[Domain-Driven Design](../patterns/domain-driven-design.md)** principles, we model the core business entities with rich behavior, clear boundaries, and event-driven workflows.
 
 **Core Domain Concepts**:
 
@@ -13,6 +19,16 @@ The Mario's Pizzeria domain captures the essential business concepts and workflo
 - **Pizza**: Product catalog with pricing and customization logic
 - **Kitchen**: Resource management and capacity planning
 - **Customer**: Contact information and order history
+
+**Key Patterns Demonstrated**:
+
+- ✅ **Rich Domain Models** - Entities contain business logic, not just data
+- ✅ **Aggregate Roots** - Kitchen controls order processing boundaries
+- ✅ **Value Objects** - Money, Address with equality semantics
+- ✅ **Domain Events** - OrderPlaced, OrderReady for workflow automation
+- ✅ **[Repository Pattern](../patterns/repository.md)** - Data access abstraction
+
+> ⚠️ **Avoid Common Mistake**: Don't create anemic domain models with only getters/setters! Our Order entity has methods like `confirmOrder()` and `startCooking()` that enforce business rules. Learn more in [DDD Common Mistakes](../patterns/domain-driven-design.md#common-mistakes).
 
 ---
 
@@ -373,9 +389,15 @@ class Money:
         return self.amount > 0
 ```
 
+---
+
 ## 📡 Domain Events
 
-Domain events capture important business occurrences and enable loose coupling:
+Domain events capture important business occurrences and enable loose coupling through **[event-driven architecture](../patterns/event-driven.md)**:
+
+> 🎯 **Why Domain Events?**: Events decouple the order placement from kitchen processing and customer notifications. The order handler doesn't need to know about the kitchen or SMS service! Learn more about [Event-Driven Architecture](../patterns/event-driven.md#what--why-the-event-driven-pattern).
+
+> ⚠️ **Common Mistake Alert**: Don't forget to use **[Unit of Work](../patterns/unit-of-work.md)** to automatically collect and dispatch events! See the [Unit of Work pattern](../patterns/unit-of-work.md#common-mistakes) to avoid manual event management.
 
 ### Order Lifecycle Events
 
@@ -431,7 +453,7 @@ class KitchenCapacityAdjustedEvent(DomainEvent):
     reason: str
 ```
 
-## 📊 Domain Enums & Value Objects
+---
 
 ### Pizza Size Enumeration
 
@@ -491,10 +513,22 @@ Alternative flow: Any status → `CANCELLED` (with business rules)
 
 ## 🔗 Related Documentation
 
+### Case Study Documents
+
 - [Business Analysis](business-analysis.md) - Requirements and stakeholder analysis
 - [Technical Architecture](technical-architecture.md) - System design and infrastructure
 - [Implementation Guide](implementation-guide.md) - Development patterns and APIs
 - [Testing & Deployment](testing-deployment.md) - Quality assurance and operations
+
+### Framework Patterns Demonstrated
+
+- **[Domain-Driven Design](../patterns/domain-driven-design.md)** - Rich domain models with business logic
+- **[Event-Driven Architecture](../patterns/event-driven.md)** - Domain events for workflow automation
+- **[Repository Pattern](../patterns/repository.md)** - Data access abstraction for entities
+- **[Unit of Work](../patterns/unit-of-work.md)** - Automatic domain event collection and dispatching
+- **[Clean Architecture](../patterns/clean-architecture.md)** - Domain layer independence
+
+> 💡 **Learning Tip**: See how Mario's Pizzeria domain entities avoid the [anemic domain model anti-pattern](../patterns/domain-driven-design.md#common-mistakes) by keeping business logic where it belongs - in the domain!
 
 ---
 
