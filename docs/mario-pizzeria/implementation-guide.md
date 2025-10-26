@@ -3,26 +3,36 @@
 > **Development Guide** | **Patterns**: CQRS, Event Sourcing, OAuth 2.0
 > **Framework**: Neuroglia + FastAPI | **Status**: Production Examples
 
+---
+
+> 💡 **Pattern in Action**: This guide demonstrates **[CQRS](../patterns/cqrs.md)**, **[Dependency Injection](../patterns/dependency-injection.md)**, **[Pipeline Behaviors](../patterns/pipeline-behaviors.md)**, and **[Event-Driven Architecture](../patterns/event-driven.md)** working together in production code.
+
+---
+
 ## 🎯 Implementation Overview
 
-This guide provides comprehensive implementation details for building Mario's Pizzeria using the Neuroglia framework. It covers CQRS patterns, event-driven workflows, authentication, and practical code examples ready for production use.
+This guide provides comprehensive implementation details for building Mario's Pizzeria using the Neuroglia framework. It covers **[CQRS patterns](../patterns/cqrs.md)**, **[event-driven workflows](../patterns/event-driven.md)**, authentication, and practical code examples ready for production use.
 
 **Key Implementation Patterns**:
 
-- **CQRS Commands & Queries**: Separate read and write operations
-- **Event-Driven Architecture**: Asynchronous business workflow processing
+- **[CQRS Commands & Queries](../patterns/cqrs.md)**: Separate read and write operations
+- **[Event-Driven Architecture](../patterns/event-driven.md)**: Asynchronous business workflow processing
+- **[Dependency Injection](../patterns/dependency-injection.md)**: Service lifetimes and constructor injection
+- **[Pipeline Behaviors](../patterns/pipeline-behaviors.md)**: Validation, logging, error handling
 - **OAuth 2.0 Security**: Role-based access control with JWT tokens
 - **Data Transfer Objects**: Clean API contracts and validation
+
+> ⚠️ **Common Mistake Alert**: Don't mix commands and queries! Commands modify state and return results. Queries read data without side effects. See [CQRS Common Mistakes](../patterns/cqrs.md#common-mistakes) for details.
 
 ---
 
 ## 🎯 CQRS Commands and Queries
 
-The system uses CQRS pattern with clear separation between write and read operations:
+The system uses **[CQRS pattern](../patterns/cqrs.md)** with clear separation between write and read operations:
 
-### Commands (Write Operations)
+> 🎯 **Why CQRS?**: Commands handle write operations (like placing an order) with validation and business logic. Queries handle read operations optimized for display. This separation enables independent scaling and optimization. Learn more: [CQRS Pattern](../patterns/cqrs.md#what--why-the-cqrs-pattern).
 
-Commands represent business intentions and return operation results:
+---
 
 ```python
 @dataclass
@@ -109,9 +119,15 @@ class GetOrderAnalyticsQuery(Query[OrderAnalyticsDto]):
     group_by: str = "day"  # day, week, month
 ```
 
+---
+
 ### Command Handlers
 
-Command handlers implement business logic and coordinate with domain entities:
+Command handlers implement business logic and coordinate with domain entities using **[Dependency Injection](../patterns/dependency-injection.md)**:
+
+> 🎯 **Why Constructor Injection?**: Dependencies like repositories and services are injected through the constructor, making testing easier and dependencies explicit. See [Dependency Injection pattern](../patterns/dependency-injection.md#what--why-dependency-injection).
+
+> ⚠️ **Avoid Fat Constructors**: Don't inject too many dependencies! If a handler needs many services, it might be doing too much. See [DI Common Mistakes](../patterns/dependency-injection.md#common-mistakes).
 
 ```python
 class PlaceOrderHandler(CommandHandler[PlaceOrderCommand, OperationResult[OrderDto]]):
@@ -139,7 +155,7 @@ class PlaceOrderHandler(CommandHandler[PlaceOrderCommand, OperationResult[OrderD
             if kitchen.is_at_capacity:
                 return self.bad_request("Kitchen is at capacity. Please try again later.")
 
-            # Create order entity
+            # Create order entity (rich domain model with behavior!)
             order = Order(
                 id=str(uuid.uuid4()),
                 customer_name=command.customer_name,
@@ -158,11 +174,14 @@ class PlaceOrderHandler(CommandHandler[PlaceOrderCommand, OperationResult[OrderD
             if not payment_result.success:
                 return self.bad_request(f"Payment failed: {payment_result.error_message}")
 
-            # Confirm order
+            # Confirm order (domain method enforces business rules)
             order.confirm_order()
 
-            # Save order
+            # Save order (repository abstracts persistence)
             await self.order_repository.save_async(order)
+
+            # Unit of Work automatically dispatches domain events here!
+            # See: https://github.com/.../patterns/unit-of-work.md
 
             # Return success result
             order_dto = self.mapper.map(order, OrderDto)
@@ -172,9 +191,21 @@ class PlaceOrderHandler(CommandHandler[PlaceOrderCommand, OperationResult[OrderD
             return self.internal_server_error(f"Failed to place order: {str(ex)}")
 ```
 
+> 💡 **Pattern Highlights in This Handler**:
+>
+> - ✅ **[Dependency Injection](../patterns/dependency-injection.md)** - Constructor injection of repositories and services
+> - ✅ **[Repository Pattern](../patterns/repository.md)** - `order_repository.save_async()` abstracts storage
+> - ✅ **[Domain-Driven Design](../patterns/domain-driven-design.md)** - `order.confirm_order()` enforces business rules
+> - ✅ **[Unit of Work](../patterns/unit-of-work.md)** - Automatic domain event collection and dispatching
+> - ✅ **[CQRS](../patterns/cqrs.md)** - Command handler returns OperationResult, not void
+
+---
+
 ## 📡 Event-Driven Workflow
 
-The system uses domain events to handle complex business workflows:
+The system uses **[domain events](../patterns/event-driven.md)** to handle complex business workflows with loose coupling:
+
+> 🎯 **Why Events?**: When an order is placed, the kitchen needs to be notified, customers need SMS alerts, and analytics need updating. Events decouple these concerns! Learn more: [Event-Driven Architecture](../patterns/event-driven.md#what--why-the-event-driven-pattern).
 
 ```mermaid
 flowchart TD
@@ -205,9 +236,13 @@ flowchart TD
     style N fill:#C8E6C9
 ```
 
+---
+
 ### Event Handlers
 
-Event handlers process domain events asynchronously:
+Event handlers process domain events asynchronously using **[event-driven architecture](../patterns/event-driven.md)**:
+
+> 💡 **Loose Coupling**: Event handlers don't know about command handlers! The kitchen handler reacts to OrderPlacedEvent without the order placement code knowing about kitchens. See [Event-Driven Benefits](../patterns/event-driven.md#what--why-the-event-driven-pattern).
 
 ```python
 class OrderPlacedEventHandler(EventHandler[OrderPlacedEvent]):
@@ -536,20 +571,42 @@ class PizzeriaClient:
 
 ## 🚀 Implementation Benefits
 
-- **🎯 Clean Separation**: CQRS provides clear read/write boundaries
-- **⚡ Event-Driven**: Loose coupling and scalable async processing
-- **🔒 Secure**: OAuth 2.0 with fine-grained access control
-- **📋 Type-Safe**: Strong typing with DTOs and validation
-- **🧪 Testable**: Mockable dependencies and clear interfaces
-- **📊 Observable**: Built-in logging and monitoring capabilities
-- **🔄 Maintainable**: Framework patterns ensure consistency
+The implementation patterns demonstrated in Mario's Pizzeria provide significant advantages:
+
+- **🎯 Clean Separation**: **[CQRS](../patterns/cqrs.md)** provides clear read/write boundaries enabling independent scaling
+- **⚡ Event-Driven**: **[Event-Driven Architecture](../patterns/event-driven.md)** enables loose coupling and scalable async processing
+- **💉 Dependency Injection**: **[DI Pattern](../patterns/dependency-injection.md)** makes testing easy with mockable dependencies
+- **🔧 Cross-Cutting Concerns**: **[Pipeline Behaviors](../patterns/pipeline-behaviors.md)** centralize validation and logging
+- **🔒 Secure**: OAuth 2.0 with fine-grained role-based access control
+- **📋 Type-Safe**: Strong typing with DTOs, rich domain models, and validation
+- **🧪 Testable**: **[Repository Pattern](../patterns/repository.md)** enables easy test data setup
+- **📊 Observable**: Built-in logging, metrics, and monitoring capabilities
+- **🔄 Maintainable**: Framework patterns ensure consistency and reduce cognitive load
+
+> 💡 **Real-World Impact**: By following these patterns, Mario's Pizzeria achieved 40% more order capacity, 60% faster processing, and zero security incidents. See [Business Analysis](business-analysis.md#-success-metrics) for full metrics.
+
+---
 
 ## 🔗 Related Documentation
+
+### Case Study Documents
 
 - [Business Analysis](business-analysis.md) - Requirements and stakeholder analysis
 - [Technical Architecture](technical-architecture.md) - System design and infrastructure
 - [Domain Design](domain-design.md) - Business logic and data models
 - [Testing & Deployment](testing-deployment.md) - Quality assurance and operations
+
+### Framework Patterns Demonstrated
+
+- **[CQRS & Mediation](../patterns/cqrs.md)** - Commands, queries, and handlers throughout
+- **[Dependency Injection](../patterns/dependency-injection.md)** - Constructor injection in all handlers
+- **[Event-Driven Architecture](../patterns/event-driven.md)** - Domain events for workflow automation
+- **[Pipeline Behaviors](../patterns/pipeline-behaviors.md)** - Validation, logging, error handling
+- **[Repository Pattern](../patterns/repository.md)** - Data access abstraction
+- **[Unit of Work](../patterns/unit-of-work.md)** - Automatic event collection and dispatching
+- **[Domain-Driven Design](../patterns/domain-driven-design.md)** - Rich domain models with business logic
+
+> 💡 **Learning Tip**: Each pattern page includes "Common Mistakes" sections with anti-patterns discovered while building Mario's Pizzeria. Learn from real implementation challenges!
 
 ---
 
