@@ -3,15 +3,23 @@
 > **Quality Assurance Guide** | **Testing Strategy**: Unit, Integration, E2E
 > **Deployment**: Docker, CI/CD, Production Monitoring | **Status**: Production Ready
 
+---
+
+> 💡 **Pattern in Action**: This document demonstrates how **[Repository Pattern](../patterns/repository.md)**, **[Dependency Injection](../patterns/dependency-injection.md)**, and **[Unit of Work](../patterns/unit-of-work.md)** make testing easier with clean mocking strategies.
+
+---
+
 ## 🎯 Testing Overview
 
-Mario's Pizzeria demonstrates comprehensive testing strategies across all application layers. The testing approach ensures reliability, maintainability, and confidence in production deployments.
+Mario's Pizzeria demonstrates comprehensive testing strategies across all application layers. The testing approach leverages **[Dependency Injection](../patterns/dependency-injection.md)** for easy mocking and **[Repository Pattern](../patterns/repository.md)** for test data setup.
 
 **Testing Pyramid**:
 
-- **Unit Tests** (70%): Fast, isolated tests for business logic
+- **Unit Tests** (70%): Fast, isolated tests for business logic with mocked dependencies
 - **Integration Tests** (20%): API endpoints and data access layer testing
 - **End-to-End Tests** (10%): Complete workflow validation
+
+> 🎯 **Why Dependency Injection Helps Testing**: Constructor injection makes it trivial to replace real repositories with mocks! See [DI Benefits](../patterns/dependency-injection.md#what--why-dependency-injection).
 
 ---
 
@@ -761,10 +769,22 @@ async def metrics():
 
 ## 🔗 Related Documentation
 
+### Case Study Documents
+
 - [Business Analysis](business-analysis.md) - Requirements and stakeholder analysis
 - [Technical Architecture](technical-architecture.md) - System design and infrastructure
 - [Domain Design](domain-design.md) - Business logic and data models
 - [Implementation Guide](implementation-guide.md) - Development patterns and APIs
+
+### Framework Patterns for Testing
+
+- **[Dependency Injection](../patterns/dependency-injection.md)** - Constructor injection enables easy mocking
+- **[Repository Pattern](../patterns/repository.md)** - InMemoryRepository for test data setup
+- **[Unit of Work](../patterns/unit-of-work.md)** - Testing domain event collection and dispatching
+- **[CQRS Pattern](../patterns/cqrs.md)** - Testing commands and queries separately
+- **[Pipeline Behaviors](../patterns/pipeline-behaviors.md)** - Testing validation and logging behaviors
+
+> 💡 **Testing Lesson**: Mario's Pizzeria testing demonstrates why [avoiding Service Locator anti-pattern](../patterns/dependency-injection.md#common-mistakes) makes testing so much easier with constructor injection!
 
 ---
 
