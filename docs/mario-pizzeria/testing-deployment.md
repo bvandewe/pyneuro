@@ -3,6 +3,8 @@
 > **Quality Assurance Guide** | **Testing Strategy**: Unit, Integration, E2E
 > **Deployment**: Docker, CI/CD, Production Monitoring | **Status**: Production Ready
 
+📂 **[View Tests on GitHub](https://github.com/bvandewe/pyneuro/tree/main/samples/mario-pizzeria/tests)**
+
 ---
 
 > 💡 **Pattern in Action**: This document demonstrates how **[Repository Pattern](../patterns/repository.md)**, **[Dependency Injection](../patterns/dependency-injection.md)**, and **[Unit of Work](../patterns/unit-of-work.md)** make testing easier with clean mocking strategies.
