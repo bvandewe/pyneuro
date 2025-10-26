@@ -113,57 +113,111 @@ classDiagram
 
 ## 🏗️ Detailed Domain Entities
 
-### Pizza Entity
+### Pizza Aggregate Root
 
-The Pizza entity encapsulates product information, pricing logic, and customization capabilities with sophisticated size-based pricing:
+The Pizza aggregate root encapsulates product information, pricing logic, and customization capabilities with sophisticated size-based pricing using event sourcing:
 
-**Source**: [`samples/mario-pizzeria/domain/entities/pizza.py`](https://github.com/bvandewe/pyneuro/blob/main/samples/mario-pizzeria/domain/entities/pizza.py)
+> 📋 **[View Source Code](https://github.com/bvandewe/pyneuro/blob/main/samples/mario-pizzeria/domain/entities/pizza.py)**
 
-```python title="samples/mario-pizzeria/domain/entities/pizza.py" linenums="17"
+```python
+from neuroglia.data.abstractions import AggregateRoot, AggregateState
+from domain.entities.enums import PizzaSize
+
+@dataclass
+class PizzaState(AggregateState[str]):
+    """State object for Pizza aggregate - contains all persisted data"""
+
+    name: Optional[str] = None
+    base_price: Optional[Decimal] = None
+    size: Optional[PizzaSize] = None
+    description: str = ""
+    toppings: list[str] = field(default_factory=list)
+
+    @dispatch(PizzaCreatedEvent)
+    def on(self, event: PizzaCreatedEvent) -> None:
+        """Handle PizzaCreatedEvent to initialize pizza state"""
+        self.id = event.aggregate_id
+        self.name = event.name
+        self.base_price = event.base_price
+        self.size = PizzaSize(event.size)
+        self.description = event.description or ""
+        self.toppings = event.toppings.copy()
+
+    @dispatch(ToppingsUpdatedEvent)
+    def on(self, event: ToppingsUpdatedEvent) -> None:
+        """Handle ToppingsUpdatedEvent to update toppings list"""
+        self.toppings = event.toppings.copy()
+
 @map_from(PizzaDto)
 @map_to(PizzaDto)
-class Pizza(Entity[str]):
-    """Pizza entity with pricing and toppings"""
+class Pizza(AggregateRoot[PizzaState, str]):
+    """Pizza aggregate root with pricing and toppings"""
 
     def __init__(self, name: str, base_price: Decimal, size: PizzaSize, description: Optional[str] = None):
         super().__init__()
-        self.id = str(uuid4())
-        self.name = name
-        self.base_price = base_price
-        self.size = size
-        self.description = description or ""
-        self.toppings: list[str] = []
+
+        # Register event and apply it to state using multipledispatch
+        self.state.on(
+            self.register_event(
+                PizzaCreatedEvent(
+                    aggregate_id=str(uuid4()),
+                    name=name,
+                    size=size.value,
+                    base_price=base_price,
+                    description=description or "",
+                    toppings=[]
+                )
+            )
+        )
 
     @property
     def size_multiplier(self) -> Decimal:
         """Get price multiplier based on pizza size"""
+        if self.state.size is None:
+            return Decimal("1.0")
         multipliers = {
             PizzaSize.SMALL: Decimal("1.0"),
             PizzaSize.MEDIUM: Decimal("1.3"),
             PizzaSize.LARGE: Decimal("1.6"),
         }
-        return multipliers[self.size]
+        return multipliers[self.state.size]
 
     @property
     def topping_price(self) -> Decimal:
         """Calculate total price for all toppings"""
-        return Decimal(str(len(self.toppings))) * Decimal("2.50")
+        return Decimal(str(len(self.state.toppings))) * Decimal("2.50")
 
     @property
     def total_price(self) -> Decimal:
         """Calculate total pizza price including size and toppings"""
-        base_with_size = self.base_price * self.size_multiplier
+        base_with_size = self.state.base_price * self.size_multiplier
         return base_with_size + self.topping_price
 
     def add_topping(self, topping: str) -> None:
         """Add a topping to the pizza"""
-        if topping not in self.toppings:
-            self.toppings.append(topping)
+        if topping not in self.state.toppings:
+            new_toppings = self.state.toppings + [topping]
+            self.state.on(
+                self.register_event(
+                    ToppingsUpdatedEvent(
+                        aggregate_id=self.id(),
+                        toppings=new_toppings
+                    )
+                )
+            )
 
     def remove_topping(self, topping: str) -> None:
         """Remove a topping from the pizza"""
-        if topping in self.toppings:
-            self.toppings.remove(topping)
+        if topping in self.state.toppings:
+            new_toppings = [t for t in self.state.toppings if t != topping]
+            self.state.on(
+                self.register_event(
+                    ToppingsUpdatedEvent(
+                        aggregate_id=self.id(),
+                        toppings=new_toppings
+                    )
+                )
+            )
 ```
 
 **Business Rules**:
@@ -173,94 +227,150 @@ class Pizza(Entity[str]):
 - Automatic mapping to/from DTOs using `@map_from` and `@map_to` decorators
 - UUID-based entity identification
 
-### Order Entity
+### Order Aggregate Root
 
-The Order aggregate root manages the complete order lifecycle and business rules:
+The Order aggregate root manages the complete order lifecycle and business rules using event sourcing with separate state management:
+
+> 📋 **[View Source Code](https://github.com/bvandewe/pyneuro/blob/main/samples/mario-pizzeria/domain/entities/order.py)**
 
 ```python
-@dataclass
-class Order(Entity[str]):
-    """A customer pizza order with complete lifecycle management"""
-    id: str
-    customer_name: str
-    customer_phone: str
-    pizzas: List[Pizza]
-    status: str  # "pending", "confirmed", "cooking", "ready", "delivered"
-    order_time: datetime
-    estimated_ready_time: Optional[datetime] = None
-    total_amount: Optional[Decimal] = None
+from neuroglia.data.abstractions import AggregateRoot, AggregateState
+from domain.entities.enums import OrderStatus
+from domain.entities.order_item import OrderItem
 
-    def __post_init__(self):
-        if self.total_amount is None:
-            self.calculate_total()
+class OrderState(AggregateState[str]):
+    """State for Order aggregate - contains all persisted data"""
 
-    def calculate_total(self) -> None:
-        """Calculate order total including taxes and fees"""
-        subtotal = sum(pizza.total_price for pizza in self.pizzas)
-        tax_rate = Decimal("0.08")  # 8% tax
-        delivery_fee = Decimal("2.50")
+    customer_id: Optional[str]
+    order_items: list[OrderItem]
+    status: OrderStatus
+    order_time: Optional[datetime]
+    confirmed_time: Optional[datetime]
+    cooking_started_time: Optional[datetime]
+    actual_ready_time: Optional[datetime]
+    estimated_ready_time: Optional[datetime]
+    delivery_person_id: Optional[str]
+    out_for_delivery_time: Optional[datetime]
+    notes: Optional[str]
 
-        self.total_amount = subtotal + (subtotal * tax_rate) + delivery_fee
+    # User tracking fields
+    chef_user_id: Optional[str]
+    chef_name: Optional[str]
+    ready_by_user_id: Optional[str]
+    ready_by_name: Optional[str]
+    delivery_user_id: Optional[str]
+    delivery_name: Optional[str]
 
-    def add_pizza(self, pizza: Pizza) -> None:
-        """Add pizza to order and recalculate total"""
-        self.pizzas.append(pizza)
-        self.calculate_total()
+@map_from(OrderDto)
+@map_to(OrderDto)
+class Order(AggregateRoot[OrderState, str]):
+    """Order aggregate root with pizzas and status management"""
 
-        # Raise domain event
-        self.raise_event(PizzaAddedToOrderEvent(
-            order_id=self.id,
-            pizza_name=pizza.name,
-            new_total=self.total_amount
-        ))
+    def __init__(self, customer_id: str, estimated_ready_time: Optional[datetime] = None):
+        super().__init__()
+
+        # Register event and apply it to state
+        self.state.on(
+            self.register_event(
+                OrderCreatedEvent(
+                    aggregate_id=str(uuid4()),
+                    customer_id=customer_id,
+                    order_time=datetime.now(timezone.utc)
+                )
+            )
+        )
+
+        if estimated_ready_time:
+            self.state.estimated_ready_time = estimated_ready_time
+
+    @property
+    def total_amount(self) -> Decimal:
+        """Calculate total order amount"""
+        return sum((item.total_price for item in self.state.order_items), Decimal("0.00"))
+
+    @property
+    def pizza_count(self) -> int:
+        """Get total number of pizzas in the order"""
+        return len(self.state.order_items)
+
+    def add_order_item(self, order_item: OrderItem) -> None:
+        """Add an order item (pizza) to the order"""
+        if self.state.status != OrderStatus.PENDING:
+            raise ValueError("Cannot modify confirmed orders")
+
+        self.state.order_items.append(order_item)
+
+        self.state.on(
+            self.register_event(
+                PizzaAddedToOrderEvent(
+                    aggregate_id=self.id(),
+                    line_item_id=order_item.line_item_id,
+                    pizza_name=order_item.name,
+                    pizza_size=order_item.size.value,
+                    price=order_item.total_price
+                )
+            )
+        )
 
     def confirm_order(self) -> None:
-        """Confirm order after payment processing"""
-        if self.status != "pending":
-            raise InvalidOrderStateError("Order must be pending to confirm")
+        """Confirm the order and set status to confirmed"""
+        if self.state.status != OrderStatus.PENDING:
+            raise ValueError("Only pending orders can be confirmed")
 
-        self.status = "confirmed"
-        self.estimated_ready_time = self._calculate_ready_time()
+        if not self.state.order_items:
+            raise ValueError("Cannot confirm empty order")
 
-        # Raise domain event
-        self.raise_event(OrderConfirmedEvent(
-            order_id=self.id,
-            customer_name=self.customer_name,
-            estimated_ready_time=self.estimated_ready_time
-        ))
+        self.state.on(
+            self.register_event(
+                OrderConfirmedEvent(
+                    aggregate_id=self.id(),
+                    confirmed_time=datetime.now(timezone.utc),
+                    total_amount=self.total_amount,
+                    pizza_count=self.pizza_count
+                )
+            )
+        )
 
-    def start_cooking(self) -> None:
-        """Start cooking process"""
-        if self.status != "confirmed":
-            raise InvalidOrderStateError("Order must be confirmed to start cooking")
+    def start_cooking(self, user_id: str, user_name: str) -> None:
+        """Start cooking the order"""
+        if self.state.status != OrderStatus.CONFIRMED:
+            raise ValueError("Only confirmed orders can start cooking")
 
-        self.status = "cooking"
+        self.state.on(
+            self.register_event(
+                CookingStartedEvent(
+                    aggregate_id=self.id(),
+                    cooking_started_time=datetime.now(timezone.utc),
+                    user_id=user_id,
+                    user_name=user_name
+                )
+            )
+        )
 
-        # Raise domain event
-        self.raise_event(CookingStartedEvent(
-            order_id=self.id,
-            started_at=datetime.utcnow()
-        ))
-
-    def mark_ready(self) -> None:
+    def mark_ready(self, user_id: str, user_name: str) -> None:
         """Mark order as ready for pickup/delivery"""
-        if self.status != "cooking":
-            raise InvalidOrderStateError("Order must be cooking to mark ready")
+        if self.state.status != OrderStatus.COOKING:
+            raise ValueError("Only cooking orders can be marked ready")
 
-        self.status = "ready"
-
-        # Raise domain event
-        self.raise_event(OrderReadyEvent(
-            order_id=self.id,
-            customer_name=self.customer_name,
-            customer_phone=self.customer_phone
-        ))
-
-    def _calculate_ready_time(self) -> datetime:
-        """Calculate estimated ready time based on pizza complexity"""
-        total_cooking_time = sum(pizza.estimate_cooking_time() for pizza in self.pizzas)
-        return self.order_time + timedelta(minutes=total_cooking_time + 10)  # +10 for prep
+        self.state.on(
+            self.register_event(
+                OrderReadyEvent(
+                    aggregate_id=self.id(),
+                    ready_time=datetime.now(timezone.utc),
+                    user_id=user_id,
+                    user_name=user_name
+                )
+            )
+        )
 ```
+
+**Key Architectural Patterns**:
+
+- **Aggregate Root**: Order is the entry point for all order-related operations
+- **Separate State**: OrderState class holds all persisted data (event sourcing pattern)
+- **Event Sourcing**: All state changes happen through domain events
+- **Business Rules**: State transitions validated before raising events
+- **User Tracking**: Records who performed cooking, ready, and delivery actions
 
 ### Kitchen Entity
 
