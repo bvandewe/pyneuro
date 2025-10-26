@@ -448,7 +448,7 @@ You've completed the Mario's Pizzeria tutorial series! You now know how to:
 - [Core Concepts](../concepts/index.md)
 - [Feature Guides](../features/index.md)
 - [Pattern Examples](../patterns/index.md)
-- [Mario's Pizzeria Case Study](../../case-studies/mario-pizzeria/index.md)
+- [Mario's Pizzeria Case Study](../mario-pizzeria.md)
 
 ## 💬 Get Help
 

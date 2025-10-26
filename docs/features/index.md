@@ -49,7 +49,7 @@ Built-in support for generating and validating Mermaid diagrams for architecture
 
 ## 🏗️ Advanced Architecture Features
 
-### [🎯 Resource Oriented Architecture](resource-oriented-architecture.md)
+### [🎯 Resource Oriented Architecture](../patterns/resource-oriented-architecture.md)
 
 Implementation of resource-oriented patterns for building RESTful APIs and microservices. Focuses on resource identification and manipulation through standard HTTP verbs.
 
