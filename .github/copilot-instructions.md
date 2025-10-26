@@ -22,6 +22,14 @@ src/
 
 ## Core Framework Modules
 
+### `neuroglia.core`
+
+- **OperationResult**: Standardized result pattern for operations with success/failure states
+- **ProblemDetails**: RFC 7807 problem details for API error responses
+- **TypeFinder**: Dynamic type discovery and reflection utilities
+- **TypeRegistry**: Type caching and registration
+- **ModuleLoader**: Dynamic module loading capabilities
+
 ### `neuroglia.dependency_injection`
 
 - **ServiceCollection**: Container for service registrations
@@ -44,17 +52,34 @@ src/
 
 ### `neuroglia.data`
 
-- **Repository**: Abstract data access pattern
-- **EventStore**: Event sourcing support
-- **MongoDB**: Document database integration
-- **InMemory**: Testing and development repositories
+- **Entity/AggregateRoot**: Domain model base classes
+- **DomainEvent**: Business events from domain entities
+- **Repository/QueryableRepository**: Abstract data access patterns
+- **FlexibleRepository**: Repository with flexible querying capabilities
+- **Queryable/QueryProvider**: LINQ-style query composition
+- **VersionedState/AggregateState**: State management for aggregates
+
+### `neuroglia.data.resources`
+
+- **Resource**: Kubernetes-style resource abstraction
+- **ResourceController**: Reconciliation-based resource management
+- **ResourceWatcher**: Resource change observation
+- **StateMachine**: Declarative state machine engine
+- **ResourceSpec/ResourceStatus**: Resource specifications and status
 
 ### `neuroglia.eventing`
 
-- **CloudEvents**: Standardized event format
 - **DomainEvent**: Business events from domain entities
 - **EventHandler**: Event processing logic
 - **EventBus**: Event publishing and subscription
+
+### `neuroglia.eventing.cloud_events`
+
+- **CloudEvent**: CloudEvents v1.0 specification implementation
+- **CloudEventPublisher**: Event publishing infrastructure
+- **CloudEventBus**: In-memory cloud event bus
+- **CloudEventIngestor**: Event ingestion from external sources
+- **CloudEventMiddleware**: FastAPI middleware for cloud event handling
 
 ### `neuroglia.mapping`
 
@@ -66,6 +91,10 @@ src/
 - **WebApplicationBuilder**: Application bootstrapping
 - **HostedService**: Background services
 - **ApplicationLifetime**: Startup/shutdown management
+
+### `neuroglia.application`
+
+- **BackgroundTaskScheduler**: Distributed task processing with Redis backend
 
 ### `neuroglia.serialization`
 
@@ -101,16 +130,18 @@ src/
 
 ### `neuroglia.integration`
 
-- **HttpServiceClient**: Resilient HTTP client with circuit breakers
-- **CacheRepository**: Redis-based caching layer
-- **BackgroundTaskScheduler**: Distributed task processing
-- **CloudEventPublisher**: Event publishing infrastructure
+- **HttpServiceClient**: Resilient HTTP client with circuit breakers and retry policies
+- **AsyncCacheRepository**: Redis-based distributed caching layer
+- **Request/Response Interceptors**: Middleware for authentication, logging, and monitoring
+- **Integration Events**: Standardized events for external system integration
 
-### `neuroglia.logging`
+### `neuroglia.observability`
 
-- **Enhanced Logging**: Structured logging with correlation IDs
-- **Performance Monitoring**: Request/response timing
-- **Diagnostic Context**: Rich contextual information
+- **OpenTelemetry Integration**: Comprehensive tracing, metrics, and logging
+- **TracerProvider/MeterProvider**: OTLP exporters with resource detection
+- **Context Propagation**: Distributed tracing across service boundaries
+- **Automatic Instrumentation**: FastAPI, HTTPX, and logging integration
+- **Decorators**: Manual instrumentation helpers (@trace_async, @trace_sync)
 
 ## Key Patterns and Conventions
 
@@ -313,19 +344,41 @@ Always import from specific modules to maintain clear dependencies:
 
 ```python
 # Core Framework
+from neuroglia.core import OperationResult, ProblemDetails, TypeFinder, TypeRegistry
 from neuroglia.dependency_injection import ServiceCollection, ServiceProvider, ServiceLifetime
 from neuroglia.mediation import Mediator, Command, Query, CommandHandler, QueryHandler
 from neuroglia.mvc import ControllerBase
 from neuroglia.hosting.web import WebApplicationBuilder
 
 # Data Access & Repositories
-from neuroglia.data import Repository, EventStore, MongoRepository, InMemoryRepository
-from neuroglia.data.resources import ResourceController, ResourceWatcher, Reconciler
+from neuroglia.data import (
+    Entity, AggregateRoot, DomainEvent,
+    Repository, QueryableRepository, FlexibleRepository,
+    Queryable, QueryProvider,
+    VersionedState, AggregateState
+)
 
-# Eventing & Integration
+# Resource-Oriented Architecture
+from neuroglia.data.resources import (
+    Resource, ResourceController, ResourceWatcher,
+    StateMachine, ResourceSpec, ResourceStatus
+)
+
+# Eventing
 from neuroglia.eventing import DomainEvent, EventHandler, EventBus
-from neuroglia.eventing.cloud_events import CloudEvent, CloudEventPublisher
-from neuroglia.integration import HttpServiceClient, CacheRepository, BackgroundTaskScheduler
+
+# CloudEvents
+from neuroglia.eventing.cloud_events import (
+    CloudEvent, CloudEventPublisher, CloudEventBus,
+    CloudEventIngestor, CloudEventMiddleware
+)
+
+# Integration & Background Services
+from neuroglia.integration import (
+    HttpServiceClient, HttpRequestOptions,
+    AsyncCacheRepository, CacheRepositoryOptions
+)
+from neuroglia.application import BackgroundTaskScheduler
 
 # Serialization & Mapping
 from neuroglia.serialization import JsonSerializer, JsonEncoder
@@ -335,6 +388,13 @@ from neuroglia.mapping import Mapper
 from neuroglia.validation import BusinessRule, ValidationResult, PropertyValidator, EntityValidator
 from neuroglia.utils import CaseConversion, CamelModel, TypeFinder
 from neuroglia.reactive import Observable, Observer
+
+# Observability (OpenTelemetry)
+from neuroglia.observability import (
+    configure_opentelemetry, get_tracer, get_meter,
+    trace_async, trace_sync,
+    instrument_fastapi_app
+)
 
 # Avoid
 from neuroglia import *
@@ -347,9 +407,23 @@ from neuroglia import *
 Implement resource controllers and watchers for Kubernetes-style resource management:
 
 ```python
-from neuroglia.data.resources import ResourceController, ResourceWatcher
+from neuroglia.data.resources import (
+    ResourceControllerBase, ResourceWatcherBase,
+    Resource, ResourceSpec, ResourceStatus
+)
 
-class LabResourceController(ResourceController[LabInstance]):
+class LabInstanceSpec(ResourceSpec):
+    desired_state: str
+    configuration: dict
+
+class LabInstanceStatus(ResourceStatus):
+    current_state: str
+    ready: bool
+
+class LabInstance(Resource[LabInstanceSpec, LabInstanceStatus]):
+    pass
+
+class LabResourceController(ResourceControllerBase[LabInstance]):
     async def reconcile_async(self, resource: LabInstance) -> None:
         # Handle resource state reconciliation
         if resource.spec.desired_state == "running":
@@ -357,8 +431,8 @@ class LabResourceController(ResourceController[LabInstance]):
         elif resource.spec.desired_state == "stopped":
             await self.cleanup_lab_instance(resource)
 
-class LabInstanceWatcher(ResourceWatcher[LabInstance]):
-    async def handle_async(self, event: ResourceEvent[LabInstance]) -> None:
+class LabInstanceWatcher(ResourceWatcherBase[LabInstance]):
+    async def handle_async(self, event: ResourceChangeEvent[LabInstance]) -> None:
         # React to resource changes
         await self.controller.reconcile_async(event.resource)
 ```
