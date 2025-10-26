@@ -34,20 +34,20 @@ architectural reference.
 
 This case study was chosen because it:
 
-✅ **Familiar Domain** - Everyone understands pizza ordering workflows
-✅ **Real Business Logic** - Complex pricing, capacity management, status tracking
-✅ **Multiple User Types** - Customers, kitchen staff, managers with different needs
-✅ **Event-Driven Nature** - Natural business events (order placed, cooking started, ready)
-✅ **Production Ready** - Actual business logic that could be deployed tomorrow
+- ✅ **Familiar Domain** - Everyone understands pizza ordering workflows
+- ✅ **Real Business Logic** - Complex pricing, capacity management, status tracking
+- ✅ **Multiple User Types** - Customers, kitchen staff, managers with different needs
+- ✅ **Event-Driven Nature** - Natural business events (order placed, cooking started, ready)
+- ✅ **Production Ready** - Actual business logic that could be deployed tomorrow
 
 ### Architecture Highlights
 
-🏛️ **[Clean Architecture](patterns/clean-architecture.md)** - Four-layer separation with clear dependencies
-🎯 **[CQRS Pattern](patterns/cqrs.md)** - Command/Query separation for scalability
-⚡ **[Event-Driven](patterns/event-driven.md)** - Asynchronous workflows and loose coupling
-🔐 **OAuth 2.0 Security** - Production-grade authentication and authorization
-🧪 **Comprehensive Testing** - Unit, integration, and end-to-end test coverage
-📊 **Business Intelligence** - Analytics and reporting capabilities
+- 🏛️ **[Clean Architecture](patterns/clean-architecture.md)** - Four-layer separation with clear dependencies
+- 🎯 **[CQRS Pattern](patterns/cqrs.md)** - Command/Query separation for scalability
+- ⚡ **[Event-Driven](patterns/event-driven.md)** - Asynchronous workflows and loose coupling
+- 🔐 **OAuth 2.0 Security** - Production-grade authentication and authorization
+- 🧪 **Comprehensive Testing** - Unit, integration, and end-to-end test coverage
+- 📊 **Business Intelligence** - Analytics and reporting capabilities
 
 ### 🌟 Patterns Demonstrated
 
