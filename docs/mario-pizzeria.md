@@ -40,12 +40,31 @@ This case study was chosen because it:
 
 ### Architecture Highlights
 
-🏛️ **Clean Architecture** - Four-layer separation with clear dependencies
-🎯 **CQRS Pattern** - Command/Query separation for scalability
-⚡ **Event-Driven** - Asynchronous workflows and loose coupling
+🏛️ **[Clean Architecture](patterns/clean-architecture.md)** - Four-layer separation with clear dependencies
+🎯 **[CQRS Pattern](patterns/cqrs.md)** - Command/Query separation for scalability
+⚡ **[Event-Driven](patterns/event-driven.md)** - Asynchronous workflows and loose coupling
 🔐 **OAuth 2.0 Security** - Production-grade authentication and authorization
 🧪 **Comprehensive Testing** - Unit, integration, and end-to-end test coverage
 📊 **Business Intelligence** - Analytics and reporting capabilities
+
+### 🌟 Patterns Demonstrated
+
+This case study demonstrates **all 10 foundational architectural patterns** working together:
+
+| Pattern                                                         | Demonstrated In                    | Key Examples                                                      |
+| --------------------------------------------------------------- | ---------------------------------- | ----------------------------------------------------------------- |
+| **[🏗️ Clean Architecture](patterns/clean-architecture.md)**     | Complete application structure     | API → Application → Domain ← Integration layers                   |
+| **[🏛️ Domain-Driven Design](patterns/domain-driven-design.md)** | Order, Pizza, Kitchen entities     | Rich domain models with business logic and invariants             |
+| **[💉 Dependency Injection](patterns/dependency-injection.md)** | Service registration and lifetimes | Repository, handler, and service dependency management            |
+| **[📡 CQRS & Mediation](patterns/cqrs.md)**                     | All command and query handlers     | PlaceOrderCommand, GetOrderByIdQuery with mediator routing        |
+| **[🔄 Event-Driven Architecture](patterns/event-driven.md)**    | Kitchen workflow automation        | OrderPlaced → Kitchen processes → OrderReady events               |
+| **[💾 Repository Pattern](patterns/repository.md)**             | Data access abstraction            | File, MongoDB, and InMemory repository implementations            |
+| **[🔄 Unit of Work](patterns/unit-of-work.md)**                 | Event coordination                 | Automatic domain event collection and dispatching                 |
+| **[🔧 Pipeline Behaviors](patterns/pipeline-behaviors.md)**     | Cross-cutting concerns             | Validation, logging, error handling around all handlers           |
+| **[🎯 Event Sourcing](patterns/event-sourcing.md)**             | Order event history                | Complete audit trail of order lifecycle (optional implementation) |
+| **[🌊 Reactive Programming](patterns/reactive-programming.md)** | Real-time order tracking           | Kitchen capacity monitoring with observable streams               |
+
+> 💡 **Learning Tip**: Each pattern documentation now includes "Common Mistakes" and "When NOT to Use" sections based on lessons learned from building Mario's Pizzeria!
 
 ---
 
@@ -141,25 +160,31 @@ This case study was chosen because it:
 
 1. Start with [Business Analysis](mario-pizzeria/business-analysis.md) to understand requirements and ROI
 2. Review [Technical Architecture](mario-pizzeria/technical-architecture.md) for system overview
-3. Focus on API endpoints and user experience sections
+3. Explore [Event-Driven Architecture](patterns/event-driven.md) to see how workflows automate business processes
+4. Focus on API endpoints and user experience sections
 
 ### For Software Architects
 
 1. Begin with [Technical Architecture](mario-pizzeria/technical-architecture.md) for system design
 2. Deep dive into [Domain Design](mario-pizzeria/domain-design.md) for DDD patterns
-3. Study [Implementation Guide](mario-pizzeria/implementation-guide.md) for architectural patterns
+3. Study [Clean Architecture](patterns/clean-architecture.md) layer separation and dependencies
+4. Review [CQRS Pattern](patterns/cqrs.md) for command/query separation strategy
+5. Explore [Implementation Guide](mario-pizzeria/implementation-guide.md) for architectural patterns in action
 
 ### For Developers
 
 1. Start with [Domain Design](mario-pizzeria/domain-design.md) to understand business logic
-2. Follow [Implementation Guide](mario-pizzeria/implementation-guide.md) for code patterns
-3. Practice with [Testing & Deployment](mario-pizzeria/testing-deployment.md) examples
+2. Learn [Dependency Injection](patterns/dependency-injection.md) for service wiring
+3. Follow [Implementation Guide](mario-pizzeria/implementation-guide.md) for CQRS code patterns
+4. Study [Pipeline Behaviors](patterns/pipeline-behaviors.md) for cross-cutting concerns
+5. Practice with [Testing & Deployment](mario-pizzeria/testing-deployment.md) examples
 
 ### For DevOps Engineers
 
 1. Focus on [Technical Architecture](mario-pizzeria/technical-architecture.md) infrastructure
 2. Study [Testing & Deployment](mario-pizzeria/testing-deployment.md) for CI/CD
 3. Review security sections in [Implementation Guide](mario-pizzeria/implementation-guide.md)
+4. Understand [Repository Pattern](patterns/repository.md) for data persistence strategies
 
 ---
 
@@ -197,11 +222,33 @@ Go to [Testing & Deployment](mario-pizzeria/testing-deployment.md) for comprehen
 
 ## 🔗 Related Framework Documentation
 
-- **[Getting Started with Neuroglia](getting-started.md)** - Framework setup and basics
-- **[Clean Architecture Patterns](patterns/index.md)** - Core architectural patterns
-- **[CQRS & Mediation](patterns/cqrs.md)** - Command/Query implementation
+### 🎯 Core Framework Guides
+
+- **[Getting Started with Neuroglia](getting-started.md)** - Framework setup and first application
+- **[3-Minute Bootstrap](guides/3-min-bootstrap.md)** - Fastest way to start building
+
+### 🏗️ Architectural Patterns (Demonstrated in Mario's Pizzeria)
+
+- **[Clean Architecture](patterns/clean-architecture.md)** - Four-layer separation (see: project structure)
+- **[Domain-Driven Design](patterns/domain-driven-design.md)** - Rich domain models (see: Order, Pizza entities)
+- **[CQRS & Mediation](patterns/cqrs.md)** - Command/Query separation (see: PlaceOrderCommand)
+- **[Event-Driven Architecture](patterns/event-driven.md)** - Workflow automation (see: kitchen events)
+- **[Repository Pattern](patterns/repository.md)** - Data access abstraction (see: OrderRepository)
+
+### 🔧 Implementation Patterns (Used Throughout)
+
+- **[Dependency Injection](patterns/dependency-injection.md)** - Service container and lifetimes
+- **[Unit of Work](patterns/unit-of-work.md)** - Event coordination (see: order handlers)
+- **[Pipeline Behaviors](patterns/pipeline-behaviors.md)** - Validation, logging (see: ValidationBehavior)
+- **[Event Sourcing](patterns/event-sourcing.md)** - Event history (optional: OrderEventStore)
+- **[Reactive Programming](patterns/reactive-programming.md)** - Real-time updates (see: kitchen capacity)
+
+### 📚 Additional Resources
+
 - **[OAuth Security Reference](references/oauth-oidc-jwt.md)** - Authentication deep dive
-- **[Dependency Injection](patterns/dependency-injection.md)** - Service container patterns
+- **[Observability Guide](features/observability.md)** - Logging and monitoring setup
+
+> 💡 **Pro Tip**: Each pattern page includes "Common Mistakes" sections that reference real issues discovered while building Mario's Pizzeria!
 
 ---
 
