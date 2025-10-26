@@ -595,8 +595,8 @@ class PizzaOrderMetrics(MetricsCollector):
 
 ## 🔗 Related Documentation
 
-- [🔧 Dependency Injection](dependency-injection.md) - Service registration patterns
-- [📨 Event Sourcing](event-sourcing.md) - Event-driven architecture
+- [🔧 Dependency Injection](../patterns/dependency-injection.md) - Service registration patterns
+- [📨 Event Sourcing](../patterns/event-sourcing.md) - Event-driven architecture
 - [🔄 Reactive Programming](../patterns/reactive-programming.md) - Stream processing
 - [⚡ Redis Cache Repository](redis-cache-repository.md) - Distributed caching
 - [🌐 HTTP Service Client](http-service-client.md) - External service integration

@@ -1052,9 +1052,9 @@ class NewTeamProject:
 ### Complementary Patterns
 
 - **[Event Sourcing](event-sourcing.md)** - Reactive event store reconciliation and stream processing
-- **[CQRS](cqrs-mediation.md)** - Reactive command/query processing pipelines
+- **[CQRS](cqrs.md)** - Reactive command/query processing pipelines
 - **[Observer](observer.md)** - Foundation pattern for reactive event subscription
-- **[Event-Driven Architecture](event-driven-architecture.md)** - Reactive event processing and distribution
+- **[Event-Driven Architecture](event-driven.md)** - Reactive event processing and distribution
 - **[Repository](repository.md)** - Reactive data access with stream-based queries
 - **[Dependency Injection](dependency-injection.md)** - Service registration for reactive components
 
@@ -1064,4 +1064,4 @@ The Reactive Programming pattern integrates naturally with other architectural p
 
 ---
 
-**Next Steps**: Explore [Event Sourcing](event-sourcing.md) for reactive event store integration or [CQRS & Mediation](cqrs-mediation.md) for reactive command/query processing patterns.
+**Next Steps**: Explore [Event Sourcing](event-sourcing.md) for reactive event store integration or [CQRS & Mediation](cqrs.md) for reactive command/query processing patterns.

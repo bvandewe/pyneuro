@@ -191,10 +191,10 @@ The framework includes complete sample applications that demonstrate real-world 
 
 - **[Getting Started](getting-started.md)** - Framework overview and quick start
 - **[Mario's Pizzeria Tutorial](guides/mario-pizzeria-tutorial.md)** - Complete walkthrough
-- **[CQRS & Mediation](features/cqrs-mediation.md)** - Command/Query patterns
+- **[CQRS & Mediation](patterns/cqrs.md)** - Command/Query patterns
 - **[MVC Controllers](features/mvc-controllers.md)** - FastAPI controller patterns
 - **[Data Access](features/data-access.md)** - Repository and persistence
-- **[Dependency Injection](features/dependency-injection.md)** - DI container usage
+- **[Dependency Injection](patterns/dependency-injection.md)** - DI container usage
 - **[Python Typing Guide](references/python_typing_guide.md)** - Type hints & generics
 
 ### 📖 Additional Resources
@@ -321,4 +321,4 @@ if __name__ == "__main__":
     app.run()
 ```
 
-**Need more detail?** Start with [Getting Started](getting-started.md) then dive into specific [feature documentation](features/) or explore the [Mario's Pizzeria sample](mario-pizzeria.md).
+**Need more detail?** Start with [Getting Started](getting-started.md) then dive into specific [feature documentation](features/index.md) or explore the [Mario's Pizzeria sample](mario-pizzeria.md).

@@ -58,7 +58,7 @@ Neuroglia enforces specific architectural patterns because they solve **real pro
   - _Problem it solves_: Domain code coupled to database
   - _Key benefit_: Testable, swappable data access
 
-- **[Unit of Work](unit-of-work.md)** - Managing transactions
+- **[Unit of Work](../patterns/unit-of-work.md)** - Managing transactions
   - _Problem it solves_: Manual transaction management and event publishing
   - _Key benefit_: Consistent transactional boundaries
 
@@ -71,7 +71,7 @@ Neuroglia enforces specific architectural patterns because they solve **real pro
 3. **Domain modeling**: [Domain-Driven Design](domain-driven-design.md)
 4. **Application layer**: [CQRS](cqrs.md) → [Mediator](mediator.md)
 5. **Integration**: [Event-Driven Architecture](event-driven.md)
-6. **Data access**: [Repository](repository.md) → [Unit of Work](unit-of-work.md)
+6. **Data access**: [Repository](repository.md) → [Unit of Work](../patterns/unit-of-work.md)
 
 **Already familiar?** Jump to any concept for Neuroglia-specific implementation details.
 
@@ -101,7 +101,7 @@ All concepts are demonstrated in the **[Mario's Pizzeria tutorial](../tutorials/
 - **Tutorials**: [Step-by-step Mario's Pizzeria guide](../tutorials/index.md)
 - **Features**: [Framework feature documentation](../features/index.md)
 - **Patterns**: [Advanced pattern examples](../patterns/index.md)
-- **Case Study**: [Complete Mario's Pizzeria analysis](../case-studies/mario-pizzeria/index.md)
+- **Case Study**: [Complete Mario's Pizzeria analysis](../mario-pizzeria.md)
 
 ---
 

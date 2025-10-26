@@ -444,10 +444,10 @@ You've completed the Mario's Pizzeria tutorial series! You now know how to:
 
 ## 🔗 Additional Resources
 
-- [Neuroglia Documentation](../../index.md)
-- [Core Concepts](../../concepts/index.md)
-- [Feature Guides](../../features/index.md)
-- [Pattern Examples](../../patterns/index.md)
+- [Neuroglia Documentation](../index.md)
+- [Core Concepts](../concepts/index.md)
+- [Feature Guides](../features/index.md)
+- [Pattern Examples](../patterns/index.md)
 - [Mario's Pizzeria Case Study](../../case-studies/mario-pizzeria/index.md)
 
 ## 💬 Get Help

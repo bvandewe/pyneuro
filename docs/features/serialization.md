@@ -497,7 +497,7 @@ Serialization integrates seamlessly with:
 
 - **[Object Mapping](object-mapping.md)** - Automatic DTO conversion before serialization
 - **[MVC Controllers](mvc-controllers.md)** - Automatic request/response serialization
-- **[Event Sourcing](event-sourcing.md)** - Event payload serialization for persistence
+- **[Event Sourcing](../patterns/event-sourcing.md)** - Event payload serialization for persistence
 - **[Data Access](data-access.md)** - Document serialization for MongoDB storage
 
 ## 📚 Next Steps
@@ -506,7 +506,7 @@ Explore related Neuroglia features:
 
 - **[Object Mapping](object-mapping.md)** - Transform objects before serialization
 - **[MVC Controllers](mvc-controllers.md)** - Automatic API serialization
-- **[Event Sourcing](event-sourcing.md)** - Event payload handling
+- **[Event Sourcing](../patterns/event-sourcing.md)** - Event payload handling
 - **[Getting Started Guide](../guides/mario-pizzeria-tutorial.md)** - Complete pizzeria implementation
 
 ---

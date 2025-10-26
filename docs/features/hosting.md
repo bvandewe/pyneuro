@@ -493,7 +493,7 @@ For these cases, use FastAPI directly or other appropriate tools.
 
 - [Getting Started](../getting-started.md) - Basic usage
 - [Tutorial Part 1](../tutorials/mario-pizzeria-01-setup.md) - Complete setup guide
-- [Dependency Injection](dependency-injection.md) - Service registration
+- [Dependency Injection](../patterns/dependency-injection.md) - Service registration
 - [MVC Controllers](mvc-controllers.md) - Building controllers
 - [Observability](observability.md) - Monitoring and tracing
 

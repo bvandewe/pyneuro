@@ -1419,11 +1419,11 @@ class UserPreferences:
 
 ### Complementary Patterns
 
-- **[CQRS](cqrs-mediation.md)** - Command/Query separation works naturally with event sourcing
+- **[CQRS](cqrs.md)** - Command/Query separation works naturally with event sourcing
 - **[Repository](repository.md)** - Event sourcing repositories for aggregate persistence
 - **[Domain-Driven Design](domain-driven-design.md)** - Aggregates and domain events are core DDD concepts
 - **[Reactive Programming](reactive-programming.md)** - Event streams integrate with reactive patterns
-- **[Event-Driven Architecture](event-driven-architecture.md)** - Events provide integration between services
+- **[Event-Driven Architecture](event-driven.md)** - Events provide integration between services
 - **[Dependency Injection](dependency-injection.md)** - Service registration for event sourcing infrastructure
 
 ### Integration Examples
@@ -1432,4 +1432,4 @@ Event Sourcing works particularly well with CQRS, where commands modify event-so
 
 ---
 
-**Next Steps**: Explore [CQRS & Mediation](cqrs-mediation.md) for command/query separation with event sourcing or [Repository](repository.md) for aggregate persistence patterns.
+**Next Steps**: Explore [CQRS & Mediation](cqrs.md) for command/query separation with event sourcing or [Repository](repository.md) for aggregate persistence patterns.

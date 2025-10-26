@@ -234,10 +234,10 @@ flowchart LR
 
 ## 🔗 Related Documentation
 
-- [🚀 Framework Features](../features/) - Implementation-specific features
-- [📖 Implementation Guides](../guides/) - Step-by-step tutorials
+- [🚀 Framework Features](../features/index.md) - Implementation-specific features
+- [📖 Implementation Guides](../guides/index.md) - Step-by-step tutorials
 - [🍕 Mario's Pizzeria](../mario-pizzeria.md) - Complete system example
-- [💼 Sample Applications](../samples/) - Production-ready examples
+- [💼 Sample Applications](../samples/index.md) - Production-ready examples
 - [🔐 OAuth, OIDC & JWT](../references/oauth-oidc-jwt.md) - Authentication and authorization patterns
 
 ---

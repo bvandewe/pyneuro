@@ -545,6 +545,6 @@ Consider upgrading to the full Neuroglia framework features when you need:
 ## 🔗 Related Documentation
 
 - [Getting Started](../getting-started.md) - Framework overview
-- [CQRS & Mediation](cqrs-mediation.md) - Advanced CQRS patterns
-- [Dependency Injection](dependency-injection.md) - Advanced DI patterns
+- [CQRS & Mediation](../patterns/cqrs.md) - Advanced CQRS patterns
+- [Dependency Injection](../patterns/dependency-injection.md) - Advanced DI patterns
 - [Data Access](data-access.md) - Repository patterns and persistence

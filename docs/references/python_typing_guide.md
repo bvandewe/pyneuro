@@ -1135,7 +1135,7 @@ class Order:
 
 - [Python Object-Oriented Programming](python_object_oriented.md) - Classes, inheritance, and composition patterns
 - [Python Modular Code](python_modular_code.md) - Module organization and import patterns
-- [CQRS & Mediation](../features/cqrs-mediation.md) - Type-safe command/query patterns in the framework
+- [CQRS & Mediation](../patterns/cqrs.md) - Type-safe command/query patterns in the framework
 - [MVC Controllers](../features/mvc-controllers.md) - Type-safe API development techniques
 - [Data Access](../features/data-access.md) - Repository patterns with full type safety
 

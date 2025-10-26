@@ -1,10 +1,10 @@
 # 🚀 Framework Features
 
-The Neuroglia Python framework provides a comprehensive set of **concrete framework capabilities** and implementation utilities. Features are specific tools and utilities provided by the framework, while [**Patterns**](../patterns/) define architectural approaches and design principles.
+The Neuroglia Python framework provides a comprehensive set of **concrete framework capabilities** and implementation utilities. Features are specific tools and utilities provided by the framework, while [**Patterns**](../patterns/index.md) define architectural approaches and design principles.
 
 ## 🎯 Features vs Patterns
 
-| **Features** (This Section)                          | **Patterns** (../patterns/)                 |
+| **Features** (This Section)                          | **Patterns** (../patterns/index.md)         |
 | ---------------------------------------------------- | ------------------------------------------- |
 | **What**: Specific framework capabilities            | **What**: Architectural design approaches   |
 | **Purpose**: Tools and utilities you use             | **Purpose**: How to structure and design    |
@@ -199,7 +199,7 @@ graph TB
 
 ## 🚀 Getting Started
 
-1. **Start with [📖 Architecture Patterns](../patterns/)** - Foundation patterns (DI, CQRS, etc.)
+1. **Start with [📖 Architecture Patterns](../patterns/index.md)** - Foundation patterns (DI, CQRS, etc.)
 2. **Implement [MVC Controllers](mvc-controllers.md)** - API layer development
 3. **Choose [Data Access](data-access.md)** - Persistence strategy
 4. **Add [Object Mapping](object-mapping.md)** - Data transformation
@@ -207,10 +207,10 @@ graph TB
 
 ## 📚 Related Documentation
 
-- [🎯 Architecture Patterns](../patterns/) - Design patterns and principles
-- [📖 Implementation Guides](../guides/) - Step-by-step implementation guides
+- [🎯 Architecture Patterns](../patterns/index.md) - Design patterns and principles
+- [📖 Implementation Guides](../guides/index.md) - Step-by-step implementation guides
 - [🍕 Mario's Pizzeria](../mario-pizzeria.md) - Complete working example
-- [💼 Sample Applications](../samples/) - Real-world implementation examples
+- [💼 Sample Applications](../samples/index.md) - Real-world implementation examples
 
 ---
 

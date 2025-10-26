@@ -571,7 +571,7 @@ def get_domain_events(self) -> List[DomainEvent]:
 
 ### **CQRS Integration**
 
-The Unit of Work pattern works seamlessly with [CQRS](../simple-cqrs.md):
+The Unit of Work pattern works seamlessly with [CQRS](../features/simple-cqrs.md):
 
 ```python
 # Commands use UnitOfWork for writes
@@ -591,7 +591,7 @@ class GetProductHandler(QueryHandler):
 
 ### **Pipeline Behaviors Integration**
 
-Unit of Work integrates with [Pipeline Behaviors](../pipeline-behaviors.md):
+Unit of Work integrates with [Pipeline Behaviors](pipeline-behaviors.md):
 
 ```python
 # Transaction behavior + Domain event dispatching
@@ -604,7 +604,7 @@ services.add_scoped(PipelineBehavior, LoggingBehavior)            # 3rd: Logs ex
 
 ### **Repository Pattern Integration**
 
-Unit of Work coordinates with [Repository Pattern](../repository.md):
+Unit of Work coordinates with [Repository Pattern](repository.md):
 
 ```python
 # Repository handles persistence, UnitOfWork handles events
@@ -986,11 +986,11 @@ class CleanupOldLogsJob:
 
 ## 📚 Related Documentation
 
-- **[🎯 Simple CQRS](../simple-cqrs.md)** - Command and Query handling patterns
-- **[🔧 Pipeline Behaviors](../pipeline-behaviors.md)** - Cross-cutting concern patterns
+- **[🎯 Simple CQRS](../features/simple-cqrs.md)** - Command and Query handling patterns
+- **[🔧 Pipeline Behaviors](pipeline-behaviors.md)** - Cross-cutting concern patterns
 - **[🏛️ State-Based Persistence](../state-based-persistence.md)** - Detailed state persistence guide
-- **[🏛️ Domain Driven Design](../domain-driven-design.md)** - Comprehensive DDD patterns
-- **[📦 Repository Pattern](../repository.md)** - Data access abstraction patterns
-- **[📡 Event-Driven Architecture](../event-driven.md)** - Event handling and integration patterns
+- **[🏛️ Domain Driven Design](domain-driven-design.md)** - Comprehensive DDD patterns
+- **[📦 Repository Pattern](repository.md)** - Data access abstraction patterns
+- **[📡 Event-Driven Architecture](event-driven.md)** - Event handling and integration patterns
 
 The Unit of Work pattern provides the coordination layer that makes domain-driven design practical and maintainable, supporting both simple and complex persistence scenarios within the same architectural framework.

@@ -958,9 +958,9 @@ class OrderValidationService:
 
 ## 🔗 Related Documentation
 
-- [🔧 Dependency Injection](dependency-injection.md) - Service registration for validators
+- [🔧 Dependency Injection](../patterns/dependency-injection.md) - Service registration for validators
 - [🔄 Case Conversion Utilities](case-conversion-utilities.md) - Model field transformations
-- [📨 CQRS & Mediation](cqrs-mediation.md) - Command validation patterns
+- [📨 CQRS & Mediation](../patterns/cqrs.md) - Command validation patterns
 - [🌐 HTTP Service Client](http-service-client.md) - Request/response validation
 - [📁 Data Access](data-access.md) - Data persistence validation
 

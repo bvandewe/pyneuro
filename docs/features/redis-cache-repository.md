@@ -774,7 +774,7 @@ class CachePerformanceMonitor:
 ## 🔗 Related Documentation
 
 - [⏰ Background Task Scheduling](background-task-scheduling.md) - Distributed job coordination
-- [🔧 Dependency Injection](dependency-injection.md) - Service registration patterns
+- [🔧 Dependency Injection](../patterns/dependency-injection.md) - Service registration patterns
 - [🌐 HTTP Service Client](http-service-client.md) - External service caching
 - [📊 Enhanced Model Validation](enhanced-model-validation.md) - Data validation caching
 - [📁 Data Access](data-access.md) - Repository patterns

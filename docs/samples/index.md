@@ -172,9 +172,9 @@ graph LR
 
 ## 🔗 Related Documentation
 
-- [🎯 Architecture Patterns](../patterns/) - Foundational design patterns
-- [🚀 Framework Features](../features/) - Detailed feature documentation
-- [📖 Implementation Guides](../guides/) - Step-by-step tutorials
+- [🎯 Architecture Patterns](../patterns/index.md) - Foundational design patterns
+- [🚀 Framework Features](../features/index.md) - Detailed feature documentation
+- [📖 Implementation Guides](../guides/index.md) - Step-by-step tutorials
 - [🍕 Mario's Pizzeria](../mario-pizzeria.md) - Unified domain example
 
 ## 🚀 Next Steps

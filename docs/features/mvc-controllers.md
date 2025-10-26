@@ -1354,8 +1354,8 @@ def create_pizzeria_app_with_docs():
 ## 🔗 Related Documentation
 
 - [Getting Started Guide](../getting-started.md) - Complete pizzeria application tutorial
-- [CQRS & Mediation](cqrs-mediation.md) - Command and query handlers used in controllers
-- [Dependency Injection](dependency-injection.md) - Service registration for controller dependencies
+- [CQRS & Mediation](../patterns/cqrs.md) - Command and query handlers used in controllers
+- [Dependency Injection](../patterns/dependency-injection.md) - Service registration for controller dependencies
 - [Data Access](data-access.md) - Repository patterns used by controller commands/queries
 - [Source Code Naming Conventions](../references/source_code_naming_convention.md) - Controller, DTO, and method naming patterns
 
