@@ -305,4 +305,4 @@ ROA is ideal for:
 - **[⚡ Execution Flow](watcher-reconciliation-execution.md)** - How components coordinate
 - **[🧪 Lab Resource Manager Sample](../samples/lab-resource-manager.md)** - Complete ROA implementation
 - **[🎯 CQRS & Mediation](cqrs.md)** - Command/Query patterns used in ROA
-- **[🗄️ Data Access](data-access.md)** - Repository patterns for resource storage
+- **[🗄️ Data Access](../features/data-access.md)** - Repository patterns for resource storage

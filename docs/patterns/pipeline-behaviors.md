@@ -649,7 +649,7 @@ class HighFrequencyMetricHandler:
 ## 📚 Related Documentation
 
 - [State-Based Persistence](state-based-persistence.md) - Domain event dispatching
-- [CQRS Mediation](simple-cqrs.md) - Core command/query patterns
+- [CQRS Mediation](../features/simple-cqrs.md) - Core command/query patterns
 - [Dependency Injection](dependency-injection.md) - Service registration
 
 Pipeline behaviors provide a clean, composable way to add cross-cutting functionality to your CQRS application while keeping your handlers focused on business logic.
