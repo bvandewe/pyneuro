@@ -1,5 +1,17 @@
 # Neuroglia Python Framework
 
+[![PyPI version](https://badge.fury.io/py/neuroglia-python.svg)](https://badge.fury.io/py/neuroglia-python)
+[![Python Version](https://img.shields.io/badge/python-3.11%2B-blue.svg)](https://www.python.org/downloads/)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![Documentation](https://img.shields.io/badge/docs-latest-brightgreen.svg)](https://bvandewe.github.io/pyneuro/)
+[![Changelog](https://img.shields.io/badge/changelog-Keep%20a%20Changelog-E05735.svg)](https://github.com/bvandewe/pyneuro/blob/main/CHANGELOG.md)
+[![Poetry](https://img.shields.io/endpoint?url=https://python-poetry.org/badge/v0.json)](https://python-poetry.org/)
+[![Docker](https://img.shields.io/badge/docker-ready-2496ED.svg?logo=docker&logoColor=white)](https://www.docker.com/)
+[![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.116%2B-009688.svg?logo=fastapi)](https://fastapi.tiangolo.com/)
+[![GitHub](https://img.shields.io/github/stars/bvandewe/pyneuro?style=social)](https://github.com/bvandewe/pyneuro)
+
 Neuroglia is a lightweight, opinionated framework built on top of [FastAPI](https://fastapi.tiangolo.com/) that provides a comprehensive set of tools and patterns for building clean, maintainable, and scalable microservices. It enforces architectural best practices and provides out-of-the-box implementations of common patterns.
 
 📚 **Read the full documentation at [bvandewe.github.io/pyneuro/](https://bvandewe.github.io/pyneuro/)** 📚
@@ -158,7 +170,9 @@ Get started quickly with Mario's Pizzeria using Docker:
 # 🔐 Authentication: http://localhost:8090/admin
 ```
 
-The Docker environment includes MongoDB, EventStoreDB, Keycloak authentication, and the Event Player for a complete development experience. See [`deployment/README-mario-docker.md`](deployment/README-mario-docker.md) for full details.
+The Docker environment includes [MongoDB](https://www.mongodb.com/) (with [Mongo Express](https://github.com/mongo-express/mongo-express)), [Keycloak](https://www.keycloak.org/) IDP, [Event Player](https://bvandewe.github.io/events-player/), and other [Open Telemetry](https://opentelemetry.io/) services (OTEL Collector, Grafana, Prometheus, Loki, Tempo) for a complete development experience.
+
+See [`deployment/README-mario-docker.md`](deployment/README-mario-docker.md) for full details.
 
 ## 🔧 Quick Start
 
