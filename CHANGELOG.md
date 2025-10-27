@@ -7,7 +7,64 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.0] - 2025-10-27
+
 ### Added
+
+#### **Mario's Pizzeria Sample - Event Handler Enhancements**
+
+- **Pizza Event Handlers**: Complete CloudEvent publishing for pizza lifecycle
+
+  - `PizzaCreatedEventHandler`: Publishes CloudEvents when pizzas are created with comprehensive logging and emoji indicators (🍕)
+  - `ToppingsUpdatedEventHandler`: Tracks and publishes topping modifications with logging (🧀)
+  - Integration with event-player for real-time event visualization
+  - Comprehensive test suite `test_pizza_event_handlers.py` with CloudEvent validation
+  - Auto-discovery via mediator pattern from `application.events` module
+
+- **Order Event Handlers**: Enhanced order lifecycle tracking
+
+  - `OrderCreatedEventHandler`: CloudEvent publishing for order creation events
+  - Full integration with `BaseDomainEventHandler` pattern for consistent event processing
+  - Comprehensive logging for order lifecycle tracking
+
+- **Event-Player Integration**: External event visualization support
+
+  - Keycloak auth client configuration for event-player service (mario-public-app)
+  - Docker Compose integration with event-player v0.3.4
+  - Support for admin, viewer, and event-publisher roles
+  - Redirect URIs configured for http://localhost:8085/\*
+
+- **Development Workflow Improvements**: Enhanced debugging and hot reload
+  - Debugpy configuration with proper PYTHONPATH for module resolution
+  - Automatic code reload on changes without authentication blocking
+  - Watch directories configured for both application and framework code
+  - VS Code debugger attachment on port 5678
+
+### Changed
+
+- **Documentation**: Repository presentation improvements
+  - Added comprehensive repository badges to README.md:
+    - PyPI version badge
+    - Python 3.11+ requirement badge
+    - Apache 2.0 license badge
+    - Documentation link badge
+    - Changelog badge with Keep a Changelog style
+    - Poetry dependency management badge
+    - Docker ready badge
+    - Pre-commit enabled badge
+    - Black code style badge
+    - FastAPI framework badge
+    - GitHub stars social badge
+  - Enhanced project visibility and quality indicators
+  - Added changelog badge linking to version history
+
+### Fixed
+
+- **Docker Compose Configuration**: Mario's Pizzeria app startup
+  - Fixed debugpy module import error by adding /tmp to PYTHONPATH
+  - Resolved "No module named debugpy" issue when using `python -m debugpy`
+  - Container now starts reliably with hot reload enabled
+  - Improved developer experience with immediate feedback loop
 
 #### **Framework Enhancements**
 
