@@ -4,6 +4,7 @@ Event handlers package for Mario's Pizzeria.
 This package contains domain event handlers organized by aggregate/entity:
 - order_event_handlers: Order lifecycle and pizza management events
 - customer_event_handlers: Customer registration, profile, and contact update events
+- pizza_event_handlers: Pizza creation and topping modification events
 """
 
 # Customer event handlers
@@ -24,6 +25,9 @@ from .order_event_handlers import (
     PizzaRemovedFromOrderEventHandler,
 )
 
+# Pizza event handlers
+from .pizza_event_handlers import PizzaCreatedEventHandler, ToppingsUpdatedEventHandler
+
 __all__ = [
     # Order handlers
     "OrderConfirmedEventHandler",
@@ -37,4 +41,7 @@ __all__ = [
     "CustomerRegisteredEventHandler",
     "CustomerProfileCreatedEventHandler",
     "CustomerContactUpdatedEventHandler",
+    # Pizza handlers
+    "PizzaCreatedEventHandler",
+    "ToppingsUpdatedEventHandler",
 ]
