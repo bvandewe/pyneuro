@@ -134,27 +134,27 @@ src/
 ### Quick Links
 
 - **[🚀 Getting Started](docs/getting-started.md)** - Set up your first Neuroglia application
-- **[🏗️ Architecture Guide](docs/architecture.md)** - Understanding the framework's architecture
-- **[💉 Dependency Injection](docs/features/dependency-injection.md)** - Service container and DI patterns
-- **[🎯 CQRS & Mediation](docs/features/cqrs-mediation.md)** - Command and Query handling
-- **[�️ State-Based Persistence](docs/features/state-based-persistence.md)** - Domain events with state persistence
-- **[🔧 Pipeline Behaviors](docs/features/pipeline-behaviors.md)** - Cross-cutting concerns and middleware
-- **[�🎯 Resource Oriented Architecture](docs/features/resource-oriented-architecture.md)** - Declarative resource management patterns
+- **[🏗️ Architecture Guide](docs/patterns/clean-architecture.md)** - Understanding the framework's architecture
+- **[💉 Dependency Injection](docs/patterns/dependency-injection.md)** - Service container and DI patterns
+- **[🎯 CQRS & Mediation](docs/patterns/cqrs.md)** - Command and Query handling
+- **[🗄️ Persistence Patterns](docs/patterns/persistence-patterns.md)** - Domain events with state persistence
+- **[🔧 Pipeline Behaviors](docs/patterns/pipeline-behaviors.md)** - Cross-cutting concerns and middleware
+- **[🎯 Resource Oriented Architecture](docs/patterns/resource-oriented-architecture.md)** - Declarative resource management patterns
 - **[🔌 MVC Controllers](docs/features/mvc-controllers.md)** - Building REST APIs
 - **[🗄️ Data Access](docs/features/data-access.md)** - Repository pattern and data persistence
-- **[📡 Event Handling](docs/features/event-handling.md)** - CloudEvents and reactive programming
+- **[📡 Event Handling](docs/patterns/event-driven.md)** - CloudEvents and reactive programming
 - **[📊 Object Mapping](docs/features/object-mapping.md)** - Mapping between different object types
-- **[⚙️ Configuration](docs/features/configuration.md)** - Application configuration and settings
+- **[🔭 Observability](docs/features/observability.md)** - OpenTelemetry integration and monitoring
 
 ### Sample Applications
 
 Learn by example with complete sample applications:
 
-- **[� Mario's Pizzeria](samples/mario-pizzeria/)** - Complete pizzeria management system showcasing all framework features
-- **[�🏦 OpenBank](docs/samples/openbank.md)** - Event-sourced banking domain with CQRS
+- **[🍕 Mario's Pizzeria](docs/mario-pizzeria.md)** - Complete pizzeria management system showcasing all framework features
+- **[🏦 OpenBank](docs/samples/openbank.md)** - Event-sourced banking domain with CQRS
 - **[🧪 Lab Resource Manager](docs/samples/lab-resource-manager.md)** - Resource Oriented Architecture with watchers and reconciliation
-- **🖥️ Desktop Controller** - Remote desktop management API
-- **🚪 API Gateway** - Microservice gateway with authentication
+- **[🖥️ Desktop Controller](docs/samples/desktop_controller.md)** - Remote desktop management API
+- **[🚪 API Gateway](docs/samples/api_gateway.md)** - Microservice gateway with authentication
 
 #### 🐳 Docker Development Environment
 
@@ -203,20 +203,20 @@ app.run()
 
 ## 🏗️ Framework Components
 
-| Component                          | Purpose                               | Documentation                                                    |
-| ---------------------------------- | ------------------------------------- | ---------------------------------------------------------------- |
-| **Core**                           | Base types, utilities, module loading | [📖 Core](docs/features/core.md)                                 |
-| **Dependency Injection**           | Service container and registration    | [📖 DI](docs/features/dependency-injection.md)                   |
-| **Hosting**                        | Web application hosting and lifecycle | [📖 Hosting](docs/features/hosting.md)                           |
-| **MVC**                            | Controllers and routing               | [📖 MVC](docs/features/mvc-controllers.md)                       |
-| **Mediation**                      | CQRS, commands, queries, events       | [📖 Mediation](docs/features/cqrs-mediation.md)                  |
-| **State Persistence**              | Domain events with state persistence  | [📖 State Persistence](docs/features/state-based-persistence.md) |
-| **Pipeline Behaviors**             | Cross-cutting concerns, middleware    | [📖 Behaviors](docs/features/pipeline-behaviors.md)              |
-| **Resource Oriented Architecture** | Watchers, controllers, reconciliation | [📖 ROA](docs/features/resource-oriented-architecture.md)        |
-| **Data**                           | Repository pattern, event sourcing    | [📖 Data](docs/features/data-access.md)                          |
-| **Eventing**                       | CloudEvents, pub/sub, reactive        | [📖 Events](docs/features/event-handling.md)                     |
-| **Mapping**                        | Object-to-object mapping              | [📖 Mapping](docs/features/object-mapping.md)                    |
-| **Serialization**                  | JSON and other serialization          | [📖 Serialization](docs/features/serialization.md)               |
+| Component                          | Purpose                               | Documentation                                             |
+| ---------------------------------- | ------------------------------------- | --------------------------------------------------------- |
+| **Dependency Injection**           | Service container and registration    | [📖 DI](docs/patterns/dependency-injection.md)            |
+| **Hosting**                        | Web application hosting and lifecycle | [📖 Hosting](docs/features/hosting.md)                    |
+| **MVC**                            | Controllers and routing               | [📖 MVC](docs/features/mvc-controllers.md)                |
+| **Mediation**                      | CQRS, commands, queries, events       | [📖 CQRS](docs/patterns/cqrs.md)                          |
+| **Persistence**                    | Domain events with state persistence  | [📖 Persistence](docs/patterns/persistence-patterns.md)   |
+| **Pipeline Behaviors**             | Cross-cutting concerns, middleware    | [📖 Behaviors](docs/patterns/pipeline-behaviors.md)       |
+| **Resource Oriented Architecture** | Watchers, controllers, reconciliation | [📖 ROA](docs/patterns/resource-oriented-architecture.md) |
+| **Data**                           | Repository pattern, event sourcing    | [📖 Data](docs/features/data-access.md)                   |
+| **Eventing**                       | CloudEvents, pub/sub, reactive        | [📖 Events](docs/patterns/event-driven.md)                |
+| **Mapping**                        | Object-to-object mapping              | [📖 Mapping](docs/features/object-mapping.md)             |
+| **Serialization**                  | JSON and other serialization          | [📖 Serialization](docs/features/serialization.md)        |
+| **Observability**                  | OpenTelemetry, tracing, metrics       | [📖 Observability](docs/features/observability.md)        |
 
 ## 📋 Requirements
 
