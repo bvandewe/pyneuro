@@ -12,6 +12,7 @@ from domain.events import (
     CookingStartedEvent,
     OrderCancelledEvent,
     OrderConfirmedEvent,
+    OrderCreatedEvent,
     OrderDeliveredEvent,
     OrderReadyEvent,
     PizzaAddedToOrderEvent,
@@ -26,6 +27,24 @@ from neuroglia.mediation import DomainEventHandler, Mediator
 
 # Set up logger
 logger = logging.getLogger(__name__)
+
+
+class OrderCreatedEventHandler(BaseDomainEventHandler[OrderCreatedEvent], DomainEventHandler[OrderCreatedEvent]):
+    """Handles order created events - used for observability"""
+
+    def __init__(
+        self,
+        mediator: Mediator,
+        cloud_event_bus: CloudEventBus,
+        cloud_event_publishing_options: CloudEventPublishingOptions,
+    ):
+        super().__init__(mediator, cloud_event_bus, cloud_event_publishing_options)
+
+    async def handle_async(self, event: OrderCreatedEvent) -> None:
+        """Process order created event"""
+        logger.info(f"🍕 Order {event.aggregate_id} created!")
+        await self.publish_cloud_event_async(event)
+        return None
 
 
 class OrderConfirmedEventHandler(BaseDomainEventHandler[OrderConfirmedEvent], DomainEventHandler[OrderConfirmedEvent]):
