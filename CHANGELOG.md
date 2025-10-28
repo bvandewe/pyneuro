@@ -7,6 +7,40 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- **Python Version Requirement**: Lowered minimum Python version from 3.11+ to 3.9+
+  - Framework analysis revealed only Python 3.9+ features are actually used (built-in generic types like `dict[str, int]`)
+  - Pattern matching (`match/case`) syntax only appears in documentation/docstrings, not runtime code
+  - Makes the framework accessible to a much wider audience while maintaining all functionality
+  - Updated in `pyproject.toml`, README badges, and documentation
+
+### Added
+
+- **CQRS Metrics Auto-Enablement**: Intelligent automatic registration of CQRS metrics collection
+  - `Observability.configure()` now auto-detects Mediator configuration and enables CQRS metrics by default
+  - New `auto_enable_cqrs_metrics` parameter (default: `True`) for opt-out capability
+  - Hybrid approach: convention over configuration with explicit control when needed
+  - Consistent with tracing behavior auto-enablement pattern
+  - Usage: `Observability.configure(builder)` automatically enables metrics when Mediator is present
+  - Opt-out: `Observability.configure(builder, auto_enable_cqrs_metrics=False)` for manual control
+
+### Fixed
+
+- **CQRS Metrics Middleware**: Fixed duplicate metric instrument creation warnings
+
+  - Changed to class-level (static) meter initialization to prevent re-creating instruments on each request
+  - Meters now initialized once and shared across all `MetricsPipelineBehavior` instances
+  - Eliminates OpenTelemetry warnings: "An instrument with name X has been created already"
+  - Fixed registration pattern: now registers as `PipelineBehavior` interface only (not dual registration)
+  - Matches the pattern used by `DomainEventDispatchingMiddleware` for consistency
+
+- **Simplest Sample**: Fixed `samples/minimal/simplest.py` to properly start uvicorn server
+  - Changed from `app.run()` to `uvicorn.run(app, host="0.0.0.0", port=8000)`
+  - Ensures the sample actually serves HTTP requests instead of exiting immediately
+  - Aligns with Docker deployment pattern and other samples
+  - Updated `docs/getting-started.md` to reflect the correct usage pattern
+
 ## [0.5.0] - 2025-10-27
 
 ### Added

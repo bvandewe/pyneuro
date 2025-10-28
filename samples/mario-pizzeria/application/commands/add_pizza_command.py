@@ -1,5 +1,6 @@
 """Add Pizza to Menu Command for Mario's Pizzeria"""
 
+import asyncio
 from dataclasses import dataclass
 from decimal import Decimal
 from typing import Optional
@@ -78,6 +79,9 @@ class AddPizzaCommandHandler(CommandHandler[AddPizzaCommand, OperationResult[Piz
                 base_price=pizza.state.base_price or Decimal("0"),
                 total_price=pizza.total_price,
             )
+
+            # Artificial delay for testing/demo purposes
+            await asyncio.sleep(3)
 
             return self.created(pizza_dto)
 

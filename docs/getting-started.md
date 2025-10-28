@@ -18,14 +18,20 @@ Don't worry! This guide assumes no prior knowledge. We'll explain concepts as we
 
 ### Prerequisites
 
-- Python 3.11 or higher
+- Python 3.9 or higher (`python3 --version`)
 - pip (Python package manager)
 - Basic familiarity with Python and REST APIs
 
 ### Install Neuroglia
 
 ```bash
-pip install neuroglia
+# [Optional] create and activate a virtual environment
+mkdir getting-started
+python3 -m venv venv
+source venv/bin/activate
+
+# Install the framework
+pip install neuroglia-python
 ```
 
 That's it! Neuroglia is built on FastAPI, so it will install all necessary dependencies automatically.
@@ -39,7 +45,7 @@ Let's create the simplest possible Neuroglia application to verify everything wo
 Create a file named `main.py`:
 
 ```python
-from fastapi import FastAPI
+import uvicorn
 from neuroglia.hosting.web import WebApplicationBuilder
 
 # Create the application builder
@@ -48,14 +54,16 @@ builder = WebApplicationBuilder()
 # Build the FastAPI application
 app = builder.build()
 
+
 # Add a simple endpoint
 @app.get("/")
 async def hello():
     return {"message": "Hello from Neuroglia!"}
 
+
 # Run the application (if executed directly)
 if __name__ == "__main__":
-    app.run()
+    uvicorn.run(app, host="0.0.0.0", port=8000)
 ```
 
 ### Step 2: Run It

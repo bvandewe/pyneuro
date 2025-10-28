@@ -183,6 +183,7 @@ class OrderCancelledEvent(DomainEvent):
     reason: Optional[str]
 
 
+@cloudevent("customer.registered.v1")
 @dataclass
 class CustomerRegisteredEvent(DomainEvent):
     """Event raised when a new customer is registered."""
@@ -204,6 +205,7 @@ class CustomerRegisteredEvent(DomainEvent):
             self.aggregate_version = 0
 
 
+@cloudevent("customer.contact.updated.v1")
 @dataclass
 class CustomerContactUpdatedEvent(DomainEvent):
     """Event raised when customer contact information is updated."""
@@ -217,6 +219,7 @@ class CustomerContactUpdatedEvent(DomainEvent):
     address: str
 
 
+@cloudevent("customer.profile.created.v1")
 @dataclass
 class CustomerProfileCreatedEvent(DomainEvent):
     """
@@ -241,6 +244,7 @@ class CustomerProfileCreatedEvent(DomainEvent):
             self.aggregate_version = 0
 
 
+@cloudevent("pizza.created.v1")
 @dataclass
 class PizzaCreatedEvent(DomainEvent):
     """Event raised when a new pizza is created."""
@@ -268,6 +272,7 @@ class PizzaCreatedEvent(DomainEvent):
     toppings: list[str]
 
 
+@cloudevent("pizza.toppings.updated.v1")
 @dataclass
 class ToppingsUpdatedEvent(DomainEvent):
     """Event raised when pizza toppings are updated."""
