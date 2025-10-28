@@ -1,7 +1,7 @@
 # Neuroglia Python Framework
 
-[![PyPI version](https://badge.fury.io/py/neuroglia-python.svg)](https://badge.fury.io/py/neuroglia-python)
-[![Python Version](https://img.shields.io/badge/python-3.11%2B-blue.svg)](https://www.python.org/downloads/)
+[![PyPI version](https://badge.fury.io/py/neuroglia-python.svg?v=2)](https://badge.fury.io/py/neuroglia-python)
+[![Python Version](https://img.shields.io/badge/python-3.9%2B-blue.svg)](https://www.python.org/downloads/)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Documentation](https://img.shields.io/badge/docs-latest-brightgreen.svg)](https://bvandewe.github.io/pyneuro/)
 [![Changelog](https://img.shields.io/badge/changelog-Keep%20a%20Changelog-E05735.svg)](https://github.com/bvandewe/pyneuro/blob/main/CHANGELOG.md)
@@ -220,7 +220,7 @@ app.run()
 
 ## 📋 Requirements
 
-- Python 3.11+
+- Python 3.9+
 - FastAPI
 - Pydantic
 - RxPy (for reactive features)

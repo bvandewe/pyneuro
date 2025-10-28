@@ -66,26 +66,40 @@ class MetricsPipelineBehavior(PipelineBehavior[TRequest, TResult], Generic[TRequ
         # All commands and queries will automatically be metered
     """
 
+    # Class-level meters (shared across all instances to avoid re-creating metrics)
+    _meters_initialized = False
+    _executions_total = None
+    _executions_success = None
+    _executions_failures = None
+    _execution_duration = None
+
     def __init__(self):
         """Initialize the metrics pipeline behavior"""
         if not OTEL_AVAILABLE:
-            log.warning("⚠️ MetricsPipelineBehavior: OpenTelemetry not available. " "Metrics will be disabled. Install opentelemetry-api to enable metrics.")
             return
 
-        # Initialize metrics
-        meter = get_meter(__name__)
+        # Initialize class-level meters only once
+        if not MetricsPipelineBehavior._meters_initialized:
+            meter = get_meter(__name__)
 
-        # Execution counters
-        self.executions_total = meter.create_counter(name="cqrs.executions.total", unit="executions", description="Total number of CQRS command/query executions")
+            # Execution counters
+            MetricsPipelineBehavior._executions_total = meter.create_counter(name="cqrs.executions.total", unit="executions", description="Total number of CQRS command/query executions")
 
-        self.executions_success = meter.create_counter(name="cqrs.executions.success", unit="executions", description="Number of successful CQRS executions")
+            MetricsPipelineBehavior._executions_success = meter.create_counter(name="cqrs.executions.success", unit="executions", description="Number of successful CQRS executions")
 
-        self.executions_failures = meter.create_counter(name="cqrs.executions.failures", unit="executions", description="Number of failed CQRS executions")
+            MetricsPipelineBehavior._executions_failures = meter.create_counter(name="cqrs.executions.failures", unit="executions", description="Number of failed CQRS executions")
 
-        # Execution duration histogram
-        self.execution_duration = meter.create_histogram(name="cqrs.execution.duration", unit="ms", description="Duration of CQRS command/query execution")
+            # Execution duration histogram
+            MetricsPipelineBehavior._execution_duration = meter.create_histogram(name="cqrs.execution.duration", unit="ms", description="Duration of CQRS command/query execution")
 
-        log.debug("📊 MetricsPipelineBehavior initialized with CQRS metrics collection")
+            MetricsPipelineBehavior._meters_initialized = True
+            log.debug("📊 MetricsPipelineBehavior meters initialized")
+
+        # Set instance properties to reference class-level meters
+        self.executions_total = MetricsPipelineBehavior._executions_total
+        self.executions_success = MetricsPipelineBehavior._executions_success
+        self.executions_failures = MetricsPipelineBehavior._executions_failures
+        self.execution_duration = MetricsPipelineBehavior._execution_duration
 
     async def handle_async(self, request: TRequest, next_handler) -> TResult:
         """
@@ -197,7 +211,7 @@ class MetricsPipelineBehavior(PipelineBehavior[TRequest, TResult], Generic[TRequ
 
 def add_cqrs_metrics(services) -> None:
     """
-    Add CQRS metrics pipeline behavior to the service collection.
+    Register CQRS metrics collection pipeline behavior.
 
     This is a convenience method that registers the MetricsPipelineBehavior
     to automatically collect metrics for all CQRS operations.
@@ -208,7 +222,7 @@ def add_cqrs_metrics(services) -> None:
     Example:
         ```python
         services = ServiceCollection()
-        services.add_cqrs_metrics()
+        add_cqrs_metrics(services)
         ```
     """
     if not OTEL_AVAILABLE:
@@ -216,7 +230,8 @@ def add_cqrs_metrics(services) -> None:
         return
 
     # Import here to avoid circular imports
-    from neuroglia.dependency_injection.service_collection import ServiceCollection
+    from neuroglia.dependency_injection import ServiceCollection
+    from neuroglia.mediation.pipeline_behavior import PipelineBehavior
 
     if not isinstance(services, ServiceCollection):
         log.error("❌ services parameter must be a ServiceCollection instance")
@@ -224,8 +239,9 @@ def add_cqrs_metrics(services) -> None:
 
     log.info("📊 Registering MetricsPipelineBehavior for automatic CQRS metrics...")
 
-    # Register the metrics pipeline behavior
-    services.add_pipeline_behavior(MetricsPipelineBehavior)
+    # Register as PipelineBehavior interface only (for mediator to discover)
+    # Don't register the concrete type to avoid duplicate behavior instances
+    services.add_scoped(PipelineBehavior, implementation_factory=lambda sp: MetricsPipelineBehavior())
 
     log.info("✅ CQRS metrics pipeline behavior registered successfully")
 

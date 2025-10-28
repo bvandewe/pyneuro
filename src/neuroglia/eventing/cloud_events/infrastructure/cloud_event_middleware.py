@@ -1,10 +1,12 @@
 import logging
-from fastapi import FastAPI, Request, Response
+
+from fastapi import Request, Response
+from starlette.middleware.base import BaseHTTPMiddleware
+
 from neuroglia.dependency_injection.service_provider import ServiceProviderBase
 from neuroglia.eventing.cloud_events.cloud_event import CloudEvent
 from neuroglia.eventing.cloud_events.infrastructure import CloudEventBus
 from neuroglia.serialization.json import JsonSerializer
-from starlette.middleware.base import BaseHTTPMiddleware
 
 
 class CloudEventMiddleware(BaseHTTPMiddleware):

@@ -44,12 +44,13 @@ class Observability:
     """
 
     @classmethod
-    def configure(cls, builder: "WebApplicationBuilder", **overrides) -> None:
+    def configure(cls, builder: "WebApplicationBuilder", auto_enable_cqrs_metrics: bool = True, **overrides) -> None:
         """
         Configure comprehensive observability for the application.
 
         Args:
             builder: The enhanced web application builder (must contain app_settings)
+            auto_enable_cqrs_metrics: Auto-enable CQRS metrics if Mediator is detected (default: True)
             **overrides: Optional configuration overrides (tracing_enabled=False, etc.)
         """
         app_settings = builder.app_settings
@@ -80,6 +81,17 @@ class Observability:
             except ImportError:
                 log.warning("⚠️ TracingPipelineBehavior not available - tracing middleware skipped")
 
+        # Auto-enable CQRS metrics if metrics enabled and Mediator is configured
+        if config.metrics_enabled and auto_enable_cqrs_metrics:
+            if cls._has_mediator_configured(builder):
+                try:
+                    from neuroglia.mediation.metrics_middleware import add_cqrs_metrics
+
+                    add_cqrs_metrics(builder.services)
+                    log.info("📊 CQRS metrics auto-enabled (mediator detected)")
+                except ImportError:
+                    log.warning("⚠️ CQRS metrics middleware not available - metrics skipped")
+
         # Register standard endpoints for automatic addition during app build
         if config.is_any_endpoint_enabled():
             cls._register_standard_endpoints(builder, config)
@@ -90,6 +102,25 @@ class Observability:
     def _has_observability_settings(cls, settings) -> bool:
         """Check if settings object has observability configuration"""
         return isinstance(settings, ObservabilitySettingsMixin) or hasattr(settings, "observability_enabled")
+
+    @classmethod
+    def _has_mediator_configured(cls, builder: "WebApplicationBuilder") -> bool:
+        """
+        Check if Mediator has been configured in the service provider.
+
+        Returns:
+            True if Mediator is registered, False otherwise
+        """
+        try:
+            from neuroglia.mediation import Mediator
+
+            # Build a temporary service provider to check registration
+            provider = builder.services.build()
+            mediator = provider.get_service(Mediator)
+            return mediator is not None
+        except Exception as ex:
+            log.debug(f"Could not detect Mediator: {ex}")
+            return False
 
     @classmethod
     def _configure_opentelemetry(cls, builder: "WebApplicationBuilder", config: ObservabilityConfig) -> None:
