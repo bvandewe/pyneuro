@@ -340,7 +340,7 @@ async def run_example():
 
     # Create application
     provider = create_application()
-    mediator = provider.get_service(Mediator)
+    mediator: Mediator = provider.get_service(Mediator)  # type: ignore
 
     print("\n📝 Creating users...")
 
