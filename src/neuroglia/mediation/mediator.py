@@ -198,6 +198,15 @@ class RequestHandler(Generic[TRequest, TResult], ABC):
             "https://www.w3.org/Protocols/HTTP/HTRESP.html#:~:text=Not%20found%20404",
         )
 
+    def conflict(self, message: str) -> TResult:
+        """Creates a new OperationResult to describe a conflict (HTTP 409)"""
+        return OperationResult(
+            "Conflict",
+            409,
+            message,
+            "https://www.w3.org/Protocols/HTTP/HTRESP.html",
+        )
+
 
 TCommand = TypeVar("TCommand", bound=Command)
 """ Represents the type of CQRS command to handle """

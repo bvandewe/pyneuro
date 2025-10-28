@@ -372,7 +372,7 @@ async def setup_application():
     services = ServiceCollection()
 
     # Add core mediation services
-    services.add_mediator()
+    services.add_singleton(Mediator)
 
     # Add state-based persistence services (new feature!)
     # Import the extension method
@@ -400,7 +400,16 @@ async def setup_application():
     services.add_scoped(ProductCategorizedEventHandler)
 
     # Build service provider
-    provider = services.build_provider()
+    provider = services.build()
+
+    # Manually populate mediator's handler registry
+    if not hasattr(Mediator, "_handler_registry"):
+        Mediator._handler_registry = {}
+
+    Mediator._handler_registry[CreateProductCommand] = CreateProductHandler
+    Mediator._handler_registry[UpdateProductPriceCommand] = UpdateProductPriceHandler
+    Mediator._handler_registry[GetProductByIdQuery] = GetProductByIdHandler
+    Mediator._handler_registry[GetAllProductsQuery] = GetAllProductsHandler
 
     log.info("✅ Application setup complete!")
     return provider

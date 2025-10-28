@@ -18,12 +18,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - **CQRS Metrics Auto-Enablement**: Intelligent automatic registration of CQRS metrics collection
+
   - `Observability.configure()` now auto-detects Mediator configuration and enables CQRS metrics by default
   - New `auto_enable_cqrs_metrics` parameter (default: `True`) for opt-out capability
   - Hybrid approach: convention over configuration with explicit control when needed
   - Consistent with tracing behavior auto-enablement pattern
   - Usage: `Observability.configure(builder)` automatically enables metrics when Mediator is present
   - Opt-out: `Observability.configure(builder, auto_enable_cqrs_metrics=False)` for manual control
+
+- **Request Handler Helpers**: Added `conflict()` method to `RequestHandler` base class
+  - Returns HTTP 409 Conflict status with error message
+  - Available to all `CommandHandler` and `QueryHandler` instances
+  - Matches existing helper methods: `ok()`, `created()`, `bad_request()`, `not_found()`
+  - Usage: `return self.conflict("User with this email already exists")`
 
 ### Fixed
 
@@ -35,11 +42,40 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Fixed registration pattern: now registers as `PipelineBehavior` interface only (not dual registration)
   - Matches the pattern used by `DomainEventDispatchingMiddleware` for consistency
 
-- **Simplest Sample**: Fixed `samples/minimal/simplest.py` to properly start uvicorn server
-  - Changed from `app.run()` to `uvicorn.run(app, host="0.0.0.0", port=8000)`
-  - Ensures the sample actually serves HTTP requests instead of exiting immediately
-  - Aligns with Docker deployment pattern and other samples
-  - Updated `docs/getting-started.md` to reflect the correct usage pattern
+- **Minimal Samples**: Fixed handler registration issues across multiple samples
+
+  - **simplest.py**: Fixed to properly start uvicorn server
+
+    - Changed from `app.run()` to `uvicorn.run(app, host="0.0.0.0", port=8000)`
+    - Ensures the sample actually serves HTTP requests instead of exiting immediately
+    - Aligns with Docker deployment pattern
+    - Updated `docs/getting-started.md` to reflect the correct usage pattern
+
+  - **minimal-cqrs.py**: Fixed mediator handler registration
+
+    - Replaced `add_simple_mediator()` with manual `Mediator` singleton registration
+    - Added explicit `_handler_registry` population for command/query handlers
+    - Added required `super().__init__()` calls to handler constructors
+    - Now successfully creates and retrieves tasks
+
+  - **ultra-simple-cqrs.py**: Fixed mediator handler registration
+
+    - Replaced `create_simple_app()` with manual `ServiceCollection` setup
+    - Applied same registry pattern as minimal-cqrs.py
+    - Now successfully adds and retrieves notes
+
+  - **simple-cqrs-example.py**: Fixed handler type mismatches and registration
+
+    - Converted from `SimpleCommandHandler` to `CommandHandler` for all 6 handlers
+    - Fixed generic type parameters: `CommandHandler[TCommand, TResult]`
+    - Applied manual mediator registry pattern
+    - Now demonstrates complete CRUD workflow: create, read, update, deactivate users
+
+  - **state-based-persistence-demo.py**: Partial fix for advanced features demo
+    - Fixed `build_provider()` to `build()` method call
+    - Applied manual mediator registry for 4 handlers
+    - Command handlers work successfully with domain event dispatching
+    - Note: Query handlers use raw return types (not `OperationResult`) causing issues with pipeline behaviors
 
 ## [0.5.0] - 2025-10-27
 

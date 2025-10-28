@@ -19,8 +19,6 @@ from neuroglia.mediation import (
     Mediator,
     Query,
     QueryHandler,
-    add_simple_mediator,
-    register_simple_handler,
 )
 
 
@@ -53,6 +51,7 @@ class GetTaskQuery(Query[OperationResult[TaskDto]]):
 # Handlers that inherit from the framework handlers
 class CreateTaskHandler(CommandHandler[CreateTaskCommand, OperationResult[TaskDto]]):
     def __init__(self, repository: InMemoryRepository[Task]):
+        super().__init__()
         self.repository = repository
 
     async def handle_async(self, request: CreateTaskCommand) -> OperationResult[TaskDto]:
@@ -68,6 +67,7 @@ class CreateTaskHandler(CommandHandler[CreateTaskCommand, OperationResult[TaskDt
 
 class GetTaskHandler(QueryHandler[GetTaskQuery, OperationResult[TaskDto]]):
     def __init__(self, repository: InMemoryRepository[Task]):
+        super().__init__()
         self.repository = repository
 
     async def handle_async(self, request: GetTaskQuery) -> OperationResult[TaskDto]:
@@ -84,21 +84,31 @@ class GetTaskHandler(QueryHandler[GetTaskQuery, OperationResult[TaskDto]]):
 def create_app():
     services = ServiceCollection()
 
-    # Add mediator
-    add_simple_mediator(services)
-
-    # Add repository and handlers
+    # Add repository
     services.add_singleton(InMemoryRepository[Task])
-    register_simple_handler(services, CreateTaskHandler)
-    register_simple_handler(services, GetTaskHandler)
 
-    return services.build()
+    # Add mediator
+    services.add_singleton(Mediator)
+
+    # Register handlers in DI
+    services.add_scoped(CreateTaskHandler)
+    services.add_scoped(GetTaskHandler)
+
+    provider = services.build()
+
+    # Register handlers in mediator's handler registry (for routing)
+    if not hasattr(Mediator, "_handler_registry"):
+        Mediator._handler_registry = {}
+    Mediator._handler_registry[CreateTaskCommand] = CreateTaskHandler
+    Mediator._handler_registry[GetTaskQuery] = GetTaskHandler
+
+    return provider
 
 
 # Usage
 async def main():
     provider = create_app()
-    mediator = provider.get_service(Mediator)
+    mediator: Mediator = provider.get_service(Mediator)  # type: ignore
 
     # Create a task
     create_cmd = CreateTaskCommand("Learn CQRS")
