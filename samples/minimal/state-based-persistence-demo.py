@@ -216,14 +216,14 @@ class UpdateProductPriceCommand(Command[OperationResult[ProductDto]]):
 
 
 # Queries (compatible with both state-based and event-sourced entities)
-class GetProductByIdQuery(Query[Optional[ProductDto]]):
+class GetProductByIdQuery(Query[OperationResult[Optional[ProductDto]]]):
     """Query to get a product by ID."""
 
     def __init__(self, product_id: str):
         self.product_id = product_id
 
 
-class GetAllProductsQuery(Query[list[ProductDto]]):
+class GetAllProductsQuery(Query[OperationResult[list[ProductDto]]]):
     """Query to get all products."""
 
 
@@ -297,32 +297,34 @@ class UpdateProductPriceHandler(CommandHandler[UpdateProductPriceCommand, Operat
 
 
 # Query Handlers (compatible with both patterns)
-class GetProductByIdHandler(QueryHandler[GetProductByIdQuery, Optional[ProductDto]]):
+class GetProductByIdHandler(QueryHandler[GetProductByIdQuery, OperationResult[Optional[ProductDto]]]):
     """Handler for getting products by ID."""
 
     def __init__(self, product_repository: ProductRepository):
         self.product_repository = product_repository
 
-    async def handle_async(self, query: GetProductByIdQuery) -> Optional[ProductDto]:
+    async def handle_async(self, query: GetProductByIdQuery) -> OperationResult[Optional[ProductDto]]:
         """Handles get product by ID query."""
         product = await self.product_repository.get_by_id_async(query.product_id)
 
         if product:
-            return ProductDto(id=product.id, name=product.name, price=product.price, category=product.category)
-        return None
+            product_dto = ProductDto(id=product.id, name=product.name, price=product.price, category=product.category)
+            return self.ok(product_dto)
+        return self.not_found(Product, query.product_id)
 
 
-class GetAllProductsHandler(QueryHandler[GetAllProductsQuery, list[ProductDto]]):
+class GetAllProductsHandler(QueryHandler[GetAllProductsQuery, OperationResult[list[ProductDto]]]):
     """Handler for getting all products."""
 
     def __init__(self, product_repository: ProductRepository):
         self.product_repository = product_repository
 
-    async def handle_async(self, query: GetAllProductsQuery) -> list[ProductDto]:
+    async def handle_async(self, query: GetAllProductsQuery) -> OperationResult[list[ProductDto]]:
         """Handles get all products query."""
         products = await self.product_repository.get_all_async()
 
-        return [ProductDto(id=product.id, name=product.name, price=product.price, category=product.category) for product in products]
+        product_dtos = [ProductDto(id=product.id, name=product.name, price=product.price, category=product.category) for product in products]
+        return self.ok(product_dtos)
 
 
 # Domain Event Handlers
@@ -449,11 +451,15 @@ async def run_demo_scenarios(provider):
     log.info("-" * 60)
 
     query = GetAllProductsQuery()
-    all_products = await mediator.execute_async(query)
+    query_result = await mediator.execute_async(query)
 
-    log.info(f"📦 Found {len(all_products)} products:")
-    for product in all_products:
-        log.info(f"   • {product.name} - ${product.price} ({product.category})")
+    if query_result.is_success:
+        all_products = query_result.data
+        log.info(f"📦 Found {len(all_products)} products:")
+        for product in all_products:
+            log.info(f"   • {product.name} - ${product.price} ({product.category})")
+    else:
+        log.error(f"❌ Failed to query products: {query_result.error_message}")
 
     # Scenario 3: Update Product Prices (demonstrates state changes with events)
     log.info("\n💲 Scenario 3: Updating Prices with Automatic Event Dispatching")
@@ -478,9 +484,10 @@ async def run_demo_scenarios(provider):
     if created_products:
         product_id = created_products[0].id
         get_query = GetProductByIdQuery(product_id)
-        product = await mediator.execute_async(get_query)
+        product_result = await mediator.execute_async(get_query)
 
-        if product:
+        if product_result.is_success and product_result.data:
+            product = product_result.data
             log.info(f"📦 Retrieved: {product.name} - ${product.price}")
         else:
             log.info(f"❌ Product not found: {product_id}")

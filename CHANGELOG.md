@@ -71,11 +71,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     - Applied manual mediator registry pattern
     - Now demonstrates complete CRUD workflow: create, read, update, deactivate users
 
-  - **state-based-persistence-demo.py**: Partial fix for advanced features demo
+  - **state-based-persistence-demo.py**: Complete fix for advanced features demo
     - Fixed `build_provider()` to `build()` method call
     - Applied manual mediator registry for 4 handlers
-    - Command handlers work successfully with domain event dispatching
-    - Note: Query handlers use raw return types (not `OperationResult`) causing issues with pipeline behaviors
+    - **Fixed query handlers to use `OperationResult`**: Changed from raw return types to `OperationResult[T]`
+    - Updated query result handling to extract data from `OperationResult`
+    - ✅ All scenarios now work: create products, query all, update prices, query individual
+    - Demonstrates full integration with domain event dispatching middleware
 
 ## [0.5.0] - 2025-10-27
 
