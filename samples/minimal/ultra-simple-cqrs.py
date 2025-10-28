@@ -10,8 +10,15 @@ import asyncio
 import uuid
 from dataclasses import dataclass
 
-from neuroglia.mediation import Command, Query, Mediator, CommandHandler, QueryHandler, create_simple_app, InMemoryRepository
 from neuroglia.core.operation_result import OperationResult
+from neuroglia.mediation import (
+    Command,
+    CommandHandler,
+    InMemoryRepository,
+    Mediator,
+    Query,
+    QueryHandler,
+)
 
 
 # Models
@@ -41,6 +48,7 @@ class GetNoteQuery(Query[OperationResult[NoteDto]]):
 # Handlers
 class AddNoteHandler(CommandHandler[AddNoteCommand, OperationResult[NoteDto]]):
     def __init__(self, repository: InMemoryRepository[Note]):
+        super().__init__()
         self.repository = repository
 
     async def handle_async(self, request: AddNoteCommand) -> OperationResult[NoteDto]:
@@ -53,6 +61,7 @@ class AddNoteHandler(CommandHandler[AddNoteCommand, OperationResult[NoteDto]]):
 
 class GetNoteHandler(QueryHandler[GetNoteQuery, OperationResult[NoteDto]]):
     def __init__(self, repository: InMemoryRepository[Note]):
+        super().__init__()
         self.repository = repository
 
     async def handle_async(self, request: GetNoteQuery) -> OperationResult[NoteDto]:
@@ -67,8 +76,22 @@ class GetNoteHandler(QueryHandler[GetNoteQuery, OperationResult[NoteDto]]):
 
 # One-line app setup!
 async def main():
-    # Create app with all dependencies in one line
-    provider = create_simple_app(AddNoteHandler, GetNoteHandler, repositories=[InMemoryRepository[Note]])
+    # Create app with dependencies - manually register handlers in registry
+    from neuroglia.dependency_injection.service_provider import ServiceCollection
+
+    services = ServiceCollection()
+    services.add_singleton(InMemoryRepository[Note])
+    services.add_singleton(Mediator)
+    services.add_scoped(AddNoteHandler)
+    services.add_scoped(GetNoteHandler)
+
+    provider = services.build()
+
+    # Register handlers in mediator's handler registry
+    if not hasattr(Mediator, "_handler_registry"):
+        Mediator._handler_registry = {}
+    Mediator._handler_registry[AddNoteCommand] = AddNoteHandler
+    Mediator._handler_registry[GetNoteQuery] = GetNoteHandler
 
     mediator = provider.get_service(Mediator)
 
