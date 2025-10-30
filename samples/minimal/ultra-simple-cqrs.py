@@ -11,6 +11,7 @@ import uuid
 from dataclasses import dataclass
 
 from neuroglia.core.operation_result import OperationResult
+from neuroglia.dependency_injection.service_provider import ServiceCollection
 from neuroglia.mediation import (
     Command,
     CommandHandler,
@@ -74,17 +75,13 @@ class GetNoteHandler(QueryHandler[GetNoteQuery, OperationResult[NoteDto]]):
         return self.ok(dto)
 
 
-# One-line app setup!
 async def main():
     # Create app with dependencies - manually register handlers in registry
-    from neuroglia.dependency_injection.service_provider import ServiceCollection
-
     services = ServiceCollection()
     services.add_singleton(InMemoryRepository[Note])
     services.add_singleton(Mediator)
     services.add_scoped(AddNoteHandler)
     services.add_scoped(GetNoteHandler)
-
     provider = services.build()
 
     # Register handlers in mediator's handler registry
@@ -93,7 +90,7 @@ async def main():
     Mediator._handler_registry[AddNoteCommand] = AddNoteHandler
     Mediator._handler_registry[GetNoteQuery] = GetNoteHandler
 
-    mediator = provider.get_service(Mediator)
+    mediator: Mediator = provider.get_service(Mediator)  # type: ignore
 
     # Add a note
     result = await mediator.execute_async(AddNoteCommand("Hello, World!"))

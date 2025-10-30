@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.1] - 2025-10-29
+
 ### Changed
 
 - **Python Version Requirement**: Lowered minimum Python version from 3.11+ to 3.9+
