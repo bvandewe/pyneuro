@@ -130,7 +130,7 @@ def create_pizzeria_app(data_dir: Optional[str] = None, port: int = 8080):
             middleware=[(SessionMiddleware, {"secret_key": app_settings.session_secret_key, "session_cookie": "mario_session", "max_age": 3600, "same_site": "lax", "https_only": not app_settings.local_dev})],
             static_files={"/static": "static"},
             templates_dir="ui/templates",
-            docs_url=None,
+            docs_url="/docs",
         )
     )  # Disable docs for UI
 
