@@ -20,6 +20,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- **Documentation: Repository-Based Event Publishing Pattern**: Comprehensive documentation update to reflect current framework architecture
+
+  - Replaced all UnitOfWork references with repository-based event publishing pattern
+  - Emphasized that **Command Handler IS the transaction boundary**
+  - Updated `persistence-patterns.md` with detailed transaction boundary explanation and component role comparison
+  - Marked `unit-of-work.md` as DEPRECATED with clear migration guidance
+  - Updated all Mario's Pizzeria tutorial files (mario-pizzeria-03-cqrs.md, mario-pizzeria-05-events.md, mario-pizzeria-06-persistence.md)
+  - Updated pattern analysis files (kitchen-order-placement-ddd-analysis.md)
+  - Removed UnitOfWork from all code examples throughout documentation
+  - Added comprehensive explanation of domain event lifecycle (raised vs published)
+  - Clarified repository responsibilities: persistence + automatic event publishing
+  - Documentation now 100% aligned with actual framework implementation
+
+- **Documentation: Deployment Architecture**: Updated README and sample documentation for new docker-compose architecture
+
+  - Restructured README.md Quick Start section with comprehensive Docker setup
+  - Added service ports reference table for all samples and infrastructure
+  - Documented CLI tools: `mario-pizzeria`, `openbank`, `simple-ui`
+  - Updated OpenBank guide with correct ports (8899) and CLI commands
+  - Added authentication section documenting shared `pyneuro` realm configuration
+  - Replaced legacy docker-compose instructions with CLI-based workflow
+  - All ports, commands, and configurations verified against actual implementation
+
 - **Simplified Mario-Pizzeria Command Handlers**: Removed UnitOfWork pattern in favor of repository-based event publishing
 
   - Removed `IUnitOfWork` dependency from all 10 command handlers
