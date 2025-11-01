@@ -8,7 +8,6 @@ from api.dtos import OrderDto, PizzaDto
 from domain.repositories import IOrderRepository
 
 from neuroglia.core import OperationResult
-from neuroglia.data.unit_of_work import IUnitOfWork
 from neuroglia.mediation import Command, CommandHandler
 
 # OpenTelemetry imports for business metrics
@@ -41,9 +40,8 @@ class UpdateOrderStatusCommand(Command[OperationResult[OrderDto]]):
 class UpdateOrderStatusHandler(CommandHandler[UpdateOrderStatusCommand, OperationResult[OrderDto]]):
     """Handler for updating order status"""
 
-    def __init__(self, order_repository: IOrderRepository, unit_of_work: IUnitOfWork):
+    def __init__(self, order_repository: IOrderRepository):
         self.order_repository = order_repository
-        self.unit_of_work = unit_of_work
 
     async def handle_async(self, request: UpdateOrderStatusCommand) -> OperationResult[OrderDto]:
         """Handle order status update"""
@@ -91,11 +89,8 @@ class UpdateOrderStatusHandler(CommandHandler[UpdateOrderStatusCommand, Operatio
                         },
                     )
 
-            # Save the updated order
+            # Save the updated order - events published automatically by repository
             await self.order_repository.update_async(order)
-
-            # Register aggregate with Unit of Work for domain event dispatching
-            self.unit_of_work.register_aggregate(order)
 
             # Return success (we'll construct a simple response)
             pizza_dtos = [

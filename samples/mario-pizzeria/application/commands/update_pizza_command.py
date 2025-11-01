@@ -9,7 +9,6 @@ from domain.entities import PizzaSize
 from domain.repositories import IPizzaRepository
 
 from neuroglia.core import OperationResult
-from neuroglia.data.unit_of_work import IUnitOfWork
 from neuroglia.mapping import Mapper
 from neuroglia.mediation import Command, CommandHandler
 
@@ -29,10 +28,9 @@ class UpdatePizzaCommand(Command[OperationResult[PizzaDto]]):
 class UpdatePizzaCommandHandler(CommandHandler[UpdatePizzaCommand, OperationResult[PizzaDto]]):
     """Handler for updating an existing pizza"""
 
-    def __init__(self, pizza_repository: IPizzaRepository, mapper: Mapper, unit_of_work: IUnitOfWork):
+    def __init__(self, pizza_repository: IPizzaRepository, mapper: Mapper):
         self.pizza_repository = pizza_repository
         self.mapper = mapper
-        self.unit_of_work = unit_of_work
 
     async def handle_async(self, request: UpdatePizzaCommand) -> OperationResult[PizzaDto]:
         try:
@@ -72,11 +70,8 @@ class UpdatePizzaCommandHandler(CommandHandler[UpdatePizzaCommand, OperationResu
                 # Clear existing toppings and add new ones
                 pizza.state.toppings = request.toppings
 
-            # Save updated pizza
+            # Save updated pizza - events published automatically by repository
             await self.pizza_repository.update_async(pizza)
-
-            # Register aggregate with Unit of Work for domain event dispatching
-            self.unit_of_work.register_aggregate(pizza)
 
             # Map to DTO (with null-safety checks)
             pizza_dto = PizzaDto(
