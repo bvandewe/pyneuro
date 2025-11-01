@@ -2,11 +2,11 @@
 MongoDB repository for Order aggregates using Neuroglia's MotorRepository.
 
 This extends the framework's MotorRepository to provide Order-specific queries
-while inheriting all standard CRUD operations.
+while inheriting all standard CRUD operations with automatic domain event publishing.
 """
 
 from datetime import datetime
-from typing import Optional
+from typing import TYPE_CHECKING, Optional
 
 from domain.entities import Order
 from domain.entities.enums import OrderStatus
@@ -17,29 +17,40 @@ from neuroglia.data.infrastructure.mongo import MotorRepository
 from neuroglia.data.infrastructure.tracing_mixin import TracedRepositoryMixin
 from neuroglia.serialization.json import JsonSerializer
 
+if TYPE_CHECKING:
+    from neuroglia.mediation.mediator import Mediator
+
 
 class MongoOrderRepository(TracedRepositoryMixin, MotorRepository[Order, str], IOrderRepository):
     """
-    Motor-based async MongoDB repository for Order aggregates with automatic tracing.
+    Motor-based async MongoDB repository for Order aggregates with automatic tracing
+    and domain event publishing.
 
-    Extends Neuroglia's MotorRepository to inherit standard CRUD operations
-    and adds Order-specific queries. TracedRepositoryMixin provides automatic
-    OpenTelemetry instrumentation for all repository operations.
+    Extends Neuroglia's MotorRepository to inherit standard CRUD operations with
+    automatic event publishing and adds Order-specific queries. TracedRepositoryMixin
+    provides automatic OpenTelemetry instrumentation for all repository operations.
     """
 
-    def __init__(self, mongo_client: AsyncIOMotorClient, serializer: JsonSerializer):
+    def __init__(
+        self,
+        mongo_client: AsyncIOMotorClient,
+        serializer: JsonSerializer,
+        mediator: Optional["Mediator"] = None,
+    ):
         """
         Initialize the Order repository.
 
         Args:
             mongo_client: Motor async MongoDB client
             serializer: JSON serializer for entity conversion
+            mediator: Optional Mediator for automatic domain event publishing
         """
         super().__init__(
             client=mongo_client,
             database_name="mario_pizzeria",
             collection_name="orders",
             serializer=serializer,
+            mediator=mediator,
         )
 
     # Custom Order-specific queries
