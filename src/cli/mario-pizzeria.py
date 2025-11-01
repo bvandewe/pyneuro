@@ -38,7 +38,9 @@ class DockerComposeManager:
     def _run_command(self, command: list[str], check: bool = True, capture_output: bool = False) -> subprocess.CompletedProcess:
         """Run a shell command."""
         try:
-            result = subprocess.run(command, cwd=self.project_root, check=check, capture_output=capture_output, text=True)
+            # Run docker-compose commands from the compose directory to ensure correct relative paths
+            cwd = self.compose_dir if command[0] == "docker-compose" else self.project_root
+            result = subprocess.run(command, cwd=cwd, check=check, capture_output=capture_output, text=True)
             return result
         except subprocess.CalledProcessError as e:
             print(f"❌ Command failed: {' '.join(command)}")
@@ -49,14 +51,14 @@ class DockerComposeManager:
         """Run docker-compose with the appropriate compose files."""
         cmd = ["docker-compose"]
 
-        # Add env file
+        # Add env file (use absolute path since we run from compose_dir)
         if self.env_file.exists():
-            cmd.extend(["--env-file", str(self.env_file)])
+            cmd.extend(["--env-file", str(self.env_file.absolute())])
 
-        # Add compose files
+        # Add compose files (use absolute paths to be safe)
         if use_shared:
-            cmd.extend(["-f", str(self.shared_compose)])
-        cmd.extend(["-f", str(self.mario_compose)])
+            cmd.extend(["-f", str(self.shared_compose.absolute())])
+        cmd.extend(["-f", str(self.mario_compose.absolute())])
 
         # Add the actual command
         cmd.extend(args)
