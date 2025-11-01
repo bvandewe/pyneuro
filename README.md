@@ -150,43 +150,108 @@ src/
 
 Learn by example with complete sample applications:
 
-- **[🍕 Mario's Pizzeria](docs/mario-pizzeria.md)** - Complete pizzeria management system showcasing all framework features
-- **[🏦 OpenBank](docs/samples/openbank.md)** - Event-sourced banking domain with CQRS
-- **[🧪 Lab Resource Manager](docs/samples/lab-resource-manager.md)** - Resource Oriented Architecture with watchers and reconciliation
-- **[🖥️ Desktop Controller](docs/samples/desktop_controller.md)** - Remote desktop management API
-- **[🚪 API Gateway](docs/samples/api_gateway.md)** - Microservice gateway with authentication
+- **[🍕 Mario's Pizzeria](https://bvandewe.github.io/pyneuro/mario-pizzeria/)** - Complete pizzeria management system with UI, authentication, and observability
+- **[🏦 OpenBank](https://bvandewe.github.io/pyneuro/samples/openbank/)** - Event-sourced banking domain with CQRS and EventStoreDB
+- **[🧪 Lab Resource Manager](https://bvandewe.github.io/pyneuro/samples/lab-resource-manager/)** - Resource Oriented Architecture with watchers and reconciliation
+- **[🖥️ Desktop Controller](https://bvandewe.github.io/pyneuro/samples/desktop_controller/)** - Remote desktop management API
+- **[🚪 API Gateway](https://bvandewe.github.io/pyneuro/samples/api_gateway/)** - Microservice gateway with authentication
 
-#### 🐳 Docker Development Environment
+## 🐳 Quick Start with Docker
 
-Get started quickly with the sample applications using the new CLI tools:
+The fastest way to explore Neuroglia is through our sample applications with Docker:
+
+### Prerequisites
+
+- Docker and Docker Compose installed
+- Git (to clone the repository)
+
+### Get Started in 3 Steps
 
 ```bash
-# Install the CLI tools (one-time setup)
-./scripts/setup/install_sample_tools.sh
+# 1. Clone the repository
+git clone https://github.com/bvandewe/pyneuro.git
+cd pyneuro
 
-# Start shared infrastructure (MongoDB, Keycloak, Observability)
-make infra-start
+# 2. Start Mario's Pizzeria (includes shared infrastructure)
+./mario-pizzeria start
 
-# Start Mario's Pizzeria
-mario-pizzeria start
-# Or: make mario-start
-
-# Start Simple UI (runs concurrently!)
-simple-ui start
-# Or: make simple-ui-start
-
-# Access services:
-# 🍕 Mario's Pizzeria: http://localhost:8080/api/docs
-# 📱 Simple UI: http://localhost:8082
-# 🗄️ Database Admin: http://localhost:8081
-# 🔐 Authentication: http://localhost:8090/admin
-# 🎬 Event Player: http://localhost:8085
-# 📊 Grafana: http://localhost:3001
+# 3. Access the application
+# 🍕 Application: http://localhost:8080
+# 📖 API Docs: http://localhost:8080/api/docs
+# 🔐 Keycloak: http://localhost:8090 (admin/admin)
 ```
 
-The Docker environment includes [MongoDB](https://www.mongodb.com/) (with [Mongo Express](https://github.com/mongo-express/mongo-express)), [Keycloak](https://www.keycloak.org/) IDP, [Event Player](https://bvandewe.github.io/events-player/), and [OpenTelemetry](https://opentelemetry.io/) services (OTEL Collector, Grafana, Prometheus, Loki, Tempo) for a complete development experience.
+### Available Sample Applications
 
-See [`deployment/docker-compose/DOCKER_COMPOSE_ARCHITECTURE.md`](deployment/docker-compose/DOCKER_COMPOSE_ARCHITECTURE.md) for full details.
+Each sample comes with its own CLI tool for easy management:
+
+```bash
+# Mario's Pizzeria (State-based persistence + UI)
+./mario-pizzeria start
+./mario-pizzeria stop
+./mario-pizzeria logs
+
+# OpenBank (Event Sourcing with EventStoreDB)
+./openbank start
+./openbank stop
+./openbank logs
+
+# Simple UI Demo (Authentication patterns)
+./simple-ui start
+./simple-ui stop
+./simple-ui logs
+```
+
+### Shared Infrastructure
+
+All samples share common infrastructure services:
+
+- **�️ MongoDB**: Database (port 27017)
+- **� MongoDB Express**: Database UI (port 8081)
+- **🔐 Keycloak**: Authentication (port 8090)
+- **🎬 Event Player**: Event visualization (port 8085)
+- **📊 Grafana**: Dashboards (port 3001)
+- **📈 Prometheus**: Metrics (port 9090)
+- **📝 Loki**: Logs aggregation
+- **🔍 Tempo**: Distributed tracing (port 3200)
+
+The shared infrastructure starts automatically with your first sample application.
+
+### Service Ports
+
+| Sample           | Port | Debug Port | Description                           |
+| ---------------- | ---- | ---------- | ------------------------------------- |
+| Mario's Pizzeria | 8080 | 5678       | Full-featured pizzeria management     |
+| OpenBank         | 8899 | 5699       | Event-sourced banking with EventStore |
+| Simple UI        | 8082 | 5680       | Authentication patterns demo          |
+| EventStoreDB     | 2113 | -          | Event sourcing database (OpenBank)    |
+| MongoDB Express  | 8081 | -          | Database admin UI                     |
+| Keycloak         | 8090 | -          | SSO/OAuth2 server                     |
+| Event Player     | 8085 | -          | CloudEvents visualization             |
+| Grafana          | 3001 | -          | Observability dashboards              |
+| Prometheus       | 9090 | -          | Metrics collection                    |
+| Tempo            | 3200 | -          | Trace visualization                   |
+
+### Test Credentials
+
+The samples come with pre-configured test users:
+
+```
+Admin:    admin / admin123
+Manager:  manager / manager123
+Chef:     chef / chef123
+Driver:   driver / driver123
+Customer: customer / customer123
+```
+
+### Learn More
+
+For detailed deployment documentation, see:
+
+- **[🚀 Getting Started Guide](https://bvandewe.github.io/pyneuro/getting-started/)** - Complete setup walkthrough
+- **[🐳 Docker Architecture](deployment/docker-compose/DOCKER_COMPOSE_ARCHITECTURE.md)** - Infrastructure details
+- **[🍕 Mario's Pizzeria Tutorial](https://bvandewe.github.io/pyneuro/guides/mario-pizzeria-tutorial/)** - Step-by-step guide
+- **[🏦 OpenBank Guide](https://bvandewe.github.io/pyneuro/samples/openbank/)** - Event sourcing patterns
 
 ## 🔧 Quick Start
 

@@ -52,36 +52,85 @@ The OpenBank sample showcases:
 
 ### Prerequisites
 
-- Python 3.11+
 - Docker and Docker Compose
-- MongoDB (via Docker)
-- EventStoreDB (via Docker)
+- Git (to clone the repository)
 
-### Setup
+### Quick Start
 
-1. **Start Dependencies**:
-
-```bash
-cd samples/openbank
-docker-compose up -d mongodb eventstoredb
-```
-
-1. **Install Dependencies**:
+The fastest way to run OpenBank is using the provided CLI tool:
 
 ```bash
-pip install -r requirements.txt
+# Clone the repository (if not already done)
+git clone https://github.com/bvandewe/pyneuro.git
+cd pyneuro
+
+# Start OpenBank (automatically starts shared infrastructure)
+./openbank start
+
+# Wait for services to be ready (~30 seconds)
+./openbank status
 ```
 
-1. **Run the Application**:
+### Access the Services
+
+Once running, access:
+
+- **API Documentation**: [http://localhost:8899/api/docs](http://localhost:8899/api/docs)
+- **EventStoreDB UI**: [http://localhost:2113](http://localhost:2113) (admin/changeit)
+- **MongoDB Express**: [http://localhost:8081](http://localhost:8081)
+- **Keycloak**: [http://localhost:8090](http://localhost:8090) (admin/admin)
+- **Event Player**: [http://localhost:8085](http://localhost:8085)
+- **Grafana**: [http://localhost:3001](http://localhost:3001)
+
+### CLI Commands
+
+The OpenBank CLI tool provides convenient management:
 
 ```bash
-python api/main.py
+# Start OpenBank and dependencies
+./openbank start
+
+# Stop OpenBank (keeps infrastructure running)
+./openbank stop
+
+# View logs
+./openbank logs
+
+# Follow logs in real-time
+./openbank logs -f
+
+# Check service status
+./openbank status
+
+# Restart OpenBank
+./openbank restart
+
+# Clean up containers and volumes
+./openbank clean
+
+# Reset everything (including data)
+./openbank reset
 ```
 
-1. **Access the API**:
+### Development Mode
 
-- API Documentation: [http://localhost:8000/api/docs](http://localhost:8000/api/docs)
-- EventStoreDB UI: [http://localhost:2113](http://localhost:2113) (admin/changeit)
+For development with hot-reload:
+
+```bash
+# Start in development mode with Poetry
+poetry install
+poetry run python samples/openbank/api/main.py
+```
+
+### Authentication
+
+OpenBank uses Keycloak for authentication in the `pyneuro` realm:
+
+- **Realm**: `pyneuro`
+- **Client**: `openbank-app`
+- **Test Users**:
+  - Admin: `admin` / `admin123`
+  - Customer: `customer` / `customer123`
 
 ## 📁 Project Structure
 
@@ -661,18 +710,40 @@ async def test_person_registration_flow():
 
 ## 🚀 Running the Sample
 
-### Start the Application
+### Using the CLI Tool (Recommended)
 
-1. **Start infrastructure**:
+The easiest way to run OpenBank:
 
 ```bash
-docker-compose up -d
+# Start OpenBank and all dependencies
+./openbank start
+
+# Check status
+./openbank status
+
+# View logs
+./openbank logs -f
+
+# Stop the application
+./openbank stop
 ```
 
-1. **Run the application**:
+### Manual Startup
+
+For development or troubleshooting:
 
 ```bash
-python api/main.py
+# Start shared infrastructure first
+cd deployment/docker-compose
+docker-compose -f docker-compose.shared.yml up -d
+
+# Start OpenBank-specific services
+docker-compose -f docker-compose.openbank.yml up -d
+
+# Or run locally with Poetry
+cd /path/to/pyneuro
+poetry install
+poetry run python samples/openbank/api/main.py
 ```
 
 ### Example API Calls
@@ -680,7 +751,7 @@ python api/main.py
 **Register a Person**:
 
 ```bash
-curl -X POST "http://localhost:8000/api/v1/persons" \
+curl -X POST "http://localhost:8899/api/v1/persons" \
   -H "Content-Type: application/json" \
   -d '{
     "first_name": "John",
@@ -700,7 +771,7 @@ curl -X POST "http://localhost:8000/api/v1/persons" \
 **Open an Account**:
 
 ```bash
-curl -X POST "http://localhost:8000/api/v1/accounts" \
+curl -X POST "http://localhost:8899/api/v1/accounts" \
   -H "Content-Type: application/json" \
   -d '{
     "owner_id": "PERSON_ID_FROM_ABOVE",
@@ -712,7 +783,7 @@ curl -X POST "http://localhost:8000/api/v1/accounts" \
 **Deposit Money**:
 
 ```bash
-curl -X POST "http://localhost:8000/api/v1/accounts/ACCOUNT_ID/deposit" \
+curl -X POST "http://localhost:8899/api/v1/accounts/ACCOUNT_ID/deposit" \
   -H "Content-Type: application/json" \
   -d '{
     "amount": 500.00,
