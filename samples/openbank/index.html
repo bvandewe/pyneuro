@@ -10,7 +10,7 @@
 <link href="../" rel="prev"/>
 <link href="../api_gateway/" rel="next"/>
 <link href="../../assets/images/favicon.png" rel="icon"/>
-<meta content="mkdocs-1.6.1, mkdocs-material-9.6.22" name="generator"/>
+<meta content="mkdocs-1.6.1, mkdocs-material-9.6.23" name="generator"/>
 <title>OpenBank - Neuroglia Python Framework</title>
 <link href="../../assets/stylesheets/main.84d31ad4.min.css" rel="stylesheet"/>
 <link href="../../assets/stylesheets/palette.06af60db.min.css" rel="stylesheet"/>
@@ -413,9 +413,37 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#setup">
+<a class="md-nav__link" href="#quick-start">
 <span class="md-ellipsis">
-      Setup
+      Quick Start
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#access-the-services">
+<span class="md-ellipsis">
+      Access the Services
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#cli-commands">
+<span class="md-ellipsis">
+      CLI Commands
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#development-mode">
+<span class="md-ellipsis">
+      Development Mode
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#authentication">
+<span class="md-ellipsis">
+      Authentication
     </span>
 </a>
 </li>
@@ -581,9 +609,16 @@
 <nav aria-label="🚀 Running the Sample" class="md-nav">
 <ul class="md-nav__list">
 <li class="md-nav__item">
-<a class="md-nav__link" href="#start-the-application">
+<a class="md-nav__link" href="#using-the-cli-tool-recommended">
 <span class="md-ellipsis">
-      Start the Application
+      Using the CLI Tool (Recommended)
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#manual-startup">
+<span class="md-ellipsis">
+      Manual Startup
     </span>
 </a>
 </li>
@@ -1396,9 +1431,37 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#setup">
+<a class="md-nav__link" href="#quick-start">
 <span class="md-ellipsis">
-      Setup
+      Quick Start
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#access-the-services">
+<span class="md-ellipsis">
+      Access the Services
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#cli-commands">
+<span class="md-ellipsis">
+      CLI Commands
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#development-mode">
+<span class="md-ellipsis">
+      Development Mode
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#authentication">
+<span class="md-ellipsis">
+      Authentication
     </span>
 </a>
 </li>
@@ -1564,9 +1627,16 @@
 <nav aria-label="🚀 Running the Sample" class="md-nav">
 <ul class="md-nav__list">
 <li class="md-nav__item">
-<a class="md-nav__link" href="#start-the-application">
+<a class="md-nav__link" href="#using-the-cli-tool-recommended">
 <span class="md-ellipsis">
-      Start the Application
+      Using the CLI Tool (Recommended)
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#manual-startup">
+<span class="md-ellipsis">
+      Manual Startup
     </span>
 </a>
 </li>
@@ -1648,37 +1718,72 @@
 <h2 id="getting-started">🚀 Getting Started<a class="headerlink" href="#getting-started" title="Permanent link">¶</a></h2>
 <h3 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">¶</a></h3>
 <ul>
-<li>Python 3.11+</li>
 <li>Docker and Docker Compose</li>
-<li>MongoDB (via Docker)</li>
-<li>EventStoreDB (via Docker)</li>
+<li>Git (to clone the repository)</li>
 </ul>
-<h3 id="setup">Setup<a class="headerlink" href="#setup" title="Permanent link">¶</a></h3>
-<ol>
-<li><strong>Start Dependencies</strong>:</li>
-</ol>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a href="#__codelineno-1-1" id="__codelineno-1-1" name="__codelineno-1-1"></a><span class="nb">cd</span><span class="w"> </span>samples/openbank
-</span><span id="__span-1-2"><a href="#__codelineno-1-2" id="__codelineno-1-2" name="__codelineno-1-2"></a>docker-compose<span class="w"> </span>up<span class="w"> </span>-d<span class="w"> </span>mongodb<span class="w"> </span>eventstoredb
+<h3 id="quick-start">Quick Start<a class="headerlink" href="#quick-start" title="Permanent link">¶</a></h3>
+<p>The fastest way to run OpenBank is using the provided CLI tool:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a href="#__codelineno-1-1" id="__codelineno-1-1" name="__codelineno-1-1"></a><span class="c1"># Clone the repository (if not already done)</span>
+</span><span id="__span-1-2"><a href="#__codelineno-1-2" id="__codelineno-1-2" name="__codelineno-1-2"></a>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/bvandewe/pyneuro.git
+</span><span id="__span-1-3"><a href="#__codelineno-1-3" id="__codelineno-1-3" name="__codelineno-1-3"></a><span class="nb">cd</span><span class="w"> </span>pyneuro
+</span><span id="__span-1-4"><a href="#__codelineno-1-4" id="__codelineno-1-4" name="__codelineno-1-4"></a>
+</span><span id="__span-1-5"><a href="#__codelineno-1-5" id="__codelineno-1-5" name="__codelineno-1-5"></a><span class="c1"># Start OpenBank (automatically starts shared infrastructure)</span>
+</span><span id="__span-1-6"><a href="#__codelineno-1-6" id="__codelineno-1-6" name="__codelineno-1-6"></a>./openbank<span class="w"> </span>start
+</span><span id="__span-1-7"><a href="#__codelineno-1-7" id="__codelineno-1-7" name="__codelineno-1-7"></a>
+</span><span id="__span-1-8"><a href="#__codelineno-1-8" id="__codelineno-1-8" name="__codelineno-1-8"></a><span class="c1"># Wait for services to be ready (~30 seconds)</span>
+</span><span id="__span-1-9"><a href="#__codelineno-1-9" id="__codelineno-1-9" name="__codelineno-1-9"></a>./openbank<span class="w"> </span>status
 </span></code></pre></div>
-<ol>
-<li><strong>Install Dependencies</strong>:</li>
-</ol>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a href="#__codelineno-2-1" id="__codelineno-2-1" name="__codelineno-2-1"></a>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
+<h3 id="access-the-services">Access the Services<a class="headerlink" href="#access-the-services" title="Permanent link">¶</a></h3>
+<p>Once running, access:</p>
+<ul>
+<li><strong>API Documentation</strong>: <a href="http://localhost:8899/api/docs">http://localhost:8899/api/docs</a></li>
+<li><strong>EventStoreDB UI</strong>: <a href="http://localhost:2113">http://localhost:2113</a> (admin/changeit)</li>
+<li><strong>MongoDB Express</strong>: <a href="http://localhost:8081">http://localhost:8081</a></li>
+<li><strong>Keycloak</strong>: <a href="http://localhost:8090">http://localhost:8090</a> (admin/admin)</li>
+<li><strong>Event Player</strong>: <a href="http://localhost:8085">http://localhost:8085</a></li>
+<li><strong>Grafana</strong>: <a href="http://localhost:3001">http://localhost:3001</a></li>
+</ul>
+<h3 id="cli-commands">CLI Commands<a class="headerlink" href="#cli-commands" title="Permanent link">¶</a></h3>
+<p>The OpenBank CLI tool provides convenient management:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a href="#__codelineno-2-1" id="__codelineno-2-1" name="__codelineno-2-1"></a><span class="c1"># Start OpenBank and dependencies</span>
+</span><span id="__span-2-2"><a href="#__codelineno-2-2" id="__codelineno-2-2" name="__codelineno-2-2"></a>./openbank<span class="w"> </span>start
+</span><span id="__span-2-3"><a href="#__codelineno-2-3" id="__codelineno-2-3" name="__codelineno-2-3"></a>
+</span><span id="__span-2-4"><a href="#__codelineno-2-4" id="__codelineno-2-4" name="__codelineno-2-4"></a><span class="c1"># Stop OpenBank (keeps infrastructure running)</span>
+</span><span id="__span-2-5"><a href="#__codelineno-2-5" id="__codelineno-2-5" name="__codelineno-2-5"></a>./openbank<span class="w"> </span>stop
+</span><span id="__span-2-6"><a href="#__codelineno-2-6" id="__codelineno-2-6" name="__codelineno-2-6"></a>
+</span><span id="__span-2-7"><a href="#__codelineno-2-7" id="__codelineno-2-7" name="__codelineno-2-7"></a><span class="c1"># View logs</span>
+</span><span id="__span-2-8"><a href="#__codelineno-2-8" id="__codelineno-2-8" name="__codelineno-2-8"></a>./openbank<span class="w"> </span>logs
+</span><span id="__span-2-9"><a href="#__codelineno-2-9" id="__codelineno-2-9" name="__codelineno-2-9"></a>
+</span><span id="__span-2-10"><a href="#__codelineno-2-10" id="__codelineno-2-10" name="__codelineno-2-10"></a><span class="c1"># Follow logs in real-time</span>
+</span><span id="__span-2-11"><a href="#__codelineno-2-11" id="__codelineno-2-11" name="__codelineno-2-11"></a>./openbank<span class="w"> </span>logs<span class="w"> </span>-f
+</span><span id="__span-2-12"><a href="#__codelineno-2-12" id="__codelineno-2-12" name="__codelineno-2-12"></a>
+</span><span id="__span-2-13"><a href="#__codelineno-2-13" id="__codelineno-2-13" name="__codelineno-2-13"></a><span class="c1"># Check service status</span>
+</span><span id="__span-2-14"><a href="#__codelineno-2-14" id="__codelineno-2-14" name="__codelineno-2-14"></a>./openbank<span class="w"> </span>status
+</span><span id="__span-2-15"><a href="#__codelineno-2-15" id="__codelineno-2-15" name="__codelineno-2-15"></a>
+</span><span id="__span-2-16"><a href="#__codelineno-2-16" id="__codelineno-2-16" name="__codelineno-2-16"></a><span class="c1"># Restart OpenBank</span>
+</span><span id="__span-2-17"><a href="#__codelineno-2-17" id="__codelineno-2-17" name="__codelineno-2-17"></a>./openbank<span class="w"> </span>restart
+</span><span id="__span-2-18"><a href="#__codelineno-2-18" id="__codelineno-2-18" name="__codelineno-2-18"></a>
+</span><span id="__span-2-19"><a href="#__codelineno-2-19" id="__codelineno-2-19" name="__codelineno-2-19"></a><span class="c1"># Clean up containers and volumes</span>
+</span><span id="__span-2-20"><a href="#__codelineno-2-20" id="__codelineno-2-20" name="__codelineno-2-20"></a>./openbank<span class="w"> </span>clean
+</span><span id="__span-2-21"><a href="#__codelineno-2-21" id="__codelineno-2-21" name="__codelineno-2-21"></a>
+</span><span id="__span-2-22"><a href="#__codelineno-2-22" id="__codelineno-2-22" name="__codelineno-2-22"></a><span class="c1"># Reset everything (including data)</span>
+</span><span id="__span-2-23"><a href="#__codelineno-2-23" id="__codelineno-2-23" name="__codelineno-2-23"></a>./openbank<span class="w"> </span>reset
 </span></code></pre></div>
-<ol>
-<li><strong>Run the Application</strong>:</li>
-</ol>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a href="#__codelineno-3-1" id="__codelineno-3-1" name="__codelineno-3-1"></a>python<span class="w"> </span>api/main.py
+<h3 id="development-mode">Development Mode<a class="headerlink" href="#development-mode" title="Permanent link">¶</a></h3>
+<p>For development with hot-reload:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a href="#__codelineno-3-1" id="__codelineno-3-1" name="__codelineno-3-1"></a><span class="c1"># Start in development mode with Poetry</span>
+</span><span id="__span-3-2"><a href="#__codelineno-3-2" id="__codelineno-3-2" name="__codelineno-3-2"></a>poetry<span class="w"> </span>install
+</span><span id="__span-3-3"><a href="#__codelineno-3-3" id="__codelineno-3-3" name="__codelineno-3-3"></a>poetry<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </span>samples/openbank/api/main.py
 </span></code></pre></div>
-<ol>
-<li>
-<p><strong>Access the API</strong>:</p>
-</li>
-<li>
-<p>API Documentation: <a href="http://localhost:8000/api/docs">http://localhost:8000/api/docs</a></p>
-</li>
-<li>EventStoreDB UI: <a href="http://localhost:2113">http://localhost:2113</a> (admin/changeit)</li>
-</ol>
+<h3 id="authentication">Authentication<a class="headerlink" href="#authentication" title="Permanent link">¶</a></h3>
+<p>OpenBank uses Keycloak for authentication in the <code>pyneuro</code> realm:</p>
+<ul>
+<li><strong>Realm</strong>: <code>pyneuro</code></li>
+<li><strong>Client</strong>: <code>openbank-app</code></li>
+<li><strong>Test Users</strong>:</li>
+<li>Admin: <code>admin</code> / <code>admin123</code></li>
+<li>Customer: <code>customer</code> / <code>customer123</code></li>
+</ul>
 <h2 id="project-structure">📁 Project Structure<a class="headerlink" href="#project-structure" title="Permanent link">¶</a></h2>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a href="#__codelineno-4-1" id="__codelineno-4-1" name="__codelineno-4-1"></a>samples/openbank/
 </span><span id="__span-4-2"><a href="#__codelineno-4-2" id="__codelineno-4-2" name="__codelineno-4-2"></a>├── api/
@@ -2203,20 +2308,37 @@
 </span><span id="__span-15-30"><a href="#__codelineno-15-30" id="__codelineno-15-30" name="__codelineno-15-30"></a>    <span class="k">assert</span> <span class="n">get_response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span>
 </span></code></pre></div>
 <h2 id="running-the-sample">🚀 Running the Sample<a class="headerlink" href="#running-the-sample" title="Permanent link">¶</a></h2>
-<h3 id="start-the-application">Start the Application<a class="headerlink" href="#start-the-application" title="Permanent link">¶</a></h3>
-<ol>
-<li><strong>Start infrastructure</strong>:</li>
-</ol>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-16-1"><a href="#__codelineno-16-1" id="__codelineno-16-1" name="__codelineno-16-1"></a>docker-compose<span class="w"> </span>up<span class="w"> </span>-d
+<h3 id="using-the-cli-tool-recommended">Using the CLI Tool (Recommended)<a class="headerlink" href="#using-the-cli-tool-recommended" title="Permanent link">¶</a></h3>
+<p>The easiest way to run OpenBank:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-16-1"><a href="#__codelineno-16-1" id="__codelineno-16-1" name="__codelineno-16-1"></a><span class="c1"># Start OpenBank and all dependencies</span>
+</span><span id="__span-16-2"><a href="#__codelineno-16-2" id="__codelineno-16-2" name="__codelineno-16-2"></a>./openbank<span class="w"> </span>start
+</span><span id="__span-16-3"><a href="#__codelineno-16-3" id="__codelineno-16-3" name="__codelineno-16-3"></a>
+</span><span id="__span-16-4"><a href="#__codelineno-16-4" id="__codelineno-16-4" name="__codelineno-16-4"></a><span class="c1"># Check status</span>
+</span><span id="__span-16-5"><a href="#__codelineno-16-5" id="__codelineno-16-5" name="__codelineno-16-5"></a>./openbank<span class="w"> </span>status
+</span><span id="__span-16-6"><a href="#__codelineno-16-6" id="__codelineno-16-6" name="__codelineno-16-6"></a>
+</span><span id="__span-16-7"><a href="#__codelineno-16-7" id="__codelineno-16-7" name="__codelineno-16-7"></a><span class="c1"># View logs</span>
+</span><span id="__span-16-8"><a href="#__codelineno-16-8" id="__codelineno-16-8" name="__codelineno-16-8"></a>./openbank<span class="w"> </span>logs<span class="w"> </span>-f
+</span><span id="__span-16-9"><a href="#__codelineno-16-9" id="__codelineno-16-9" name="__codelineno-16-9"></a>
+</span><span id="__span-16-10"><a href="#__codelineno-16-10" id="__codelineno-16-10" name="__codelineno-16-10"></a><span class="c1"># Stop the application</span>
+</span><span id="__span-16-11"><a href="#__codelineno-16-11" id="__codelineno-16-11" name="__codelineno-16-11"></a>./openbank<span class="w"> </span>stop
 </span></code></pre></div>
-<ol>
-<li><strong>Run the application</strong>:</li>
-</ol>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-17-1"><a href="#__codelineno-17-1" id="__codelineno-17-1" name="__codelineno-17-1"></a>python<span class="w"> </span>api/main.py
+<h3 id="manual-startup">Manual Startup<a class="headerlink" href="#manual-startup" title="Permanent link">¶</a></h3>
+<p>For development or troubleshooting:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-17-1"><a href="#__codelineno-17-1" id="__codelineno-17-1" name="__codelineno-17-1"></a><span class="c1"># Start shared infrastructure first</span>
+</span><span id="__span-17-2"><a href="#__codelineno-17-2" id="__codelineno-17-2" name="__codelineno-17-2"></a><span class="nb">cd</span><span class="w"> </span>deployment/docker-compose
+</span><span id="__span-17-3"><a href="#__codelineno-17-3" id="__codelineno-17-3" name="__codelineno-17-3"></a>docker-compose<span class="w"> </span>-f<span class="w"> </span>docker-compose.shared.yml<span class="w"> </span>up<span class="w"> </span>-d
+</span><span id="__span-17-4"><a href="#__codelineno-17-4" id="__codelineno-17-4" name="__codelineno-17-4"></a>
+</span><span id="__span-17-5"><a href="#__codelineno-17-5" id="__codelineno-17-5" name="__codelineno-17-5"></a><span class="c1"># Start OpenBank-specific services</span>
+</span><span id="__span-17-6"><a href="#__codelineno-17-6" id="__codelineno-17-6" name="__codelineno-17-6"></a>docker-compose<span class="w"> </span>-f<span class="w"> </span>docker-compose.openbank.yml<span class="w"> </span>up<span class="w"> </span>-d
+</span><span id="__span-17-7"><a href="#__codelineno-17-7" id="__codelineno-17-7" name="__codelineno-17-7"></a>
+</span><span id="__span-17-8"><a href="#__codelineno-17-8" id="__codelineno-17-8" name="__codelineno-17-8"></a><span class="c1"># Or run locally with Poetry</span>
+</span><span id="__span-17-9"><a href="#__codelineno-17-9" id="__codelineno-17-9" name="__codelineno-17-9"></a><span class="nb">cd</span><span class="w"> </span>/path/to/pyneuro
+</span><span id="__span-17-10"><a href="#__codelineno-17-10" id="__codelineno-17-10" name="__codelineno-17-10"></a>poetry<span class="w"> </span>install
+</span><span id="__span-17-11"><a href="#__codelineno-17-11" id="__codelineno-17-11" name="__codelineno-17-11"></a>poetry<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </span>samples/openbank/api/main.py
 </span></code></pre></div>
 <h3 id="example-api-calls">Example API Calls<a class="headerlink" href="#example-api-calls" title="Permanent link">¶</a></h3>
 <p><strong>Register a Person</strong>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-18-1"><a href="#__codelineno-18-1" id="__codelineno-18-1" name="__codelineno-18-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">"http://localhost:8000/api/v1/persons"</span><span class="w"> </span><span class="se">\</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-18-1"><a href="#__codelineno-18-1" id="__codelineno-18-1" name="__codelineno-18-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">"http://localhost:8899/api/v1/persons"</span><span class="w"> </span><span class="se">\</span>
 </span><span id="__span-18-2"><a href="#__codelineno-18-2" id="__codelineno-18-2" name="__codelineno-18-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/json"</span><span class="w"> </span><span class="se">\</span>
 </span><span id="__span-18-3"><a href="#__codelineno-18-3" id="__codelineno-18-3" name="__codelineno-18-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">'{</span>
 </span><span id="__span-18-4"><a href="#__codelineno-18-4" id="__codelineno-18-4" name="__codelineno-18-4"></a><span class="s1">    "first_name": "John",</span>
@@ -2233,7 +2355,7 @@
 </span><span id="__span-18-15"><a href="#__codelineno-18-15" id="__codelineno-18-15" name="__codelineno-18-15"></a><span class="s1">  }'</span>
 </span></code></pre></div>
 <p><strong>Open an Account</strong>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-19-1"><a href="#__codelineno-19-1" id="__codelineno-19-1" name="__codelineno-19-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">"http://localhost:8000/api/v1/accounts"</span><span class="w"> </span><span class="se">\</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-19-1"><a href="#__codelineno-19-1" id="__codelineno-19-1" name="__codelineno-19-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">"http://localhost:8899/api/v1/accounts"</span><span class="w"> </span><span class="se">\</span>
 </span><span id="__span-19-2"><a href="#__codelineno-19-2" id="__codelineno-19-2" name="__codelineno-19-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/json"</span><span class="w"> </span><span class="se">\</span>
 </span><span id="__span-19-3"><a href="#__codelineno-19-3" id="__codelineno-19-3" name="__codelineno-19-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">'{</span>
 </span><span id="__span-19-4"><a href="#__codelineno-19-4" id="__codelineno-19-4" name="__codelineno-19-4"></a><span class="s1">    "owner_id": "PERSON_ID_FROM_ABOVE",</span>
@@ -2242,7 +2364,7 @@
 </span><span id="__span-19-7"><a href="#__codelineno-19-7" id="__codelineno-19-7" name="__codelineno-19-7"></a><span class="s1">  }'</span>
 </span></code></pre></div>
 <p><strong>Deposit Money</strong>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-20-1"><a href="#__codelineno-20-1" id="__codelineno-20-1" name="__codelineno-20-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">"http://localhost:8000/api/v1/accounts/ACCOUNT_ID/deposit"</span><span class="w"> </span><span class="se">\</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-20-1"><a href="#__codelineno-20-1" id="__codelineno-20-1" name="__codelineno-20-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">"http://localhost:8899/api/v1/accounts/ACCOUNT_ID/deposit"</span><span class="w"> </span><span class="se">\</span>
 </span><span id="__span-20-2"><a href="#__codelineno-20-2" id="__codelineno-20-2" name="__codelineno-20-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/json"</span><span class="w"> </span><span class="se">\</span>
 </span><span id="__span-20-3"><a href="#__codelineno-20-3" id="__codelineno-20-3" name="__codelineno-20-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">'{</span>
 </span><span id="__span-20-4"><a href="#__codelineno-20-4" id="__codelineno-20-4" name="__codelineno-20-4"></a><span class="s1">    "amount": 500.00,</span>

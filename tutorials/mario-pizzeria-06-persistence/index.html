@@ -10,7 +10,7 @@
 <link href="../mario-pizzeria-05-events/" rel="prev"/>
 <link href="../mario-pizzeria-07-auth/" rel="next"/>
 <link href="../../assets/images/favicon.png" rel="icon"/>
-<meta content="mkdocs-1.6.1, mkdocs-material-9.6.22" name="generator"/>
+<meta content="mkdocs-1.6.1, mkdocs-material-9.6.23" name="generator"/>
 <title>6. Data Persistence - Neuroglia Python Framework</title>
 <link href="../../assets/stylesheets/main.84d31ad4.min.css" rel="stylesheet"/>
 <link href="../../assets/stylesheets/palette.06af60db.min.css" rel="stylesheet"/>
@@ -415,42 +415,24 @@
 </nav>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#transaction-management-with-unitofwork">
+<a class="md-nav__link" href="#transaction-management-with-repository-pattern">
 <span class="md-ellipsis">
-      🔄 Transaction Management with UnitOfWork
+      🔄 Transaction Management with Repository Pattern
     </span>
 </a>
-<nav aria-label="🔄 Transaction Management with UnitOfWork" class="md-nav">
+<nav aria-label="🔄 Transaction Management with Repository Pattern" class="md-nav">
 <ul class="md-nav__list">
 <li class="md-nav__item">
-<a class="md-nav__link" href="#how-unitofwork-works">
+<a class="md-nav__link" href="#how-repository-based-transactions-work">
 <span class="md-ellipsis">
-      How UnitOfWork Works
+      How Repository-Based Transactions Work
     </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#configure-unitofwork">
+<a class="md-nav__link" href="#configure-repositories">
 <span class="md-ellipsis">
-      Configure UnitOfWork
-    </span>
-</a>
-</li>
-</ul>
-</nav>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#testing-repositories">
-<span class="md-ellipsis">
-      🧪 Testing Repositories
-    </span>
-</a>
-<nav aria-label="🧪 Testing Repositories" class="md-nav">
-<ul class="md-nav__list">
-<li class="md-nav__item">
-<a class="md-nav__link" href="#option-1-in-memory-repository-unit-tests">
-<span class="md-ellipsis">
-      Option 1: In-Memory Repository (Unit Tests)
+      Configure Repositories
     </span>
 </a>
 </li>
@@ -1381,42 +1363,24 @@
 </nav>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#transaction-management-with-unitofwork">
+<a class="md-nav__link" href="#transaction-management-with-repository-pattern">
 <span class="md-ellipsis">
-      🔄 Transaction Management with UnitOfWork
+      🔄 Transaction Management with Repository Pattern
     </span>
 </a>
-<nav aria-label="🔄 Transaction Management with UnitOfWork" class="md-nav">
+<nav aria-label="🔄 Transaction Management with Repository Pattern" class="md-nav">
 <ul class="md-nav__list">
 <li class="md-nav__item">
-<a class="md-nav__link" href="#how-unitofwork-works">
+<a class="md-nav__link" href="#how-repository-based-transactions-work">
 <span class="md-ellipsis">
-      How UnitOfWork Works
+      How Repository-Based Transactions Work
     </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#configure-unitofwork">
+<a class="md-nav__link" href="#configure-repositories">
 <span class="md-ellipsis">
-      Configure UnitOfWork
-    </span>
-</a>
-</li>
-</ul>
-</nav>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#testing-repositories">
-<span class="md-ellipsis">
-      🧪 Testing Repositories
-    </span>
-</a>
-<nav aria-label="🧪 Testing Repositories" class="md-nav">
-<ul class="md-nav__list">
-<li class="md-nav__item">
-<a class="md-nav__link" href="#option-1-in-memory-repository-unit-tests">
-<span class="md-ellipsis">
-      Option 1: In-Memory Repository (Unit Tests)
+      Configure Repositories
     </span>
 </a>
 </li>
@@ -1459,7 +1423,7 @@
 <li>The Repository pattern and why it matters</li>
 <li>MongoDB integration with Motor (async driver)</li>
 <li>Implementing repositories for aggregates</li>
-<li>Transaction management with UnitOfWork</li>
+<li>Data persistence with repository pattern and automatic event publishing</li>
 <li>Testing data access layers</li>
 </ul>
 <h2 id="understanding-the-repository-pattern">💾 Understanding the Repository Pattern<a class="headerlink" href="#understanding-the-repository-pattern" title="Permanent link">¶</a></h2>
@@ -1732,83 +1696,87 @@
 </span><span id="__span-7-19"><a href="#__codelineno-7-19" id="__codelineno-7-19" name="__codelineno-7-19"></a><span class="c1"># Singleton instance</span>
 </span><span id="__span-7-20"><a href="#__codelineno-7-20" id="__codelineno-7-20" name="__codelineno-7-20"></a><span class="n">app_settings</span> <span class="o">=</span> <span class="n">AppSettings</span><span class="p">()</span>
 </span></code></pre></div>
-<h2 id="transaction-management-with-unitofwork">🔄 Transaction Management with UnitOfWork<a class="headerlink" href="#transaction-management-with-unitofwork" title="Permanent link">¶</a></h2>
-<p>The UnitOfWork pattern manages <strong>transactions and event publishing</strong>.</p>
-<h3 id="how-unitofwork-works">How UnitOfWork Works<a class="headerlink" href="#how-unitofwork-works" title="Permanent link">¶</a></h3>
+<h2 id="transaction-management-with-repository-pattern">🔄 Transaction Management with Repository Pattern<a class="headerlink" href="#transaction-management-with-repository-pattern" title="Permanent link">¶</a></h2>
+<p>The <strong>Command Handler serves as the transaction boundary</strong>, and the <strong>Repository</strong> coordinates persistence with automatic event publishing.</p>
+<h3 id="how-repository-based-transactions-work">How Repository-Based Transactions Work<a class="headerlink" href="#how-repository-based-transactions-work" title="Permanent link">¶</a></h3>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-8-1"><a href="#__codelineno-8-1" id="__codelineno-8-1" name="__codelineno-8-1"></a><span class="c1"># In command handler</span>
 </span><span id="__span-8-2"><a href="#__codelineno-8-2" id="__codelineno-8-2" name="__codelineno-8-2"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">handle_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command</span><span class="p">:</span> <span class="n">PlaceOrderCommand</span><span class="p">):</span>
 </span><span id="__span-8-3"><a href="#__codelineno-8-3" id="__codelineno-8-3" name="__codelineno-8-3"></a>    <span class="c1"># 1️⃣ Create order (in memory)</span>
 </span><span id="__span-8-4"><a href="#__codelineno-8-4" id="__codelineno-8-4" name="__codelineno-8-4"></a>    <span class="n">order</span> <span class="o">=</span> <span class="n">Order</span><span class="p">(</span><span class="n">customer_id</span><span class="o">=</span><span class="n">command</span><span class="o">.</span><span class="n">customer_id</span><span class="p">)</span>
 </span><span id="__span-8-5"><a href="#__codelineno-8-5" id="__codelineno-8-5" name="__codelineno-8-5"></a>    <span class="n">order</span><span class="o">.</span><span class="n">add_order_item</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
-</span><span id="__span-8-6"><a href="#__codelineno-8-6" id="__codelineno-8-6" name="__codelineno-8-6"></a>    <span class="n">order</span><span class="o">.</span><span class="n">confirm_order</span><span class="p">()</span>  <span class="c1"># Raises OrderConfirmedEvent</span>
+</span><span id="__span-8-6"><a href="#__codelineno-8-6" id="__codelineno-8-6" name="__codelineno-8-6"></a>    <span class="n">order</span><span class="o">.</span><span class="n">confirm_order</span><span class="p">()</span>  <span class="c1"># Raises OrderConfirmedEvent internally</span>
 </span><span id="__span-8-7"><a href="#__codelineno-8-7" id="__codelineno-8-7" name="__codelineno-8-7"></a>
-</span><span id="__span-8-8"><a href="#__codelineno-8-8" id="__codelineno-8-8" name="__codelineno-8-8"></a>    <span class="c1"># 2️⃣ Register with UnitOfWork</span>
-</span><span id="__span-8-9"><a href="#__codelineno-8-9" id="__codelineno-8-9" name="__codelineno-8-9"></a>    <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">unit_of_work</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">order</span><span class="p">)</span>
+</span><span id="__span-8-8"><a href="#__codelineno-8-8" id="__codelineno-8-8" name="__codelineno-8-8"></a>    <span class="c1"># 2️⃣ Save changes via repository (transaction boundary)</span>
+</span><span id="__span-8-9"><a href="#__codelineno-8-9" id="__codelineno-8-9" name="__codelineno-8-9"></a>    <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">order_repository</span><span class="o">.</span><span class="n">add_async</span><span class="p">(</span><span class="n">order</span><span class="p">)</span>
 </span><span id="__span-8-10"><a href="#__codelineno-8-10" id="__codelineno-8-10" name="__codelineno-8-10"></a>
-</span><span id="__span-8-11"><a href="#__codelineno-8-11" id="__codelineno-8-11" name="__codelineno-8-11"></a>    <span class="c1"># 3️⃣ Save changes (transaction)</span>
-</span><span id="__span-8-12"><a href="#__codelineno-8-12" id="__codelineno-8-12" name="__codelineno-8-12"></a>    <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">unit_of_work</span><span class="o">.</span><span class="n">save_changes_async</span><span class="p">()</span>
-</span><span id="__span-8-13"><a href="#__codelineno-8-13" id="__codelineno-8-13" name="__codelineno-8-13"></a>
-</span><span id="__span-8-14"><a href="#__codelineno-8-14" id="__codelineno-8-14" name="__codelineno-8-14"></a>    <span class="c1"># UnitOfWork does:</span>
-</span><span id="__span-8-15"><a href="#__codelineno-8-15" id="__codelineno-8-15" name="__codelineno-8-15"></a>    <span class="c1"># - Saves order to repository</span>
-</span><span id="__span-8-16"><a href="#__codelineno-8-16" id="__codelineno-8-16" name="__codelineno-8-16"></a>    <span class="c1"># - Gets uncommitted events from order</span>
-</span><span id="__span-8-17"><a href="#__codelineno-8-17" id="__codelineno-8-17" name="__codelineno-8-17"></a>    <span class="c1"># - Publishes events to event bus</span>
-</span><span id="__span-8-18"><a href="#__codelineno-8-18" id="__codelineno-8-18" name="__codelineno-8-18"></a>    <span class="c1"># - Clears uncommitted events</span>
-</span><span id="__span-8-19"><a href="#__codelineno-8-19" id="__codelineno-8-19" name="__codelineno-8-19"></a>    <span class="c1"># - All in a single transaction!</span>
+</span><span id="__span-8-11"><a href="#__codelineno-8-11" id="__codelineno-8-11" name="__codelineno-8-11"></a>    <span class="c1"># Repository does:</span>
+</span><span id="__span-8-12"><a href="#__codelineno-8-12" id="__codelineno-8-12" name="__codelineno-8-12"></a>    <span class="c1"># - Saves order state to database</span>
+</span><span id="__span-8-13"><a href="#__codelineno-8-13" id="__codelineno-8-13" name="__codelineno-8-13"></a>    <span class="c1"># - Gets uncommitted events from order</span>
+</span><span id="__span-8-14"><a href="#__codelineno-8-14" id="__codelineno-8-14" name="__codelineno-8-14"></a>    <span class="c1"># - Publishes events to event bus</span>
+</span><span id="__span-8-15"><a href="#__codelineno-8-15" id="__codelineno-8-15" name="__codelineno-8-15"></a>    <span class="c1"># - Clears uncommitted events from order</span>
+</span><span id="__span-8-16"><a href="#__codelineno-8-16" id="__codelineno-8-16" name="__codelineno-8-16"></a>    <span class="c1"># - All in a transactional scope!</span>
 </span></code></pre></div>
 <p><strong>Benefits:</strong></p>
 <ul>
-<li><strong>Atomic</strong>: All changes succeed or fail together</li>
-<li><strong>Event consistency</strong>: Events only published if save succeeds</li>
+<li><strong>Atomic</strong>: State changes and event publishing succeed or fail together</li>
+<li><strong>Event consistency</strong>: Events only published if database save succeeds</li>
 <li><strong>Automatic</strong>: No manual event publishing needed</li>
+<li><strong>Simple</strong>: Command handler IS the transaction boundary</li>
 </ul>
-<h3 id="configure-unitofwork">Configure UnitOfWork<a class="headerlink" href="#configure-unitofwork" title="Permanent link">¶</a></h3>
+<h3 id="configure-repositories">Configure Repositories<a class="headerlink" href="#configure-repositories" title="Permanent link">¶</a></h3>
 <p>In <code>main.py</code>:</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-9-1"><a href="#__codelineno-9-1" id="__codelineno-9-1" name="__codelineno-9-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.data.unit_of_work</span><span class="w"> </span><span class="kn">import</span> <span class="n">UnitOfWork</span>
-</span><span id="__span-9-2"><a href="#__codelineno-9-2" id="__codelineno-9-2" name="__codelineno-9-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.mediation.behaviors</span><span class="w"> </span><span class="kn">import</span> <span class="n">DomainEventDispatchingMiddleware</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-9-1"><a href="#__codelineno-9-1" id="__codelineno-9-1" name="__codelineno-9-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.data.infrastructure.mongo</span><span class="w"> </span><span class="kn">import</span> <span class="n">MongoRepository</span>
+</span><span id="__span-9-2"><a href="#__codelineno-9-2" id="__codelineno-9-2" name="__codelineno-9-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">domain.repositories</span><span class="w"> </span><span class="kn">import</span> <span class="n">IOrderRepository</span>
 </span><span id="__span-9-3"><a href="#__codelineno-9-3" id="__codelineno-9-3" name="__codelineno-9-3"></a>
-</span><span id="__span-9-4"><a href="#__codelineno-9-4" id="__codelineno-9-4" name="__codelineno-9-4"></a><span class="c1"># Configure UnitOfWork</span>
-</span><span id="__span-9-5"><a href="#__codelineno-9-5" id="__codelineno-9-5" name="__codelineno-9-5"></a><span class="n">UnitOfWork</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">)</span>
+</span><span id="__span-9-4"><a href="#__codelineno-9-4" id="__codelineno-9-4" name="__codelineno-9-4"></a><span class="c1"># Configure repositories with automatic event publishing</span>
+</span><span id="__span-9-5"><a href="#__codelineno-9-5" id="__codelineno-9-5" name="__codelineno-9-5"></a><span class="n">services</span><span class="o">.</span><span class="n">add_scoped</span><span class="p">(</span><span class="n">IOrderRepository</span><span class="p">,</span> <span class="n">MongoOrderRepository</span><span class="p">)</span>
 </span><span id="__span-9-6"><a href="#__codelineno-9-6" id="__codelineno-9-6" name="__codelineno-9-6"></a>
-</span><span id="__span-9-7"><a href="#__codelineno-9-7" id="__codelineno-9-7" name="__codelineno-9-7"></a><span class="c1"># Add middleware for automatic event publishing</span>
-</span><span id="__span-9-8"><a href="#__codelineno-9-8" id="__codelineno-9-8" name="__codelineno-9-8"></a><span class="n">DomainEventDispatchingMiddleware</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">)</span>
+</span><span id="__span-9-7"><a href="#__codelineno-9-7" id="__codelineno-9-7" name="__codelineno-9-7"></a><span class="c1"># Repository automatically handles:</span>
+</span><span id="__span-9-8"><a href="#__codelineno-9-8" id="__codelineno-9-8" name="__codelineno-9-8"></a><span class="c1"># - State persistence</span>
+</span><span id="__span-9-9"><a href="#__codelineno-9-9" id="__codelineno-9-9" name="__codelineno-9-9"></a><span class="c1"># - Event publishing</span>
+</span><span id="__span-9-10"><a href="#__codelineno-9-10" id="__codelineno-9-10" name="__codelineno-9-10"></a><span class="c1"># - Transaction coordination</span>
 </span></code></pre></div>
-<h2 id="testing-repositories">🧪 Testing Repositories<a class="headerlink" href="#testing-repositories" title="Permanent link">¶</a></h2>
-<h3 id="option-1-in-memory-repository-unit-tests">Option 1: In-Memory Repository (Unit Tests)<a class="headerlink" href="#option-1-in-memory-repository-unit-tests" title="Permanent link">¶</a></h3>
-<p>Create <code>tests/fixtures/in_memory_order_repository.py</code>:</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-10-1"><a href="#__codelineno-10-1" id="__codelineno-10-1" name="__codelineno-10-1"></a><span class="sd">"""In-memory repository for testing"""</span>
-</span><span id="__span-10-2"><a href="#__codelineno-10-2" id="__codelineno-10-2" name="__codelineno-10-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
-</span><span id="__span-10-3"><a href="#__codelineno-10-3" id="__codelineno-10-3" name="__codelineno-10-3"></a>
-</span><span id="__span-10-4"><a href="#__codelineno-10-4" id="__codelineno-10-4" name="__codelineno-10-4"></a><span class="kn">from</span><span class="w"> </span><span class="nn">domain.entities</span><span class="w"> </span><span class="kn">import</span> <span class="n">Order</span><span class="p">,</span> <span class="n">OrderStatus</span>
-</span><span id="__span-10-5"><a href="#__codelineno-10-5" id="__codelineno-10-5" name="__codelineno-10-5"></a><span class="kn">from</span><span class="w"> </span><span class="nn">domain.repositories</span><span class="w"> </span><span class="kn">import</span> <span class="n">IOrderRepository</span>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-10-1"><a href="#__codelineno-10-1" id="__codelineno-10-1" name="__codelineno-10-1"></a>## 🧪 Testing Repositories
+</span><span id="__span-10-2"><a href="#__codelineno-10-2" id="__codelineno-10-2" name="__codelineno-10-2"></a>
+</span><span id="__span-10-3"><a href="#__codelineno-10-3" id="__codelineno-10-3" name="__codelineno-10-3"></a>### Option 1: In-Memory Repository (Unit Tests)
+</span><span id="__span-10-4"><a href="#__codelineno-10-4" id="__codelineno-10-4" name="__codelineno-10-4"></a>
+</span><span id="__span-10-5"><a href="#__codelineno-10-5" id="__codelineno-10-5" name="__codelineno-10-5"></a>Create `tests/fixtures/in_memory_order_repository.py`:
 </span><span id="__span-10-6"><a href="#__codelineno-10-6" id="__codelineno-10-6" name="__codelineno-10-6"></a>
-</span><span id="__span-10-7"><a href="#__codelineno-10-7" id="__codelineno-10-7" name="__codelineno-10-7"></a>
-</span><span id="__span-10-8"><a href="#__codelineno-10-8" id="__codelineno-10-8" name="__codelineno-10-8"></a><span class="k">class</span><span class="w"> </span><span class="nc">InMemoryOrderRepository</span><span class="p">(</span><span class="n">IOrderRepository</span><span class="p">):</span>
-</span><span id="__span-10-9"><a href="#__codelineno-10-9" id="__codelineno-10-9" name="__codelineno-10-9"></a><span class="w">    </span><span class="sd">"""In-memory implementation for testing"""</span>
+</span><span id="__span-10-7"><a href="#__codelineno-10-7" id="__codelineno-10-7" name="__codelineno-10-7"></a>```python
+</span><span id="__span-10-8"><a href="#__codelineno-10-8" id="__codelineno-10-8" name="__codelineno-10-8"></a>"""In-memory repository for testing"""
+</span><span id="__span-10-9"><a href="#__codelineno-10-9" id="__codelineno-10-9" name="__codelineno-10-9"></a>from typing import Dict, List, Optional
 </span><span id="__span-10-10"><a href="#__codelineno-10-10" id="__codelineno-10-10" name="__codelineno-10-10"></a>
-</span><span id="__span-10-11"><a href="#__codelineno-10-11" id="__codelineno-10-11" name="__codelineno-10-11"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="__span-10-12"><a href="#__codelineno-10-12" id="__codelineno-10-12" name="__codelineno-10-12"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_orders</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Order</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+</span><span id="__span-10-11"><a href="#__codelineno-10-11" id="__codelineno-10-11" name="__codelineno-10-11"></a>from domain.entities import Order, OrderStatus
+</span><span id="__span-10-12"><a href="#__codelineno-10-12" id="__codelineno-10-12" name="__codelineno-10-12"></a>from domain.repositories import IOrderRepository
 </span><span id="__span-10-13"><a href="#__codelineno-10-13" id="__codelineno-10-13" name="__codelineno-10-13"></a>
-</span><span id="__span-10-14"><a href="#__codelineno-10-14" id="__codelineno-10-14" name="__codelineno-10-14"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">order_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Order</span><span class="p">]:</span>
-</span><span id="__span-10-15"><a href="#__codelineno-10-15" id="__codelineno-10-15" name="__codelineno-10-15"></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_orders</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">order_id</span><span class="p">)</span>
-</span><span id="__span-10-16"><a href="#__codelineno-10-16" id="__codelineno-10-16" name="__codelineno-10-16"></a>
-</span><span id="__span-10-17"><a href="#__codelineno-10-17" id="__codelineno-10-17" name="__codelineno-10-17"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">add_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">order</span><span class="p">:</span> <span class="n">Order</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="__span-10-18"><a href="#__codelineno-10-18" id="__codelineno-10-18" name="__codelineno-10-18"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_orders</span><span class="p">[</span><span class="n">order</span><span class="o">.</span><span class="n">id</span><span class="p">()]</span> <span class="o">=</span> <span class="n">order</span>
-</span><span id="__span-10-19"><a href="#__codelineno-10-19" id="__codelineno-10-19" name="__codelineno-10-19"></a>
-</span><span id="__span-10-20"><a href="#__codelineno-10-20" id="__codelineno-10-20" name="__codelineno-10-20"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">update_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">order</span><span class="p">:</span> <span class="n">Order</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="__span-10-21"><a href="#__codelineno-10-21" id="__codelineno-10-21" name="__codelineno-10-21"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_orders</span><span class="p">[</span><span class="n">order</span><span class="o">.</span><span class="n">id</span><span class="p">()]</span> <span class="o">=</span> <span class="n">order</span>
-</span><span id="__span-10-22"><a href="#__codelineno-10-22" id="__codelineno-10-22" name="__codelineno-10-22"></a>
-</span><span id="__span-10-23"><a href="#__codelineno-10-23" id="__codelineno-10-23" name="__codelineno-10-23"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">delete_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">order_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="__span-10-24"><a href="#__codelineno-10-24" id="__codelineno-10-24" name="__codelineno-10-24"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_orders</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">order_id</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-</span><span id="__span-10-25"><a href="#__codelineno-10-25" id="__codelineno-10-25" name="__codelineno-10-25"></a>
-</span><span id="__span-10-26"><a href="#__codelineno-10-26" id="__codelineno-10-26" name="__codelineno-10-26"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">list_async</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Order</span><span class="p">]:</span>
-</span><span id="__span-10-27"><a href="#__codelineno-10-27" id="__codelineno-10-27" name="__codelineno-10-27"></a>        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_orders</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
-</span><span id="__span-10-28"><a href="#__codelineno-10-28" id="__codelineno-10-28" name="__codelineno-10-28"></a>
-</span><span id="__span-10-29"><a href="#__codelineno-10-29" id="__codelineno-10-29" name="__codelineno-10-29"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">find_by_status_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">status</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Order</span><span class="p">]:</span>
-</span><span id="__span-10-30"><a href="#__codelineno-10-30" id="__codelineno-10-30" name="__codelineno-10-30"></a>        <span class="n">order_status</span> <span class="o">=</span> <span class="n">OrderStatus</span><span class="p">(</span><span class="n">status</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span>
-</span><span id="__span-10-31"><a href="#__codelineno-10-31" id="__codelineno-10-31" name="__codelineno-10-31"></a>        <span class="k">return</span> <span class="p">[</span>
-</span><span id="__span-10-32"><a href="#__codelineno-10-32" id="__codelineno-10-32" name="__codelineno-10-32"></a>            <span class="n">o</span> <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_orders</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
-</span><span id="__span-10-33"><a href="#__codelineno-10-33" id="__codelineno-10-33" name="__codelineno-10-33"></a>            <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="n">order_status</span>
-</span><span id="__span-10-34"><a href="#__codelineno-10-34" id="__codelineno-10-34" name="__codelineno-10-34"></a>        <span class="p">]</span>
+</span><span id="__span-10-14"><a href="#__codelineno-10-14" id="__codelineno-10-14" name="__codelineno-10-14"></a>
+</span><span id="__span-10-15"><a href="#__codelineno-10-15" id="__codelineno-10-15" name="__codelineno-10-15"></a>class InMemoryOrderRepository(IOrderRepository):
+</span><span id="__span-10-16"><a href="#__codelineno-10-16" id="__codelineno-10-16" name="__codelineno-10-16"></a>    """In-memory implementation for testing"""
+</span><span id="__span-10-17"><a href="#__codelineno-10-17" id="__codelineno-10-17" name="__codelineno-10-17"></a>
+</span><span id="__span-10-18"><a href="#__codelineno-10-18" id="__codelineno-10-18" name="__codelineno-10-18"></a>    def __init__(self):
+</span><span id="__span-10-19"><a href="#__codelineno-10-19" id="__codelineno-10-19" name="__codelineno-10-19"></a>        self._orders: Dict[str, Order] = {}
+</span><span id="__span-10-20"><a href="#__codelineno-10-20" id="__codelineno-10-20" name="__codelineno-10-20"></a>
+</span><span id="__span-10-21"><a href="#__codelineno-10-21" id="__codelineno-10-21" name="__codelineno-10-21"></a>    async def get_async(self, order_id: str) -&gt; Optional[Order]:
+</span><span id="__span-10-22"><a href="#__codelineno-10-22" id="__codelineno-10-22" name="__codelineno-10-22"></a>        return self._orders.get(order_id)
+</span><span id="__span-10-23"><a href="#__codelineno-10-23" id="__codelineno-10-23" name="__codelineno-10-23"></a>
+</span><span id="__span-10-24"><a href="#__codelineno-10-24" id="__codelineno-10-24" name="__codelineno-10-24"></a>    async def add_async(self, order: Order) -&gt; None:
+</span><span id="__span-10-25"><a href="#__codelineno-10-25" id="__codelineno-10-25" name="__codelineno-10-25"></a>        self._orders[order.id()] = order
+</span><span id="__span-10-26"><a href="#__codelineno-10-26" id="__codelineno-10-26" name="__codelineno-10-26"></a>
+</span><span id="__span-10-27"><a href="#__codelineno-10-27" id="__codelineno-10-27" name="__codelineno-10-27"></a>    async def update_async(self, order: Order) -&gt; None:
+</span><span id="__span-10-28"><a href="#__codelineno-10-28" id="__codelineno-10-28" name="__codelineno-10-28"></a>        self._orders[order.id()] = order
+</span><span id="__span-10-29"><a href="#__codelineno-10-29" id="__codelineno-10-29" name="__codelineno-10-29"></a>
+</span><span id="__span-10-30"><a href="#__codelineno-10-30" id="__codelineno-10-30" name="__codelineno-10-30"></a>    async def delete_async(self, order_id: str) -&gt; None:
+</span><span id="__span-10-31"><a href="#__codelineno-10-31" id="__codelineno-10-31" name="__codelineno-10-31"></a>        self._orders.pop(order_id, None)
+</span><span id="__span-10-32"><a href="#__codelineno-10-32" id="__codelineno-10-32" name="__codelineno-10-32"></a>
+</span><span id="__span-10-33"><a href="#__codelineno-10-33" id="__codelineno-10-33" name="__codelineno-10-33"></a>    async def list_async(self) -&gt; List[Order]:
+</span><span id="__span-10-34"><a href="#__codelineno-10-34" id="__codelineno-10-34" name="__codelineno-10-34"></a>        return list(self._orders.values())
+</span><span id="__span-10-35"><a href="#__codelineno-10-35" id="__codelineno-10-35" name="__codelineno-10-35"></a>
+</span><span id="__span-10-36"><a href="#__codelineno-10-36" id="__codelineno-10-36" name="__codelineno-10-36"></a>    async def find_by_status_async(self, status: str) -&gt; List[Order]:
+</span><span id="__span-10-37"><a href="#__codelineno-10-37" id="__codelineno-10-37" name="__codelineno-10-37"></a>        order_status = OrderStatus(status.lower())
+</span><span id="__span-10-38"><a href="#__codelineno-10-38" id="__codelineno-10-38" name="__codelineno-10-38"></a>        return [
+</span><span id="__span-10-39"><a href="#__codelineno-10-39" id="__codelineno-10-39" name="__codelineno-10-39"></a>            o for o in self._orders.values()
+</span><span id="__span-10-40"><a href="#__codelineno-10-40" id="__codelineno-10-40" name="__codelineno-10-40"></a>            if o.state.status == order_status
+</span><span id="__span-10-41"><a href="#__codelineno-10-41" id="__codelineno-10-41" name="__codelineno-10-41"></a>        ]
 </span></code></pre></div>
 <p>Use in tests:</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-11-1"><a href="#__codelineno-11-1" id="__codelineno-11-1" name="__codelineno-11-1"></a><span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
@@ -1911,7 +1879,7 @@
 <li><strong>Clean Architecture</strong>: Domain doesn't depend on infrastructure</li>
 <li><strong>Motor</strong>: Async MongoDB driver for Python</li>
 <li><strong>MotorRepository</strong>: Framework base class with CRUD operations</li>
-<li><strong>UnitOfWork</strong>: Manages transactions and event publishing</li>
+<li><strong>Repository Pattern</strong>: Handles persistence and automatic event publishing</li>
 <li><strong>Testing</strong>: Use in-memory repos for unit tests, real DB for integration tests</li>
 </ol>
 <h2 id="whats-next">🚀 What's Next?<a class="headerlink" href="#whats-next" title="Permanent link">¶</a></h2>
