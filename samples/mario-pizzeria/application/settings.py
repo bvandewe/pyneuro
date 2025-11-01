@@ -39,13 +39,13 @@ class MarioPizzeriaApplicationSettings(ApplicationSettingsWithObservability):
 
     # Keycloak Configuration (Internal Docker network URLs - used by backend)
     keycloak_server_url: str = "http://keycloak:8080"  # Internal Docker network
-    keycloak_realm: str = "mario-pizzeria"
-    keycloak_client_id: str = "mario-app"
+    keycloak_realm: str = "pyneuro"
+    keycloak_client_id: str = "pyneuro-app"
     keycloak_client_secret: str = "mario-secret-123"
 
     # JWT Validation (Backend token validation)
     jwt_signing_key: str = ""  # RSA public key - auto-discovered from Keycloak if empty
-    jwt_audience: str = "mario-app"  # Expected audience claim in JWT (must match client_id)
+    jwt_audience: str = "pyneuro-app"  # Expected audience claim in JWT (must match client_id)
     required_scope: str = "openid profile email"  # Required OAuth2 scopes
 
     # OAuth2 Scheme Type
@@ -59,7 +59,7 @@ class MarioPizzeriaApplicationSettings(ApplicationSettingsWithObservability):
     cloud_event_retry_delay: float = 1.0  # Delay between retries (seconds)
 
     # Swagger UI OAuth Configuration (External URLs - used by browser)
-    swagger_ui_client_id: str = "mario-app"  # Must match keycloak_client_id
+    swagger_ui_client_id: str = "pyneuro-app"  # Must match keycloak_client_id
     swagger_ui_client_secret: str = ""  # Leave empty for public clients
 
     # Observability Configuration (Three Pillars)
