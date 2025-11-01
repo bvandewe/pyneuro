@@ -2,10 +2,10 @@
 MongoDB repository for Customer aggregates using Neuroglia's MotorRepository.
 
 This extends the framework's MotorRepository to provide Customer-specific queries
-while inheriting all standard CRUD operations.
+while inheriting all standard CRUD operations with automatic domain event publishing.
 """
 
-from typing import Optional
+from typing import TYPE_CHECKING, Optional
 
 from domain.entities import Customer
 from domain.repositories import ICustomerRepository
@@ -15,29 +15,40 @@ from neuroglia.data.infrastructure.mongo import MotorRepository
 from neuroglia.data.infrastructure.tracing_mixin import TracedRepositoryMixin
 from neuroglia.serialization.json import JsonSerializer
 
+if TYPE_CHECKING:
+    from neuroglia.mediation.mediator import Mediator
+
 
 class MongoCustomerRepository(TracedRepositoryMixin, MotorRepository[Customer, str], ICustomerRepository):
     """
-    Motor-based async MongoDB repository for Customer aggregates with automatic tracing.
+    Motor-based async MongoDB repository for Customer aggregates with automatic tracing
+    and domain event publishing.
 
-    Extends Neuroglia's MotorRepository to inherit standard CRUD operations
-    and adds Customer-specific queries. TracedRepositoryMixin provides automatic
-    OpenTelemetry instrumentation for all repository operations.
+    Extends Neuroglia's MotorRepository to inherit standard CRUD operations with
+    automatic event publishing and adds Customer-specific queries. TracedRepositoryMixin
+    provides automatic OpenTelemetry instrumentation for all repository operations.
     """
 
-    def __init__(self, mongo_client: AsyncIOMotorClient, serializer: JsonSerializer):
+    def __init__(
+        self,
+        mongo_client: AsyncIOMotorClient,
+        serializer: JsonSerializer,
+        mediator: Optional["Mediator"] = None,
+    ):
         """
         Initialize the Customer repository.
 
         Args:
             mongo_client: Motor async MongoDB client
             serializer: JSON serializer for entity conversion
+            mediator: Optional Mediator for automatic domain event publishing
         """
         super().__init__(
             client=mongo_client,
             database_name="mario_pizzeria",
             collection_name="customers",
             serializer=serializer,
+            mediator=mediator,
         )
 
     # Custom Customer-specific queries

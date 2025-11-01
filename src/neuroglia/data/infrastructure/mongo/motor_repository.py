@@ -38,14 +38,18 @@ See Also:
 """
 
 from datetime import datetime, timezone
-from typing import Generic, Optional
+from typing import TYPE_CHECKING, Generic, Optional
 
 from motor.motor_asyncio import AsyncIOMotorClient, AsyncIOMotorCollection
 
 from neuroglia.data.abstractions import AggregateRoot, TEntity, TKey
 from neuroglia.data.infrastructure.abstractions import Repository
 from neuroglia.hosting.abstractions import ApplicationBuilderBase
+from neuroglia.mediation.mediator import Mediator
 from neuroglia.serialization.json import JsonSerializer
+
+if TYPE_CHECKING:
+    from neuroglia.mediation.mediator import Mediator
 
 
 class MotorRepository(Generic[TEntity, TKey], Repository[TEntity, TKey]):
@@ -104,6 +108,7 @@ class MotorRepository(Generic[TEntity, TKey], Repository[TEntity, TKey]):
         collection_name: str,
         serializer: JsonSerializer,
         entity_type: Optional[type[TEntity]] = None,
+        mediator: Optional["Mediator"] = None,
     ):
         """
         Initialize the Motor repository.
@@ -114,7 +119,9 @@ class MotorRepository(Generic[TEntity, TKey], Repository[TEntity, TKey]):
             collection_name: Name of the collection for this entity type
             serializer: JSON serializer for entity conversion
             entity_type: Optional explicit entity type (for proper deserialization)
+            mediator: Optional Mediator instance for publishing domain events
         """
+        super().__init__(mediator)
         self._client = client
         self._database_name = database_name
         self._collection_name = collection_name
@@ -311,7 +318,7 @@ class MotorRepository(Generic[TEntity, TKey], Repository[TEntity, TKey]):
 
         return self._deserialize_entity(doc)
 
-    async def add_async(self, entity: TEntity) -> TEntity:
+    async def _do_add_async(self, entity: TEntity) -> TEntity:
         """
         Add a new entity to the repository.
 
@@ -341,7 +348,7 @@ class MotorRepository(Generic[TEntity, TKey], Repository[TEntity, TKey]):
         await self.collection.insert_one(doc)
         return entity
 
-    async def update_async(self, entity: TEntity) -> TEntity:
+    async def _do_update_async(self, entity: TEntity) -> TEntity:
         """
         Update an existing entity in the repository.
 
@@ -379,7 +386,7 @@ class MotorRepository(Generic[TEntity, TKey], Repository[TEntity, TKey]):
         await self.collection.replace_one({"id": entity_id}, doc)
         return entity
 
-    async def remove_async(self, id: TKey) -> None:
+    async def _do_remove_async(self, id: TKey) -> None:
         """
         Remove an entity by its unique identifier.
 
@@ -569,12 +576,15 @@ class MotorRepository(Generic[TEntity, TKey], Repository[TEntity, TKey]):
 
         # Factory function to create MotorRepository with proper entity type
         def create_motor_repository(sp):
+            # Try to get mediator, but allow it to be None (for testing or when not configured)
+            mediator = sp.get_service(Mediator)  # Returns None if not registered
             return MotorRepository(
                 client=sp.get_required_service(AsyncIOMotorClient),
                 database_name=database_name,
                 collection_name=collection_name,
                 serializer=sp.get_required_service(JsonSerializer),
                 entity_type=entity_type,
+                mediator=mediator,
             )
 
         # Factory function to resolve abstract Repository interface

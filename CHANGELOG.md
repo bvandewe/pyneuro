@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **Repository-Based Domain Event Publishing**: Repositories now automatically publish domain events after successful persistence
+  - Extended `Repository` base class with automatic event publishing via optional mediator parameter
+  - Implemented template method pattern: `add_async`/`update_async` call `_do_add_async`/`_do_update_async`
+  - Events published AFTER successful persistence, then cleared from aggregates (best-effort logging on failure)
+  - Updated `MotorRepository` and `MemoryRepository` to support mediator injection
+  - Updated all mario-pizzeria repositories to accept mediator parameter
+  - Benefits: Automatic event publishing (impossible to forget), works everywhere, simplifies handler code
+  - **BREAKING**: Repository constructors now require optional `mediator` parameter (defaults to `None` for backward compatibility)
+
 ### Changed
 
 - **Simple UI Authentication**: Migrated to pure JWT-only authentication (stateless)

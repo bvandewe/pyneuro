@@ -2,10 +2,11 @@
 MongoDB repository for Kitchen entity using Neuroglia's MotorRepository.
 
 The Kitchen is a singleton entity that manages kitchen capacity and order processing state.
-This repository ensures only one Kitchen instance exists in the database.
+This repository ensures only one Kitchen instance exists in the database with automatic
+domain event publishing.
 """
 
-from typing import Optional
+from typing import TYPE_CHECKING, Optional
 
 from domain.entities import Kitchen
 from domain.repositories import IKitchenRepository
@@ -15,29 +16,40 @@ from neuroglia.data.infrastructure.mongo import MotorRepository
 from neuroglia.data.infrastructure.tracing_mixin import TracedRepositoryMixin
 from neuroglia.serialization.json import JsonSerializer
 
+if TYPE_CHECKING:
+    from neuroglia.mediation.mediator import Mediator
+
 
 class MongoKitchenRepository(TracedRepositoryMixin, MotorRepository[Kitchen, str], IKitchenRepository):
     """
-    Motor-based async MongoDB repository for Kitchen entity (singleton) with automatic tracing.
+    Motor-based async MongoDB repository for Kitchen entity (singleton) with automatic tracing
+    and domain event publishing.
 
     The Kitchen is a singleton entity with a fixed ID of "kitchen".
     This repository handles initialization and ensures only one Kitchen exists.
     TracedRepositoryMixin provides automatic OpenTelemetry instrumentation.
     """
 
-    def __init__(self, mongo_client: AsyncIOMotorClient, serializer: JsonSerializer):
+    def __init__(
+        self,
+        mongo_client: AsyncIOMotorClient,
+        serializer: JsonSerializer,
+        mediator: Optional["Mediator"] = None,
+    ):
         """
         Initialize the Kitchen repository.
 
         Args:
             mongo_client: Motor async MongoDB client
             serializer: JSON serializer for entity conversion
+            mediator: Optional Mediator for automatic domain event publishing
         """
         super().__init__(
             client=mongo_client,
             database_name="mario_pizzeria",
             collection_name="kitchen",
             serializer=serializer,
+            mediator=mediator,
         )
 
     # Custom Kitchen-specific methods

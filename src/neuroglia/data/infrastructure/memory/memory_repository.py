@@ -1,12 +1,42 @@
 from collections.abc import Callable, Iterable
-from typing import Optional
+from typing import TYPE_CHECKING, Optional
 
 from neuroglia.data.abstractions import TEntity, TKey
 from neuroglia.data.infrastructure.abstractions import Repository
 
+if TYPE_CHECKING:
+    from neuroglia.mediation.mediator import Mediator
+
 
 class MemoryRepository(Repository[TEntity, TKey]):
-    entities: dict = {}
+    """
+    In-memory repository implementation for testing and rapid prototyping.
+
+    This repository stores entities in a dictionary and provides full CRUD
+    operations with automatic domain event publishing support.
+
+    Examples:
+        ```python
+        # With event publishing
+        repo = MemoryRepository[Order, str](mediator=mediator)
+        order = Order.create(customer_id="123")
+        await repo.add_async(order)  # Events published automatically
+
+        # For testing - disable events
+        test_repo = MemoryRepository[Order, str](mediator=None)
+        await test_repo.add_async(order)  # No events published
+        ```
+    """
+
+    def __init__(self, mediator: Optional["Mediator"] = None):
+        """
+        Initialize the memory repository.
+
+        Args:
+            mediator: Optional Mediator instance for publishing domain events
+        """
+        super().__init__(mediator)
+        self.entities: dict = {}
 
     def _get_entity_id(self, entity: TEntity) -> TKey:
         """Get the entity's ID, handling both property and method access."""
@@ -22,19 +52,19 @@ class MemoryRepository(Repository[TEntity, TKey]):
     async def get_async(self, id: TKey) -> Optional[TEntity]:
         return self.entities.get(id, None)
 
-    async def add_async(self, entity: TEntity) -> TEntity:
+    async def _do_add_async(self, entity: TEntity) -> TEntity:
         entity_id = self._get_entity_id(entity)
         if entity_id in self.entities:
             raise Exception()
         self.entities[entity_id] = entity
         return entity
 
-    async def update_async(self, entity: TEntity) -> TEntity:
+    async def _do_update_async(self, entity: TEntity) -> TEntity:
         entity_id = self._get_entity_id(entity)
         self.entities[entity_id] = entity
         return entity
 
-    async def remove_async(self, id: TKey) -> None:
+    async def _do_remove_async(self, id: TKey) -> None:
         if id not in self.entities:
             raise Exception()
         del self.entities[id]
