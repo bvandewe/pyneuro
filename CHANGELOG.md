@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- **Simple UI Authentication**: Migrated to pure JWT-only authentication (stateless)
+  - Removed redundant server-side session cookies and SessionMiddleware
+  - All authentication now handled via JWT tokens in Authorization header
+  - JWT tokens stored client-side in localStorage only
+  - Updated `ui_auth_controller.py` to remove session storage logic
+  - Updated `main.py` to remove SessionMiddleware from UI sub-app
+  - Removed `session_secret_key` from `application/settings.py`
+  - Fixed JWT token parsing to use `username` field instead of `sub` (UUID)
+  - Benefits: Stateless, scalable, microservices-ready, no CSRF concerns
+  - Updated documentation in `docs/guides/simple-ui-app.md` with JWT-only architecture details
+
 ## [0.5.1] - 2025-10-29
 
 ### Changed

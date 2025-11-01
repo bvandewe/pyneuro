@@ -158,21 +158,35 @@ Learn by example with complete sample applications:
 
 #### 🐳 Docker Development Environment
 
-Get started quickly with Mario's Pizzeria using Docker:
+Get started quickly with the sample applications using the new CLI tools:
 
 ```bash
-# Start the complete development environment
-./mario-docker.sh start
+# Install the CLI tools (one-time setup)
+./scripts/setup/install_sample_tools.sh
+
+# Start shared infrastructure (MongoDB, Keycloak, Observability)
+make infra-start
+
+# Start Mario's Pizzeria
+mario-pizzeria start
+# Or: make mario-start
+
+# Start Simple UI (runs concurrently!)
+simple-ui start
+# Or: make simple-ui-start
 
 # Access services:
-# 🍕 API Documentation: http://localhost:8080/api/docs
+# 🍕 Mario's Pizzeria: http://localhost:8080/api/docs
+# 📱 Simple UI: http://localhost:8082
 # 🗄️ Database Admin: http://localhost:8081
 # 🔐 Authentication: http://localhost:8090/admin
+# 🎬 Event Player: http://localhost:8085
+# 📊 Grafana: http://localhost:3001
 ```
 
-The Docker environment includes [MongoDB](https://www.mongodb.com/) (with [Mongo Express](https://github.com/mongo-express/mongo-express)), [Keycloak](https://www.keycloak.org/) IDP, [Event Player](https://bvandewe.github.io/events-player/), and other [Open Telemetry](https://opentelemetry.io/) services (OTEL Collector, Grafana, Prometheus, Loki, Tempo) for a complete development experience.
+The Docker environment includes [MongoDB](https://www.mongodb.com/) (with [Mongo Express](https://github.com/mongo-express/mongo-express)), [Keycloak](https://www.keycloak.org/) IDP, [Event Player](https://bvandewe.github.io/events-player/), and [OpenTelemetry](https://opentelemetry.io/) services (OTEL Collector, Grafana, Prometheus, Loki, Tempo) for a complete development experience.
 
-See [`deployment/README-mario-docker.md`](deployment/README-mario-docker.md) for full details.
+See [`deployment/docker-compose/DOCKER_COMPOSE_ARCHITECTURE.md`](deployment/docker-compose/DOCKER_COMPOSE_ARCHITECTURE.md) for full details.
 
 ## 🔧 Quick Start
 
