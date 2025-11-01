@@ -27,11 +27,12 @@ async def handle_async(self, request: PlaceOrderCommand):
     # 3. Confirm order (raises OrderConfirmedEvent)
     order.confirm_order()
 
-    # 4. Save order
+    # 4. Save order - repository publishes events automatically
     await self.order_repository.add_async(order)
-
-    # 5. Register for domain event dispatching
-    self.unit_of_work.register_aggregate(order)
+    # Repository handles:
+    # - Saves order state
+    # - Publishes OrderConfirmedEvent
+    # - Event handlers process asynchronously
 
     # ❌ Kitchen is NOT updated here
 
@@ -54,12 +55,10 @@ async def handle_async(self, request: StartCookingCommand):
     order.start_cooking()  # Raises CookingStartedEvent
     kitchen.start_order(order.id())  # ✅ Kitchen updated in command handler
 
-    # 4. Save both aggregates
+    # 4. Save both aggregates - events published automatically
     await self.order_repository.update_async(order)
     await self.kitchen_repository.update_kitchen_state_async(kitchen)
-
-    # 5. Register for events
-    self.unit_of_work.register_aggregate(order)
+    # Both repositories publish their respective events
 
     return self.ok(order_dto)
 ```
@@ -136,7 +135,7 @@ async def handle_async(self, request: PlaceOrderCommand):
     order = Order(...)
     order.confirm_order()  # Raises OrderConfirmedEvent
     await self.order_repository.add_async(order)
-    self.unit_of_work.register_aggregate(order)
+    # Repository automatically publishes events
     # ✅ Transaction complete, only modified Order
     return self.created(order_dto)
 
@@ -318,12 +317,12 @@ class PlaceOrderCommandHandler(CommandHandler[PlaceOrderCommand, OperationResult
             # Confirm order (raises OrderConfirmedEvent)
             order.confirm_order()
 
-            # Save order (commits transaction)
+            # Save order - repository publishes events automatically
             await self.order_repository.add_async(order)
-
-            # Register for domain event dispatching
-            self.unit_of_work.register_aggregate(order)
-            self.unit_of_work.register_aggregate(customer)
+            # Repository handles:
+            # - Saves order state
+            # - Publishes OrderConfirmedEvent
+            # - Event handlers process asynchronously
 
             # ✅ Kitchen will be updated by OrderConfirmedEventHandler
             # ✅ Happens AFTER this transaction commits

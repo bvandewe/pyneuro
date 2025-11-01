@@ -1,10 +1,49 @@
 # 🔄 Unit of Work Pattern
 
+> **⚠️ DEPRECATED**: This pattern has been superseded by **repository-based event publishing** where the command handler serves as the transaction boundary. See [Persistence Patterns](persistence-patterns.md) for the current recommended approach.
+>
+> **Migration Note**: The framework no longer requires explicit UnitOfWork usage. Domain events are now automatically published by repositories when persisting aggregates, eliminating the need for manual event registration and coordination.
+
+---
+
+## 📚 Historical Context
+
+_This documentation is preserved for reference and migration purposes._
+
 _Estimated reading time: 25 minutes_
 
-The Unit of Work pattern maintains a list of objects affected by a business transaction and coordinates writing out changes while resolving concurrency problems. In the Neuroglia framework, it provides automatic domain event collection and dispatching, enabling both **event-sourced** and **state-based persistence** patterns.
+The Unit of Work pattern maintained a list of objects affected by a business transaction and coordinated writing out changes while resolving concurrency problems. In earlier versions of Neuroglia, it provided automatic domain event collection and dispatching.
 
-## 💡 What & Why
+## 🔄 Current Approach (Recommended)
+
+**Instead of Unit of Work, use the repository-based pattern:**
+
+```python
+# ✅ CURRENT PATTERN: Repository handles event publishing
+class CreateOrderHandler(CommandHandler[CreateOrderCommand, OperationResult[OrderDto]]):
+    def __init__(self, order_repository: OrderRepository):
+        self.order_repository = order_repository
+
+    async def handle_async(self, command: CreateOrderCommand):
+        # 1. Create order (raises domain events internally)
+        order = Order.create(command.customer_id, command.items)
+
+        # 2. Save order - repository automatically publishes events
+        await self.order_repository.save_async(order)
+        # Repository does:
+        # ✅ Saves order state
+        # ✅ Gets uncommitted events
+        # ✅ Publishes events to event bus
+        # ✅ Clears events from aggregate
+
+        return self.created(order)
+```
+
+See [Persistence Patterns](persistence-patterns.md) for detailed documentation.
+
+---
+
+## 💡 What & Why (Historical)
 
 ### ❌ The Problem: Manual Event Management and Inconsistent Transactions
 

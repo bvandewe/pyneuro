@@ -106,32 +106,26 @@ class Order(AggregateRoot[OrderState, str]):
 
 **When are events published?**
 
-Events are **automatically dispatched** when you use `UnitOfWork`:
+Events are **automatically published by the repository** when you save an aggregate:
 
 ```python
 # In handler
-await self.unit_of_work.register(order)
-await self.unit_of_work.save_changes_async()
+order.confirm_order()  # Raises event internally
+await self.order_repository.add_async(order)
 
-# UnitOfWork does:
-# 1. Save aggregate to repository
+# Repository does:
+# 1. Save aggregate state to database
 # 2. Get uncommitted events from aggregate
 # 3. Publish each event to event bus
-# 4. Clear uncommitted events
+# 4. Clear uncommitted events from aggregate
 ```
 
-This is configured in `main.py`:
+This ensures **transactional consistency**:
 
-```python
-from neuroglia.data.unit_of_work import UnitOfWork
-from neuroglia.mediation.behaviors import DomainEventDispatchingMiddleware
-
-# Configure UnitOfWork
-UnitOfWork.configure(builder)
-
-# Add middleware to auto-publish events
-DomainEventDispatchingMiddleware.configure(builder)
-```
+- ✅ Events only published if database save succeeds
+- ✅ No manual event management needed
+- ✅ Command handler IS the transaction boundary
+- ✅ Repository coordinates persistence + event publishing
 
 ## 🎧 Handling Domain Events
 
@@ -476,7 +470,7 @@ async def test_multiple_handlers_same_event():
 1. **Domain Events**: Represent business occurrences, raised by aggregates
 2. **Loose Coupling**: Events decouple publishers from subscribers
 3. **Multiple Handlers**: Many handlers can react to one event
-4. **Automatic Publishing**: UnitOfWork + middleware handles event dispatch
+4. **Automatic Publishing**: Repository handles event dispatch when saving aggregates
 5. **CloudEvents**: Standard format for external integration
 6. **Async Processing**: Handlers run asynchronously for performance
 
@@ -486,7 +480,7 @@ In [Part 6: Persistence & Repositories](mario-pizzeria-06-persistence.md), you'l
 
 - Implementing the repository pattern
 - MongoDB integration with Motor
-- Transaction management with UnitOfWork
+- Repository pattern for persistence and event publishing
 - Data persistence strategies
 
 ---

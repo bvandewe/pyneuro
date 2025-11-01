@@ -200,36 +200,38 @@ class ValidationBehavior(PipelineBehavior):
 
         return await next_handler()
 
-class TransactionBehavior(PipelineBehavior):
-    """Wraps commands in transactions."""
+class TracingBehavior(PipelineBehavior):
+    """Adds distributed tracing to requests."""
 
-    def __init__(self, unit_of_work: IUnitOfWork):
-        self.unit_of_work = unit_of_work
+    def __init__(self, tracer):
+        self.tracer = tracer
 
     async def handle_async(self, request, next_handler):
-        if isinstance(request, Command):
-            async with self.unit_of_work.begin():
-                result = await next_handler()
-                if result.is_success:
-                    await self.unit_of_work.commit()
-                else:
-                    await self.unit_of_work.rollback()
-                return result
-        else:
+        with self.tracer.start_span(f"Handle {request.__class__.__name__}"):
             return await next_handler()
 
 # Register behaviors (run in order)
 services.add_scoped(PipelineBehavior, LoggingBehavior)
 services.add_scoped(PipelineBehavior, ValidationBehavior)
-services.add_scoped(PipelineBehavior, TransactionBehavior)
+services.add_scoped(PipelineBehavior, TracingBehavior)
 ```
 
 **Pipeline execution:**
 
 ```
-Request → LoggingBehavior → ValidationBehavior → TransactionBehavior → Handler → Result
-          (logs)            (validates)           (transaction)        (logic)
+Request → LoggingBehavior → ValidationBehavior → TracingBehavior → Handler → Result
 ```
+
+```
+
+**Pipeline execution:**
+
+```
+
+Request → LoggingBehavior → ValidationBehavior → TransactionBehavior → Handler → Result
+(logs) (validates) (transaction) (logic)
+
+````
 
 ## 🏗️ Real-World Example: Mario's Pizzeria
 
@@ -299,7 +301,7 @@ class OrdersController(ControllerBase):
         query = GetOrdersByStatusQuery(status=status)
         result = await self.mediator.execute_async(query)
         return result
-```
+````
 
 ## 🧪 Testing with Mediator
 
