@@ -11,15 +11,16 @@ from domain.repositories import (
 )
 
 from neuroglia.core import OperationResult
-from neuroglia.data.unit_of_work import IUnitOfWork
 from neuroglia.mapping import Mapper
 from neuroglia.mediation import Command, CommandHandler
 
 # OpenTelemetry imports for business metrics and span attributes
 try:
     from datetime import datetime
+
+    from observability.metrics import cooking_duration, orders_completed
+
     from neuroglia.observability.tracing import add_span_attributes
-    from observability.metrics import orders_completed, cooking_duration, orders_in_progress
 
     OTEL_AVAILABLE = True
 except ImportError:
@@ -46,13 +47,11 @@ class CompleteOrderCommandHandler(CommandHandler[CompleteOrderCommand, Operation
         kitchen_repository: IKitchenRepository,
         customer_repository: ICustomerRepository,
         mapper: Mapper,
-        unit_of_work: IUnitOfWork,
     ):
         self.order_repository = order_repository
         self.kitchen_repository = kitchen_repository
         self.customer_repository = customer_repository
         self.mapper = mapper
-        self.unit_of_work = unit_of_work
 
     async def handle_async(self, request: CompleteOrderCommand) -> OperationResult[OrderDto]:
         try:
@@ -88,12 +87,9 @@ class CompleteOrderCommandHandler(CommandHandler[CompleteOrderCommand, Operation
             order.mark_ready(user_id, user_name)
             kitchen.complete_order(order.id())
 
-            # Save changes
+            # Save changes - events published automatically by repository
             await self.order_repository.update_async(order)
             await self.kitchen_repository.update_kitchen_state_async(kitchen)
-
-            # Register order with Unit of Work for domain event dispatching
-            self.unit_of_work.register_aggregate(order)
 
             # Record business metrics
             if OTEL_AVAILABLE:

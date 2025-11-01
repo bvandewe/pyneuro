@@ -11,15 +11,21 @@ from domain.entities.order_item import OrderItem
 from domain.repositories import ICustomerRepository, IOrderRepository
 
 from neuroglia.core import OperationResult
-from neuroglia.data.unit_of_work import IUnitOfWork
 from neuroglia.mapping import Mapper
 from neuroglia.mapping.mapper import map_from
 from neuroglia.mediation import Command, CommandHandler
 
 # OpenTelemetry imports for business metrics and span attributes
 try:
+    from observability.metrics import (
+        customers_returning,
+        order_value,
+        orders_created,
+        pizzas_by_size,
+        pizzas_ordered,
+    )
+
     from neuroglia.observability.tracing import add_span_attributes
-    from observability.metrics import orders_created, order_value, pizzas_ordered, pizzas_by_size, customers_returning
 
     OTEL_AVAILABLE = True
 except ImportError:
@@ -49,12 +55,10 @@ class PlaceOrderCommandHandler(CommandHandler[PlaceOrderCommand, OperationResult
         order_repository: IOrderRepository,
         customer_repository: ICustomerRepository,
         mapper: Mapper,
-        unit_of_work: IUnitOfWork,
     ):
         self.order_repository = order_repository
         self.customer_repository = customer_repository
         self.mapper = mapper
-        self.unit_of_work = unit_of_work
 
     async def handle_async(self, request: PlaceOrderCommand) -> OperationResult[OrderDto]:
         try:
@@ -118,12 +122,8 @@ class PlaceOrderCommandHandler(CommandHandler[PlaceOrderCommand, OperationResult
             # Confirm order (raises domain event)
             order.confirm_order()
 
-            # Save order
+            # Save order - events published automatically by repository
             await self.order_repository.add_async(order)
-
-            # Register aggregates with Unit of Work for domain event dispatching
-            self.unit_of_work.register_aggregate(order)
-            self.unit_of_work.register_aggregate(customer)
 
             # Record business metrics
             if OTEL_AVAILABLE:
@@ -206,9 +206,8 @@ class PlaceOrderCommandHandler(CommandHandler[PlaceOrderCommand, OperationResult
             # Update address if provided and customer doesn't have one
             if request.customer_address and not existing_customer.state.address:
                 existing_customer.update_contact_info(address=request.customer_address)
+                # Save updated customer - events published automatically by repository
                 await self.customer_repository.update_async(existing_customer)
-                # Register updated customer for domain events
-                self.unit_of_work.register_aggregate(existing_customer)
             return existing_customer
         else:
             # Create new customer

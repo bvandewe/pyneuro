@@ -9,7 +9,6 @@ from domain.events import CustomerProfileCreatedEvent
 from domain.repositories import ICustomerRepository
 
 from neuroglia.core import OperationResult
-from neuroglia.data.unit_of_work import IUnitOfWork
 from neuroglia.mediation import Command, CommandHandler, Mediator
 
 # OpenTelemetry imports for business metrics
@@ -46,11 +45,9 @@ class CreateCustomerProfileHandler(CommandHandler[CreateCustomerProfileCommand, 
         self,
         customer_repository: ICustomerRepository,
         mediator: Mediator,
-        unit_of_work: IUnitOfWork,
     ):
         self.customer_repository = customer_repository
         self.mediator = mediator
-        self.unit_of_work = unit_of_work
 
     async def handle_async(self, request: CreateCustomerProfileCommand) -> OperationResult[CustomerProfileDto]:
         """Handle profile creation"""
@@ -69,11 +66,8 @@ class CreateCustomerProfileHandler(CommandHandler[CreateCustomerProfileCommand, 
             user_id=request.user_id,
         )
 
-        # Save (this persists the Customer entity with CustomerRegisteredEvent)
+        # Save - events published automatically by repository
         await self.customer_repository.add_async(customer)
-
-        # Register aggregate with Unit of Work for domain event dispatching
-        self.unit_of_work.register_aggregate(customer)
 
         # Record business metrics
         if OTEL_AVAILABLE:

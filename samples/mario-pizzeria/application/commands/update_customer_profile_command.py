@@ -7,7 +7,6 @@ from api.dtos.profile_dtos import CustomerProfileDto
 from domain.repositories import ICustomerRepository
 
 from neuroglia.core import OperationResult
-from neuroglia.data.unit_of_work import IUnitOfWork
 from neuroglia.mediation import Command, CommandHandler
 
 
@@ -25,9 +24,8 @@ class UpdateCustomerProfileCommand(Command[OperationResult[CustomerProfileDto]])
 class UpdateCustomerProfileHandler(CommandHandler[UpdateCustomerProfileCommand, OperationResult[CustomerProfileDto]]):
     """Handler for updating customer profiles"""
 
-    def __init__(self, customer_repository: ICustomerRepository, unit_of_work: IUnitOfWork):
+    def __init__(self, customer_repository: ICustomerRepository):
         self.customer_repository = customer_repository
-        self.unit_of_work = unit_of_work
 
     async def handle_async(self, request: UpdateCustomerProfileCommand) -> OperationResult[CustomerProfileDto]:
         """Handle profile update"""
@@ -54,11 +52,8 @@ class UpdateCustomerProfileHandler(CommandHandler[UpdateCustomerProfileCommand, 
                 return self.bad_request("Email already in use by another customer")
             customer.state.email = request.email
 
-        # Save
+        # Save - events published automatically by repository
         await self.customer_repository.update_async(customer)
-
-        # Register aggregate with Unit of Work for domain event dispatching
-        self.unit_of_work.register_aggregate(customer)
 
         # Get order count for user (TODO: Query order repository for statistics)
 

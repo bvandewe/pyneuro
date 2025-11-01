@@ -7,7 +7,6 @@ from api.dtos import OrderDto, PizzaDto
 from domain.repositories import IOrderRepository
 
 from neuroglia.core import OperationResult
-from neuroglia.data.unit_of_work import IUnitOfWork
 from neuroglia.mediation import Command, CommandHandler
 
 
@@ -22,9 +21,8 @@ class AssignOrderToDeliveryCommand(Command[OperationResult[OrderDto]]):
 class AssignOrderToDeliveryHandler(CommandHandler[AssignOrderToDeliveryCommand, OperationResult[OrderDto]]):
     """Handler for assigning order to delivery"""
 
-    def __init__(self, order_repository: IOrderRepository, unit_of_work: IUnitOfWork):
+    def __init__(self, order_repository: IOrderRepository):
         self.order_repository = order_repository
-        self.unit_of_work = unit_of_work
 
     async def handle_async(self, request: AssignOrderToDeliveryCommand) -> OperationResult[OrderDto]:
         """Handle order assignment to delivery driver"""
@@ -39,11 +37,8 @@ class AssignOrderToDeliveryHandler(CommandHandler[AssignOrderToDeliveryCommand, 
             order.assign_to_delivery(request.delivery_person_id)
             order.mark_out_for_delivery()
 
-            # Save the updated order
+            # Save the updated order - events published automatically by repository
             await self.order_repository.update_async(order)
-
-            # Register aggregate with Unit of Work for domain event dispatching
-            self.unit_of_work.register_aggregate(order)
 
             # Return success with simple DTO
             pizza_dtos = [

@@ -5,7 +5,6 @@ from dataclasses import dataclass
 from domain.repositories import IPizzaRepository
 
 from neuroglia.core import OperationResult
-from neuroglia.data.unit_of_work import IUnitOfWork
 from neuroglia.mediation import Command, CommandHandler
 
 
@@ -19,9 +18,8 @@ class RemovePizzaCommand(Command[OperationResult[bool]]):
 class RemovePizzaCommandHandler(CommandHandler[RemovePizzaCommand, OperationResult[bool]]):
     """Handler for removing a pizza from the menu"""
 
-    def __init__(self, pizza_repository: IPizzaRepository, unit_of_work: IUnitOfWork):
+    def __init__(self, pizza_repository: IPizzaRepository):
         self.pizza_repository = pizza_repository
-        self.unit_of_work = unit_of_work
 
     async def handle_async(self, request: RemovePizzaCommand) -> OperationResult[bool]:
         try:
@@ -30,10 +28,7 @@ class RemovePizzaCommandHandler(CommandHandler[RemovePizzaCommand, OperationResu
             if not pizza:
                 return self.bad_request(f"Pizza with ID '{request.pizza_id}' not found")
 
-            # Register aggregate with Unit of Work for domain event dispatching
-            self.unit_of_work.register_aggregate(pizza)
-
-            # Remove the pizza
+            # Remove the pizza - events published automatically by repository
             await self.pizza_repository.remove_async(request.pizza_id)
 
             return self.ok(True)
