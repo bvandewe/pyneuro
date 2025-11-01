@@ -80,12 +80,12 @@ services:
   # http://localhost:${EVENT_PLAYER_PORT}
   # Shared event visualization and replay service for all samples
   event-player:
-    image: ghcr.io/bvandewe/events-player:v0.3.4
+    image: ghcr.io/bvandewe/events-player:v0.4.0
     runtime: runc
     ports:
       - "${EVENT_PLAYER_PORT:-8085}:8080"
     environment:
-      tag: "v0.3.4"
+      tag: "v0.4.0"
       log_level: INFO
       auth_required: "true"
       auth_jwks_url: http://keycloak:8080/realms/${KEYCLOAK_REALM:-pyneuro}/protocol/openid-connect/certs
