@@ -168,6 +168,10 @@ sample-lab: ## Run Lab Resource Manager sample
 	@echo "🧪 Starting Lab Resource Manager..."
 	cd $(LAB_RESOURCE_MANAGER) && $(POETRY) run $(PYTHON) main.py
 
+sample-simple-ui: ## Run Simple UI sample (standalone, no Docker)
+	@echo "📱 Starting Simple UI..."
+	cd $(SAMPLES_DIR)/simple-ui && $(POETRY) run $(PYTHON) main.py
+
 ##@ Sample Management (using pyneuroctl)
 
 samples-list: ## List all available samples
@@ -182,26 +186,108 @@ samples-stop: ## Stop all running samples
 	@echo "⏹️  Stopping all sample applications..."
 	@$(PYTHON) $(SRC_DIR)/cli/pyneuroctl.py stop --all
 
-mario-start: ## Start Mario's Pizzeria with full observability stack
-	@./mario-docker.sh start
+##@ Shared Infrastructure
 
-mario-stop: ## Stop Mario's Pizzeria and observability stack
-	@./mario-docker.sh stop
+infra-start: ## Start shared infrastructure services (MongoDB, Keycloak, Observability)
+	@echo "🔧 Starting shared infrastructure services..."
+	@echo "🌐 Creating Docker network (if not exists)..."
+	@docker network create pyneuro-net 2>/dev/null || true
+	@docker-compose -f deployment/docker-compose/docker-compose.shared.yml up -d
+	@echo "✅ Shared infrastructure started!"
+	@echo "📊 MongoDB Express: http://localhost:8081"
+	@echo "🔐 Keycloak Admin: http://localhost:8090 (admin/admin)"
+	@echo "🎬 Event Player: http://localhost:8085"
+	@echo "📈 Grafana: http://localhost:3001 (admin/admin)"
+	@echo "📊 Prometheus: http://localhost:9090"
 
-mario-restart: ## Restart Mario's Pizzeria and observability stack
-	@./mario-docker.sh restart
+infra-stop: ## Stop shared infrastructure services
+	@echo "⏹️  Stopping shared infrastructure services..."
+	@docker-compose -f deployment/docker-compose/docker-compose.shared.yml down
 
-mario-status: ## Check Mario's Pizzeria and observability stack status
-	@./mario-docker.sh status
+infra-status: ## Check status of shared infrastructure
+	@echo "📊 Shared Infrastructure Status:"
+	@docker-compose -f deployment/docker-compose/docker-compose.shared.yml ps
 
-mario-logs: ## View logs for Mario's Pizzeria and observability stack
-	@./mario-docker.sh logs
+infra-logs: ## View logs for shared infrastructure
+	@echo "📝 Shared Infrastructure Logs:"
+	@docker-compose -f deployment/docker-compose/docker-compose.shared.yml logs -f
 
-mario-clean: ## Stop and clean Mario's Pizzeria environment (destructive)
-	@./mario-docker.sh clean
+infra-clean: ## Stop and clean shared infrastructure (removes volumes)
+	@echo "🧹 Cleaning shared infrastructure..."
+	@docker-compose -f deployment/docker-compose/docker-compose.shared.yml down -v
+	@echo "✅ Shared infrastructure cleaned!"
+
+##@ Mario's Pizzeria
+
+mario-start: ## Start Mario's Pizzeria with shared infrastructure
+	@./mario-pizzeria start
+
+mario-stop: ## Stop Mario's Pizzeria (keeps shared infrastructure running)
+	@./mario-pizzeria stop
+
+mario-restart: ## Restart Mario's Pizzeria
+	@./mario-pizzeria restart
+
+mario-status: ## Check Mario's Pizzeria status
+	@./mario-pizzeria status
+
+mario-logs: ## View logs for Mario's Pizzeria
+	@./mario-pizzeria logs
+
+mario-clean: ## Stop Mario's Pizzeria and clean volumes
+	@./mario-pizzeria clean
+
+mario-build: ## Rebuild Mario's Pizzeria Docker image
+	@./mario-pizzeria build
+
+##@ Simple UI Sample
+
+simple-ui-start: ## Start Simple UI with shared infrastructure
+	@./simple-ui start
+
+simple-ui-stop: ## Stop Simple UI (keeps shared infrastructure running)
+	@./simple-ui stop
+
+simple-ui-restart: ## Restart Simple UI
+	@./simple-ui restart
+
+simple-ui-status: ## Check Simple UI status
+	@./simple-ui status
+
+simple-ui-logs: ## View logs for Simple UI
+	@./simple-ui logs
+
+simple-ui-clean: ## Stop Simple UI and clean volumes
+	@./simple-ui clean
+
+simple-ui-build: ## Rebuild Simple UI Docker image
+	@./simple-ui build
+
+##@ Multi-Sample Commands
+
+all-samples-start: ## Start all samples with shared infrastructure
+	@echo "🚀 Starting all samples..."
+	@$(MAKE) infra-start
+	@$(MAKE) mario-start
+	@$(MAKE) simple-ui-start
+	@echo "✅ All samples started!"
+
+all-samples-stop: ## Stop all samples (keeps shared infrastructure)
+	@echo "⏹️  Stopping all samples..."
+	@$(MAKE) mario-stop
+	@$(MAKE) simple-ui-stop
+
+all-samples-clean: ## Stop all samples and clean everything
+	@echo "🧹 Cleaning all samples and infrastructure..."
+	@$(MAKE) mario-clean
+	@$(MAKE) simple-ui-clean
+	@$(MAKE) infra-clean
+	@echo "✅ All samples and infrastructure cleaned!"
+
+##@ Legacy Commands (mario-docker.sh compatibility)
 
 mario-reset: ## Complete reset of Mario's Pizzeria environment (destructive)
-	@./mario-docker.sh reset
+	@./mario-pizzeria reset
 
 mario-open: ## Open key Mario's Pizzeria services in browser
 	@echo "🌐 Opening Mario's Pizzeria services in browser..."
@@ -215,13 +301,16 @@ mario-test-data: ## Generate test data for Mario's Pizzeria observability dashbo
 	@$(POETRY) run python samples/mario-pizzeria/scripts/generate_test_data.py --count 10
 
 mario-clean-orders: ## Remove all order data from Mario's Pizzeria MongoDB
-	@./mario-docker.sh clean-orders
+	@echo "🧹 Cleaning orders from MongoDB..."
+	@docker exec -it $$(docker ps -qf "name=mongodb") mongosh --eval "use mario_pizzeria; db.orders.deleteMany({});" -u root -p neuroglia123 --authenticationDatabase admin
 
 mario-create-menu: ## Create default pizza menu in Mario's Pizzeria
-	@./mario-docker.sh create-menu
+	@echo "🍕 Creating default menu..."
+	@$(POETRY) run python samples/mario-pizzeria/scripts/create_menu.py
 
 mario-remove-validation: ## Remove MongoDB validation schemas (use app validation only)
-	@./mario-docker.sh remove-validation
+	@echo "🔧 Removing MongoDB validation..."
+	@docker exec -it $$(docker ps -qf "name=mongodb") mongosh --eval "use mario_pizzeria; db.runCommand({collMod: 'orders', validator: {}, validationLevel: 'off'});" -u root -p neuroglia123 --authenticationDatabase admin
 
 openbank-start: ## Start OpenBank using CLI
 	@$(PYTHON) $(SRC_DIR)/cli/pyneuroctl.py start openbank
