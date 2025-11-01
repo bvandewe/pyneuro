@@ -9,7 +9,7 @@ In this tutorial, you'll implement data persistence using the Repository pattern
 - The Repository pattern and why it matters
 - MongoDB integration with Motor (async driver)
 - Implementing repositories for aggregates
-- Transaction management with UnitOfWork
+- Data persistence with repository pattern and automatic event publishing
 - Testing data access layers
 
 ## 💾 Understanding the Repository Pattern
@@ -316,11 +316,11 @@ class AppSettings(BaseSettings):
 app_settings = AppSettings()
 ```
 
-## 🔄 Transaction Management with UnitOfWork
+## 🔄 Transaction Management with Repository Pattern
 
-The UnitOfWork pattern manages **transactions and event publishing**.
+The **Command Handler serves as the transaction boundary**, and the **Repository** coordinates persistence with automatic event publishing.
 
-### How UnitOfWork Works
+### How Repository-Based Transactions Work
 
 ```python
 # In command handler
@@ -328,42 +328,44 @@ async def handle_async(self, command: PlaceOrderCommand):
     # 1️⃣ Create order (in memory)
     order = Order(customer_id=command.customer_id)
     order.add_order_item(item)
-    order.confirm_order()  # Raises OrderConfirmedEvent
+    order.confirm_order()  # Raises OrderConfirmedEvent internally
 
-    # 2️⃣ Register with UnitOfWork
-    await self.unit_of_work.register(order)
+    # 2️⃣ Save changes via repository (transaction boundary)
+    await self.order_repository.add_async(order)
 
-    # 3️⃣ Save changes (transaction)
-    await self.unit_of_work.save_changes_async()
-
-    # UnitOfWork does:
-    # - Saves order to repository
+    # Repository does:
+    # - Saves order state to database
     # - Gets uncommitted events from order
     # - Publishes events to event bus
-    # - Clears uncommitted events
-    # - All in a single transaction!
+    # - Clears uncommitted events from order
+    # - All in a transactional scope!
 ```
 
 **Benefits:**
 
-- **Atomic**: All changes succeed or fail together
-- **Event consistency**: Events only published if save succeeds
+- **Atomic**: State changes and event publishing succeed or fail together
+- **Event consistency**: Events only published if database save succeeds
 - **Automatic**: No manual event publishing needed
+- **Simple**: Command handler IS the transaction boundary
 
-### Configure UnitOfWork
+### Configure Repositories
 
 In `main.py`:
 
 ```python
-from neuroglia.data.unit_of_work import UnitOfWork
-from neuroglia.mediation.behaviors import DomainEventDispatchingMiddleware
+from neuroglia.data.infrastructure.mongo import MongoRepository
+from domain.repositories import IOrderRepository
 
-# Configure UnitOfWork
-UnitOfWork.configure(builder)
+# Configure repositories with automatic event publishing
+services.add_scoped(IOrderRepository, MongoOrderRepository)
 
-# Add middleware for automatic event publishing
-DomainEventDispatchingMiddleware.configure(builder)
+# Repository automatically handles:
+# - State persistence
+# - Event publishing
+# - Transaction coordination
 ```
+
+````
 
 ## 🧪 Testing Repositories
 
@@ -406,7 +408,7 @@ class InMemoryOrderRepository(IOrderRepository):
             o for o in self._orders.values()
             if o.state.status == order_status
         ]
-```
+````
 
 Use in tests:
 
@@ -519,7 +521,7 @@ poetry run pytest tests/integration/ -m integration -v
 2. **Clean Architecture**: Domain doesn't depend on infrastructure
 3. **Motor**: Async MongoDB driver for Python
 4. **MotorRepository**: Framework base class with CRUD operations
-5. **UnitOfWork**: Manages transactions and event publishing
+5. **Repository Pattern**: Handles persistence and automatic event publishing
 6. **Testing**: Use in-memory repos for unit tests, real DB for integration tests
 
 ## 🚀 What's Next?

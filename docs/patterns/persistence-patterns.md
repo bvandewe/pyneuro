@@ -1,7 +1,5 @@
 # 🏛️ Persistence Patterns in Neuroglia
 
-> **🚧 Work in Progress**: This documentation is being updated to include beginner-friendly explanations with What & Why sections, Common Mistakes, and When NOT to Use guidance. The content below is accurate but will be enhanced soon.
-
 This guide explains the **persistence pattern alternatives** available in the Neuroglia framework and their corresponding **complexity levels**, helping you choose the right approach for your domain requirements.
 
 ## 🎯 Pattern Overview
@@ -14,7 +12,9 @@ Neuroglia supports **three distinct persistence patterns**, each with different 
 | **[Aggregate Root + Event Sourcing](#️-pattern-2-aggregate-root--event-sourcing)**    | ⭐⭐⭐⭐⭐ | Complex domains, audit requirements   | Event store    |
 | **[Hybrid Approach](#-pattern-3-hybrid-approach)**                                    | ⭐⭐⭐☆☆   | Mixed requirements, gradual migration | Both           |
 
-All patterns use the **same infrastructure** (Unit of Work, CQRS, Domain Events) but with different complexity levels and persistence strategies.
+All patterns use the **same infrastructure** (CQRS, Domain Events, Repository Pattern) but with different complexity levels and persistence strategies.
+
+> **📝 Note**: This documentation supersedes the deprecated [Unit of Work pattern](unit-of-work.md). The framework now uses **repository-based event publishing** where the command handler serves as the transaction boundary.
 
 ## 📊 Architecture Decision Matrix
 
@@ -168,9 +168,18 @@ class ProductRepository:
 
 # 4. Simple Command Handler
 class UpdateProductPriceHandler(CommandHandler[UpdateProductPriceCommand, OperationResult]):
-    def __init__(self, product_repository: ProductRepository, unit_of_work: IUnitOfWork):
+    """
+    Command Handler as Transaction Boundary
+
+    The handler coordinates the transaction:
+    1. Loads entity from repository
+    2. Executes business logic (raises domain events)
+    3. Saves entity via repository
+    4. Repository automatically publishes pending domain events
+    """
+
+    def __init__(self, product_repository: ProductRepository):
         self.product_repository = product_repository
-        self.unit_of_work = unit_of_work
 
     async def handle_async(self, command: UpdateProductPriceCommand) -> OperationResult:
         # Load entity
@@ -181,14 +190,143 @@ class UpdateProductPriceHandler(CommandHandler[UpdateProductPriceCommand, Operat
         # Business logic with events
         product.update_price(command.new_price)  # Raises ProductPriceUpdatedEvent
 
-        # State persistence
+        # State persistence + automatic event publishing
         await self.product_repository.save_async(product)
-
-        # Register for automatic event dispatching
-        self.unit_of_work.register_aggregate(product)
+        # Repository does:
+        # 1. Saves product state to database
+        # 2. Gets uncommitted events from product
+        # 3. Publishes each event to event bus
+        # 4. Clears uncommitted events from entity
 
         return self.ok({"product_id": product.id, "new_price": product.price})
 ```
+
+### Understanding the Transaction Boundary
+
+````
+
+### Understanding the Transaction Boundary
+
+**Key Concept**: The **Command Handler IS the transaction boundary**
+
+```python
+async def handle_async(self, command: UpdateProductPriceCommand) -> OperationResult:
+    # ┌─────────────────────────────────────────────┐
+    # │  TRANSACTION SCOPE (Command Handler)       │
+    # │                                             │
+    # │  1️⃣ Load entity                            │
+    product = await self.repository.get_by_id_async(command.product_id)
+    # │                                             │
+    # │  2️⃣ Execute domain logic (raises events)   │
+    product.update_price(command.new_price)
+    # │     - Domain event stored in entity        │
+    # │     - NOT yet published                    │
+    # │                                             │
+    # │  3️⃣ Save changes (transaction commit)      │
+    await self.repository.save_async(product)
+    # │     ✅ State persisted                      │
+    # │     ✅ Events published                     │
+    # │     ✅ Events cleared from entity           │
+    # │                                             │
+    # └─────────────────────────────────────────────┘
+
+    return self.ok(result)
+````
+
+### Repository Responsibilities
+
+The repository handles **both persistence and event publishing**:
+
+```python
+
+```
+
+### Repository Responsibilities
+
+````
+
+### Repository Responsibilities
+
+The repository handles **both persistence and event publishing**:
+
+```python
+class MongoProductRepository(ProductRepository):
+    async def save_async(self, product: Product) -> None:
+        """
+        Repository is responsible for:
+        1. Persisting entity state
+        2. Publishing pending domain events
+        3. Clearing events after publishing
+        """
+        # 1. Save state to database
+        await self.db_context.products.replace_one(
+            {"_id": product.id},
+            {
+                "_id": product.id,
+                "name": product.name,
+                "price": float(product.price),
+                "is_active": product.is_active,
+                "updated_at": datetime.utcnow()
+            },
+            upsert=True
+        )
+
+        # 2. Get pending domain events from entity
+        uncommitted_events = product.get_uncommitted_events()
+
+        # 3. Publish each event to event bus
+        for event in uncommitted_events:
+            await self.event_bus.publish_async(event)
+
+                # 4. Clear events from entity
+        product.clear_uncommitted_events()
+````
+
+### Domain Events vs Repository vs Command Handler
+
+**Understanding the Roles**:
+
+| Component           | Responsibility                                      | When it Acts                     |
+| ------------------- | --------------------------------------------------- | -------------------------------- |
+| **Domain Entity**   | Raises events when state changes                    | During business logic execution  |
+| **Domain Event**    | Represents a business fact that happened            | Created by entity, queued        |
+| **Event Handler**   | Reacts to domain events (side effects, integration) | After repository publishes event |
+| **Repository**      | Persists state + publishes pending events           | When save_async() is called      |
+| **Command Handler** | Transaction boundary, coordinates the workflow      | Entire handle_async() scope      |
+
+**Example Flow**:
+
+```python
+# Command Handler (Transaction Boundary)
+class UpdateProductPriceHandler(CommandHandler):
+    async def handle_async(self, command):
+        # 1️⃣ LOAD PHASE
+        product = await self.repository.get_by_id_async(command.product_id)
+
+        # 2️⃣ BUSINESS LOGIC PHASE
+        product.update_price(command.new_price)
+        # ↳ Domain entity raises ProductPriceUpdatedEvent
+        # ↳ Event stored in entity._uncommitted_events list
+        # ↳ Event NOT yet published
+
+        # 3️⃣ PERSISTENCE PHASE
+        await self.repository.save_async(product)
+        # ↳ Repository saves product state to database
+        # ↳ Repository gets uncommitted events from product
+        # ↳ Repository publishes events to event bus
+        # ↳ Event handlers receive and process events
+        # ↳ Repository clears uncommitted events from product
+
+        # 4️⃣ RETURN PHASE
+        return self.ok(result)
+```
+
+**Key Insight**: Events are raised **during business logic** but published **during persistence**. This ensures:
+
+- ✅ Events only published if database save succeeds
+- ✅ Transactional consistency between state and events
+- ✅ Event handlers see committed state
+- ✅ No manual event publishing needed
 
 ### Database Schema Example (MongoDB)
 
@@ -480,9 +618,15 @@ class EventSourcedOrderRepository:
 
 # 5. Complex Command Handler
 class PlaceOrderHandler(CommandHandler[PlaceOrderCommand, OperationResult[OrderDto]]):
-    def __init__(self, order_repository: EventSourcedOrderRepository, unit_of_work: IUnitOfWork):
+    """
+    Command Handler as Transaction Boundary (Event Sourcing)
+
+    Even with event sourcing, the handler remains the transaction boundary.
+    The repository handles event persistence and publishing.
+    """
+
+    def __init__(self, order_repository: EventSourcedOrderRepository):
         self.order_repository = order_repository
-        self.unit_of_work = unit_of_work
 
     async def handle_async(self, command: PlaceOrderCommand) -> OperationResult[OrderDto]:
         try:
@@ -491,12 +635,15 @@ class PlaceOrderHandler(CommandHandler[PlaceOrderCommand, OperationResult[OrderD
 
             # Rich business logic with validation
             order.place_order(command.customer_id, command.items)
+            # ↳ Raises OrderPlacedEvent
+            # ↳ Event stored in aggregate._uncommitted_events
 
             # Event sourcing persistence
             await self.order_repository.save_async(order)
-
-            # Register for event dispatching
-            self.unit_of_work.register_aggregate(order)
+            # ↳ Repository appends new events to event store
+            # ↳ Repository publishes events to event bus
+            # ↳ Repository marks events as committed
+            # ↳ Event handlers process events asynchronously
 
             # Return rich result
             return self.created(OrderDto.from_aggregate(order))
@@ -506,6 +653,8 @@ class PlaceOrderHandler(CommandHandler[PlaceOrderCommand, OperationResult[OrderD
         except Exception as ex:
             return self.internal_server_error(f"Failed to place order: {str(ex)}")
 ```
+
+````
 
 ### Event Store Schema Example
 
@@ -543,7 +692,7 @@ db.order_summary.aggregate([
     total_amount: {$sum: "$data.total_amount"}
   }}
 ])
-```
+````
 
 ### Benefits & Trade-offs
 

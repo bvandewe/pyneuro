@@ -124,7 +124,6 @@ from domain.entities import Customer, Order, OrderItem, PizzaSize
 from domain.repositories import IOrderRepository, ICustomerRepository
 from neuroglia.mapping import Mapper
 from neuroglia.mediation import CommandHandler
-from neuroglia.data.unit_of_work import IUnitOfWork
 from uuid import uuid4
 from decimal import Decimal
 
@@ -140,6 +139,8 @@ class PlaceOrderCommandHandler(
     - Coordinate domain operations
     - Persist changes via repositories
     - Return result
+
+    The handler IS the transaction boundary.
     """
 
     def __init__(
@@ -147,7 +148,6 @@ class PlaceOrderCommandHandler(
         order_repository: IOrderRepository,
         customer_repository: ICustomerRepository,
         mapper: Mapper,
-        unit_of_work: IUnitOfWork,
     ):
         """
         Dependencies injected by framework's DI container.
@@ -157,7 +157,6 @@ class PlaceOrderCommandHandler(
         self.order_repository = order_repository
         self.customer_repository = customer_repository
         self.mapper = mapper
-        self.unit_of_work = unit_of_work
 
     async def handle_async(
         self,
@@ -200,12 +199,16 @@ class PlaceOrderCommandHandler(
             if order.pizza_count == 0:
                 return self.bad_request("Order must contain at least one pizza")
 
-            # 5️⃣ Confirm order (triggers domain event)
+            # 5️⃣ Confirm order (raises domain event internally)
             order.confirm_order()
 
-            # 6️⃣ Persist changes
-            await self.unit_of_work.register(order)
-            await self.unit_of_work.save_changes_async()
+            # 6️⃣ Persist changes - repository publishes events automatically
+            await self.order_repository.add_async(order)
+            # Repository does:
+            # - Saves order state to database
+            # - Gets uncommitted events from order
+            # - Publishes events to event bus
+            # - Clears events from order
 
             # 7️⃣ Map to DTO and return success
             order_dto = self.mapper.map(order, OrderDto)
@@ -249,6 +252,7 @@ class PlaceOrderCommandHandler(
             "supreme": Decimal("17.99"),
         }
         return prices.get(pizza_name.lower(), Decimal("12.99"))
+
 ```
 
 **Key points:**
