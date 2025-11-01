@@ -20,6 +20,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- **Simplified Mario-Pizzeria Command Handlers**: Removed UnitOfWork pattern in favor of repository-based event publishing
+
+  - Removed `IUnitOfWork` dependency from all 10 command handlers
+  - Handlers no longer need to manually register aggregates for event publishing
+  - Simplified handler constructors by removing `unit_of_work` parameter
+  - Events are now published automatically by repositories after successful persistence
+  - Affected handlers: PlaceOrderCommand, AddPizzaCommand, UpdateCustomerProfileCommand, StartCookingCommand, UpdatePizzaCommand, CreateCustomerProfileCommand, AssignOrderToDeliveryCommand, RemovePizzaCommand, CompleteOrderCommand, UpdateOrderStatusCommand
+  - Reduced boilerplate code and eliminated possibility of forgetting to register aggregates
+
 - **Simple UI Authentication**: Migrated to pure JWT-only authentication (stateless)
   - Removed redundant server-side session cookies and SessionMiddleware
   - All authentication now handled via JWT tokens in Authorization header
