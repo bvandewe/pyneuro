@@ -36,7 +36,6 @@ from integration.repositories import (
 )
 
 from neuroglia.data.infrastructure.mongo import MotorRepository
-from neuroglia.data.unit_of_work import UnitOfWork
 from neuroglia.eventing.cloud_events.infrastructure import (
     CloudEventIngestor,
     CloudEventPublisher,
@@ -44,9 +43,6 @@ from neuroglia.eventing.cloud_events.infrastructure import (
 from neuroglia.hosting.web import SubAppConfig, WebApplicationBuilder
 from neuroglia.mapping import Mapper
 from neuroglia.mediation import Mediator
-from neuroglia.mediation.behaviors.domain_event_dispatching_middleware import (
-    DomainEventDispatchingMiddleware,
-)
 from neuroglia.observability import Observability
 from neuroglia.serialization.json import JsonSerializer
 
@@ -78,10 +74,6 @@ def create_pizzeria_app(data_dir: Optional[str] = None, port: int = 8080):
     Mediator.configure(builder, ["application.commands", "application.queries", "application.events"])
     Mapper.configure(builder, ["application.mapping", "api.dtos", "domain.entities"])
     JsonSerializer.configure(builder, ["domain.entities.enums", "domain.entities"])
-
-    # Optional: configure UnitOfWork and middleware (as we use AggregateRoot)
-    UnitOfWork.configure(builder)
-    DomainEventDispatchingMiddleware.configure(builder)
 
     # Optional: configure CloudEvent emission and consumption
     CloudEventPublisher.configure(builder)
