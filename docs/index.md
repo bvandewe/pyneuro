@@ -182,7 +182,7 @@ src/
 
 ```bash
 # Install the framework
-pip install neuroglia
+pip install neuroglia-python
 
 # Create your first app
 pyneuroctl new myapp --template minimal
