@@ -4,6 +4,9 @@ from typing import Optional
 
 from pydantic import BaseModel, EmailStr, Field
 
+from .notification_dtos import CustomerNotificationDto
+from .order_dtos import OrderDto
+
 
 class CustomerProfileDto(BaseModel):
     """DTO for customer profile information"""
@@ -18,6 +21,11 @@ class CustomerProfileDto(BaseModel):
     # Order statistics (read-only)
     total_orders: int = 0
     favorite_pizza: Optional[str] = None
+
+    # Active orders and notifications (new fields)
+    active_orders: list[OrderDto] = Field(default_factory=list)
+    notifications: list[CustomerNotificationDto] = Field(default_factory=list)
+    unread_notification_count: int = 0
 
     class Config:
         from_attributes = True

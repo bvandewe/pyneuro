@@ -1,8 +1,11 @@
 """Query for retrieving customer profile"""
 
 from dataclasses import dataclass
+from datetime import datetime, timezone
 from typing import Optional
 
+from api.dtos.notification_dtos import CustomerNotificationDto
+from api.dtos.order_dtos import OrderDto, PizzaDto
 from api.dtos.profile_dtos import CustomerProfileDto
 from domain.entities import Customer
 from domain.repositories import ICustomerRepository, IOrderRepository
@@ -75,6 +78,61 @@ class GetCustomerProfileHandler(QueryHandler[GetCustomerProfileQuery, OperationR
             if pizza_counts:
                 favorite_pizza = max(pizza_counts, key=lambda name: pizza_counts[name])
 
+        # Get active orders (orders that are not delivered or cancelled)
+        active_orders = [order for order in customer_orders if hasattr(order.state, "status") and order.state.status not in ["delivered", "cancelled"]]
+
+        # Map active orders to DTOs
+        active_order_dtos = []
+        for order in active_orders:
+            # Map pizzas in the order
+            pizza_dtos = []
+            for item in order.state.order_items:
+                pizza_dto = PizzaDto(
+                    name=item.name,
+                    size=item.size.value if hasattr(item.size, "value") else str(item.size),
+                    total_price=item.total_price,  # Use calculated total price
+                    toppings=list(item.toppings) if item.toppings else [],
+                )
+                pizza_dtos.append(pizza_dto)
+
+            order_dto = OrderDto(
+                id=order.id(),
+                customer_name=customer.state.name or "",
+                customer_phone=customer.state.phone or "",
+                customer_address=customer.state.address or "",
+                customer_email=customer.state.email or "",
+                pizzas=pizza_dtos,
+                total_amount=order.total_amount,  # Use calculated total amount
+                pizza_count=len(pizza_dtos),  # Count of pizzas in order
+                status=order.state.status.value if hasattr(order.state.status, "value") else str(order.state.status),
+                order_time=order.state.order_time,
+                payment_method="unknown",  # OrderState doesn't store payment method
+                notes=getattr(order.state, "notes", None) or "",
+            )
+            active_order_dtos.append(order_dto)
+
+        # Get customer notifications (placeholder for now - will need notification repository)
+        notification_dtos = []
+        unread_notification_count = 0
+
+        # TODO: Implement actual notification retrieval when notification repository is available
+        # For now, add sample notifications if customer has active orders
+        if active_order_dtos:
+            sample_notification = CustomerNotificationDto(
+                id="sample-notification-1",
+                customer_id=customer.id(),
+                notification_type="order_cooking_started",
+                title="👨‍🍳 Cooking Started",
+                message="Your order is now being prepared!",
+                order_id=active_order_dtos[0].id,
+                status="unread",
+                created_at=datetime.now(timezone.utc),
+                read_at=None,
+                dismissed_at=None,
+            )
+            notification_dtos.append(sample_notification)
+            unread_notification_count = 1
+
         # Map to DTO (convert empty strings to None for validation)
         user_id = customer.state.user_id or ""
         profile_dto = CustomerProfileDto(
@@ -86,6 +144,9 @@ class GetCustomerProfileHandler(QueryHandler[GetCustomerProfileQuery, OperationR
             address=customer.state.address if customer.state.address else None,
             total_orders=len(customer_orders),
             favorite_pizza=favorite_pizza,
+            active_orders=active_order_dtos,
+            notifications=notification_dtos,
+            unread_notification_count=unread_notification_count,
         )
 
         return self.ok(profile_dto)

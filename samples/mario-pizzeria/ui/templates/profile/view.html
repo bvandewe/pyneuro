@@ -100,6 +100,53 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Active Orders Section -->
+                {% if profile and profile.active_orders %}
+                <hr class="my-4">
+                <h5 class="mb-3">
+                    <i class="bi bi-clock-history"></i> Current Orders
+                    <span class="badge bg-primary rounded-pill ms-2">{{ profile.active_orders|length }}</span>
+                </h5>
+                {% for order in profile.active_orders %}
+                <div class="card border-primary mb-3">
+                    <div class="card-header bg-primary bg-opacity-10 d-flex justify-content-between align-items-center">
+                        <h6 class="mb-0">
+                            <i class="bi bi-receipt"></i> Order #{{ order.id }}
+                        </h6>
+                        <span class="badge bg-{% if order.status == 'confirmed' %}warning{% elif order.status == 'cooking' %}info{% elif order.status == 'ready' %}success{% else %}secondary{% endif %}">
+                            {{ order.status|title }}
+                        </span>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <p class="mb-2"><strong>Pizzas:</strong></p>
+                                <ul class="list-unstyled ms-3">
+                                    {% for pizza in order.pizzas %}
+                                    <li class="mb-1">
+                                        <i class="bi bi-check2"></i> {{ pizza.name }} ({{ pizza.size }})
+                                        {% if pizza.toppings %}
+                                        <br><small class="text-muted ms-3">{{ pizza.toppings|join(', ') }}</small>
+                                        {% endif %}
+                                    </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                            <div class="col-md-4 text-end">
+                                <p class="mb-1">
+                                    <strong>Total: ${{ order.total_amount }}</strong>
+                                </p>
+                                <small class="text-muted">
+                                    Ordered: {{ order.order_time.strftime('%m/%d/%Y %I:%M %p') if order.order_time }}
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+                {% endif %}
+
                 {% else %}
                 <div class="alert alert-info">
                     <i class="bi bi-info-circle"></i> No profile information available.
@@ -108,6 +155,60 @@
                 {% endif %}
             </div>
         </div>
+
+        <!-- Notifications Section -->
+        {% if notifications %}
+        <div class="card shadow mt-4">
+            <div class="card-header bg-warning text-dark d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">
+                    <i class="bi bi-bell"></i> Notifications
+                    {% if unread_count > 0 %}
+                    <span class="badge bg-danger rounded-pill ms-2">{{ unread_count }}</span>
+                    {% endif %}
+                </h5>
+            </div>
+            <div class="card-body p-0">
+                {% for notification in notifications %}
+                <div class="notification-item p-3 border-bottom {% if notification.status == 'unread' %}bg-light{% endif %}"
+                     data-notification-id="{{ notification.id }}">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div class="notification-content flex-grow-1">
+                            <h6 class="mb-1 fw-bold">
+                                {{ notification.title }}
+                                {% if notification.status == 'unread' %}
+                                <span class="badge bg-primary rounded-pill ms-2" style="font-size: 0.75em;">New</span>
+                                {% endif %}
+                            </h6>
+                            <p class="mb-2 text-muted">{{ notification.message }}</p>
+                            {% if notification.order_id %}
+                            <small class="text-muted">
+                                <i class="bi bi-box"></i> Order: {{ notification.order_id }}
+                            </small>
+                            {% endif %}
+                            <div class="mt-1">
+                                <small class="text-muted">
+                                    <i class="bi bi-clock"></i>
+                                    {% if notification.created_at %}
+                                        {{ notification.created_at.strftime('%B %d, %Y at %I:%M %p') }}
+                                    {% endif %}
+                                </small>
+                            </div>
+                        </div>
+                        {% if notification.is_dismissible() %}
+                        <div class="notification-actions ms-3">
+                            <form method="post" action="/notifications/{{ notification.id }}/dismiss" style="display: inline;">
+                                <button type="submit" class="btn btn-sm btn-outline-secondary" title="Dismiss notification">
+                                    <i class="bi bi-x"></i>
+                                </button>
+                            </form>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
 
         <div class="mt-4 d-flex gap-2 justify-content-center">
             <a href="/orders" class="btn btn-outline-primary">

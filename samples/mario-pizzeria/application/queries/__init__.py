@@ -6,6 +6,10 @@ from .get_active_kitchen_orders_query import (
     GetActiveKitchenOrdersQuery,
 )
 from .get_active_orders_query import GetActiveOrdersQuery, GetActiveOrdersQueryHandler
+from .get_customer_notifications_query import (
+    GetCustomerNotificationsHandler,
+    GetCustomerNotificationsQuery,
+)
 from .get_customer_profile_query import (
     GetCustomerProfileHandler,
     GetCustomerProfileQuery,
@@ -97,4 +101,6 @@ __all__ = [
     "GetStaffPerformanceHandler",
     "GetTopCustomersQuery",
     "GetTopCustomersHandler",
+    "GetCustomerNotificationsQuery",
+    "GetCustomerNotificationsHandler",
 ]

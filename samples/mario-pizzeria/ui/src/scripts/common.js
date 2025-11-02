@@ -57,14 +57,56 @@ function createToastContainer() {
   return container;
 }
 
+// Handle notification dismissal
+export function initializeNotifications() {
+  // Add smooth animation when dismissing notifications
+  document.querySelectorAll('.notification-item form').forEach(form => {
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      const notificationItem = this.closest('.notification-item');
+
+      // Add dismissing animation
+      notificationItem.style.opacity = '0.5';
+      notificationItem.style.transform = 'translateX(100%)';
+
+      // Submit form after animation
+      setTimeout(() => {
+        this.submit();
+      }, 300);
+    });
+  });
+
+  // Mark notifications as read when viewed
+  markNotificationsAsRead();
+}
+
+// Mark unread notifications as read when the page is viewed
+function markNotificationsAsRead() {
+  const unreadNotifications = document.querySelectorAll('.notification-item.bg-light');
+
+  // Simple visual feedback - remove the "new" styling after a delay
+  setTimeout(() => {
+    unreadNotifications.forEach(notification => {
+      notification.classList.remove('bg-light');
+      const newBadge = notification.querySelector('.badge.bg-primary');
+      if (newBadge) {
+        newBadge.remove();
+      }
+    });
+  }, 3000); // After 3 seconds viewing
+}
+
 // Initialize common functionalities
 document.addEventListener('DOMContentLoaded', () => {
   console.log('Common JS loaded');
+  initializeNotifications();
 });
 
 // Make functions available globally
 window.appUtils = {
   formatDateTime,
   truncateText,
-  showToast
+  showToast,
+  initializeNotifications
 };

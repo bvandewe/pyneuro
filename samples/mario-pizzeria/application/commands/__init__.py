@@ -11,6 +11,10 @@ from .create_customer_profile_command import (
     CreateCustomerProfileCommand,
     CreateCustomerProfileHandler,
 )
+from .dismiss_customer_notification_command import (
+    DismissCustomerNotificationCommand,
+    DismissCustomerNotificationHandler,
+)
 from .place_order_command import PlaceOrderCommand, PlaceOrderCommandHandler
 from .remove_pizza_command import RemovePizzaCommand, RemovePizzaCommandHandler
 from .start_cooking_command import StartCookingCommand, StartCookingCommandHandler
@@ -46,4 +50,6 @@ __all__ = [
     "UpdatePizzaCommandHandler",
     "RemovePizzaCommand",
     "RemovePizzaCommandHandler",
+    "DismissCustomerNotificationCommand",
+    "DismissCustomerNotificationHandler",
 ]

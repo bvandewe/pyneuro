@@ -7,6 +7,37 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.6.2] - 2025-11-02
+
+### Added
+
+- **Sample Application: Mario's Pizzeria - Customer Notifications Feature**
+  - Added complete customer notification system with order status updates
+  - Domain: `CustomerNotification` entity with notification types (order_cooking_started, order_ready, order_delivered, order_cancelled, general)
+  - Domain: Notification status management (unread, read, dismissed) with event sourcing
+  - Domain events: `CustomerNotificationCreatedEvent`, `CustomerNotificationReadEvent`, `CustomerNotificationDismissedEvent`
+  - Repository: `ICustomerNotificationRepository` interface and `InMemoryCustomerNotificationRepository` implementation
+  - Application: `GetCustomerNotificationsQuery` with pagination support
+  - Application: `DismissCustomerNotificationCommand` for dismissing notifications
+  - Application: `NotificationService` for in-memory notification tracking
+  - API: `/api/notifications` endpoints for retrieving and dismissing notifications
+  - UI: Notifications page (`/notifications`) with Bootstrap 5 styling
+  - UI: Notifications dropdown in navigation bar with unread count badge
+  - UI: Profile page integration showing active orders and notifications
+  - Enhanced order event handlers to create notifications on order status changes
+  - Customer entity: Active orders tracking (`add_active_order`, `remove_active_order`, `has_active_orders`)
+  - UI: Smooth animations for notification dismissal and unread badges
+  - Unit tests: Comprehensive test coverage for notification entity and repositories
+
+### Changed
+
+- **Dependencies: Updated all dependencies to latest versions**
+  - Core: fastapi 0.115.5, pydantic-settings 2.6.1, typing-extensions 4.12.2, uvicorn 0.32.1, httpx 0.27.2, grpcio 1.68.1
+  - Auth: pyjwt 2.10.1, python-multipart 0.0.17, itsdangerous 2.2.0, jinja2 3.1.4
+  - Optional: pymongo 4.10.1, motor 3.6.0, esdbclient 1.1.1, redis 5.2.0, pydantic 2.10.3, email-validator 2.2.0
+  - Dev: pytest 8.3.3, pytest-asyncio 0.24.0, mypy 1.13.0, autopep8 2.3.1, coverage 7.6.9, flake8 7.1.1, isort 5.13.2, pre-commit 4.0.1
+  - Docs: mkdocs-material 9.5.48
+
 ## [0.6.1] - 2025-11-02
 
 ### Changed
