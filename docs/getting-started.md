@@ -328,14 +328,9 @@ from api.orders_controller import OrdersController
 # Create application builder
 builder = WebApplicationBuilder()
 
-# Register handlers
-services = builder.services
-services.add_singleton(CreatePizzaOrderHandler)
-services.add_singleton(GetPizzaOrderHandler)
-
-# Add mediator and controllers
-services.add_mediator()
-services.add_controllers([OrdersController])
+# Configure core services
+Mediator.configure(builder, ["application.handlers"])
+Mapper.configure(builder, ["application.dtos", "api.dtos", "domain.entities"])
 
 # Build and configure app
 app = builder.build()
@@ -438,7 +433,7 @@ Address already in use
 No handler registered for command
 ```
 
-**A:** Make sure handlers are registered with `services.add_singleton(YourHandler)` before calling `services.add_mediator()`
+**A:** Ensure you're using `Mediator.configure(builder, ["application.handlers"])` to auto-discover handlers in the specified modules.
 
 **Q: Module import errors in project**
 
@@ -463,18 +458,119 @@ ImportError: attempted relative import with no known parent package
 5. **Controllers** are thin - they delegate to the application layer
 
 !!! success "You're Ready!"
-You now understand the fundamentals of Neuroglia. Continue with the [Mario's Pizzeria tutorial](guides/mario-pizzeria-tutorial.md) to build a complete production-ready application!
+You now understand the fundamentals of Neuroglia. Ready to explore more? Check out these complete sample applications!
 
-## 💡 Key Takeaways
+## 🎯 Explore Sample Applications
 
-1. **Clean Architecture** separates concerns into layers with clear dependencies
-2. **CQRS** separates writes (Commands) from reads (Queries)
-3. **Mediator** decouples controllers from handlers
-4. **Domain Layer** contains pure business logic with no external dependencies
-5. **Controllers** are thin - they delegate to the application layer
+Learn from complete, production-ready examples that demonstrate different architectural patterns:
 
-!!! success "You're Ready!"
-You now understand the fundamentals of Neuroglia. Continue with the [Mario's Pizzeria tutorial](guides/mario-pizzeria-tutorial.md) to build a complete production-ready application!
+### 🏦 [OpenBank - Event Sourcing & CQRS](samples/openbank.md)
+
+**Perfect for:** Financial systems, audit-critical applications, complex domain logic
+
+A complete banking system demonstrating:
+
+- ✅ Event sourcing with KurrentDB (EventStoreDB)
+- ✅ Complete CQRS separation (write/read models)
+- ✅ Domain-driven design with rich aggregates
+- ✅ Read model reconciliation and eventual consistency
+- ✅ Snapshot strategy for performance optimization
+- ✅ Comprehensive domain events and integration events
+
+**When to use this pattern:**
+
+- Applications requiring complete audit trails
+- Financial transactions and banking systems
+- Systems needing time-travel debugging
+- Complex business rules with event replay
+
+```bash
+# Quick start OpenBank
+./openbank start
+# Visit http://localhost:8899/api/docs
+```
+
+[**Explore OpenBank Documentation →**](samples/openbank.md)
+
+---
+
+### 🎨 [Simple UI - SubApp Pattern with JWT Auth](samples/simple-ui.md)
+
+**Perfect for:** Internal dashboards, admin tools, task management systems
+
+A modern SPA demonstrating:
+
+- ✅ FastAPI SubApp mounting (UI + API separation)
+- ✅ Stateless JWT authentication
+- ✅ Role-based access control (RBAC) at application layer
+- ✅ Bootstrap 5 frontend with Parcel bundler
+- ✅ Clean separation of concerns
+
+**When to use this pattern:**
+
+- Internal business applications
+- Admin dashboards and management tools
+- Applications requiring different auth for UI vs API
+- Projects needing role-based permissions
+
+```bash
+# Quick start Simple UI
+cd samples/simple-ui
+poetry run python main.py
+# Visit http://localhost:8000
+```
+
+[**Explore Simple UI Documentation →**](samples/simple-ui.md)
+
+---
+
+### 🍕 [Mario's Pizzeria - Complete Tutorial](mario-pizzeria.md)
+
+**Perfect for:** Learning all framework patterns, e-commerce systems
+
+A comprehensive e-commerce platform featuring:
+
+- ✅ 9-part tutorial series from setup to deployment
+- ✅ Order management and kitchen workflows
+- ✅ Real-time event-driven processes
+- ✅ Keycloak authentication integration
+- ✅ MongoDB persistence with domain events
+- ✅ Complete observability setup
+
+**When to use this pattern:**
+
+- Learning the complete Neuroglia framework
+- Building order processing systems
+- Event-driven workflows
+- Standard CRUD with business logic
+
+[**Start the Tutorial Series →**](tutorials/index.md)
+
+---
+
+## 🗺️ Learning Paths
+
+### Path 1: Quick Learner (1-2 hours)
+
+1. ✅ Complete this Getting Started guide
+2. 📖 Review [Simple UI Sample](samples/simple-ui.md) for authentication patterns
+3. 🏗️ Build a small CRUD app using what you learned
+
+### Path 2: Comprehensive Learner (1-2 days)
+
+1. ✅ Complete this Getting Started guide
+2. 📚 Work through [Mario's Pizzeria Tutorial](tutorials/index.md) (9 parts)
+3. 🔍 Study [Core Concepts](concepts/index.md)
+4. 🏦 Explore [OpenBank](samples/openbank.md) for advanced patterns
+5. 🎨 Review [Simple UI](samples/simple-ui.md) for authentication
+
+### Path 3: Deep Dive (1 week)
+
+1. ✅ Complete Path 2
+2. 📖 Read all [Architecture Patterns](patterns/index.md) documentation
+3. 🔧 Study [RBAC & Authorization Guide](guides/rbac-authorization.md)
+4. 🏗️ Build a production application using learned patterns
+5. 📊 Implement observability and monitoring
 
 ---
 

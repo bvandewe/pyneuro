@@ -1,8 +1,40 @@
 # 🔭 OpenTelemetry Integration Guide
 
+_Infrastructure setup and deployment guide for production observability_
+
 ## 📋 Overview
 
 This guide covers the comprehensive OpenTelemetry (OTEL) integration for the Neuroglia framework and Mario's Pizzeria application, providing full observability through distributed tracing, metrics, and structured logging.
+
+### 📚 Documentation Map
+
+This guide focuses on **infrastructure provisioning and deployment**. For a complete observability learning path:
+
+1. **Start here** for infrastructure setup (Docker Compose, Kubernetes)
+2. **[Observability Feature Guide](../features/observability.md)** - Developer instrumentation and API reference
+3. **[Tutorial: Mario's Pizzeria Observability](../tutorials/mario-pizzeria-08-observability.md)** - Step-by-step implementation
+4. **[Mario's Pizzeria Sample](../mario-pizzeria.md)** - Complete working example
+
+### 🎯 What This Guide Covers
+
+- ✅ Complete observability stack architecture
+- ✅ Docker Compose configuration for all components
+- ✅ OTEL Collector setup and configuration
+- ✅ Grafana, Tempo, Prometheus, and Loki integration
+- ✅ Multi-application instrumentation patterns
+- ✅ Production deployment considerations
+- ✅ Troubleshooting and verification steps
+
+### 📝 What This Guide Does NOT Cover
+
+See the **[Observability Feature Guide](../features/observability.md)** for:
+
+- Code instrumentation patterns (controllers, handlers, repositories)
+- Choosing metric types (counter, gauge, histogram)
+- Tracing decorators and manual instrumentation
+- Data flow from application to dashboard
+- Layer-specific implementation guidance
+- API reference and configuration options
 
 ## 🎯 Observability Pillars
 
@@ -536,11 +568,22 @@ docker logs mario-pizzeria-otel-collector-1
 
 ## 🔗 Related Documentation
 
+### Neuroglia Framework
+
+- **[Observability Feature Guide](../features/observability.md)** - Comprehensive developer guide and API reference
+- **[Tutorial: Mario's Pizzeria Observability](../tutorials/mario-pizzeria-08-observability.md)** - Step-by-step implementation
+- **[Mario's Pizzeria Sample](../mario-pizzeria.md)** - Complete working example
+- **[CQRS & Mediation](../features/simple-cqrs.md)** - Automatic handler tracing
+- **[Getting Started](../getting-started.md)** - Framework setup
+
+### External Resources
+
 - [OpenTelemetry Python Documentation](https://opentelemetry.io/docs/instrumentation/python/)
 - [Grafana Tempo Documentation](https://grafana.com/docs/tempo/latest/)
 - [Prometheus Documentation](https://prometheus.io/docs/)
 - [Grafana Loki Documentation](https://grafana.com/docs/loki/latest/)
 - [W3C Trace Context Specification](https://www.w3.org/TR/trace-context/)
+- [OTEL Framework Integration Analysis](otel-framework-integration-analysis.md) - Internal design notes
 
 ## 🎓 Learning Resources
 

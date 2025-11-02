@@ -222,12 +222,13 @@ class LoggingBehavior(PipelineBehavior[Any, Any]):
 ### Registration
 
 ```python
-from neuroglia.dependency_injection import ServiceCollection
+from neuroglia.hosting.web import WebApplicationBuilder
+from neuroglia.mediation import Mediator
 from neuroglia.mediation.pipeline_behavior import PipelineBehavior
 
-services = ServiceCollection()
-services.add_mediator()
-services.add_scoped(PipelineBehavior, LoggingBehavior)
+builder = WebApplicationBuilder()
+Mediator.configure(builder, ["application.commands", "application.queries"])
+builder.services.add_scoped(PipelineBehavior, LoggingBehavior)
 ```
 
 ## 🚀 Common Patterns
@@ -346,12 +347,12 @@ async def test_logging_behavior_logs_execution():
 @pytest.mark.asyncio
 async def test_full_pipeline_execution():
     # Setup complete pipeline
-    services = ServiceCollection()
-    services.add_mediator()
-    services.add_scoped(PipelineBehavior, ValidationBehavior)
-    services.add_scoped(PipelineBehavior, LoggingBehavior)
+    builder = WebApplicationBuilder()
+    Mediator.configure(builder, ["application.commands"])
+    builder.services.add_scoped(PipelineBehavior, ValidationBehavior)
+    builder.services.add_scoped(PipelineBehavior, LoggingBehavior)
 
-    provider = services.build_provider()
+    provider = builder.services.build_provider()
     mediator = provider.get_service(Mediator)
 
     # Execute through full pipeline

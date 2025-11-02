@@ -233,28 +233,35 @@ async def create_app():
     # Build application
     app = builder.build()
 
+    # Configure core services
+    configure_services(builder)
+
     # Configure middleware
     configure_middleware(app)
 
     return app
 
-def configure_services(services: ServiceCollection):
+def configure_services(builder: WebApplicationBuilder):
     """Configure dependency injection"""
-    # Add framework services
-    services.add_mediator()
-    services.add_controllers([
-        "src.api.controllers"
-    ])
+    # Configure framework services
+    Mediator.configure(builder, ["application.commands", "application.queries"])
+    Mapper.configure(builder, ["application.mapping", "api.dtos", "domain.entities"])
 
-    # Add application services
-    services.add_scoped(PlaceOrderHandler)
+    # Add SubApp with controllers
+    builder.add_sub_app(
+        SubAppConfig(
+            path="/api",
+            name="api",
+            controllers=["src.api.controllers"]
+        )
+    )
 
     # Add repositories
-    services.add_scoped(MongoOrderRepository)
+    builder.services.add_scoped(MongoOrderRepository)
 
     # Add external services
-    # services.add_scoped(SMSService)
-    # services.add_scoped(PaymentService)
+    # builder.services.add_scoped(SMSService)
+    # builder.services.add_scoped(PaymentService)
 
 def configure_middleware(app):
     """Configure application middleware"""

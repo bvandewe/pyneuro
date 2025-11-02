@@ -272,13 +272,22 @@ def create_app():
     builder.services.add_singleton(EmailService)
     builder.services.add_singleton(PaymentService)
 
-    # Add mediator for CQRS
-    builder.services.add_mediator()
+    # Configure core services
+    Mediator.configure(builder, ["application.commands", "application.queries"])
+    Mapper.configure(builder, ["application.mapping", "api.dtos"])
 
-    # Register controllers
-    builder.add_controllers(["api.controllers.orders"], prefix="/api")
-    builder.add_controllers(["api.controllers.customers"], prefix="/api")
-    builder.add_controllers(["api.controllers.menu"], prefix="/api")
+    # Add SubApp with controllers
+    builder.add_sub_app(
+        SubAppConfig(
+            path="/api",
+            name="api",
+            controllers=[
+                "api.controllers.orders",
+                "api.controllers.customers",
+                "api.controllers.menu"
+            ]
+        )
+    )
 
     # Add background services
     builder.services.add_hosted_service(OrderCleanupService)

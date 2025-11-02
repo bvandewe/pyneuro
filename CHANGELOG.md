@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- **Documentation: Observability Guide Enhancements**: Massively expanded observability documentation with comprehensive beginner-to-advanced content
+  - Expanded `docs/features/observability.md` from 838 to 2,079 lines (148% increase)
+  - Added Architecture Overview for Beginners section with complete stack visualization using Mermaid diagrams
+  - Added Infrastructure Setup guide covering Docker Compose and Kubernetes deployment
+  - Added layer-by-layer Developer Implementation Guide (API, Application, Domain, Integration layers)
+  - Added Understanding Metric Types section with Counter vs Gauge vs Histogram comparison
+  - Added Data Flow Explained section with sequence diagrams showing app → OTEL Collector → backends → Grafana
+  - Enhanced `docs/guides/opentelemetry-integration.md` with documentation map and clear scope definition
+  - Reorganized MkDocs navigation: added 3-tier Guides structure (Getting Started/Development/Operations)
+  - Integrated OpenTelemetry Integration guide into navigation under Operations section
+  - Established cross-references between all observability documentation files
+
 ## [0.6.0] - 2025-11-01
 
 ### Added

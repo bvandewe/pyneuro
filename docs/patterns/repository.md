@@ -635,10 +635,12 @@ def create_app():
     else:
         configure_in_memory_repositories(builder)
 
+    # Configure core services
+    Mediator.configure(builder, ["application.commands", "application.queries"])
+    Mapper.configure(builder, ["application.mapping", "api.dtos"])
+
     # Register application services
     builder.services.add_scoped(OrderService)
-    builder.services.add_mediator()
-    builder.services.add_mapper()
 
     # Build app
     return builder.build()

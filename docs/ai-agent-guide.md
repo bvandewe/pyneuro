@@ -87,19 +87,29 @@ class MongoOrderRepository(MongoRepository[Order, str]):
 
 ```python
 from neuroglia.hosting.web import WebApplicationBuilder
+from neuroglia.mediation import Mediator
+from neuroglia.mapping import Mapper
 
 def create_app():
     builder = WebApplicationBuilder()
-    services = builder.services
 
-    # Register services
-    services.add_scoped(OrderRepository, MongoOrderRepository)
-    services.add_mediator()  # Auto-discovers handlers
-    services.add_controllers(["api.controllers"])
-    services.add_object_mapping()
+    # Configure core services
+    Mediator.configure(builder, ["application.commands", "application.queries"])
+    Mapper.configure(builder, ["application.mapping", "api.dtos", "domain.entities"])
+
+    # Register custom services
+    builder.services.add_scoped(OrderRepository, MongoOrderRepository)
+
+    # Add SubApp with controllers
+    builder.add_sub_app(
+        SubAppConfig(
+            path="/api",
+            name="api",
+            controllers=["api.controllers"]
+        )
+    )
 
     app = builder.build()
-    app.use_controllers()
     return app
 ```
 
@@ -302,18 +312,27 @@ pyneuroctl new myapp --template minimal
 ```python
 # Minimal Neuroglia application setup
 from neuroglia.hosting.web import WebApplicationBuilder
+from neuroglia.mediation import Mediator
+from neuroglia.mapping import Mapper
 
 def create_app():
     builder = WebApplicationBuilder()
 
-    # Essential services
-    builder.services.add_mediator()  # CQRS support
-    builder.services.add_controllers(["api.controllers"])  # Auto-discover controllers
-    builder.services.add_object_mapping()  # Object mapping
+    # Configure essential services
+    Mediator.configure(builder, ["application.commands", "application.queries"])
+    Mapper.configure(builder, ["application.mapping", "api.dtos"])
 
-    # Build and configure
+    # Add SubApp with controllers
+    builder.add_sub_app(
+        SubAppConfig(
+            path="/api",
+            name="api",
+            controllers=["api.controllers"]
+        )
+    )
+
+    # Build application
     app = builder.build()
-    app.use_controllers()  # Enable controller routing
     return app
 
 if __name__ == "__main__":

@@ -524,10 +524,11 @@ class OrderProcessingHandler(CommandHandler):
 The Unit of Work integrates seamlessly with the mediation pipeline through `DomainEventDispatchingMiddleware`:
 
 ```python
-# Automatic setup
-services = ServiceCollection()
-services.add_mediator()
-services.add_state_based_persistence()  # Includes UnitOfWork + Event Dispatching
+# Automatic setup with configuration methods
+builder = WebApplicationBuilder()
+Mediator.configure(builder, ["application.commands", "application.queries"])
+UnitOfWork.configure(builder)
+DomainEventDispatchingMiddleware.configure(builder)
 
 # Pipeline execution flow:
 # 1. Command received
@@ -538,7 +539,6 @@ services.add_state_based_persistence()  # Includes UnitOfWork + Event Dispatchin
 # 6. DomainEventDispatchingMiddleware collects events
 # 7. Events dispatched through mediator
 # 8. [Optional] Transaction commits
-# 9. UnitOfWork cleared for next request
 ```
 
 ### **Event Collection Mechanism**
