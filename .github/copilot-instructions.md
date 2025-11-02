@@ -505,6 +505,210 @@ class OrderProcessingService:
 8. **Inconsistent case conversion** - Use CamelModel for API compatibility
 9. **Synchronous validation** - Use async business rule validation
 10. **Missing resource reconciliation** - Implement proper resource controllers
+11. **Authorization in controllers** - Implement RBAC in handlers (application layer)
+12. **Missing observability** - Add tracing, metrics, and logging with OpenTelemetry
+
+## Advanced Framework Features
+
+### Observability with OpenTelemetry
+
+The framework provides comprehensive observability through OpenTelemetry integration:
+
+```python
+from neuroglia.observability import (
+    configure_opentelemetry,
+    get_tracer,
+    get_meter,
+    trace_async,
+    trace_sync
+)
+
+# Configure in application startup
+def create_app():
+    builder = WebApplicationBuilder()
+    
+    # Configure OpenTelemetry
+    configure_opentelemetry(
+        service_name="mario-pizzeria",
+        service_version="1.0.0",
+        otlp_endpoint="http://localhost:4317",
+        export_logs=True,
+        export_traces=True,
+        export_metrics=True
+    )
+    
+    # Continue with application setup...
+    return builder.build()
+
+# Use tracing decorators in handlers
+class PlaceOrderHandler(CommandHandler):
+    def __init__(self):
+        super().__init__()
+        self.tracer = get_tracer(__name__)
+        self.meter = get_meter(__name__)
+        self.order_counter = self.meter.create_counter(
+            "orders_placed_total",
+            description="Total number of orders placed"
+        )
+    
+    @trace_async(name="place_order")
+    async def handle_async(self, command: PlaceOrderCommand):
+        # Automatic span creation
+        with self.tracer.start_as_current_span("validate_order") as span:
+            span.set_attribute("customer_id", command.customer_id)
+            # Validation logic
+        
+        # Increment counter
+        self.order_counter.add(1, {"customer_type": "vip"})
+        
+        # Business logic continues...
+```
+
+**Key Observability Patterns:**
+
+- Use `@trace_async` and `@trace_sync` decorators for automatic tracing
+- Create custom spans for important operations with `tracer.start_as_current_span()`
+- Add span attributes for contextual information
+- Use counters, gauges, and histograms for metrics
+- Logs are automatically correlated with traces
+- Context propagation works automatically across service boundaries
+
+### Role-Based Access Control (RBAC)
+
+RBAC is implemented at the **application layer** (handlers), not at the API layer:
+
+```python
+from fastapi import Depends, HTTPException
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+import jwt
+
+security = HTTPBearer()
+
+# Extract user context in controller
+class OrdersController(ControllerBase):
+    
+    def _get_user_info(self, credentials: HTTPAuthorizationCredentials) -> dict:
+        """Extract user information from JWT token."""
+        token = credentials.credentials
+        payload = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
+        return {
+            "user_id": payload.get("sub"),
+            "username": payload.get("username"),
+            "roles": payload.get("roles", []),
+            "permissions": payload.get("permissions", [])
+        }
+    
+    @post("/", response_model=OrderDto)
+    async def create_order(
+        self,
+        dto: CreateOrderDto,
+        credentials: HTTPAuthorizationCredentials = Depends(security)
+    ) -> OrderDto:
+        user_info = self._get_user_info(credentials)
+        
+        command = CreateOrderCommand(
+            customer_id=dto.customer_id,
+            items=dto.items,
+            user_context=user_info  # Pass to handler
+        )
+        result = await self.mediator.execute_async(command)
+        return self.process(result)
+
+# Authorization in handler (application layer)
+class CreateOrderHandler(CommandHandler):
+    async def handle_async(self, command: CreateOrderCommand):
+        # Role-based authorization
+        if not self._has_role(command.user_context, "customer"):
+            return self.forbidden("Only customers can place orders")
+        
+        # Permission-based authorization
+        if not self._has_permission(command.user_context, "orders:create"):
+            return self.forbidden("Insufficient permissions")
+        
+        # Resource-level authorization
+        if not self._is_own_order(command.user_context, command.customer_id):
+            return self.forbidden("Cannot place orders for other customers")
+        
+        # Business logic
+        order = Order(command.customer_id, command.items)
+        await self.repository.save_async(order)
+        return self.created(order)
+    
+    def _has_role(self, user_context: dict, role: str) -> bool:
+        return role in user_context.get("roles", [])
+    
+    def _has_permission(self, user_context: dict, permission: str) -> bool:
+        return permission in user_context.get("permissions", [])
+    
+    def _is_own_order(self, user_context: dict, customer_id: str) -> bool:
+        return user_context.get("user_id") == customer_id
+```
+
+**RBAC Best Practices:**
+
+- **Always implement authorization in handlers**, never in controllers
+- Pass user context (roles, permissions, user_id) from JWT to commands/queries
+- Use helper methods for common authorization checks
+- Default to deny access (fail securely)
+- Combine role-based, permission-based, and resource-level checks
+- Audit authorization failures for security monitoring
+- Keep role/permission names configurable (not hardcoded)
+
+### SubApp Pattern for UI/API Separation
+
+Use FastAPI SubApp mounting for clean separation of concerns:
+
+```python
+from neuroglia.hosting.web import WebApplicationBuilder, SubAppConfig
+
+def create_app():
+    builder = WebApplicationBuilder()
+    
+    # Configure core services
+    Mediator.configure(builder, ["application.commands", "application.queries"])
+    Mapper.configure(builder, ["application.mapping", "api.dtos"])
+    
+    # Add API SubApp
+    builder.add_sub_app(
+        SubAppConfig(
+            path="/api",
+            name="api",
+            title="Application API",
+            controllers=["api.controllers"],
+            docs_url="/docs"
+        )
+    )
+    
+    # Add UI SubApp
+    builder.add_sub_app(
+        SubAppConfig(
+            path="/",
+            name="ui",
+            title="Application UI",
+            controllers=["ui.controllers"],
+            static_files=[("/static", "static/dist")]
+        )
+    )
+    
+    return builder.build()
+```
+
+**SubApp Benefits:**
+
+- Clean separation between UI and API concerns
+- Different middleware for different SubApps
+- Independent scaling and deployment
+- Clear API boundaries
+- Easy migration to microservices
+
+
+4. **Anemic domain models** - Domain entities should have behavior
+5. **Fat controllers** - Controllers should only orchestrate
+6. **Ignoring async/await** - Use async patterns throughout
+7. **Manual serialization** - Use JsonSerializer with automatic type handling
+8. **Inconsistent case conversion** - Use CamelModel for API compatibility
+9. **Synchronous validation** - Use async business rule validation
+10. **Missing resource reconciliation** - Implement proper resource controllers
 
 ## Testing Patterns & Automated Test Maintenance
 
@@ -848,6 +1052,11 @@ When using this framework in VS Code with Copilot:
 5. **Respect layer boundaries** when suggesting code changes
 6. **Use async/await** by default for all I/O operations
 7. **Suggest dependency injection** patterns for new services
+8. **Add observability** decorators (`@trace_async`) to handlers
+9. **Implement RBAC** at application layer (handlers), not API layer
+10. **Use SubApp pattern** for UI/API separation when applicable
+11. **Include type hints** for all function signatures
+12. **Reference sample applications** (Mario's Pizzeria, OpenBank, Simple UI) for patterns
 
 ### Automatic Test Maintenance
 
@@ -1064,3 +1273,83 @@ Neuroglia enforces clean architecture - always respect the dependency rule and m
 7. **Validate async operations** - All async code must have async test coverage
 
 **Remember: Code without tests is incomplete code in the Neuroglia framework.**
+
+## Key Sample Applications Reference
+
+### Mario's Pizzeria
+- **Location**: `samples/mario-pizzeria/`
+- **Focus**: CQRS, event-driven architecture, MongoDB persistence, OpenTelemetry observability
+- **Documentation**: `docs/mario-pizzeria.md`, `docs/guides/mario-pizzeria-tutorial.md`
+- **Tutorial Series**: 9-part comprehensive tutorial in `docs/tutorials/`
+
+### OpenBank
+- **Location**: `samples/openbank/`
+- **Focus**: Event sourcing with KurrentDB, CQRS with read/write models, snapshots, projections
+- **Documentation**: `docs/samples/openbank.md`
+- **Key Patterns**: Event sourcing, eventual consistency, read model reconciliation
+
+### Simple UI
+- **Location**: `samples/simple-ui/`
+- **Focus**: SubApp pattern, stateless JWT authentication, RBAC at application layer
+- **Documentation**: `docs/samples/simple-ui.md`, `docs/guides/rbac-authorization.md`
+- **Key Patterns**: UI/API separation, role-based authorization, permission checks
+
+## Documentation Navigation Map
+
+### Getting Started
+- `docs/getting-started.md` - Framework introduction
+- `docs/guides/3-min-bootstrap.md` - Quick start
+- `docs/guides/local-development.md` - Development setup
+
+### Core Features
+- `docs/features/simple-cqrs.md` - CQRS implementation
+- `docs/features/data-access.md` - Repository patterns
+- `docs/features/mvc-controllers.md` - Controller implementation
+- `docs/features/observability.md` - **NEW**: Comprehensive OpenTelemetry guide
+- `docs/features/serialization.md` - JSON serialization
+
+### Guides (3-Tier Structure)
+- **Getting Started**: Project setup, testing setup, local dev
+- **Development**: Mario's tutorial, Simple UI app, JSON config
+- **Operations**: **NEW**: OpenTelemetry integration, RBAC & authorization
+
+### Patterns
+- `docs/patterns/clean-architecture.md` - Architecture principles
+- `docs/patterns/cqrs.md` - Command/Query separation
+- `docs/patterns/repository.md` - Repository pattern
+- `docs/patterns/persistence-patterns.md` - Persistence strategies
+- `docs/patterns/unit-of-work.md` - DEPRECATED (use repository-based event publishing)
+
+### References
+- `docs/references/python_typing_guide.md` - Type hints & generics
+- `docs/references/12-factor-app.md` - Cloud-native principles
+- `docs/references/source_code_naming_convention.md` - Naming standards
+
+## Recent Framework Improvements (v0.6.0+)
+
+1. **Observability Enhancement**:
+   - Expanded observability guide from 838 to 2,079 lines
+   - Architecture overview with Mermaid diagrams
+   - Infrastructure setup (Docker Compose, Kubernetes)
+   - Layer-by-layer developer implementation guide
+   - Metric types comparison (Counter, Gauge, Histogram)
+   - Complete data flow visualization
+
+2. **RBAC Documentation**:
+   - Comprehensive RBAC guide with practical patterns
+   - JWT authentication integration
+   - Role-based, permission-based, and resource-level authorization
+   - Simple UI sample demonstrating RBAC implementation
+
+3. **Documentation Reorganization**:
+   - Reorganized MkDocs navigation (3-tier Guides structure)
+   - Cross-referenced all observability documentation
+   - Added documentation maps and learning paths
+   - Enhanced sample documentation (OpenBank, Simple UI)
+
+4. **SubApp Pattern**:
+   - Clean UI/API separation pattern
+   - Simple UI sample demonstrating implementation
+   - Bootstrap 5 frontend integration
+   - Stateless JWT authentication
+

@@ -21,6 +21,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Integrated OpenTelemetry Integration guide into navigation under Operations section
   - Established cross-references between all observability documentation files
 
+- **Documentation: AI Agent Guide Updates**: Updated AI agent documentation to reflect recent framework improvements
+  - Added observability patterns with OpenTelemetry integration examples
+  - Added RBAC implementation patterns with JWT authentication
+  - Updated sample applications section with OpenBank event sourcing details and Simple UI SubApp pattern
+  - Enhanced key takeaways with observability, security, and event sourcing guidance
+  - Added comprehensive documentation navigation reference
+
+- **Documentation: Copilot Instructions Alignment**: Aligned GitHub Copilot instructions with AI agent guide
+  - Added comprehensive observability section with OpenTelemetry patterns
+  - Added RBAC best practices and implementation examples
+  - Added SubApp pattern documentation for UI/API separation
+  - Updated IDE-specific instructions to reference new samples and patterns
+  - Added documentation navigation map with 3-tier structure
+  - Documented recent framework improvements (v0.6.0+)
+  - Added sample application reference guide (Mario's Pizzeria, OpenBank, Simple UI)
+
 ## [0.6.0] - 2025-11-01
 
 ### Added
