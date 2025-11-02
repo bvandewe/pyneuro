@@ -9,6 +9,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- **Documentation: Source Code Docstring Updates**: Updated docstrings to reflect v0.6.0 patterns and deprecations
+
+  - Updated `src/neuroglia/extensions/mediator_extensions.py` to recommend `Mediator.configure()` pattern
+  - Updated `src/neuroglia/extensions/cqrs_metrics_extensions.py` with modern WebApplicationBuilder examples
+  - Updated `src/neuroglia/extensions/state_persistence_extensions.py` marking UnitOfWork as deprecated
+  - Updated `src/neuroglia/mediation/mediator.py` showing `Mediator.configure()` as primary pattern
+  - Added deprecation notices for UnitOfWork pattern with repository-based event publishing alternative
+  - Updated all examples to use `Mediator.configure()` instead of `services.add_mediator()`
+  - Added legacy pattern notes for backward compatibility
+  - Created `DOCSTRING_UPDATE_PLAN.md` with comprehensive audit and enhancement roadmap
+  - Created `DOCSTRING_UPDATES_SUMMARY.md` documenting all changes made
+
 - **Documentation: Observability Guide Enhancements**: Massively expanded observability documentation with comprehensive beginner-to-advanced content
 
   - Expanded `docs/features/observability.md` from 838 to 2,079 lines (148% increase)
