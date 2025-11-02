@@ -5,12 +5,17 @@ This module contains both the CustomerState (data) and Customer (behavior)
 classes following the state separation pattern with multipledispatch event handlers.
 """
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Optional
 from uuid import uuid4
 
 from api.dtos import CustomerDto
-from domain.events import CustomerContactUpdatedEvent, CustomerRegisteredEvent
+from domain.events import (
+    CustomerActiveOrderAddedEvent,
+    CustomerActiveOrderRemovedEvent,
+    CustomerContactUpdatedEvent,
+    CustomerRegisteredEvent,
+)
 from multipledispatch import dispatch
 
 from neuroglia.data.abstractions import AggregateRoot, AggregateState
@@ -31,6 +36,7 @@ class CustomerState(AggregateState[str]):
     phone: str = ""
     address: str = ""
     user_id: Optional[str] = None  # Keycloak user ID for profile linkage
+    active_orders: list[str] = field(default_factory=list)  # List of active order IDs
 
     @dispatch(CustomerRegisteredEvent)
     def on(self, event: CustomerRegisteredEvent) -> None:
@@ -47,6 +53,18 @@ class CustomerState(AggregateState[str]):
         """Handle CustomerContactUpdatedEvent to update contact information"""
         self.phone = event.phone
         self.address = event.address
+
+    @dispatch(CustomerActiveOrderAddedEvent)
+    def on(self, event: CustomerActiveOrderAddedEvent) -> None:
+        """Handle CustomerActiveOrderAddedEvent to add order to active orders"""
+        if event.order_id not in self.active_orders:
+            self.active_orders.append(event.order_id)
+
+    @dispatch(CustomerActiveOrderRemovedEvent)
+    def on(self, event: CustomerActiveOrderRemovedEvent) -> None:
+        """Handle CustomerActiveOrderRemovedEvent to remove order from active orders"""
+        if event.order_id in self.active_orders:
+            self.active_orders.remove(event.order_id)
 
 
 @map_from(CustomerDto)
@@ -102,6 +120,32 @@ class Customer(AggregateRoot[CustomerState, str]):
                     )
                 )
             )
+
+    def add_active_order(self, order_id: str) -> None:
+        """Add an order to customer's active orders"""
+        if order_id not in self.state.active_orders:
+            add_event = CustomerActiveOrderAddedEvent(
+                aggregate_id=self.id(),
+                order_id=order_id,
+            )
+            self.state.on(self.register_event(add_event))
+
+    def remove_active_order(self, order_id: str) -> None:
+        """Remove an order from customer's active orders"""
+        if order_id in self.state.active_orders:
+            remove_event = CustomerActiveOrderRemovedEvent(
+                aggregate_id=self.id(),
+                order_id=order_id,
+            )
+            self.state.on(self.register_event(remove_event))
+
+    def get_active_orders(self) -> list[str]:
+        """Get list of active order IDs"""
+        return self.state.active_orders.copy()
+
+    def has_active_orders(self) -> bool:
+        """Check if customer has any active orders"""
+        return len(self.state.active_orders) > 0
 
     def __str__(self) -> str:
         name_str = self.state.name if self.state.name else "Unknown"

@@ -282,3 +282,79 @@ class ToppingsUpdatedEvent(DomainEvent):
         self.toppings = toppings
 
     toppings: list[str]
+
+
+@cloudevent("customer.notification.created.v1")
+@dataclass
+class CustomerNotificationCreatedEvent(DomainEvent):
+    """Event raised when a customer notification is created."""
+
+    def __init__(
+        self,
+        aggregate_id: str,
+        customer_id: str,
+        notification_type: str,
+        title: str,
+        message: str,
+        order_id: Optional[str] = None,
+    ):
+        super().__init__(aggregate_id)
+        self.customer_id = customer_id
+        self.notification_type = notification_type
+        self.title = title
+        self.message = message
+        self.order_id = order_id
+
+    customer_id: str
+    notification_type: str
+    title: str
+    message: str
+    order_id: Optional[str]
+
+
+@cloudevent("customer.notification.read.v1")
+@dataclass
+class CustomerNotificationReadEvent(DomainEvent):
+    """Event raised when a customer notification is marked as read."""
+
+    def __init__(self, aggregate_id: str, read_time: datetime):
+        super().__init__(aggregate_id)
+        self.read_time = read_time
+
+    read_time: datetime
+
+
+@cloudevent("customer.notification.dismissed.v1")
+@dataclass
+class CustomerNotificationDismissedEvent(DomainEvent):
+    """Event raised when a customer notification is dismissed."""
+
+    def __init__(self, aggregate_id: str, dismissed_time: datetime):
+        super().__init__(aggregate_id)
+        self.dismissed_time = dismissed_time
+
+    dismissed_time: datetime
+
+
+@cloudevent("customer.active.order.added.v1")
+@dataclass
+class CustomerActiveOrderAddedEvent(DomainEvent):
+    """Event raised when an order is added to customer's active orders."""
+
+    def __init__(self, aggregate_id: str, order_id: str):
+        super().__init__(aggregate_id)
+        self.order_id = order_id
+
+    order_id: str
+
+
+@cloudevent("customer.active.order.removed.v1")
+@dataclass
+class CustomerActiveOrderRemovedEvent(DomainEvent):
+    """Event raised when an order is removed from customer's active orders."""
+
+    def __init__(self, aggregate_id: str, order_id: str):
+        super().__init__(aggregate_id)
+        self.order_id = order_id
+
+    order_id: str

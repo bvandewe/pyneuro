@@ -31,6 +31,12 @@
                         <li class="nav-item">
                             <a class="nav-link {% if active_page == 'orders' %}active{% endif %}" href="/orders">My Orders</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if active_page == 'notifications' %}active{% endif %}" href="/notifications" title="My Notifications">
+                                <i class="bi bi-bell"></i>
+                                <span class="d-md-inline d-none ms-1">Notifications</span>
+                            </a>
+                        </li>
                         {% if 'chef' in roles or 'manager' in roles %}
                         <li class="nav-item">
                             <a class="nav-link {% if active_page == 'kitchen' %}active{% endif %}" href="/kitchen">
@@ -79,6 +85,11 @@
                                     </div>
                                 </li>
                                 <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <a class="dropdown-item" href="/notifications">
+                                        <i class="bi bi-bell"></i> My Notifications
+                                    </a>
+                                </li>
                                 <li>
                                     <a class="dropdown-item" href="/profile">
                                         <i class="bi bi-person"></i> My Profile

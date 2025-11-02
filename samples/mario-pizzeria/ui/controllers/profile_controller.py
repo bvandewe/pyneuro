@@ -3,7 +3,10 @@
 from typing import Optional
 
 from application.commands import UpdateCustomerProfileCommand
-from application.queries import GetOrCreateCustomerProfileQuery
+from application.queries import (
+    GetCustomerNotificationsQuery,
+    GetOrCreateCustomerProfileQuery,
+)
 from application.settings import app_settings
 from classy_fastapi import Routable, get, post
 from fastapi import Form, Request
@@ -60,6 +63,16 @@ class UIProfileController(ControllerBase):
         profile = result.data if result.is_success else None
         error = None if result.is_success else result.error_message
 
+        # Get customer notifications
+        notifications = []
+        unread_count = 0
+        if user_id:
+            notifications_query = GetCustomerNotificationsQuery(user_id=str(user_id))
+            notifications_result = await self.mediator.execute_async(notifications_query)
+            if notifications_result.is_success:
+                notifications = notifications_result.data.notifications
+                unread_count = notifications_result.data.unread_count
+
         return request.app.state.templates.TemplateResponse(
             "profile/view.html",
             {
@@ -73,6 +86,8 @@ class UIProfileController(ControllerBase):
                 "roles": request.session.get("roles", []),
                 "profile": profile,
                 "error": error,
+                "notifications": notifications,
+                "unread_count": unread_count,
                 "app_version": app_settings.app_version,
             },
         )

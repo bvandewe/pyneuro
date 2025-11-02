@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "neuroglia-python"
-version = "0.6.1"
+version = "0.6.2"
 description = "Port from .NET to Python of the Neuroglia Framework"
 authors = ["Charles d'Avernas <charles.davernas@neuroglia.io>", "Bruno van de Werve <bvandewe@gmail.com>"]
 license = "Apache"
@@ -15,31 +15,31 @@ python = "^3.9"
 # Core framework dependencies - always required
 annotated-types = "^0.7.0"
 classy-fastapi = "^0.6.1"
-fastapi = "^0.116.0"
+fastapi = "^0.115.5"
 multipledispatch = "^1.0.0"
-pydantic-settings = "^2.0.0"
+pydantic-settings = "^2.6.1"
 python-dotenv = "^1.0.1"
-typing-extensions = "^4.9.0"
+typing-extensions = "^4.12.2"
 rx = { version = "^3.2.0" }
-uvicorn = { version = "^0.35.0" }
-httpx = { version = "^0.28.1" }
-grpcio = { version = "^1.74.0" }
+uvicorn = { version = "^0.32.1" }
+httpx = { version = "^0.27.2" }
+grpcio = { version = "^1.68.1" }
 
 # Authentication dependencies
-pyjwt = "^2.8.0"
+pyjwt = "^2.10.1"
 passlib = { extras = ["bcrypt"], version = "^1.7.4" }
-python-multipart = "^0.0.6"
-itsdangerous = "^2.1.2"
-jinja2 = "^3.1.0"
+python-multipart = "^0.0.17"
+itsdangerous = "^2.2.0"
+jinja2 = "^3.1.4"
 
 # Optional dependencies - install with extras
-pymongo = { version = "^4.6.3", optional = true }
-motor = { version = "^3.3.0", optional = true }
-esdbclient = { version = "^1.0.0", optional = true }
+pymongo = { version = "^4.10.1", optional = true }
+motor = { version = "^3.6.0", optional = true }
+esdbclient = { version = "^1.1.1", optional = true }
 apscheduler = "^3.11.0"
-redis = "^6.4.0"
-pydantic = {extras = ["email"], version = "^2.12.3"}
-email-validator = "^2.3.0"
+redis = "^5.2.0"
+pydantic = {extras = ["email"], version = "^2.10.3"}
+email-validator = "^2.2.0"
 
 # OpenTelemetry dependencies
 opentelemetry-api = "^1.28.2"
@@ -62,15 +62,15 @@ all = ["pymongo", "motor", "esdbclient", "rx", "redis"]
 
 [tool.poetry.group.dev.dependencies]
 # Development and testing dependencies
-pre-commit = "^4.3.0"
-pytest = "^8.0.1"
-pytest-asyncio = "^0.26.0"
-mypy = "^1.8.0"
-autopep8 = "^2.0.4"
-coverage = "^7.4.1"
+pre-commit = "^4.0.1"
+pytest = "^8.3.3"
+pytest-asyncio = "^0.24.0"
+mypy = "^1.13.0"
+autopep8 = "^2.3.1"
+coverage = "^7.6.9"
 mypy-extensions = "^1.0.0"
-flake8 = "^7.3.0"
-isort = "^6.0.1"
+flake8 = "^7.1.1"
+isort = "^5.13.2"
 
 [tool.poetry.group.docs]
 optional = true
@@ -78,7 +78,7 @@ optional = true
 [tool.poetry.group.docs.dependencies]
 # Documentation dependencies
 mkdocs = "^1.6.1"
-mkdocs-material = "^9.5.46"
+mkdocs-material = "^9.5.48"
 mkdocs-mermaid2-plugin = "^1.2.2"
 
 [build-system]
