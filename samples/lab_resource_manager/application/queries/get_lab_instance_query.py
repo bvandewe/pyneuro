@@ -7,13 +7,13 @@ Resource Oriented Architecture patterns with CQRS.
 from dataclasses import dataclass
 from typing import Optional
 
-from neuroglia.mediation.mediator import Query
+from integration.models.lab_instance_dto import LabInstanceDto
 
-from samples.lab_resource_manager.integration.models.lab_instance_dto import LabInstanceDto
+from neuroglia.mediation.mediator import Query
 
 
 @dataclass
 class GetLabInstanceQuery(Query[Optional[LabInstanceDto]]):
     """Query to get a lab instance by ID."""
-    
+
     resource_id: str

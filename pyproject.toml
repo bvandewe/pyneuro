@@ -53,12 +53,14 @@ opentelemetry-instrumentation-logging = "^0.49b2"
 opentelemetry-instrumentation-system-metrics = "^0.49b2"
 opentelemetry-exporter-prometheus = "^0.49b2"
 prometheus-client = "^0.21.0"
+boto3 = { version = "^1.40.64", optional = true }
 
 [tool.poetry.extras]
 mongodb = ["pymongo", "motor"]
 eventstore = ["esdbclient", "rx"]
 redis = ["redis"]
-all = ["pymongo", "motor", "esdbclient", "rx", "redis"]
+aws = ["boto3"]
+all = ["pymongo", "motor", "esdbclient", "rx", "redis", "boto3"]
 
 [tool.poetry.group.dev.dependencies]
 # Development and testing dependencies

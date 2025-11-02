@@ -7,6 +7,7 @@ and reconciliation controllers.
 
 from .abstractions import (
     Resource,
+    ResourceConflictError,
     ResourceController,
     ResourceEvent,
     ResourceMetadata,
@@ -43,6 +44,7 @@ __all__ = [
     "ResourceController",
     "ResourceWatcher",
     "ResourceEvent",
+    "ResourceConflictError",
     "TResourceSpec",
     "TResourceStatus",
     "TState",

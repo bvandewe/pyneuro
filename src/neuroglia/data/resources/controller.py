@@ -10,7 +10,7 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from datetime import datetime, timedelta
 from enum import Enum
-from typing import Generic, Optional
+from typing import TYPE_CHECKING, Generic, Optional
 
 from neuroglia.dependency_injection import ServiceProviderBase
 from neuroglia.eventing.cloud_events.cloud_event import CloudEvent
@@ -19,6 +19,9 @@ from neuroglia.eventing.cloud_events.infrastructure.cloud_event_publisher import
 )
 
 from .abstractions import Resource, ResourceController, TResourceSpec, TResourceStatus
+
+if TYPE_CHECKING:
+    from neuroglia.coordination import LeaderElection
 
 log = logging.getLogger(__name__)
 
@@ -77,11 +80,15 @@ class ResourceControllerBase(Generic[TResourceSpec, TResourceStatus], ResourceCo
         self,
         service_provider: ServiceProviderBase,
         event_publisher: Optional[CloudEventPublisher] = None,
+        finalizer_name: Optional[str] = None,
+        leader_election: Optional["LeaderElection"] = None,
     ):
         self.service_provider = service_provider
         self.event_publisher = event_publisher
         self._reconciliation_timeout = timedelta(minutes=5)
         self._max_retry_attempts = 3
+        self.finalizer_name = finalizer_name or f"{self.__class__.__name__.lower()}/finalizer"
+        self.leader_election = leader_election
 
     async def reconcile(self, resource: Resource[TResourceSpec, TResourceStatus]) -> None:
         """Main reconciliation entry point with error handling and events."""
@@ -91,7 +98,42 @@ class ResourceControllerBase(Generic[TResourceSpec, TResourceStatus], ResourceCo
         resource_namespace = resource.metadata.namespace
 
         try:
+            # Check if we're the leader (skip if no leader election configured)
+            if self.leader_election and not self.leader_election.is_leader():
+                log.debug(f"Not leader, skipping reconciliation for {resource_namespace}/{resource_name}")
+                return
+
             log.info(f"Starting reconciliation for {resource_namespace}/{resource_name}")
+
+            # Check if resource is being deleted
+            if resource.metadata.is_being_deleted():
+                log.info(f"Resource {resource_namespace}/{resource_name} is being deleted")
+
+                # Process finalizers if present
+                if resource.metadata.has_finalizers():
+                    if resource.metadata.has_finalizer(self.finalizer_name):
+                        log.info(f"Running finalizer {self.finalizer_name} for {resource_namespace}/{resource_name}")
+
+                        # Execute finalization logic
+                        cleanup_complete = await self.finalize(resource)
+
+                        if cleanup_complete:
+                            # Remove our finalizer
+                            resource.metadata.remove_finalizer(self.finalizer_name)
+                            log.info(f"Finalizer {self.finalizer_name} completed for {resource_namespace}/{resource_name}")
+
+                            # Note: Repository update handled by caller
+                            # to ensure proper persistence of finalizer removal
+                        else:
+                            log.info(f"Finalizer {self.finalizer_name} still in progress for {resource_namespace}/{resource_name}")
+                    else:
+                        log.debug(f"No finalizer {self.finalizer_name} present on {resource_namespace}/{resource_name}")
+
+                    return  # Don't proceed with normal reconciliation during deletion
+                else:
+                    # No finalizers left, resource can be deleted
+                    log.info(f"All finalizers completed for {resource_namespace}/{resource_name}, ready for deletion")
+                    return
 
             # Check if resource needs reconciliation
             if not resource.needs_reconciliation():

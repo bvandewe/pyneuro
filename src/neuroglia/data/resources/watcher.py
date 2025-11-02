@@ -48,7 +48,7 @@ class ResourceChangeEvent(Generic[TResourceSpec, TResourceStatus]):
 class ResourceWatcherBase(Generic[TResourceSpec, TResourceStatus], ResourceWatcher[TResourceSpec, TResourceStatus], ABC):
     """Base implementation for resource watchers with event emission."""
 
-    def __init__(self, event_publisher: Optional[CloudEventPublisher] = None, watch_interval: float = 5.0):
+    def __init__(self, event_publisher: Optional[CloudEventPublisher] = None, watch_interval: float = 5.0, bookmark_storage=None, bookmark_key: Optional[str] = None):
         self.event_publisher = event_publisher
         self.watch_interval = watch_interval
         self._watching = False
@@ -58,12 +58,24 @@ class ResourceWatcherBase(Generic[TResourceSpec, TResourceStatus], ResourceWatch
         # Cache for tracking resource states
         self._resource_cache: dict[str, Resource[TResourceSpec, TResourceStatus]] = {}
 
+        # Bookmark support for resumption
+        self.bookmark_storage = bookmark_storage
+        self.bookmark_key = bookmark_key or f"watcher_bookmark_{self.__class__.__name__}"
+        self._last_resource_version: Optional[str] = None
+
     async def watch(self, namespace: Optional[str] = None, label_selector: Optional[dict[str, str]] = None) -> None:
         """Start watching for resource changes."""
 
         if self._watching:
             log.warning("Watcher is already running")
             return
+
+        # Load last known position for resumption
+        self._last_resource_version = await self._load_bookmark()
+        if self._last_resource_version:
+            log.info(f"Starting watcher from resource version: {self._last_resource_version}")
+        else:
+            log.info("Starting watcher from beginning (no bookmark found)")
 
         self._watching = True
         log.info(f"Starting resource watcher for namespace={namespace}, labels={label_selector}")
@@ -132,12 +144,44 @@ class ResourceWatcherBase(Generic[TResourceSpec, TResourceStatus], ResourceWatch
                 # Update cache
                 self._resource_cache = current_resource_map
 
+                # Save bookmark with latest resource version
+                if current_resources:
+                    latest_rv = max((r.metadata.resource_version for r in current_resources), default=None)
+                    if latest_rv:
+                        await self._save_bookmark(latest_rv)
+                        self._last_resource_version = latest_rv
+
                 # Wait before next poll
                 await asyncio.sleep(self.watch_interval)
 
             except Exception as e:
                 log.error(f"Error in watch loop: {e}")
                 await asyncio.sleep(self.watch_interval)
+
+    async def _load_bookmark(self) -> Optional[str]:
+        """Load last known resource version from storage for resumption."""
+        if not self.bookmark_storage:
+            return None
+
+        try:
+            bookmark = await self.bookmark_storage.get(self.bookmark_key)
+            if bookmark:
+                log.info(f"Loaded bookmark: {bookmark}")
+            return bookmark
+        except Exception as e:
+            log.warning(f"Failed to load bookmark: {e}")
+            return None
+
+    async def _save_bookmark(self, resource_version: str) -> None:
+        """Save current resource version as bookmark."""
+        if not self.bookmark_storage:
+            return
+
+        try:
+            await self.bookmark_storage.set(self.bookmark_key, resource_version)
+            log.debug(f"Saved bookmark at resource version: {resource_version}")
+        except Exception as e:
+            log.error(f"Failed to save bookmark: {e}")
 
     def _detect_changes(self, current_resources: dict[str, Resource[TResourceSpec, TResourceStatus]]) -> list[ResourceChangeEvent[TResourceSpec, TResourceStatus]]:
         """Detect changes between current resources and cached resources."""

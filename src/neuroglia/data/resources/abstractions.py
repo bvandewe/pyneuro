@@ -31,6 +31,8 @@ class ResourceMetadata:
     annotations: dict[str, str] = field(default_factory=dict)
     generation: int = 0
     resource_version: str = "1"
+    finalizers: list[str] = field(default_factory=list)
+    deletion_timestamp: Optional[datetime] = None
 
     def add_label(self, key: str, value: str) -> None:
         """Add a label to the resource metadata."""
@@ -44,6 +46,33 @@ class ResourceMetadata:
         """Increment the generation when spec changes."""
         self.generation += 1
         self.resource_version = str(int(self.resource_version) + 1)
+
+    def add_finalizer(self, name: str) -> None:
+        """Add a finalizer to block deletion until cleanup is complete."""
+        if name not in self.finalizers:
+            self.finalizers.append(name)
+
+    def remove_finalizer(self, name: str) -> None:
+        """Remove a finalizer to allow deletion to proceed."""
+        if name in self.finalizers:
+            self.finalizers.remove(name)
+
+    def has_finalizer(self, name: str) -> bool:
+        """Check if a specific finalizer is present."""
+        return name in self.finalizers
+
+    def has_finalizers(self) -> bool:
+        """Check if resource has any finalizers."""
+        return len(self.finalizers) > 0
+
+    def is_being_deleted(self) -> bool:
+        """Check if resource is marked for deletion."""
+        return self.deletion_timestamp is not None
+
+    def mark_for_deletion(self) -> None:
+        """Mark the resource for deletion by setting deletion timestamp."""
+        if self.deletion_timestamp is None:
+            self.deletion_timestamp = datetime.now()
 
 
 class ResourceSpec(ABC):
@@ -188,6 +217,16 @@ class ResourceEvent(ABC):
     def __init__(self, resource_uid: str, event_time: Optional[datetime] = None):
         self.resource_uid = resource_uid
         self.event_time = event_time or datetime.now()
+
+
+class ResourceConflictError(Exception):
+    """Raised when a resource update conflicts with current state."""
+
+    def __init__(self, resource_id: str, expected_version: str, actual_version: str):
+        self.resource_id = resource_id
+        self.expected_version = expected_version
+        self.actual_version = actual_version
+        super().__init__(f"Resource {resource_id} conflict: expected version {expected_version}, " f"but current version is {actual_version}")
 
 
 class ResourceController(Generic[TResourceSpec, TResourceStatus], ABC):
