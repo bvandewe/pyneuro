@@ -257,7 +257,7 @@ For detailed deployment documentation, see:
 
 ```bash
 # Install from PyPI
-pip install neuroglia
+pip install neuroglia-python
 
 # Or install from source
 git clone <repository-url>
