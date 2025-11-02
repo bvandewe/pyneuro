@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - **Documentation: Observability Guide Enhancements**: Massively expanded observability documentation with comprehensive beginner-to-advanced content
+
   - Expanded `docs/features/observability.md` from 838 to 2,079 lines (148% increase)
   - Added Architecture Overview for Beginners section with complete stack visualization using Mermaid diagrams
   - Added Infrastructure Setup guide covering Docker Compose and Kubernetes deployment
@@ -22,6 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Established cross-references between all observability documentation files
 
 - **Documentation: AI Agent Guide Updates**: Updated AI agent documentation to reflect recent framework improvements
+
   - Added observability patterns with OpenTelemetry integration examples
   - Added RBAC implementation patterns with JWT authentication
   - Updated sample applications section with OpenBank event sourcing details and Simple UI SubApp pattern

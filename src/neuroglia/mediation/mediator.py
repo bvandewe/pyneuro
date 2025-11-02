@@ -476,16 +476,24 @@ class Mediator:
     Attributes:
         _service_provider (ServiceProviderBase): The dependency injection container for handler resolution
 
-    Examples:
+    Usage with Mediator.configure (Recommended):
         ```python
-        # Setup mediator with dependency injection
-        services = ServiceCollection()
-        services.add_mediator()
-        services.add_scoped(CreateUserHandler)
-        services.add_scoped(GetUserByIdHandler)
+        from neuroglia.hosting.web import WebApplicationBuilder
+        from neuroglia.mediation import Mediator
 
-        provider = services.build_provider()
-        mediator = provider.get_service(Mediator)
+        builder = WebApplicationBuilder()
+
+        # Automatic handler discovery and registration
+        Mediator.configure(builder, [
+            "application.commands",
+            "application.queries",
+            "application.events"
+        ])
+
+        app = builder.build()
+
+        # Use mediator in controllers/handlers via DI
+        mediator = app.service_provider.get_service(Mediator)
 
         # Execute command
         command = CreateUserCommand("John", "Doe", "john@example.com")
@@ -500,6 +508,18 @@ class Mediator:
         await mediator.publish_async(event)
         ```
 
+    Legacy Manual Setup:
+        ```python
+        # Manual handler registration (still supported)
+        services = ServiceCollection()
+        services.add_mediator()
+        services.add_scoped(CreateUserHandler)
+        services.add_scoped(GetUserByIdHandler)
+
+        provider = services.build_provider()
+        mediator = provider.get_service(Mediator)
+        ```
+
     Architecture:
         ```
         Controller -> Mediator -> Handler -> Repository/Service
@@ -510,7 +530,7 @@ class Mediator:
 
     See Also:
         - CQRS Mediation: https://bvandewe.github.io/pyneuro/features/simple-cqrs/
-        - Mediator Pattern: https://bvandewe.github.io/pyneuro/patterns/
+        - Mediator Pattern: https://bvandewe.github.io/pyneuro/patterns/cqrs/
         - Getting Started Guide: https://bvandewe.github.io/pyneuro/getting-started/
     """
 

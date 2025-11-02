@@ -13,8 +13,12 @@ def add_mediator(services: ServiceCollection) -> ServiceCollection:
     """
     Registers the Mediator service with proper dependency injection support.
 
+    NOTE: This is a low-level extension method. For most use cases, prefer using
+    `Mediator.configure(builder, packages)` which combines service registration
+    with automatic handler discovery.
+
     This method configures the dependency injection container with the Mediator
-    service, enabling CQRS pattern support with automatic handler discovery.
+    service, enabling CQRS pattern support.
 
     Services Registered:
         - Mediator -> Mediator (Singleton): Central request dispatcher
@@ -25,25 +29,40 @@ def add_mediator(services: ServiceCollection) -> ServiceCollection:
     Returns:
         The configured service collection for fluent chaining
 
-    Examples:
+    Recommended Usage (Mediator.configure):
         ```python
-        # Basic setup
+        from neuroglia.hosting.web import WebApplicationBuilder
+        from neuroglia.mediation import Mediator
+
+        builder = WebApplicationBuilder()
+
+        # Preferred: One-line configuration with automatic handler discovery
+        Mediator.configure(builder, [
+            "application.commands",
+            "application.queries"
+        ])
+
+        app = builder.build()
+        app.run()
+        ```
+
+    Legacy Usage (Direct Service Registration):
+        ```python
+        # Still supported, but requires manual handler registration
         services = ServiceCollection()
         services.add_mediator()
 
-        # Full CQRS setup with automatic discovery
-        builder = WebApplicationBuilder()
-        builder.services.add_mediator()
+        # Must manually register handlers
+        services.add_scoped(CreateUserHandler)
+        services.add_scoped(GetUserHandler)
 
-        # Configure mediator with handler discovery
-        Mediator.configure(builder, ["application.commands", "application.queries"])
-
-        app = builder.build()
+        provider = services.build()
         ```
 
     See Also:
-        - Mediator Pattern: https://bvandewe.github.io/pyneuro/patterns/mediator/
-        - CQRS: https://bvandewe.github.io/pyneuro/features/simple-cqrs/
+        - Mediator.configure(): Recommended high-level API
+        - CQRS Pattern: https://bvandewe.github.io/pyneuro/features/simple-cqrs/
+        - Mediator Pattern: https://bvandewe.github.io/pyneuro/patterns/cqrs/
     """
     services.add_singleton(Mediator, Mediator)
     return services
