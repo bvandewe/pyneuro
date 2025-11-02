@@ -4,6 +4,7 @@
 # Install Neuroglia Sample Management Tools
 ##
 # This script installs the sample management CLI tools to your system PATH:
+# - infra: Manage shared infrastructure services
 # - mario-pizzeria: Manage Mario's Pizzeria sample
 # - simple-ui: Manage Simple UI sample
 # - pyneuroctl: Main Neuroglia CLI tool
@@ -44,6 +45,7 @@ echo ""
 
 # Check if scripts exist in project directory
 PYNEUROCTL_SCRIPT="$PROJECT_ROOT/pyneuroctl"
+INFRA_SCRIPT="$PROJECT_ROOT/infra"
 MARIO_SCRIPT="$PROJECT_ROOT/mario-pizzeria"
 SIMPLE_UI_SCRIPT="$PROJECT_ROOT/simple-ui"
 
@@ -61,6 +63,7 @@ check_script() {
 # Validate all scripts exist
 SCRIPTS_VALID=true
 check_script "$PYNEUROCTL_SCRIPT" "pyneuroctl" || SCRIPTS_VALID=false
+check_script "$INFRA_SCRIPT" "infra" || SCRIPTS_VALID=false
 check_script "$MARIO_SCRIPT" "mario-pizzeria" || SCRIPTS_VALID=false
 check_script "$SIMPLE_UI_SCRIPT" "simple-ui" || SCRIPTS_VALID=false
 
@@ -71,6 +74,7 @@ fi
 
 # Make all scripts executable
 chmod +x "$PYNEUROCTL_SCRIPT"
+chmod +x "$INFRA_SCRIPT"
 chmod +x "$MARIO_SCRIPT"
 chmod +x "$SIMPLE_UI_SCRIPT"
 print_success "Made all scripts executable"
@@ -142,6 +146,7 @@ create_symlink() {
 # Install all tools
 print_info "Installing tools to ~/.local/bin..."
 create_symlink "$PYNEUROCTL_SCRIPT" "pyneuroctl"
+create_symlink "$INFRA_SCRIPT" "infra"
 create_symlink "$MARIO_SCRIPT" "mario-pizzeria"
 create_symlink "$SIMPLE_UI_SCRIPT" "simple-ui"
 echo ""
@@ -211,6 +216,7 @@ test_tool() {
 # Test installations
 ALL_WORKING=true
 test_tool "pyneuroctl" "--help" || ALL_WORKING=false
+test_tool "infra" "status" || ALL_WORKING=false
 test_tool "mario-pizzeria" "status" || ALL_WORKING=false
 test_tool "simple-ui" "status" || ALL_WORKING=false
 
@@ -232,6 +238,14 @@ echo "    pyneuroctl validate                # Validate configurations"
 echo "    pyneuroctl start mario-pizzeria    # Start a sample"
 echo "    pyneuroctl --help                  # Show all commands"
 echo ""
+echo "  ${GREEN}infra${NC}"
+echo "    infra start                        # Start shared infrastructure"
+echo "    infra stop                         # Stop shared infrastructure"
+echo "    infra status                       # Check infrastructure status"
+echo "    infra health                       # Health check all services"
+echo "    infra logs [service]               # View logs"
+echo "    infra --help                       # Show all commands"
+echo ""
 echo "  ${GREEN}mario-pizzeria${NC}"
 echo "    mario-pizzeria start               # Start Mario's Pizzeria"
 echo "    mario-pizzeria stop                # Stop Mario's Pizzeria"
@@ -247,7 +261,7 @@ echo "    simple-ui status                   # Check status"
 echo "    simple-ui --help                   # Show all commands"
 echo ""
 print_info "🚀 Quick Start:"
-echo "  1. Start shared infrastructure:  make infra-start"
+echo "  1. Start shared infrastructure:  infra start"
 echo "  2. Start Mario's Pizzeria:       mario-pizzeria start"
 echo "  3. Start Simple UI:              simple-ui start"
 echo ""

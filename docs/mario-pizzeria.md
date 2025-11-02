@@ -61,7 +61,7 @@ This case study demonstrates **all 10 foundational architectural patterns** work
 | **[📡 CQRS & Mediation](patterns/cqrs.md)**                     | All command and query handlers     | PlaceOrderCommand, GetOrderByIdQuery with mediator routing        |
 | **[🔄 Event-Driven Architecture](patterns/event-driven.md)**    | Kitchen workflow automation        | OrderPlaced → Kitchen processes → OrderReady events               |
 | **[💾 Repository Pattern](patterns/repository.md)**             | Data access abstraction            | File, MongoDB, and InMemory repository implementations            |
-| **[🔄 Unit of Work](patterns/unit-of-work.md)**                 | Event coordination                 | Automatic domain event collection and dispatching                 |
+| **[🏛️ Persistence Patterns](patterns/persistence-patterns.md)** | Event publishing & state           | Repository-based event publishing and domain event coordination   |
 | **[🔧 Pipeline Behaviors](patterns/pipeline-behaviors.md)**     | Cross-cutting concerns             | Validation, logging, error handling around all handlers           |
 | **[🎯 Event Sourcing](patterns/event-sourcing.md)**             | Order event history                | Complete audit trail of order lifecycle (optional implementation) |
 | **[🌊 Reactive Programming](patterns/reactive-programming.md)** | Real-time order tracking           | Kitchen capacity monitoring with observable streams               |
@@ -240,7 +240,7 @@ Go to [Testing & Deployment](mario-pizzeria/testing-deployment.md) for comprehen
 ### 🔧 Implementation Patterns (Used Throughout)
 
 - **[Dependency Injection](patterns/dependency-injection.md)** - Service container and lifetimes
-- **[Unit of Work](patterns/unit-of-work.md)** - Event coordination (see: order handlers)
+- **[Persistence Patterns](patterns/persistence-patterns.md)** - Repository-based event publishing (see: order handlers)
 - **[Pipeline Behaviors](patterns/pipeline-behaviors.md)** - Validation, logging (see: ValidationBehavior)
 - **[Event Sourcing](patterns/event-sourcing.md)** - Event history (optional: OrderEventStore)
 - **[Reactive Programming](patterns/reactive-programming.md)** - Real-time updates (see: kitchen capacity)

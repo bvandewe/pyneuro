@@ -7,6 +7,39 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **Infrastructure CLI: `recreate` command** for service recreation with fresh containers
+  - Forces Docker to create new containers (picks up environment variable changes)
+  - `--delete-volumes` option to also delete and recreate volumes (data loss warning)
+  - `--no-remove-orphans` option to skip orphan container removal
+  - `-y, --yes` flag to skip confirmation prompts
+  - Makefile targets: `infra-recreate` and `infra-recreate-clean`
+  - Comprehensive documentation in `RECREATE_COMMAND_GUIDE.md`
+
+### Changed
+
+- **Documentation: Removed deprecated Unit of Work pattern references**
+
+  - Updated all Mario's Pizzeria documentation to use repository-based event publishing
+  - Replaced Unit of Work references with Persistence Patterns documentation
+  - Updated `docs/mario-pizzeria.md` pattern table
+  - Updated `docs/mario-pizzeria/domain-design.md` event publishing guidance
+  - Updated `docs/mario-pizzeria/implementation-guide.md` code examples and patterns
+  - Updated `docs/mario-pizzeria/testing-deployment.md` testing patterns
+
+- **Documentation: Unified getting started guides**
+  - Removed duplicate `guides/3-min-bootstrap.md` from navigation
+  - Consolidated quick start content into comprehensive `getting-started.md`
+  - Streamlined learning path: Welcome → Getting Started → Local Dev Setup → Tutorials
+
+### Fixed
+
+- **Infrastructure: Event Player OAuth configuration**
+  - Updated `oauth_client_id` from `pyneuro-public-app` to `pyneuro-public` (matches Keycloak realm)
+  - Fixed OAuth redirect URL using `oauth_server_url` (browser) and `oauth_server_url_backend` (container)
+  - Added `oauth_legacy_keycloak: "false"` for Event Player v0.4.4+ compatibility
+
 ## [0.6.2] - 2025-11-02
 
 ### Added

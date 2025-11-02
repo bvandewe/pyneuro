@@ -499,7 +499,7 @@ Domain events capture important business occurrences and enable loose coupling t
 
 > 🎯 **Why Domain Events?**: Events decouple the order placement from kitchen processing and customer notifications. The order handler doesn't need to know about the kitchen or SMS service! Learn more about [Event-Driven Architecture](../patterns/event-driven.md#what--why-the-event-driven-pattern).
 
-> ⚠️ **Common Mistake Alert**: Don't forget to use **[Unit of Work](../patterns/unit-of-work.md)** to automatically collect and dispatch events! See the [Unit of Work pattern](../patterns/unit-of-work.md#common-mistakes) to avoid manual event management.
+> ⚠️ **Common Mistake Alert**: Ensure your repositories publish domain events after successful persistence! The framework uses **[repository-based event publishing](../patterns/persistence-patterns.md#repository-based-event-publishing)** where the repository automatically collects and dispatches events. See the [Persistence Patterns guide](../patterns/persistence-patterns.md) for best practices.
 
 ### Order Lifecycle Events
 
@@ -627,7 +627,7 @@ Alternative flow: Any status → `CANCELLED` (with business rules)
 - **[Domain-Driven Design](../patterns/domain-driven-design.md)** - Rich domain models with business logic
 - **[Event-Driven Architecture](../patterns/event-driven.md)** - Domain events for workflow automation
 - **[Repository Pattern](../patterns/repository.md)** - Data access abstraction for entities
-- **[Unit of Work](../patterns/unit-of-work.md)** - Automatic domain event collection and dispatching
+- **[Persistence Patterns](../patterns/persistence-patterns.md)** - Repository-based event publishing and state management
 - **[Clean Architecture](../patterns/clean-architecture.md)** - Domain layer independence
 
 > 💡 **Learning Tip**: See how Mario's Pizzeria domain entities avoid the [anemic domain model anti-pattern](../patterns/domain-driven-design.md#common-mistakes) by keeping business logic where it belongs - in the domain!
