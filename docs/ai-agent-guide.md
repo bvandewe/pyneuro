@@ -113,6 +113,69 @@ def create_app():
     return app
 ```
 
+### 5. Observability with OpenTelemetry
+
+```python
+from neuroglia.observability import configure_opentelemetry, get_tracer, trace_async
+
+# Configure OpenTelemetry (in main.py)
+configure_opentelemetry(
+    service_name="mario-pizzeria",
+    service_version="1.0.0",
+    otlp_endpoint="http://localhost:4317"
+)
+
+# Use in handlers
+tracer = get_tracer(__name__)
+
+class PlaceOrderHandler(CommandHandler):
+    @trace_async(name="place_order")
+    async def handle_async(self, command: PlaceOrderCommand):
+        with tracer.start_as_current_span("validate_order"):
+            # Business logic with automatic tracing
+            pass
+```
+
+### 6. Role-Based Access Control (RBAC)
+
+```python
+from fastapi import Depends
+from fastapi.security import HTTPBearer
+
+security = HTTPBearer()
+
+class OrdersController(ControllerBase):
+    @post("/", response_model=OrderDto)
+    async def create_order(
+        self,
+        dto: CreateOrderDto,
+        credentials: HTTPAuthorizationCredentials = Depends(security)
+    ) -> OrderDto:
+        # Extract user info from JWT
+        user_info = self._decode_jwt(credentials.credentials)
+        
+        # Pass to handler for RBAC check
+        command = CreateOrderCommand(
+            customer_id=dto.customer_id,
+            items=dto.items,
+            user_info=user_info  # Handler checks roles/permissions
+        )
+        result = await self.mediator.execute_async(command)
+        return self.process(result)
+
+# RBAC in handler (application layer)
+class CreateOrderHandler(CommandHandler):
+    async def handle_async(self, command: CreateOrderCommand):
+        # Authorization check based on roles
+        if "customer" not in command.user_info.get("roles", []):
+            return self.forbidden("Insufficient permissions")
+        
+        # Business logic
+        order = Order(command.customer_id, command.items)
+        await self.repository.save_async(order)
+        return self.created(order)
+```
+
 ---
 
 ## 🧩 Framework Modules Reference
@@ -135,7 +198,7 @@ def create_app():
 | **`neuroglia.integration`**           | External services        | `HttpServiceClient`, `CacheRepository`, `BackgroundTaskScheduler`          |
 | **`neuroglia.utils`**                 | Utility functions        | `CaseConversion`, `CamelModel`, `TypeFinder`                               |
 | **`neuroglia.expressions`**           | Expression evaluation    | `JavaScriptExpressionTranslator`                                           |
-| **`neuroglia.logging`**               | Enhanced logging         | Structured logging, correlation IDs, performance monitoring                |
+| **`neuroglia.observability`**         | OpenTelemetry integration| Tracing, metrics, logging with OTLP exporters                              |
 
 ---
 
@@ -149,6 +212,7 @@ The framework includes complete sample applications that demonstrate real-world 
 - **MongoDB repositories** for orders, customers, pizzas
 - **Event-driven architecture** with domain events
 - **Complete API** with OpenAPI documentation
+- **OpenTelemetry observability** with distributed tracing, metrics, and logging
 
 **Key Files:**
 
@@ -159,9 +223,20 @@ The framework includes complete sample applications that demonstrate real-world 
 
 ### 🏦 OpenBank (`samples/openbank/`)
 
-- **Event sourcing** with EventStore
-- **Complex domain modeling** (accounts, transactions)
+- **Event sourcing** with KurrentDB (EventStoreDB)
+- **CQRS with separate read/write models**
+- **Complex domain modeling** (accounts, transactions, persons)
 - **Banking business rules** and validation
+- **Read model projections** and eventual consistency
+- **Snapshot strategies** for performance
+
+### 🎨 Simple UI (`samples/simple-ui/`)
+
+- **SubApp pattern** for UI/API separation
+- **Stateless JWT authentication** without server-side sessions
+- **Role-Based Access Control (RBAC)** at query/command level
+- **Bootstrap 5 frontend** with Parcel bundler
+- **Clean separation** of concerns between UI and API
 
 ### 🎛️ Desktop Controller (`samples/desktop-controller/`)
 
@@ -205,6 +280,9 @@ The framework includes complete sample applications that demonstrate real-world 
 - **[MVC Controllers](features/mvc-controllers.md)** - FastAPI controller patterns
 - **[Data Access](features/data-access.md)** - Repository and persistence
 - **[Dependency Injection](patterns/dependency-injection.md)** - DI container usage
+- **[Observability](features/observability.md)** - OpenTelemetry tracing, metrics, logging
+- **[RBAC & Authorization](guides/rbac-authorization.md)** - Role-based access control patterns
+- **[OpenTelemetry Integration](guides/opentelemetry-integration.md)** - Infrastructure setup guide
 - **[Python Typing Guide](references/python_typing_guide.md)** - Type hints & generics
 
 ### 📖 Additional Resources
@@ -297,6 +375,9 @@ pyneuroctl new myapp --template minimal
 5. **Sample Code**: Always reference `samples/mario-pizzeria/` for real examples
 6. **Documentation**: Comprehensive docs in `docs/` with practical examples
 7. **Testing**: Full test coverage with patterns for all architectural layers
+8. **Observability**: OpenTelemetry integration for distributed tracing, metrics, and logging
+9. **Security**: RBAC patterns with JWT authentication at application layer
+10. **Event Sourcing**: Full support with KurrentDB (EventStoreDB) in OpenBank sample
 
 **When writing Neuroglia code:**
 
@@ -306,6 +387,9 @@ pyneuroctl new myapp --template minimal
 - Include comprehensive type hints
 - Reference Mario's Pizzeria sample for patterns
 - Maintain separation of concerns between layers
+- Implement observability with OpenTelemetry decorators
+- Handle authorization in handlers (application layer), not controllers
+- Use SubApp pattern for clean UI/API separation
 
 ## 🤖 Quick Framework Setup for AI Agents
 
