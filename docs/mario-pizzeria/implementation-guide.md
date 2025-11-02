@@ -165,8 +165,8 @@ class PlaceOrderHandler(CommandHandler[PlaceOrderCommand, OperationResult[OrderD
             # Save order (repository abstracts persistence)
             await self.order_repository.save_async(order)
 
-            # Unit of Work automatically dispatches domain events here!
-            # See: https://github.com/.../patterns/unit-of-work.md
+            # Repository automatically collects and dispatches domain events!
+            # See: https://github.com/.../patterns/persistence-patterns.md
 
             # Return success result
             order_dto = self.mapper.map(order, OrderDto)
@@ -181,7 +181,7 @@ class PlaceOrderHandler(CommandHandler[PlaceOrderCommand, OperationResult[OrderD
 > - ✅ **[Dependency Injection](../patterns/dependency-injection.md)** - Constructor injection of repositories and services
 > - ✅ **[Repository Pattern](../patterns/repository.md)** - `order_repository.save_async()` abstracts storage
 > - ✅ **[Domain-Driven Design](../patterns/domain-driven-design.md)** - `order.confirm_order()` enforces business rules
-> - ✅ **[Unit of Work](../patterns/unit-of-work.md)** - Automatic domain event collection and dispatching
+> - ✅ **[Persistence Patterns](../patterns/persistence-patterns.md)** - Repository-based event publishing after save
 > - ✅ **[CQRS](../patterns/cqrs.md)** - Command handler returns OperationResult, not void
 
 ---
@@ -588,7 +588,7 @@ The implementation patterns demonstrated in Mario's Pizzeria provide significant
 - **[Event-Driven Architecture](../patterns/event-driven.md)** - Domain events for workflow automation
 - **[Pipeline Behaviors](../patterns/pipeline-behaviors.md)** - Validation, logging, error handling
 - **[Repository Pattern](../patterns/repository.md)** - Data access abstraction
-- **[Unit of Work](../patterns/unit-of-work.md)** - Automatic event collection and dispatching
+- **[Persistence Patterns](../patterns/persistence-patterns.md)** - Repository-based event publishing and state management
 - **[Domain-Driven Design](../patterns/domain-driven-design.md)** - Rich domain models with business logic
 
 > 💡 **Learning Tip**: Each pattern page includes "Common Mistakes" sections with anti-patterns discovered while building Mario's Pizzeria. Learn from real implementation challenges!

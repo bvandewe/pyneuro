@@ -7,7 +7,7 @@
 
 ---
 
-> 💡 **Pattern in Action**: This document demonstrates how **[Repository Pattern](../patterns/repository.md)**, **[Dependency Injection](../patterns/dependency-injection.md)**, and **[Unit of Work](../patterns/unit-of-work.md)** make testing easier with clean mocking strategies.
+> 💡 **Pattern in Action**: This document demonstrates how **[Repository Pattern](../patterns/repository.md)**, **[Dependency Injection](../patterns/dependency-injection.md)**, and **[Persistence Patterns](../patterns/persistence-patterns.md)** make testing easier with clean mocking strategies and event verification.
 
 ---
 
@@ -782,7 +782,7 @@ async def metrics():
 
 - **[Dependency Injection](../patterns/dependency-injection.md)** - Constructor injection enables easy mocking
 - **[Repository Pattern](../patterns/repository.md)** - InMemoryRepository for test data setup
-- **[Unit of Work](../patterns/unit-of-work.md)** - Testing domain event collection and dispatching
+- **[Persistence Patterns](../patterns/persistence-patterns.md)** - Testing event publishing and domain event verification
 - **[CQRS Pattern](../patterns/cqrs.md)** - Testing commands and queries separately
 - **[Pipeline Behaviors](../patterns/pipeline-behaviors.md)** - Testing validation and logging behaviors
 

@@ -189,33 +189,40 @@ samples-stop: ## Stop all running samples
 ##@ Shared Infrastructure
 
 infra-start: ## Start shared infrastructure services (MongoDB, Keycloak, Observability)
-	@echo "🔧 Starting shared infrastructure services..."
-	@echo "🌐 Creating Docker network (if not exists)..."
-	@docker network create pyneuro-net 2>/dev/null || true
-	@docker-compose -f deployment/docker-compose/docker-compose.shared.yml up -d
-	@echo "✅ Shared infrastructure started!"
-	@echo "📊 MongoDB Express: http://localhost:8081"
-	@echo "🔐 Keycloak Admin: http://localhost:8090 (admin/admin)"
-	@echo "🎬 Event Player: http://localhost:8085"
-	@echo "📈 Grafana: http://localhost:3001 (admin/admin)"
-	@echo "📊 Prometheus: http://localhost:9090"
+	@./infra start
 
 infra-stop: ## Stop shared infrastructure services
-	@echo "⏹️  Stopping shared infrastructure services..."
-	@docker-compose -f deployment/docker-compose/docker-compose.shared.yml down
+	@./infra stop
+
+infra-restart: ## Restart shared infrastructure services
+	@./infra restart
+
+infra-recreate: ## Recreate infrastructure services (use SERVICE=name for specific service)
+	@./infra recreate $(if $(SERVICE),$(SERVICE),)
+
+infra-recreate-clean: ## Recreate infrastructure with fresh volumes (deletes all data!)
+	@./infra recreate --delete-volumes $(if $(SERVICE),$(SERVICE),)
 
 infra-status: ## Check status of shared infrastructure
-	@echo "📊 Shared Infrastructure Status:"
-	@docker-compose -f deployment/docker-compose/docker-compose.shared.yml ps
+	@./infra status
 
 infra-logs: ## View logs for shared infrastructure
-	@echo "📝 Shared Infrastructure Logs:"
-	@docker-compose -f deployment/docker-compose/docker-compose.shared.yml logs -f
+	@./infra logs
 
 infra-clean: ## Stop and clean shared infrastructure (removes volumes)
-	@echo "🧹 Cleaning shared infrastructure..."
-	@docker-compose -f deployment/docker-compose/docker-compose.shared.yml down -v
-	@echo "✅ Shared infrastructure cleaned!"
+	@./infra clean
+
+infra-build: ## Rebuild infrastructure Docker images
+	@./infra build
+
+infra-reset: ## Complete reset of infrastructure (clean + start)
+	@./infra reset
+
+infra-ps: ## List infrastructure containers
+	@./infra ps
+
+infra-health: ## Health check for infrastructure services
+	@./infra health
 
 ##@ Mario's Pizzeria
 
