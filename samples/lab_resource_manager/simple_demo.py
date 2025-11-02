@@ -7,21 +7,18 @@ that doesn't rely on complex import paths.
 import asyncio
 import logging
 import sys
-import os
-from datetime import datetime, timedelta
 from dataclasses import dataclass
+from datetime import datetime, timezone
 from enum import Enum
-from typing import Dict, List, Optional, Any
+from pathlib import Path
 
-# Add the src directory to Python path
-project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-src_path = os.path.join(project_root, "src")
-sys.path.insert(0, src_path)
+# Add the project root to Python path so we can import neuroglia
+project_root = Path(__file__).parent.parent.parent
+sys.path.insert(0, str(project_root / "src"))  # For neuroglia imports
+sys.path.insert(0, str(Path(__file__).parent))  # For local imports from lab_resource_manager
 
 # Configure logging
-logging.basicConfig(
-    level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
-)
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 log = logging.getLogger(__name__)
 
 
@@ -56,10 +53,10 @@ class SimpleResource:
 class SimpleWatcher:
     """Simple watcher implementation for demonstration."""
 
-    def __init__(self, storage: Dict[str, SimpleResource], watch_interval: float = 2.0):
+    def __init__(self, storage: dict[str, SimpleResource], watch_interval: float = 2.0):
         self.storage = storage
         self.watch_interval = watch_interval
-        self.cache: Dict[str, SimpleResource] = {}
+        self.cache: dict[str, SimpleResource] = {}
         self.watching = False
         self.change_handlers = []
 
@@ -123,9 +120,7 @@ class SimpleWatcher:
             if current.generation > cached.generation:
                 changes.append({"type": "UPDATED", "resource": current, "old_resource": cached})
             elif current.phase != cached.phase:
-                changes.append(
-                    {"type": "STATUS_UPDATED", "resource": current, "old_resource": cached}
-                )
+                changes.append({"type": "STATUS_UPDATED", "resource": current, "old_resource": cached})
 
         return changes
 
@@ -137,7 +132,7 @@ class SimpleWatcher:
 class SimpleController:
     """Simple controller for demonstration."""
 
-    def __init__(self, storage: Dict[str, SimpleResource]):
+    def __init__(self, storage: dict[str, SimpleResource]):
         self.storage = storage
 
     async def handle_change(self, change):
@@ -176,7 +171,7 @@ class SimpleController:
 class SimpleScheduler:
     """Simple scheduler for demonstration."""
 
-    def __init__(self, storage: Dict[str, SimpleResource], interval: float = 3.0):
+    def __init__(self, storage: dict[str, SimpleResource], interval: float = 3.0):
         self.storage = storage
         self.interval = interval
         self.running = False
@@ -234,7 +229,7 @@ async def demonstrate_patterns():
     print("=" * 60)
 
     # Shared storage
-    storage: Dict[str, SimpleResource] = {}
+    storage: dict[str, SimpleResource] = {}
 
     # Create components
     watcher = SimpleWatcher(storage, watch_interval=2.0)
@@ -254,17 +249,13 @@ async def demonstrate_patterns():
     # Create resources
     log.info("\n📋 Step 2: Creating Resources")
 
-    resource1 = SimpleResource(
-        id="lab-001", name="python-lab-001", namespace="default", phase=LabInstancePhase.PENDING
-    )
+    resource1 = SimpleResource(id="lab-001", name="python-lab-001", namespace="default", phase=LabInstancePhase.PENDING)
     storage[resource1.id] = resource1
     log.info(f"💾 Created resource: {resource1.name}")
 
     await asyncio.sleep(3)  # Let watcher detect
 
-    resource2 = SimpleResource(
-        id="lab-002", name="docker-lab-002", namespace="advanced", phase=LabInstancePhase.PENDING
-    )
+    resource2 = SimpleResource(id="lab-002", name="docker-lab-002", namespace="advanced", phase=LabInstancePhase.PENDING)
     storage[resource2.id] = resource2
     log.info(f"💾 Created resource: {resource2.name}")
 

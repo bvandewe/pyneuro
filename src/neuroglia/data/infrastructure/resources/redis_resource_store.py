@@ -5,7 +5,7 @@ with support for basic CRUD operations.
 """
 
 import logging
-from typing import List, Optional
+from typing import Optional
 
 try:
     import redis.asyncio as redis
@@ -28,11 +28,8 @@ class RedisResourceStore:
         password: Optional[str] = None,
         decode_responses: bool = True,
     ):
-
         if not REDIS_AVAILABLE:
-            raise ImportError(
-                "redis is required for Redis storage. Install with: pip install redis"
-            )
+            raise ImportError("redis is required for Redis storage. Install with: pip install redis")
 
         self.host = host
         self.port = port
@@ -84,7 +81,7 @@ class RedisResourceStore:
         client = await self._get_client()
         await client.delete(key)
 
-    async def keys(self, pattern: str) -> List[str]:
+    async def keys(self, pattern: str) -> list[str]:
         """Get all keys matching a pattern."""
         client = await self._get_client()
         keys = await client.keys(pattern)

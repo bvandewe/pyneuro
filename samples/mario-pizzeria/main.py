@@ -36,17 +36,14 @@ from integration.repositories import (
 )
 
 from neuroglia.data.infrastructure.mongo import MotorRepository
-from neuroglia.data.unit_of_work import UnitOfWork
 from neuroglia.eventing.cloud_events.infrastructure import (
     CloudEventIngestor,
+    CloudEventMiddleware,
     CloudEventPublisher,
 )
 from neuroglia.hosting.web import SubAppConfig, WebApplicationBuilder
 from neuroglia.mapping import Mapper
 from neuroglia.mediation import Mediator
-from neuroglia.mediation.behaviors.domain_event_dispatching_middleware import (
-    DomainEventDispatchingMiddleware,
-)
 from neuroglia.observability import Observability
 from neuroglia.serialization.json import JsonSerializer
 
@@ -80,8 +77,8 @@ def create_pizzeria_app(data_dir: Optional[str] = None, port: int = 8080):
     JsonSerializer.configure(builder, ["domain.entities.enums", "domain.entities"])
 
     # Optional: configure UnitOfWork and middleware (as we use AggregateRoot)
-    UnitOfWork.configure(builder)
-    DomainEventDispatchingMiddleware.configure(builder)
+    # UnitOfWork.configure(builder)
+    # DomainEventDispatchingMiddleware.configure(builder)
 
     # Optional: configure CloudEvent emission and consumption
     CloudEventPublisher.configure(builder)
@@ -142,7 +139,7 @@ def create_pizzeria_app(data_dir: Optional[str] = None, port: int = 8080):
     # - Adds exception handling
     # - Injects service provider to all apps
     app = builder.build_app_with_lifespan(title="Mario's Pizzeria", description="Complete pizza ordering and management system with Keycloak auth", version="1.0.0", debug=True)
-
+    app.add_middleware(CloudEventMiddleware, service_provider=app.state.services)
     log.info("App is ready to rock.")
     return app
 
