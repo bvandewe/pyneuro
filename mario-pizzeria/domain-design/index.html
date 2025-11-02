@@ -226,14 +226,6 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../guides/3-min-bootstrap/">
-<span class="md-ellipsis">
-    Quick Bootstrap
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
 <a class="md-nav__link" href="../../guides/local-development/">
 <span class="md-ellipsis">
     Local Dev Setup
@@ -242,16 +234,16 @@
 </a>
 </li>
 <li class="md-nav__item md-nav__item--nested">
-<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_1_5" type="checkbox"/>
-<label class="md-nav__link" for="__nav_1_5" id="__nav_1_5_label" tabindex="0">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_1_4" type="checkbox"/>
+<label class="md-nav__link" for="__nav_1_4" id="__nav_1_4_label" tabindex="0">
 <span class="md-ellipsis">
     Tutorials
     
   </span>
 <span class="md-nav__icon md-icon"></span>
 </label>
-<nav aria-expanded="false" aria-labelledby="__nav_1_5_label" class="md-nav" data-md-level="2">
-<label class="md-nav__title" for="__nav_1_5">
+<nav aria-expanded="false" aria-labelledby="__nav_1_4_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_1_4">
 <span class="md-nav__icon md-icon"></span>
             Tutorials
           </label>
@@ -340,16 +332,16 @@
 </nav>
 </li>
 <li class="md-nav__item md-nav__item--nested">
-<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_1_6" type="checkbox"/>
-<label class="md-nav__link" for="__nav_1_6" id="__nav_1_6_label" tabindex="0">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_1_5" type="checkbox"/>
+<label class="md-nav__link" for="__nav_1_5" id="__nav_1_5_label" tabindex="0">
 <span class="md-ellipsis">
     Sample Applications
     
   </span>
 <span class="md-nav__icon md-icon"></span>
 </label>
-<nav aria-expanded="false" aria-labelledby="__nav_1_6_label" class="md-nav" data-md-level="2">
-<label class="md-nav__title" for="__nav_1_6">
+<nav aria-expanded="false" aria-labelledby="__nav_1_5_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_1_5">
 <span class="md-nav__icon md-icon"></span>
             Sample Applications
           </label>
@@ -363,7 +355,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../marios-pizzeria.md">
+<a class="md-nav__link" href="../">
 <span class="md-ellipsis">
     🍕 Mario's Pizzeria - CQRS &amp; Event-Driven
     
@@ -426,7 +418,7 @@
 <li class="md-nav__item">
 <a class="md-nav__link" href="../">
 <span class="md-ellipsis">
-    Overview
+    🍕 Mario's Pizzeria - CQRS &amp; Event-Driven
     
   </span>
 </a>
@@ -2062,7 +2054,7 @@
 <p>Domain events capture important business occurrences and enable loose coupling through <strong><a href="../../patterns/event-driven/">event-driven architecture</a></strong>:</p>
 <blockquote>
 <p>🎯 <strong>Why Domain Events?</strong>: Events decouple the order placement from kitchen processing and customer notifications. The order handler doesn't need to know about the kitchen or SMS service! Learn more about <a href="../../patterns/event-driven/#what--why-the-event-driven-pattern">Event-Driven Architecture</a>.</p>
-<p>⚠️ <strong>Common Mistake Alert</strong>: Don't forget to use <strong><a href="../../patterns/unit-of-work/">Unit of Work</a></strong> to automatically collect and dispatch events! See the <a href="../../patterns/unit-of-work/#common-mistakes">Unit of Work pattern</a> to avoid manual event management.</p>
+<p>⚠️ <strong>Common Mistake Alert</strong>: Ensure your repositories publish domain events after successful persistence! The framework uses <strong><a href="../../patterns/persistence-patterns/#repository-based-event-publishing">repository-based event publishing</a></strong> where the repository automatically collects and dispatches events. See the <a href="../../patterns/persistence-patterns/">Persistence Patterns guide</a> for best practices.</p>
 </blockquote>
 <h3 id="order-lifecycle-events">Order Lifecycle Events<a class="headerlink" href="#order-lifecycle-events" title="Permanent link">¶</a></h3>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a href="#__codelineno-5-1" id="__codelineno-5-1" name="__codelineno-5-1"></a><span class="nd">@dataclass</span>
@@ -2183,7 +2175,7 @@
 <li><strong><a href="../../patterns/domain-driven-design/">Domain-Driven Design</a></strong> - Rich domain models with business logic</li>
 <li><strong><a href="../../patterns/event-driven/">Event-Driven Architecture</a></strong> - Domain events for workflow automation</li>
 <li><strong><a href="../../patterns/repository/">Repository Pattern</a></strong> - Data access abstraction for entities</li>
-<li><strong><a href="../../patterns/unit-of-work/">Unit of Work</a></strong> - Automatic domain event collection and dispatching</li>
+<li><strong><a href="../../patterns/persistence-patterns/">Persistence Patterns</a></strong> - Repository-based event publishing and state management</li>
 <li><strong><a href="../../patterns/clean-architecture/">Clean Architecture</a></strong> - Domain layer independence</li>
 </ul>
 <blockquote>

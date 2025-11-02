@@ -226,14 +226,6 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../guides/3-min-bootstrap/">
-<span class="md-ellipsis">
-    Quick Bootstrap
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
 <a class="md-nav__link" href="../../guides/local-development/">
 <span class="md-ellipsis">
     Local Dev Setup
@@ -242,16 +234,16 @@
 </a>
 </li>
 <li class="md-nav__item md-nav__item--nested">
-<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_1_5" type="checkbox"/>
-<label class="md-nav__link" for="__nav_1_5" id="__nav_1_5_label" tabindex="0">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_1_4" type="checkbox"/>
+<label class="md-nav__link" for="__nav_1_4" id="__nav_1_4_label" tabindex="0">
 <span class="md-ellipsis">
     Tutorials
     
   </span>
 <span class="md-nav__icon md-icon"></span>
 </label>
-<nav aria-expanded="false" aria-labelledby="__nav_1_5_label" class="md-nav" data-md-level="2">
-<label class="md-nav__title" for="__nav_1_5">
+<nav aria-expanded="false" aria-labelledby="__nav_1_4_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_1_4">
 <span class="md-nav__icon md-icon"></span>
             Tutorials
           </label>
@@ -340,16 +332,16 @@
 </nav>
 </li>
 <li class="md-nav__item md-nav__item--nested">
-<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_1_6" type="checkbox"/>
-<label class="md-nav__link" for="__nav_1_6" id="__nav_1_6_label" tabindex="0">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_1_5" type="checkbox"/>
+<label class="md-nav__link" for="__nav_1_5" id="__nav_1_5_label" tabindex="0">
 <span class="md-ellipsis">
     Sample Applications
     
   </span>
 <span class="md-nav__icon md-icon"></span>
 </label>
-<nav aria-expanded="false" aria-labelledby="__nav_1_6_label" class="md-nav" data-md-level="2">
-<label class="md-nav__title" for="__nav_1_6">
+<nav aria-expanded="false" aria-labelledby="__nav_1_5_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_1_5">
 <span class="md-nav__icon md-icon"></span>
             Sample Applications
           </label>
@@ -363,7 +355,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../marios-pizzeria.md">
+<a class="md-nav__link" href="../">
 <span class="md-ellipsis">
     🍕 Mario's Pizzeria - CQRS &amp; Event-Driven
     
@@ -426,7 +418,7 @@
 <li class="md-nav__item">
 <a class="md-nav__link" href="../">
 <span class="md-ellipsis">
-    Overview
+    🍕 Mario's Pizzeria - CQRS &amp; Event-Driven
     
   </span>
 </a>
@@ -1777,8 +1769,8 @@
 </span><span id="__span-2-48"><a href="#__codelineno-2-48" id="__codelineno-2-48" name="__codelineno-2-48"></a>            <span class="c1"># Save order (repository abstracts persistence)</span>
 </span><span id="__span-2-49"><a href="#__codelineno-2-49" id="__codelineno-2-49" name="__codelineno-2-49"></a>            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">order_repository</span><span class="o">.</span><span class="n">save_async</span><span class="p">(</span><span class="n">order</span><span class="p">)</span>
 </span><span id="__span-2-50"><a href="#__codelineno-2-50" id="__codelineno-2-50" name="__codelineno-2-50"></a>
-</span><span id="__span-2-51"><a href="#__codelineno-2-51" id="__codelineno-2-51" name="__codelineno-2-51"></a>            <span class="c1"># Unit of Work automatically dispatches domain events here!</span>
-</span><span id="__span-2-52"><a href="#__codelineno-2-52" id="__codelineno-2-52" name="__codelineno-2-52"></a>            <span class="c1"># See: https://github.com/.../patterns/unit-of-work.md</span>
+</span><span id="__span-2-51"><a href="#__codelineno-2-51" id="__codelineno-2-51" name="__codelineno-2-51"></a>            <span class="c1"># Repository automatically collects and dispatches domain events!</span>
+</span><span id="__span-2-52"><a href="#__codelineno-2-52" id="__codelineno-2-52" name="__codelineno-2-52"></a>            <span class="c1"># See: https://github.com/.../patterns/persistence-patterns.md</span>
 </span><span id="__span-2-53"><a href="#__codelineno-2-53" id="__codelineno-2-53" name="__codelineno-2-53"></a>
 </span><span id="__span-2-54"><a href="#__codelineno-2-54" id="__codelineno-2-54" name="__codelineno-2-54"></a>            <span class="c1"># Return success result</span>
 </span><span id="__span-2-55"><a href="#__codelineno-2-55" id="__codelineno-2-55" name="__codelineno-2-55"></a>            <span class="n">order_dto</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mapper</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">order</span><span class="p">,</span> <span class="n">OrderDto</span><span class="p">)</span>
@@ -1793,7 +1785,7 @@
 <li>✅ <strong><a href="../../patterns/dependency-injection/">Dependency Injection</a></strong> - Constructor injection of repositories and services</li>
 <li>✅ <strong><a href="../../patterns/repository/">Repository Pattern</a></strong> - <code>order_repository.save_async()</code> abstracts storage</li>
 <li>✅ <strong><a href="../../patterns/domain-driven-design/">Domain-Driven Design</a></strong> - <code>order.confirm_order()</code> enforces business rules</li>
-<li>✅ <strong><a href="../../patterns/unit-of-work/">Unit of Work</a></strong> - Automatic domain event collection and dispatching</li>
+<li>✅ <strong><a href="../../patterns/persistence-patterns/">Persistence Patterns</a></strong> - Repository-based event publishing after save</li>
 <li>✅ <strong><a href="../../patterns/cqrs/">CQRS</a></strong> - Command handler returns OperationResult, not void</li>
 </ul>
 </blockquote>
@@ -2184,7 +2176,7 @@
 <li><strong><a href="../../patterns/event-driven/">Event-Driven Architecture</a></strong> - Domain events for workflow automation</li>
 <li><strong><a href="../../patterns/pipeline-behaviors/">Pipeline Behaviors</a></strong> - Validation, logging, error handling</li>
 <li><strong><a href="../../patterns/repository/">Repository Pattern</a></strong> - Data access abstraction</li>
-<li><strong><a href="../../patterns/unit-of-work/">Unit of Work</a></strong> - Automatic event collection and dispatching</li>
+<li><strong><a href="../../patterns/persistence-patterns/">Persistence Patterns</a></strong> - Repository-based event publishing and state management</li>
 <li><strong><a href="../../patterns/domain-driven-design/">Domain-Driven Design</a></strong> - Rich domain models with business logic</li>
 </ul>
 <blockquote>
