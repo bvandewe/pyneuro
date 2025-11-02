@@ -18,6 +18,9 @@ def add_unit_of_work(services: ServiceCollection) -> ServiceCollection:
     """
     Registers the Unit of Work services for state-based persistence.
 
+    NOTE: The UnitOfWork pattern is deprecated in favor of repository-based event publishing.
+    For new projects, use the repository event publishing pattern instead.
+
     This method configures the dependency injection container with the necessary
     services for collecting and managing domain events from aggregate roots.
 
@@ -30,22 +33,38 @@ def add_unit_of_work(services: ServiceCollection) -> ServiceCollection:
     Returns:
         The configured service collection for fluent chaining
 
-    Examples:
+    Recommended Pattern (Repository-Based Event Publishing):
         ```python
-        # Basic setup
+        from neuroglia.hosting.web import WebApplicationBuilder
+        from neuroglia.mediation import Mediator
+
+        builder = WebApplicationBuilder()
+        Mediator.configure(builder, ["application.commands", "application.queries"])
+
+        # Repositories automatically publish events on save
+        builder.services.add_scoped(UserRepository)
+
+        app = builder.build()
+        ```
+
+    Legacy Pattern (UnitOfWork):
+        ```python
+        # Basic setup (deprecated)
         services = ServiceCollection()
         services.add_unit_of_work()
 
-        # Full CQRS setup with domain events
-        services = ServiceCollection()
-        services.add_mediator()
-        services.add_unit_of_work()
-        services.add_domain_event_dispatching()
+        # Full CQRS setup with domain events (deprecated)
+        from neuroglia.mediation import Mediator
+
+        builder = WebApplicationBuilder()
+        Mediator.configure(builder, ["application.commands"])
+        builder.services.add_unit_of_work()
+        builder.services.add_domain_event_dispatching()
         ```
 
     See Also:
-        - Unit of Work Pattern: https://bvandewe.github.io/pyneuro/patterns/unit-of-work/
-        - State-Based Persistence: https://bvandewe.github.io/pyneuro/features/state-persistence/
+        - Repository Pattern: https://bvandewe.github.io/pyneuro/patterns/repository/
+        - State-Based Persistence: https://bvandewe.github.io/pyneuro/features/data-access/
     """
     services.add_scoped(IUnitOfWork, UnitOfWork)
     return services
@@ -55,6 +74,10 @@ def add_domain_event_dispatching(services: ServiceCollection) -> ServiceCollecti
     """
     Registers the domain event dispatching middleware for automatic event processing.
 
+    NOTE: This is typically used with the deprecated UnitOfWork pattern. For new projects,
+    prefer repository-based event publishing where repositories automatically dispatch
+    events when aggregates are saved.
+
     This method configures pipeline behaviors that automatically collect and dispatch
     domain events after successful command execution, providing the outbox pattern
     for eventual consistency.
@@ -63,7 +86,7 @@ def add_domain_event_dispatching(services: ServiceCollection) -> ServiceCollecti
         - PipelineBehavior -> DomainEventDispatchingMiddleware (Scoped)
 
     Prerequisites:
-        - Mediator must be registered (services.add_mediator())
+        - Mediator must be registered (via Mediator.configure() or services.add_mediator())
         - Unit of Work must be registered (services.add_unit_of_work())
 
     Args:
@@ -72,13 +95,29 @@ def add_domain_event_dispatching(services: ServiceCollection) -> ServiceCollecti
     Returns:
         The configured service collection for fluent chaining
 
-    Examples:
+    Recommended Pattern (Repository-Based):
+        ```python
+        from neuroglia.hosting.web import WebApplicationBuilder
+        from neuroglia.mediation import Mediator
+
+        builder = WebApplicationBuilder()
+        Mediator.configure(builder, ["application.commands", "application.queries"])
+
+        # Repositories automatically handle event publishing
+        builder.services.add_scoped(UserRepository)
+
+        app = builder.build()
+        ```
+
+    Legacy Pattern (UnitOfWork with Middleware):
         ```python
         # Complete setup for state-based persistence with domain events
-        services = ServiceCollection()
-        services.add_mediator()
-        services.add_unit_of_work()
-        services.add_domain_event_dispatching()
+        from neuroglia.mediation import Mediator
+
+        builder = WebApplicationBuilder()
+        Mediator.configure(builder, ["application.commands"])
+        builder.services.add_unit_of_work()
+        builder.services.add_domain_event_dispatching()
 
         # Usage in handlers
         class CreateUserHandler(CommandHandler[CreateUserCommand, OperationResult]):
@@ -103,8 +142,8 @@ def add_domain_event_dispatching(services: ServiceCollection) -> ServiceCollecti
         ```
 
     See Also:
-        - Domain Events: https://bvandewe.github.io/pyneuro/patterns/domain-events/
-        - Pipeline Behaviors: https://bvandewe.github.io/pyneuro/patterns/pipeline-behaviors/
+        - Repository Pattern: https://bvandewe.github.io/pyneuro/patterns/repository/
+        - Domain Events: https://bvandewe.github.io/pyneuro/patterns/cqrs/
     """
     services.add_scoped(PipelineBehavior, DomainEventDispatchingMiddleware)
     return services
@@ -129,14 +168,20 @@ def add_transaction_behavior(services: ServiceCollection) -> ServiceCollection:
     Returns:
         The configured service collection for fluent chaining
 
-    Examples:
+    Usage:
         ```python
-        # Setup with transaction management
-        services = ServiceCollection()
-        services.add_mediator()
-        services.add_transaction_behavior()  # Should be registered before event dispatching
-        services.add_unit_of_work()
-        services.add_domain_event_dispatching()
+        from neuroglia.hosting.web import WebApplicationBuilder
+        from neuroglia.mediation import Mediator
+
+        builder = WebApplicationBuilder()
+        Mediator.configure(builder, ["application.commands"])
+
+        # Should be registered before event dispatching
+        builder.services.add_transaction_behavior()
+        builder.services.add_unit_of_work()
+        builder.services.add_domain_event_dispatching()
+
+        app = builder.build()
         ```
 
     Behavior Order:
@@ -147,8 +192,7 @@ def add_transaction_behavior(services: ServiceCollection) -> ServiceCollection:
         ```
 
     See Also:
-        - Pipeline Behaviors: https://bvandewe.github.io/pyneuro/patterns/pipeline-behaviors/
-        - Transaction Patterns: https://bvandewe.github.io/pyneuro/patterns/transactions/
+        - Pipeline Behaviors: https://bvandewe.github.io/pyneuro/patterns/cqrs/
     """
     services.add_scoped(PipelineBehavior, TransactionBehavior)
     return services
@@ -158,6 +202,9 @@ def add_state_based_persistence(services: ServiceCollection) -> ServiceCollectio
     """
     Registers all services required for complete state-based persistence support.
 
+    NOTE: This pattern is deprecated. For new projects, use repository-based event publishing
+    where repositories automatically dispatch events when aggregates are saved.
+
     This is a convenience method that registers all the components needed for
     state-based persistence with automatic domain event dispatching:
     - Unit of Work for aggregate tracking
@@ -165,7 +212,7 @@ def add_state_based_persistence(services: ServiceCollection) -> ServiceCollectio
     - Transaction behavior (optional, placeholder implementation)
 
     Prerequisites:
-        - Mediator must be registered first (services.add_mediator())
+        - Mediator must be registered first (via Mediator.configure())
 
     Services Registered:
         - IUnitOfWork -> UnitOfWork (Scoped)
@@ -178,18 +225,34 @@ def add_state_based_persistence(services: ServiceCollection) -> ServiceCollectio
     Returns:
         The configured service collection for fluent chaining
 
-    Examples:
+    Recommended Pattern (Repository-Based):
         ```python
-        # Complete setup in one call
-        services = ServiceCollection()
-        services.add_mediator()
-        services.add_state_based_persistence()
+        from neuroglia.hosting.web import WebApplicationBuilder
+        from neuroglia.mediation import Mediator
+
+        builder = WebApplicationBuilder()
+        Mediator.configure(builder, ["application.commands", "application.queries"])
+
+        # Repositories automatically publish events
+        builder.services.add_scoped(UserRepository)
+
+        app = builder.build()
+        ```
+
+    Legacy Pattern (Complete UnitOfWork Setup):
+        ```python
+        # Complete setup in one call (deprecated)
+        from neuroglia.mediation import Mediator
+
+        builder = WebApplicationBuilder()
+        Mediator.configure(builder, ["application.commands"])
+        builder.services.add_state_based_persistence()
 
         # Equivalent to:
-        services.add_mediator()
-        services.add_unit_of_work()
-        services.add_transaction_behavior()
-        services.add_domain_event_dispatching()
+        Mediator.configure(builder, ["application.commands"])
+        builder.services.add_unit_of_work()
+        builder.services.add_transaction_behavior()
+        builder.services.add_domain_event_dispatching()
         ```
 
     Architecture:
@@ -209,8 +272,8 @@ def add_state_based_persistence(services: ServiceCollection) -> ServiceCollectio
         ```
 
     See Also:
+        - Repository Pattern: https://bvandewe.github.io/pyneuro/patterns/repository/
         - Getting Started: https://bvandewe.github.io/pyneuro/getting-started/
-        - State-Based Persistence: https://bvandewe.github.io/pyneuro/features/state-persistence/
     """
     services.add_unit_of_work()
     services.add_transaction_behavior()

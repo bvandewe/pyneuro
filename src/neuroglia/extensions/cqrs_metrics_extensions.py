@@ -44,7 +44,24 @@ def add_cqrs_metrics(services: ServiceCollection) -> ServiceCollection:
     Returns:
         ServiceCollection: The configured service collection for method chaining
 
-    Example:
+    Recommended Usage:
+        ```python
+        from neuroglia.hosting.web import WebApplicationBuilder
+        from neuroglia.mediation import Mediator
+
+        builder = WebApplicationBuilder()
+
+        # Configure mediator with handlers (required first)
+        Mediator.configure(builder, ["application.commands", "application.queries"])
+
+        # Add CQRS metrics collection
+        builder.services.add_cqrs_metrics()
+
+        app = builder.build()
+        app.run()
+        ```
+
+    Legacy Usage:
         ```python
         from neuroglia.dependency_injection import ServiceCollection
 
@@ -54,7 +71,7 @@ def add_cqrs_metrics(services: ServiceCollection) -> ServiceCollection:
         ```
 
     Requirements:
-        - Mediator must be registered first (services.add_mediator())
+        - Mediator must be registered first (via Mediator.configure() or services.add_mediator())
         - OpenTelemetry packages must be installed
     """
     if not MIDDLEWARE_AVAILABLE:

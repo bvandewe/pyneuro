@@ -153,7 +153,7 @@ class OrdersController(ControllerBase):
     ) -> OrderDto:
         # Extract user info from JWT
         user_info = self._decode_jwt(credentials.credentials)
-        
+
         # Pass to handler for RBAC check
         command = CreateOrderCommand(
             customer_id=dto.customer_id,
@@ -169,7 +169,7 @@ class CreateOrderHandler(CommandHandler):
         # Authorization check based on roles
         if "customer" not in command.user_info.get("roles", []):
             return self.forbidden("Insufficient permissions")
-        
+
         # Business logic
         order = Order(command.customer_id, command.items)
         await self.repository.save_async(order)
@@ -180,25 +180,25 @@ class CreateOrderHandler(CommandHandler):
 
 ## 🧩 Framework Modules Reference
 
-| Module                                | Purpose                  | Key Classes                                                                |
-| ------------------------------------- | ------------------------ | -------------------------------------------------------------------------- |
-| **`neuroglia.core`**                  | Base types, utilities    | `OperationResult`, `Entity`, `ValueObject`                                 |
-| **`neuroglia.dependency_injection`**  | DI container             | `ServiceCollection`, `ServiceProvider`, `ServiceLifetime`                  |
-| **`neuroglia.mediation`**             | CQRS patterns            | `Mediator`, `Command`, `Query`, `CommandHandler`, `QueryHandler`           |
-| **`neuroglia.mvc`**                   | FastAPI controllers      | `ControllerBase`, auto-discovery                                           |
-| **`neuroglia.data`**                  | Repository & persistence | `Repository`, `MongoRepository`, `InMemoryRepository`, `EventStore`        |
-| **`neuroglia.data.resources`**        | Resource management      | `ResourceController`, `ResourceWatcher`, `Reconciler`                      |
-| **`neuroglia.eventing`**              | Event handling           | `DomainEvent`, `EventHandler`, `EventBus`                                  |
-| **`neuroglia.eventing.cloud_events`** | CloudEvents integration  | `CloudEvent`, `CloudEventPublisher`, `CloudEventIngestor`                  |
-| **`neuroglia.mapping`**               | Object mapping           | `Mapper`, convention-based mapping                                         |
-| **`neuroglia.hosting`**               | App lifecycle            | `WebApplicationBuilder`, `WebApplication`, `HostedService`                 |
-| **`neuroglia.serialization`**         | JSON/data serialization  | `JsonSerializer`, `JsonEncoder`, `TypeRegistry`                            |
-| **`neuroglia.validation`**            | Business rule validation | `BusinessRule`, `ValidationResult`, `PropertyValidator`, `EntityValidator` |
-| **`neuroglia.reactive`**              | Reactive programming     | `Observable`, `Observer` (RxPy integration)                                |
-| **`neuroglia.integration`**           | External services        | `HttpServiceClient`, `CacheRepository`, `BackgroundTaskScheduler`          |
-| **`neuroglia.utils`**                 | Utility functions        | `CaseConversion`, `CamelModel`, `TypeFinder`                               |
-| **`neuroglia.expressions`**           | Expression evaluation    | `JavaScriptExpressionTranslator`                                           |
-| **`neuroglia.observability`**         | OpenTelemetry integration| Tracing, metrics, logging with OTLP exporters                              |
+| Module                                | Purpose                   | Key Classes                                                                |
+| ------------------------------------- | ------------------------- | -------------------------------------------------------------------------- |
+| **`neuroglia.core`**                  | Base types, utilities     | `OperationResult`, `Entity`, `ValueObject`                                 |
+| **`neuroglia.dependency_injection`**  | DI container              | `ServiceCollection`, `ServiceProvider`, `ServiceLifetime`                  |
+| **`neuroglia.mediation`**             | CQRS patterns             | `Mediator`, `Command`, `Query`, `CommandHandler`, `QueryHandler`           |
+| **`neuroglia.mvc`**                   | FastAPI controllers       | `ControllerBase`, auto-discovery                                           |
+| **`neuroglia.data`**                  | Repository & persistence  | `Repository`, `MongoRepository`, `InMemoryRepository`, `EventStore`        |
+| **`neuroglia.data.resources`**        | Resource management       | `ResourceController`, `ResourceWatcher`, `Reconciler`                      |
+| **`neuroglia.eventing`**              | Event handling            | `DomainEvent`, `EventHandler`, `EventBus`                                  |
+| **`neuroglia.eventing.cloud_events`** | CloudEvents integration   | `CloudEvent`, `CloudEventPublisher`, `CloudEventIngestor`                  |
+| **`neuroglia.mapping`**               | Object mapping            | `Mapper`, convention-based mapping                                         |
+| **`neuroglia.hosting`**               | App lifecycle             | `WebApplicationBuilder`, `WebApplication`, `HostedService`                 |
+| **`neuroglia.serialization`**         | JSON/data serialization   | `JsonSerializer`, `JsonEncoder`, `TypeRegistry`                            |
+| **`neuroglia.validation`**            | Business rule validation  | `BusinessRule`, `ValidationResult`, `PropertyValidator`, `EntityValidator` |
+| **`neuroglia.reactive`**              | Reactive programming      | `Observable`, `Observer` (RxPy integration)                                |
+| **`neuroglia.integration`**           | External services         | `HttpServiceClient`, `CacheRepository`, `BackgroundTaskScheduler`          |
+| **`neuroglia.utils`**                 | Utility functions         | `CaseConversion`, `CamelModel`, `TypeFinder`                               |
+| **`neuroglia.expressions`**           | Expression evaluation     | `JavaScriptExpressionTranslator`                                           |
+| **`neuroglia.observability`**         | OpenTelemetry integration | Tracing, metrics, logging with OTLP exporters                              |
 
 ---
 
