@@ -7,9 +7,11 @@
 <meta content="width=device-width,initial-scale=1" name="viewport"/>
 <meta content="A lightweight, opinionated Python framework built on FastAPI that enforces clean architecture principles" name="description"/>
 <link href="https://bvandewe.github.io/pyneuro/guides/opentelemetry-integration/" rel="canonical"/>
+<link href="../jsonserializer-configuration/" rel="prev"/>
+<link href="../rbac-authorization/" rel="next"/>
 <link href="../../assets/images/favicon.png" rel="icon"/>
 <meta content="mkdocs-1.6.1, mkdocs-material-9.6.23" name="generator"/>
-<title>🔭 OpenTelemetry Integration Guide - Neuroglia Python Framework</title>
+<title>OpenTelemetry Integration - Neuroglia Python Framework</title>
 <link href="../../assets/stylesheets/main.84d31ad4.min.css" rel="stylesheet"/>
 <link href="../../assets/stylesheets/palette.06af60db.min.css" rel="stylesheet"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
@@ -46,7 +48,7 @@
 <div class="md-header__topic" data-md-component="header-topic">
 <span class="md-ellipsis">
             
-              🔭 OpenTelemetry Integration Guide
+              OpenTelemetry Integration
             
           </span>
 </div>
@@ -146,7 +148,7 @@
 
         </a>
 </li>
-<li class="md-tabs__item">
+<li class="md-tabs__item md-tabs__item--active">
 <a class="md-tabs__link" href="../">
           
   
@@ -361,9 +363,25 @@
 </a>
 </li>
 <li class="md-nav__item">
+<a class="md-nav__link" href="../../marios-pizzeria.md">
+<span class="md-ellipsis">
+    🍕 Mario's Pizzeria - CQRS &amp; Event-Driven
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
 <a class="md-nav__link" href="../../samples/openbank/">
 <span class="md-ellipsis">
-    OpenBank
+    🏦 OpenBank - Event Sourcing
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../samples/simple-ui/">
+<span class="md-ellipsis">
+    🎨 Simple UI - SubApp Pattern
     
   </span>
 </a>
@@ -729,17 +747,25 @@
 </ul>
 </nav>
 </li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/observability/">
+<span class="md-ellipsis">
+    Observability
+    
+  </span>
+</a>
+</li>
 <li class="md-nav__item md-nav__item--nested">
-<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_4_3" type="checkbox"/>
-<label class="md-nav__link" for="__nav_4_3" id="__nav_4_3_label" tabindex="0">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_4_4" type="checkbox"/>
+<label class="md-nav__link" for="__nav_4_4" id="__nav_4_4_label" tabindex="0">
 <span class="md-ellipsis">
     Validation &amp; Utilities
     
   </span>
 <span class="md-nav__icon md-icon"></span>
 </label>
-<nav aria-expanded="false" aria-labelledby="__nav_4_3_label" class="md-nav" data-md-level="2">
-<label class="md-nav__title" for="__nav_4_3">
+<nav aria-expanded="false" aria-labelledby="__nav_4_4_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_4_4">
 <span class="md-nav__icon md-icon"></span>
             Validation &amp; Utilities
           </label>
@@ -772,16 +798,16 @@
 </nav>
 </li>
 <li class="md-nav__item md-nav__item--nested">
-<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_4_4" type="checkbox"/>
-<label class="md-nav__link" for="__nav_4_4" id="__nav_4_4_label" tabindex="0">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_4_5" type="checkbox"/>
+<label class="md-nav__link" for="__nav_4_5" id="__nav_4_5_label" tabindex="0">
 <span class="md-ellipsis">
     Integration
     
   </span>
 <span class="md-nav__icon md-icon"></span>
 </label>
-<nav aria-expanded="false" aria-labelledby="__nav_4_4_label" class="md-nav" data-md-level="2">
-<label class="md-nav__title" for="__nav_4_4">
+<nav aria-expanded="false" aria-labelledby="__nav_4_5_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_4_5">
 <span class="md-nav__icon md-icon"></span>
             Integration
           </label>
@@ -814,16 +840,16 @@
 </nav>
 </li>
 <li class="md-nav__item md-nav__item--nested">
-<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_4_5" type="checkbox"/>
-<label class="md-nav__link" for="__nav_4_5" id="__nav_4_5_label" tabindex="0">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_4_6" type="checkbox"/>
+<label class="md-nav__link" for="__nav_4_6" id="__nav_4_6_label" tabindex="0">
 <span class="md-ellipsis">
     Dev Tools
     
   </span>
 <span class="md-nav__icon md-icon"></span>
 </label>
-<nav aria-expanded="false" aria-labelledby="__nav_4_5_label" class="md-nav" data-md-level="2">
-<label class="md-nav__title" for="__nav_4_5">
+<nav aria-expanded="false" aria-labelledby="__nav_4_6_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_4_6">
 <span class="md-nav__icon md-icon"></span>
             Dev Tools
           </label>
@@ -850,16 +876,16 @@
 </ul>
 </nav>
 </li>
-<li class="md-nav__item md-nav__item--nested">
-<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_5" type="checkbox"/>
-<label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+<li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+<input checked="" class="md-nav__toggle md-toggle" id="__nav_5" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
 <span class="md-ellipsis">
     Guides
     
   </span>
 <span class="md-nav__icon md-icon"></span>
 </label>
-<nav aria-expanded="false" aria-labelledby="__nav_5_label" class="md-nav" data-md-level="1">
+<nav aria-expanded="true" aria-labelledby="__nav_5_label" class="md-nav" data-md-level="1">
 <label class="md-nav__title" for="__nav_5">
 <span class="md-nav__icon md-icon"></span>
             Guides
@@ -873,6 +899,21 @@
   </span>
 </a>
 </li>
+<li class="md-nav__item md-nav__item--section md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_5_2" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5_2" id="__nav_5_2_label" tabindex="">
+<span class="md-ellipsis">
+    Getting Started
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_5_2_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_5_2">
+<span class="md-nav__icon md-icon"></span>
+            Getting Started
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
 <li class="md-nav__item">
 <a class="md-nav__link" href="../project-setup/">
 <span class="md-ellipsis">
@@ -890,13 +931,31 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../jsonserializer-configuration/">
+<a class="md-nav__link" href="../local-development/">
 <span class="md-ellipsis">
-    JsonSerializer Config
+    Local Dev Setup
     
   </span>
 </a>
 </li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--section md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_5_3" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5_3" id="__nav_5_3_label" tabindex="">
+<span class="md-ellipsis">
+    Development
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_5_3_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_5_3">
+<span class="md-nav__icon md-icon"></span>
+            Development
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
 <li class="md-nav__item">
 <a class="md-nav__link" href="../mario-pizzeria-tutorial/">
 <span class="md-ellipsis">
@@ -905,215 +964,55 @@
   </span>
 </a>
 </li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../simple-ui-app/">
+<span class="md-ellipsis">
+    Simple UI Development
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../jsonserializer-configuration/">
+<span class="md-ellipsis">
+    JsonSerializer Config
+    
+  </span>
+</a>
+</li>
 </ul>
 </nav>
 </li>
-<li class="md-nav__item md-nav__item--nested">
-<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_6" type="checkbox"/>
-<label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+<li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+<input checked="" class="md-nav__toggle md-toggle" id="__nav_5_4" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5_4" id="__nav_5_4_label" tabindex="">
 <span class="md-ellipsis">
-    References
+    Operations
     
   </span>
 <span class="md-nav__icon md-icon"></span>
 </label>
-<nav aria-expanded="false" aria-labelledby="__nav_6_label" class="md-nav" data-md-level="1">
-<label class="md-nav__title" for="__nav_6">
+<nav aria-expanded="true" aria-labelledby="__nav_5_4_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_5_4">
 <span class="md-nav__icon md-icon"></span>
-            References
+            Operations
           </label>
 <ul class="md-nav__list" data-md-scrollfix="">
-<li class="md-nav__item md-nav__item--nested">
-<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_6_1" type="checkbox"/>
-<label class="md-nav__link" for="__nav_6_1" id="__nav_6_1_label" tabindex="0">
+<li class="md-nav__item md-nav__item--active">
+<input class="md-nav__toggle md-toggle" id="__toc" type="checkbox"/>
+<label class="md-nav__link md-nav__link--active" for="__toc">
 <span class="md-ellipsis">
-    Core Concepts
+    OpenTelemetry Integration
     
   </span>
 <span class="md-nav__icon md-icon"></span>
 </label>
-<nav aria-expanded="false" aria-labelledby="__nav_6_1_label" class="md-nav" data-md-level="2">
-<label class="md-nav__title" for="__nav_6_1">
-<span class="md-nav__icon md-icon"></span>
-            Core Concepts
-          </label>
-<ul class="md-nav__list" data-md-scrollfix="">
-<li class="md-nav__item">
-<a class="md-nav__link" href="../../concepts/">
+<a class="md-nav__link md-nav__link--active" href="./">
 <span class="md-ellipsis">
-    Overview
+    OpenTelemetry Integration
     
   </span>
 </a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../../concepts/clean-architecture/">
-<span class="md-ellipsis">
-    Clean Architecture
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../../concepts/domain-driven-design/">
-<span class="md-ellipsis">
-    Domain-Driven Design
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../../concepts/cqrs/">
-<span class="md-ellipsis">
-    CQRS Pattern
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../../concepts/mediator/">
-<span class="md-ellipsis">
-    Mediator Pattern
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../../concepts/event-driven/">
-<span class="md-ellipsis">
-    Event-Driven Architecture
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../../concepts/repository/">
-<span class="md-ellipsis">
-    Repository Pattern
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../../concepts/aggregates-entities/">
-<span class="md-ellipsis">
-    Aggregates &amp; Entities
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../../concepts/dependency-injection/">
-<span class="md-ellipsis">
-    Dependency Injection
-    
-  </span>
-</a>
-</li>
-</ul>
-</nav>
-</li>
-<li class="md-nav__item md-nav__item--nested">
-<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_6_2" type="checkbox"/>
-<label class="md-nav__link" for="__nav_6_2" id="__nav_6_2_label" tabindex="0">
-<span class="md-ellipsis">
-    Technical References
-    
-  </span>
-<span class="md-nav__icon md-icon"></span>
-</label>
-<nav aria-expanded="false" aria-labelledby="__nav_6_2_label" class="md-nav" data-md-level="2">
-<label class="md-nav__title" for="__nav_6_2">
-<span class="md-nav__icon md-icon"></span>
-            Technical References
-          </label>
-<ul class="md-nav__list" data-md-scrollfix="">
-<li class="md-nav__item">
-<a class="md-nav__link" href="../../references/oauth-oidc-jwt/">
-<span class="md-ellipsis">
-    OAuth &amp; JWT
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../../references/12-factor-app/">
-<span class="md-ellipsis">
-    12-Factor App
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../../references/persistence-documentation-guide/">
-<span class="md-ellipsis">
-    Persistence Guide
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../../references/source_code_naming_convention/">
-<span class="md-ellipsis">
-    Naming Conventions
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../../references/python_typing_guide/">
-<span class="md-ellipsis">
-    Python Typing
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../../references/python_modular_code/">
-<span class="md-ellipsis">
-    Modular Code
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../../references/python_object_oriented/">
-<span class="md-ellipsis">
-    OOP Guide
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../../references/test-mermaid/">
-<span class="md-ellipsis">
-    Mermaid Reference
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../../ai-agent-guide/">
-<span class="md-ellipsis">
-    AI Agent Guide
-    
-  </span>
-</a>
-</li>
-</ul>
-</nav>
-</li>
-</ul>
-</nav>
-</li>
-</ul>
-</nav>
-</div>
-</div>
-</div>
-<div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
-<div class="md-sidebar__scrollwrap">
-<div class="md-sidebar__inner">
 <nav aria-label="Table of contents" class="md-nav md-nav--secondary">
 <label class="md-nav__title" for="__toc">
 <span class="md-nav__icon md-icon"></span>
@@ -1126,6 +1025,31 @@
       📋 Overview
     </span>
 </a>
+<nav aria-label="📋 Overview" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#documentation-map">
+<span class="md-ellipsis">
+      📚 Documentation Map
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#what-this-guide-covers">
+<span class="md-ellipsis">
+      🎯 What This Guide Covers
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#what-this-guide-does-not-cover">
+<span class="md-ellipsis">
+      📝 What This Guide Does NOT Cover
+    </span>
+</a>
+</li>
+</ul>
+</nav>
 </li>
 <li class="md-nav__item">
 <a class="md-nav__link" href="#observability-pillars">
@@ -1473,6 +1397,682 @@
       🔗 Related Documentation
     </span>
 </a>
+<nav aria-label="🔗 Related Documentation" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#neuroglia-framework">
+<span class="md-ellipsis">
+      Neuroglia Framework
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#external-resources">
+<span class="md-ellipsis">
+      External Resources
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#learning-resources">
+<span class="md-ellipsis">
+      🎓 Learning Resources
+    </span>
+</a>
+<nav aria-label="🎓 Learning Resources" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#concepts">
+<span class="md-ellipsis">
+      Concepts
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#tutorials">
+<span class="md-ellipsis">
+      Tutorials
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#next-steps">
+<span class="md-ellipsis">
+      📝 Next Steps
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../rbac-authorization/">
+<span class="md-ellipsis">
+    RBAC &amp; Authorization
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_6" type="checkbox"/>
+<label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+<span class="md-ellipsis">
+    References
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_6_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_6">
+<span class="md-nav__icon md-icon"></span>
+            References
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_6_1" type="checkbox"/>
+<label class="md-nav__link" for="__nav_6_1" id="__nav_6_1_label" tabindex="0">
+<span class="md-ellipsis">
+    Core Concepts
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_6_1_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_6_1">
+<span class="md-nav__icon md-icon"></span>
+            Core Concepts
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../concepts/">
+<span class="md-ellipsis">
+    Overview
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../concepts/clean-architecture/">
+<span class="md-ellipsis">
+    Clean Architecture
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../concepts/domain-driven-design/">
+<span class="md-ellipsis">
+    Domain-Driven Design
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../concepts/cqrs/">
+<span class="md-ellipsis">
+    CQRS Pattern
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../concepts/mediator/">
+<span class="md-ellipsis">
+    Mediator Pattern
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../concepts/event-driven/">
+<span class="md-ellipsis">
+    Event-Driven Architecture
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../concepts/repository/">
+<span class="md-ellipsis">
+    Repository Pattern
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../concepts/aggregates-entities/">
+<span class="md-ellipsis">
+    Aggregates &amp; Entities
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../concepts/dependency-injection/">
+<span class="md-ellipsis">
+    Dependency Injection
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_6_2" type="checkbox"/>
+<label class="md-nav__link" for="__nav_6_2" id="__nav_6_2_label" tabindex="0">
+<span class="md-ellipsis">
+    Technical References
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_6_2_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_6_2">
+<span class="md-nav__icon md-icon"></span>
+            Technical References
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../references/oauth-oidc-jwt/">
+<span class="md-ellipsis">
+    OAuth &amp; JWT
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../references/12-factor-app/">
+<span class="md-ellipsis">
+    12-Factor App
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../references/persistence-documentation-guide/">
+<span class="md-ellipsis">
+    Persistence Guide
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../references/source_code_naming_convention/">
+<span class="md-ellipsis">
+    Naming Conventions
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../references/python_typing_guide/">
+<span class="md-ellipsis">
+    Python Typing
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../references/python_modular_code/">
+<span class="md-ellipsis">
+    Modular Code
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../references/python_object_oriented/">
+<span class="md-ellipsis">
+    OOP Guide
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../references/test-mermaid/">
+<span class="md-ellipsis">
+    Mermaid Reference
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../ai-agent-guide/">
+<span class="md-ellipsis">
+    AI Agent Guide
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#overview">
+<span class="md-ellipsis">
+      📋 Overview
+    </span>
+</a>
+<nav aria-label="📋 Overview" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#documentation-map">
+<span class="md-ellipsis">
+      📚 Documentation Map
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#what-this-guide-covers">
+<span class="md-ellipsis">
+      🎯 What This Guide Covers
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#what-this-guide-does-not-cover">
+<span class="md-ellipsis">
+      📝 What This Guide Does NOT Cover
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#observability-pillars">
+<span class="md-ellipsis">
+      🎯 Observability Pillars
+    </span>
+</a>
+<nav aria-label="🎯 Observability Pillars" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#1-distributed-tracing">
+<span class="md-ellipsis">
+      1. Distributed Tracing 🔍
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#2-metrics">
+<span class="md-ellipsis">
+      2. Metrics 📊
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#3-logging">
+<span class="md-ellipsis">
+      3. Logging 📝
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#architecture">
+<span class="md-ellipsis">
+      🏗️ Architecture
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#components">
+<span class="md-ellipsis">
+      📦 Components
+    </span>
+</a>
+<nav aria-label="📦 Components" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#opentelemetry-collector-all-in-one">
+<span class="md-ellipsis">
+      OpenTelemetry Collector (All-in-One)
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#grafana-tempo">
+<span class="md-ellipsis">
+      Grafana Tempo
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#prometheus">
+<span class="md-ellipsis">
+      Prometheus
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#grafana-loki">
+<span class="md-ellipsis">
+      Grafana Loki
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#grafana">
+<span class="md-ellipsis">
+      Grafana
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#implementation-components">
+<span class="md-ellipsis">
+      🔧 Implementation Components
+    </span>
+</a>
+<nav aria-label="🔧 Implementation Components" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#1-framework-module-neurogliaobservability">
+<span class="md-ellipsis">
+      1. Framework Module: neuroglia.observability
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#2-tracing-middleware">
+<span class="md-ellipsis">
+      2. Tracing Middleware
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#3-metrics-collection">
+<span class="md-ellipsis">
+      3. Metrics Collection
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#4-structured-logging">
+<span class="md-ellipsis">
+      4. Structured Logging
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#fastapi-multi-application-instrumentation">
+<span class="md-ellipsis">
+      ⚙️ FastAPI Multi-Application Instrumentation
+    </span>
+</a>
+<nav aria-label="⚙️ FastAPI Multi-Application Instrumentation" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#critical-configuration-for-multi-app-architectures">
+<span class="md-ellipsis">
+      🚨 Critical Configuration for Multi-App Architectures
+    </span>
+</a>
+<nav aria-label="🚨 Critical Configuration for Multi-App Architectures" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#the-problem-duplicate-instrumentation">
+<span class="md-ellipsis">
+      The Problem: Duplicate Instrumentation
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#correct-single-main-app-instrumentation">
+<span class="md-ellipsis">
+      ✅ CORRECT - Single Main App Instrumentation
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#complete-coverage-verification">
+<span class="md-ellipsis">
+      📊 Complete Coverage Verification
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#how-it-works">
+<span class="md-ellipsis">
+      🔍 How It Works
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#best-practices">
+<span class="md-ellipsis">
+      🎯 Best Practices
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#common-pitfalls">
+<span class="md-ellipsis">
+      🚨 Common Pitfalls
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#metrics-verification">
+<span class="md-ellipsis">
+      📈 Metrics Verification
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#integration-checklist">
+<span class="md-ellipsis">
+      📋 Integration Checklist
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#key-benefits">
+<span class="md-ellipsis">
+      🚀 Key Benefits
+    </span>
+</a>
+<nav aria-label="🚀 Key Benefits" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#for-development">
+<span class="md-ellipsis">
+      For Development
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#for-operations">
+<span class="md-ellipsis">
+      For Operations
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#for-business">
+<span class="md-ellipsis">
+      For Business
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#grafana-dashboards">
+<span class="md-ellipsis">
+      🎨 Grafana Dashboards
+    </span>
+</a>
+<nav aria-label="🎨 Grafana Dashboards" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#1-overview-dashboard">
+<span class="md-ellipsis">
+      1. Overview Dashboard
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#2-traces-dashboard-tempo">
+<span class="md-ellipsis">
+      2. Traces Dashboard (Tempo)
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#3-metrics-dashboard-prometheus">
+<span class="md-ellipsis">
+      3. Metrics Dashboard (Prometheus)
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#4-logs-dashboard-loki">
+<span class="md-ellipsis">
+      4. Logs Dashboard (Loki)
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#5-marios-pizzeria-business-dashboard">
+<span class="md-ellipsis">
+      5. Mario's Pizzeria Business Dashboard
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#trace-context-propagation">
+<span class="md-ellipsis">
+      📊 Trace Context Propagation
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#security-considerations">
+<span class="md-ellipsis">
+      🔒 Security Considerations
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#performance-considerations">
+<span class="md-ellipsis">
+      ⚡ Performance Considerations
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#testing-otel-integration">
+<span class="md-ellipsis">
+      🧪 Testing OTEL Integration
+    </span>
+</a>
+<nav aria-label="🧪 Testing OTEL Integration" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#manual-testing">
+<span class="md-ellipsis">
+      Manual Testing
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#verify-trace-flow">
+<span class="md-ellipsis">
+      Verify Trace Flow
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#verify-metrics-flow">
+<span class="md-ellipsis">
+      Verify Metrics Flow
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#verify-logs-flow">
+<span class="md-ellipsis">
+      Verify Logs Flow
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#related-documentation">
+<span class="md-ellipsis">
+      🔗 Related Documentation
+    </span>
+</a>
+<nav aria-label="🔗 Related Documentation" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#neuroglia-framework">
+<span class="md-ellipsis">
+      Neuroglia Framework
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#external-resources">
+<span class="md-ellipsis">
+      External Resources
+    </span>
+</a>
+</li>
+</ul>
+</nav>
 </li>
 <li class="md-nav__item">
 <a class="md-nav__link" href="#learning-resources">
@@ -1514,8 +2114,37 @@
 <div class="md-content" data-md-component="content">
 <article class="md-content__inner md-typeset">
 <h1 id="opentelemetry-integration-guide">🔭 OpenTelemetry Integration Guide<a class="headerlink" href="#opentelemetry-integration-guide" title="Permanent link">¶</a></h1>
+<p><em>Infrastructure setup and deployment guide for production observability</em></p>
 <h2 id="overview">📋 Overview<a class="headerlink" href="#overview" title="Permanent link">¶</a></h2>
 <p>This guide covers the comprehensive OpenTelemetry (OTEL) integration for the Neuroglia framework and Mario's Pizzeria application, providing full observability through distributed tracing, metrics, and structured logging.</p>
+<h3 id="documentation-map">📚 Documentation Map<a class="headerlink" href="#documentation-map" title="Permanent link">¶</a></h3>
+<p>This guide focuses on <strong>infrastructure provisioning and deployment</strong>. For a complete observability learning path:</p>
+<ol>
+<li><strong>Start here</strong> for infrastructure setup (Docker Compose, Kubernetes)</li>
+<li><strong><a href="../../features/observability/">Observability Feature Guide</a></strong> - Developer instrumentation and API reference</li>
+<li><strong><a href="../../tutorials/mario-pizzeria-08-observability/">Tutorial: Mario's Pizzeria Observability</a></strong> - Step-by-step implementation</li>
+<li><strong><a href="../../mario-pizzeria/">Mario's Pizzeria Sample</a></strong> - Complete working example</li>
+</ol>
+<h3 id="what-this-guide-covers">🎯 What This Guide Covers<a class="headerlink" href="#what-this-guide-covers" title="Permanent link">¶</a></h3>
+<ul>
+<li>✅ Complete observability stack architecture</li>
+<li>✅ Docker Compose configuration for all components</li>
+<li>✅ OTEL Collector setup and configuration</li>
+<li>✅ Grafana, Tempo, Prometheus, and Loki integration</li>
+<li>✅ Multi-application instrumentation patterns</li>
+<li>✅ Production deployment considerations</li>
+<li>✅ Troubleshooting and verification steps</li>
+</ul>
+<h3 id="what-this-guide-does-not-cover">📝 What This Guide Does NOT Cover<a class="headerlink" href="#what-this-guide-does-not-cover" title="Permanent link">¶</a></h3>
+<p>See the <strong><a href="../../features/observability/">Observability Feature Guide</a></strong> for:</p>
+<ul>
+<li>Code instrumentation patterns (controllers, handlers, repositories)</li>
+<li>Choosing metric types (counter, gauge, histogram)</li>
+<li>Tracing decorators and manual instrumentation</li>
+<li>Data flow from application to dashboard</li>
+<li>Layer-specific implementation guidance</li>
+<li>API reference and configuration options</li>
+</ul>
 <h2 id="observability-pillars">🎯 Observability Pillars<a class="headerlink" href="#observability-pillars" title="Permanent link">¶</a></h2>
 <h3 id="1-distributed-tracing">1. <strong>Distributed Tracing</strong> 🔍<a class="headerlink" href="#1-distributed-tracing" title="Permanent link">¶</a></h3>
 <ul>
@@ -1990,12 +2619,22 @@
 <li><strong>In Grafana</strong>: View correlated logs with traces</li>
 </ol>
 <h2 id="related-documentation">🔗 Related Documentation<a class="headerlink" href="#related-documentation" title="Permanent link">¶</a></h2>
+<h3 id="neuroglia-framework">Neuroglia Framework<a class="headerlink" href="#neuroglia-framework" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong><a href="../../features/observability/">Observability Feature Guide</a></strong> - Comprehensive developer guide and API reference</li>
+<li><strong><a href="../../tutorials/mario-pizzeria-08-observability/">Tutorial: Mario's Pizzeria Observability</a></strong> - Step-by-step implementation</li>
+<li><strong><a href="../../mario-pizzeria/">Mario's Pizzeria Sample</a></strong> - Complete working example</li>
+<li><strong><a href="../../features/simple-cqrs/">CQRS &amp; Mediation</a></strong> - Automatic handler tracing</li>
+<li><strong><a href="../../getting-started/">Getting Started</a></strong> - Framework setup</li>
+</ul>
+<h3 id="external-resources">External Resources<a class="headerlink" href="#external-resources" title="Permanent link">¶</a></h3>
 <ul>
 <li><a href="https://opentelemetry.io/docs/instrumentation/python/">OpenTelemetry Python Documentation</a></li>
 <li><a href="https://grafana.com/docs/tempo/latest/">Grafana Tempo Documentation</a></li>
 <li><a href="https://prometheus.io/docs/">Prometheus Documentation</a></li>
 <li><a href="https://grafana.com/docs/loki/latest/">Grafana Loki Documentation</a></li>
 <li><a href="https://www.w3.org/TR/trace-context/">W3C Trace Context Specification</a></li>
+<li><a href="../otel-framework-integration-analysis/">OTEL Framework Integration Analysis</a> - Internal design notes</li>
 </ul>
 <h2 id="learning-resources">🎓 Learning Resources<a class="headerlink" href="#learning-resources" title="Permanent link">¶</a></h2>
 <h3 id="concepts">Concepts<a class="headerlink" href="#concepts" title="Permanent link">¶</a></h3>

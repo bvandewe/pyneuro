@@ -7,9 +7,11 @@
 <meta content="width=device-width,initial-scale=1" name="viewport"/>
 <meta content="A lightweight, opinionated Python framework built on FastAPI that enforces clean architecture principles" name="description"/>
 <link href="https://bvandewe.github.io/pyneuro/guides/simple-ui-app/" rel="canonical"/>
+<link href="../mario-pizzeria-tutorial/" rel="prev"/>
+<link href="../jsonserializer-configuration/" rel="next"/>
 <link href="../../assets/images/favicon.png" rel="icon"/>
 <meta content="mkdocs-1.6.1, mkdocs-material-9.6.23" name="generator"/>
-<title>Building a Simple UI Application with Neuroglia - Neuroglia Python Framework</title>
+<title>Simple UI Development - Neuroglia Python Framework</title>
 <link href="../../assets/stylesheets/main.84d31ad4.min.css" rel="stylesheet"/>
 <link href="../../assets/stylesheets/palette.06af60db.min.css" rel="stylesheet"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
@@ -46,7 +48,7 @@
 <div class="md-header__topic" data-md-component="header-topic">
 <span class="md-ellipsis">
             
-              Building a Simple UI Application with Neuroglia
+              Simple UI Development
             
           </span>
 </div>
@@ -146,7 +148,7 @@
 
         </a>
 </li>
-<li class="md-tabs__item">
+<li class="md-tabs__item md-tabs__item--active">
 <a class="md-tabs__link" href="../">
           
   
@@ -361,9 +363,25 @@
 </a>
 </li>
 <li class="md-nav__item">
+<a class="md-nav__link" href="../../marios-pizzeria.md">
+<span class="md-ellipsis">
+    🍕 Mario's Pizzeria - CQRS &amp; Event-Driven
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
 <a class="md-nav__link" href="../../samples/openbank/">
 <span class="md-ellipsis">
-    OpenBank
+    🏦 OpenBank - Event Sourcing
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../samples/simple-ui/">
+<span class="md-ellipsis">
+    🎨 Simple UI - SubApp Pattern
     
   </span>
 </a>
@@ -729,17 +747,25 @@
 </ul>
 </nav>
 </li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/observability/">
+<span class="md-ellipsis">
+    Observability
+    
+  </span>
+</a>
+</li>
 <li class="md-nav__item md-nav__item--nested">
-<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_4_3" type="checkbox"/>
-<label class="md-nav__link" for="__nav_4_3" id="__nav_4_3_label" tabindex="0">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_4_4" type="checkbox"/>
+<label class="md-nav__link" for="__nav_4_4" id="__nav_4_4_label" tabindex="0">
 <span class="md-ellipsis">
     Validation &amp; Utilities
     
   </span>
 <span class="md-nav__icon md-icon"></span>
 </label>
-<nav aria-expanded="false" aria-labelledby="__nav_4_3_label" class="md-nav" data-md-level="2">
-<label class="md-nav__title" for="__nav_4_3">
+<nav aria-expanded="false" aria-labelledby="__nav_4_4_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_4_4">
 <span class="md-nav__icon md-icon"></span>
             Validation &amp; Utilities
           </label>
@@ -772,16 +798,16 @@
 </nav>
 </li>
 <li class="md-nav__item md-nav__item--nested">
-<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_4_4" type="checkbox"/>
-<label class="md-nav__link" for="__nav_4_4" id="__nav_4_4_label" tabindex="0">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_4_5" type="checkbox"/>
+<label class="md-nav__link" for="__nav_4_5" id="__nav_4_5_label" tabindex="0">
 <span class="md-ellipsis">
     Integration
     
   </span>
 <span class="md-nav__icon md-icon"></span>
 </label>
-<nav aria-expanded="false" aria-labelledby="__nav_4_4_label" class="md-nav" data-md-level="2">
-<label class="md-nav__title" for="__nav_4_4">
+<nav aria-expanded="false" aria-labelledby="__nav_4_5_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_4_5">
 <span class="md-nav__icon md-icon"></span>
             Integration
           </label>
@@ -814,16 +840,16 @@
 </nav>
 </li>
 <li class="md-nav__item md-nav__item--nested">
-<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_4_5" type="checkbox"/>
-<label class="md-nav__link" for="__nav_4_5" id="__nav_4_5_label" tabindex="0">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_4_6" type="checkbox"/>
+<label class="md-nav__link" for="__nav_4_6" id="__nav_4_6_label" tabindex="0">
 <span class="md-ellipsis">
     Dev Tools
     
   </span>
 <span class="md-nav__icon md-icon"></span>
 </label>
-<nav aria-expanded="false" aria-labelledby="__nav_4_5_label" class="md-nav" data-md-level="2">
-<label class="md-nav__title" for="__nav_4_5">
+<nav aria-expanded="false" aria-labelledby="__nav_4_6_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_4_6">
 <span class="md-nav__icon md-icon"></span>
             Dev Tools
           </label>
@@ -850,16 +876,16 @@
 </ul>
 </nav>
 </li>
-<li class="md-nav__item md-nav__item--nested">
-<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_5" type="checkbox"/>
-<label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+<li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+<input checked="" class="md-nav__toggle md-toggle" id="__nav_5" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
 <span class="md-ellipsis">
     Guides
     
   </span>
 <span class="md-nav__icon md-icon"></span>
 </label>
-<nav aria-expanded="false" aria-labelledby="__nav_5_label" class="md-nav" data-md-level="1">
+<nav aria-expanded="true" aria-labelledby="__nav_5_label" class="md-nav" data-md-level="1">
 <label class="md-nav__title" for="__nav_5">
 <span class="md-nav__icon md-icon"></span>
             Guides
@@ -873,6 +899,21 @@
   </span>
 </a>
 </li>
+<li class="md-nav__item md-nav__item--section md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_5_2" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5_2" id="__nav_5_2_label" tabindex="">
+<span class="md-ellipsis">
+    Getting Started
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_5_2_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_5_2">
+<span class="md-nav__icon md-icon"></span>
+            Getting Started
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
 <li class="md-nav__item">
 <a class="md-nav__link" href="../project-setup/">
 <span class="md-ellipsis">
@@ -890,13 +931,31 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../jsonserializer-configuration/">
+<a class="md-nav__link" href="../local-development/">
 <span class="md-ellipsis">
-    JsonSerializer Config
+    Local Dev Setup
     
   </span>
 </a>
 </li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+<input checked="" class="md-nav__toggle md-toggle" id="__nav_5_3" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5_3" id="__nav_5_3_label" tabindex="">
+<span class="md-ellipsis">
+    Development
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="true" aria-labelledby="__nav_5_3_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_5_3">
+<span class="md-nav__icon md-icon"></span>
+            Development
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
 <li class="md-nav__item">
 <a class="md-nav__link" href="../mario-pizzeria-tutorial/">
 <span class="md-ellipsis">
@@ -904,6 +963,438 @@
     
   </span>
 </a>
+</li>
+<li class="md-nav__item md-nav__item--active">
+<input class="md-nav__toggle md-toggle" id="__toc" type="checkbox"/>
+<label class="md-nav__link md-nav__link--active" for="__toc">
+<span class="md-ellipsis">
+    Simple UI Development
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<a class="md-nav__link md-nav__link--active" href="./">
+<span class="md-ellipsis">
+    Simple UI Development
+    
+  </span>
+</a>
+<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#overview">
+<span class="md-ellipsis">
+      🎯 Overview
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#prerequisites">
+<span class="md-ellipsis">
+      📋 Prerequisites
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#project-structure">
+<span class="md-ellipsis">
+      🏗️ Project Structure
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#step-1-set-up-the-project">
+<span class="md-ellipsis">
+      🚀 Step 1: Set Up the Project
+    </span>
+</a>
+<nav aria-label="🚀 Step 1: Set Up the Project" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#11-create-directory-structure">
+<span class="md-ellipsis">
+      1.1 Create Directory Structure
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#12-initialize-frontend">
+<span class="md-ellipsis">
+      1.2 Initialize Frontend
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#step-2-domain-layer-define-your-business-models">
+<span class="md-ellipsis">
+      📝 Step 2: Domain Layer - Define Your Business Models
+    </span>
+</a>
+<nav aria-label="📝 Step 2: Domain Layer - Define Your Business Models" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#21-create-task-entity-domainentitiestaskpy">
+<span class="md-ellipsis">
+      2.1 Create Task Entity (domain/entities/task.py)
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#22-create-task-repository-interface-domainrepositoriestask_repositorypy">
+<span class="md-ellipsis">
+      2.2 Create Task Repository Interface (domain/repositories/task_repository.py)
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#step-3-infrastructure-layer-implement-repository">
+<span class="md-ellipsis">
+      🔧 Step 3: Infrastructure Layer - Implement Repository
+    </span>
+</a>
+<nav aria-label="🔧 Step 3: Infrastructure Layer - Implement Repository" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#31-in-memory-task-repository-integrationrepositoriesin_memory_task_repositorypy">
+<span class="md-ellipsis">
+      3.1 In-Memory Task Repository (integration/repositories/in_memory_task_repository.py)
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#step-4-application-layer-cqrs-commands-and-queries">
+<span class="md-ellipsis">
+      💼 Step 4: Application Layer - CQRS Commands and Queries
+    </span>
+</a>
+<nav aria-label="💼 Step 4: Application Layer - CQRS Commands and Queries" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#41-create-task-command-applicationcommandscreate_task_commandpy">
+<span class="md-ellipsis">
+      4.1 Create Task Command (application/commands/create_task_command.py)
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#42-get-tasks-query-applicationqueriesget_tasks_querypy">
+<span class="md-ellipsis">
+      4.2 Get Tasks Query (application/queries/get_tasks_query.py)
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#step-5-application-settings">
+<span class="md-ellipsis">
+      ⚙️ Step 5: Application Settings
+    </span>
+</a>
+<nav aria-label="⚙️ Step 5: Application Settings" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#51-create-settings-file-applicationsettingspy">
+<span class="md-ellipsis">
+      5.1 Create Settings File (application/settings.py)
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#step-6-authentication-and-authorization">
+<span class="md-ellipsis">
+      🔐 Step 6: Authentication and Authorization
+    </span>
+</a>
+<nav aria-label="🔐 Step 6: Authentication and Authorization" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#61-jwt-only-authentication-architecture">
+<span class="md-ellipsis">
+      6.1 JWT-Only Authentication Architecture
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#62-create-auth-controller-apicontrollersauth_controllerpy">
+<span class="md-ellipsis">
+      6.2 Create Auth Controller (api/controllers/auth_controller.py)
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#63-create-tasks-api-controller-apicontrollerstasks_controllerpy">
+<span class="md-ellipsis">
+      6.3 Create Tasks API Controller (api/controllers/tasks_controller.py)
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#step-7-frontend-ui-controller-and-templates">
+<span class="md-ellipsis">
+      🎨 Step 7: Frontend - UI Controller and Templates
+    </span>
+</a>
+<nav aria-label="🎨 Step 7: Frontend - UI Controller and Templates" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#71-create-ui-controller-uicontrollersui_controllerpy">
+<span class="md-ellipsis">
+      7.1 Create UI Controller (ui/controllers/ui_controller.py)
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#72-create-html-template-uitemplatesindexhtml">
+<span class="md-ellipsis">
+      7.2 Create HTML Template (ui/templates/index.html)
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#73-create-sass-styles-uisrcstylesmainscss">
+<span class="md-ellipsis">
+      7.3 Create SASS Styles (ui/src/styles/main.scss)
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#74-create-javascript-logic-uisrcscriptsmainjs">
+<span class="md-ellipsis">
+      7.4 Create JavaScript Logic (ui/src/scripts/main.js)
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#step-8-application-entry-point">
+<span class="md-ellipsis">
+      🚀 Step 8: Application Entry Point
+    </span>
+</a>
+<nav aria-label="🚀 Step 8: Application Entry Point" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#81-create-main-application-mainpy">
+<span class="md-ellipsis">
+      8.1 Create Main Application (main.py)
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#step-9-build-and-run">
+<span class="md-ellipsis">
+      🔨 Step 9: Build and Run
+    </span>
+</a>
+<nav aria-label="🔨 Step 9: Build and Run" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#91-build-frontend-assets">
+<span class="md-ellipsis">
+      9.1 Build Frontend Assets
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#92-run-the-application">
+<span class="md-ellipsis">
+      9.2 Run the Application
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#93-test-the-application">
+<span class="md-ellipsis">
+      9.3 Test the Application
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#key-concepts-explained">
+<span class="md-ellipsis">
+      📚 Key Concepts Explained
+    </span>
+</a>
+<nav aria-label="📚 Key Concepts Explained" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#role-based-access-control-rbac">
+<span class="md-ellipsis">
+      Role-Based Access Control (RBAC)
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#jwt-authentication-flow-stateless">
+<span class="md-ellipsis">
+      JWT Authentication Flow (Stateless)
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#single-page-architecture">
+<span class="md-ellipsis">
+      Single Page Architecture
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#parcel-build-process">
+<span class="md-ellipsis">
+      Parcel Build Process
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#next-steps">
+<span class="md-ellipsis">
+      🎯 Next Steps
+    </span>
+</a>
+<nav aria-label="🎯 Next Steps" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#enhancements-to-consider">
+<span class="md-ellipsis">
+      Enhancements to Consider
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#related-documentation">
+<span class="md-ellipsis">
+      🔗 Related Documentation
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#tips-and-best-practices">
+<span class="md-ellipsis">
+      💡 Tips and Best Practices
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#troubleshooting">
+<span class="md-ellipsis">
+      🐛 Troubleshooting
+    </span>
+</a>
+<nav aria-label="🐛 Troubleshooting" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#frontend-not-loading">
+<span class="md-ellipsis">
+      Frontend not loading
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#authentication-failing">
+<span class="md-ellipsis">
+      Authentication failing
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#tasks-not-displaying">
+<span class="md-ellipsis">
+      Tasks not displaying
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#cors-errors">
+<span class="md-ellipsis">
+      CORS errors
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../jsonserializer-configuration/">
+<span class="md-ellipsis">
+    JsonSerializer Config
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--section md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_5_4" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5_4" id="__nav_5_4_label" tabindex="">
+<span class="md-ellipsis">
+    Operations
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_5_4_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_5_4">
+<span class="md-nav__icon md-icon"></span>
+            Operations
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../opentelemetry-integration/">
+<span class="md-ellipsis">
+    OpenTelemetry Integration
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../rbac-authorization/">
+<span class="md-ellipsis">
+    RBAC &amp; Authorization
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
 </li>
 </ul>
 </nav>
