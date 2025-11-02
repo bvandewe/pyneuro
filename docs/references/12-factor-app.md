@@ -48,15 +48,20 @@ src/
 ```python
 # main.py - Same code, different configs
 from neuroglia.hosting.web import WebApplicationBuilder
+from neuroglia.mediation import Mediator
+from neuroglia.mapping import Mapper
 
 def create_app():
     builder = WebApplicationBuilder()
 
     # Configuration varies by environment
     # but same codebase everywhere
-    services = builder.services
-    services.add_controllers(["api.controllers"])
-    services.add_mediator()
+    Mediator.configure(builder, ["application.commands", "application.queries"])
+    Mapper.configure(builder, ["application.mapping", "api.dtos"])
+
+    builder.add_sub_app(
+        SubAppConfig(path="/api", name="api", controllers=["api.controllers"])
+    )
 
     return builder.build()
 ```
@@ -95,15 +100,16 @@ pytest-asyncio = "^0.21.0"
 
 ```python
 from neuroglia.dependency_injection import ServiceLifetime
+from neuroglia.mediation import Mediator
 
-def configure_services(services):
+def configure_services(builder):
     # Explicit service dependencies
-    services.add_singleton(OrderService)
-    services.add_scoped(PizzaRepository, MongoDbPizzaRepository)
-    services.add_transient(EmailService, SmtpEmailService)
+    builder.services.add_singleton(OrderService)
+    builder.services.add_scoped(PizzaRepository, MongoDbPizzaRepository)
+    builder.services.add_transient(EmailService, SmtpEmailService)
 
     # Framework handles dependency resolution
-    services.add_mediator()
+    Mediator.configure(builder, ["application.commands", "application.queries"])
 ```
 
 **No System Dependencies** - Everything runs in isolated containers:
@@ -508,19 +514,24 @@ class SessionService:
 ```python
 # main.py - Self-contained application
 from neuroglia.hosting.web import WebApplicationBuilder
+from neuroglia.mediation import Mediator
+from neuroglia.mapping import Mapper
 import uvicorn
 
 def create_app():
     builder = WebApplicationBuilder()
 
-    # Configure services
-    services = builder.services
-    services.add_controllers(["api.controllers"])
-    services.add_mediator()
+    # Configure core services
+    Mediator.configure(builder, ["application.commands", "application.queries"])
+    Mapper.configure(builder, ["application.mapping", "api.dtos"])
+
+    # Add SubApp with controllers
+    builder.add_sub_app(
+        SubAppConfig(path="/api", name="api", controllers=["api.controllers"])
+    )
 
     # Build FastAPI application
     app = builder.build()
-    app.use_controllers()
 
     return app
 
@@ -612,30 +623,36 @@ CMD ["python", "main.py"]
 
 **Process Types** definition:
 
+````python
+**Process Types** definition:
+
 ```python
 # Different process types for different workloads
 # web.py - HTTP request handler processes
 def create_web_app():
     builder = WebApplicationBuilder()
-    services = builder.services
-    services.add_controllers(["api.controllers"])
+    Mediator.configure(builder, ["application.commands", "application.queries"])
+    builder.add_sub_app(
+        SubAppConfig(path="/api", name="api", controllers=["api.controllers"])
+    )
     return builder.build()
 
 # worker.py - Background task processes
 def create_worker_app():
     builder = WebApplicationBuilder()
-    services = builder.services
-    services.add_event_handlers(["application.handlers"])
-    services.add_background_tasks()
-    return builder.build()
+    Mediator.configure(builder, ["application.handlers"])
+    builder.services.add_background_tasks()
+````
 
 # scheduler.py - Periodic task processes
+
 def create_scheduler_app():
-    builder = WebApplicationBuilder()
-    services = builder.services
-    services.add_scheduled_tasks()
-    return builder.build()
-```
+builder = WebApplicationBuilder()
+services = builder.services
+services.add_scheduled_tasks()
+return builder.build()
+
+````
 
 **Process Scaling** configuration:
 
@@ -644,7 +661,7 @@ def create_scheduler_app():
 web: python web.py
 worker: python worker.py
 scheduler: python scheduler.py
-```
+````
 
 **Horizontal Scaling** with different process counts:
 
@@ -760,8 +777,12 @@ def create_app():
     builder = WebApplicationBuilder()
 
     # Register services (no initialization yet)
-    builder.services.add_controllers(["api.controllers"])
-    builder.services.add_mediator()
+    Mediator.configure(builder, ["application.commands", "application.queries"])
+    Mapper.configure(builder, ["application.mapping", "api.dtos"])
+
+    builder.add_sub_app(
+        SubAppConfig(path="/api", name="api", controllers=["api.controllers"])
+    )
 
     # Build returns immediately
     return builder.build()
@@ -1326,7 +1347,7 @@ async def run_admin_command(command_name: str) -> int:
 
     # Same service configuration as main application
     builder.services.add_scoped(PizzaRepository, MongoDbPizzaRepository)
-    builder.services.add_mediator()
+    Mediator.configure(builder, ["application.commands"])
 
     service_provider = builder.services.build_provider()
 
@@ -1339,19 +1360,21 @@ async def run_admin_command(command_name: str) -> int:
     if command_name not in commands:
         logger.error(f"Unknown command: {command_name}")
         return 1
+```
 
     # Execute command with same environment
     return await commands[command_name].execute_async(service_provider)
 
-if __name__ == "__main__":
-    if len(sys.argv) != 2:
-        print("Usage: python admin.py <command>")
-        sys.exit(1)
+if **name** == "**main**":
+if len(sys.argv) != 2:
+print("Usage: python admin.py <command>")
+sys.exit(1)
 
     command = sys.argv[1]
     exit_code = asyncio.run(run_admin_command(command))
     sys.exit(exit_code)
-```
+
+````
 
 **Container-Based Admin Tasks**:
 
@@ -1368,7 +1391,7 @@ CMD ["python", "main.py"]
 # Admin processes use same image with different command
 # docker run marios-pizzeria:latest python admin.py migrate
 # docker run marios-pizzeria:latest python admin.py seed
-```
+````
 
 **Kubernetes Jobs** for admin processes:
 

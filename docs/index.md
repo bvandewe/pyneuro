@@ -20,7 +20,35 @@ A lightweight, opinionated Python framework built on [FastAPI](https://fastapi.t
 
 Clean architecture patterns with dependency injection, CQRS, event-driven design, and comprehensive testing utilities.
 
-### 🍕 **Real-World Samples**
+### � **Production-Ready Sample Applications**
+
+Learn by example with complete, runnable applications:
+
+- **[🏦 OpenBank](samples/openbank.md)** - Event Sourcing & CQRS banking system demonstrating:
+
+  - Complete event sourcing with KurrentDB (EventStoreDB)
+  - CQRS with separate write and read models
+  - Domain-driven design with rich aggregates
+  - Read model reconciliation and eventual consistency
+  - Snapshot strategy for performance
+  - Perfect for financial systems and audit-critical applications
+
+- **[🎨 Simple UI](samples/simple-ui.md)** - SubApp pattern with JWT authentication showing:
+
+  - FastAPI SubApp mounting for UI/API separation
+  - Stateless JWT authentication architecture
+  - Role-based access control (RBAC) at application layer
+  - Bootstrap 5 frontend with Parcel bundler
+  - Perfect for internal dashboards and admin tools
+
+- **[🍕 Mario's Pizzeria](mario-pizzeria.md)** - Complete e-commerce platform featuring:
+  - Order management and kitchen workflows
+  - Real-time event-driven processes
+  - Keycloak authentication integration
+  - MongoDB persistence with domain events
+  - Perfect for learning all framework patterns
+
+### �🍕 **Real-World Samples**
 
 Complete production examples like [Mario's Pizzeria](mario-pizzeria.md) demonstrating every framework feature in realistic business scenarios.
 
@@ -191,12 +219,17 @@ Visit `http://localhost:8000/docs` to explore the auto-generated API documentati
 ### 📖 Quick Links
 
 - **[Tutorials](tutorials/index.md)** - Step-by-step learning with the 9-part Mario's Pizzeria tutorial
+- **[Sample Applications](samples/index.md)** - Complete working examples:
+  - **[🏦 OpenBank](samples/openbank.md)** - Event sourcing & CQRS banking system
+  - **[🎨 Simple UI](samples/simple-ui.md)** - SubApp pattern with JWT auth & RBAC
+  - **[API Gateway](samples/api_gateway.md)** - Microservice orchestration
 - **[Core Concepts](concepts/index.md)** - Understand Clean Architecture, DDD, CQRS, and more
 - **[Mario's Pizzeria](mario-pizzeria.md)** - Complete case study with business analysis and implementation
 - **[Patterns](patterns/index.md)** - Architectural patterns with "What & Why" and "Common Mistakes"
 - **[Features](features/index.md)** - Framework capabilities and how to use them
 - **[Guides](guides/index.md)** - Practical how-to procedures
-- **[Samples](samples/index.md)** - Working code examples (OpenBank, API Gateway, Desktop Controller)
+  - **[RBAC & Authorization](guides/rbac-authorization.md)** - Role-based access control patterns
+  - **[Simple UI Development](guides/simple-ui-app.md)** - Step-by-step UI integration guide
 
 ### 📖 Reference Documentation
 

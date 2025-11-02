@@ -127,16 +127,12 @@ Neuroglia auto-discovers handlers:
 
 ```python
 from neuroglia.hosting.web import WebApplicationBuilder
+from neuroglia.mediation import Mediator
 
 builder = WebApplicationBuilder()
 
-# Register mediator (auto-discovers handlers)
-builder.services.add_mediator()
-
-# Or specify packages to scan
-builder.services.add_mediator(
-    handler_packages=["application.commands", "application.queries"]
-)
+# Configure mediator with handler discovery
+Mediator.configure(builder, ["application.commands", "application.queries"])
 ```
 
 ### Request Types
@@ -341,13 +337,15 @@ async def test_create_order_controller():
 async def test_order_workflow():
     """Test complete workflow through mediator."""
     # Setup real mediator with handlers
-    services = ServiceCollection()
-    services.add_scoped(IOrderRepository, InMemoryOrderRepository)
-    services.add_scoped(PlaceOrderHandler)
-    services.add_scoped(GetOrderByIdHandler)
-    services.add_mediator()
+    builder = WebApplicationBuilder()
 
-    provider = services.build_provider()
+    # Configure mediator
+    Mediator.configure(builder, ["application.commands", "application.queries"])
+
+    # Register repositories
+    builder.services.add_scoped(IOrderRepository, InMemoryOrderRepository)
+
+    provider = builder.services.build_provider()
     mediator = provider.get_service(Mediator)
 
     # Place order

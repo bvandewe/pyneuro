@@ -75,13 +75,10 @@ from neuroglia.core.operation_result import OperationResult
 # Step 1: Create application builder
 builder = WebApplicationBuilder()
 
-# Step 2: Add mediator (includes all CQRS infrastructure)
-builder.services.add_mediator()
+# Step 2: Configure mediator (auto-discovers handlers in specified modules)
+Mediator.configure(builder, ["application.commands", "application.queries"])
 
-# Step 3: Mediator automatically discovers and registers handlers
-# Just import your handler modules and they're auto-registered!
-
-# Step 4: Build app
+# Step 3: Build app
 app = builder.build()
 ```
 

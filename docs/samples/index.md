@@ -2,32 +2,93 @@
 
 Comprehensive sample applications that demonstrate real-world implementation of the Neuroglia framework. Each sample showcases different architectural patterns, integration scenarios, and business domains to provide practical guidance for building production-ready systems.
 
-## 🏦 Production-Ready Examples
+## � Featured Samples
 
-### [🏦 OpenBank - Event Sourcing Banking System](openbank.md)
+### [�🏦 OpenBank - Event Sourcing Banking System](openbank.md)
 
-A complete banking system demonstrating event sourcing, CQRS, and financial domain modeling. Shows how to handle complex business rules, audit trails, and regulatory compliance.
+A complete banking system demonstrating **Event Sourcing**, **CQRS**, and **Domain-Driven Design** patterns for financial applications.
 
-**Domain Focus:**
+**What You'll Learn:**
 
-- Account management
-- Transaction processing
-- Balance calculations
-- Regulatory compliance
+- Complete event sourcing with KurrentDB (EventStoreDB)
+- CQRS with separate write and read models
+- Domain-driven design with rich aggregates
+- Read model reconciliation and eventual consistency
+- Snapshot strategy for aggregate performance
+- Complex financial domain modeling
 
-**Key Patterns:**
+**Best For:**
 
-- Event sourcing with snapshots
-- Complex domain aggregates
-- Financial calculations with precision
-- Audit trail implementation
+- 🏦 Financial systems requiring complete audit trails
+- 📊 Applications needing time-travel debugging
+- 🔒 Audit-critical systems (compliance, regulations)
+- 💼 Complex business rules with event replay
+- 🔄 Systems with eventual consistency requirements
 
 **Technology Stack:**
 
-- EventStoreDB for event persistence
+- KurrentDB (EventStoreDB) for event persistence
 - MongoDB for read models
 - FastAPI for REST APIs
-- Comprehensive test coverage
+- CloudEvents for integration
+- Comprehensive domain events
+
+**Complexity Level:** 🔴 **Advanced** - Requires understanding of event sourcing and CQRS patterns
+
+[**→ Explore OpenBank Documentation**](openbank.md)
+
+---
+
+### [🎨 Simple UI - SubApp Pattern with JWT Authentication](simple-ui.md)
+
+A modern single-page application demonstrating **SubApp architecture**, **stateless JWT authentication**, and **role-based access control**.
+
+**What You'll Learn:**
+
+- FastAPI SubApp mounting for UI/API separation
+- Stateless JWT authentication architecture
+- Role-based access control (RBAC) at application layer
+- Bootstrap 5 frontend integration
+- Parcel bundler for modern JavaScript
+- Clean separation between UI and API concerns
+
+**Best For:**
+
+- 🖥️ Internal dashboards and admin tools
+- 📋 Task management applications
+- 🎨 Content management systems
+- 👥 Applications requiring role-based permissions
+- 🔐 Systems needing stateless authentication
+
+**Technology Stack:**
+
+- FastAPI SubApp pattern
+- JWT for stateless authentication
+- Bootstrap 5 for responsive UI
+- Parcel for asset bundling
+- localStorage for client-side token storage
+
+**Complexity Level:** 🟡 **Intermediate** - Good introduction to authentication and RBAC
+
+[**→ Explore Simple UI Documentation**](simple-ui.md)
+
+---
+
+## 🏭 Production-Ready Examples
+
+### [� Mario's Pizzeria - Order Management System](../mario-pizzeria.md)
+
+**Tutorial Sample** - A friendly introduction to Neuroglia framework through a pizza restaurant order management system. Perfect for learning CQRS, mediator pattern, and basic microservice architecture.
+
+**🎯 Use Cases:** Learning the framework, order management, small business systems
+
+**📚 Key Patterns:** CQRS commands/queries, mediator, background services
+
+**� Complexity:** Beginner-Friendly
+
+[**→ Full Tutorial**](../mario-pizzeria.md)
+
+---
 
 ### [🌐 API Gateway - Microservice Orchestration](api_gateway.md)
 
@@ -79,6 +140,38 @@ Shows how to build background services that interact with system resources, hand
 - System API integration
 - Inter-process communication
 
+## � Learning Paths
+
+### 🚀 Quick Start (1-2 Hours)
+
+Perfect for understanding core Neuroglia concepts quickly:
+
+1. **[🍕 Mario's Pizzeria Tutorial](../mario-pizzeria.md)** - Start here to learn CQRS and mediator patterns
+2. Try creating orders via REST API and observe command/query separation
+3. Explore background service implementation for order processing
+
+### 🏗️ Intermediate (Half Day)
+
+Build on basics with authentication and UI integration:
+
+1. Complete Quick Start path
+2. **[🎨 Simple UI Sample](simple-ui.md)** - Understand SubApp pattern and JWT authentication
+3. **[RBAC & Authorization Guide](../guides/rbac-authorization.md)** - Implement role-based access control
+4. Build a custom authenticated endpoint with permission checking
+
+### 🎓 Advanced (1-2 Days)
+
+Master event sourcing and distributed patterns:
+
+1. Complete Intermediate path
+2. **[🏦 OpenBank Sample](openbank.md)** - Deep dive into event sourcing with KurrentDB
+3. Study read model reconciliation and snapshot strategies
+4. Experiment with time-travel debugging using event replay
+5. Explore API Gateway and Desktop Controller patterns
+6. Build a custom event-sourced aggregate with projections
+
+---
+
 ## 🚀 Getting Started with Samples
 
 ### Quick Start Guide
@@ -88,26 +181,6 @@ Shows how to build background services that interact with system resources, hand
 3. **Run Locally**: Follow setup instructions for local development
 4. **Explore Code**: Study the implementation details
 5. **Adapt and Extend**: Customize for your specific needs
-
-### Sample Complexity Levels
-
-#### 🟢 Beginner Level
-
-- **Desktop Controller**: Straightforward background services
-- Clear separation of concerns
-- Basic integration patterns
-
-#### 🟡 Intermediate Level
-
-- **API Gateway**: Microservice coordination
-- Cross-cutting concerns implementation
-- Distributed system patterns
-
-#### 🔴 Advanced Level
-
-- **OpenBank**: Complex event sourcing
-- **Lab Resource Manager**: Kubernetes operators
-- Advanced domain modeling
 
 ## 🧪 Development and Testing
 
@@ -143,14 +216,14 @@ graph LR
 
 ## 📊 Sample Comparison Matrix
 
-| Feature          | OpenBank           | API Gateway       | Desktop Controller  |
-| ---------------- | ------------------ | ----------------- | ------------------- |
-| **Complexity**   | 🔴 Advanced        | 🟡 Intermediate   | 🟢 Beginner         |
-| **Domain**       | Financial          | Integration       | System              |
-| **Architecture** | Event Sourcing     | Gateway Pattern   | Background Services |
-| **Storage**      | EventStore + Mongo | Redis + SQL       | File System         |
-| **Integration**  | REST APIs          | Multiple Services | System APIs         |
-| **Deployment**   | Cloud/On-Premise   | Cloud Native      | Desktop/Server      |
+| Feature           | Mario's<br/>Pizzeria | Simple UI          | OpenBank           | API Gateway     | Desktop Controller  |
+| ----------------- | -------------------- | ------------------ | ------------------ | --------------- | ------------------- |
+| **Complexity**    | � Beginner           | 🟡 Intermediate    | �🔴 Advanced       | 🟡 Intermediate | � Intermediate      |
+| **Domain**        | Food Service         | UI + Auth          | Financial          | Integration     | System Resources    |
+| **Architecture**  | CQRS + Mediator      | SubApp + JWT       | Event Sourcing     | Gateway Pattern | Background Services |
+| **Storage**       | In-Memory            | JWT + localStorage | EventStore + Mongo | Redis + SQL     | File System         |
+| **Best For**      | Learning Framework   | Auth & RBAC        | Audit Trails       | Microservices   | IoT & Devices       |
+| **Learning Time** | 1-2 hours            | Half day           | 1-2 days           | Half day        | Half day            |
 
 ## 🎓 Learning Outcomes
 
@@ -174,15 +247,8 @@ graph LR
 
 - [🎯 Architecture Patterns](../patterns/index.md) - Foundational design patterns
 - [🚀 Framework Features](../features/index.md) - Detailed feature documentation
-- [📖 Implementation Guides](../guides/index.md) - Step-by-step tutorials
-- [🍕 Mario's Pizzeria](../mario-pizzeria.md) - Unified domain example
-
-## 🚀 Next Steps
-
-1. **Explore Sample Code**: Clone and run the samples locally
-2. **Study Implementation**: Review architecture decisions and patterns
-3. **Adapt for Your Needs**: Use samples as starting templates
-4. **Contribute Back**: Share improvements and additional samples
+- [📖 RBAC & Authorization Guide](../guides/rbac-authorization.md) - Comprehensive authorization patterns
+- [📘 Getting Started](../getting-started.md) - Framework introduction with sample exploration
 
 ---
 

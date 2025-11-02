@@ -47,13 +47,17 @@ def create_app():
     """Create the web application"""
     builder = WebApplicationBuilder()
 
-    # Add controllers
-    services = builder.services
-    services.add_controllers([HelloController])
+    # Add SubApp with controllers
+    builder.add_sub_app(
+        SubAppConfig(
+            path="/api",
+            name="api",
+            controllers=[HelloController]
+        )
+    )
 
     # Build app
     app = builder.build()
-    app.use_controllers()
 
     return app
 

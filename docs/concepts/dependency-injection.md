@@ -226,30 +226,38 @@ services.add_scoped(IEmailService, factory=create_email_service)
 ```python
 # main.py - Application startup
 from neuroglia.hosting.web import WebApplicationBuilder
+from neuroglia.mediation import Mediator
+from neuroglia.mapping import Mapper
 
 def create_app():
     builder = WebApplicationBuilder()
-    services = builder.services
+
+    # Configure core services
+    Mediator.configure(builder, ["application.commands", "application.queries"])
+    Mapper.configure(builder, ["application.mapping", "api.dtos", "domain.entities"])
 
     # Register domain services
-    services.add_scoped(IOrderRepository, MongoOrderRepository)
-    services.add_scoped(ICustomerRepository, MongoCustomerRepository)
-    services.add_scoped(IMenuRepository, MongoMenuRepository)
+    builder.services.add_scoped(IOrderRepository, MongoOrderRepository)
+    builder.services.add_scoped(ICustomerRepository, MongoCustomerRepository)
+    builder.services.add_scoped(IMenuRepository, MongoMenuRepository)
 
     # Register application services
-    services.add_scoped(OrderService)
-    services.add_scoped(CustomerService)
+    builder.services.add_scoped(OrderService)
+    builder.services.add_scoped(CustomerService)
 
     # Register infrastructure
-    services.add_singleton(ConfigService)
-    services.add_scoped(IEmailService, SendGridEmailService)
-    services.add_scoped(IPaymentService, StripePaymentService)
+    builder.services.add_singleton(ConfigService)
+    builder.services.add_scoped(IEmailService, SendGridEmailService)
+    builder.services.add_scoped(IPaymentService, StripePaymentService)
 
-    # Register handlers (mediator does this automatically)
-    services.add_mediator()
-
-    # Register controllers
-    services.add_controllers(["api.controllers"])
+    # Add SubApp with controllers
+    builder.add_sub_app(
+        SubAppConfig(
+            path="/api",
+            name="api",
+            controllers=["api.controllers"]
+        )
+    )
 
     return builder.build()
 
