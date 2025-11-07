@@ -7,11 +7,9 @@
 <meta content="width=device-width,initial-scale=1" name="viewport"/>
 <meta content="A lightweight, opinionated Python framework built on FastAPI that enforces clean architecture principles" name="description"/>
 <link href="https://bvandewe.github.io/pyneuro/concepts/domain-driven-design/" rel="canonical"/>
-<link href="../clean-architecture/" rel="prev"/>
-<link href="../cqrs/" rel="next"/>
 <link href="../../assets/images/favicon.png" rel="icon"/>
 <meta content="mkdocs-1.6.1, mkdocs-material-9.6.23" name="generator"/>
-<title>Domain-Driven Design - Neuroglia Python Framework</title>
+<title>Domain-Driven Design (DDD) - Neuroglia Python Framework</title>
 <link href="../../assets/stylesheets/main.84d31ad4.min.css" rel="stylesheet"/>
 <link href="../../assets/stylesheets/palette.06af60db.min.css" rel="stylesheet"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
@@ -48,7 +46,7 @@
 <div class="md-header__topic" data-md-component="header-topic">
 <span class="md-ellipsis">
             
-              Domain-Driven Design
+              Domain-Driven Design (DDD)
             
           </span>
 </div>
@@ -157,8 +155,8 @@
 
         </a>
 </li>
-<li class="md-tabs__item md-tabs__item--active">
-<a class="md-tabs__link" href="../">
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../references/oauth-oidc-jwt/">
           
   
   
@@ -949,14 +947,6 @@
           </label>
 <ul class="md-nav__list" data-md-scrollfix="">
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../guides/mario-pizzeria-tutorial/">
-<span class="md-ellipsis">
-    Mario's Tutorial
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
 <a class="md-nav__link" href="../../guides/simple-ui-app/">
 <span class="md-ellipsis">
     Simple UI Development
@@ -1012,331 +1002,19 @@
 </ul>
 </nav>
 </li>
-<li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
-<input checked="" class="md-nav__toggle md-toggle" id="__nav_6" type="checkbox"/>
-<label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_6" type="checkbox"/>
+<label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
 <span class="md-ellipsis">
     References
     
   </span>
 <span class="md-nav__icon md-icon"></span>
 </label>
-<nav aria-expanded="true" aria-labelledby="__nav_6_label" class="md-nav" data-md-level="1">
+<nav aria-expanded="false" aria-labelledby="__nav_6_label" class="md-nav" data-md-level="1">
 <label class="md-nav__title" for="__nav_6">
 <span class="md-nav__icon md-icon"></span>
             References
-          </label>
-<ul class="md-nav__list" data-md-scrollfix="">
-<li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
-<input checked="" class="md-nav__toggle md-toggle" id="__nav_6_1" type="checkbox"/>
-<label class="md-nav__link" for="__nav_6_1" id="__nav_6_1_label" tabindex="">
-<span class="md-ellipsis">
-    Core Concepts
-    
-  </span>
-<span class="md-nav__icon md-icon"></span>
-</label>
-<nav aria-expanded="true" aria-labelledby="__nav_6_1_label" class="md-nav" data-md-level="2">
-<label class="md-nav__title" for="__nav_6_1">
-<span class="md-nav__icon md-icon"></span>
-            Core Concepts
-          </label>
-<ul class="md-nav__list" data-md-scrollfix="">
-<li class="md-nav__item">
-<a class="md-nav__link" href="../">
-<span class="md-ellipsis">
-    Overview
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../clean-architecture/">
-<span class="md-ellipsis">
-    Clean Architecture
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item md-nav__item--active">
-<input class="md-nav__toggle md-toggle" id="__toc" type="checkbox"/>
-<label class="md-nav__link md-nav__link--active" for="__toc">
-<span class="md-ellipsis">
-    Domain-Driven Design
-    
-  </span>
-<span class="md-nav__icon md-icon"></span>
-</label>
-<a class="md-nav__link md-nav__link--active" href="./">
-<span class="md-ellipsis">
-    Domain-Driven Design
-    
-  </span>
-</a>
-<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
-<label class="md-nav__title" for="__toc">
-<span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
-<li class="md-nav__item">
-<a class="md-nav__link" href="#the-problem-anemic-domain-models">
-<span class="md-ellipsis">
-      ❌ The Problem: Anemic Domain Models
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#the-solution-rich-domain-models">
-<span class="md-ellipsis">
-      ✅ The Solution: Rich Domain Models
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#ddd-building-blocks">
-<span class="md-ellipsis">
-      🏗️ DDD Building Blocks
-    </span>
-</a>
-<nav aria-label="🏗️ DDD Building Blocks" class="md-nav">
-<ul class="md-nav__list">
-<li class="md-nav__item">
-<a class="md-nav__link" href="#1-entities">
-<span class="md-ellipsis">
-      1. Entities
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#2-value-objects">
-<span class="md-ellipsis">
-      2. Value Objects
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#3-aggregates">
-<span class="md-ellipsis">
-      3. Aggregates
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#4-domain-events">
-<span class="md-ellipsis">
-      4. Domain Events
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#5-repositories">
-<span class="md-ellipsis">
-      5. Repositories
-    </span>
-</a>
-</li>
-</ul>
-</nav>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#ddd-in-neuroglia">
-<span class="md-ellipsis">
-      🔧 DDD in Neuroglia
-    </span>
-</a>
-<nav aria-label="🔧 DDD in Neuroglia" class="md-nav">
-<ul class="md-nav__list">
-<li class="md-nav__item">
-<a class="md-nav__link" href="#rich-domain-entities">
-<span class="md-ellipsis">
-      Rich Domain Entities
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#ubiquitous-language">
-<span class="md-ellipsis">
-      Ubiquitous Language
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#bounded-contexts">
-<span class="md-ellipsis">
-      Bounded Contexts
-    </span>
-</a>
-</li>
-</ul>
-</nav>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#testing-ddd">
-<span class="md-ellipsis">
-      🧪 Testing DDD
-    </span>
-</a>
-<nav aria-label="🧪 Testing DDD" class="md-nav">
-<ul class="md-nav__list">
-<li class="md-nav__item">
-<a class="md-nav__link" href="#unit-tests-test-business-rules">
-<span class="md-ellipsis">
-      Unit Tests: Test Business Rules
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#integration-tests-test-repositories">
-<span class="md-ellipsis">
-      Integration Tests: Test Repositories
-    </span>
-</a>
-</li>
-</ul>
-</nav>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#common-mistakes">
-<span class="md-ellipsis">
-      ⚠️ Common Mistakes
-    </span>
-</a>
-<nav aria-label="⚠️ Common Mistakes" class="md-nav">
-<ul class="md-nav__list">
-<li class="md-nav__item">
-<a class="md-nav__link" href="#1-anemic-domain-models">
-<span class="md-ellipsis">
-      1. Anemic Domain Models
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#2-public-setters">
-<span class="md-ellipsis">
-      2. Public Setters
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#3-breaking-aggregate-boundaries">
-<span class="md-ellipsis">
-      3. Breaking Aggregate Boundaries
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#4-too-many-aggregates">
-<span class="md-ellipsis">
-      4. Too Many Aggregates
-    </span>
-</a>
-</li>
-</ul>
-</nav>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#when-not-to-use-ddd">
-<span class="md-ellipsis">
-      🚫 When NOT to Use DDD
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#key-takeaways">
-<span class="md-ellipsis">
-      📝 Key Takeaways
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#ddd-clean-architecture">
-<span class="md-ellipsis">
-      🔄 DDD + Clean Architecture
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#next-steps">
-<span class="md-ellipsis">
-      🚀 Next Steps
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#further-reading">
-<span class="md-ellipsis">
-      📚 Further Reading
-    </span>
-</a>
-</li>
-</ul>
-</nav>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../cqrs/">
-<span class="md-ellipsis">
-    CQRS Pattern
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../mediator/">
-<span class="md-ellipsis">
-    Mediator Pattern
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../event-driven/">
-<span class="md-ellipsis">
-    Event-Driven Architecture
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../repository/">
-<span class="md-ellipsis">
-    Repository Pattern
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../aggregates-entities/">
-<span class="md-ellipsis">
-    Aggregates &amp; Entities
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../dependency-injection/">
-<span class="md-ellipsis">
-    Dependency Injection
-    
-  </span>
-</a>
-</li>
-</ul>
-</nav>
-</li>
-<li class="md-nav__item md-nav__item--section md-nav__item--nested">
-<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_6_2" type="checkbox"/>
-<label class="md-nav__link" for="__nav_6_2" id="__nav_6_2_label" tabindex="">
-<span class="md-ellipsis">
-    Technical References
-    
-  </span>
-<span class="md-nav__icon md-icon"></span>
-</label>
-<nav aria-expanded="false" aria-labelledby="__nav_6_2_label" class="md-nav" data-md-level="2">
-<label class="md-nav__title" for="__nav_6_2">
-<span class="md-nav__icon md-icon"></span>
-            Technical References
           </label>
 <ul class="md-nav__list" data-md-scrollfix="">
 <li class="md-nav__item">
@@ -1359,6 +1037,14 @@
 <a class="md-nav__link" href="../../references/persistence-documentation-guide/">
 <span class="md-ellipsis">
     Persistence Guide
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../references/etcd_cheat_sheet/">
+<span class="md-ellipsis">
+    Etcd Cheat Sheet
     
   </span>
 </a>
@@ -1410,9 +1096,6 @@
     
   </span>
 </a>
-</li>
-</ul>
-</nav>
 </li>
 </ul>
 </nav>
