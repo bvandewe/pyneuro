@@ -1,4 +1,4 @@
-"""Application settings and configuration"""
+"""Application settings and configuration for Lab Resource Manager"""
 
 from typing import Optional
 
@@ -9,7 +9,7 @@ from neuroglia.observability.settings import ApplicationSettingsWithObservabilit
 
 
 class LabResourceManagerApplicationSettings(ApplicationSettingsWithObservability):
-    """Application configuration for Lab Resource Manager.
+    """Application configuration for Lab Resource Manager with integrated observability
 
     Key URL Concepts:
     - Internal URLs (keycloak_*): Used by backend services running in Docker network
@@ -29,44 +29,54 @@ class LabResourceManagerApplicationSettings(ApplicationSettingsWithObservability
     # Application Configuration
     app_name: str = "Lab Resource Manager"
     debug: bool = True
-    log_level: str = "DEBUG"  # Options: DEBUG, INFO, WARNING, ERROR, CRITICAL
+    log_level: str = "INFO"  # Options: DEBUG, INFO, WARNING, ERROR, CRITICAL
     local_dev: bool = True  # True = development mode with localhost URLs for browser
-    app_url: str = "http://localhost:8080"  # External URL where the app is accessible (Docker port mapping)
+    app_url: str = "http://localhost:8003"  # External URL where the app is accessible (Docker port mapping)
 
-    # Session (for UI app)
+    # Session (for UI features if needed)
     session_secret_key: str = "change-me-in-production-please-use-strong-key-32-chars-min"
     session_max_age: int = 3600  # 1 hour
+
+    # etcd Configuration (Primary persistence for resources)
+    etcd_host: str = "localhost"
+    etcd_port: int = 2379
+    etcd_prefix: str = "/lab-resource-manager"
+    etcd_timeout: int = 10  # Connection timeout in seconds
+
+    # Database Configuration (Optional: for read models/projections)
+    mongodb_connection_string: str = "mongodb://mongodb:27017"
+    mongodb_database_name: str = "lab_manager"
 
     # Keycloak Configuration (Internal Docker network URLs - used by backend)
     keycloak_server_url: str = "http://keycloak:8080"  # Internal Docker network
     keycloak_realm: str = "pyneuro"
-    keycloak_client_id: str = "mario-app"
-    keycloak_client_secret: str = "mario-secret-123"
+    keycloak_client_id: str = "lab-manager-app"
+    keycloak_client_secret: str = "lab-manager-secret-123"
 
     # JWT Validation (Backend token validation)
     jwt_signing_key: str = ""  # RSA public key - auto-discovered from Keycloak if empty
-    jwt_audience: str = "mario-app"  # Expected audience claim in JWT (must match client_id)
+    jwt_audience: str = "lab-manager-app"  # Expected audience claim in JWT (must match client_id)
     required_scope: str = "openid profile email"  # Required OAuth2 scopes
 
     # OAuth2 Scheme Type
     oauth2_scheme: Optional[str] = "authorization_code"  # "client_credentials" or "authorization_code"
 
     # CloudEvent Publishing Configuration (override base class defaults)
-    cloud_event_sink: str = "http://localhost:8080/events"  # Where to publish CloudEvents
-    cloud_event_source: str = "https://mario-pizzeria.com"  # Source identifier for events
-    cloud_event_type_prefix: str = "com.mario-pizzeria"  # Prefix for event types
+    cloud_event_sink: Optional[str] = "http://event-player:8085/events"  # Where to publish CloudEvents
+    cloud_event_source: Optional[str] = "https://lab-resource-manager.com"  # Source identifier for events
+    cloud_event_type_prefix: str = "com.lab-resource-manager"  # Prefix for event types
     cloud_event_retry_attempts: int = 5  # Number of retry attempts
     cloud_event_retry_delay: float = 1.0  # Delay between retries (seconds)
 
     # Swagger UI OAuth Configuration (External URLs - used by browser)
-    swagger_ui_client_id: str = "mario-app"  # Must match keycloak_client_id
+    swagger_ui_client_id: str = "lab-manager-app"  # Must match keycloak_client_id
     swagger_ui_client_secret: str = ""  # Leave empty for public clients
 
     # Observability Configuration (Three Pillars)
     observability_enabled: bool = True
     observability_metrics_enabled: bool = True
     observability_tracing_enabled: bool = True
-    observability_logging_enabled: bool = False  # Disable for local development (as its very resource intensive)
+    observability_logging_enabled: bool = False  # Disable for local development (resource intensive)
 
     # Standard Endpoints
     observability_health_endpoint: bool = True
@@ -74,11 +84,22 @@ class LabResourceManagerApplicationSettings(ApplicationSettingsWithObservability
     observability_ready_endpoint: bool = True
 
     # Health Check Dependencies
-    observability_health_checks: list[str] = ["mongodb", "keycloak"]
+    observability_health_checks: list[str] = ["mongodb"]
 
     # OpenTelemetry Configuration
     otel_endpoint: str = "http://otel-collector:4317"  # Docker network endpoint
     otel_console_export: bool = False  # Enable for debugging
+
+    # Lab Resource Manager Specific Settings
+    worker_pool_max_size: int = 10  # Maximum number of concurrent workers
+    worker_pool_min_size: int = 2  # Minimum number of workers to maintain
+    instance_timeout_minutes: int = 120  # Default timeout for lab instances
+    reconciliation_interval_seconds: int = 30  # How often controllers reconcile state
+
+    # Cloud Provider Settings (AWS EC2)
+    aws_region: str = "us-west-2"
+    aws_access_key_id: Optional[str] = None  # Use IAM role if None
+    aws_secret_access_key: Optional[str] = None  # Use IAM role if None
 
     # Computed Fields - Auto-generate URLs from base configuration
     @computed_field
@@ -129,4 +150,4 @@ class LabResourceManagerApplicationSettings(ApplicationSettingsWithObservability
     )
 
 
-app_settings = MarioPizzeriaApplicationSettings()
+app_settings = LabResourceManagerApplicationSettings()

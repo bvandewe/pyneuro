@@ -80,12 +80,12 @@ services:
   # http://localhost:${EVENT_PLAYER_PORT}
   # Shared event visualization and replay service for all samples
   event-player:
-    image: ghcr.io/bvandewe/events-player:v0.4.4
+    image: ghcr.io/bvandewe/events-player:v0.4.10
     runtime: runc
     ports:
       - "${EVENT_PLAYER_PORT:-8085}:8080"
     environment:
-      tag: "v0.4.4"
+      tag: "v0.4.10"
       log_level: INFO
 
       # Authentication & Authorization
@@ -245,5 +245,5 @@ volumes:
 
 networks:
   pyneuro-net:
-    external: true
+    driver: bridge
     name: ${DOCKER_NETWORK_NAME:-pyneuro-net}
