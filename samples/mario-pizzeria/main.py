@@ -38,6 +38,7 @@ from integration.repositories import (
 from neuroglia.data.infrastructure.mongo import MotorRepository
 from neuroglia.eventing.cloud_events.infrastructure import (
     CloudEventIngestor,
+    CloudEventMiddleware,
     CloudEventPublisher,
 )
 from neuroglia.hosting.web import SubAppConfig, WebApplicationBuilder
@@ -134,7 +135,7 @@ def create_pizzeria_app(data_dir: Optional[str] = None, port: int = 8080):
     # - Adds exception handling
     # - Injects service provider to all apps
     app = builder.build_app_with_lifespan(title="Mario's Pizzeria", description="Complete pizza ordering and management system with Keycloak auth", version="1.0.0", debug=True)
-
+    app.add_middleware(CloudEventMiddleware, service_provider=app.state.services)
     log.info("App is ready to rock.")
     return app
 

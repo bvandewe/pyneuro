@@ -6,38 +6,45 @@ patterns work together to provide declarative resource management.
 
 import asyncio
 import logging
+import sys
 from datetime import datetime, timedelta
-from typing import Dict, Any
+from pathlib import Path
 
-from neuroglia.data.infrastructure.resources.in_memory_storage_backend import InMemoryStorageBackend
-from neuroglia.serialization.json import JsonSerializer
-from neuroglia.eventing.cloud_events.infrastructure.cloud_event_publisher import CloudEventPublisher
+# Add the project root to Python path so we can import neuroglia
+project_root = Path(__file__).parent.parent.parent
+sys.path.insert(0, str(project_root / "src"))  # For neuroglia imports
+sys.path.insert(0, str(Path(__file__).parent))  # For local imports from lab_resource_manager
+
+from application.services.lab_instance_scheduler_service import (
+    LabInstanceSchedulerService,
+)
+from application.watchers.lab_instance_watcher import LabInstanceWatcher
+from domain.controllers.lab_instance_request_controller import (
+    LabInstanceRequestController,
+)
 
 # Sample application imports
-from samples.lab_resource_manager.domain.resources.lab_instance_request import (
+from domain.resources.lab_instance_request import (
+    LabInstancePhase,
     LabInstanceRequest,
     LabInstanceRequestSpec,
     LabInstanceRequestStatus,
-    LabInstancePhase,
 )
-from samples.lab_resource_manager.integration.repositories.lab_instance_resource_repository import (
+from integration.repositories.lab_instance_resource_repository import (
     LabInstanceResourceRepository,
 )
-from samples.lab_resource_manager.domain.controllers.lab_instance_controller import (
-    LabInstanceController,
+from integration.services.container_service import ContainerService
+
+from neuroglia.data.infrastructure.resources.in_memory_storage_backend import (
+    InMemoryStorageBackend,
 )
-from samples.lab_resource_manager.application.watchers.lab_instance_watcher import (
-    LabInstanceWatcher,
+from neuroglia.eventing.cloud_events.infrastructure.cloud_event_publisher import (
+    CloudEventPublisher,
 )
-from samples.lab_resource_manager.application.services.lab_instance_scheduler_service import (
-    LabInstanceSchedulerService,
-)
-from samples.lab_resource_manager.integration.services.container_service import ContainerService
+from neuroglia.serialization.json import JsonSerializer
 
 # Configure logging
-logging.basicConfig(
-    level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
-)
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 
 log = logging.getLogger(__name__)
 
@@ -78,9 +85,7 @@ class WatcherReconciliationDemo:
         self.container_service = ContainerService()
 
         # Controller
-        self.controller = LabInstanceController(
-            service_provider=None, event_publisher=self.event_publisher  # Not needed for demo
-        )
+        self.controller = LabInstanceRequestController(service_provider=None, event_publisher=self.event_publisher)  # Not needed for demo
 
         # Watcher
         self.watcher = LabInstanceWatcher(
@@ -101,9 +106,7 @@ class WatcherReconciliationDemo:
 
         self.demo_running = False
 
-    async def create_sample_resource(
-        self, name: str, start_delay_minutes: int = 0
-    ) -> LabInstanceRequest:
+    async def create_sample_resource(self, name: str, start_delay_minutes: int = 0) -> LabInstanceRequest:
         """Create a sample lab instance resource."""
         spec = LabInstanceRequestSpec(
             lab_template="python:3.9-alpine",
@@ -123,9 +126,7 @@ class WatcherReconciliationDemo:
 
     async def update_resource_spec(self, resource: LabInstanceRequest, new_duration: int):
         """Update a resource's spec to trigger reconciliation."""
-        log.info(
-            f"📝 Updating resource spec: {resource.metadata.name} duration to {new_duration} minutes"
-        )
+        log.info(f"📝 Updating resource spec: {resource.metadata.name} duration to {new_duration} minutes")
         resource.spec.duration_minutes = new_duration
         resource.metadata.generation += 1  # Increment generation for spec change
         await self.repository.save_async(resource)
@@ -135,9 +136,7 @@ class WatcherReconciliationDemo:
         if resource.status.container_id:
             log.info(f"🏁 Simulating container completion for: {resource.metadata.name}")
             # Mock container service will return "stopped" for this container
-            await self.container_service.set_container_status_async(
-                resource.status.container_id, "stopped"
-            )
+            await self.container_service.set_container_status_async(resource.status.container_id, "stopped")
 
     async def print_status_summary(self):
         """Print current status of all resources and services."""
@@ -167,17 +166,13 @@ class WatcherReconciliationDemo:
 
         # Scheduler status
         scheduler_stats = await self.scheduler.get_service_statistics_async()
-        print(
-            f"⚙️  Scheduler: {'🟢 Running' if scheduler_stats.get('running', False) else '🔴 Stopped'}"
-        )
+        print(f"⚙️  Scheduler: {'🟢 Running' if scheduler_stats.get('running', False) else '🔴 Stopped'}")
 
         # Recent events
         recent_events = self.event_publisher.published_events[-5:]  # Last 5 events
         print("📤 Recent Events:")
         for event in recent_events:
-            print(
-                f"   {event['timestamp'].strftime('%H:%M:%S')} - {event['type']} - {event['subject']}"
-            )
+            print(f"   {event['timestamp'].strftime('%H:%M:%S')} - {event['type']} - {event['subject']}")
 
         print("=" * 80 + "\n")
 
@@ -197,12 +192,8 @@ class WatcherReconciliationDemo:
 
             # Step 2: Create initial resources
             log.info("\n📋 Step 2: Creating Initial Resources")
-            resource1 = await self.create_sample_resource(
-                "lab-001", start_delay_minutes=0
-            )  # Should start now
-            resource2 = await self.create_sample_resource(
-                "lab-002", start_delay_minutes=2
-            )  # Start in 2 min
+            resource1 = await self.create_sample_resource("lab-001", start_delay_minutes=0)  # Should start now
+            resource2 = await self.create_sample_resource("lab-002", start_delay_minutes=2)  # Start in 2 min
 
             await asyncio.sleep(3)  # Let watcher detect and reconcile
             await self.print_status_summary()

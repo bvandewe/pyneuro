@@ -36,12 +36,15 @@ jinja2 = "^3.1.4"
 pymongo = { version = "^4.10.1", optional = true }
 motor = { version = "^3.6.0", optional = true }
 esdbclient = { version = "^1.1.1", optional = true }
+etcd3-py = { version = "^0.1.6", optional = true }  # Maintained fork with protobuf 5.x support
+protobuf = "^5.0"  # Use protobuf 5.x for compatibility with latest OpenTelemetry and etcd3-py
 apscheduler = "^3.11.0"
 redis = "^5.2.0"
 pydantic = {extras = ["email"], version = "^2.10.3"}
 email-validator = "^2.2.0"
 
 # OpenTelemetry dependencies
+# Using latest versions with protobuf 5.x support
 opentelemetry-api = "^1.28.2"
 opentelemetry-sdk = "^1.28.2"
 opentelemetry-exporter-otlp-proto-grpc = "^1.28.2"
@@ -51,14 +54,17 @@ opentelemetry-instrumentation-fastapi = "^0.49b2"
 opentelemetry-instrumentation-httpx = "^0.49b2"
 opentelemetry-instrumentation-logging = "^0.49b2"
 opentelemetry-instrumentation-system-metrics = "^0.49b2"
-opentelemetry-exporter-prometheus = "^0.49b2"
-prometheus-client = "^0.21.0"
+opentelemetry-exporter-prometheus = "^0.49b2"  # Prometheus /metrics endpoint support
+prometheus-client = "^0.21.0"  # Required by opentelemetry-exporter-prometheus
+boto3 = { version = "^1.40.64", optional = true }
 
 [tool.poetry.extras]
 mongodb = ["pymongo", "motor"]
-eventstore = ["esdbclient", "rx"]
+eventstore = ["esdbclient"]
 redis = ["redis"]
-all = ["pymongo", "motor", "esdbclient", "rx", "redis"]
+etcd = ["etcd3-py", "protobuf"]
+aws = ["boto3"]
+all = ["pymongo", "motor", "esdbclient", "redis", "etcd3-py", "protobuf", "boto3"]
 
 [tool.poetry.group.dev.dependencies]
 # Development and testing dependencies

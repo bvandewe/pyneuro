@@ -4,9 +4,7 @@ This provides a simple in-memory storage implementation for testing and developm
 """
 
 import logging
-from typing import Dict, List, Optional, Any
-import json
-import uuid
+from typing import Any, Optional
 
 log = logging.getLogger(__name__)
 
@@ -15,12 +13,10 @@ class InMemoryStorageBackend:
     """In-memory storage backend for resources."""
 
     def __init__(self):
-        self._data: Dict[str, str] = {}  # resource_id -> serialized_data
-        self._metadata: Dict[str, Dict[str, Any]] = {}  # resource_id -> metadata
+        self._data: dict[str, str] = {}  # resource_id -> serialized_data
+        self._metadata: dict[str, dict[str, Any]] = {}  # resource_id -> metadata
 
-    async def store_async(
-        self, key: str, data: str, metadata: Optional[Dict[str, Any]] = None
-    ) -> None:
+    async def store_async(self, key: str, data: str, metadata: Optional[dict[str, Any]] = None) -> None:
         """Store data with key."""
         self._data[key] = data
         if metadata:
@@ -43,7 +39,7 @@ class InMemoryStorageBackend:
         log.debug(f"Deleted resource with key: {key}, existed: {deleted}")
         return deleted
 
-    async def list_keys_async(self, prefix: Optional[str] = None) -> List[str]:
+    async def list_keys_async(self, prefix: Optional[str] = None) -> list[str]:
         """List all keys, optionally filtered by prefix."""
         keys = list(self._data.keys())
         if prefix:
@@ -57,7 +53,7 @@ class InMemoryStorageBackend:
         log.debug(f"Checked existence of key: {key}, exists: {exists}")
         return exists
 
-    def get_metadata(self, key: str) -> Optional[Dict[str, Any]]:
+    def get_metadata(self, key: str) -> Optional[dict[str, Any]]:
         """Get metadata for a key."""
         return self._metadata.get(key)
 
@@ -71,6 +67,6 @@ class InMemoryStorageBackend:
         """Get number of stored items."""
         return len(self._data)
 
-    def get_all_data(self) -> Dict[str, str]:
+    def get_all_data(self) -> dict[str, str]:
         """Get all stored data (for debugging)."""
         return self._data.copy()
