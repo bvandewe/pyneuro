@@ -5,7 +5,7 @@ Neuroglia controller approach but handling Resources instead of DDD Entities.
 """
 
 from datetime import datetime
-from typing import Optional
+from typing import List, Optional
 
 from application.commands.create_lab_instance_command import CreateLabInstanceCommand
 from application.queries.get_lab_instance_query import GetLabInstanceQuery

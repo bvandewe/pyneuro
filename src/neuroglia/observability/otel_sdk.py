@@ -27,8 +27,11 @@ try:
     # OTLP Exporters
     from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import OTLPSpanExporter
 
-    # Prometheus metrics
-    from opentelemetry.exporter.prometheus import PrometheusMetricReader
+    # Prometheus metrics (optional)
+    try:
+        from opentelemetry.exporter.prometheus import PrometheusMetricReader
+    except ImportError:
+        PrometheusMetricReader = None
 
     # Auto-instrumentation
     from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
@@ -272,13 +275,16 @@ def _configure_metrics(config: OpenTelemetryConfig, resource: Resource) -> None:
         # Create metric readers
         readers = []
 
-        # Prometheus reader for /metrics endpoint
-        try:
-            prometheus_reader = PrometheusMetricReader()
-            readers.append(prometheus_reader)
-            log.debug("📊 Prometheus metrics reader configured")
-        except Exception as e:
-            log.warning(f"⚠️ Prometheus reader setup failed: {e}")
+        # Prometheus reader for /metrics endpoint (optional)
+        if PrometheusMetricReader is not None:
+            try:
+                prometheus_reader = PrometheusMetricReader()
+                readers.append(prometheus_reader)
+                log.debug("📊 Prometheus metrics reader configured")
+            except Exception as e:
+                log.warning(f"⚠️ Prometheus reader setup failed: {e}")
+        else:
+            log.info("ℹ️ Prometheus exporter not available - using OTLP metrics only")
 
         # OTLP metric reader
         try:

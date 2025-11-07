@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+_No notable changes yet._
+
+## [0.6.3] - 2025-11-07
+
 ### Added
 
 - **Infrastructure CLI: `recreate` command** for service recreation with fresh containers

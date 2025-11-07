@@ -18,7 +18,7 @@ from integration.repositories.lab_instance_resource_repository import (
     LabInstanceResourceRepository,
 )
 
-from neuroglia.core.operation_result import OperationResult
+from neuroglia.core import OperationResult
 from neuroglia.dependency_injection import ServiceProviderBase
 from neuroglia.mapping.mapper import Mapper
 from neuroglia.mediation.mediator import Command, CommandHandler

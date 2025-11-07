@@ -15,7 +15,7 @@ COPY poetry.lock pyproject.toml /app/
 RUN pip install poetry
 RUN poetry config virtualenvs.create false && \
     (poetry lock 2>/dev/null || true) && \
-    poetry install --no-root --no-interaction --no-ansi --extras "mongodb aws"
+    poetry install --no-root --no-interaction --no-ansi --extras "etcd aws"
 
 # Copy the entire project
 COPY . /app

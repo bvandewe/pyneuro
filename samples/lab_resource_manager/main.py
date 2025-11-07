@@ -14,28 +14,23 @@ from pathlib import Path
 project_root = Path(__file__).parent.parent.parent
 sys.path.insert(0, str(project_root / "src"))
 
-from application.services.lab_instance_scheduler_service import (
-    LabInstanceSchedulerService,
-)
+# Third-party imports
+import etcd3
 from application.services.logger import configure_logging
 
 # Application imports
 from application.settings import app_settings
-from domain.controllers.lab_instance_request_controller import (
-    LabInstanceRequestController,
+from integration.repositories.etcd_lab_worker_repository import (
+    EtcdLabWorkerResourceRepository,
 )
-from integration.services.container_service import ContainerService
-from integration.services.resource_allocator import ResourceAllocator
 
 # Framework imports (must be after path manipulation)
-from neuroglia.data.infrastructure.mongo import MongoRepository
 from neuroglia.data.resources.serializers.yaml_serializer import YamlResourceSerializer
 from neuroglia.eventing.cloud_events.infrastructure import (
     CloudEventMiddleware,
     CloudEventPublisher,
 )
-from neuroglia.hosting.configuration.data_access_layer import DataAccessLayer
-from neuroglia.hosting.web import ExceptionHandlingMiddleware, WebApplicationBuilder
+from neuroglia.hosting.web import SubAppConfig, WebApplicationBuilder
 from neuroglia.mapping import Mapper
 from neuroglia.mediation import Mediator
 from neuroglia.serialization.json import JsonSerializer
@@ -49,16 +44,12 @@ def create_lab_resource_manager_app():
     """Create and configure the Lab Resource Manager application."""
     log.info("Bootstrapping Lab Resource Manager...")
 
-    database_name = "lab_manager"
+    builder = WebApplicationBuilder(app_settings)
 
-    builder = WebApplicationBuilder()
-
-    # Configure Core services (following mario-pizzeria pattern)
+    # Configure Core services
     Mediator.configure(builder, ["application.commands", "application.queries", "application.events"])
     Mapper.configure(builder, ["application", "integration.models"])
     JsonSerializer.configure(builder, ["domain"])
-
-    # Optional: configure CloudEvent emission (no consumption for now - no integration handlers yet)
     CloudEventPublisher.configure(builder)
 
     # Configure resource serialization
@@ -68,29 +59,59 @@ def create_lab_resource_manager_app():
     else:
         log.warning("YAML serialization not available - install PyYAML")
 
-    # Configure data access
-    DataAccessLayer.ReadModel.configure(
-        builder,
-        ["integration.models"],
-        lambda builder_, entity_type, key_type: MongoRepository.configure(builder_, entity_type, key_type, database_name),
-    )
+    # Register etcd client as singleton for resource persistence
+    # Using sync Client - storage operations are wrapped in async by repository layer
+    # etcd provides native watchable API, strong consistency, and atomic operations
+    etcd_client = etcd3.Client(host=app_settings.etcd_host, port=app_settings.etcd_port, timeout=app_settings.etcd_timeout)
+    builder.services.try_add_singleton(etcd3.Client, singleton=etcd_client)
+    log.info(f"etcd client registered as singleton: {app_settings.etcd_host}:{app_settings.etcd_port}")
+
+    # Register EtcdLabWorkerResourceRepository as scoped service (one per request)
+    # Scoped lifetime ensures proper async context and integration with UnitOfWork
+    def create_lab_worker_repository(sp):
+        """Factory function for EtcdLabWorkerResourceRepository with DI."""
+        return EtcdLabWorkerResourceRepository.create_with_json_serializer(
+            etcd_client=sp.get_required_service(etcd3.Client),
+            prefix=f"{app_settings.etcd_prefix}/lab-workers/",
+        )
+
+    builder.services.add_scoped(EtcdLabWorkerResourceRepository, implementation_factory=create_lab_worker_repository)
+    log.info("EtcdLabWorkerResourceRepository registered as scoped service")
 
     # Register application services
-    builder.services.add_singleton(ContainerService)
-    builder.services.add_singleton(ResourceAllocator)
-    builder.services.add_scoped(LabInstanceRequestController)
-    builder.services.add_scoped(LabInstanceSchedulerService)
+    # builder.services.add_singleton(ContainerService)
+    # builder.services.add_singleton(ResourceAllocator)
+    # builder.services.add_scoped(LabInstanceRequestController)
+    # builder.services.add_scoped(LabInstanceSchedulerService)
 
-    # Register controllers
-    builder.add_controllers(["api.controllers"])
+    # Configure sub-applications declaratively
+    # API sub-app: REST API with OAuth2/JWT authentication
+    builder.add_sub_app(
+        SubAppConfig(
+            path="/api",
+            name="api",
+            title="Lab Resource Manager API",
+            description="Lab instance and worker resource management API with OAuth2/JWT authentication",
+            version="1.0.0",
+            controllers=["api.controllers"],
+            docs_url="/docs",
+        )
+    )
 
-    # Build the application
-    app = builder.build()
-
-    # Configure middleware
-    app.add_middleware(ExceptionHandlingMiddleware, service_provider=app.services)
-    app.add_middleware(CloudEventMiddleware, service_provider=app.services)
-    app.use_controllers()
+    # Build the complete application with all sub-apps mounted and configured
+    # This automatically:
+    # - Creates the main FastAPI app with Host lifespan
+    # - Creates and configures the API sub-app
+    # - Mounts sub-app to main app
+    # - Adds exception handling
+    # - Injects service provider to all apps
+    app = builder.build_app_with_lifespan(
+        title="Lab Resource Manager",
+        description="Lab instance and worker resource management system with OAuth2 auth",
+        version="1.0.0",
+        debug=app_settings.debug,
+    )
+    app.add_middleware(CloudEventMiddleware, service_provider=app.state.services)
 
     log.info("Lab Resource Manager is ready!")
     return app
@@ -112,9 +133,10 @@ def main():
                 host = sys.argv[i + 1]
 
     print(f"🧪 Starting Lab Resource Manager on http://{host}:{port}")
-    print(f"📖 API Documentation available at http://{host}:{port}/docs")
-    print("🗄️  MongoDB (Motor async) for resource persistence")
+    print(f"📖 API Documentation available at http://{host}:{port}/api/docs")
+    print(f"🗄️  etcd v3 for resource persistence ({app_settings.etcd_host}:{app_settings.etcd_port})")
     print("🔍 OpenTelemetry tracing enabled")
+    print("👁️  Native watchable API for real-time resource updates")
 
     # Run with module:app string so uvicorn can properly detect lifespan
     uvicorn.run("main:app", host=host, port=port, reload=True, log_level="info")
