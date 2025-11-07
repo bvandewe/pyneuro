@@ -5,7 +5,10 @@ with support for basic CRUD operations.
 """
 
 import logging
-from typing import List, Optional
+from typing import TYPE_CHECKING, Optional
+
+if TYPE_CHECKING:
+    import asyncpg
 
 try:
     import asyncpg
@@ -21,17 +24,14 @@ class PostgresResourceStore:
     """PostgreSQL-based storage backend for resources."""
 
     def __init__(self, connection_string: str, table_name: str = "resources"):
-
         if not POSTGRES_AVAILABLE:
-            raise ImportError(
-                "asyncpg is required for PostgreSQL storage. Install with: pip install asyncpg"
-            )
+            raise ImportError("asyncpg is required for PostgreSQL storage. Install with: pip install asyncpg")
 
         self.connection_string = connection_string
         self.table_name = table_name
-        self._pool: Optional[asyncpg.Pool] = None
+        self._pool: Optional["asyncpg.Pool"] = None
 
-    async def _get_pool(self) -> asyncpg.Pool:
+    async def _get_pool(self) -> "asyncpg.Pool":
         """Get or create connection pool."""
         if self._pool is None:
             try:
@@ -105,7 +105,7 @@ class PostgresResourceStore:
         async with pool.acquire() as connection:
             await connection.execute(sql, key)
 
-    async def keys(self, pattern: str) -> List[str]:
+    async def keys(self, pattern: str) -> list[str]:
         """Get all keys matching a pattern (using LIKE)."""
         pool = await self._get_pool()
 

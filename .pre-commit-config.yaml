@@ -29,6 +29,7 @@ repos:
         args: ['--allow-multiple-documents']
         exclude: mkdocs\.yml  # Skip YAML check for mkdocs.yml due to Python tags
       - id: check-added-large-files
+        exclude: ^samples/.*/references/.*\.(json|yaml)$  # Allow large reference files in samples
 
   - repo: https://github.com/psf/black
     rev: 23.10.1

@@ -13,6 +13,10 @@ state machines, and event-driven controllers.
 - **Resource Controllers**: Reconciliation loops for maintaining desired state
 - **Resource Watchers**: Change detection and event-driven processing
 - **Multi-format Serialization**: YAML, XML, and JSON support
+- **🆕 Finalizers**: Graceful resource cleanup before deletion
+- **🆕 Leader Election**: Multi-instance deployment with automatic failover
+- **🆕 Watch Bookmarks**: Reliable event processing with crash recovery
+- **🆕 Conflict Resolution**: Optimistic locking for concurrent updates
 
 ### Integration with Traditional Neuroglia Patterns
 
@@ -21,6 +25,77 @@ state machines, and event-driven controllers.
 - **Event Bus**: CloudEvents integration for resource changes
 - **API Controllers**: REST endpoints following Neuroglia controller patterns
 - **Background Services**: Hosted services for resource lifecycle management
+
+## 🚀 New Production-Ready Features
+
+### Finalizers - Resource Cleanup Hooks
+
+Finalizers ensure external resources are properly cleaned up before deletion:
+
+```python
+# Controller automatically adds finalizers
+controller.finalizer_name = "lab-instance-controller.neuroglia.io"
+
+# Implement cleanup logic
+async def finalize(self, resource: LabInstanceRequest) -> bool:
+    # Clean up containers, networks, storage
+    await self.cleanup_container(resource)
+    await self.release_resources(resource)
+    return True  # Finalizer removed, resource can be deleted
+```
+
+**Demo**: See `demo_finalizers.py` for complete examples
+
+### Leader Election - High Availability
+
+Multiple controller instances elect a leader for active reconciliation:
+
+```python
+# Configure leader election
+config = LeaderElectionConfig(
+    lock_name="lab-instance-controller-leader",
+    identity=instance_id,
+    lease_duration=timedelta(seconds=15)
+)
+
+election = LeaderElection(config=config, backend=redis_backend)
+
+# Only leader reconciles
+controller.leader_election = election
+```
+
+**Demo**: See `demo_ha_deployment.py` for multi-instance setup
+
+### Watch Bookmarks - Reliable Event Processing
+
+Watchers persist progress to avoid missing events on restart:
+
+```python
+# Create watcher with bookmark support
+watcher = ResourceWatcher(
+    controller=controller,
+    bookmark_storage=redis_client,
+    bookmark_key="lab-watcher-bookmark:instance-1"
+)
+
+# Automatically resumes from last processed event
+await watcher.watch()  # Loads bookmark on start
+```
+
+**Demo**: See `demo_bookmarks.py` for crash recovery scenarios
+
+### Conflict Resolution - Optimistic Locking
+
+Prevent lost updates with version-based conflict detection:
+
+```python
+# Automatic conflict detection
+try:
+    await repository.update_async(resource)
+except ResourceConflictError:
+    # Resource was modified by another instance
+    await repository.update_with_retry_async(resource)  # Retry with fresh version
+```
 
 ## 🏗️ Architecture Overview
 
@@ -211,6 +286,191 @@ curl "http://localhost:8000/api/lab-instances/?phase=RUNNING"
 
 # Filter by student
 curl "http://localhost:8000/api/lab-instances/?student_email=student@university.edu"
+```
+
+## 🎓 Demo Applications
+
+### Demo 1: Finalizers - Resource Cleanup
+
+Demonstrates how finalizers ensure proper cleanup of external resources:
+
+```bash
+# Run the finalizers demo
+python samples/lab_resource_manager/demo_finalizers.py
+```
+
+**What you'll see:**
+
+- Multiple finalizers added to a resource
+- Step-by-step cleanup process
+- Container, resource, and network cleanup
+- Graceful handling of cleanup failures
+- Resource deletion only after all finalizers complete
+
+### Demo 2: High Availability Deployment
+
+Demonstrates multi-instance deployment with leader election:
+
+```bash
+# Prerequisites: Start Redis
+docker run -d -p 6379:6379 redis:latest
+
+# Terminal 1 - Start first instance (becomes leader)
+python samples/lab_resource_manager/demo_ha_deployment.py --instance-id instance-1 --port 8001
+
+# Terminal 2 - Start second instance (standby)
+python samples/lab_resource_manager/demo_ha_deployment.py --instance-id instance-2 --port 8002
+
+# Terminal 3 - Start third instance (standby)
+python samples/lab_resource_manager/demo_ha_deployment.py --instance-id instance-3 --port 8003
+```
+
+**What you'll see:**
+
+- Leader election in action
+- Automatic failover when leader stops
+- Only leader performs reconciliation
+- Standby instances wait for leadership
+- Graceful handoff during rolling updates
+
+### Demo 3: Watch Bookmarks - Crash Recovery
+
+Demonstrates reliable event processing with bookmarks:
+
+```bash
+# Prerequisites: Start Redis
+docker run -d -p 6379:6379 redis:latest
+
+# Run the bookmarks demo
+python samples/lab_resource_manager/demo_bookmarks.py
+```
+
+**What you'll see:**
+
+- Bookmark persistence after each event
+- Automatic resumption from last processed event
+- No event loss during crashes
+- No duplicate event processing
+- Independent bookmarks for multiple watchers
+
+## 🏭 Production Deployment
+
+### Multi-Instance Setup
+
+Deploy multiple instances for high availability:
+
+```yaml
+# kubernetes deployment example
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lab-resource-manager
+spec:
+  replicas: 3 # Run 3 instances
+  template:
+    spec:
+      containers:
+        - name: lab-manager
+          image: lab-resource-manager:latest
+          env:
+            - name: INSTANCE_ID
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: REDIS_URL
+              value: "redis://redis-service:6379"
+```
+
+### Required Infrastructure
+
+1. **Redis**: For leader election and bookmarks
+
+   ```bash
+   docker run -d -p 6379:6379 redis:latest
+   ```
+
+2. **MongoDB**: For resource storage
+
+   ```bash
+   docker run -d -p 27017:27017 mongo:latest
+   ```
+
+### Configuration
+
+```python
+# Leader election configuration
+LeaderElectionConfig(
+    lock_name="lab-instance-controller-leader",
+    identity=os.getenv("INSTANCE_ID"),
+    lease_duration=timedelta(seconds=15),
+    renew_deadline=timedelta(seconds=10),
+    retry_period=timedelta(seconds=2)
+)
+
+# Watcher configuration with bookmarks
+ResourceWatcher(
+    controller=controller,
+    bookmark_storage=redis_client,
+    bookmark_key=f"lab-watcher:{os.getenv('INSTANCE_ID')}"
+)
+
+# Controller with finalizers
+controller.finalizer_name = "lab-instance-controller.neuroglia.io"
+```
+
+### Best Practices
+
+1. **Leader Election**:
+
+   - Use unique instance IDs
+   - Set lease duration based on network latency
+   - Monitor leadership changes in logs
+   - Configure health checks properly
+
+2. **Finalizers**:
+
+   - Add finalizers during reconciliation
+   - Implement idempotent cleanup logic
+   - Handle cleanup failures gracefully
+   - Use specific finalizer names per controller
+
+3. **Bookmarks**:
+
+   - Use Redis or persistent storage
+   - Include instance ID in bookmark key
+   - Monitor bookmark lag
+   - Clean up old bookmarks periodically
+
+4. **Conflict Resolution**:
+   - Use `update_with_retry_async()` for updates
+   - Implement proper retry limits
+   - Log conflict occurrences
+   - Monitor conflict rates
+
+## 📊 Monitoring
+
+### Key Metrics to Monitor
+
+- **Leader Election**: Time without leader, election frequency
+- **Finalizer Processing**: Cleanup duration, failure rate
+- **Bookmark Lag**: Time between current version and bookmark
+- **Conflicts**: Conflict rate, retry success rate
+- **Reconciliation**: Queue depth, processing time
+
+### Health Checks
+
+```python
+# Leader health check
+GET /api/status/leader
+# Returns: {"is_leader": true, "identity": "instance-1"}
+
+# Bookmark status
+GET /api/status/bookmarks
+# Returns: {"bookmark": "1234", "current_version": "1250", "lag": 16}
+
+# Finalizer status
+GET /api/status/finalizers
+# Returns: {"pending": 3, "processing": 1, "completed": 45}
 ```
 
 ## 🔧 Key Implementation Details

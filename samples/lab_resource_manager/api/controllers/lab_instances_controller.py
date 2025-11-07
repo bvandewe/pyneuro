@@ -4,32 +4,25 @@ REST API endpoints for managing lab instance resources using the traditional
 Neuroglia controller approach but handling Resources instead of DDD Entities.
 """
 
+from datetime import datetime
 from typing import List, Optional
-from datetime import datetime, timedelta
 
-from classy_fastapi.decorators import get, post, put, delete
+from application.commands.create_lab_instance_command import CreateLabInstanceCommand
+from application.queries.get_lab_instance_query import GetLabInstanceQuery
+from application.queries.list_lab_instances_query import ListLabInstancesQuery
+from classy_fastapi.decorators import delete, get, post, put
+from domain.resources.lab_instance_request import LabInstancePhase
 from fastapi import HTTPException, Query
-
-from neuroglia.mvc.controller_base import ControllerBase
-from neuroglia.dependency_injection.abstractions import ServiceProviderBase
-from neuroglia.mapping.abstractions import Mapper
-from neuroglia.mediation.abstractions import Mediator
-
-from samples.lab_resource_manager.application.commands.create_lab_instance_command import (
-    CreateLabInstanceCommand,
-)
-from samples.lab_resource_manager.application.queries.get_lab_instance_query import (
-    GetLabInstanceQuery,
-)
-from samples.lab_resource_manager.application.queries.list_lab_instances_query import (
-    ListLabInstancesQuery,
-)
-from samples.lab_resource_manager.integration.models.lab_instance_dto import (
+from integration.models.lab_instance_dto import (
+    CreateLabInstanceCommandDto,
     LabInstanceDto,
-    CreateLabInstanceDto,
     UpdateLabInstanceDto,
 )
-from samples.lab_resource_manager.domain.resources.lab_instance_request import LabInstancePhase
+
+from neuroglia.dependency_injection import ServiceProviderBase
+from neuroglia.mapping.mapper import Mapper
+from neuroglia.mediation.mediator import Mediator
+from neuroglia.mvc.controller_base import ControllerBase
 
 
 class LabInstancesController(ControllerBase):
@@ -46,7 +39,7 @@ class LabInstancesController(ControllerBase):
         phase: Optional[LabInstancePhase] = Query(None, description="Filter by phase"),
         limit: Optional[int] = Query(None, description="Limit number of results"),
         offset: Optional[int] = Query(0, description="Offset for pagination"),
-    ) -> List[LabInstanceDto]:
+    ) -> list[LabInstanceDto]:
         """List lab instances with optional filtering."""
         try:
             query = ListLabInstancesQuery(
@@ -81,7 +74,7 @@ class LabInstancesController(ControllerBase):
             raise HTTPException(status_code=500, detail=f"Failed to get lab instance: {str(e)}")
 
     @post("/", response_model=LabInstanceDto, status_code=201)
-    async def create_lab_instance(self, create_dto: CreateLabInstanceDto) -> LabInstanceDto:
+    async def create_lab_instance(self, create_dto: CreateLabInstanceCommandDto) -> LabInstanceDto:
         """Create a new lab instance."""
         try:
             command = self.mapper.map(create_dto, CreateLabInstanceCommand)
@@ -92,9 +85,7 @@ class LabInstancesController(ControllerBase):
             raise HTTPException(status_code=500, detail=f"Failed to create lab instance: {str(e)}")
 
     @put("/{lab_instance_id}", response_model=LabInstanceDto)
-    async def update_lab_instance(
-        self, lab_instance_id: str, update_dto: UpdateLabInstanceDto
-    ) -> LabInstanceDto:
+    async def update_lab_instance(self, lab_instance_id: str, update_dto: UpdateLabInstanceDto) -> LabInstanceDto:
         """Update an existing lab instance."""
         try:
             # First get the current instance
@@ -105,20 +96,14 @@ class LabInstancesController(ControllerBase):
                 raise HTTPException(status_code=404, detail="Lab instance not found")
 
             # For now, only allow updating scheduled start time if still pending
-            if (
-                current_instance.status.phase == LabInstancePhase.PENDING
-                and update_dto.scheduled_start_time is not None
-            ):
-
+            if current_instance.status.phase == LabInstancePhase.PENDING and update_dto.scheduled_start_time is not None:
                 current_instance.spec.scheduled_start_time = update_dto.scheduled_start_time
                 # Save through repository would be done via command pattern
                 # This is a simplified example
 
                 return self.mapper.map(current_instance, LabInstanceDto)
             else:
-                raise HTTPException(
-                    status_code=400, detail="Lab instance cannot be updated in current phase"
-                )
+                raise HTTPException(status_code=400, detail="Lab instance cannot be updated in current phase")
 
         except HTTPException:
             raise
@@ -216,9 +201,7 @@ class LabInstancesController(ControllerBase):
                 raise HTTPException(status_code=404, detail="Lab instance not found")
 
             if not instance.status.container_id:
-                raise HTTPException(
-                    status_code=400, detail="Lab instance has no associated container"
-                )
+                raise HTTPException(status_code=400, detail="Lab instance has no associated container")
 
             # Implementation would use ContainerService to get logs
             # For now, return placeholder
@@ -231,6 +214,4 @@ class LabInstancesController(ControllerBase):
         except HTTPException:
             raise
         except Exception as e:
-            raise HTTPException(
-                status_code=500, detail=f"Failed to get lab instance logs: {str(e)}"
-            )
+            raise HTTPException(status_code=500, detail=f"Failed to get lab instance logs: {str(e)}")
