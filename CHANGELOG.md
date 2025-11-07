@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - **Infrastructure CLI: `recreate` command** for service recreation with fresh containers
+
   - Forces Docker to create new containers (picks up environment variable changes)
   - `--delete-volumes` option to also delete and recreate volumes (data loss warning)
   - `--no-remove-orphans` option to skip orphan container removal
@@ -17,7 +18,55 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Makefile targets: `infra-recreate` and `infra-recreate-clean`
   - Comprehensive documentation in `RECREATE_COMMAND_GUIDE.md`
 
+- **Tests: MongoDB Lazy Import Tests** (`tests/integration/test_mongo_lazy_imports.py`)
+  - Comprehensive test suite verifying lazy import mechanism
+  - Tests MotorRepository imports without pymongo dependency
+  - Tests sync repositories fail gracefully without pymongo
+  - Tests sync repositories work correctly when pymongo is installed
+  - Tests all exports present in `__all__`
+
+### Fixed
+
+- **Packaging: Ensure `rx` installs with base distribution**
+
+  - Removed `rx` from extras list so it's treated as a core dependency
+  - Downstream consumers no longer need to install `rx` manually
+
+- **Observability: Re-enabled Prometheus /metrics endpoint**
+
+  - Added `opentelemetry-exporter-prometheus ^0.49b2` dependency (now compatible with protobuf 5.x)
+  - Prometheus metrics endpoint now works correctly at `/metrics`
+  - PrometheusMetricReader properly configured in OpenTelemetry SDK
+  - Applications can now expose metrics for Prometheus scraping
+  - Note: Was previously removed due to protobuf incompatibility, now resolved
+
+- **Docker Compose: Fixed network and port configuration**
+
+  - Changed network from `external: true` to `driver: bridge` in `docker-compose.shared.yml`
+  - Removed duplicate network declarations from sample compose files
+  - Updated OTEL collector ports in `.env` to avoid conflicts (4317→4417, 4318→4418, etc.)
+  - Updated debug ports in `.env` to avoid conflicts (5678→5778, 5679→5779)
+  - Added port configuration documentation in `notes/infrastructure/DOCKER_COMPOSE_PORT_CONFIGURATION.md`
+  - Multiple stacks can now run concurrently without port conflicts
+
+- **Keycloak: Fixed admin CLI configuration script**
+  - Auto-detects Keycloak container name instead of hardcoding
+  - Auto-detects `kcadm.sh` location (supports multiple Keycloak versions)
+  - Fixed script to target correct container (was incorrectly targeting mario-pizzeria-app)
+  - Improved error handling with validation checks
+
 ### Changed
+
+- **Framework: MongoDB Package Lazy Imports (Breaking Dependency Fix)**
+
+  - Implemented PEP 562 lazy imports in `neuroglia.data.infrastructure.mongo.__init__`
+  - **MotorRepository** now imports without requiring pymongo (async-only applications)
+  - **Sync repositories** (MongoRepository, EnhancedMongoRepository) lazy-loaded on access
+  - Added `TYPE_CHECKING` imports for type checker compatibility
+  - Added comprehensive `__getattr__` implementation for lazy loading
+  - Maintains **full backward compatibility** - all import paths unchanged
+  - Removes unnecessary pymongo dependency for Motor-only users
+  - Updated package docstring with lazy import notes
 
 - **Documentation: Removed deprecated Unit of Work pattern references**
 
