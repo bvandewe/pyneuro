@@ -37,8 +37,9 @@ See Also:
     - Data Access Patterns: https://bvandewe.github.io/pyneuro/features/data-access/
 """
 
+import logging
 from datetime import datetime, timezone
-from typing import TYPE_CHECKING, Generic, Optional
+from typing import TYPE_CHECKING, Any, Generic, Optional, cast
 
 from motor.motor_asyncio import AsyncIOMotorClient, AsyncIOMotorCollection
 
@@ -50,6 +51,8 @@ from neuroglia.serialization.json import JsonSerializer
 
 if TYPE_CHECKING:
     from neuroglia.mediation.mediator import Mediator
+
+log = logging.getLogger(__name__)
 
 
 class MotorRepository(Generic[TEntity, TKey], Repository[TEntity, TKey]):
@@ -136,7 +139,7 @@ class MotorRepository(Generic[TEntity, TKey], Repository[TEntity, TKey]):
             # Search through all base classes to find one with generic type args
             self._entity_type = None
             try:
-                for base in self.__orig_bases__:
+                for base in self.__orig_bases__:  # type: ignore[attr-defined]
                     if hasattr(base, "__args__") and len(base.__args__) > 0:
                         self._entity_type = base.__args__[0]
                         break
@@ -186,14 +189,14 @@ class MotorRepository(Generic[TEntity, TKey], Repository[TEntity, TKey]):
 
         if self._is_aggregate_root(entity):
             # For AggregateRoot, serialize only the state
-            json_str = self._serializer.serialize_to_text(entity.state)
+            json_str = self._serializer.serialize_to_text(entity.state)  # type: ignore[attr-defined]
         else:
             # For Entity, serialize the whole object
             json_str = self._serializer.serialize_to_text(entity)
 
         # Parse JSON but preserve datetime objects for MongoDB
-        doc = json.loads(json_str)
-        return self._restore_datetime_objects(doc)
+        doc = cast(dict[str, Any], self._restore_datetime_objects(json.loads(json_str)))
+        return doc
 
     def _restore_datetime_objects(self, obj):
         """
@@ -257,7 +260,7 @@ class MotorRepository(Generic[TEntity, TKey], Repository[TEntity, TKey]):
         if entity_type is None:
             # Search through all base classes to find one with generic type args
             try:
-                for base in self.__orig_bases__:
+                for base in self.__orig_bases__:  # type: ignore[attr-defined]
                     if hasattr(base, "__args__") and len(base.__args__) > 0:
                         entity_type = base.__args__[0]
                         break
@@ -486,6 +489,7 @@ class MotorRepository(Generic[TEntity, TKey], Repository[TEntity, TKey]):
         database_name: str,
         collection_name: Optional[str] = None,
         connection_string_name: str = "mongo",
+        domain_repository_type: Optional[type] = None,
     ) -> ApplicationBuilderBase:
         """
         Configure the application to use MotorRepository for a specific entity type.
@@ -506,6 +510,9 @@ class MotorRepository(Generic[TEntity, TKey], Repository[TEntity, TKey]):
             database_name: Name of the MongoDB database
             collection_name: Optional collection name (defaults to lowercase entity name)
             connection_string_name: Name of connection string in settings (default: "mongo")
+            domain_repository_type: Optional domain-layer repository interface to register
+                (e.g., TaskRepository). When provided, the interface resolves to the
+                configured MotorRepository instance, preserving clean architecture boundaries.
 
         Returns:
             The configured application builder (for fluent chaining)
@@ -528,13 +535,14 @@ class MotorRepository(Generic[TEntity, TKey], Repository[TEntity, TKey]):
                 database_name="mario_pizzeria"
             )
 
-            # Custom collection name
+            # Custom collection name and domain interface registration
             MotorRepository.configure(
                 builder,
                 entity_type=Order,
                 key_type=str,
                 database_name="mario_pizzeria",
-                collection_name="pizza_orders"
+                collection_name="pizza_orders",
+                domain_repository_type=OrderRepository
             )
 
             # Usage in handlers (automatically scoped per request)
@@ -576,8 +584,10 @@ class MotorRepository(Generic[TEntity, TKey], Repository[TEntity, TKey]):
 
         # Factory function to create MotorRepository with proper entity type
         def create_motor_repository(sp):
-            # Try to get mediator, but allow it to be None (for testing or when not configured)
-            mediator = sp.get_service(Mediator)  # Returns None if not registered
+            # Attempt to resolve Mediator optionally first (tests may skip registration)
+            mediator = sp.get_service(Mediator)
+            if mediator is None:
+                mediator = sp.get_required_service(Mediator)
             return MotorRepository(
                 client=sp.get_required_service(AsyncIOMotorClient),
                 database_name=database_name,
@@ -603,5 +613,21 @@ class MotorRepository(Generic[TEntity, TKey], Repository[TEntity, TKey]):
             Repository[entity_type, key_type],
             implementation_factory=get_repository_interface,
         )
+
+        if domain_repository_type is not None:
+
+            def get_domain_repository(sp):
+                return sp.get_required_service(MotorRepository[entity_type, key_type])
+
+            builder.services.add_scoped(
+                domain_repository_type,
+                implementation_factory=get_domain_repository,
+            )
+            log.debug(
+                "Registered domain repository interface %s -> MotorRepository[%s, %s]",
+                getattr(domain_repository_type, "__name__", str(domain_repository_type)),
+                entity_type.__name__,
+                key_type.__name__,
+            )
 
         return builder
