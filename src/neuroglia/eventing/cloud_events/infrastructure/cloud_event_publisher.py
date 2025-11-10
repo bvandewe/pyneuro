@@ -74,9 +74,10 @@ class CloudEventPublisher(HostedService):
         for retries in range(self._options.retry_attempts):
             try:
                 headers = {"Content-Type": "application/cloudevents+json"}
+                payload = self._json_serializer.serialize_to_text(e)
                 response = None
                 with httpx.Client() as client:
-                    response = client.post(url=url, headers=headers, content=self._json_serializer.serialize(e))
+                    response = client.post(url=url, headers=headers, content=payload)
                     response.raise_for_status()
                     if response is not None and 200 <= response.status_code < 300:
                         log.debug(f"Published cloudevent: {e.type}")
