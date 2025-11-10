@@ -521,14 +521,19 @@ class OrderProcessingHandler(CommandHandler):
 
 ### **Pipeline Integration**
 
-The Unit of Work integrates seamlessly with the mediation pipeline through `DomainEventDispatchingMiddleware`:
+The Unit of Work integrates with the mediator's notification pipeline through the new
+`DomainEventCloudEventBehavior`, which supersedes the legacy `DomainEventDispatchingMiddleware`:
 
 ```python
+from neuroglia.eventing.cloud_events.infrastructure import CloudEventPublisher
+from neuroglia.mediation.behaviors.domain_event_cloudevent_behavior import DomainEventCloudEventBehavior
+
 # Automatic setup with configuration methods
 builder = WebApplicationBuilder()
 Mediator.configure(builder, ["application.commands", "application.queries"])
 UnitOfWork.configure(builder)
-DomainEventDispatchingMiddleware.configure(builder)
+DomainEventCloudEventBehavior.configure(builder)  # Emits decorated domain events as CloudEvents
+CloudEventPublisher.configure(builder)            # Optional: forward CloudEvents to external sinks
 
 # Pipeline execution flow:
 # 1. Command received
@@ -536,10 +541,26 @@ DomainEventDispatchingMiddleware.configure(builder)
 # 3. Command handler executes
 # 4. Handler registers aggregates with UnitOfWork
 # 5. Command completes successfully
-# 6. DomainEventDispatchingMiddleware collects events
-# 7. Events dispatched through mediator
-# 8. [Optional] Transaction commits
+# 6. Mediator publishes domain events
+# 7. DomainEventCloudEventBehavior converts them to CloudEvents and pushes them to the bus
+# 8. CloudEventPublisher (if configured) fans out to external transports
+# 9. [Optional] Transaction commits
 ```
+
+> ⚠️ `DomainEventDispatchingMiddleware` is deprecated and now acts as a no-op. Remove it from the
+> pipeline to avoid duplicate registrations and rely on `DomainEventCloudEventBehavior` for CloudEvent
+> emission.
+
+### **CloudEvent Emission Requirements**
+
+- Decorate domain events with `@cloudevent("my.event.type")` to opt-in to CloudEvent emission.
+- `DomainEventCloudEventBehavior` listens to the mediator's notification pipeline and serializes the
+  event payload (dataclass, Pydantic, or plain object) into a CloudEvent before pushing it to the
+  in-memory `CloudEventBus`.
+- `CloudEventPublishingOptions` lets you tune the CloudEvent `source`, optional `type_prefix`, and
+  retry behaviour used by downstream publishers.
+- Register `CloudEventPublisher` when you want the framework to fan out the generated CloudEvents to
+  HTTP, message brokers, or observability pipelines.
 
 ### **Event Collection Mechanism**
 
@@ -633,9 +654,9 @@ class GetProductHandler(QueryHandler):
 Unit of Work integrates with [Pipeline Behaviors](pipeline-behaviors.md):
 
 ```python
-# Transaction behavior + Domain event dispatching
+# Transaction behavior + Domain event emission
 services.add_scoped(PipelineBehavior, TransactionBehavior)        # 1st: Manages DB transactions
-services.add_scoped(PipelineBehavior, DomainEventDispatchingMiddleware)  # 2nd: Dispatches events after success
+services.add_scoped(PipelineBehavior, DomainEventCloudEventBehavior)  # 2nd: Emits domain events as CloudEvents
 services.add_scoped(PipelineBehavior, LoggingBehavior)            # 3rd: Logs execution
 
 # Execution order ensures events only dispatch after successful transaction commit
@@ -707,28 +728,61 @@ async def test_command_handler_registers_aggregates():
     assert len(events) == 1
     assert isinstance(events[0], ProductCreatedEvent)
 
-@pytest.mark.asyncio
-async def test_middleware_dispatches_events():
-    """Test automatic event dispatching through middleware."""
-    # Setup
-    mock_mediator = Mock()
-    middleware = DomainEventDispatchingMiddleware(unit_of_work, mock_mediator)
+from decimal import Decimal
 
-    # Setup aggregate with events
-    product = Product("Test Product", 10.0)
+import pytest
+
+from neuroglia.core import OperationResult
+from neuroglia.data.abstractions import DomainEvent
+from neuroglia.data.unit_of_work import UnitOfWork
+from neuroglia.eventing.cloud_events.cloud_event import CloudEvent
+from neuroglia.eventing.cloud_events.decorators import cloudevent
+from neuroglia.eventing.cloud_events.infrastructure.cloud_event_bus import CloudEventBus
+from neuroglia.eventing.cloud_events.infrastructure.cloud_event_publisher import CloudEventPublishingOptions
+from neuroglia.mediation.behaviors.domain_event_cloudevent_behavior import DomainEventCloudEventBehavior
+
+
+@cloudevent("inventory.product.created.v1")
+class ProductCreatedEvent(DomainEvent[str]):
+    def __init__(self, aggregate_id: str, name: str, price: Decimal):
+        super().__init__(aggregate_id)
+        self.name = name
+        self.price = price
+
+
+@pytest.mark.asyncio
+async def test_domain_events_emit_cloudevents():
+    """Test automatic CloudEvent emission for decorated domain events."""
+    unit_of_work = UnitOfWork()
+    product = Product("Laptop", 999.99)
     unit_of_work.register_aggregate(product)
 
-    # Execute
-    async def successful_handler():
+    # Simulate mediator publishing collected domain events
+    bus = CloudEventBus()
+    captured: list[CloudEvent] = []
+    bus.output_stream.subscribe(captured.append)
+
+    behavior = DomainEventCloudEventBehavior(
+        bus,
+        CloudEventPublishingOptions(source="/tests/integration"),
+    )
+
+    async def next_handler() -> OperationResult:
         return OperationResult("OK", 200)
 
-    command = CreateProductCommand("Test Product", 10.0)
-    result = await middleware.handle_async(command, successful_handler)
+    # In production code iterate over unit_of_work.get_domain_events().
+    # The fallback below keeps the example self-contained.
+    events = unit_of_work.get_domain_events() or [
+        ProductCreatedEvent(product.id, product.name, Decimal("999.99"))
+    ]
 
-    # Verify
-    assert result.is_success
-    mock_mediator.publish_async.assert_called_once()
-    assert not unit_of_work.has_changes()  # Cleared after dispatching
+    for event in events:
+        await behavior.handle_async(event, next_handler)
+
+    assert captured
+    cloud_event = captured[0]
+    assert cloud_event.subject == product.id
+    assert cloud_event.type == "inventory.product.created.v1"
 ```
 
 ## 🚨 Best Practices

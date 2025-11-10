@@ -41,7 +41,7 @@ Related Documentation:
 
 from dataclasses import dataclass
 from decimal import Decimal
-from typing import Optional
+from typing import List, Optional
 
 import pytest
 from fastapi import FastAPI

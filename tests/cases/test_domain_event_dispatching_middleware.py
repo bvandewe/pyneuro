@@ -1,237 +1,170 @@
-from unittest.mock import AsyncMock, Mock
+from dataclasses import dataclass
+from datetime import datetime, timezone
+from decimal import Decimal
+from enum import Enum
+from typing import Any
 
 import pytest
+from rx.subject.subject import Subject
 
 from neuroglia.core import OperationResult
 from neuroglia.data.abstractions import DomainEvent
-from neuroglia.data.unit_of_work import IUnitOfWork
+from neuroglia.eventing.cloud_events.cloud_event import (
+    CloudEvent,
+    CloudEventSpecVersion,
+)
+from neuroglia.eventing.cloud_events.decorators import cloudevent
+from neuroglia.eventing.cloud_events.infrastructure.cloud_event_bus import CloudEventBus
+from neuroglia.eventing.cloud_events.infrastructure.cloud_event_publisher import (
+    CloudEventPublishingOptions,
+)
 from neuroglia.mediation import Command
+from neuroglia.mediation.behaviors.domain_event_cloudevent_behavior import (
+    DomainEventCloudEventBehavior,
+)
 from neuroglia.mediation.behaviors.domain_event_dispatching_middleware import (
-    DomainEventDispatchingMiddleware,
     TransactionBehavior,
 )
-from neuroglia.mediation.mediator import Mediator
+
+
+class PaymentStatus(Enum):
+    PENDING = "pending"
+    COMPLETED = "completed"
+
+
+@cloudevent("order.payment.updated.v1")
+@dataclass
+class PaymentUpdatedEvent(DomainEvent[str]):
+    aggregate_id: str
+    amount: Decimal
+    occurred_at: datetime
+    status: PaymentStatus
+    metadata: dict[str, Any]
+
+    def __post_init__(self) -> None:
+        super().__init__(self.aggregate_id)
+
+
+class UndecoratedEvent(DomainEvent[str]):
+    def __init__(self, aggregate_id: str):
+        super().__init__(aggregate_id)
+
+
+class TestDomainEventCloudEventBehavior:
+    """Tests for transforming domain events into CloudEvents."""
+
+    def setup_method(self) -> None:
+        self.bus = CloudEventBus()
+        self.options = CloudEventPublishingOptions(
+            sink_uri="http://example.com",
+            source="/services/payments",
+            type_prefix="com.example",
+            retry_attempts=3,
+            retry_delay=0.1,
+        )
+        self.behavior = DomainEventCloudEventBehavior(self.bus, self.options)
+        self.bus.output_stream = Subject()
+        self.captured_events: list[CloudEvent] = []
+        self.bus.output_stream.subscribe(self.captured_events.append)
+
+    @pytest.mark.asyncio
+    async def test_non_domain_event_passes_through(self) -> None:
+        async def next_handler() -> str:
+            return "ok"
+
+        result = await self.behavior.handle_async(object(), next_handler)
+
+        assert result == "ok"
+        assert not self.captured_events
+
+    @pytest.mark.asyncio
+    async def test_undecorated_domain_event_skips_emission(self) -> None:
+        event = UndecoratedEvent("order-123")
+
+        async def next_handler() -> str:
+            return "done"
+
+        result = await self.behavior.handle_async(event, next_handler)
+
+        assert result == "done"
+        assert not self.captured_events
+
+    @pytest.mark.asyncio
+    async def test_emits_cloudevent_for_decorated_domain_event(self) -> None:
+        occurred_at = datetime(2024, 1, 1, tzinfo=timezone.utc)
+        event = PaymentUpdatedEvent(
+            aggregate_id="order-42",
+            amount=Decimal("19.99"),
+            occurred_at=occurred_at,
+            status=PaymentStatus.COMPLETED,
+            metadata={"notes": ["test", b"binary"], "nested": {"value": Decimal("2.5")}},
+        )
+
+        async def next_handler() -> str:
+            return "processed"
+
+        result = await self.behavior.handle_async(event, next_handler)
+
+        assert result == "processed"
+        assert len(self.captured_events) == 1
+        cloud_event = self.captured_events[0]
+
+        assert cloud_event.source == self.options.source
+        assert cloud_event.type == "com.example.order.payment.updated.v1"
+        assert cloud_event.subject == "order-42"
+        assert cloud_event.specversion == CloudEventSpecVersion.v1_0
+
+        assert cloud_event.data is not None
+        payload = cloud_event.data
+        assert payload["aggregate_id"] == "order-42"
+        assert payload["amount"] == "19.99"
+        assert payload["status"] == PaymentStatus.COMPLETED.value
+        assert payload["occurred_at"] == occurred_at.isoformat()
+        assert payload["metadata"]["notes"][1] == "binary"
+        assert payload["metadata"]["nested"]["value"] == "2.5"
+
+    @pytest.mark.asyncio
+    async def test_prefix_not_applied_when_already_present(self) -> None:
+        @cloudevent("com.example.preprefixed")
+        class PrePrefixedEvent(DomainEvent[str]):
+            def __init__(self) -> None:
+                super().__init__("agg-1")
+
+        async def next_handler() -> None:
+            return None
+
+        await self.behavior.handle_async(PrePrefixedEvent(), next_handler)
+
+        assert self.captured_events
+        cloud_event = self.captured_events[-1]
+        assert cloud_event.type == "com.example.preprefixed"
+
+    @pytest.mark.asyncio
+    async def test_source_defaults_to_module_path(self) -> None:
+        behavior = DomainEventCloudEventBehavior(self.bus, publishing_options=None)
+
+        async def next_handler() -> None:
+            return None
+
+        await behavior.handle_async(
+            PaymentUpdatedEvent(
+                aggregate_id="agg-2",
+                amount=Decimal("10"),
+                occurred_at=datetime.now(timezone.utc),
+                status=PaymentStatus.PENDING,
+                metadata={},
+            ),
+            next_handler,
+        )
+
+        assert self.captured_events
+        cloud_event = self.captured_events[-1]
+        assert cloud_event.source.endswith("tests.cases.test_domain_event_dispatching_middleware")
 
 
 class TestCommand(Command[OperationResult]):
-    """Test command for middleware testing."""
-
     def __init__(self, value: str):
         self.value = value
-
-
-class TestDomainEvent(DomainEvent):
-    """Test domain event for middleware testing."""
-
-    def __init__(self, message: str):
-        super().__init__()
-        self.message = message
-
-
-class TestDomainEventDispatchingMiddleware:
-    """Tests for the DomainEventDispatchingMiddleware."""
-
-    def setup_method(self):
-        """Setup test fixtures."""
-        self.mock_unit_of_work = Mock(spec=IUnitOfWork)
-        self.mock_mediator = Mock(spec=Mediator)
-        self.middleware = DomainEventDispatchingMiddleware(self.mock_unit_of_work, self.mock_mediator)
-
-    @pytest.mark.asyncio
-    async def test_successful_command_dispatches_events(self):
-        """Test that successful command execution triggers domain event dispatching."""
-        # Setup
-        command = TestCommand("test")
-        successful_result = OperationResult("OK", 200)
-        successful_result.data = "test_data"
-
-        test_events = [TestDomainEvent("Event 1"), TestDomainEvent("Event 2")]
-
-        self.mock_unit_of_work.get_domain_events.return_value = test_events
-        self.mock_unit_of_work.has_changes.return_value = True
-        self.mock_mediator.publish_async = AsyncMock()
-
-        async def mock_next_handler():
-            return successful_result
-
-        # Execute
-        result = await self.middleware.handle_async(command, mock_next_handler)
-
-        # Verify
-        assert result == successful_result
-        self.mock_unit_of_work.get_domain_events.assert_called_once()
-        assert self.mock_mediator.publish_async.call_count == 2
-        self.mock_unit_of_work.clear.assert_called_once()
-
-    @pytest.mark.asyncio
-    async def test_failed_command_skips_event_dispatching(self):
-        """Test that failed command execution skips domain event dispatching."""
-        # Setup
-        command = TestCommand("test")
-        failed_result = OperationResult("Bad Request", 400, "Validation failed")
-
-        self.mock_unit_of_work.has_changes.return_value = False
-
-        async def mock_next_handler():
-            return failed_result
-
-        # Execute
-        result = await self.middleware.handle_async(command, mock_next_handler)
-
-        # Verify
-        assert result == failed_result
-        self.mock_unit_of_work.get_domain_events.assert_not_called()
-        self.mock_mediator.publish_async.assert_not_called()
-
-    @pytest.mark.asyncio
-    async def test_no_events_skips_dispatching(self):
-        """Test that commands with no domain events skip event dispatching."""
-        # Setup
-        command = TestCommand("test")
-        successful_result = OperationResult("OK", 200)
-
-        self.mock_unit_of_work.get_domain_events.return_value = []
-        self.mock_unit_of_work.has_changes.return_value = False
-
-        async def mock_next_handler():
-            return successful_result
-
-        # Execute
-        result = await self.middleware.handle_async(command, mock_next_handler)
-
-        # Verify
-        assert result == successful_result
-        self.mock_unit_of_work.get_domain_events.assert_called_once()
-        self.mock_mediator.publish_async.assert_not_called()
-
-    @pytest.mark.asyncio
-    async def test_command_exception_clears_unit_of_work(self):
-        """Test that command handler exceptions properly clear the unit of work."""
-        # Setup
-        command = TestCommand("test")
-        self.mock_unit_of_work.has_changes.return_value = True
-
-        async def mock_next_handler():
-            raise ValueError("Command handler failed")
-
-        # Execute and verify exception propagation
-        with pytest.raises(ValueError, match="Command handler failed"):
-            await self.middleware.handle_async(command, mock_next_handler)
-
-        # Verify unit of work was cleared
-        self.mock_unit_of_work.clear.assert_called_once()
-        self.mock_mediator.publish_async.assert_not_called()
-
-    @pytest.mark.asyncio
-    async def test_event_dispatch_exception_logged_not_propagated(self):
-        """Test that event dispatching exceptions are logged but don't fail the command."""
-        # Setup
-        command = TestCommand("test")
-        successful_result = OperationResult("OK", 200)
-
-        test_events = [TestDomainEvent("Event that will fail")]
-        self.mock_unit_of_work.get_domain_events.return_value = test_events
-        self.mock_unit_of_work.has_changes.return_value = True
-
-        # Mock mediator to raise exception on publish
-        self.mock_mediator.publish_async = AsyncMock(side_effect=RuntimeError("Event publishing failed"))
-
-        async def mock_next_handler():
-            return successful_result
-
-        # Execute - should not raise exception despite event publishing failure
-        result = await self.middleware.handle_async(command, mock_next_handler)
-
-        # Verify
-        assert result == successful_result  # Command result should still be returned
-        self.mock_mediator.publish_async.assert_called_once()
-        self.mock_unit_of_work.clear.assert_called_once()
-
-    @pytest.mark.asyncio
-    async def test_unit_of_work_cleared_even_without_changes(self):
-        """Test that unit of work is cleared even when there are no changes."""
-        # Setup
-        command = TestCommand("test")
-        successful_result = OperationResult("OK", 200)
-
-        self.mock_unit_of_work.get_domain_events.return_value = []
-        self.mock_unit_of_work.has_changes.return_value = False
-
-        async def mock_next_handler():
-            return successful_result
-
-        # Execute
-        result = await self.middleware.handle_async(command, mock_next_handler)
-
-        # Verify unit of work clear is not called when no changes
-        assert result == successful_result
-        self.mock_unit_of_work.clear.assert_not_called()
-
-    @pytest.mark.asyncio
-    async def test_multiple_events_all_dispatched_independently(self):
-        """Test that multiple events are dispatched independently."""
-        # Setup
-        command = TestCommand("test")
-        successful_result = OperationResult("OK", 200)
-
-        test_events = [
-            TestDomainEvent("Event 1"),
-            TestDomainEvent("Event 2"),
-            TestDomainEvent("Event 3"),
-        ]
-
-        self.mock_unit_of_work.get_domain_events.return_value = test_events
-        self.mock_unit_of_work.has_changes.return_value = True
-        self.mock_mediator.publish_async = AsyncMock()
-
-        async def mock_next_handler():
-            return successful_result
-
-        # Execute
-        result = await self.middleware.handle_async(command, mock_next_handler)
-
-        # Verify all events were dispatched
-        assert result == successful_result
-        assert self.mock_mediator.publish_async.call_count == 3
-
-        # Verify each event was dispatched with correct parameters
-        published_events = [call.args[0] for call in self.mock_mediator.publish_async.call_args_list]
-        assert len(published_events) == 3
-        assert all(isinstance(event, TestDomainEvent) for event in published_events)
-
-    @pytest.mark.asyncio
-    async def test_partial_event_dispatch_failure_continues(self):
-        """Test that failure to dispatch one event doesn't prevent others."""
-        # Setup
-        command = TestCommand("test")
-        successful_result = OperationResult("OK", 200)
-
-        test_events = [
-            TestDomainEvent("Event 1"),
-            TestDomainEvent("Failing Event"),
-            TestDomainEvent("Event 3"),
-        ]
-
-        self.mock_unit_of_work.get_domain_events.return_value = test_events
-        self.mock_unit_of_work.has_changes.return_value = True
-
-        # Mock mediator to fail on second event only
-        async def mock_publish_async(event):
-            if event.message == "Failing Event":
-                raise RuntimeError("This event fails")
-
-        self.mock_mediator.publish_async = AsyncMock(side_effect=mock_publish_async)
-
-        async def mock_next_handler():
-            return successful_result
-
-        # Execute - should complete despite one event failing
-        result = await self.middleware.handle_async(command, mock_next_handler)
-
-        # Verify
-        assert result == successful_result
-        assert self.mock_mediator.publish_async.call_count == 3  # All events attempted
-        self.mock_unit_of_work.clear.assert_called_once()
 
 
 class TestTransactionBehavior:

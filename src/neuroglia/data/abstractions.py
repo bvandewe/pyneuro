@@ -219,6 +219,11 @@ class AggregateRoot(Generic[TState, TKey], Entity[TKey], ABC):
                 item = OrderItem(product_id, quantity, price)
                 self.state.items.append(item)
                 self.register_event(ItemAddedEvent(self.id, product_id, quantity))
+
+        class Task(AggregateRoot[TaskState, str]):
+            def assign(self, *, user_id: str) -> None:
+                self.state.assignee_id = user_id
+                self.register_event(TaskAssigned(self.id, user_id))
         ```
 
     See Also:
@@ -230,13 +235,14 @@ class AggregateRoot(Generic[TState, TKey], Entity[TKey], ABC):
     _pending_events: list[DomainEvent]
     """ Gets a list containing all domain events pending persistence """
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initializes a new aggregate root"""
-        self.state = object.__new__(self.__orig_bases__[0].__args__[0])
-        self.state.__init__()
+        state_type = self._get_state_type()
+        self.state = object.__new__(state_type)
+        state_type.__init__(self.state)
         self._pending_events = list[DomainEvent]()
 
-    def id(self):
+    def id(self):  # type: ignore[override]
         """Gets the aggregate root's id"""
         return self.state.id
 
@@ -293,6 +299,16 @@ class AggregateRoot(Generic[TState, TKey], Entity[TKey], ABC):
             List of uncommitted domain events
         """
         return self._pending_events.copy()
+
+    @classmethod
+    def _get_state_type(cls):
+        """Resolves the state type declared for the aggregate root."""
+        orig_bases = getattr(cls, "__orig_bases__", None)
+        if orig_bases:
+            base = orig_bases[0]
+            if hasattr(base, "__args__") and base.__args__:
+                return base.__args__[0]
+        raise TypeError(f"{cls.__name__} must specify an AggregateState generic argument")
 
 
 TAggregate = TypeVar("TAggregate", bound=AggregateRoot)

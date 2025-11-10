@@ -35,7 +35,7 @@ Related Documentation:
 """
 
 from dataclasses import dataclass
-from typing import Optional
+from typing import List, Optional
 
 import pytest
 from fastapi import FastAPI, Query
