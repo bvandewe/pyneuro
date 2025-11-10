@@ -7,7 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-_No unreleased changes yet._
+### Added
+
+- **Data Access: MotorRepository custom implementation registration**
+  - `MotorRepository.configure` now accepts an optional `implementation_type` parameter for registering custom repository implementations that extend `MotorRepository`
+  - Enables single-line registration of custom repositories with domain-specific query methods
+  - Validates that implementation types properly extend `MotorRepository` at configuration time
+  - When provided with `domain_repository_type`, the custom implementation is automatically bound to the domain interface
+
+### Documentation
+
+- Updated `docs/tutorials/mario-pizzeria-06-persistence.md` with examples of custom repository implementation registration
 
 ## [0.6.5] - 2025-11-10
 

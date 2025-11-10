@@ -263,13 +263,44 @@ def create_pizzeria_app():
 
 Passing `domain_repository_type` automatically binds your domain-level repository interface
 to the scoped `MotorRepository` instance. This keeps handlers decoupled from the infrastructure
-layer while avoiding manual service registration boilerplate. If you need a specialized
-repository implementation instead of the generic `MotorRepository`, you can still register
-your class after configuration by calling `builder.services.add_scoped(IOrderRepository, CustomOrderRepository)`.
+layer while avoiding manual service registration boilerplate.
+
+### Using Custom Repository Implementations
+
+If you need domain-specific query methods beyond basic CRUD, create a custom repository
+that extends `MotorRepository` and register it using the `implementation_type` parameter:
+
+```python
+# Custom repository with domain-specific queries
+class MongoOrderRepository(MotorRepository[Order, str]):
+    """Custom MongoDB repository with order-specific queries."""
+
+    async def get_by_customer_phone_async(self, phone: str) -> List[Order]:
+        """Get orders by customer phone number."""
+        return await self.find_async({"customer_phone": phone})
+
+    async def get_by_status_async(self, status: str) -> List[Order]:
+        """Get orders by status for kitchen management."""
+        return await self.find_async({"status": status})
+
+# Single-line registration with custom implementation
+MotorRepository.configure(
+    builder,
+    entity_type=Order,
+    key_type=str,
+    database_name="mario_pizzeria",
+    collection_name="orders",
+    domain_repository_type=IOrderRepository,
+    implementation_type=MongoOrderRepository,  # Custom implementation
+)
+```
+
+When `implementation_type` is provided, your domain interface resolves to the custom
+repository class, giving you access to specialized query methods while maintaining
+clean architecture boundaries.
 
 `MotorRepository.configure` now resolves the `Mediator` for you, so aggregate domain events
-are published automatically once your handlers persist state. Only override the repository
-registration when you truly need a custom implementation.
+are published automatically once your handlers persist state.
 
 **Configuration does:**
 
