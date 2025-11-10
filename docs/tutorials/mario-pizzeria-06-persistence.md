@@ -233,11 +233,6 @@ from domain.repositories import (
     ICustomerRepository,
     IPizzaRepository
 )
-from integration.repositories import (
-    MongoOrderRepository,
-    MongoCustomerRepository,
-    MongoPizzaRepository
-)
 
 def create_pizzeria_app():
     builder = WebApplicationBuilder()
@@ -250,7 +245,8 @@ def create_pizzeria_app():
         entity_type=Order,
         key_type=str,
         database_name="mario_pizzeria",
-        collection_name="orders"
+        collection_name="orders",
+        domain_repository_type=IOrderRepository,
     )
 
     MotorRepository.configure(
@@ -258,15 +254,22 @@ def create_pizzeria_app():
         entity_type=Customer,
         key_type=str,
         database_name="mario_pizzeria",
-        collection_name="customers"
+        collection_name="customers",
+        domain_repository_type=ICustomerRepository,
     )
-
-    # Register repository implementations
-    builder.services.add_scoped(IOrderRepository, MongoOrderRepository)
-    builder.services.add_scoped(ICustomerRepository, MongoCustomerRepository)
 
     return builder.build_app_with_lifespan(...)
 ```
+
+Passing `domain_repository_type` automatically binds your domain-level repository interface
+to the scoped `MotorRepository` instance. This keeps handlers decoupled from the infrastructure
+layer while avoiding manual service registration boilerplate. If you need a specialized
+repository implementation instead of the generic `MotorRepository`, you can still register
+your class after configuration by calling `builder.services.add_scoped(IOrderRepository, CustomOrderRepository)`.
+
+`MotorRepository.configure` now resolves the `Mediator` for you, so aggregate domain events
+are published automatically once your handlers persist state. Only override the repository
+registration when you truly need a custom implementation.
 
 **Configuration does:**
 
