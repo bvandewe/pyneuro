@@ -2735,11 +2735,16 @@
 </span></code></pre></div>
 <h3 id="pipeline-behaviors-integration">Pipeline Behaviors Integration<a class="headerlink" href="#pipeline-behaviors-integration" title="Permanent link">¶</a></h3>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-11-1"><a href="#__codelineno-11-1" id="__codelineno-11-1" name="__codelineno-11-1"></a><span class="c1"># Same pipeline works with both patterns</span>
-</span><span id="__span-11-2"><a href="#__codelineno-11-2" id="__codelineno-11-2" name="__codelineno-11-2"></a><span class="n">services</span><span class="o">.</span><span class="n">add_scoped</span><span class="p">(</span><span class="n">PipelineBehavior</span><span class="p">,</span> <span class="n">ValidationBehavior</span><span class="p">)</span>           <span class="c1"># Validate inputs</span>
-</span><span id="__span-11-3"><a href="#__codelineno-11-3" id="__codelineno-11-3" name="__codelineno-11-3"></a><span class="n">services</span><span class="o">.</span><span class="n">add_scoped</span><span class="p">(</span><span class="n">PipelineBehavior</span><span class="p">,</span> <span class="n">TransactionBehavior</span><span class="p">)</span>          <span class="c1"># Manage transactions</span>
-</span><span id="__span-11-4"><a href="#__codelineno-11-4" id="__codelineno-11-4" name="__codelineno-11-4"></a><span class="n">services</span><span class="o">.</span><span class="n">add_scoped</span><span class="p">(</span><span class="n">PipelineBehavior</span><span class="p">,</span> <span class="n">DomainEventDispatchingMiddleware</span><span class="p">)</span>  <span class="c1"># Dispatch events</span>
+</span><span id="__span-11-2"><a href="#__codelineno-11-2" id="__codelineno-11-2" name="__codelineno-11-2"></a><span class="n">services</span><span class="o">.</span><span class="n">add_scoped</span><span class="p">(</span><span class="n">PipelineBehavior</span><span class="p">,</span> <span class="n">ValidationBehavior</span><span class="p">)</span>          <span class="c1"># Validate inputs</span>
+</span><span id="__span-11-3"><a href="#__codelineno-11-3" id="__codelineno-11-3" name="__codelineno-11-3"></a><span class="n">services</span><span class="o">.</span><span class="n">add_scoped</span><span class="p">(</span><span class="n">PipelineBehavior</span><span class="p">,</span> <span class="n">TransactionBehavior</span><span class="p">)</span>         <span class="c1"># Manage transactions</span>
+</span><span id="__span-11-4"><a href="#__codelineno-11-4" id="__codelineno-11-4" name="__codelineno-11-4"></a><span class="n">services</span><span class="o">.</span><span class="n">add_scoped</span><span class="p">(</span><span class="n">PipelineBehavior</span><span class="p">,</span> <span class="n">DomainEventCloudEventBehavior</span><span class="p">)</span>  <span class="c1"># Convert domain events to CloudEvents</span>
 </span><span id="__span-11-5"><a href="#__codelineno-11-5" id="__codelineno-11-5" name="__codelineno-11-5"></a><span class="n">services</span><span class="o">.</span><span class="n">add_scoped</span><span class="p">(</span><span class="n">PipelineBehavior</span><span class="p">,</span> <span class="n">LoggingBehavior</span><span class="p">)</span>             <span class="c1"># Log execution</span>
 </span></code></pre></div>
+<blockquote>
+<p>ℹ️ <code>DomainEventDispatchingMiddleware</code> has been deprecated. Register <code>DomainEventCloudEventBehavior</code>
+to automatically transform decorated <code>DomainEvent</code> instances into CloudEvents and emit them
+through the framework's CloudEvent bus.</p>
+</blockquote>
 <h2 id="related-documentation">📚 Related Documentation<a class="headerlink" href="#related-documentation" title="Permanent link">¶</a></h2>
 <ul>
 <li><strong><a href="../unit-of-work/">🔄 Unit of Work Pattern</a></strong> - Coordination layer for both patterns</li>

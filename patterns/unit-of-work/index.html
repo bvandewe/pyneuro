@@ -728,6 +728,13 @@
 </a>
 </li>
 <li class="md-nav__item">
+<a class="md-nav__link" href="#cloudevent-emission-requirements">
+<span class="md-ellipsis">
+      CloudEvent Emission Requirements
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
 <a class="md-nav__link" href="#event-collection-mechanism">
 <span class="md-ellipsis">
       Event Collection Mechanism
@@ -1656,6 +1663,13 @@
 </a>
 </li>
 <li class="md-nav__item">
+<a class="md-nav__link" href="#cloudevent-emission-requirements">
+<span class="md-ellipsis">
+      CloudEvent Emission Requirements
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
 <a class="md-nav__link" href="#event-collection-mechanism">
 <span class="md-ellipsis">
       Event Collection Mechanism
@@ -2380,23 +2394,45 @@
 </span></code></pre></div>
 <h2 id="infrastructure-integration">🔧 Infrastructure Integration<a class="headerlink" href="#infrastructure-integration" title="Permanent link">¶</a></h2>
 <h3 id="pipeline-integration"><strong>Pipeline Integration</strong><a class="headerlink" href="#pipeline-integration" title="Permanent link">¶</a></h3>
-<p>The Unit of Work integrates seamlessly with the mediation pipeline through <code>DomainEventDispatchingMiddleware</code>:</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-9-1"><a href="#__codelineno-9-1" id="__codelineno-9-1" name="__codelineno-9-1"></a><span class="c1"># Automatic setup with configuration methods</span>
-</span><span id="__span-9-2"><a href="#__codelineno-9-2" id="__codelineno-9-2" name="__codelineno-9-2"></a><span class="n">builder</span> <span class="o">=</span> <span class="n">WebApplicationBuilder</span><span class="p">()</span>
-</span><span id="__span-9-3"><a href="#__codelineno-9-3" id="__codelineno-9-3" name="__codelineno-9-3"></a><span class="n">Mediator</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="p">[</span><span class="s2">"application.commands"</span><span class="p">,</span> <span class="s2">"application.queries"</span><span class="p">])</span>
-</span><span id="__span-9-4"><a href="#__codelineno-9-4" id="__codelineno-9-4" name="__codelineno-9-4"></a><span class="n">UnitOfWork</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">)</span>
-</span><span id="__span-9-5"><a href="#__codelineno-9-5" id="__codelineno-9-5" name="__codelineno-9-5"></a><span class="n">DomainEventDispatchingMiddleware</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">)</span>
-</span><span id="__span-9-6"><a href="#__codelineno-9-6" id="__codelineno-9-6" name="__codelineno-9-6"></a>
-</span><span id="__span-9-7"><a href="#__codelineno-9-7" id="__codelineno-9-7" name="__codelineno-9-7"></a><span class="c1"># Pipeline execution flow:</span>
-</span><span id="__span-9-8"><a href="#__codelineno-9-8" id="__codelineno-9-8" name="__codelineno-9-8"></a><span class="c1"># 1. Command received</span>
-</span><span id="__span-9-9"><a href="#__codelineno-9-9" id="__codelineno-9-9" name="__codelineno-9-9"></a><span class="c1"># 2. [Optional] Transaction begins</span>
-</span><span id="__span-9-10"><a href="#__codelineno-9-10" id="__codelineno-9-10" name="__codelineno-9-10"></a><span class="c1"># 3. Command handler executes</span>
-</span><span id="__span-9-11"><a href="#__codelineno-9-11" id="__codelineno-9-11" name="__codelineno-9-11"></a><span class="c1"># 4. Handler registers aggregates with UnitOfWork</span>
-</span><span id="__span-9-12"><a href="#__codelineno-9-12" id="__codelineno-9-12" name="__codelineno-9-12"></a><span class="c1"># 5. Command completes successfully</span>
-</span><span id="__span-9-13"><a href="#__codelineno-9-13" id="__codelineno-9-13" name="__codelineno-9-13"></a><span class="c1"># 6. DomainEventDispatchingMiddleware collects events</span>
-</span><span id="__span-9-14"><a href="#__codelineno-9-14" id="__codelineno-9-14" name="__codelineno-9-14"></a><span class="c1"># 7. Events dispatched through mediator</span>
-</span><span id="__span-9-15"><a href="#__codelineno-9-15" id="__codelineno-9-15" name="__codelineno-9-15"></a><span class="c1"># 8. [Optional] Transaction commits</span>
+<p>The Unit of Work integrates with the mediator's notification pipeline through the new
+<code>DomainEventCloudEventBehavior</code>, which supersedes the legacy <code>DomainEventDispatchingMiddleware</code>:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-9-1"><a href="#__codelineno-9-1" id="__codelineno-9-1" name="__codelineno-9-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.eventing.cloud_events.infrastructure</span><span class="w"> </span><span class="kn">import</span> <span class="n">CloudEventPublisher</span>
+</span><span id="__span-9-2"><a href="#__codelineno-9-2" id="__codelineno-9-2" name="__codelineno-9-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.mediation.behaviors.domain_event_cloudevent_behavior</span><span class="w"> </span><span class="kn">import</span> <span class="n">DomainEventCloudEventBehavior</span>
+</span><span id="__span-9-3"><a href="#__codelineno-9-3" id="__codelineno-9-3" name="__codelineno-9-3"></a>
+</span><span id="__span-9-4"><a href="#__codelineno-9-4" id="__codelineno-9-4" name="__codelineno-9-4"></a><span class="c1"># Automatic setup with configuration methods</span>
+</span><span id="__span-9-5"><a href="#__codelineno-9-5" id="__codelineno-9-5" name="__codelineno-9-5"></a><span class="n">builder</span> <span class="o">=</span> <span class="n">WebApplicationBuilder</span><span class="p">()</span>
+</span><span id="__span-9-6"><a href="#__codelineno-9-6" id="__codelineno-9-6" name="__codelineno-9-6"></a><span class="n">Mediator</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="p">[</span><span class="s2">"application.commands"</span><span class="p">,</span> <span class="s2">"application.queries"</span><span class="p">])</span>
+</span><span id="__span-9-7"><a href="#__codelineno-9-7" id="__codelineno-9-7" name="__codelineno-9-7"></a><span class="n">UnitOfWork</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">)</span>
+</span><span id="__span-9-8"><a href="#__codelineno-9-8" id="__codelineno-9-8" name="__codelineno-9-8"></a><span class="n">DomainEventCloudEventBehavior</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">)</span>  <span class="c1"># Emits decorated domain events as CloudEvents</span>
+</span><span id="__span-9-9"><a href="#__codelineno-9-9" id="__codelineno-9-9" name="__codelineno-9-9"></a><span class="n">CloudEventPublisher</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">)</span>            <span class="c1"># Optional: forward CloudEvents to external sinks</span>
+</span><span id="__span-9-10"><a href="#__codelineno-9-10" id="__codelineno-9-10" name="__codelineno-9-10"></a>
+</span><span id="__span-9-11"><a href="#__codelineno-9-11" id="__codelineno-9-11" name="__codelineno-9-11"></a><span class="c1"># Pipeline execution flow:</span>
+</span><span id="__span-9-12"><a href="#__codelineno-9-12" id="__codelineno-9-12" name="__codelineno-9-12"></a><span class="c1"># 1. Command received</span>
+</span><span id="__span-9-13"><a href="#__codelineno-9-13" id="__codelineno-9-13" name="__codelineno-9-13"></a><span class="c1"># 2. [Optional] Transaction begins</span>
+</span><span id="__span-9-14"><a href="#__codelineno-9-14" id="__codelineno-9-14" name="__codelineno-9-14"></a><span class="c1"># 3. Command handler executes</span>
+</span><span id="__span-9-15"><a href="#__codelineno-9-15" id="__codelineno-9-15" name="__codelineno-9-15"></a><span class="c1"># 4. Handler registers aggregates with UnitOfWork</span>
+</span><span id="__span-9-16"><a href="#__codelineno-9-16" id="__codelineno-9-16" name="__codelineno-9-16"></a><span class="c1"># 5. Command completes successfully</span>
+</span><span id="__span-9-17"><a href="#__codelineno-9-17" id="__codelineno-9-17" name="__codelineno-9-17"></a><span class="c1"># 6. Mediator publishes domain events</span>
+</span><span id="__span-9-18"><a href="#__codelineno-9-18" id="__codelineno-9-18" name="__codelineno-9-18"></a><span class="c1"># 7. DomainEventCloudEventBehavior converts them to CloudEvents and pushes them to the bus</span>
+</span><span id="__span-9-19"><a href="#__codelineno-9-19" id="__codelineno-9-19" name="__codelineno-9-19"></a><span class="c1"># 8. CloudEventPublisher (if configured) fans out to external transports</span>
+</span><span id="__span-9-20"><a href="#__codelineno-9-20" id="__codelineno-9-20" name="__codelineno-9-20"></a><span class="c1"># 9. [Optional] Transaction commits</span>
 </span></code></pre></div>
+<blockquote>
+<p>⚠️ <code>DomainEventDispatchingMiddleware</code> is deprecated and now acts as a no-op. Remove it from the
+pipeline to avoid duplicate registrations and rely on <code>DomainEventCloudEventBehavior</code> for CloudEvent
+emission.</p>
+</blockquote>
+<h3 id="cloudevent-emission-requirements"><strong>CloudEvent Emission Requirements</strong><a class="headerlink" href="#cloudevent-emission-requirements" title="Permanent link">¶</a></h3>
+<ul>
+<li>Decorate domain events with <code>@cloudevent("my.event.type")</code> to opt-in to CloudEvent emission.</li>
+<li><code>DomainEventCloudEventBehavior</code> listens to the mediator's notification pipeline and serializes the
+  event payload (dataclass, Pydantic, or plain object) into a CloudEvent before pushing it to the
+  in-memory <code>CloudEventBus</code>.</li>
+<li><code>CloudEventPublishingOptions</code> lets you tune the CloudEvent <code>source</code>, optional <code>type_prefix</code>, and
+  retry behaviour used by downstream publishers.</li>
+<li>Register <code>CloudEventPublisher</code> when you want the framework to fan out the generated CloudEvents to
+  HTTP, message brokers, or observability pipelines.</li>
+</ul>
 <h3 id="event-collection-mechanism"><strong>Event Collection Mechanism</strong><a class="headerlink" href="#event-collection-mechanism" title="Permanent link">¶</a></h3>
 <p>The UnitOfWork uses <strong>duck typing</strong> to collect events from any object, supporting both patterns:</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-10-1"><a href="#__codelineno-10-1" id="__codelineno-10-1" name="__codelineno-10-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_domain_events</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">DomainEvent</span><span class="p">]:</span>
@@ -2515,9 +2551,9 @@
 </span></code></pre></div>
 <h3 id="pipeline-behaviors-integration"><strong>Pipeline Behaviors Integration</strong><a class="headerlink" href="#pipeline-behaviors-integration" title="Permanent link">¶</a></h3>
 <p>Unit of Work integrates with <a href="../pipeline-behaviors/">Pipeline Behaviors</a>:</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-12-1"><a href="#__codelineno-12-1" id="__codelineno-12-1" name="__codelineno-12-1"></a><span class="c1"># Transaction behavior + Domain event dispatching</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-12-1"><a href="#__codelineno-12-1" id="__codelineno-12-1" name="__codelineno-12-1"></a><span class="c1"># Transaction behavior + Domain event emission</span>
 </span><span id="__span-12-2"><a href="#__codelineno-12-2" id="__codelineno-12-2" name="__codelineno-12-2"></a><span class="n">services</span><span class="o">.</span><span class="n">add_scoped</span><span class="p">(</span><span class="n">PipelineBehavior</span><span class="p">,</span> <span class="n">TransactionBehavior</span><span class="p">)</span>        <span class="c1"># 1st: Manages DB transactions</span>
-</span><span id="__span-12-3"><a href="#__codelineno-12-3" id="__codelineno-12-3" name="__codelineno-12-3"></a><span class="n">services</span><span class="o">.</span><span class="n">add_scoped</span><span class="p">(</span><span class="n">PipelineBehavior</span><span class="p">,</span> <span class="n">DomainEventDispatchingMiddleware</span><span class="p">)</span>  <span class="c1"># 2nd: Dispatches events after success</span>
+</span><span id="__span-12-3"><a href="#__codelineno-12-3" id="__codelineno-12-3" name="__codelineno-12-3"></a><span class="n">services</span><span class="o">.</span><span class="n">add_scoped</span><span class="p">(</span><span class="n">PipelineBehavior</span><span class="p">,</span> <span class="n">DomainEventCloudEventBehavior</span><span class="p">)</span>  <span class="c1"># 2nd: Emits domain events as CloudEvents</span>
 </span><span id="__span-12-4"><a href="#__codelineno-12-4" id="__codelineno-12-4" name="__codelineno-12-4"></a><span class="n">services</span><span class="o">.</span><span class="n">add_scoped</span><span class="p">(</span><span class="n">PipelineBehavior</span><span class="p">,</span> <span class="n">LoggingBehavior</span><span class="p">)</span>            <span class="c1"># 3rd: Logs execution</span>
 </span><span id="__span-12-5"><a href="#__codelineno-12-5" id="__codelineno-12-5" name="__codelineno-12-5"></a>
 </span><span id="__span-12-6"><a href="#__codelineno-12-6" id="__codelineno-12-6" name="__codelineno-12-6"></a><span class="c1"># Execution order ensures events only dispatch after successful transaction commit</span>
@@ -2578,28 +2614,61 @@
 </span><span id="__span-15-18"><a href="#__codelineno-15-18" id="__codelineno-15-18" name="__codelineno-15-18"></a>    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">events</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
 </span><span id="__span-15-19"><a href="#__codelineno-15-19" id="__codelineno-15-19" name="__codelineno-15-19"></a>    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">events</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">ProductCreatedEvent</span><span class="p">)</span>
 </span><span id="__span-15-20"><a href="#__codelineno-15-20" id="__codelineno-15-20" name="__codelineno-15-20"></a>
-</span><span id="__span-15-21"><a href="#__codelineno-15-21" id="__codelineno-15-21" name="__codelineno-15-21"></a><span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">asyncio</span>
-</span><span id="__span-15-22"><a href="#__codelineno-15-22" id="__codelineno-15-22" name="__codelineno-15-22"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">test_middleware_dispatches_events</span><span class="p">():</span>
-</span><span id="__span-15-23"><a href="#__codelineno-15-23" id="__codelineno-15-23" name="__codelineno-15-23"></a><span class="w">    </span><span class="sd">"""Test automatic event dispatching through middleware."""</span>
-</span><span id="__span-15-24"><a href="#__codelineno-15-24" id="__codelineno-15-24" name="__codelineno-15-24"></a>    <span class="c1"># Setup</span>
-</span><span id="__span-15-25"><a href="#__codelineno-15-25" id="__codelineno-15-25" name="__codelineno-15-25"></a>    <span class="n">mock_mediator</span> <span class="o">=</span> <span class="n">Mock</span><span class="p">()</span>
-</span><span id="__span-15-26"><a href="#__codelineno-15-26" id="__codelineno-15-26" name="__codelineno-15-26"></a>    <span class="n">middleware</span> <span class="o">=</span> <span class="n">DomainEventDispatchingMiddleware</span><span class="p">(</span><span class="n">unit_of_work</span><span class="p">,</span> <span class="n">mock_mediator</span><span class="p">)</span>
-</span><span id="__span-15-27"><a href="#__codelineno-15-27" id="__codelineno-15-27" name="__codelineno-15-27"></a>
-</span><span id="__span-15-28"><a href="#__codelineno-15-28" id="__codelineno-15-28" name="__codelineno-15-28"></a>    <span class="c1"># Setup aggregate with events</span>
-</span><span id="__span-15-29"><a href="#__codelineno-15-29" id="__codelineno-15-29" name="__codelineno-15-29"></a>    <span class="n">product</span> <span class="o">=</span> <span class="n">Product</span><span class="p">(</span><span class="s2">"Test Product"</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">)</span>
-</span><span id="__span-15-30"><a href="#__codelineno-15-30" id="__codelineno-15-30" name="__codelineno-15-30"></a>    <span class="n">unit_of_work</span><span class="o">.</span><span class="n">register_aggregate</span><span class="p">(</span><span class="n">product</span><span class="p">)</span>
-</span><span id="__span-15-31"><a href="#__codelineno-15-31" id="__codelineno-15-31" name="__codelineno-15-31"></a>
-</span><span id="__span-15-32"><a href="#__codelineno-15-32" id="__codelineno-15-32" name="__codelineno-15-32"></a>    <span class="c1"># Execute</span>
-</span><span id="__span-15-33"><a href="#__codelineno-15-33" id="__codelineno-15-33" name="__codelineno-15-33"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">successful_handler</span><span class="p">():</span>
-</span><span id="__span-15-34"><a href="#__codelineno-15-34" id="__codelineno-15-34" name="__codelineno-15-34"></a>        <span class="k">return</span> <span class="n">OperationResult</span><span class="p">(</span><span class="s2">"OK"</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
-</span><span id="__span-15-35"><a href="#__codelineno-15-35" id="__codelineno-15-35" name="__codelineno-15-35"></a>
-</span><span id="__span-15-36"><a href="#__codelineno-15-36" id="__codelineno-15-36" name="__codelineno-15-36"></a>    <span class="n">command</span> <span class="o">=</span> <span class="n">CreateProductCommand</span><span class="p">(</span><span class="s2">"Test Product"</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">)</span>
-</span><span id="__span-15-37"><a href="#__codelineno-15-37" id="__codelineno-15-37" name="__codelineno-15-37"></a>    <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">middleware</span><span class="o">.</span><span class="n">handle_async</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="n">successful_handler</span><span class="p">)</span>
-</span><span id="__span-15-38"><a href="#__codelineno-15-38" id="__codelineno-15-38" name="__codelineno-15-38"></a>
-</span><span id="__span-15-39"><a href="#__codelineno-15-39" id="__codelineno-15-39" name="__codelineno-15-39"></a>    <span class="c1"># Verify</span>
-</span><span id="__span-15-40"><a href="#__codelineno-15-40" id="__codelineno-15-40" name="__codelineno-15-40"></a>    <span class="k">assert</span> <span class="n">result</span><span class="o">.</span><span class="n">is_success</span>
-</span><span id="__span-15-41"><a href="#__codelineno-15-41" id="__codelineno-15-41" name="__codelineno-15-41"></a>    <span class="n">mock_mediator</span><span class="o">.</span><span class="n">publish_async</span><span class="o">.</span><span class="n">assert_called_once</span><span class="p">()</span>
-</span><span id="__span-15-42"><a href="#__codelineno-15-42" id="__codelineno-15-42" name="__codelineno-15-42"></a>    <span class="k">assert</span> <span class="ow">not</span> <span class="n">unit_of_work</span><span class="o">.</span><span class="n">has_changes</span><span class="p">()</span>  <span class="c1"># Cleared after dispatching</span>
+</span><span id="__span-15-21"><a href="#__codelineno-15-21" id="__codelineno-15-21" name="__codelineno-15-21"></a><span class="kn">from</span><span class="w"> </span><span class="nn">decimal</span><span class="w"> </span><span class="kn">import</span> <span class="n">Decimal</span>
+</span><span id="__span-15-22"><a href="#__codelineno-15-22" id="__codelineno-15-22" name="__codelineno-15-22"></a>
+</span><span id="__span-15-23"><a href="#__codelineno-15-23" id="__codelineno-15-23" name="__codelineno-15-23"></a><span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
+</span><span id="__span-15-24"><a href="#__codelineno-15-24" id="__codelineno-15-24" name="__codelineno-15-24"></a>
+</span><span id="__span-15-25"><a href="#__codelineno-15-25" id="__codelineno-15-25" name="__codelineno-15-25"></a><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">OperationResult</span>
+</span><span id="__span-15-26"><a href="#__codelineno-15-26" id="__codelineno-15-26" name="__codelineno-15-26"></a><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.data.abstractions</span><span class="w"> </span><span class="kn">import</span> <span class="n">DomainEvent</span>
+</span><span id="__span-15-27"><a href="#__codelineno-15-27" id="__codelineno-15-27" name="__codelineno-15-27"></a><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.data.unit_of_work</span><span class="w"> </span><span class="kn">import</span> <span class="n">UnitOfWork</span>
+</span><span id="__span-15-28"><a href="#__codelineno-15-28" id="__codelineno-15-28" name="__codelineno-15-28"></a><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.eventing.cloud_events.cloud_event</span><span class="w"> </span><span class="kn">import</span> <span class="n">CloudEvent</span>
+</span><span id="__span-15-29"><a href="#__codelineno-15-29" id="__codelineno-15-29" name="__codelineno-15-29"></a><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.eventing.cloud_events.decorators</span><span class="w"> </span><span class="kn">import</span> <span class="n">cloudevent</span>
+</span><span id="__span-15-30"><a href="#__codelineno-15-30" id="__codelineno-15-30" name="__codelineno-15-30"></a><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.eventing.cloud_events.infrastructure.cloud_event_bus</span><span class="w"> </span><span class="kn">import</span> <span class="n">CloudEventBus</span>
+</span><span id="__span-15-31"><a href="#__codelineno-15-31" id="__codelineno-15-31" name="__codelineno-15-31"></a><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.eventing.cloud_events.infrastructure.cloud_event_publisher</span><span class="w"> </span><span class="kn">import</span> <span class="n">CloudEventPublishingOptions</span>
+</span><span id="__span-15-32"><a href="#__codelineno-15-32" id="__codelineno-15-32" name="__codelineno-15-32"></a><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.mediation.behaviors.domain_event_cloudevent_behavior</span><span class="w"> </span><span class="kn">import</span> <span class="n">DomainEventCloudEventBehavior</span>
+</span><span id="__span-15-33"><a href="#__codelineno-15-33" id="__codelineno-15-33" name="__codelineno-15-33"></a>
+</span><span id="__span-15-34"><a href="#__codelineno-15-34" id="__codelineno-15-34" name="__codelineno-15-34"></a>
+</span><span id="__span-15-35"><a href="#__codelineno-15-35" id="__codelineno-15-35" name="__codelineno-15-35"></a><span class="nd">@cloudevent</span><span class="p">(</span><span class="s2">"inventory.product.created.v1"</span><span class="p">)</span>
+</span><span id="__span-15-36"><a href="#__codelineno-15-36" id="__codelineno-15-36" name="__codelineno-15-36"></a><span class="k">class</span><span class="w"> </span><span class="nc">ProductCreatedEvent</span><span class="p">(</span><span class="n">DomainEvent</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
+</span><span id="__span-15-37"><a href="#__codelineno-15-37" id="__codelineno-15-37" name="__codelineno-15-37"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">aggregate_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">price</span><span class="p">:</span> <span class="n">Decimal</span><span class="p">):</span>
+</span><span id="__span-15-38"><a href="#__codelineno-15-38" id="__codelineno-15-38" name="__codelineno-15-38"></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">aggregate_id</span><span class="p">)</span>
+</span><span id="__span-15-39"><a href="#__codelineno-15-39" id="__codelineno-15-39" name="__codelineno-15-39"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+</span><span id="__span-15-40"><a href="#__codelineno-15-40" id="__codelineno-15-40" name="__codelineno-15-40"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">price</span> <span class="o">=</span> <span class="n">price</span>
+</span><span id="__span-15-41"><a href="#__codelineno-15-41" id="__codelineno-15-41" name="__codelineno-15-41"></a>
+</span><span id="__span-15-42"><a href="#__codelineno-15-42" id="__codelineno-15-42" name="__codelineno-15-42"></a>
+</span><span id="__span-15-43"><a href="#__codelineno-15-43" id="__codelineno-15-43" name="__codelineno-15-43"></a><span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">asyncio</span>
+</span><span id="__span-15-44"><a href="#__codelineno-15-44" id="__codelineno-15-44" name="__codelineno-15-44"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">test_domain_events_emit_cloudevents</span><span class="p">():</span>
+</span><span id="__span-15-45"><a href="#__codelineno-15-45" id="__codelineno-15-45" name="__codelineno-15-45"></a><span class="w">    </span><span class="sd">"""Test automatic CloudEvent emission for decorated domain events."""</span>
+</span><span id="__span-15-46"><a href="#__codelineno-15-46" id="__codelineno-15-46" name="__codelineno-15-46"></a>    <span class="n">unit_of_work</span> <span class="o">=</span> <span class="n">UnitOfWork</span><span class="p">()</span>
+</span><span id="__span-15-47"><a href="#__codelineno-15-47" id="__codelineno-15-47" name="__codelineno-15-47"></a>    <span class="n">product</span> <span class="o">=</span> <span class="n">Product</span><span class="p">(</span><span class="s2">"Laptop"</span><span class="p">,</span> <span class="mf">999.99</span><span class="p">)</span>
+</span><span id="__span-15-48"><a href="#__codelineno-15-48" id="__codelineno-15-48" name="__codelineno-15-48"></a>    <span class="n">unit_of_work</span><span class="o">.</span><span class="n">register_aggregate</span><span class="p">(</span><span class="n">product</span><span class="p">)</span>
+</span><span id="__span-15-49"><a href="#__codelineno-15-49" id="__codelineno-15-49" name="__codelineno-15-49"></a>
+</span><span id="__span-15-50"><a href="#__codelineno-15-50" id="__codelineno-15-50" name="__codelineno-15-50"></a>    <span class="c1"># Simulate mediator publishing collected domain events</span>
+</span><span id="__span-15-51"><a href="#__codelineno-15-51" id="__codelineno-15-51" name="__codelineno-15-51"></a>    <span class="n">bus</span> <span class="o">=</span> <span class="n">CloudEventBus</span><span class="p">()</span>
+</span><span id="__span-15-52"><a href="#__codelineno-15-52" id="__codelineno-15-52" name="__codelineno-15-52"></a>    <span class="n">captured</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">CloudEvent</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+</span><span id="__span-15-53"><a href="#__codelineno-15-53" id="__codelineno-15-53" name="__codelineno-15-53"></a>    <span class="n">bus</span><span class="o">.</span><span class="n">output_stream</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span><span class="n">captured</span><span class="o">.</span><span class="n">append</span><span class="p">)</span>
+</span><span id="__span-15-54"><a href="#__codelineno-15-54" id="__codelineno-15-54" name="__codelineno-15-54"></a>
+</span><span id="__span-15-55"><a href="#__codelineno-15-55" id="__codelineno-15-55" name="__codelineno-15-55"></a>    <span class="n">behavior</span> <span class="o">=</span> <span class="n">DomainEventCloudEventBehavior</span><span class="p">(</span>
+</span><span id="__span-15-56"><a href="#__codelineno-15-56" id="__codelineno-15-56" name="__codelineno-15-56"></a>        <span class="n">bus</span><span class="p">,</span>
+</span><span id="__span-15-57"><a href="#__codelineno-15-57" id="__codelineno-15-57" name="__codelineno-15-57"></a>        <span class="n">CloudEventPublishingOptions</span><span class="p">(</span><span class="n">source</span><span class="o">=</span><span class="s2">"/tests/integration"</span><span class="p">),</span>
+</span><span id="__span-15-58"><a href="#__codelineno-15-58" id="__codelineno-15-58" name="__codelineno-15-58"></a>    <span class="p">)</span>
+</span><span id="__span-15-59"><a href="#__codelineno-15-59" id="__codelineno-15-59" name="__codelineno-15-59"></a>
+</span><span id="__span-15-60"><a href="#__codelineno-15-60" id="__codelineno-15-60" name="__codelineno-15-60"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">next_handler</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">OperationResult</span><span class="p">:</span>
+</span><span id="__span-15-61"><a href="#__codelineno-15-61" id="__codelineno-15-61" name="__codelineno-15-61"></a>        <span class="k">return</span> <span class="n">OperationResult</span><span class="p">(</span><span class="s2">"OK"</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+</span><span id="__span-15-62"><a href="#__codelineno-15-62" id="__codelineno-15-62" name="__codelineno-15-62"></a>
+</span><span id="__span-15-63"><a href="#__codelineno-15-63" id="__codelineno-15-63" name="__codelineno-15-63"></a>    <span class="c1"># In production code iterate over unit_of_work.get_domain_events().</span>
+</span><span id="__span-15-64"><a href="#__codelineno-15-64" id="__codelineno-15-64" name="__codelineno-15-64"></a>    <span class="c1"># The fallback below keeps the example self-contained.</span>
+</span><span id="__span-15-65"><a href="#__codelineno-15-65" id="__codelineno-15-65" name="__codelineno-15-65"></a>    <span class="n">events</span> <span class="o">=</span> <span class="n">unit_of_work</span><span class="o">.</span><span class="n">get_domain_events</span><span class="p">()</span> <span class="ow">or</span> <span class="p">[</span>
+</span><span id="__span-15-66"><a href="#__codelineno-15-66" id="__codelineno-15-66" name="__codelineno-15-66"></a>        <span class="n">ProductCreatedEvent</span><span class="p">(</span><span class="n">product</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">product</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">Decimal</span><span class="p">(</span><span class="s2">"999.99"</span><span class="p">))</span>
+</span><span id="__span-15-67"><a href="#__codelineno-15-67" id="__codelineno-15-67" name="__codelineno-15-67"></a>    <span class="p">]</span>
+</span><span id="__span-15-68"><a href="#__codelineno-15-68" id="__codelineno-15-68" name="__codelineno-15-68"></a>
+</span><span id="__span-15-69"><a href="#__codelineno-15-69" id="__codelineno-15-69" name="__codelineno-15-69"></a>    <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">events</span><span class="p">:</span>
+</span><span id="__span-15-70"><a href="#__codelineno-15-70" id="__codelineno-15-70" name="__codelineno-15-70"></a>        <span class="k">await</span> <span class="n">behavior</span><span class="o">.</span><span class="n">handle_async</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">next_handler</span><span class="p">)</span>
+</span><span id="__span-15-71"><a href="#__codelineno-15-71" id="__codelineno-15-71" name="__codelineno-15-71"></a>
+</span><span id="__span-15-72"><a href="#__codelineno-15-72" id="__codelineno-15-72" name="__codelineno-15-72"></a>    <span class="k">assert</span> <span class="n">captured</span>
+</span><span id="__span-15-73"><a href="#__codelineno-15-73" id="__codelineno-15-73" name="__codelineno-15-73"></a>    <span class="n">cloud_event</span> <span class="o">=</span> <span class="n">captured</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</span><span id="__span-15-74"><a href="#__codelineno-15-74" id="__codelineno-15-74" name="__codelineno-15-74"></a>    <span class="k">assert</span> <span class="n">cloud_event</span><span class="o">.</span><span class="n">subject</span> <span class="o">==</span> <span class="n">product</span><span class="o">.</span><span class="n">id</span>
+</span><span id="__span-15-75"><a href="#__codelineno-15-75" id="__codelineno-15-75" name="__codelineno-15-75"></a>    <span class="k">assert</span> <span class="n">cloud_event</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">"inventory.product.created.v1"</span>
 </span></code></pre></div>
 <h2 id="best-practices">🚨 Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">¶</a></h2>
 <h3 id="entity-design-patterns"><strong>Entity Design Patterns</strong><a class="headerlink" href="#entity-design-patterns" title="Permanent link">¶</a></h3>
