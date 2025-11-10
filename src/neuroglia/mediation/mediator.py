@@ -2,9 +2,10 @@ import asyncio
 import inspect
 import logging
 from abc import ABC, abstractmethod
+from collections.abc import Awaitable, Callable
 from pathlib import Path
 from types import UnionType
-from typing import Any, Generic, Optional, TypeVar
+from typing import Any, ClassVar, Generic, Optional, TypeVar, cast
 
 from neuroglia.core import ModuleLoader, OperationResult, TypeExtensions, TypeFinder
 from neuroglia.data.abstractions import DomainEvent
@@ -173,39 +174,24 @@ class RequestHandler(Generic[TRequest, TResult], ABC):
     def ok(self, data: Optional[Any] = None) -> TResult:
         result: OperationResult = OperationResult("OK", 200)
         result.data = data
-        return result
+        return cast(TResult, result)
 
     def created(self, data: Optional[Any] = None) -> TResult:
         result: OperationResult = OperationResult("Created", 201)
         result.data = data
-        return result
+        return cast(TResult, result)
 
     def bad_request(self, detail: str) -> TResult:
         """Creates a new OperationResult to describe the fact that the request is invalid"""
-        return OperationResult(
-            "Bad Request",
-            400,
-            detail,
-            "https://www.w3.org/Protocols/HTTP/HTRESP.html#:~:text=Bad%20Request",
-        )
+        return cast(TResult, OperationResult("Bad Request", 400, detail, "https://www.w3.org/Protocols/HTTP/HTRESP.html#:~:text=Bad%20Request"))
 
     def not_found(self, entity_type, entity_key, key_name: str = "id") -> TResult:
         """Creates a new OperationResult to describe the fact that an entity of the specified type and key could not be found or does not exist"""
-        return OperationResult(
-            "Not Found",
-            404,
-            f"Failed to find an entity of type '{entity_type.__name__}' with the specified {key_name} '{entity_key}'",
-            "https://www.w3.org/Protocols/HTTP/HTRESP.html#:~:text=Not%20found%20404",
-        )
+        return cast(TResult, OperationResult("Not Found", 404, f"Failed to find an entity of type '{entity_type.__name__}' with the specified {key_name} '{entity_key}'", "https://www.w3.org/Protocols/HTTP/HTRESP.html#:~:text=Not%20found%20404"))
 
     def conflict(self, message: str) -> TResult:
         """Creates a new OperationResult to describe a conflict (HTTP 409)"""
-        return OperationResult(
-            "Conflict",
-            409,
-            message,
-            "https://www.w3.org/Protocols/HTTP/HTRESP.html",
-        )
+        return cast(TResult, OperationResult("Conflict", 409, message, "https://www.w3.org/Protocols/HTTP/HTRESP.html"))
 
 
 TCommand = TypeVar("TCommand", bound=Command)
@@ -534,6 +520,7 @@ class Mediator:
         - Getting Started Guide: https://bvandewe.github.io/pyneuro/getting-started/
     """
 
+    _handler_registry: ClassVar[dict[type[Any], type[Any]]] = {}
     _service_provider: ServiceProviderBase
 
     def __init__(self, service_provider: ServiceProviderBase):
@@ -545,7 +532,6 @@ class Mediator:
 
         # Use the original approach but get RequestHandler services and find matching concrete handlers
         # Use a class-level handler registry approach
-        handler = None
         request_type = type(request)
 
         # Check if we have a handler registry
@@ -558,11 +544,10 @@ class Mediator:
             # Create service scope for BOTH handler AND pipeline behaviors
             scope = self._service_provider.create_scope()
             try:
-                # Cast scope to ServiceProviderBase for get_service access
-                from neuroglia.dependency_injection import ServiceProviderBase
-
                 provider: ServiceProviderBase = scope.get_service_provider()
-                handler = provider.get_service(handler_class)
+                handler_instance = provider.get_service(handler_class)
+                if handler_instance is None:
+                    raise Exception(f"Failed to resolve handler instance for '{handler_class.__name__}'")
                 log.debug(f"🔍 MEDIATOR DEBUG: Successfully resolved {handler_class.__name__} from registry")
 
                 # Get all pipeline behaviors for this request type from scoped provider
@@ -571,18 +556,15 @@ class Mediator:
 
                 if not behaviors:
                     # No behaviors, execute handler directly
-                    return await handler.handle_async(request)
+                    return await handler_instance.handle_async(request)
 
                 # Build pipeline chain with behaviors
-                return await self._build_pipeline(request, handler, behaviors)
+                return await self._build_pipeline(request, handler_instance, behaviors)
             finally:
                 if hasattr(scope, "dispose"):
                     scope.dispose()
 
-        if handler is None:
-            raise Exception(f"Failed to find a handler for request of type '{request_type.__name__}'. Registry has {len(Mediator._handler_registry)} handlers.")
-
-        log.info(f"Executing request type {type(request).__name__}")
+        raise Exception(f"Failed to find a handler for request of type '{request_type.__name__}'. Registry has {len(Mediator._handler_registry)} handlers.")
 
     async def publish_async(self, notification: object):
         """
@@ -628,11 +610,13 @@ class Mediator:
             # This allows handlers with scoped dependencies to be resolved correctly
             handlers: list[NotificationHandler] = [candidate for candidate in scoped_provider.get_services(NotificationHandler) if self._notification_handler_matches(candidate, type(notification))]
 
-            if handlers is None or len(handlers) < 1:
-                return
+            behaviors = self._get_pipeline_behaviors(notification, scoped_provider)
 
-            # Execute all handlers concurrently within this scope
-            await asyncio.gather(*(handler.handle_async(notification) for handler in handlers))
+            async def invoke_handlers() -> None:
+                if handlers:
+                    await asyncio.gather(*(handler.handle_async(notification) for handler in handlers))
+
+            await self._execute_notification_pipeline(notification, invoke_handlers, behaviors)
         # Scope automatically disposed here, including all scoped services
 
     def _handler_type_matches(self, handler_class, request_type) -> bool:
@@ -678,7 +662,7 @@ class Mediator:
             log.debug(f"Error matching notification handler {candidate_type.__name__} to {request_type.__name__}: {e}")
             return False
 
-    def _get_pipeline_behaviors(self, request: Request, provider: Optional[ServiceProviderBase] = None) -> list[PipelineBehavior]:
+    def _get_pipeline_behaviors(self, request: object, provider: Optional[ServiceProviderBase] = None) -> list[PipelineBehavior]:
         """
         Gets all registered pipeline behaviors that can handle the specified request type.
 
@@ -710,7 +694,7 @@ class Mediator:
 
         return behaviors
 
-    def _pipeline_behavior_matches(self, behavior: PipelineBehavior, request: Request) -> bool:
+    def _pipeline_behavior_matches(self, behavior: PipelineBehavior, request: object) -> bool:
         """Determines if a pipeline behavior can handle the specified request type"""
         try:
             # For now, assume all behaviors can handle all requests
@@ -753,6 +737,27 @@ class Mediator:
         # Can be extended to support priority attributes or specific ordering rules
         return behaviors
 
+    async def _execute_notification_pipeline(self, notification: object, handler_callable: Callable[[], Awaitable[Any]], behaviors: list[PipelineBehavior]) -> Any:
+        """Executes notification pipeline behaviors around event handlers."""
+
+        if not behaviors:
+            return await handler_callable()
+
+        sorted_behaviors = self._sort_behaviors(behaviors)
+
+        async def invoke(index: int) -> Any:
+            if index >= len(sorted_behaviors):
+                return await handler_callable()
+
+            current_behavior = sorted_behaviors[index]
+
+            async def next_handler() -> Any:
+                return await invoke(index + 1)
+
+            return await current_behavior.handle_async(notification, next_handler)
+
+        return await invoke(0)
+
     @staticmethod
     def _discover_submodules(package_name: str) -> list[str]:
         """Discover individual modules within a package without importing the package."""
@@ -791,17 +796,11 @@ class Mediator:
                 # Register only the concrete type (for DI) and track for mediator discovery
                 app.services.add_scoped(command_handler_type, command_handler_type)
 
-                # Add to class-level handler registry
-                if not hasattr(Mediator, "_handler_registry"):
-                    Mediator._handler_registry = {}
-
-                # Get the command type this handler handles
-                for base in command_handler_type.__orig_bases__:
-                    if hasattr(base, "__origin__") and base.__origin__.__name__ == "CommandHandler":
-                        command_type = base.__args__[0]
-                        Mediator._handler_registry[command_type] = command_handler_type
-                        log.debug(f"🔧 Registered {command_type.__name__} -> {command_handler_type.__name__} in registry from {module_name}")
-                        break
+                generic = TypeExtensions.get_generic_implementation(command_handler_type, CommandHandler)
+                if generic is not None and hasattr(generic, "__args__") and generic.__args__:
+                    command_type = generic.__args__[0]
+                    Mediator._handler_registry[command_type] = command_handler_type
+                    log.debug(f"🔧 Registered {command_type.__name__} -> {command_handler_type.__name__} in registry from {module_name}")
                 handlers_registered += 1
 
             # Query handlers
@@ -818,17 +817,11 @@ class Mediator:
                 # Register only the concrete type (for DI) and track for mediator discovery
                 app.services.add_scoped(queryhandler_type, queryhandler_type)
 
-                # Add to class-level handler registry
-                if not hasattr(Mediator, "_handler_registry"):
-                    Mediator._handler_registry = {}
-
-                # Get the query type this handler handles
-                for base in queryhandler_type.__orig_bases__:
-                    if hasattr(base, "__origin__") and base.__origin__.__name__ == "QueryHandler":
-                        query_type = base.__args__[0]
-                        Mediator._handler_registry[query_type] = queryhandler_type
-                        log.debug(f"🔧 Registered {query_type.__name__} -> {queryhandler_type.__name__} in registry from {module_name}")
-                        break
+                generic = TypeExtensions.get_generic_implementation(queryhandler_type, QueryHandler)
+                if generic is not None and hasattr(generic, "__args__") and generic.__args__:
+                    query_type = generic.__args__[0]
+                    Mediator._handler_registry[query_type] = queryhandler_type
+                    log.debug(f"🔧 Registered {query_type.__name__} -> {queryhandler_type.__name__} in registry from {module_name}")
                 handlers_registered += 1
 
             # Domain event handlers

@@ -914,11 +914,15 @@ class OrderHandler(CommandHandler):
 
 ```python
 # Same pipeline works with both patterns
-services.add_scoped(PipelineBehavior, ValidationBehavior)           # Validate inputs
-services.add_scoped(PipelineBehavior, TransactionBehavior)          # Manage transactions
-services.add_scoped(PipelineBehavior, DomainEventDispatchingMiddleware)  # Dispatch events
+services.add_scoped(PipelineBehavior, ValidationBehavior)          # Validate inputs
+services.add_scoped(PipelineBehavior, TransactionBehavior)         # Manage transactions
+services.add_scoped(PipelineBehavior, DomainEventCloudEventBehavior)  # Convert domain events to CloudEvents
 services.add_scoped(PipelineBehavior, LoggingBehavior)             # Log execution
 ```
+
+> ℹ️ `DomainEventDispatchingMiddleware` has been deprecated. Register `DomainEventCloudEventBehavior`
+> to automatically transform decorated `DomainEvent` instances into CloudEvents and emit them
+> through the framework's CloudEvent bus.
 
 ## 📚 Related Documentation
 

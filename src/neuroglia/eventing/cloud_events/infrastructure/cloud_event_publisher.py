@@ -57,7 +57,10 @@ class CloudEventPublisher(HostedService):
         # ERROR:root:An exception occured while publishing an event of type 'PersonRegisteredDomainEventV1': asyncio.run() cannot be called from a running event loop
         # /tmp/debugpy/_vendored/pydevd/_pydevd_bundle/pydevd_trace_dispatch_regular.py:326: RuntimeWarning: coroutine 'CloudEventPublisher.on_publish_cloud_event_async' was never awaited
         # self._subscription = AsyncRx.subscribe(self._cloud_event_bus.output_stream, lambda e: asyncio.run(self.on_publish_cloud_event_async(e)))
-        self._subscription = AsyncRx.subscribe(self._cloud_event_bus.output_stream, lambda e: asyncio.create_task(self.on_publish_cloud_event_async(e)))
+        def _schedule(event):
+            asyncio.create_task(self.on_publish_cloud_event_async(event))
+
+        self._subscription = AsyncRx.subscribe(self._cloud_event_bus.output_stream, _schedule)
         # await self._subscription
         log.info(f"✅ CloudEventPublisher started - publishing to sink: {self._options.sink_uri}")
 
@@ -67,9 +70,9 @@ class CloudEventPublisher(HostedService):
     async def on_publish_cloud_event_async(self, e: CloudEvent):
         uri = urlparse(self._options.sink_uri)
         published = False
+        url = uri.geturl()
         for retries in range(self._options.retry_attempts):
             try:
-                url = uri.geturl()
                 headers = {"Content-Type": "application/cloudevents+json"}
                 response = None
                 with httpx.Client() as client:
@@ -95,8 +98,18 @@ class CloudEventPublisher(HostedService):
         Args:
             services (ServiceCollection): the service collection to configure
         """
-        options = CloudEventPublishingOptions(builder.settings.cloud_event_sink, builder.settings.cloud_event_source, builder.settings.cloud_event_type_prefix, builder.settings.cloud_event_retry_attempts, builder.settings.cloud_event_retry_delay)
+        sink = builder.settings.cloud_event_sink or ""
+        source = builder.settings.cloud_event_source or ""
+        type_prefix = builder.settings.cloud_event_type_prefix or ""
+        options = CloudEventPublishingOptions(sink, source, type_prefix, builder.settings.cloud_event_retry_attempts, builder.settings.cloud_event_retry_delay)
         builder.services.try_add_singleton(CloudEventBus)
         builder.services.add_singleton(CloudEventPublishingOptions, singleton=options)
         builder.services.add_singleton(HostedService, CloudEventPublisher)
+
+        # Ensure domain events decorated with @cloudevent are published to the CloudEvent bus
+        from neuroglia.mediation.behaviors.domain_event_cloudevent_behavior import (
+            DomainEventCloudEventBehavior,
+        )
+
+        DomainEventCloudEventBehavior.configure(builder)
         return builder
