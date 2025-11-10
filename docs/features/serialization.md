@@ -14,6 +14,7 @@ Neuroglia's serialization system offers:
 - **🎨 Custom Converters** - Extensible system for specialized serialization logic
 - **💉 DI Integration** - Service-based serializers with configurable lifetimes
 - **🧪 Test-Friendly** - Easy mocking and testing of serialization logic
+- **🤝 Optional Hydration** - Missing optional fields fall back to `None` or dataclass defaults
 
 ### Key Benefits
 
@@ -265,6 +266,41 @@ def configure_serialization(builder: WebApplicationBuilder):
             orders = await self.get_all_orders()
             return self.serializer.serialize_to_text(orders)
 ```
+
+### 4. Optional Field Hydration
+
+The serializer automatically backfills optional members that are missing from the payload.
+
+```python
+from dataclasses import dataclass
+from typing import Optional
+
+
+@dataclass
+class LoyaltyProfile:
+        id: str
+        favorite_pizza: Optional[str] = None
+        marketing_opt_in: bool = False
+
+
+serializer = JsonSerializer()
+
+# Incoming payload omits optional members
+json_payload = """
+{
+    "id": "customer-42"
+}
+"""
+
+
+profile = serializer.deserialize_from_text(json_payload, LoyaltyProfile)
+
+assert profile.id == "customer-42"
+assert profile.favorite_pizza is None  # Optional field hydrated to None
+assert profile.marketing_opt_in is False  # Dataclass default preserved
+```
+
+The deserializer also respects type hints on plain classes (non-dataclasses); any omitted attributes annotated as `Optional[...]` are automatically populated with `None`, ensuring consistent models even when upstream systems omit optional data.
 
 ## 🧪 Testing Serialization
 

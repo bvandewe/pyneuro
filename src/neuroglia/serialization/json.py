@@ -38,11 +38,21 @@ See Also:
 """
 
 import json
+import types
 import typing
-from dataclasses import fields, is_dataclass
+from dataclasses import MISSING, fields, is_dataclass
 from datetime import datetime
 from enum import Enum
-from typing import TYPE_CHECKING, Any, Optional, Union, get_args, get_origin
+from typing import (
+    TYPE_CHECKING,
+    Any,
+    Optional,
+    Union,
+    cast,
+    get_args,
+    get_origin,
+    get_type_hints,
+)
 
 from neuroglia.serialization.abstractions import Serializer, TextSerializer
 
@@ -59,7 +69,7 @@ class JsonEncoder(json.JSONEncoder):
     and custom objects with intelligent fallback mechanisms.
 
     Supported Types:
-        - Enums: Converted to their value (e.g., "active" for Status.ACTIVE)
+    - Enums: Converted to their name (e.g., "ACTIVE" for Status.ACTIVE)
         - DateTime: Converted to ISO format strings
         - Custom Objects: Serialized using their __dict__ with private field filtering
         - Unsupported Types: Gracefully converted to string representation
@@ -83,13 +93,13 @@ class JsonEncoder(json.JSONEncoder):
                 self._internal_field = "hidden"
 
         # Automatic encoding
-        order = Order("123", Status.ACTIVE, Decimal('99.99'))
+        order = Order("123", Status.ACTIVE, Decimal("99.99"))
         json_str = json.dumps(order, cls=JsonEncoder)
 
         # Result:
         # {
         #   "id": "123",
-        #   "status": "active",  # Uses enum value, not name
+        #   "status": "ACTIVE",  # Uses enum name for stable storage
         #   "total": "99.99",
         #   "created_at": "2025-09-27T10:30:00.123456"
         #   // Note: _internal_field is filtered out
@@ -101,18 +111,18 @@ class JsonEncoder(json.JSONEncoder):
         - Type Handling Guide: https://bvandewe.github.io/pyneuro/patterns/
     """
 
-    def default(self, obj):
-        if issubclass(type(obj), Enum):
-            return obj.value  # Use value instead of name for consistent lowercase storage
-        elif issubclass(type(obj), datetime):
-            return obj.isoformat()
-        elif hasattr(obj, "__dict__"):
-            filtered_dict = {key: value for key, value in obj.__dict__.items() if not key.startswith("_") and value is not None}
+    def default(self, o: Any) -> Any:  # noqa: D401 - Inherit documentation from base class
+        if issubclass(type(o), Enum):
+            return o.name  # Use enum name for consistent serialized representation
+        elif issubclass(type(o), datetime):
+            return o.isoformat()
+        elif hasattr(o, "__dict__"):
+            filtered_dict = {key: value for key, value in o.__dict__.items() if not key.startswith("_") and value is not None}
             return filtered_dict
         try:
-            return super().default(obj)
+            return super().default(o)
         except Exception:
-            return str(obj)
+            return str(o)
 
 
 class JsonSerializer(TextSerializer):
@@ -131,6 +141,7 @@ class JsonSerializer(TextSerializer):
         - Dataclass and custom object support
         - Generic type handling (List[T], Dict[K,V], Optional[T])
         - Type registry integration for enum discovery
+    - Automatic resolution of postponed annotations and forward references
         - Comprehensive error handling and fallback strategies
 
     Examples:
@@ -199,6 +210,27 @@ class JsonSerializer(TextSerializer):
         data = '{"status": "ACTIVE"}'
         obj = serializer.deserialize_from_text(data, User)
         # status automatically matched to UserStatus.ACTIVE enum
+        ```
+
+    Forward Reference Resolution:
+        Automatically resolves postponed annotations and forward references when
+        reconstructing objects:
+
+        ```python
+        from __future__ import annotations
+
+        class TaskState:
+            assignee: "User" | None
+
+        class User:
+            name: str
+
+    serializer = JsonSerializer()
+    payload = '{"assignee": {"name": "Mario"}}'
+    state = serializer.deserialize_from_text(payload, TaskState)
+
+        assert isinstance(state.assignee, User)
+        assert state.assignee.name == "Mario"
         ```
 
     See Also:
@@ -273,8 +305,8 @@ class JsonSerializer(TextSerializer):
     def serialize(self, value: Any) -> bytearray:
         text = self.serialize_to_text(value)
         if text is None:
-            return None
-        return text.encode()
+            return bytearray()
+        return bytearray(text, "utf-8")
 
     def serialize_to_text(self, value: Any) -> str:
         """
@@ -390,9 +422,10 @@ class JsonSerializer(TextSerializer):
         # Get the state type from AggregateRoot[TState, TKey]
         state_type = self._get_state_type(aggregate_type)
 
+        aggregate: Any = object.__new__(aggregate_type)
+
         if state_type is None:
             # Fallback: create aggregate with empty state
-            aggregate = object.__new__(aggregate_type)
             aggregate.state = object.__new__(object)
             aggregate._pending_events = []
             return aggregate
@@ -402,7 +435,6 @@ class JsonSerializer(TextSerializer):
         state_instance = self.deserialize_from_text(state_json, state_type)
 
         # Create the aggregate instance without calling __init__
-        aggregate = object.__new__(aggregate_type)
         aggregate.state = state_instance
 
         # Initialize pending events as empty list
@@ -418,20 +450,40 @@ class JsonSerializer(TextSerializer):
         # Collect all type annotations from the class hierarchy
         type_hints = {}
         for base_type in reversed(expected_type.__mro__):
-            if hasattr(base_type, "__annotations__"):
-                type_hints.update(base_type.__annotations__)
+            if hasattr(base_type, "__annotations__") and base_type.__annotations__:
+                annotations = base_type.__annotations__
+                try:
+                    resolved = get_type_hints(base_type)
+                except (NameError, TypeError, AttributeError):
+                    resolved = annotations
+                except Exception:
+                    resolved = annotations
+                type_hints.update(resolved or annotations)
 
         # Deserialize each field using its type annotation
         for key, value in data.items():
             if key in type_hints:
                 field_type = type_hints[key]
-                fields[key] = self._deserialize_nested(value, field_type)
+                if isinstance(field_type, str):
+                    fields[key] = value
+                else:
+                    fields[key] = self._deserialize_nested(value, field_type)
             else:
                 # For fields without type annotations, try intelligent type inference
                 fields[key] = self._infer_and_deserialize(key, value, expected_type)
 
+        # Populate missing optional fields with None to maintain backwards compatibility
+        for attr_name, attr_type in type_hints.items():
+            if attr_name in fields:
+                continue
+            origin = get_origin(attr_type)
+            if origin is typing.ClassVar:
+                continue
+            if self._is_optional_type(attr_type):
+                fields[attr_name] = None
+
         # Create the object instance
-        instance = object.__new__(expected_type)
+        instance: Any = object.__new__(cast(type, expected_type))
         instance.__dict__ = fields
         return instance
 
@@ -523,18 +575,21 @@ class JsonSerializer(TextSerializer):
 
         return None
 
-    def _deserialize_nested(self, value: Any, expected_type: type) -> Any:
+    def _deserialize_nested(self, value: Any, expected_type: Any) -> Any:
         """Recursively deserializes a nested object. Support native types (str, int, float, bool) as well as Generic Types that also include subtypes (typing.Dict, typing.List)."""
 
         # Handle None for Optional types
         if value is None:
             return None
 
+        if isinstance(expected_type, str):
+            return value
+
         origin_type = get_origin(expected_type)
         if origin_type is not None:
             # This is a generic type (e.g., Optional[SomeType], List[SomeType])
             type_args = get_args(expected_type)
-            if origin_type is Union and type(None) in type_args:
+            if origin_type in (Union, types.UnionType) and type(None) in type_args:
                 # This is an Optional type
                 non_optional_type = next(t for t in type_args if t is not type(None))
                 return self._deserialize_nested(value, non_optional_type)
@@ -563,25 +618,54 @@ class JsonSerializer(TextSerializer):
         if isinstance(value, dict):
             # Handle Dataclass deserialization
             if is_dataclass(expected_type):
+                try:
+                    dataclass_type_hints = get_type_hints(expected_type)
+                except (NameError, TypeError, AttributeError):
+                    dataclass_type_hints = {field.name: field.type for field in fields(expected_type)}
+                except Exception:
+                    dataclass_type_hints = {field.name: field.type for field in fields(expected_type)}
                 field_dict = {}
                 for field in fields(expected_type):
                     if field.name in value:
-                        field_value = self._deserialize_nested(value[field.name], field.type)
-                        field_dict[field.name] = field_value
+                        field_type = dataclass_type_hints.get(field.name, field.type)
+                        if isinstance(field_type, str):
+                            field_dict[field.name] = value[field.name]
+                        else:
+                            field_value = self._deserialize_nested(value[field.name], field_type)
+                            field_dict[field.name] = field_value
+                # Ensure Optional fields missing from the payload are explicitly populated
+                for field in fields(expected_type):
+                    if field.name in field_dict:
+                        continue
+                    resolved_type = dataclass_type_hints.get(field.name, field.type)
+                    if field.default is not MISSING:
+                        field_dict[field.name] = field.default
+                    elif field.default_factory is not MISSING:  # type: ignore[attr-defined]
+                        field_dict[field.name] = field.default_factory()  # type: ignore[attr-defined]
+                    elif self._is_optional_type(resolved_type):
+                        field_dict[field.name] = None
                 # Create instance and set fields (works for frozen and non-frozen dataclasses)
-                instance = object.__new__(expected_type)
+                instance: Any = object.__new__(cast(type, expected_type))
                 for key, val in field_dict.items():
                     object.__setattr__(instance, key, val)
                 return instance
 
-            # If the expected type is a plain dict, we need to deserialize each value in the dict.
-            if hasattr(expected_type, "__args__") and expected_type.__args__:
-                # Dictionary with type hints (e.g. typing.Dict[str, int])
-                key_type, val_type = expected_type.__args__
-                return {self._deserialize_nested(k, key_type): self._deserialize_nested(v, val_type) for k, v in value.items()}
-            else:
-                # Dictionary without type hints, use the actual type of each value
-                return {k: self._deserialize_nested(v, type(v)) for k, v in value.items()}
+            origin_expected = get_origin(expected_type)
+            if expected_type == dict or origin_expected is dict:
+                # If the expected type is a plain dict, we need to deserialize each value in the dict.
+                if hasattr(expected_type, "__args__") and expected_type.__args__:
+                    # Dictionary with type hints (e.g. typing.Dict[str, int])
+                    key_type, val_type = expected_type.__args__
+                    return {self._deserialize_nested(k, key_type): self._deserialize_nested(v, val_type) for k, v in value.items()}
+                else:
+                    # Dictionary without type hints, use the actual type of each value
+                    return {k: self._deserialize_nested(v, type(v)) for k, v in value.items()}
+
+            if isinstance(expected_type, type):
+                return self._deserialize_object(value, expected_type)
+
+            # Fallback: treat as plain dictionary
+            return {k: self._deserialize_nested(v, type(v)) for k, v in value.items()}
 
         elif isinstance(value, list):
             # List with type hints (e.g. typing.List[str])
@@ -606,13 +690,17 @@ class JsonSerializer(TextSerializer):
                     field_dict = {}
                     for field in fields(item_type):
                         if field.name in v:
-                            field_value = self._deserialize_nested(v[field.name], field.type)
-                            field_dict[field.name] = field_value
+                            field_type = field.type
+                            if isinstance(field_type, str):
+                                field_dict[field.name] = v[field.name]
+                            else:
+                                field_value = self._deserialize_nested(v[field.name], field_type)
+                                field_dict[field.name] = field_value
                     # Create instance and set fields (works for frozen and non-frozen dataclasses)
-                    instance = object.__new__(item_type)
+                    item_instance: Any = object.__new__(cast(type, item_type))
                     for key, val in field_dict.items():
-                        object.__setattr__(instance, key, val)
-                    values.append(instance)
+                        object.__setattr__(item_instance, key, val)
+                    values.append(item_instance)
                 else:
                     # For non-dataclass types, use regular deserialization
                     deserialized = self._deserialize_nested(v, item_type)
@@ -640,6 +728,13 @@ class JsonSerializer(TextSerializer):
         else:
             # Return the value as is for types that do not require deserialization
             return value
+
+    def _is_optional_type(self, annotation: Any) -> bool:
+        """Check if the provided annotation represents an Optional type."""
+        origin = get_origin(annotation)
+        if origin in (Union, types.UnionType):
+            return any(arg is type(None) for arg in get_args(annotation))
+        return False
 
     @staticmethod
     def configure(builder: "ApplicationBuilderBase", modules: Optional[list[str]] = None) -> "ApplicationBuilderBase":
