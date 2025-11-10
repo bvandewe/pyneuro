@@ -9,6 +9,38 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 _No notable changes yet._
 
+## [0.6.4] - 2025-11-10
+
+### Added
+
+- **Eventing: Automatic CloudEvent emission from domain events**
+  - New `DomainEventCloudEventBehavior` pipeline behavior transforms domain events decorated with `@cloudevent` into CloudEvents and publishes them on the internal bus
+  - `CloudEventPublisher.configure` now wires the CloudEvent bus, publishing options, and behavior in one call for consistent setup
+  - Payload sanitizer ensures datetimes, decimals, enums, and nested events are CloudEvent-friendly and always include the aggregate id when available
+- **Serialization: Optional field hydration for missing payload members**
+  - `JsonSerializer` now populates omitted `Optional[...]` fields with `None`
+  - Dataclass defaults are preserved when source JSON omits optional attributes
+  - Non-dataclass objects also receive automatic optional backfilling via type hints
+- **Tests: Optional hydration regression coverage**
+  - Added `tests/cases/test_json_serializer_optional_fields.py` covering dataclass and plain-class scenarios
+
+### Changed
+
+- **Domain Model: AggregateRoot initialization is now generic-safe**
+  - Aggregate roots resolve their state type through a dedicated `_get_state_type` helper, preventing `__orig_bases__` access errors and ensuring custom constructors still receive an initialized state instance
+- **Mediator: Notification pipeline now honors behaviors**
+  - Notification publishing reuses the same pipeline behavior infrastructure, enabling CloudEvent emission and other cross-cutting behaviors for domain events without additional wiring
+
+### Deprecated
+
+- **DomainEventDispatchingMiddleware**
+  - Middleware is now a no-op wrapper kept for backward compatibility; use `DomainEventCloudEventBehavior.configure()` for CloudEvent publishing instead
+
+### Documentation
+
+- Updated `docs/features/serialization.md` to document optional field hydration behaviour and defaults preservation
+- Refreshed `docs/patterns/persistence-patterns.md` and `docs/patterns/unit-of-work.md` with guidance on replacing `DomainEventDispatchingMiddleware` with `DomainEventCloudEventBehavior`
+
 ## [0.6.3] - 2025-11-07
 
 ### Added
