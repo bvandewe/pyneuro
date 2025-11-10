@@ -27,6 +27,18 @@ class DomainRepositoryInterface:  # pragma: no cover - marker interface
         raise NotImplementedError
 
 
+class CustomMotorRepository(MotorRepository[DummyEntity, str]):  # type: ignore[type-var]
+    """Custom repository implementation with domain-specific methods."""
+
+    async def get_by_name_async(self, name: str) -> list[DummyEntity]:
+        """Custom query method for testing."""
+        return await self.find_async({"name": name})
+
+
+class NotARepository:
+    """Class that does not extend MotorRepository - for validation tests."""
+
+
 @pytest.fixture
 def builder_mock() -> Mock:
     """Create an application builder mock compatible with configure()."""
@@ -124,3 +136,108 @@ class TestMotorRepositoryConfigure:
         service_provider.get_service.assert_called_once_with(Mediator)
         service_provider.get_required_service.assert_any_call(Mediator)
         assert repository._mediator is mediator_instance
+
+    def test_configure_with_custom_implementation_type(self, builder_mock: Mock) -> None:
+        """Test that custom repository implementation is used when implementation_type provided."""
+
+        with patch("neuroglia.data.infrastructure.mongo.motor_repository.AsyncIOMotorClient") as motor_client:
+            motor_client.return_value = Mock()
+
+            result = MotorRepository.configure(
+                builder_mock,
+                entity_type=DummyEntity,
+                key_type=str,
+                database_name="test_db",
+                domain_repository_type=DomainRepositoryInterface,
+                implementation_type=CustomMotorRepository,
+            )
+
+        assert result is builder_mock
+        builder_mock.services.try_add_singleton.assert_called_once()
+
+        # Get the factory function
+        repo_factory = builder_mock.services.add_scoped.call_args_list[0].kwargs["implementation_factory"]
+
+        # Mock service provider
+        mediator_instance = Mock(spec=Mediator)
+        serializer_instance = Mock(spec=JsonSerializer)
+        motor_client_instance = Mock(name="AsyncIOMotorClientInstance")
+
+        def get_required(service_type):
+            if service_type is motor_client or getattr(service_type, "__name__", "") == "AsyncIOMotorClient":
+                return motor_client_instance
+            if service_type is JsonSerializer:
+                return serializer_instance
+            if service_type is Mediator:
+                return mediator_instance
+            raise AssertionError(f"Unexpected service request: {service_type}")
+
+        service_provider = Mock()
+        service_provider.get_service.return_value = None
+        service_provider.get_required_service.side_effect = get_required
+
+        # Create repository using factory
+        repository = repo_factory(service_provider)
+
+        # Should be CustomMotorRepository instance
+        assert isinstance(repository, CustomMotorRepository)
+        assert hasattr(repository, "get_by_name_async")
+
+    def test_configure_with_invalid_implementation_type(self, builder_mock: Mock) -> None:
+        """Test that invalid implementation_type raises ValueError."""
+
+        with patch("neuroglia.data.infrastructure.mongo.motor_repository.AsyncIOMotorClient") as motor_client:
+            motor_client.return_value = Mock()
+
+            with pytest.raises(ValueError, match="must extend MotorRepository"):
+                MotorRepository.configure(
+                    builder_mock,
+                    entity_type=DummyEntity,
+                    key_type=str,
+                    database_name="test_db",
+                    domain_repository_type=DomainRepositoryInterface,
+                    implementation_type=NotARepository,
+                )
+
+    def test_configure_without_implementation_type_uses_base(self, builder_mock: Mock) -> None:
+        """Test fallback to base MotorRepository when no implementation_type provided."""
+
+        with patch("neuroglia.data.infrastructure.mongo.motor_repository.AsyncIOMotorClient") as motor_client:
+            motor_client.return_value = Mock()
+
+            MotorRepository.configure(
+                builder_mock,
+                entity_type=DummyEntity,
+                key_type=str,
+                database_name="test_db",
+                domain_repository_type=DomainRepositoryInterface,
+            )
+
+        # Get the factory function
+        repo_factory = builder_mock.services.add_scoped.call_args_list[0].kwargs["implementation_factory"]
+
+        # Mock service provider
+        mediator_instance = Mock(spec=Mediator)
+        serializer_instance = Mock(spec=JsonSerializer)
+        motor_client_instance = Mock(name="AsyncIOMotorClientInstance")
+
+        def get_required(service_type):
+            if service_type is motor_client or getattr(service_type, "__name__", "") == "AsyncIOMotorClient":
+                return motor_client_instance
+            if service_type is JsonSerializer:
+                return serializer_instance
+            if service_type is Mediator:
+                return mediator_instance
+            raise AssertionError(f"Unexpected service request: {service_type}")
+
+        service_provider = Mock()
+        service_provider.get_service.return_value = None
+        service_provider.get_required_service.side_effect = get_required
+
+        # Create repository using factory
+        repository = repo_factory(service_provider)
+
+        # Should be base MotorRepository instance, not CustomMotorRepository
+        assert isinstance(repository, MotorRepository)
+        assert type(repository).__name__ == "MotorRepository"
+        assert not hasattr(repository, "get_by_name_async")

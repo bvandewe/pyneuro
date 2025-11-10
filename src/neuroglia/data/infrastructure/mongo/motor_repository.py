@@ -490,6 +490,7 @@ class MotorRepository(Generic[TEntity, TKey], Repository[TEntity, TKey]):
         collection_name: Optional[str] = None,
         connection_string_name: str = "mongo",
         domain_repository_type: Optional[type] = None,
+        implementation_type: Optional[type] = None,
     ) -> ApplicationBuilderBase:
         """
         Configure the application to use MotorRepository for a specific entity type.
@@ -513,6 +514,11 @@ class MotorRepository(Generic[TEntity, TKey], Repository[TEntity, TKey]):
             domain_repository_type: Optional domain-layer repository interface to register
                 (e.g., TaskRepository). When provided, the interface resolves to the
                 configured MotorRepository instance, preserving clean architecture boundaries.
+            implementation_type: Optional custom repository implementation class.
+                If provided with domain_repository_type, this implementation will be
+                registered for the domain interface instead of base MotorRepository.
+                Must extend MotorRepository[entity_type, key_type]. Enables single-line
+                registration of custom repositories with domain-specific query methods.
 
         Returns:
             The configured application builder (for fluent chaining)
@@ -545,6 +551,17 @@ class MotorRepository(Generic[TEntity, TKey], Repository[TEntity, TKey]):
                 domain_repository_type=OrderRepository
             )
 
+            # Custom repository implementation with domain-specific methods
+            MotorRepository.configure(
+                builder,
+                entity_type=Task,
+                key_type=str,
+                database_name="starter_app",
+                collection_name="tasks",
+                domain_repository_type=TaskRepository,
+                implementation_type=MongoTaskRepository
+            )
+
             # Usage in handlers (automatically scoped per request)
             class GetCustomerHandler(QueryHandler[GetCustomerQuery, CustomerDto]):
                 def __init__(self, repository: Repository[Customer, str]):
@@ -569,6 +586,18 @@ class MotorRepository(Generic[TEntity, TKey], Repository[TEntity, TKey]):
         # Import Motor client here to avoid circular imports
         from motor.motor_asyncio import AsyncIOMotorClient
 
+        # Validate implementation_type if provided
+        if implementation_type is not None:
+            # Check if it's a subclass of MotorRepository (duck typing check)
+            try:
+                if not issubclass(implementation_type, MotorRepository):
+                    raise ValueError(f"implementation_type {implementation_type.__name__} must extend " f"MotorRepository[{entity_type.__name__}, {key_type.__name__}]")
+            except TypeError:
+                # issubclass fails for generics, check __bases__ instead
+                is_motor_repo = any(base.__name__ == "MotorRepository" or (hasattr(base, "__origin__") and base.__origin__.__name__ == "MotorRepository") for base in getattr(implementation_type, "__mro__", []))
+                if not is_motor_repo:
+                    raise ValueError(f"implementation_type {implementation_type.__name__} must extend " f"MotorRepository[{entity_type.__name__}, {key_type.__name__}]")
+
         # Register AsyncIOMotorClient as singleton (shared across all repositories)
         builder.services.try_add_singleton(
             AsyncIOMotorClient,
@@ -582,20 +611,32 @@ class MotorRepository(Generic[TEntity, TKey], Repository[TEntity, TKey]):
             if collection_name.endswith("dto"):
                 collection_name = collection_name[:-3]
 
-        # Factory function to create MotorRepository with proper entity type
+        # Factory function to create MotorRepository or custom implementation with proper entity type
         def create_motor_repository(sp):
             # Attempt to resolve Mediator optionally first (tests may skip registration)
             mediator = sp.get_service(Mediator)
             if mediator is None:
                 mediator = sp.get_required_service(Mediator)
-            return MotorRepository(
-                client=sp.get_required_service(AsyncIOMotorClient),
-                database_name=database_name,
-                collection_name=collection_name,
-                serializer=sp.get_required_service(JsonSerializer),
-                entity_type=entity_type,
-                mediator=mediator,
-            )
+
+            # Use custom implementation if provided, otherwise base MotorRepository
+            if implementation_type is not None:
+                return implementation_type(
+                    client=sp.get_required_service(AsyncIOMotorClient),
+                    database_name=database_name,
+                    collection_name=collection_name,
+                    serializer=sp.get_required_service(JsonSerializer),
+                    entity_type=entity_type,
+                    mediator=mediator,
+                )
+            else:
+                return MotorRepository(
+                    client=sp.get_required_service(AsyncIOMotorClient),
+                    database_name=database_name,
+                    collection_name=collection_name,
+                    serializer=sp.get_required_service(JsonSerializer),
+                    entity_type=entity_type,
+                    mediator=mediator,
+                )
 
         # Factory function to resolve abstract Repository interface
         def get_repository_interface(sp):
@@ -623,9 +664,12 @@ class MotorRepository(Generic[TEntity, TKey], Repository[TEntity, TKey]):
                 domain_repository_type,
                 implementation_factory=get_domain_repository,
             )
+
+            impl_name = implementation_type.__name__ if implementation_type else "MotorRepository"
             log.debug(
-                "Registered domain repository interface %s -> MotorRepository[%s, %s]",
+                "Registered domain repository interface %s -> %s[%s, %s]",
                 getattr(domain_repository_type, "__name__", str(domain_repository_type)),
+                impl_name,
                 entity_type.__name__,
                 key_type.__name__,
             )
