@@ -1615,40 +1615,41 @@
 </span><span id="__span-5-5"><a href="#__codelineno-5-5" id="__codelineno-5-5" name="__codelineno-5-5"></a>    <span class="n">ICustomerRepository</span><span class="p">,</span>
 </span><span id="__span-5-6"><a href="#__codelineno-5-6" id="__codelineno-5-6" name="__codelineno-5-6"></a>    <span class="n">IPizzaRepository</span>
 </span><span id="__span-5-7"><a href="#__codelineno-5-7" id="__codelineno-5-7" name="__codelineno-5-7"></a><span class="p">)</span>
-</span><span id="__span-5-8"><a href="#__codelineno-5-8" id="__codelineno-5-8" name="__codelineno-5-8"></a><span class="kn">from</span><span class="w"> </span><span class="nn">integration.repositories</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
-</span><span id="__span-5-9"><a href="#__codelineno-5-9" id="__codelineno-5-9" name="__codelineno-5-9"></a>    <span class="n">MongoOrderRepository</span><span class="p">,</span>
-</span><span id="__span-5-10"><a href="#__codelineno-5-10" id="__codelineno-5-10" name="__codelineno-5-10"></a>    <span class="n">MongoCustomerRepository</span><span class="p">,</span>
-</span><span id="__span-5-11"><a href="#__codelineno-5-11" id="__codelineno-5-11" name="__codelineno-5-11"></a>    <span class="n">MongoPizzaRepository</span>
-</span><span id="__span-5-12"><a href="#__codelineno-5-12" id="__codelineno-5-12" name="__codelineno-5-12"></a><span class="p">)</span>
+</span><span id="__span-5-8"><a href="#__codelineno-5-8" id="__codelineno-5-8" name="__codelineno-5-8"></a>
+</span><span id="__span-5-9"><a href="#__codelineno-5-9" id="__codelineno-5-9" name="__codelineno-5-9"></a><span class="k">def</span><span class="w"> </span><span class="nf">create_pizzeria_app</span><span class="p">():</span>
+</span><span id="__span-5-10"><a href="#__codelineno-5-10" id="__codelineno-5-10" name="__codelineno-5-10"></a>    <span class="n">builder</span> <span class="o">=</span> <span class="n">WebApplicationBuilder</span><span class="p">()</span>
+</span><span id="__span-5-11"><a href="#__codelineno-5-11" id="__codelineno-5-11" name="__codelineno-5-11"></a>
+</span><span id="__span-5-12"><a href="#__codelineno-5-12" id="__codelineno-5-12" name="__codelineno-5-12"></a>    <span class="c1"># ... other configuration ...</span>
 </span><span id="__span-5-13"><a href="#__codelineno-5-13" id="__codelineno-5-13" name="__codelineno-5-13"></a>
-</span><span id="__span-5-14"><a href="#__codelineno-5-14" id="__codelineno-5-14" name="__codelineno-5-14"></a><span class="k">def</span><span class="w"> </span><span class="nf">create_pizzeria_app</span><span class="p">():</span>
-</span><span id="__span-5-15"><a href="#__codelineno-5-15" id="__codelineno-5-15" name="__codelineno-5-15"></a>    <span class="n">builder</span> <span class="o">=</span> <span class="n">WebApplicationBuilder</span><span class="p">()</span>
-</span><span id="__span-5-16"><a href="#__codelineno-5-16" id="__codelineno-5-16" name="__codelineno-5-16"></a>
-</span><span id="__span-5-17"><a href="#__codelineno-5-17" id="__codelineno-5-17" name="__codelineno-5-17"></a>    <span class="c1"># ... other configuration ...</span>
-</span><span id="__span-5-18"><a href="#__codelineno-5-18" id="__codelineno-5-18" name="__codelineno-5-18"></a>
-</span><span id="__span-5-19"><a href="#__codelineno-5-19" id="__codelineno-5-19" name="__codelineno-5-19"></a>    <span class="c1"># Configure MongoDB repositories</span>
-</span><span id="__span-5-20"><a href="#__codelineno-5-20" id="__codelineno-5-20" name="__codelineno-5-20"></a>    <span class="n">MotorRepository</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span>
-</span><span id="__span-5-21"><a href="#__codelineno-5-21" id="__codelineno-5-21" name="__codelineno-5-21"></a>        <span class="n">builder</span><span class="p">,</span>
-</span><span id="__span-5-22"><a href="#__codelineno-5-22" id="__codelineno-5-22" name="__codelineno-5-22"></a>        <span class="n">entity_type</span><span class="o">=</span><span class="n">Order</span><span class="p">,</span>
-</span><span id="__span-5-23"><a href="#__codelineno-5-23" id="__codelineno-5-23" name="__codelineno-5-23"></a>        <span class="n">key_type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
-</span><span id="__span-5-24"><a href="#__codelineno-5-24" id="__codelineno-5-24" name="__codelineno-5-24"></a>        <span class="n">database_name</span><span class="o">=</span><span class="s2">"mario_pizzeria"</span><span class="p">,</span>
-</span><span id="__span-5-25"><a href="#__codelineno-5-25" id="__codelineno-5-25" name="__codelineno-5-25"></a>        <span class="n">collection_name</span><span class="o">=</span><span class="s2">"orders"</span>
-</span><span id="__span-5-26"><a href="#__codelineno-5-26" id="__codelineno-5-26" name="__codelineno-5-26"></a>    <span class="p">)</span>
-</span><span id="__span-5-27"><a href="#__codelineno-5-27" id="__codelineno-5-27" name="__codelineno-5-27"></a>
-</span><span id="__span-5-28"><a href="#__codelineno-5-28" id="__codelineno-5-28" name="__codelineno-5-28"></a>    <span class="n">MotorRepository</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span>
-</span><span id="__span-5-29"><a href="#__codelineno-5-29" id="__codelineno-5-29" name="__codelineno-5-29"></a>        <span class="n">builder</span><span class="p">,</span>
-</span><span id="__span-5-30"><a href="#__codelineno-5-30" id="__codelineno-5-30" name="__codelineno-5-30"></a>        <span class="n">entity_type</span><span class="o">=</span><span class="n">Customer</span><span class="p">,</span>
-</span><span id="__span-5-31"><a href="#__codelineno-5-31" id="__codelineno-5-31" name="__codelineno-5-31"></a>        <span class="n">key_type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
-</span><span id="__span-5-32"><a href="#__codelineno-5-32" id="__codelineno-5-32" name="__codelineno-5-32"></a>        <span class="n">database_name</span><span class="o">=</span><span class="s2">"mario_pizzeria"</span><span class="p">,</span>
-</span><span id="__span-5-33"><a href="#__codelineno-5-33" id="__codelineno-5-33" name="__codelineno-5-33"></a>        <span class="n">collection_name</span><span class="o">=</span><span class="s2">"customers"</span>
-</span><span id="__span-5-34"><a href="#__codelineno-5-34" id="__codelineno-5-34" name="__codelineno-5-34"></a>    <span class="p">)</span>
-</span><span id="__span-5-35"><a href="#__codelineno-5-35" id="__codelineno-5-35" name="__codelineno-5-35"></a>
-</span><span id="__span-5-36"><a href="#__codelineno-5-36" id="__codelineno-5-36" name="__codelineno-5-36"></a>    <span class="c1"># Register repository implementations</span>
-</span><span id="__span-5-37"><a href="#__codelineno-5-37" id="__codelineno-5-37" name="__codelineno-5-37"></a>    <span class="n">builder</span><span class="o">.</span><span class="n">services</span><span class="o">.</span><span class="n">add_scoped</span><span class="p">(</span><span class="n">IOrderRepository</span><span class="p">,</span> <span class="n">MongoOrderRepository</span><span class="p">)</span>
-</span><span id="__span-5-38"><a href="#__codelineno-5-38" id="__codelineno-5-38" name="__codelineno-5-38"></a>    <span class="n">builder</span><span class="o">.</span><span class="n">services</span><span class="o">.</span><span class="n">add_scoped</span><span class="p">(</span><span class="n">ICustomerRepository</span><span class="p">,</span> <span class="n">MongoCustomerRepository</span><span class="p">)</span>
-</span><span id="__span-5-39"><a href="#__codelineno-5-39" id="__codelineno-5-39" name="__codelineno-5-39"></a>
-</span><span id="__span-5-40"><a href="#__codelineno-5-40" id="__codelineno-5-40" name="__codelineno-5-40"></a>    <span class="k">return</span> <span class="n">builder</span><span class="o">.</span><span class="n">build_app_with_lifespan</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+</span><span id="__span-5-14"><a href="#__codelineno-5-14" id="__codelineno-5-14" name="__codelineno-5-14"></a>    <span class="c1"># Configure MongoDB repositories</span>
+</span><span id="__span-5-15"><a href="#__codelineno-5-15" id="__codelineno-5-15" name="__codelineno-5-15"></a>    <span class="n">MotorRepository</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span>
+</span><span id="__span-5-16"><a href="#__codelineno-5-16" id="__codelineno-5-16" name="__codelineno-5-16"></a>        <span class="n">builder</span><span class="p">,</span>
+</span><span id="__span-5-17"><a href="#__codelineno-5-17" id="__codelineno-5-17" name="__codelineno-5-17"></a>        <span class="n">entity_type</span><span class="o">=</span><span class="n">Order</span><span class="p">,</span>
+</span><span id="__span-5-18"><a href="#__codelineno-5-18" id="__codelineno-5-18" name="__codelineno-5-18"></a>        <span class="n">key_type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+</span><span id="__span-5-19"><a href="#__codelineno-5-19" id="__codelineno-5-19" name="__codelineno-5-19"></a>        <span class="n">database_name</span><span class="o">=</span><span class="s2">"mario_pizzeria"</span><span class="p">,</span>
+</span><span id="__span-5-20"><a href="#__codelineno-5-20" id="__codelineno-5-20" name="__codelineno-5-20"></a>        <span class="n">collection_name</span><span class="o">=</span><span class="s2">"orders"</span><span class="p">,</span>
+</span><span id="__span-5-21"><a href="#__codelineno-5-21" id="__codelineno-5-21" name="__codelineno-5-21"></a>        <span class="n">domain_repository_type</span><span class="o">=</span><span class="n">IOrderRepository</span><span class="p">,</span>
+</span><span id="__span-5-22"><a href="#__codelineno-5-22" id="__codelineno-5-22" name="__codelineno-5-22"></a>    <span class="p">)</span>
+</span><span id="__span-5-23"><a href="#__codelineno-5-23" id="__codelineno-5-23" name="__codelineno-5-23"></a>
+</span><span id="__span-5-24"><a href="#__codelineno-5-24" id="__codelineno-5-24" name="__codelineno-5-24"></a>    <span class="n">MotorRepository</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span>
+</span><span id="__span-5-25"><a href="#__codelineno-5-25" id="__codelineno-5-25" name="__codelineno-5-25"></a>        <span class="n">builder</span><span class="p">,</span>
+</span><span id="__span-5-26"><a href="#__codelineno-5-26" id="__codelineno-5-26" name="__codelineno-5-26"></a>        <span class="n">entity_type</span><span class="o">=</span><span class="n">Customer</span><span class="p">,</span>
+</span><span id="__span-5-27"><a href="#__codelineno-5-27" id="__codelineno-5-27" name="__codelineno-5-27"></a>        <span class="n">key_type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+</span><span id="__span-5-28"><a href="#__codelineno-5-28" id="__codelineno-5-28" name="__codelineno-5-28"></a>        <span class="n">database_name</span><span class="o">=</span><span class="s2">"mario_pizzeria"</span><span class="p">,</span>
+</span><span id="__span-5-29"><a href="#__codelineno-5-29" id="__codelineno-5-29" name="__codelineno-5-29"></a>        <span class="n">collection_name</span><span class="o">=</span><span class="s2">"customers"</span><span class="p">,</span>
+</span><span id="__span-5-30"><a href="#__codelineno-5-30" id="__codelineno-5-30" name="__codelineno-5-30"></a>        <span class="n">domain_repository_type</span><span class="o">=</span><span class="n">ICustomerRepository</span><span class="p">,</span>
+</span><span id="__span-5-31"><a href="#__codelineno-5-31" id="__codelineno-5-31" name="__codelineno-5-31"></a>    <span class="p">)</span>
+</span><span id="__span-5-32"><a href="#__codelineno-5-32" id="__codelineno-5-32" name="__codelineno-5-32"></a>
+</span><span id="__span-5-33"><a href="#__codelineno-5-33" id="__codelineno-5-33" name="__codelineno-5-33"></a>    <span class="k">return</span> <span class="n">builder</span><span class="o">.</span><span class="n">build_app_with_lifespan</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
 </span></code></pre></div>
+<p>Passing <code>domain_repository_type</code> automatically binds your domain-level repository interface
+to the scoped <code>MotorRepository</code> instance. This keeps handlers decoupled from the infrastructure
+layer while avoiding manual service registration boilerplate. If you need a specialized
+repository implementation instead of the generic <code>MotorRepository</code>, you can still register
+your class after configuration by calling <code>builder.services.add_scoped(IOrderRepository, CustomOrderRepository)</code>.</p>
+<p><code>MotorRepository.configure</code> now resolves the <code>Mediator</code> for you, so aggregate domain events
+are published automatically once your handlers persist state. Only override the repository
+registration when you truly need a custom implementation.</p>
 <p><strong>Configuration does:</strong></p>
 <ol>
 <li>Creates MongoDB connection pool</li>
