@@ -7,7 +7,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-_No notable changes yet._
+_No unreleased changes yet._
+
+## [0.6.5] - 2025-11-10
+
+### Added
+
+- **Data Access: MotorRepository domain interface registration**
+  - `MotorRepository.configure` can now bind a domain-layer repository interface directly to the scoped Motor repository via the optional `domain_repository_type` argument
+- **Tests: CloudEvent publishing regression coverage**
+  - Added `tests/cases/test_cloud_event_publisher.py` to verify CloudEvents are emitted with JSON payloads
+
+### Fixed
+
+- **CloudEvents: HTTP publishing with httpx**
+  - `CloudEventPublisher` now submits JSON payloads as UTF-8 text, preventing `httpx` from treating the body as a streaming request when the serializer produced a `bytearray`
+- **Data Access: MotorRepository mediator resolution**
+  - `MotorRepository.configure` now requires a Mediator from the service provider when available so aggregate domain events continue to flow without manual wiring
+
+### Documentation
+
+- Updated `docs/tutorials/mario-pizzeria-06-persistence.md` to show how to bind domain repository interfaces with `MotorRepository.configure`
 
 ## [0.6.4] - 2025-11-10
 
