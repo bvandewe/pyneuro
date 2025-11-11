@@ -81,11 +81,11 @@ class DockerComposeManager:
         print("   🔐 Keycloak: http://localhost:8090")
 
     def stop(self):
-        """Stop OpenBank (keeps shared infrastructure running)."""
+        """Stop OpenBank and all running services."""
         print("⏹️  Stopping OpenBank...")
-        self._docker_compose(["down"], use_shared=False)
+        # Note: use_shared=True is required to resolve network references
+        self._docker_compose(["down"], use_shared=True)
         print("✅ OpenBank stopped!")
-        print("   (Shared infrastructure is still running)")
 
     def restart(self):
         """Restart OpenBank."""

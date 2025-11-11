@@ -80,11 +80,11 @@ class DockerComposeManager:
         print("   🔐 Keycloak: http://localhost:8090")
 
     def stop(self):
-        """Stop Mario's Pizzeria (keeps shared infrastructure running)."""
+        """Stop Mario's Pizzeria and all running services."""
         print("⏹️  Stopping Mario's Pizzeria...")
-        self._docker_compose(["down"], use_shared=False)
+        # Note: use_shared=True is required to resolve network references
+        self._docker_compose(["down"], use_shared=True)
         print("✅ Mario's Pizzeria stopped!")
-        print("   (Shared infrastructure is still running)")
 
     def restart(self):
         """Restart Mario's Pizzeria."""
@@ -109,7 +109,9 @@ class DockerComposeManager:
     def clean(self):
         """Stop and remove volumes."""
         print("🧹 Cleaning Mario's Pizzeria...")
-        self._docker_compose(["down", "-v"], use_shared=False)
+        # Note: use_shared=True is required to resolve network references
+        # The 'down -v' command only removes services/volumes defined in mario.yml
+        self._docker_compose(["down", "-v"], use_shared=True)
         print("✅ Mario's Pizzeria cleaned!")
 
     def build(self):
