@@ -245,7 +245,7 @@ export function showTaskDetailsModal(task) {
                     </div>
                     <div class="col-md-6">
                         <label for="editTaskStatus" class="form-label fw-bold">Status</label>
-                        <select class="form-select" id="editTaskStatus" name="status">
+                        <select class="form-select" id="editTaskStatus" name="status" tabindex="2">
                             <option value="pending" ${task.status === 'pending' ? 'selected' : ''}>Pending</option>
                             <option value="in_progress" ${task.status === 'in_progress' ? 'selected' : ''}>In Progress</option>
                             <option value="completed" ${task.status === 'completed' ? 'selected' : ''}>Completed</option>
@@ -254,19 +254,20 @@ export function showTaskDetailsModal(task) {
                     <div class="col-12">
                         <label for="editTaskTitle" class="form-label fw-bold">Title</label>
                         <input type="text" class="form-control" id="editTaskTitle" name="title"
-                               value="${escapeHtml(task.title)}" required maxlength="100">
+                               value="${escapeHtml(task.title)}" required maxlength="100" tabindex="1">
                     </div>
                     <div class="col-12">
                         <label for="editTaskDescription" class="form-label fw-bold">Description</label>
                         <textarea class="form-control" id="editTaskDescription" name="description"
-                                  rows="3">${escapeHtml(task.description || '')}</textarea>
+                                  rows="3" tabindex="3">${escapeHtml(task.description || '')}</textarea>
                     </div>
                     <div class="col-md-6">
                         <label for="editTaskAssignedTo" class="form-label fw-bold">Assigned To</label>
                         ${isAdminOrManager ? `
                             <input type="text" class="form-control" id="editTaskAssignedTo" name="assigned_to"
                                    value="${escapeHtml(task.assigned_to || '')}"
-                                   placeholder="Enter username">
+                                   placeholder="Enter username"
+                                   tabindex="4">
                             <small class="text-muted">Admins/Managers can reassign tasks</small>
                         ` : `
                             <p class="form-control-plaintext">${escapeHtml(task.assigned_to || 'Unassigned')}</p>
@@ -288,14 +289,14 @@ export function showTaskDetailsModal(task) {
         // Update modal footer to include save and delete buttons
         const modalFooter = document.querySelector('#taskDetailsModal .modal-footer');
         modalFooter.innerHTML = `
-            <button type="button" class="btn btn-danger" id="deleteTaskBtn">
+            <button type="button" class="btn btn-danger" id="deleteTaskBtn" tabindex="6">
                 <i class="bi bi-trash"></i> Delete Task
             </button>
             <div class="ms-auto">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" tabindex="7">
                     <i class="bi bi-x-circle"></i> Close
                 </button>
-                <button type="submit" form="editTaskForm" class="btn btn-primary">
+                <button type="submit" form="editTaskForm" class="btn btn-primary" tabindex="5">
                     <i class="bi bi-check-circle"></i> Save Changes
                 </button>
             </div>
@@ -309,10 +310,32 @@ export function showTaskDetailsModal(task) {
         }
         modal.show();
 
+        // Focus on title field after modal is fully shown
+        modalElement.addEventListener('shown.bs.modal', function focusTitle() {
+            // Use requestAnimationFrame to ensure focus happens after Bootstrap's animation
+            requestAnimationFrame(() => {
+                const titleInput = document.getElementById('editTaskTitle');
+                if (titleInput) {
+                    titleInput.focus();
+                    titleInput.select();
+                }
+            });
+            // Remove listener after first execution
+            modalElement.removeEventListener('shown.bs.modal', focusTitle);
+        });
+
         // Add form submit handler (needs to be done after modal is shown)
         setTimeout(() => {
             const form = document.getElementById('editTaskForm');
             if (form) {
+                // Handle Enter key - submit except in textarea
+                form.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter' && e.target.tagName !== 'TEXTAREA') {
+                        e.preventDefault();
+                        form.requestSubmit();
+                    }
+                });
+
                 form.addEventListener('submit', async (e) => {
                     e.preventDefault();
                     await handleEditTask(task.id, modal);

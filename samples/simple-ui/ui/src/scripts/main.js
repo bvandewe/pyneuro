@@ -76,6 +76,28 @@ function setupEventListeners() {
   const createTaskForm = document.getElementById('createTaskForm');
   if (createTaskForm) {
     createTaskForm.addEventListener('submit', handleCreateTask);
+
+    // Handle Enter key - submit except in textarea
+    createTaskForm.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && e.target.tagName !== 'TEXTAREA') {
+        e.preventDefault();
+        createTaskForm.requestSubmit();
+      }
+    });
+  }
+
+  // Add focus handling for create task modal
+  const createTaskModal = document.getElementById('createTaskModal');
+  if (createTaskModal) {
+    createTaskModal.addEventListener('shown.bs.modal', () => {
+      // Use requestAnimationFrame to ensure focus happens after Bootstrap's animation
+      requestAnimationFrame(() => {
+        const titleInput = document.getElementById('taskTitle');
+        if (titleInput) {
+          titleInput.focus();
+        }
+      });
+    });
   }
 }
 
