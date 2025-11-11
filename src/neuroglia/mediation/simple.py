@@ -76,50 +76,118 @@ class SimpleCommandHandler(Generic[TCommand, TResult], ABC):
         """Handle the command and return the result."""
         raise NotImplementedError()
 
-    # Convenience methods for common response patterns
+    # Success response methods (2xx)
 
     def ok(self, data=None) -> "OperationResult":
-        """Create a successful operation result."""
-        result = OperationResult("OK", 200)
+        """Create a successful operation result (HTTP 200 OK)."""
+        result: OperationResult = OperationResult("OK", 200)
         result.data = data
         return result
 
     def created(self, data=None) -> "OperationResult":
-        """Create a successful creation result (HTTP 201)."""
-        result = OperationResult("Created", 201)
+        """Create a successful creation result (HTTP 201 Created)."""
+        result: OperationResult = OperationResult("Created", 201)
         result.data = data
         return result
 
+    def accepted(self, data=None) -> "OperationResult":
+        """Create an accepted result for async operations (HTTP 202 Accepted)."""
+        result: OperationResult = OperationResult("Accepted", 202)
+        result.data = data
+        return result
+
+    def no_content(self) -> "OperationResult":
+        """Create a successful no content result (HTTP 204 No Content)."""
+        result: OperationResult = OperationResult("No Content", 204)
+        result.data = None
+        return result
+
+    # Client error response methods (4xx)
+
     def bad_request(self, message: str) -> "OperationResult":
-        """Create a bad request error result (HTTP 400)."""
-        return OperationResult(
+        """Create a bad request error result (HTTP 400 Bad Request)."""
+        result: OperationResult = OperationResult(
             "Bad Request",
             400,
             message,
             "https://www.w3.org/Protocols/HTTP/HTRESP.html#:~:text=Bad%20Request",
         )
+        result.data = None
+        return result
+
+    def unauthorized(self, message: str = "Authentication required") -> "OperationResult":
+        """Create an unauthorized error result (HTTP 401 Unauthorized)."""
+        result: OperationResult = OperationResult(
+            "Unauthorized",
+            401,
+            message,
+            "https://www.w3.org/Protocols/HTTP/HTRESP.html",
+        )
+        result.data = None
+        return result
+
+    def forbidden(self, message: str = "Access denied") -> "OperationResult":
+        """Create a forbidden error result (HTTP 403 Forbidden)."""
+        result: OperationResult = OperationResult(
+            "Forbidden",
+            403,
+            message,
+            "https://www.w3.org/Protocols/HTTP/HTRESP.html",
+        )
+        result.data = None
+        return result
 
     def not_found(self, message: str = "Resource not found") -> "OperationResult":
-        """Create a not found error result (HTTP 404)."""
-        return OperationResult(
+        """Create a not found error result (HTTP 404 Not Found)."""
+        result: OperationResult = OperationResult(
             "Not Found",
             404,
             message,
             "https://www.w3.org/Protocols/HTTP/HTRESP.html#:~:text=Not%20found%20404",
         )
+        result.data = None
+        return result
 
     def conflict(self, message: str) -> "OperationResult":
-        """Create a conflict error result (HTTP 409)."""
-        return OperationResult("Conflict", 409, message, "https://www.w3.org/Protocols/HTTP/HTRESP.html")
+        """Create a conflict error result (HTTP 409 Conflict)."""
+        result: OperationResult = OperationResult("Conflict", 409, message, "https://www.w3.org/Protocols/HTTP/HTRESP.html")
+        result.data = None
+        return result
+
+    def unprocessable_entity(self, message: str) -> "OperationResult":
+        """Create an unprocessable entity error result (HTTP 422 Unprocessable Entity)."""
+        result: OperationResult = OperationResult(
+            "Unprocessable Entity",
+            422,
+            message,
+            "https://www.w3.org/Protocols/HTTP/HTRESP.html",
+        )
+        result.data = None
+        return result
+
+    # Server error response methods (5xx)
 
     def internal_error(self, message: str) -> "OperationResult":
-        """Create an internal server error result (HTTP 500)."""
-        return OperationResult(
+        """Create an internal server error result (HTTP 500 Internal Server Error)."""
+        result: OperationResult = OperationResult(
             "Internal Server Error",
             500,
             message,
             "https://www.w3.org/Protocols/HTTP/HTRESP.html#:~:text=Internal%20Server%20Error",
         )
+        result.data = None
+        return result
+
+    def service_unavailable(self, message: str = "Service temporarily unavailable") -> "OperationResult":
+        """Create a service unavailable error result (HTTP 503 Service Unavailable)."""
+        result: OperationResult = OperationResult(
+            "Service Unavailable",
+            503,
+            message,
+            "https://www.w3.org/Protocols/HTTP/HTRESP.html",
+        )
+        result.data = None
+        return result
 
 
 class SimpleQueryHandler(Generic[TQuery, TResult], ABC):
