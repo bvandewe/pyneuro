@@ -19,7 +19,7 @@ echo "📦 Found Keycloak container: $KEYCLOAK_CONTAINER"
 
 # Wait for Keycloak to be ready
 echo "⏳ Waiting for Keycloak to be ready..."
-sleep 20
+sleep 10
 
 # Detect kcadm.sh location (different in various Keycloak versions)
 echo "� Detecting kcadm.sh location..."
