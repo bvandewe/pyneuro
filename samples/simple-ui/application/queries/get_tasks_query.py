@@ -1,7 +1,7 @@
 """Query for retrieving tasks."""
 
 from dataclasses import dataclass
-from typing import Optional
+from typing import List, Optional
 
 from application.commands.create_task_command import TaskDto
 from domain.repositories.task_repository import TaskRepository
