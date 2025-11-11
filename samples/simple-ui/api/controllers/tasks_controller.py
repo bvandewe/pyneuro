@@ -1,5 +1,6 @@
 """Tasks API controller."""
 
+from typing import List
 
 from api.controllers.auth_controller import UserInfo, get_current_user
 from application.commands.create_task_command import CreateTaskCommand, TaskDto
