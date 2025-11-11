@@ -44,38 +44,46 @@ services:
     depends_on:
       - mongodb
 
-  # 🔐 Keycloak (Authentication & Authorization)
-  # http://localhost:${KEYCLOAK_PORT} (admin/admin)
-  #
-  # Shared SSO/OAuth2 server for all samples
-  keycloak:
-    image: quay.io/keycloak/keycloak:22.0.5
-    runtime: runc
-    command: ["start-dev", "--import-realm"]
+    # �️ Redis (Session Store & Cache)
+  # In-memory data store for session management and caching
+  # redis://localhost:${REDIS_PORT}
+  redis:
+    image: redis:7.4-alpine
+    restart: always
     ports:
-      - "${KEYCLOAK_PORT:-8090}:8080"
-    environment:
-      # Admin credentials
-      KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN_USERNAME:-admin}
-      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD:-admin}
-      # Development settings (no external DB, uses H2)
-      KC_HTTP_PORT: 8080
-      KC_HOSTNAME_STRICT: false
-      KC_HOSTNAME_STRICT_HTTPS: false
-      KC_HTTP_ENABLED: true
-      KC_HEALTH_ENABLED: true
-      KC_METRICS_ENABLED: true
-      # Disable HTTPS requirement for admin console (development only!)
-      KC_HOSTNAME_URL: http://localhost:${KEYCLOAK_PORT:-8090}
-      KC_HOSTNAME_ADMIN_URL: http://localhost:${KEYCLOAK_PORT:-8090}
-      KC_PROXY: edge
+      - "${REDIS_PORT:-6379}:6379"
+    command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
     volumes:
-      # Persist H2 database to maintain Keycloak configuration across container restarts
-      - keycloak_data:/opt/keycloak/data
-      # Import realm configurations on first startup
-      - ../keycloak/pyneuro-realm-export.json:/opt/keycloak/data/import/pyneuro-realm-export.json:ro
+      - redis_data:/data
     networks:
       - ${DOCKER_NETWORK_NAME:-pyneuro-net}
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+
+  # 🔐 Keycloak (Identity & Access Management)
+  # OAuth2/OIDC Provider for authentication and authorization
+  # http://localhost:${KEYCLOAK_PORT}
+  # Default credentials: admin/${KEYCLOAK_ADMIN_PASSWORD}
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.0
+    restart: always
+    environment:
+      KC_DB: dev-mem
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD:-admin}
+      KC_HTTP_ENABLED: "true"
+      KC_HOSTNAME_STRICT: "false"
+    command:
+      - start-dev
+    ports:
+      - "${KEYCLOAK_PORT:-8080}:8080"
+    networks:
+      - ${DOCKER_NETWORK_NAME:-pyneuro-net}
+    volumes:
+      - keycloak_data:/opt/keycloak/data
 
   # 🎬 Event Player (Event Visualization & Replay)
   # http://localhost:${EVENT_PLAYER_PORT}
@@ -233,6 +241,9 @@ volumes:
     driver: local
   # Keycloak H2 database (persists configuration across container restarts)
   keycloak_data:
+    driver: local
+  # Redis AOF persistence (session data and cache)
+  redis_data:
     driver: local
   # OpenTelemetry & Observability volumes
   grafana_data:

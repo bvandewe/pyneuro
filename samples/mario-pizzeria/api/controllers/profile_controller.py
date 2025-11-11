@@ -2,9 +2,9 @@
 
 from typing import Any
 
+from api.dependencies import get_current_user_from_jwt
 from api.dtos import OrderDto
 from api.dtos.profile_dtos import CreateProfileDto, CustomerProfileDto, UpdateProfileDto
-from api.oauth2_scheme import validate_token
 from application.commands import (
     CreateCustomerProfileCommand,
     UpdateCustomerProfileCommand,
@@ -41,7 +41,7 @@ class ProfileController(ControllerBase):
     @get("/me", response_model=CustomerProfileDto, responses=ControllerBase.error_responses)
     async def get_my_profile(
         self,
-        token: dict = Depends(validate_token),
+        token: dict = Depends(get_current_user_from_jwt),
     ):
         """Get current user's profile (requires authentication)
 
@@ -80,7 +80,7 @@ class ProfileController(ControllerBase):
     async def create_profile(
         self,
         request: CreateProfileDto,
-        token: dict = Depends(validate_token),
+        token: dict = Depends(get_current_user_from_jwt),
     ):
         """Create a new customer profile (requires authentication)"""
         user_id = self._get_user_id_from_token(token)
@@ -99,7 +99,7 @@ class ProfileController(ControllerBase):
     async def update_my_profile(
         self,
         request: UpdateProfileDto,
-        token: dict = Depends(validate_token),
+        token: dict = Depends(get_current_user_from_jwt),
     ):
         """Update current user's profile (requires authentication)"""
         user_id = self._get_user_id_from_token(token)
@@ -127,7 +127,7 @@ class ProfileController(ControllerBase):
     @get("/me/orders", response_model=list[OrderDto], responses=ControllerBase.error_responses)
     async def get_my_orders(
         self,
-        token: dict = Depends(validate_token),
+        token: dict = Depends(get_current_user_from_jwt),
         limit: int = 50,
     ):
         """Get current user's order history (requires authentication)"""
