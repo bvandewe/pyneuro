@@ -7,6 +7,35 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **CQRS/Mediation: Expanded OperationResult helper methods**
+
+  - Added `accepted(data)` for async operations (HTTP 202 Accepted)
+  - Added `no_content()` for successful operations with no response body (HTTP 204 No Content)
+  - Added `unauthorized(detail)` for authentication failures (HTTP 401 Unauthorized)
+  - Added `forbidden(detail)` for authorization failures (HTTP 403 Forbidden)
+  - Added `unprocessable_entity(detail)` for semantic validation errors (HTTP 422 Unprocessable Entity)
+  - Added `service_unavailable(detail)` for temporary service outages (HTTP 503 Service Unavailable)
+  - All helper methods available in both `RequestHandler` and `SimpleCommandHandler`
+  - Comprehensive test coverage with 26 unit tests validating all response types
+
+- **Data Access: Optimistic Concurrency Control (OCC) for MotorRepository**
+  - Automatic version-based conflict detection for `AggregateRoot` state-based persistence
+  - `state_version` field in `AggregateState` automatically increments on each save operation
+  - Atomic MongoDB operations prevent race conditions using `replace_one` with version filter
+  - New `OptimisticConcurrencyException` raised when concurrent updates are detected
+  - New `EntityNotFoundException` raised when attempting to update non-existent entities
+  - `last_modified` timestamp automatically updated on each save
+  - Comprehensive test coverage with 9 unit tests validating all OCC scenarios
+
+### Documentation
+
+- Added comprehensive Optimistic Concurrency Control documentation:
+  - `docs/features/data-access.md`: Detailed OCC guide with pizzeria examples, retry patterns, and best practices
+  - `docs/patterns/persistence-patterns.md`: OCC implementation patterns for state-based persistence
+  - Complete usage examples including exception handling and MongoDB atomic operations
+
 ## [0.6.6] - 2025-11-10
 
 ### Added
