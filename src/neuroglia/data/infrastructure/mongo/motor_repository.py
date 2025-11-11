@@ -325,7 +325,7 @@ class MotorRepository(Generic[TEntity, TKey], Repository[TEntity, TKey]):
         """
         Add a new entity to the repository.
 
-        For AggregateRoot: Persists only the state (not the wrapper or events)
+        For AggregateRoot: Ensures state_version starts at 0 and persists only the state
         For Entity: Persists the entire entity
 
         Args:
@@ -339,11 +339,21 @@ class MotorRepository(Generic[TEntity, TKey], Repository[TEntity, TKey]):
 
         Example:
             ```python
-            new_user = User(id="user123", name="John Doe")
-            await repository.add_async(new_user)
-            print("User added successfully")
+            new_order = Order(customer_id="cust123")
+            await repository.add_async(new_order)
+            print("Order added with initial version 0")
             ```
         """
+        # For AggregateRoot, ensure version starts at 0
+        if self._is_aggregate_root(entity):
+            aggregate = cast(AggregateRoot, entity)
+            # State should already be initialized with version 0 by AggregateState.__init__
+            # But ensure timestamps are set
+            if not hasattr(aggregate.state, "created_at") or aggregate.state.created_at is None:
+                aggregate.state.created_at = datetime.now(timezone.utc)
+            if not hasattr(aggregate.state, "last_modified") or aggregate.state.last_modified is None:
+                aggregate.state.last_modified = aggregate.state.created_at
+
         # Serialize entity (handles both Entity and AggregateRoot)
         doc = self._serialize_entity(entity)
 
@@ -353,41 +363,98 @@ class MotorRepository(Generic[TEntity, TKey], Repository[TEntity, TKey]):
 
     async def _do_update_async(self, entity: TEntity) -> TEntity:
         """
-        Update an existing entity in the repository.
+        Update an existing entity in the repository with optimistic concurrency control.
 
-        This performs a full document replacement based on the entity's ID.
-        For AggregateRoot: Updates only the state
-        For Entity: Updates the entire entity
+        For AggregateRoot instances with state_version tracking, this method implements
+        optimistic concurrency control by checking that the version hasn't changed since
+        the entity was loaded. This prevents lost updates when multiple processes modify
+        the same aggregate concurrently.
+
+        For Entity instances (non-AggregateRoot), performs a simple replace without
+        version checking.
 
         Args:
             entity: The entity with updated values
 
         Returns:
-            The updated entity
+            The updated entity with incremented state_version (for AggregateRoot)
+
+        Raises:
+            OptimisticConcurrencyException: When version mismatch indicates concurrent modification
+            EntityNotFoundException: When the entity doesn't exist in the database
 
         Example:
             ```python
-            user = await repository.get_async("user123")
-            user.name = "Jane Doe"
-            await repository.update_async(user)
-            print("User updated")
+            # With optimistic concurrency control
+            try:
+                order = await repository.get_async("order123")
+                order.add_item("Pizza")
+                await repository.update_async(order)
+            except OptimisticConcurrencyException as ex:
+                # Handle conflict - reload and retry
+                logger.warning(f"Conflict: {ex}")
+                return OperationResult.conflict("Order was modified, please retry")
             ```
         """
         # Get entity ID (handle both Entity.id and AggregateRoot.id())
         if self._is_aggregate_root(entity):
-            entity_id = entity.id()  # type: ignore
+            # Cast to AggregateRoot for type checking
+            aggregate = cast(AggregateRoot, entity)
+            entity_id = aggregate.id()
+
+            # Optimistic Concurrency Control for AggregateRoot
+            old_version = aggregate.state.state_version
+
+            # Update last_modified timestamp
+            aggregate.state.last_modified = datetime.now(timezone.utc)
+
+            # Increment version for this save operation
+            aggregate.state.state_version = old_version + 1
+
+            # Serialize with new version
+            doc = self._serialize_entity(entity)
+            doc.pop("_id", None)
+
+            # Atomic update with version check
+            result = await self.collection.replace_one({"id": entity_id, "state_version": old_version}, doc)
+
+            if result.matched_count == 0:
+                # Check if entity exists at all
+                existing = await self.collection.find_one({"id": entity_id})
+
+                if existing is None:
+                    # Entity doesn't exist
+                    from neuroglia.data.exceptions import EntityNotFoundException
+
+                    entity_type_name = type(entity).__name__
+                    raise EntityNotFoundException(entity_id=entity_id, entity_type=entity_type_name)
+                else:
+                    # Entity exists but version mismatch = concurrency conflict
+                    actual_version = existing.get("state_version", 0)
+                    from neuroglia.data.exceptions import OptimisticConcurrencyException
+
+                    raise OptimisticConcurrencyException(
+                        entity_id=entity_id,
+                        expected_version=old_version,
+                        actual_version=actual_version,
+                    )
+
+            return entity
+
         else:
+            # Simple Entity without version tracking
             entity_id = entity.id if hasattr(entity, "id") else str(entity.id())  # type: ignore
 
-        # Serialize entity (handles both Entity and AggregateRoot)
-        doc = self._serialize_entity(entity)
+            # Update last_modified if present
+            if hasattr(entity, "last_modified"):
+                entity.last_modified = datetime.now(timezone.utc)  # type: ignore
 
-        # Remove _id if present (MongoDB won't allow updating _id)
-        doc.pop("_id", None)
+            doc = self._serialize_entity(entity)
+            doc.pop("_id", None)
 
-        # Replace the document
-        await self.collection.replace_one({"id": entity_id}, doc)
-        return entity
+            # Simple replace without version check
+            await self.collection.replace_one({"id": entity_id}, doc)
+            return entity
 
     async def _do_remove_async(self, id: TKey) -> None:
         """

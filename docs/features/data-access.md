@@ -477,6 +477,164 @@ def create_pizzeria_app():
     return app
 ```
 
+### Optimistic Concurrency Control (OCC)
+
+MotorRepository provides automatic **Optimistic Concurrency Control** for `AggregateRoot` entities using version-based conflict detection. This prevents lost updates when multiple processes attempt to modify the same entity concurrently.
+
+#### How OCC Works
+
+When saving an `AggregateRoot`, the repository:
+
+1. **Checks the current version** - Reads `state_version` from the aggregate's state
+2. **Increments the version** - Increases `state_version` by 1 for this save
+3. **Atomic update** - Uses MongoDB's `replace_one` with version filter: `{"id": entity_id, "state_version": old_version}`
+4. **Conflict detection** - If `matched_count == 0` and entity exists, another process updated it first
+5. **Exception** - Raises `OptimisticConcurrencyException` with version details
+
+#### Version Semantics for State-Based Persistence
+
+- **New aggregates**: Start with `state_version = 0`
+- **Version increment**: Once per save operation (not per event)
+- **Event sourcing**: This is different - events have their own sequence numbers
+- **Timestamps**: `last_modified` automatically updated on each save
+
+#### Pizzeria OCC Example
+
+```python
+from neuroglia.data import OptimisticConcurrencyException, EntityNotFoundException
+
+class UpdateOrderStatusHandler(CommandHandler[UpdateOrderStatusCommand, OperationResult]):
+    """Update order status with automatic conflict detection"""
+
+    def __init__(self, order_repository: IOrderRepository):
+        self.order_repository = order_repository
+
+    async def handle_async(self, command: UpdateOrderStatusCommand) -> OperationResult:
+        try:
+            # Load current order state
+            order = await self.order_repository.get_by_id_async(command.order_id)
+            if not order:
+                return self.not_found(f"Order {command.order_id} not found")
+
+            # Business logic - update status
+            order.update_status(command.new_status)
+
+            # Save with automatic OCC
+            # If another process modified this order, OptimisticConcurrencyException is raised
+            await self.order_repository.update_async(order)
+
+            return self.ok("Order status updated successfully")
+
+        except OptimisticConcurrencyException as ex:
+            # Concurrent update detected - inform user to retry
+            return self.conflict(
+                f"Order was modified by another process. "
+                f"Expected version {ex.expected_version}, but current version is {ex.actual_version}. "
+                f"Please reload and try again."
+            )
+        except EntityNotFoundException as ex:
+            # Entity was deleted between load and save
+            return self.not_found(f"{ex.entity_type} '{ex.entity_id}' not found")
+```
+
+#### Retry Pattern for OCC
+
+Implement automatic retry with exponential backoff:
+
+```python
+from typing import Callable, TypeVar, Optional
+import asyncio
+
+T = TypeVar('T')
+
+async def retry_on_conflict(
+    operation: Callable[[], T],
+    max_attempts: int = 3,
+    base_delay: float = 0.1
+) -> T:
+    """Retry operation on OptimisticConcurrencyException"""
+
+    for attempt in range(max_attempts):
+        try:
+            return await operation()
+        except OptimisticConcurrencyException as ex:
+            if attempt == max_attempts - 1:
+                # Final attempt failed - re-raise
+                raise
+
+            # Exponential backoff
+            delay = base_delay * (2 ** attempt)
+            await asyncio.sleep(delay)
+
+            # Log retry for observability
+            logger.warning(
+                f"Optimistic concurrency conflict on attempt {attempt + 1}/{max_attempts}. "
+                f"Expected version: {ex.expected_version}, Actual: {ex.actual_version}. "
+                f"Retrying in {delay}s..."
+            )
+
+# Usage in handler
+async def update_order_with_retry(self, order_id: str, new_status: str):
+    """Update order with automatic conflict retry"""
+
+    async def update_operation():
+        order = await self.order_repository.get_by_id_async(order_id)
+        order.update_status(new_status)
+        await self.order_repository.update_async(order)
+        return order
+
+    return await retry_on_conflict(update_operation, max_attempts=3)
+```
+
+#### When OCC is Applied
+
+OCC is **automatically enabled** for:
+
+- ✅ `AggregateRoot` entities with `AggregateState`
+- ✅ State-based persistence using `MotorRepository`
+- ✅ All update operations via `update_async()`
+
+OCC is **NOT applied** to:
+
+- ❌ Simple `Entity` objects (no state version tracking)
+- ❌ Read operations (`get_by_id_async`, queries)
+- ❌ Delete operations (no version check)
+
+#### Testing OCC
+
+The framework includes comprehensive OCC tests:
+
+```python
+# Example test structure
+@pytest.mark.asyncio
+async def test_concurrent_update_raises_exception():
+    """Verify OCC detects concurrent modifications"""
+    # Arrange: Two handlers load same order
+    order1 = await repository.get_by_id_async(order_id)
+    order2 = await repository.get_by_id_async(order_id)
+
+    # Act: First update succeeds
+    order1.update_status("cooking")
+    await repository.update_async(order1)  # version: 0 -> 1
+
+    # Assert: Second update fails (version conflict)
+    order2.update_status("ready")
+    with pytest.raises(OptimisticConcurrencyException) as exc:
+        await repository.update_async(order2)  # expects version 0, but actual is 1
+
+    assert exc.value.expected_version == 0
+    assert exc.value.actual_version == 1
+```
+
+#### Best Practices
+
+1. **Always handle OptimisticConcurrencyException** - Inform users and suggest reload
+2. **Use retry patterns** for automated workflows (background jobs, integrations)
+3. **Keep transactions short** - Load, modify, save quickly to minimize conflicts
+4. **Design for eventual consistency** - Accept that conflicts will occur
+5. **Monitor conflict rates** - High rates may indicate architectural issues
+6. **Don't use for simple entities** - OCC overhead only needed for aggregates
+
 ## 📊 Event Sourcing for Kitchen Workflow
 
 ### Kitchen Event Store
