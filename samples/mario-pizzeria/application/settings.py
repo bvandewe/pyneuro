@@ -37,6 +37,12 @@ class MarioPizzeriaApplicationSettings(ApplicationSettingsWithObservability):
     session_secret_key: str = "change-me-in-production-please-use-strong-key-32-chars-min"
     session_max_age: int = 3600  # 1 hour
 
+    # Redis Session Store Configuration
+    redis_enabled: bool = True  # Enable Redis session storage (falls back to in-memory if unavailable)
+    redis_url: str = "redis://redis:6379/0"  # Redis connection URL
+    redis_key_prefix: str = "mario_session:"  # Prefix for session keys
+    session_timeout_hours: int = 24  # Session timeout in hours
+
     # Keycloak Configuration (Internal Docker network URLs - used by backend)
     keycloak_server_url: str = "http://keycloak:8080"  # Internal Docker network
     keycloak_realm: str = "pyneuro"
@@ -46,6 +52,18 @@ class MarioPizzeriaApplicationSettings(ApplicationSettingsWithObservability):
     # JWT Validation (Backend token validation)
     jwt_signing_key: str = ""  # RSA public key - auto-discovered from Keycloak if empty
     jwt_audience: str = "mario-app"  # Expected audience claim in JWT (must match client_id)
+    jwt_algorithm: str = "HS256"  # JWT algorithm (HS256 for legacy, RS256 for Keycloak)
+    jwt_secret_key: str = "mario-secret-key-change-in-production"  # Secret for HS256 (legacy)
+
+    # JWT Validation Options (for RS256 tokens from Keycloak)
+    verify_audience: bool = True  # Verify audience claim in JWT
+    expected_audience: str = "mario-app"  # Expected audience (same as jwt_audience)
+    verify_issuer: bool = False  # Verify issuer claim in JWT
+    expected_issuer: str = ""  # Expected issuer URL (e.g., http://keycloak:8080/realms/pyneuro)
+
+    # Token Refresh (for session-based auth with refresh tokens)
+    refresh_auto_leeway_seconds: int = 300  # Auto-refresh when token expires in less than 5 minutes
+
     required_scope: str = "openid profile email"  # Required OAuth2 scopes
 
     # OAuth2 Scheme Type

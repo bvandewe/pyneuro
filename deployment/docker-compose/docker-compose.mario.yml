@@ -55,6 +55,11 @@ services:
       KEYCLOAK_SERVER_URL: http://keycloak:8080
       KEYCLOAK_REALM: ${KEYCLOAK_REALM:-pyneuro}
       KEYCLOAK_CLIENT_ID: mario-app
+      # Session store (Redis)
+      REDIS_URL: redis://redis:6379/0
+      REDIS_ENABLED: ${REDIS_ENABLED:-true}
+      REDIS_KEY_PREFIX: "mario_session:"
+      SESSION_TIMEOUT_HOURS: 24
       # Application settings
       DATA_DIR: /app/data
       ENABLE_CORS: "true"
@@ -76,6 +81,7 @@ services:
       - pyneuro-net
     depends_on:
       - mongodb
+      - redis
       - keycloak
       - event-player
       - ui-builder # Ensure UI is built before app starts

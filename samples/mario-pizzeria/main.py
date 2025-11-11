@@ -18,6 +18,7 @@ project_root = Path(__file__).parent.parent.parent.parent
 sys.path.insert(0, str(project_root / "src"))
 
 # Framework imports (must be after path manipulation)
+from api.services.auth import DualAuthService
 from api.services.openapi import set_oas_description
 from application.services import AuthService, configure_logging
 from application.settings import app_settings
@@ -83,15 +84,46 @@ def create_pizzeria_app(data_dir: Optional[str] = None, port: int = 8080):
     # Optional: configure Observability
     Observability.configure(builder)
 
+    # Configure authentication with session store (Redis or in-memory fallback)
+    DualAuthService.configure(builder)
+
     # Optional: configure persistence settings
-    MotorRepository.configure(builder, entity_type=Customer, key_type=str, database_name="mario_pizzeria", collection_name="customers")
-    MotorRepository.configure(builder, entity_type=Order, key_type=str, database_name="mario_pizzeria", collection_name="orders")
-    MotorRepository.configure(builder, entity_type=Pizza, key_type=str, database_name="mario_pizzeria", collection_name="pizzas")
-    MotorRepository.configure(builder, entity_type=Kitchen, key_type=str, database_name="mario_pizzeria", collection_name="kitchen")
-    builder.services.add_scoped(ICustomerRepository, MongoCustomerRepository)
-    builder.services.add_scoped(IOrderRepository, MongoOrderRepository)
-    builder.services.add_scoped(IPizzaRepository, MongoPizzaRepository)
-    builder.services.add_scoped(IKitchenRepository, MongoKitchenRepository)
+    MotorRepository.configure(
+        builder,
+        entity_type=Customer,
+        key_type=str,
+        database_name="mario_pizzeria",
+        collection_name="customers",
+        domain_repository_type=ICustomerRepository,
+        implementation_type=MongoCustomerRepository,
+    )
+    MotorRepository.configure(
+        builder,
+        entity_type=Order,
+        key_type=str,
+        database_name="mario_pizzeria",
+        collection_name="orders",
+        domain_repository_type=IOrderRepository,
+        implementation_type=MongoOrderRepository,
+    )
+    MotorRepository.configure(
+        builder,
+        entity_type=Pizza,
+        key_type=str,
+        database_name="mario_pizzeria",
+        collection_name="pizzas",
+        domain_repository_type=IPizzaRepository,
+        implementation_type=MongoPizzaRepository,
+    )
+    MotorRepository.configure(
+        builder,
+        entity_type=Kitchen,
+        key_type=str,
+        database_name="mario_pizzeria",
+        collection_name="kitchen",
+        domain_repository_type=IKitchenRepository,
+        implementation_type=MongoKitchenRepository,
+    )
 
     # Register application services
     builder.services.add_scoped(AuthService)
@@ -135,7 +167,11 @@ def create_pizzeria_app(data_dir: Optional[str] = None, port: int = 8080):
     # - Adds exception handling
     # - Injects service provider to all apps
     app = builder.build_app_with_lifespan(title="Mario's Pizzeria", description="Complete pizza ordering and management system with Keycloak auth", version="1.0.0", debug=True)
+
+    # Configure middleware
+    DualAuthService.configure_middleware(app)  # Inject DualAuthService into request state
     app.add_middleware(CloudEventMiddleware, service_provider=app.state.services)
+
     log.info("App is ready to rock.")
     return app
 

@@ -32,22 +32,28 @@ class MongoKitchenRepository(TracedRepositoryMixin, MotorRepository[Kitchen, str
 
     def __init__(
         self,
-        mongo_client: AsyncIOMotorClient,
+        client: AsyncIOMotorClient,
+        database_name: str,
+        collection_name: str,
         serializer: JsonSerializer,
+        entity_type: type[Kitchen],
         mediator: Optional["Mediator"] = None,
     ):
         """
         Initialize the Kitchen repository.
 
         Args:
-            mongo_client: Motor async MongoDB client
+            client: Motor async MongoDB client
+            database_name: Name of the database
+            collection_name: Name of the collection
             serializer: JSON serializer for entity conversion
+            entity_type: Type of entity stored in this repository
             mediator: Optional Mediator for automatic domain event publishing
         """
         super().__init__(
-            client=mongo_client,
-            database_name="mario_pizzeria",
-            collection_name="kitchen",
+            client=client,
+            database_name=database_name,
+            collection_name=collection_name,
             serializer=serializer,
             mediator=mediator,
         )
