@@ -10,17 +10,15 @@
 
 - automate `set_oas_description(api_app, app_settings)`
 
-- simplify config with passing the abstract repo to the MotorRepository.configure
-  MotorRepository.configure(builder, entity_type=Customer, key_type=str, database_name="mario_pizzeria", collection_name="customers")
-  builder.services.add_scoped(ICustomerRepository, MongoCustomerRepository)
-
 ## In Progress
+
+NA
 
 ## Next
 
 - [ ] Clean up and integrate notes into mkdos site
 - [ ] Add event on menu' changes
-- [ ] Add alerts
+- [ ] Add alerts to grafana
 - [ ] Protect endpoints
 - [ ] Mark new order as delivery or take-away
 - [ ] Mark take-away orders as delivered
