@@ -229,7 +229,7 @@ infra-health: ## Health check for infrastructure services
 mario-start: ## Start Mario's Pizzeria with shared infrastructure
 	@./mario-pizzeria start
 
-mario-stop: ## Stop Mario's Pizzeria (keeps shared infrastructure running)
+mario-stop: ## Stop Mario's Pizzeria and all services
 	@./mario-pizzeria stop
 
 mario-restart: ## Restart Mario's Pizzeria
@@ -252,7 +252,7 @@ mario-build: ## Rebuild Mario's Pizzeria Docker image
 simple-ui-start: ## Start Simple UI with shared infrastructure
 	@./simple-ui start
 
-simple-ui-stop: ## Stop Simple UI (keeps shared infrastructure running)
+simple-ui-stop: ## Stop Simple UI and all services
 	@./simple-ui stop
 
 simple-ui-restart: ## Restart Simple UI
@@ -279,7 +279,7 @@ all-samples-start: ## Start all samples with shared infrastructure
 	@$(MAKE) simple-ui-start
 	@echo "✅ All samples started!"
 
-all-samples-stop: ## Stop all samples (keeps shared infrastructure)
+all-samples-stop: ## Stop all samples and services
 	@echo "⏹️  Stopping all samples..."
 	@$(MAKE) mario-stop
 	@$(MAKE) simple-ui-stop
