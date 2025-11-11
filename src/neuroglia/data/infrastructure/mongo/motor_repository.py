@@ -170,6 +170,21 @@ class MotorRepository(Generic[TEntity, TKey], Repository[TEntity, TKey]):
         """
         return isinstance(obj, AggregateRoot)
 
+    def _normalize_id(self, id: Any) -> str:
+        """
+        Normalize an ID to string format for MongoDB queries.
+
+        MongoDB documents store IDs as strings after JSON serialization.
+        This method ensures query IDs match the serialized format.
+
+        Args:
+            id: The ID to normalize (UUID, str, or other type)
+
+        Returns:
+            String representation of the ID
+        """
+        return str(id)
+
     def _serialize_entity(self, entity: TEntity) -> dict:
         """
         Serialize an entity to a dictionary, handling both Entity and AggregateRoot.
@@ -289,7 +304,7 @@ class MotorRepository(Generic[TEntity, TKey], Repository[TEntity, TKey]):
                 print("User already exists")
             ```
         """
-        count = await self.collection.count_documents({"id": id}, limit=1)
+        count = await self.collection.count_documents({"id": self._normalize_id(id)}, limit=1)
         return count > 0
 
     async def get_async(self, id: TKey) -> Optional[TEntity]:
@@ -315,7 +330,7 @@ class MotorRepository(Generic[TEntity, TKey], Repository[TEntity, TKey]):
                 print("User not found")
             ```
         """
-        doc = await self.collection.find_one({"id": id})
+        doc = await self.collection.find_one({"id": self._normalize_id(id)})
         if doc is None:
             return None
 
@@ -415,12 +430,16 @@ class MotorRepository(Generic[TEntity, TKey], Repository[TEntity, TKey]):
             doc = self._serialize_entity(entity)
             doc.pop("_id", None)
 
+            # Convert entity_id to string to match serialized format in MongoDB
+            # (JsonSerializer converts UUIDs to strings during serialization)
+            entity_id_str = str(entity_id)
+
             # Atomic update with version check
-            result = await self.collection.replace_one({"id": entity_id, "state_version": old_version}, doc)
+            result = await self.collection.replace_one({"id": entity_id_str, "state_version": old_version}, doc)
 
             if result.matched_count == 0:
                 # Check if entity exists at all
-                existing = await self.collection.find_one({"id": entity_id})
+                existing = await self.collection.find_one({"id": entity_id_str})
 
                 if existing is None:
                     # Entity doesn't exist
@@ -452,8 +471,8 @@ class MotorRepository(Generic[TEntity, TKey], Repository[TEntity, TKey]):
             doc = self._serialize_entity(entity)
             doc.pop("_id", None)
 
-            # Simple replace without version check
-            await self.collection.replace_one({"id": entity_id}, doc)
+            # Simple replace without version check (normalize ID for query)
+            await self.collection.replace_one({"id": self._normalize_id(entity_id)}, doc)
             return entity
 
     async def _do_remove_async(self, id: TKey) -> None:
@@ -469,7 +488,7 @@ class MotorRepository(Generic[TEntity, TKey], Repository[TEntity, TKey]):
             print("User removed")
             ```
         """
-        await self.collection.delete_one({"id": id})
+        await self.collection.delete_one({"id": self._normalize_id(id)})
 
     async def get_all_async(self) -> list[TEntity]:
         """

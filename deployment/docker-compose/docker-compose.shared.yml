@@ -84,6 +84,7 @@ services:
       - ${DOCKER_NETWORK_NAME:-pyneuro-net}
     volumes:
       - keycloak_data:/opt/keycloak/data
+      - ./deployment/keycloak/pyneuro-realm-export.json:/opt/keycloak/data/import/pyneuro-realm-export.json:ro
 
   # 🎬 Event Player (Event Visualization & Replay)
   # http://localhost:${EVENT_PLAYER_PORT}
