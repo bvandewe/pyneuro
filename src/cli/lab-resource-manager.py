@@ -81,11 +81,10 @@ class DockerComposeManager:
         print("   🔐 Keycloak: http://localhost:8090")
 
     def stop(self):
-        """Stop Lab Resource Manager (keeps shared infrastructure running)."""
+        """Stop Lab Resource Manager and all running services."""
         print("⏹️  Stopping Lab Resource Manager...")
-        self._docker_compose(["stop", "lab-resource-manager-app"], use_shared=True)
+        self._docker_compose(["down"], use_shared=True)
         print("✅ Lab Resource Manager stopped!")
-        print("   (Shared infrastructure is still running)")
 
     def restart(self):
         """Restart Lab Resource Manager."""

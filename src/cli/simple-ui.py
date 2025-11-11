@@ -82,11 +82,11 @@ class DockerComposeManager:
         print("   jane.smith / user123 (can see own tasks)")
 
     def stop(self):
-        """Stop Simple UI (keeps shared infrastructure running)."""
+        """Stop Simple UI and all running services."""
         print("⏹️  Stopping Simple UI...")
-        self._docker_compose(["down"], use_shared=False)
+        # Note: use_shared=True is required to resolve network references
+        self._docker_compose(["down"], use_shared=True)
         print("✅ Simple UI stopped!")
-        print("   (Shared infrastructure is still running)")
 
     def restart(self):
         """Restart Simple UI."""
@@ -111,7 +111,9 @@ class DockerComposeManager:
     def clean(self):
         """Stop and remove volumes."""
         print("🧹 Cleaning Simple UI...")
-        self._docker_compose(["down", "-v"], use_shared=False)
+        # Note: use_shared=True is required to resolve network references
+        # The 'down -v' command only removes services/volumes defined in simple-ui.yml
+        self._docker_compose(["down", "-v"], use_shared=True)
         print("✅ Simple UI cleaned!")
 
     def build(self):
