@@ -171,27 +171,83 @@ class RequestHandler(Generic[TRequest, TResult], ABC):
         """Handles the specified request"""
         raise NotImplementedError()
 
+    # Success response methods (2xx)
+
     def ok(self, data: Optional[Any] = None) -> TResult:
+        """Creates a successful operation result (HTTP 200 OK)"""
         result: OperationResult = OperationResult("OK", 200)
         result.data = data
         return cast(TResult, result)
 
     def created(self, data: Optional[Any] = None) -> TResult:
+        """Creates a successful creation result (HTTP 201 Created)"""
         result: OperationResult = OperationResult("Created", 201)
         result.data = data
         return cast(TResult, result)
 
+    def accepted(self, data: Optional[Any] = None) -> TResult:
+        """Creates an accepted result for async operations (HTTP 202 Accepted)"""
+        result: OperationResult = OperationResult("Accepted", 202)
+        result.data = data
+        return cast(TResult, result)
+
+    def no_content(self) -> TResult:
+        """Creates a successful no content result (HTTP 204 No Content)"""
+        result: OperationResult = OperationResult("No Content", 204)
+        result.data = None
+        return cast(TResult, result)
+
+    # Client error response methods (4xx)
+
     def bad_request(self, detail: str) -> TResult:
-        """Creates a new OperationResult to describe the fact that the request is invalid"""
-        return cast(TResult, OperationResult("Bad Request", 400, detail, "https://www.w3.org/Protocols/HTTP/HTRESP.html#:~:text=Bad%20Request"))
+        """Creates a bad request error result (HTTP 400 Bad Request)"""
+        result: OperationResult = OperationResult("Bad Request", 400, detail, "https://www.w3.org/Protocols/HTTP/HTRESP.html#:~:text=Bad%20Request")
+        result.data = None
+        return cast(TResult, result)
+
+    def unauthorized(self, detail: str = "Authentication required") -> TResult:
+        """Creates an unauthorized error result (HTTP 401 Unauthorized)"""
+        result: OperationResult = OperationResult("Unauthorized", 401, detail, "https://www.w3.org/Protocols/HTTP/HTRESP.html")
+        result.data = None
+        return cast(TResult, result)
+
+    def forbidden(self, detail: str = "Access denied") -> TResult:
+        """Creates a forbidden error result (HTTP 403 Forbidden)"""
+        result: OperationResult = OperationResult("Forbidden", 403, detail, "https://www.w3.org/Protocols/HTTP/HTRESP.html")
+        result.data = None
+        return cast(TResult, result)
 
     def not_found(self, entity_type, entity_key, key_name: str = "id") -> TResult:
-        """Creates a new OperationResult to describe the fact that an entity of the specified type and key could not be found or does not exist"""
-        return cast(TResult, OperationResult("Not Found", 404, f"Failed to find an entity of type '{entity_type.__name__}' with the specified {key_name} '{entity_key}'", "https://www.w3.org/Protocols/HTTP/HTRESP.html#:~:text=Not%20found%20404"))
+        """Creates a not found error result (HTTP 404 Not Found)"""
+        result: OperationResult = OperationResult("Not Found", 404, f"Failed to find an entity of type '{entity_type.__name__}' with the specified {key_name} '{entity_key}'", "https://www.w3.org/Protocols/HTTP/HTRESP.html#:~:text=Not%20found%20404")
+        result.data = None
+        return cast(TResult, result)
 
     def conflict(self, message: str) -> TResult:
-        """Creates a new OperationResult to describe a conflict (HTTP 409)"""
-        return cast(TResult, OperationResult("Conflict", 409, message, "https://www.w3.org/Protocols/HTTP/HTRESP.html"))
+        """Creates a conflict error result (HTTP 409 Conflict)"""
+        result: OperationResult = OperationResult("Conflict", 409, message, "https://www.w3.org/Protocols/HTTP/HTRESP.html")
+        result.data = None
+        return cast(TResult, result)
+
+    def unprocessable_entity(self, detail: str) -> TResult:
+        """Creates an unprocessable entity error result (HTTP 422 Unprocessable Entity)"""
+        result: OperationResult = OperationResult("Unprocessable Entity", 422, detail, "https://www.w3.org/Protocols/HTTP/HTRESP.html")
+        result.data = None
+        return cast(TResult, result)
+
+    # Server error response methods (5xx)
+
+    def internal_server_error(self, detail: str = "An internal error occurred") -> TResult:
+        """Creates an internal server error result (HTTP 500 Internal Server Error)"""
+        result: OperationResult = OperationResult("Internal Server Error", 500, detail, "https://www.w3.org/Protocols/HTTP/HTRESP.html")
+        result.data = None
+        return cast(TResult, result)
+
+    def service_unavailable(self, detail: str = "Service temporarily unavailable") -> TResult:
+        """Creates a service unavailable error result (HTTP 503 Service Unavailable)"""
+        result: OperationResult = OperationResult("Service Unavailable", 503, detail, "https://www.w3.org/Protocols/HTTP/HTRESP.html")
+        result.data = None
+        return cast(TResult, result)
 
 
 TCommand = TypeVar("TCommand", bound=Command)
