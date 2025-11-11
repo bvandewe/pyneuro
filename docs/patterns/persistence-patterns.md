@@ -349,6 +349,155 @@ db.products.aggregate([
 ])
 ```
 
+### Optimistic Concurrency Control for State Persistence
+
+When using **state-based persistence with AggregateRoot**, the Neuroglia framework provides automatic **Optimistic Concurrency Control (OCC)** to prevent lost updates in concurrent scenarios.
+
+#### How OCC Works with MotorRepository
+
+The `MotorRepository` automatically manages version tracking for `AggregateRoot` entities:
+
+1. **Version Initialization**: New aggregates start with `state_version = 0`
+2. **Version Increment**: Each save operation increments `state_version` by 1
+3. **Atomic Update**: MongoDB's `replace_one` with version filter ensures atomic operations
+4. **Conflict Detection**: Concurrent modifications raise `OptimisticConcurrencyException`
+
+#### Implementation Example
+
+```python
+from neuroglia.data import AggregateRoot, AggregateState, OptimisticConcurrencyException
+from dataclasses import dataclass
+
+# Aggregate state with automatic version tracking
+@dataclass
+class OrderState(AggregateState[str]):
+    customer_id: str
+    items: List[OrderItem]
+    status: str
+    total_amount: Decimal
+
+    def __post_init__(self):
+        super().__init__()  # Initializes state_version, created_at, last_modified
+        if not hasattr(self, "id") or self.id is None:
+            self.id = str(uuid.uuid4())
+
+# Aggregate root with business logic
+class Order(AggregateRoot[OrderState, str]):
+    def __init__(self, customer_id: str):
+        state = OrderState(
+            customer_id=customer_id,
+            items=[],
+            status="pending",
+            total_amount=Decimal("0.00")
+        )
+        super().__init__(state)
+
+    def add_item(self, product_id: str, quantity: int, price: Decimal):
+        """Add item with automatic version tracking"""
+        item = OrderItem(product_id, quantity, price)
+        self.state.items.append(item)
+        self.state.total_amount += price * quantity
+        self.raise_event(OrderItemAddedEvent(self.id(), product_id, quantity))
+
+# Handler with OCC error handling
+class AddOrderItemHandler(CommandHandler):
+    async def handle_async(self, command: AddOrderItemCommand):
+        try:
+            # Load order (version = N)
+            order = await self.repository.get_by_id_async(command.order_id)
+
+            # Business logic
+            order.add_item(command.product_id, command.quantity, command.price)
+
+            # Save with OCC (expects version N, saves as N+1)
+            await self.repository.update_async(order)
+            # If another process updated the order, OptimisticConcurrencyException is raised
+
+            return self.ok("Item added successfully")
+
+        except OptimisticConcurrencyException as ex:
+            return self.conflict(
+                f"Order was modified by another process. "
+                f"Expected version {ex.expected_version}, actual {ex.actual_version}. "
+                f"Please reload and retry."
+            )
+```
+
+#### MongoDB Document Structure with Version
+
+```javascript
+// Order document with state_version field
+{
+  "_id": "order-123",
+  "customer_id": "cust-456",
+  "items": [
+    {"product_id": "prod-1", "quantity": 2, "price": 15.99}
+  ],
+  "status": "pending",
+  "total_amount": 31.98,
+  "state_version": 3,           // ← Automatic version tracking
+  "created_at": ISODate("2024-01-01T10:00:00Z"),
+  "last_modified": ISODate("2024-01-01T10:15:00Z")
+}
+
+// Atomic update operation (performed by MotorRepository)
+db.orders.replaceOne(
+  {
+    "_id": "order-123",
+    "state_version": 3     // ← Must match expected version
+  },
+  {
+    // ... updated document with state_version: 4
+  }
+)
+// If matched_count == 0, another process updated it → OptimisticConcurrencyException
+```
+
+#### Retry Pattern for Concurrent Updates
+
+```python
+async def retry_on_conflict(operation, max_attempts=3):
+    """Retry operation on OptimisticConcurrencyException"""
+    for attempt in range(max_attempts):
+        try:
+            return await operation()
+        except OptimisticConcurrencyException as ex:
+            if attempt == max_attempts - 1:
+                raise
+            # Exponential backoff
+            await asyncio.sleep(0.1 * (2 ** attempt))
+
+# Usage
+async def add_item_with_retry(order_id: str, product_id: str):
+    async def operation():
+        order = await repository.get_by_id_async(order_id)
+        order.add_item(product_id, quantity=1, price=Decimal("9.99"))
+        await repository.update_async(order)
+    return await retry_on_conflict(operation)
+```
+
+#### When OCC is Applied
+
+**Automatic OCC** for:
+
+- ✅ `AggregateRoot` with `AggregateState` (state-based persistence)
+- ✅ `MotorRepository.update_async()` operations
+- ✅ Concurrent modifications by multiple processes/users
+
+**No OCC** for:
+
+- ❌ Simple `Entity` objects (no version tracking)
+- ❌ Read operations (queries)
+- ❌ Delete operations
+
+#### Best Practices
+
+1. **Always handle OptimisticConcurrencyException** - Inform users to reload and retry
+2. **Use retry patterns** for automated workflows (background jobs)
+3. **Keep transactions short** - Load → modify → save quickly
+4. **Design for conflicts** - They will happen in concurrent systems
+5. **Monitor conflict rates** - High rates may indicate design issues
+
 ### Benefits & Trade-offs
 
 #### ✅ Benefits

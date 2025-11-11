@@ -78,6 +78,7 @@ class EventSourcingRepository(Generic[TAggregate, TKey], Repository[TAggregate, 
         event_type = type(e).__name__.lower()
         return EventDescriptor(event_type, e)
 
+    @staticmethod
     def configure(builder: ApplicationBuilderBase, entity_type: type, key_type: type) -> ApplicationBuilderBase:
         """Configures the specified application to use an event sourcing based repository implementation to manage the specified type of entity"""
         builder.services.try_add_singleton(
