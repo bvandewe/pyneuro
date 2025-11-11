@@ -62,7 +62,7 @@ __all__ = [
 ]
 
 # Framework metadata
-__version__ = "0.6.5"
+__version__ = "0.6.6"
 __author__ = "Neuroglia Team"
 __email__ = "team@neuroglia.io"
 __license__ = "Apache"
