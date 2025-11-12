@@ -354,6 +354,10 @@ class WebApplicationBuilder(WebApplicationBuilderBase):
         # Store app settings (use default if not provided)
         self._app_settings = app_settings
 
+        # Override the class-level settings with instance settings if provided
+        if app_settings:
+            self.settings = app_settings
+
         # Advanced feature state (only used when app_settings provided or advanced features used)
         self._main_app: Optional[FastAPI] = None
         self._registered_controllers: dict[str, set[str]] = {}
