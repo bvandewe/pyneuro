@@ -72,19 +72,31 @@ services:
     restart: always
     environment:
       KC_DB: dev-mem
-      KEYCLOAK_ADMIN: admin
-      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD:-admin}
+      # Use new bootstrap variables (Keycloak 26+)
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD:-admin}
+      # HTTP configuration
       KC_HTTP_ENABLED: "true"
       KC_HOSTNAME_STRICT: "false"
+      KC_HOSTNAME_STRICT_HTTPS: "false"
+      KC_PROXY: "edge"
+      KC_HTTP_RELATIVE_PATH: "/"
     command:
       - start-dev
+      - --import-realm
     ports:
-      - "${KEYCLOAK_PORT:-8080}:8080"
+      - "${KEYCLOAK_PORT:-8090}:8080"
     networks:
       - ${DOCKER_NETWORK_NAME:-pyneuro-net}
     volumes:
       - keycloak_data:/opt/keycloak/data
       - ../keycloak/pyneuro-realm-export.json:/opt/keycloak/data/import/pyneuro-realm-export.json:ro
+    healthcheck:
+      test: ["CMD-SHELL", "exec 3<>/dev/tcp/localhost/8080 && echo -e 'GET /health/ready HTTP/1.1\\r\\nHost: localhost\\r\\nConnection: close\\r\\n\\r\\n' >&3 && cat <&3 | grep -q '200 OK'"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 60s
 
   # 🎬 Event Player (Event Visualization & Replay)
   # http://localhost:${EVENT_PLAYER_PORT}
