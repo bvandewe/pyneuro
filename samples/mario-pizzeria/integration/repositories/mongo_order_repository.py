@@ -72,7 +72,7 @@ class MongoOrderRepository(TracedRepositoryMixin, MotorRepository[Order, str], I
 
     async def get_by_status_async(self, status: OrderStatus) -> list[Order]:
         """Get all orders with specific status"""
-        return await self.find_async({"status": status.value})
+        return await self.find_async({"status": status.name})
 
     async def get_orders_by_status_async(self, status: OrderStatus) -> list[Order]:
         """Get all orders with a specific status (interface method)"""
@@ -97,7 +97,7 @@ class MongoOrderRepository(TracedRepositoryMixin, MotorRepository[Order, str], I
 
     async def get_active_orders_async(self) -> list[Order]:
         """Get all active orders (not delivered or cancelled)"""
-        query = {"status": {"$nin": [OrderStatus.DELIVERED.value, OrderStatus.CANCELLED.value]}}
+        query = {"status": {"$nin": [OrderStatus.DELIVERED.name, OrderStatus.CANCELLED.name]}}
         return await self.find_async(query)
 
     async def get_pending_orders_async(self) -> list[Order]:
@@ -125,7 +125,7 @@ class MongoOrderRepository(TracedRepositoryMixin, MotorRepository[Order, str], I
             List of orders with status='delivering' and assigned to this driver
         """
         query = {
-            "status": OrderStatus.DELIVERING.value,
+            "status": OrderStatus.DELIVERING.name,
             "delivery_person_id": delivery_person_id,
         }
         orders = await self.find_async(query)
@@ -165,7 +165,7 @@ class MongoOrderRepository(TracedRepositoryMixin, MotorRepository[Order, str], I
         """
         query = {
             "created_at": {"$gte": start_date, "$lte": end_date},
-            "status": {"$nin": [OrderStatus.PENDING.value, OrderStatus.CANCELLED.value]},
+            "status": {"$nin": [OrderStatus.PENDING.name, OrderStatus.CANCELLED.name]},
         }
         return await self.find_async(query)
 
@@ -208,6 +208,6 @@ class MongoOrderRepository(TracedRepositoryMixin, MotorRepository[Order, str], I
         """
         query = {
             "created_at": {"$gte": start_date, "$lte": end_date},
-            "status": {"$ne": OrderStatus.CANCELLED.value},  # Exclude cancelled orders
+            "status": {"$ne": OrderStatus.CANCELLED.name},  # Exclude cancelled orders
         }
         return await self.find_async(query)

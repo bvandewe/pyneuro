@@ -50,7 +50,7 @@ class GetActiveKitchenOrdersHandler(QueryHandler[GetActiveKitchenOrdersQuery, Op
         # - DELIVERED: Completed
         # - CANCELLED: No longer needed
 
-        kitchen_orders = [order for order in active_orders if order.state.status.value in ["pending", "confirmed", "cooking"]]
+        kitchen_orders = [order for order in active_orders if order.state.status.name in ["PENDING", "CONFIRMED", "COOKING"]]
 
         # Sort by order time (oldest first for kitchen priority)
         kitchen_orders.sort(key=lambda o: o.state.order_time or datetime.min, reverse=False)
