@@ -435,7 +435,14 @@ class MotorRepository(Generic[TEntity, TKey], Repository[TEntity, TKey]):
             entity_id_str = str(entity_id)
 
             # Atomic update with version check
-            result = await self.collection.replace_one({"id": entity_id_str, "state_version": old_version}, doc)
+            # Handle documents that don't have state_version field (legacy data)
+            # Use $or to match either explicit version or missing version (treated as 0)
+            if old_version == 0:
+                query = {"id": entity_id_str, "$or": [{"state_version": 0}, {"state_version": {"$exists": False}}]}
+            else:
+                query = {"id": entity_id_str, "state_version": old_version}
+
+            result = await self.collection.replace_one(query, doc)
 
             if result.matched_count == 0:
                 # Check if entity exists at all

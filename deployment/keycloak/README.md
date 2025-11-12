@@ -1,52 +1,43 @@
-# Keycloak Setup Instructions for Mario's Pizzeria
+# Keycloak Configuration and Management
 
-## 🔧 Fixed Issues
+## Overview
 
-The `keycloak-setup` service has been removed and replaced with automatic realm import on Keycloak startup.
+Keycloak is configured with **persistent H2 file-based storage** to maintain realm configurations, users, and clients across container restarts. This ensures that you don't lose your authentication setup when restarting services.
 
-### Changes Made
+## Database Configuration
 
-1. **Added `--import-realm` flag** to Keycloak startup command
-2. **Fixed volume mount path** for proper realm import
-3. **Removed unnecessary setup service** - Keycloak now imports automatically
-4. **Cleaned up dependencies** - removed references to commented-out services
-5. **Fixed realm export file** - removed problematic authentication flow references that caused import failures
+### Current Setup (Persistent) ✅
 
-## 🚀 How It Works Now
-
-1. **Automatic Import**: Keycloak will automatically import the `mario-pizzeria` realm on first startup
-2. **No Manual Steps**: No need for a separate provisioning service
-3. **Persistent**: Once imported, the realm persists in the PostgreSQL database
-
-## 🧪 Testing the Fix
-
-### Step 1: Stop and Clean Current Containers
-
-```bash
-docker-compose -f docker-compose.mario.yml down -v
-docker-compose -f docker-compose.mario.yml rm -f
+```yaml
+environment:
+  KC_DB: dev-file # H2 file-based database
+volumes:
+  - keycloak_data:/opt/keycloak/data # Persistent storage
 ```
 
-### Step 2: Start Fresh
+The database files are stored in the Docker volume `pyneuro_keycloak_data`, which persists across container restarts and recreations.
 
-```bash
-docker-compose -f docker-compose.mario.yml up -d keycloak-db
-# Wait a moment for DB to be ready
-docker-compose -f docker-compose.mario.yml up -d keycloak
+### Previous Setup (Non-Persistent) ❌
+
+```yaml
+environment:
+  KC_DB: dev-mem # In-memory database (lost on restart)
 ```
 
-### Step 3: Check Keycloak Logs
+## Realm Import
 
-```bash
-docker-compose -f docker-compose.mario.yml logs -f keycloak
+The `pyneuro` realm is automatically imported on first startup from:
+
+```
+deployment/keycloak/pyneuro-realm-export.json
 ```
 
-**Look for these log messages:**
+This includes pre-configured clients:
 
-- `Importing realm from file: /opt/keycloak/data/import/mario-pizzeria-realm-export.json`
-- `Imported realm 'mario-pizzeria'`
-
-### Step 4: Verify Import
+- `mario-app` - Mario's Pizzeria backend
+- `mario-public-app` - Mario's Pizzeria public client
+- `pyneuro-public` - Event Player client
+- `simple-ui-app` - Simple UI application
 
 1. Open http://localhost:8090/admin
 2. Login with `admin` / `admin`
@@ -109,6 +100,82 @@ The imported realm includes:
   - `customer` / `test` (customer role)
   - `chef` / `test` (chef role)
   - `manager` / `test` (manager + chef roles)
+
+## Management Commands
+
+### Using Makefile
+
+```bash
+# Reset Keycloak (delete volume and start fresh)
+make keycloak-reset
+
+# Configure realms (disable SSL, import pyneuro realm if needed)
+make keycloak-configure
+
+# View Keycloak logs
+make keycloak-logs
+
+# Restart Keycloak (preserves data)
+make keycloak-restart
+
+# Export current realm configuration
+make keycloak-export
+```
+
+### Using Script Directly
+
+```bash
+# Interactive reset with confirmation
+./scripts/keycloak-reset.sh
+
+# Non-interactive reset (for CI/CD)
+./scripts/keycloak-reset.sh --yes
+```
+
+## When to Reset Keycloak
+
+Reset Keycloak when you need to:
+
+1. **Start from scratch**: Remove all custom configurations and return to the exported realm state
+2. **Fix corrupted data**: Resolve database inconsistencies or errors
+3. **Test fresh installations**: Verify that realm import works correctly
+4. **Update realm configuration**: Apply changes from the realm export file
+
+## Data Persistence
+
+### What Gets Persisted ✅
+
+When using `KC_DB: dev-file`:
+
+- All realms (master and pyneuro)
+- All users and credentials
+- All clients and their configurations
+- SSL/TLS settings
+- Role mappings and permissions
+- Sessions and tokens (until expiry)
+
+### What Gets Reset ❌
+
+When running `make keycloak-reset`:
+
+- Docker volume is deleted
+- All runtime data is lost
+- Fresh import from `pyneuro-realm-export.json`
+- SSL disabled for local development
+
+## Access Information
+
+After successful setup:
+
+- **Admin Console**: http://localhost:8090/admin
+- **Master Realm**: http://localhost:8090/realms/master
+- **Pyneuro Realm**: http://localhost:8090/realms/pyneuro
+- **JWKS Endpoint**: http://localhost:8090/realms/pyneuro/protocol/openid-connect/certs
+
+Default credentials:
+
+- Username: `admin`
+- Password: `admin`
 - **Roles**: `customer`, `chef`, `manager`
 - **Groups**: `customers`, `staff`, `management`
 - **Client Scopes**: Standard OpenID Connect scopes + `mario-pizza` custom scope

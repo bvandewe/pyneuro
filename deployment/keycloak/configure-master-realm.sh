@@ -93,11 +93,33 @@ if docker exec "$KEYCLOAK_CONTAINER" "$KCADM_PATH" get realms/pyneuro >/dev/null
     -s sslRequired=NONE
   echo "✅ Pyneuro realm SSL configuration complete!"
 else
-  echo "⚠️  Pyneuro realm not found - it will be imported from file"
-  echo "   SSL will be disabled based on realm export configuration"
+  echo "⚠️  Pyneuro realm not found - importing from file..."
+  if docker exec "$KEYCLOAK_CONTAINER" "$KCADM_PATH" create realms \
+    -f /opt/keycloak/data/import/pyneuro-realm-export.json 2>&1; then
+    echo "✅ Pyneuro realm imported successfully!"
+    echo "🔓 Disabling SSL requirement for pyneuro realm..."
+    docker exec "$KEYCLOAK_CONTAINER" "$KCADM_PATH" update realms/pyneuro \
+      -s sslRequired=NONE
+  else
+    echo "❌ Failed to import pyneuro realm"
+    echo "   Continuing anyway - manual import may be needed"
+  fi
 fi
 
 echo "✅ Master realm SSL configuration complete!"
+
+# Create test users with passwords
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+if [ -f "$SCRIPT_DIR/create-test-users.sh" ]; then
+  echo ""
+  echo "👥 Creating test users..."
+  bash "$SCRIPT_DIR/create-test-users.sh"
+else
+  echo "⚠️  Test user creation script not found at: $SCRIPT_DIR/create-test-users.sh"
+  echo "   You'll need to set passwords manually"
+fi
+
+echo ""
 echo "🌐 You can now access the admin console at: http://localhost:8090"
 echo ""
 echo "📋 Next steps:"
