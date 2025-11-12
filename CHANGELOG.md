@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Comprehensive test coverage with 26 unit tests validating all response types
 
 - **Data Access: Optimistic Concurrency Control (OCC) for MotorRepository**
+
   - Automatic version-based conflict detection for `AggregateRoot` state-based persistence
   - `state_version` field in `AggregateState` automatically increments on each save operation
   - Atomic MongoDB operations prevent race conditions using `replace_one` with version filter
@@ -29,12 +30,51 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `last_modified` timestamp automatically updated on each save
   - Comprehensive test coverage with 9 unit tests validating all OCC scenarios
 
+- **Keycloak: Management scripts and commands**
+  - Added `deployment/keycloak/create-test-users.sh` for automated test user creation
+  - Added `scripts/keycloak-reset.sh` for interactive Keycloak data reset
+  - Added Makefile commands: `keycloak-reset`, `keycloak-configure`, `keycloak-create-users`, `keycloak-logs`, `keycloak-restart`, `keycloak-export`
+  - Test users (manager, chef, customer, driver, john.doe, jane.smith) with password "test"
+
+### Changed
+
+- **Observability: Transparent CloudEvent environment variable reading**
+
+  - Removed `NEUROGLIA_` prefix requirement from `ObservabilitySettingsMixin`
+  - Applications now read `CLOUD_EVENT_SINK`, `CLOUD_EVENT_SOURCE`, `CLOUD_EVENT_TYPE_PREFIX` directly
+  - `ApplicationSettingsWithObservability` now inherits from `BaseSettings` for proper Pydantic settings behavior
+  - Simplified settings configuration in Mario's Pizzeria sample
+
+- **Keycloak: Persistent H2 file-based storage**
+  - Changed from `KC_DB: dev-mem` (in-memory) to `KC_DB: dev-file` for data persistence
+  - Keycloak configurations now survive container restarts
+  - Realm configurations persist in `pyneuro_keycloak_data` Docker volume
+
+### Fixed
+
+- **Data Access: MotorRepository legacy document compatibility**
+
+  - Fixed `OptimisticConcurrencyException` on documents without `state_version` field
+  - Added `$or` query to match documents with `state_version: 0` or missing `state_version` field
+  - Legacy documents (created before OCC implementation) now update successfully
+  - Handles migration from non-versioned to versioned documents transparently
+
+- **Events: Duplicate CloudEvent publishing in Mario's Pizzeria**
+
+  - Fixed duplicate CloudEvents for order and pizza domain events
+  - Removed manual `publish_cloud_event_async()` calls from event handlers
+  - `DomainEventCloudEventBehavior` pipeline behavior now exclusively handles CloudEvent conversion
+  - Event handlers focus on side effects (notifications, state updates) while framework handles publishing
+  - Customer profile events were working correctly (never manually published)
+
 ### Documentation
 
 - Added comprehensive Optimistic Concurrency Control documentation:
   - `docs/features/data-access.md`: Detailed OCC guide with pizzeria examples, retry patterns, and best practices
   - `docs/patterns/persistence-patterns.md`: OCC implementation patterns for state-based persistence
   - Complete usage examples including exception handling and MongoDB atomic operations
+- Updated `deployment/keycloak/README.md` with persistent storage documentation and management commands
+- Updated `deployment/keycloak/configure-master-realm.sh` to automatically import realm and create test users
 
 ## [0.6.6] - 2025-11-10
 
