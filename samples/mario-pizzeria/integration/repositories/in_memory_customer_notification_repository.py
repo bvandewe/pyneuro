@@ -44,6 +44,6 @@ class InMemoryCustomerNotificationRepository(ICustomerNotificationRepository):
         """Count unread notifications for a customer"""
         count = 0
         for notification in self._notifications.values():
-            if notification.state.customer_id == customer_id and notification.state.status.value == "unread":
+            if notification.state.customer_id == customer_id and notification.state.status.name == "UNREAD":
                 count += 1
         return count

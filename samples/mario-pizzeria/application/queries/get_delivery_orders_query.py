@@ -48,14 +48,14 @@ class GetDeliveryOrdersHandler(QueryHandler[GetDeliveryOrdersQuery, OperationRes
         # - DELIVERED: Completed
         # - CANCELLED: No longer needed
 
-        delivery_orders = [order for order in active_orders if order.state.status.value in ["ready", "delivering"]]
+        delivery_orders = [order for order in active_orders if order.state.status.name in ["READY", "DELIVERING"]]
 
         # Sort by priority:
         # 1. DELIVERING orders first (sorted by out_for_delivery_time - oldest first)
         # 2. READY orders second (sorted by actual_ready_time - oldest first, FIFO)
 
-        delivering_orders = [o for o in delivery_orders if o.state.status.value == "delivering"]
-        ready_orders = [o for o in delivery_orders if o.state.status.value == "ready"]
+        delivering_orders = [o for o in delivery_orders if o.state.status.name == "DELIVERING"]
+        ready_orders = [o for o in delivery_orders if o.state.status.name == "READY"]
 
         # Sort each group
         delivering_orders.sort(key=lambda o: getattr(o.state, "out_for_delivery_time", None) or datetime.min)

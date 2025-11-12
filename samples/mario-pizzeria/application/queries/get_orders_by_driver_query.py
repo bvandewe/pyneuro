@@ -81,7 +81,7 @@ class GetOrdersByDriverHandler(QueryHandler[GetOrdersByDriverQuery, OperationRes
             driver_stats[driver_id]["assigned"] += 1
 
             # Count only delivered orders for revenue and completion
-            if order.state.status.value == "delivered":
+            if order.state.status.name == "DELIVERED":
                 driver_stats[driver_id]["delivered"] += 1
                 driver_stats[driver_id]["revenue"] += order.total_amount
 

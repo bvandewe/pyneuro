@@ -81,9 +81,9 @@ class GetOrdersTimeseriesHandler(QueryHandler[GetOrdersTimeseriesQuery, Operatio
             period_data[period_key]["revenue"] += order.total_amount
 
             # Count by status
-            if order.state.status.value == "delivered":
+            if order.state.status.name == "DELIVERED":
                 period_data[period_key]["delivered"] += 1
-            elif order.state.status.value == "cancelled":
+            elif order.state.status.name == "CANCELLED":
                 period_data[period_key]["cancelled"] += 1
 
         # Build timeseries data points

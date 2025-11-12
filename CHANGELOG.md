@@ -9,6 +9,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.6.7] - 2025-11-12
 
+### Fixed
+
+- **Mario's Pizzeria: Enum serialization and query mismatch**
+  - Fixed critical bug where ready orders weren't appearing in delivery dashboard
+  - Root cause: Enums stored in MongoDB using `.name` (e.g., "READY") but queries using `.value` (e.g., "ready")
+  - Updated all status comparisons in query handlers to use `.name` instead of `.value`:
+    - `get_delivery_orders_query.py` - READY/DELIVERING comparisons
+    - `get_active_kitchen_orders_query.py` - PENDING/CONFIRMED/COOKING comparisons
+    - `get_orders_timeseries_query.py` - DELIVERED/CANCELLED comparisons
+    - `get_orders_by_driver_query.py` - DELIVERED comparison
+    - `in_memory_customer_notification_repository.py` - UNREAD comparison
+  - Updated all MongoDB queries in `mongo_order_repository.py` to use `.name`:
+    - `get_by_status_async()` - Status query filter
+    - `get_active_orders_async()` - DELIVERED/CANCELLED exclusion
+    - `get_orders_by_delivery_person_async()` - DELIVERING filter
+    - `get_orders_for_kitchen_stats_async()` - PENDING/CANCELLED exclusion
+    - `get_orders_for_pizza_analytics_async()` - CANCELLED exclusion
+  - This aligns with the `JsonEncoder` behavior (line 111 in `json.py`) which serializes enums using `.name` for stable storage
+
+## [0.6.7] - 2025-11-12
+
 ### Added
 
 - **CQRS/Mediation: Expanded OperationResult helper methods**
