@@ -71,7 +71,8 @@ services:
     image: quay.io/keycloak/keycloak:26.0
     restart: always
     environment:
-      KC_DB: dev-mem
+      # Use H2 file database for persistence across restarts
+      KC_DB: dev-file
       # Use new bootstrap variables (Keycloak 26+)
       KC_BOOTSTRAP_ADMIN_USERNAME: admin
       KC_BOOTSTRAP_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD:-admin}
@@ -92,7 +93,11 @@ services:
       - keycloak_data:/opt/keycloak/data
       - ../keycloak/pyneuro-realm-export.json:/opt/keycloak/data/import/pyneuro-realm-export.json:ro
     healthcheck:
-      test: ["CMD-SHELL", "exec 3<>/dev/tcp/localhost/8080 && echo -e 'GET /health/ready HTTP/1.1\\r\\nHost: localhost\\r\\nConnection: close\\r\\n\\r\\n' >&3 && cat <&3 | grep -q '200 OK'"]
+      test:
+        [
+          "CMD-SHELL",
+          "exec 3<>/dev/tcp/localhost/8080 && echo -e 'GET /health/ready HTTP/1.1\\r\\nHost: localhost\\r\\nConnection: close\\r\\n\\r\\n' >&3 && cat <&3 | grep -q '200 OK'",
+        ]
       interval: 10s
       timeout: 5s
       retries: 30

@@ -224,6 +224,50 @@ infra-ps: ## List infrastructure containers
 infra-health: ## Health check for infrastructure services
 	@./infra health
 
+##@ Keycloak Management
+
+keycloak-reset: ## Reset Keycloak (delete volume and restart with fresh realm import)
+	@echo "🔐 Resetting Keycloak..."
+	@echo "⚠️  This will delete all Keycloak data and reimport the realm from file"
+	@echo "⏹️  Stopping Keycloak..."
+	@docker compose -f deployment/docker-compose/docker-compose.shared.yml stop keycloak
+	@echo "🗑️  Deleting Keycloak data volume..."
+	@docker volume rm pyneuro_keycloak_data 2>/dev/null || echo "Volume doesn't exist or already deleted"
+	@echo "🚀 Starting Keycloak with fresh import..."
+	@docker compose -f deployment/docker-compose/docker-compose.shared.yml up -d keycloak
+	@echo "⏳ Waiting for Keycloak to be ready..."
+	@sleep 15
+	@echo "🔧 Configuring realms..."
+	@./deployment/keycloak/configure-master-realm.sh
+	@echo "✅ Keycloak reset complete!"
+
+keycloak-configure: ## Configure Keycloak realms (disable SSL, import pyneuro realm if needed)
+	@echo "🔧 Configuring Keycloak..."
+	@./deployment/keycloak/configure-master-realm.sh
+
+keycloak-logs: ## View Keycloak logs
+	@docker compose -f deployment/docker-compose/docker-compose.shared.yml logs -f keycloak
+
+keycloak-restart: ## Restart Keycloak (preserves data)
+	@echo "🔄 Restarting Keycloak..."
+	@docker compose -f deployment/docker-compose/docker-compose.shared.yml restart keycloak
+	@echo "⏳ Waiting for Keycloak to be ready..."
+	@sleep 10
+	@echo "✅ Keycloak restarted!"
+
+keycloak-export: ## Export current Keycloak realm configuration
+	@echo "📤 Exporting pyneuro realm..."
+	@docker exec pyneuro-keycloak-1 /opt/keycloak/bin/kc.sh export \
+		--dir /opt/keycloak/data/import \
+		--realm pyneuro \
+		--users realm_file
+	@echo "✅ Realm exported to container:/opt/keycloak/data/import/pyneuro-realm.json"
+	@echo "💡 Copy it out with: docker cp pyneuro-keycloak-1:/opt/keycloak/data/import/pyneuro-realm.json deployment/keycloak/"
+
+keycloak-create-users: ## Create/update test users with passwords
+	@echo "👥 Creating test users in Keycloak..."
+	@./deployment/keycloak/create-test-users.sh
+
 ##@ Mario's Pizzeria
 
 mario-start: ## Start Mario's Pizzeria with shared infrastructure
@@ -360,32 +404,6 @@ docker-logs: ## Show Docker container logs
 docker-stop: ## Stop Docker containers
 	@echo "⏹️  Stopping Docker containers..."
 	docker-compose -f docker-compose.dev.yml down
-
-##@ Keycloak Management
-
-keycloak-setup: ## Configure Keycloak master realm SSL (run after first startup)
-	@echo "🔐 Configuring Keycloak master realm..."
-	@sleep 5
-	@./deployment/keycloak/configure-master-realm.sh
-
-keycloak-reset: ## Reset Keycloak (removes volume and recreates)
-	@echo "🔐 Resetting Keycloak..."
-	@docker-compose -f docker-compose.mario.yml down -v
-	@sleep 2
-	@docker volume ls | grep mario-pizzeria_keycloak_data && docker volume rm -f mario-pizzeria_keycloak_data || echo "Volume already removed"
-	@docker-compose -f docker-compose.mario.yml up -d
-	@echo "⏳ Waiting for services to start..."
-	@sleep 30
-	@./deployment/keycloak/configure-master-realm.sh
-	@echo "✅ Keycloak reset complete!"
-
-keycloak-verify: ## Verify Keycloak master realm configuration
-	@echo "🔍 Checking Keycloak configuration..."
-	@docker exec mario-pizzeria-keycloak-1 /opt/keycloak/bin/kcadm.sh get realms/master 2>/dev/null | grep sslRequired || echo "❌ Keycloak not running"
-
-keycloak-logs: ## Show Keycloak container logs
-	@echo "📝 Keycloak logs:"
-	@docker logs mario-pizzeria-keycloak-1 --tail 50 -f
 
 ##@ Utilities
 

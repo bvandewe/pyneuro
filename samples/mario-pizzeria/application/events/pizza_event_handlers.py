@@ -42,7 +42,7 @@ class PizzaCreatedEventHandler(BaseDomainEventHandler[PizzaCreatedEvent], Domain
         # - Trigger analytics/reporting
         # - Update cache/CDN for menu
 
-        await self.publish_cloud_event_async(event)
+        # CloudEvent published automatically by DomainEventCloudEventBehavior
         return None
 
 
@@ -67,5 +67,5 @@ class ToppingsUpdatedEventHandler(BaseDomainEventHandler[ToppingsUpdatedEvent], 
         # - Update inventory for toppings
         # - Notify kitchen prep systems
 
-        await self.publish_cloud_event_async(event)
+        # CloudEvent published automatically by DomainEventCloudEventBehavior
         return None

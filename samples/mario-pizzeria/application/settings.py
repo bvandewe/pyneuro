@@ -69,12 +69,8 @@ class MarioPizzeriaApplicationSettings(ApplicationSettingsWithObservability):
     # OAuth2 Scheme Type
     oauth2_scheme: Optional[str] = "authorization_code"  # "client_credentials" or "authorization_code"
 
-    # CloudEvent Publishing Configuration (override base class defaults)
-    cloud_event_sink: str = "http://localhost:8080/events"  # Where to publish CloudEvents
-    cloud_event_source: str = "https://mario-pizzeria.com"  # Source identifier for events
-    cloud_event_type_prefix: str = "com.mario-pizzeria"  # Prefix for event types
-    cloud_event_retry_attempts: int = 5  # Number of retry attempts
-    cloud_event_retry_delay: float = 1.0  # Delay between retries (seconds)
+    # CloudEvent Publishing Configuration inherited from ApplicationSettingsWithObservability
+    # Reads from CLOUD_EVENT_SINK, CLOUD_EVENT_SOURCE, CLOUD_EVENT_TYPE_PREFIX environment variables
 
     # Swagger UI OAuth Configuration (External URLs - used by browser)
     swagger_ui_client_id: str = "mario-app"  # Must match keycloak_client_id

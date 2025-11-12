@@ -8,6 +8,7 @@ to enable comprehensive observability with the three pillars: metrics, tracing, 
 from typing import Optional
 
 from pydantic import BaseModel, ConfigDict, Field
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class ObservabilitySettingsMixin(BaseModel):
@@ -121,7 +122,8 @@ class ObservabilitySettingsMixin(BaseModel):
     """Additional OpenTelemetry resource attributes as key-value pairs"""
 
     # Pydantic v2 configuration
-    model_config = ConfigDict(env_prefix="NEUROGLIA_")
+    # No env_prefix to allow transparent environment variable reading
+    model_config = ConfigDict()
 
 
 class ObservabilityConfig:
@@ -200,7 +202,7 @@ class ObservabilityConfig:
         return self.health_endpoint or self.metrics_endpoint or self.ready_endpoint
 
 
-class ApplicationSettingsWithObservability(ObservabilitySettingsMixin):
+class ApplicationSettingsWithObservability(BaseSettings, ObservabilitySettingsMixin):
     """
     Convenience class that combines base ApplicationSettings fields with observability support.
 
@@ -238,3 +240,6 @@ class ApplicationSettingsWithObservability(ObservabilitySettingsMixin):
 
     cloud_event_retry_delay: float = 1.0
     """Delay between cloud event retry attempts in seconds."""
+
+    # Override model_config to remove env_prefix for transparent environment variable reading
+    model_config = SettingsConfigDict()

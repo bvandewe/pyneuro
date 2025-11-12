@@ -62,8 +62,7 @@ class OrderCreatedEventHandler(BaseDomainEventHandler[OrderCreatedEvent], Domain
         except Exception as e:
             logger.error(f"Error updating customer active orders for order {event.aggregate_id}: {e}")
 
-        # Publish cloud event for external integrations
-        await self.publish_cloud_event_async(event)
+        # CloudEvent published automatically by DomainEventCloudEventBehavior
         return None
 
 
@@ -89,7 +88,7 @@ class OrderConfirmedEventHandler(BaseDomainEventHandler[OrderConfirmedEvent], Do
         # - Update analytics/reporting databases
         # - Create kitchen ticket
 
-        await self.publish_cloud_event_async(event)
+        # CloudEvent published automatically by DomainEventCloudEventBehavior
         return None
 
 
@@ -133,7 +132,7 @@ class CookingStartedEventHandler(BaseDomainEventHandler[CookingStartedEvent], Do
         except Exception as e:
             logger.error(f"Error creating cooking started notification for order {event.aggregate_id}: {e}")
 
-        await self.publish_cloud_event_async(event)
+        # CloudEvent published automatically by DomainEventCloudEventBehavior
         return None
 
 
@@ -185,8 +184,7 @@ class OrderReadyEventHandler(BaseDomainEventHandler[OrderReadyEvent], DomainEven
         except Exception as e:
             logger.error(f"Error creating order ready notification for order {event.aggregate_id}: {e}")
 
-        # Publish as CloudEvent for external integrations
-        await self.publish_cloud_event_async(event)
+        # CloudEvent published automatically by DomainEventCloudEventBehavior
         return None
 
 
@@ -224,8 +222,7 @@ class OrderDeliveredEventHandler(BaseDomainEventHandler[OrderDeliveredEvent], Do
         except Exception as e:
             logger.error(f"Error removing order from customer active orders for order {event.aggregate_id}: {e}")
 
-        # Publish as CloudEvent for external integrations
-        await self.publish_cloud_event_async(event)
+        # CloudEvent published automatically by DomainEventCloudEventBehavior
         return None
 
 
@@ -264,8 +261,7 @@ class OrderCancelledEventHandler(BaseDomainEventHandler[OrderCancelledEvent], Do
         except Exception as e:
             logger.error(f"Error removing cancelled order from customer active orders for order {event.aggregate_id}: {e}")
 
-        # Publish as CloudEvent for external integrations
-        await self.publish_cloud_event_async(event)
+        # CloudEvent published automatically by DomainEventCloudEventBehavior
         return None
 
 
@@ -281,7 +277,8 @@ class PizzaAddedToOrderEventHandler(BaseDomainEventHandler[PizzaAddedToOrderEven
         # - Check ingredient availability
         # - Update order total in UI
         # - Log popular pizza combinations
-        await self.publish_cloud_event_async(event)
+
+        # CloudEvent published automatically by DomainEventCloudEventBehavior
         return None
 
 
@@ -298,6 +295,5 @@ class PizzaRemovedFromOrderEventHandler(BaseDomainEventHandler[PizzaRemovedFromO
         # - Update order total in UI
         # - Log customer behavior patterns
 
-        # Publish as CloudEvent for external integrations
-        await self.publish_cloud_event_async(event)
+        # CloudEvent published automatically by DomainEventCloudEventBehavior
         return None
