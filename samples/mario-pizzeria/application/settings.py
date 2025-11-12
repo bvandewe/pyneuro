@@ -98,8 +98,14 @@ class MarioPizzeriaApplicationSettings(ApplicationSettingsWithObservability):
     otel_endpoint: str = "http://otel-collector:4317"  # Docker network endpoint
     otel_console_export: bool = False  # Enable for debugging
 
+    # Database Connection Strings (overrides base class default)
+    connection_strings: dict[str, str] = {
+        "mongo": "mongodb://root:neuroglia123@mongodb:27017/mario_pizzeria?authSource=admin",
+    }
+
     # Computed Fields - Auto-generate URLs from base configuration
     @computed_field
+    @property
     def jwt_authority(self) -> str:
         """Internal Keycloak authority URL (for backend token validation)"""
         return f"{self.keycloak_server_url}/realms/{self.keycloak_realm}"
