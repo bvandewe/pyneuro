@@ -368,7 +368,7 @@ class WebApplicationBuilder(WebApplicationBuilderBase):
 
         # Auto-register app_settings in DI container if provided
         if app_settings:
-            self.services.add_singleton(type(app_settings), lambda: app_settings)
+            self.services.add_singleton(type(app_settings), singleton=app_settings)
 
     @property
     def app(self) -> Optional[FastAPI]:
