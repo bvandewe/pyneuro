@@ -9,6 +9,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- **WebApplicationBuilder: Settings registration no longer breaks DI resolution**
+
+  - Fixed critical bug where `lambda: app_settings` registration caused `AttributeError` when resolving services depending on settings
+  - Root cause: Lambda functions registered as `implementation_type` don't have `__origin__` attribute, breaking generic type inspection
+  - Solution: Changed `WebApplicationBuilder.__init__` to use `singleton=app_settings` instead of `lambda: app_settings` (line 371 in `web.py`)
+  - Added defensive check in `ServiceProvider._build_service` to prevent crashes from non-class implementation types (line 600 in `service_provider.py`)
+  - Benefits:
+    - Semantically correct: settings are already singleton instances, no need for lambda wrapper
+    - Performance improvement: eliminates lambda invocation overhead on every settings resolution
+    - Type safety: DI container can properly inspect service types
+    - 100% backward compatible: behavior from consumer perspective is identical
+  - Comprehensive test coverage added in `test_web_application_builder_settings_registration.py`
+  - This fix enables command/query handlers to declare settings dependencies without manual workarounds
+
 - **Mario's Pizzeria: Enum serialization and query mismatch**
   - Fixed critical bug where ready orders weren't appearing in delivery dashboard
   - Root cause: Enums stored in MongoDB using `.name` (e.g., "READY") but queries using `.value` (e.g., "ready")
