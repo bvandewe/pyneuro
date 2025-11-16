@@ -594,7 +594,9 @@ class ServiceProvider(ServiceProviderBase):
         elif service_descriptor.implementation_factory is not None:
             service = service_descriptor.implementation_factory(self)
         else:
-            is_service_generic = not inspect.isclass(service_descriptor.implementation_type)  # if implementation_type is not a class, then it must be a generic type
+            # Check if implementation_type is a class or a generic type
+            # Added defensive check: ensure __origin__ exists before accessing it
+            is_service_generic = not inspect.isclass(service_descriptor.implementation_type) and hasattr(service_descriptor.implementation_type, "__origin__")
             service_generic_type = service_descriptor.implementation_type.__origin__ if is_service_generic else None  # retrieve the generic type, used to determine the __init__ args
             service_type = service_descriptor.implementation_type if service_generic_type is None else service_generic_type  # get the type used to determine the __init__ args: the implementation type as is or its generic type definition
 
