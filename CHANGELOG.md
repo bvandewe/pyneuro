@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.6.8] - 2025-11-16
+
 ### Fixed
 
 - **WebApplicationBuilder: Settings registration no longer breaks DI resolution**
