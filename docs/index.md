@@ -55,13 +55,51 @@ A lightweight, opinionated Python framework built on [FastAPI](https://fastapi.t
 
 ---
 
+## 🚀 Quick Start Options
+
+### 🎯 **Option 1: Start with a Full-Featured Template**
+
+**[📦 Starter App Repository](https://bvandewe.github.io/starter-app/)** - Clone a production-ready template and start building immediately:
+
+```bash
+git clone https://github.com/bvandewe/starter-app.git my-project
+cd my-project
+# Follow the setup instructions in the repo
+```
+
+**What's Included:**
+
+- ✅ **SubApp Architecture** - REST API + Frontend separation
+- ✅ **OAuth2/OIDC with RBAC** - Complete authentication and authorization
+- ✅ **Clean Architecture** - DDD and CQRS patterns implemented
+- ✅ **Modular Frontend** - Vanilla JS/SASS/ES6 with modern tooling
+- ✅ **OpenTelemetry** - Automatic instrumentation for observability
+- ✅ **Docker Compose** - Ready for local development
+- ✅ **Production Patterns** - All common concerns pre-configured
+
+**Perfect for**: Starting a new project with best practices baked in.
+
+---
+
+### 🎯 **Option 2: Learn from Samples**
+
+Explore complete, production-ready sample applications to understand specific patterns.
+
+---
+
+### 🎯 **Option 3: Build from Scratch**
+
+Follow the [Getting Started Guide](getting-started.md) to understand every concept step-by-step.
+
+---
+
 ## 🚀 What's Included
 
 ### 🏗️ **Framework Core**
 
 Clean architecture patterns with dependency injection, CQRS, event-driven design, and comprehensive testing utilities.
 
-### � **Production-Ready Sample Applications**
+### 📦 **Production-Ready Sample Applications**
 
 Learn by example with complete, runnable applications:
 

@@ -2,6 +2,33 @@
 
 Welcome to **Neuroglia** - a lightweight Python framework for building maintainable microservices using clean architecture principles.
 
+## 🎯 Choose Your Starting Point
+
+### 🏃 **Fast Track: Use the Starter App Template**
+
+**Want to start with a production-ready template?** Clone the [**Starter App Repository**](https://bvandewe.github.io/starter-app/) and get a fully-configured application with:
+
+- SubApp architecture (REST API + Frontend)
+- OAuth2/OIDC authentication with RBAC
+- Clean architecture with DDD and CQRS
+- Modular frontend (Vanilla JS/SASS/ES6)
+- OpenTelemetry instrumentation
+- Docker Compose development environment
+
+```bash
+git clone https://github.com/bvandewe/starter-app.git my-project
+cd my-project
+# Follow the repo's README for setup
+```
+
+**Perfect for**: Teams who want to hit the ground running with battle-tested patterns.
+
+---
+
+### 📚 **Learning Path: Build from Scratch**
+
+**Prefer to understand every concept?** Continue with this guide to build your first application step-by-step.
+
 ## 🎯 What You'll Learn
 
 This guide will take you from zero to your first working application in just a few minutes. By the end, you'll understand:
@@ -12,9 +39,7 @@ This guide will take you from zero to your first working application in just a f
 - Where to go next for advanced features
 
 !!! tip "New to Clean Architecture?"
-Don't worry! This guide assumes no prior knowledge. We'll explain concepts as we go.
-
-## ⚡ Quick Installation
+Don't worry! This guide assumes no prior knowledge. We'll explain concepts as we go.## ⚡ Quick Installation
 
 ### Prerequisites
 
