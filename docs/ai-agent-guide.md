@@ -2,6 +2,10 @@
 
 **Fast-track guide for AI agents to understand and work with the Neuroglia Python Framework**
 
+!!! warning "Read This First"
+
+    Before using this guide, review the **[Documentation Philosophy](documentation-philosophy.md)** to understand how to interpret patterns, evaluate trade-offs, and adapt examples to specific contexts. This is a toolbox, not a rulebook.
+
 ---
 
 ## 🎯 Framework Overview
