@@ -176,7 +176,44 @@ Please contribute via:
 
 ---
 
-## 🎓 Learning Paths Based on Your Context
+## 🎯 Quick Start Options
+
+Before diving into learning, choose your starting approach:
+
+### 🏃 **Option 1: Production Template (Recommended for Teams)**
+
+**[Starter App Repository](https://bvandewe.github.io/starter-app/)** - Start with a complete, production-ready template:
+
+- **What**: Fully-configured application demonstrating all framework capabilities
+- **Includes**: SubApp architecture, OAuth2/OIDC, RBAC, clean architecture, modular frontend, OTEL
+- **Best For**: Teams building production applications who want proven patterns out-of-the-box
+- **Approach**: Clone, configure, and customize to your domain
+
+```bash
+git clone https://github.com/bvandewe/starter-app.git my-project
+cd my-project
+# Follow setup instructions
+```
+
+### 📚 **Option 2: Learning Path (Recommended for Individuals)**
+
+- **What**: Step-by-step tutorials and sample applications
+- **Includes**: Mario's Pizzeria, OpenBank, Simple UI samples with detailed guides
+- **Best For**: Developers learning clean architecture and DDD patterns
+- **Approach**: Read docs, explore samples, build understanding incrementally
+
+### 🔧 **Option 3: Minimal Bootstrap**
+
+- **What**: Bare-bones setup to understand core concepts
+- **Includes**: [3-Minute Bootstrap](guides/3-min-bootstrap.md) and minimal examples
+- **Best For**: Experienced developers who want minimal scaffolding
+- **Approach**: Start small, add complexity as needed
+
+---
+
+## 🎓 Recommended Learning Pathways
+
+### For Beginners
 
 ### You're Building a Simple REST API
 

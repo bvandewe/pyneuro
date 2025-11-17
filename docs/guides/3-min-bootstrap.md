@@ -2,10 +2,11 @@
 
 Get up and running with Neuroglia in under 3 minutes! This quick-start guide gets you from zero to a working API in the fastest way possible.
 
-!!! info "🎯 What You'll Build"
-A minimal "Hello Pizzeria" API with one endpoint that demonstrates the basic framework setup.
+!!! tip "🚀 Want a Production-Ready Starting Point?"
+For a fully-featured application template with authentication, frontend, and all common concerns pre-configured, check out the [**Starter App Repository**](https://bvandewe.github.io/starter-app/). This guide shows the minimal hello-world approach.
 
-## 🚀 Quick Setup
+!!! info "🎯 What You'll Build"
+A minimal "Hello Pizzeria" API with one endpoint that demonstrates the basic framework setup.## 🚀 Quick Setup
 
 ### Prerequisites
 
