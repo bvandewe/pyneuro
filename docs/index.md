@@ -2,6 +2,47 @@
 
 > **Keywords**: Python microservices, FastAPI framework, clean architecture Python, CQRS Python, domain-driven design Python, event-driven architecture, dependency injection Python, microservices patterns
 
+---
+
+## ⚠️ Documentation Philosophy & Critical Disclaimer
+
+!!! warning "Eventual Accuracy & Critical Interpretation Required"
+
+    **This documentation is designed as an entry point for both human developers and AI agents**, serving as a conceptual toolbox rather than prescriptive instructions.
+
+    ### 🎯 Intended Interpretation
+
+    - **Eventual Accuracy**: Content and illustrations represent patterns and concepts that evolve with real-world usage. Expect refinement over time.
+    - **No One-Size-Fits-All**: These are **patterns, not prescriptions**. Your domain, constraints, and business context will require critical adaptation.
+    - **Toolbox Approach**: Consider this a collection of architectural tools and techniques. Select, combine, and adapt based on your specific use case.
+    - **Critical Mindset Required**: You must evaluate each pattern's applicability to your context. What works for a banking system may be overkill for a simple API.
+
+    ### 🏗️ Clean Architecture Starts with Business Modeling
+
+    **Before writing code**, proper clean architecture requires:
+
+    1. **Business Domain Understanding**: Map your business processes, entities, and rules
+    2. **Ecosystem Perspective**: Identify how your microservice(s) interact within the broader system
+    3. **Event-Driven Thinking**: Consider autonomous services that emit and subscribe to **persisted, queryable streams of CloudEvents**
+    4. **Bounded Contexts**: Define clear boundaries for your domain models and services
+    5. **Integration Patterns**: Plan for eventual consistency, event sourcing, saga patterns, or CQRS based on actual requirements
+
+    **The framework provides the mechanisms** (CQRS, event sourcing, repositories, mediators), **but you provide the domain insight** to know when and how to apply them.
+
+    ### 🤖 For AI Agents
+
+    This documentation is structured to enable AI-assisted development. Use it to:
+
+    - Understand architectural patterns and their trade-offs
+    - Generate code that respects clean architecture principles
+    - Suggest implementations based on documented patterns
+    - Critically evaluate when patterns should (or should not) be applied
+    - Adapt examples to specific business domains and constraints
+
+    **Remember**: Even with AI assistance, human domain expertise and critical evaluation remain essential.
+
+---
+
 A lightweight, opinionated Python framework built on [FastAPI](https://fastapi.tiangolo.com/) that enforces clean architecture principles and provides comprehensive tooling for building production-ready microservices.
 
 ## 🎯 Perfect For
