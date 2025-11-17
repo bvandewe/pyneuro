@@ -7,6 +7,37 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **Documentation: Starter App Repository Integration**
+
+  - Added prominent references to the [Starter App Repository](https://bvandewe.github.io/starter-app/) across documentation
+  - Positioned starter-app as production-ready template alternative to blank setup
+  - Updated `docs/index.md` with "Quick Start Options" section featuring three paths:
+    - Option 1: Production Template (starter-app with OAuth2/OIDC, RBAC, SubApp, OTEL, frontend)
+    - Option 2: Learn from Samples (existing Mario's Pizzeria, OpenBank, Simple UI)
+    - Option 3: Build from Scratch (traditional getting started guide)
+  - Updated `docs/getting-started.md` with "Choose Your Starting Point" section
+  - Added starter-app tip to `docs/guides/3-min-bootstrap.md`
+  - Added starter-app to `docs/documentation-philosophy.md` learning options
+  - Starter app includes: SubApp architecture, OAuth2/OIDC with RBAC, clean architecture (DDD+CQRS), modular frontend (Vanilla JS/SASS/ES6), OpenTelemetry instrumentation, Docker Compose setup
+
+- **Documentation: Philosophy & Critical Disclaimer**
+  - Added prominent "⚠️ Eventual Accuracy Disclaimer" to `docs/index.md`
+  - Created comprehensive `docs/documentation-philosophy.md` page
+  - Positioned documentation as entry point for both human developers and AI agents
+  - Emphasized critical mindset approach and toolbox metaphor (no one-size-fits-all)
+  - Highlighted business modeling and ecosystem perspectives as starting points
+  - Documented clean architecture starting with domain understanding, not code
+  - Added guidance on microservices interaction via persisted queryable CloudEvents streams
+  - Cross-referenced AI agent guide with documentation philosophy
+
+### Changed
+
+- **Development: Markdown linting configuration**
+  - Disabled MD046 rule in `.markdownlint.json` to allow MkDocs admonition syntax
+  - Allows consistent use of indented code blocks within admonitions (warning, tip, info boxes)
+
 ## [0.6.8] - 2025-11-16
 
 ### Fixed
