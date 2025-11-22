@@ -169,7 +169,15 @@ services.add_transient(EmailService)  # New instance per resolve
 
 ### 2. CQRS with Mediator Pattern
 
-Separate commands (write) from queries (read):
+Separate commands (write) from queries (read).
+
+**IMPORTANT**: All handlers inherit 12 helper methods from `RequestHandler`:
+
+- Success: `ok()`, `created()`, `accepted()`, `no_content()`
+- Client Errors: `bad_request()`, `unauthorized()`, `forbidden()`, `not_found()`, `conflict()`, `unprocessable_entity()`
+- Server Errors: `internal_server_error()`, `service_unavailable()`
+
+**Always use helper methods** - never construct `OperationResult` manually.
 
 ```python
 # Command (Write Operation)
@@ -181,9 +189,15 @@ class CreateUserCommand(Command[OperationResult[UserDto]]):
 
 class CreateUserHandler(CommandHandler[CreateUserCommand, OperationResult[UserDto]]):
     async def handle_async(self, command: CreateUserCommand) -> OperationResult[UserDto]:
-        # Business logic here
+        # Validation → use self.bad_request()
+        if not command.email:
+            return self.bad_request("Email is required")
+
+        # Business logic
         user = User(command.email, command.first_name, command.last_name)
         await self.user_repository.save_async(user)
+
+        # Success → use self.created()
         return self.created(self.mapper.map(user, UserDto))
 
 # Query (Read Operation)
@@ -526,7 +540,7 @@ from neuroglia.observability import (
 # Configure in application startup
 def create_app():
     builder = WebApplicationBuilder()
-    
+
     # Configure OpenTelemetry
     configure_opentelemetry(
         service_name="mario-pizzeria",
@@ -536,7 +550,7 @@ def create_app():
         export_traces=True,
         export_metrics=True
     )
-    
+
     # Continue with application setup...
     return builder.build()
 
@@ -550,17 +564,17 @@ class PlaceOrderHandler(CommandHandler):
             "orders_placed_total",
             description="Total number of orders placed"
         )
-    
+
     @trace_async(name="place_order")
     async def handle_async(self, command: PlaceOrderCommand):
         # Automatic span creation
         with self.tracer.start_as_current_span("validate_order") as span:
             span.set_attribute("customer_id", command.customer_id)
             # Validation logic
-        
+
         # Increment counter
         self.order_counter.add(1, {"customer_type": "vip"})
-        
+
         # Business logic continues...
 ```
 
@@ -586,7 +600,7 @@ security = HTTPBearer()
 
 # Extract user context in controller
 class OrdersController(ControllerBase):
-    
+
     def _get_user_info(self, credentials: HTTPAuthorizationCredentials) -> dict:
         """Extract user information from JWT token."""
         token = credentials.credentials
@@ -597,7 +611,7 @@ class OrdersController(ControllerBase):
             "roles": payload.get("roles", []),
             "permissions": payload.get("permissions", [])
         }
-    
+
     @post("/", response_model=OrderDto)
     async def create_order(
         self,
@@ -605,7 +619,7 @@ class OrdersController(ControllerBase):
         credentials: HTTPAuthorizationCredentials = Depends(security)
     ) -> OrderDto:
         user_info = self._get_user_info(credentials)
-        
+
         command = CreateOrderCommand(
             customer_id=dto.customer_id,
             items=dto.items,
@@ -620,26 +634,26 @@ class CreateOrderHandler(CommandHandler):
         # Role-based authorization
         if not self._has_role(command.user_context, "customer"):
             return self.forbidden("Only customers can place orders")
-        
+
         # Permission-based authorization
         if not self._has_permission(command.user_context, "orders:create"):
             return self.forbidden("Insufficient permissions")
-        
+
         # Resource-level authorization
         if not self._is_own_order(command.user_context, command.customer_id):
             return self.forbidden("Cannot place orders for other customers")
-        
+
         # Business logic
         order = Order(command.customer_id, command.items)
         await self.repository.save_async(order)
         return self.created(order)
-    
+
     def _has_role(self, user_context: dict, role: str) -> bool:
         return role in user_context.get("roles", [])
-    
+
     def _has_permission(self, user_context: dict, permission: str) -> bool:
         return permission in user_context.get("permissions", [])
-    
+
     def _is_own_order(self, user_context: dict, customer_id: str) -> bool:
         return user_context.get("user_id") == customer_id
 ```
@@ -663,11 +677,11 @@ from neuroglia.hosting.web import WebApplicationBuilder, SubAppConfig
 
 def create_app():
     builder = WebApplicationBuilder()
-    
+
     # Configure core services
     Mediator.configure(builder, ["application.commands", "application.queries"])
     Mapper.configure(builder, ["application.mapping", "api.dtos"])
-    
+
     # Add API SubApp
     builder.add_sub_app(
         SubAppConfig(
@@ -678,7 +692,7 @@ def create_app():
             docs_url="/docs"
         )
     )
-    
+
     # Add UI SubApp
     builder.add_sub_app(
         SubAppConfig(
@@ -689,7 +703,7 @@ def create_app():
             static_files=[("/static", "static/dist")]
         )
     )
-    
+
     return builder.build()
 ```
 
@@ -700,7 +714,6 @@ def create_app():
 - Independent scaling and deployment
 - Clear API boundaries
 - Easy migration to microservices
-
 
 4. **Anemic domain models** - Domain entities should have behavior
 5. **Fat controllers** - Controllers should only orchestrate
@@ -1004,25 +1017,69 @@ pytest tests/cases/test_mediator.py -v
 
 ## Error Handling Patterns
 
-Use OperationResult for consistent error handling:
+Use RequestHandler helper methods for consistent error handling:
+
+**Available Helper Methods** (all inherit from `RequestHandler`):
+
+```python
+# Success responses (2xx)
+self.ok(data)                      # 200 OK
+self.created(data)                 # 201 Created
+self.accepted(data)                # 202 Accepted
+self.no_content()                  # 204 No Content
+
+# Client errors (4xx)
+self.bad_request(detail)           # 400 Bad Request
+self.unauthorized(detail)          # 401 Unauthorized
+self.forbidden(detail)             # 403 Forbidden
+self.not_found(entity_type, key)   # 404 Not Found
+self.conflict(message)             # 409 Conflict
+self.unprocessable_entity(detail)  # 422 Unprocessable Entity
+
+# Server errors (5xx)
+self.internal_server_error(detail) # 500 Internal Server Error
+self.service_unavailable(detail)   # 503 Service Unavailable
+```
+
+**Complete Example:**
 
 ```python
 class CreateUserHandler(CommandHandler[CreateUserCommand, OperationResult[UserDto]]):
     async def handle_async(self, command: CreateUserCommand) -> OperationResult[UserDto]:
         try:
-            # Validation
+            # Input validation → 400
+            if not command.email:
+                return self.bad_request("Email is required")
+
+            # Business validation → 409
             if await self.user_repository.exists_by_email(command.email):
-                return self.bad_request("User with this email already exists")
+                return self.conflict("User with this email already exists")
+
+            # Authorization → 403
+            if not command.user_context.can_create_users:
+                return self.forbidden("Insufficient permissions to create users")
 
             # Business logic
             user = User(command.email, command.first_name, command.last_name)
             await self.user_repository.save_async(user)
 
             user_dto = self.mapper.map(user, UserDto)
-            return self.created(user_dto)
+            return self.created(user_dto)  # 201
 
         except Exception as ex:
-            return self.internal_server_error(f"Failed to create user: {str(ex)}")
+            return self.internal_server_error(f"Failed to create user: {str(ex)}")  # 500
+```
+
+**DO NOT construct OperationResult manually:**
+
+```python
+# ❌ WRONG - Don't do this
+result = OperationResult("OK", 200)
+result.data = user
+return result
+
+# ✅ CORRECT - Use helper methods
+return self.ok(user)
 ```
 
 ## Performance Considerations
@@ -1277,18 +1334,21 @@ Neuroglia enforces clean architecture - always respect the dependency rule and m
 ## Key Sample Applications Reference
 
 ### Mario's Pizzeria
+
 - **Location**: `samples/mario-pizzeria/`
 - **Focus**: CQRS, event-driven architecture, MongoDB persistence, OpenTelemetry observability
 - **Documentation**: `docs/mario-pizzeria.md`, `docs/guides/mario-pizzeria-tutorial.md`
 - **Tutorial Series**: 9-part comprehensive tutorial in `docs/tutorials/`
 
 ### OpenBank
+
 - **Location**: `samples/openbank/`
 - **Focus**: Event sourcing with KurrentDB, CQRS with read/write models, snapshots, projections
 - **Documentation**: `docs/samples/openbank.md`
 - **Key Patterns**: Event sourcing, eventual consistency, read model reconciliation
 
 ### Simple UI
+
 - **Location**: `samples/simple-ui/`
 - **Focus**: SubApp pattern, stateless JWT authentication, RBAC at application layer
 - **Documentation**: `docs/samples/simple-ui.md`, `docs/guides/rbac-authorization.md`
@@ -1297,11 +1357,13 @@ Neuroglia enforces clean architecture - always respect the dependency rule and m
 ## Documentation Navigation Map
 
 ### Getting Started
+
 - `docs/getting-started.md` - Framework introduction
 - `docs/guides/3-min-bootstrap.md` - Quick start
 - `docs/guides/local-development.md` - Development setup
 
 ### Core Features
+
 - `docs/features/simple-cqrs.md` - CQRS implementation
 - `docs/features/data-access.md` - Repository patterns
 - `docs/features/mvc-controllers.md` - Controller implementation
@@ -1309,11 +1371,13 @@ Neuroglia enforces clean architecture - always respect the dependency rule and m
 - `docs/features/serialization.md` - JSON serialization
 
 ### Guides (3-Tier Structure)
+
 - **Getting Started**: Project setup, testing setup, local dev
 - **Development**: Mario's tutorial, Simple UI app, JSON config
 - **Operations**: **NEW**: OpenTelemetry integration, RBAC & authorization
 
 ### Patterns
+
 - `docs/patterns/clean-architecture.md` - Architecture principles
 - `docs/patterns/cqrs.md` - Command/Query separation
 - `docs/patterns/repository.md` - Repository pattern
@@ -1321,6 +1385,7 @@ Neuroglia enforces clean architecture - always respect the dependency rule and m
 - `docs/patterns/unit-of-work.md` - DEPRECATED (use repository-based event publishing)
 
 ### References
+
 - `docs/references/python_typing_guide.md` - Type hints & generics
 - `docs/references/12-factor-app.md` - Cloud-native principles
 - `docs/references/source_code_naming_convention.md` - Naming standards
@@ -1328,6 +1393,7 @@ Neuroglia enforces clean architecture - always respect the dependency rule and m
 ## Recent Framework Improvements (v0.6.0+)
 
 1. **Observability Enhancement**:
+
    - Expanded observability guide from 838 to 2,079 lines
    - Architecture overview with Mermaid diagrams
    - Infrastructure setup (Docker Compose, Kubernetes)
@@ -1336,12 +1402,14 @@ Neuroglia enforces clean architecture - always respect the dependency rule and m
    - Complete data flow visualization
 
 2. **RBAC Documentation**:
+
    - Comprehensive RBAC guide with practical patterns
    - JWT authentication integration
    - Role-based, permission-based, and resource-level authorization
    - Simple UI sample demonstrating RBAC implementation
 
 3. **Documentation Reorganization**:
+
    - Reorganized MkDocs navigation (3-tier Guides structure)
    - Cross-referenced all observability documentation
    - Added documentation maps and learning paths
@@ -1352,4 +1420,3 @@ Neuroglia enforces clean architecture - always respect the dependency rule and m
    - Simple UI sample demonstrating implementation
    - Bootstrap 5 frontend integration
    - Stateless JWT authentication
-
