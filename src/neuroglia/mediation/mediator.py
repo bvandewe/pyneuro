@@ -58,9 +58,112 @@ class Command(Generic[TResult], Request[TResult], ABC):
     operations. Each command should have exactly one handler and represent a single business use case.
 
     Type Parameters:
-        TResult: The type of result returned after command execution (typically OperationResult)
+        TResult: The type of result returned after command execution (typically OperationResult[T])
 
-    Examples:
+    Type Hint Patterns & Examples
+    ------------------------------
+
+    **Pattern 1: Command returning a DTO (most common)**
+    ```python
+    from dataclasses import dataclass
+    from neuroglia.mediation import Command, CommandHandler
+    from neuroglia.core import OperationResult
+
+    @dataclass
+    class CreateUserCommand(Command[OperationResult[UserDto]]):
+        \"\"\"Command that returns a single user DTO.\"\"\"
+        email: str
+        name: str
+        password: str
+
+    class CreateUserHandler(CommandHandler[CreateUserCommand, OperationResult[UserDto]]):
+        async def handle_async(self, command: CreateUserCommand) -> OperationResult[UserDto]:
+            # IDE knows return type is OperationResult[UserDto]
+            return self.created(user_dto)
+    ```
+
+    **Pattern 2: Command with no return data (delete, void operations)**
+    ```python
+    @dataclass
+    class DeleteUserCommand(Command[OperationResult[None]]):
+        \"\"\"Command that returns no data, only success/failure status.\"\"\"
+        user_id: str
+
+    class DeleteUserHandler(CommandHandler[DeleteUserCommand, OperationResult[None]]):
+        async def handle_async(self, command: DeleteUserCommand) -> OperationResult[None]:
+            await self.repository.delete_async(command.user_id)
+            return self.no_content()  # 204 No Content
+    ```
+
+    **Pattern 3: Command returning a boolean**
+    ```python
+    @dataclass
+    class ActivateUserCommand(Command[OperationResult[bool]]):
+        \"\"\"Command that returns boolean success indicator.\"\"\"
+        user_id: str
+
+    class ActivateUserHandler(CommandHandler[ActivateUserCommand, OperationResult[bool]]):
+        async def handle_async(self, command: ActivateUserCommand) -> OperationResult[bool]:
+            success = await self.user_service.activate(command.user_id)
+            return self.ok(success)
+    ```
+
+    **Pattern 4: Command returning a list of DTOs**
+    ```python
+    @dataclass
+    class BulkCreateUsersCommand(Command[OperationResult[List[UserDto]]]):
+        \"\"\"Command that creates multiple users and returns list of created DTOs.\"\"\"
+        users: List[CreateUserDto]
+
+    class BulkCreateUsersHandler(CommandHandler[BulkCreateUsersCommand, OperationResult[List[UserDto]]]):
+        async def handle_async(self, command: BulkCreateUsersCommand) -> OperationResult[List[UserDto]]:
+            created_users = await self.user_service.bulk_create(command.users)
+            return self.created([UserDto.from_entity(u) for u in created_users])
+    ```
+
+    **Pattern 5: Command returning a primitive type (ID, count, etc.)**
+    ```python
+    @dataclass
+    class CreateOrderCommand(Command[OperationResult[str]]):
+        \"\"\"Command that returns the created order ID.\"\"\"
+        customer_id: str
+        items: List[OrderItemDto]
+
+    class CreateOrderHandler(CommandHandler[CreateOrderCommand, OperationResult[str]]):
+        async def handle_async(self, command: CreateOrderCommand) -> OperationResult[str]:
+            order = await self.order_service.create(command)
+            return self.created(order.id)  # Returns string ID
+    ```
+
+    **Pattern 6: Command with optional result (async job queued)**
+    ```python
+    @dataclass
+    class ProcessBulkImportCommand(Command[OperationResult[Optional[str]]]):
+        \"\"\"Command that queues async job and returns optional job ID.\"\"\"
+        file_path: str
+
+    class ProcessBulkImportHandler(CommandHandler[ProcessBulkImportCommand, OperationResult[Optional[str]]]):
+        async def handle_async(self, command: ProcessBulkImportCommand) -> OperationResult[Optional[str]]:
+            job_id = await self.task_scheduler.enqueue(self.import_job, command.file_path)
+            return self.accepted(job_id)  # 202 Accepted
+    ```
+
+    **Pattern 7: Command returning complex nested types**
+    ```python
+    @dataclass
+    class GenerateReportCommand(Command[OperationResult[Dict[str, Any]]]):
+        \"\"\"Command that returns a report as dictionary.\"\"\"
+        report_type: str
+        start_date: datetime
+        end_date: datetime
+
+    class GenerateReportHandler(CommandHandler[GenerateReportCommand, OperationResult[Dict[str, Any]]]):
+        async def handle_async(self, command: GenerateReportCommand) -> OperationResult[Dict[str, Any]]:
+            report_data = await self.report_service.generate(command)
+            return self.ok(report_data)
+    ```
+
+    Basic Examples:
         ```python
         @dataclass
         class CreateUserCommand(Command[OperationResult[UserDto]]):
@@ -82,6 +185,7 @@ class Command(Generic[TResult], Request[TResult], ABC):
     See Also:
         - CQRS Mediation: https://bvandewe.github.io/pyneuro/features/simple-cqrs/
         - Command Pattern: https://bvandewe.github.io/pyneuro/patterns/
+        - CommandHandler: Handler class for processing commands
     """
 
 
@@ -93,9 +197,154 @@ class Query(Generic[TResult], Request[TResult], ABC):
     have multiple handlers for different projections or optimized read models of the same data.
 
     Type Parameters:
-        TResult: The type of data returned by the query (DTOs, lists, primitives, etc.)
+        TResult: The type of data returned by the query (typically OperationResult[T] or plain T)
 
-    Examples:
+    Type Hint Patterns & Examples
+    ------------------------------
+
+    **Pattern 1: Query returning a single optional DTO (most common for get-by-id)**
+    ```python
+    from dataclasses import dataclass
+    from typing import Optional
+    from neuroglia.mediation import Query, QueryHandler
+    from neuroglia.core import OperationResult
+
+    @dataclass
+    class GetUserByIdQuery(Query[OperationResult[Optional[UserDto]]]):
+        \"\"\"Query that may or may not find a user.\"\"\"
+        user_id: str
+
+    class GetUserByIdHandler(QueryHandler[GetUserByIdQuery, OperationResult[Optional[UserDto]]]):
+        async def handle_async(self, query: GetUserByIdQuery) -> OperationResult[Optional[UserDto]]:
+            user = await self.repository.get_by_id_async(query.user_id)
+            if not user:
+                return self.not_found(User, query.user_id)
+            return self.ok(UserDto.from_entity(user))
+    ```
+
+    **Pattern 2: Query returning a guaranteed DTO (with error handling)**
+    ```python
+    @dataclass
+    class GetUserByIdQuery(Query[OperationResult[UserDto]]):
+        \"\"\"Query that returns user or error (no Optional).\"\"\"
+        user_id: str
+
+    class GetUserByIdHandler(QueryHandler[GetUserByIdQuery, OperationResult[UserDto]]):
+        async def handle_async(self, query: GetUserByIdQuery) -> OperationResult[UserDto]:
+            user = await self.repository.get_by_id_async(query.user_id)
+            if not user:
+                return self.not_found(User, query.user_id)  # Returns error
+            return self.ok(UserDto.from_entity(user))  # Returns data
+    ```
+
+    **Pattern 3: Query returning a list of DTOs (with pagination)**
+    ```python
+    @dataclass
+    class GetUsersQuery(Query[OperationResult[List[UserDto]]]):
+        \"\"\"Query that returns paginated list of users.\"\"\"
+        page: int = 1
+        page_size: int = 20
+        active_only: bool = True
+
+    class GetUsersHandler(QueryHandler[GetUsersQuery, OperationResult[List[UserDto]]]):
+        async def handle_async(self, query: GetUsersQuery) -> OperationResult[List[UserDto]]:
+            users = await self.repository.list_async(
+                skip=(query.page - 1) * query.page_size,
+                limit=query.page_size
+            )
+            return self.ok([UserDto.from_entity(u) for u in users])
+    ```
+
+    **Pattern 4: Query returning a primitive type (count, sum, etc.)**
+    ```python
+    @dataclass
+    class GetUserCountQuery(Query[OperationResult[int]]):
+        \"\"\"Query that returns count of users.\"\"\"
+        active_only: bool = True
+
+    class GetUserCountHandler(QueryHandler[GetUserCountQuery, OperationResult[int]]):
+        async def handle_async(self, query: GetUserCountQuery) -> OperationResult[int]:
+            count = await self.repository.count_async(active=query.active_only)
+            return self.ok(count)
+    ```
+
+    **Pattern 5: Query returning complex types (tuples, dicts)**
+    ```python
+    @dataclass
+    class GetUserStatisticsQuery(Query[OperationResult[Dict[str, int]]]):
+        \"\"\"Query that returns statistics as dictionary.\"\"\"
+        start_date: datetime
+        end_date: datetime
+
+    class GetUserStatisticsHandler(QueryHandler[GetUserStatisticsQuery, OperationResult[Dict[str, int]]]):
+        async def handle_async(self, query: GetUserStatisticsQuery) -> OperationResult[Dict[str, int]]:
+            stats = await self.analytics_service.calculate_stats(query.start_date, query.end_date)
+            return self.ok(stats)  # Returns {"total": 100, "active": 75, ...}
+    ```
+
+    **Pattern 6: Query with search/filter criteria**
+    ```python
+    @dataclass
+    class SearchUsersQuery(Query[OperationResult[List[UserDto]]]):
+        \"\"\"Query with multiple search criteria.\"\"\"
+        search_term: Optional[str] = None
+        role: Optional[str] = None
+        min_age: Optional[int] = None
+        max_age: Optional[int] = None
+        page: int = 1
+        page_size: int = 20
+
+    class SearchUsersHandler(QueryHandler[SearchUsersQuery, OperationResult[List[UserDto]]]):
+        async def handle_async(self, query: SearchUsersQuery) -> OperationResult[List[UserDto]]:
+            users = await self.repository.search_async(
+                search_term=query.search_term,
+                role=query.role,
+                age_range=(query.min_age, query.max_age)
+            )
+            return self.ok([UserDto.from_entity(u) for u in users])
+    ```
+
+    **Pattern 7: Query without OperationResult (simplified for read-only)**
+    ```python
+    @dataclass
+    class GetUserByIdQuery(Query[Optional[UserDto]]):
+        \"\"\"Simplified query returning plain optional DTO (no error handling).\"\"\"
+        user_id: str
+
+    class GetUserByIdHandler(QueryHandler[GetUserByIdQuery, Optional[UserDto]]):
+        async def handle_async(self, query: GetUserByIdQuery) -> Optional[UserDto]:
+            user = await self.repository.get_by_id_async(query.user_id)
+            return UserDto.from_entity(user) if user else None
+    ```
+
+    **Pattern 8: Query returning paginated results with metadata**
+    ```python
+    @dataclass
+    class PagedResult(Generic[T]):
+        items: List[T]
+        total_count: int
+        page: int
+        page_size: int
+
+    @dataclass
+    class GetUsersPagedQuery(Query[OperationResult[PagedResult[UserDto]]]):
+        \"\"\"Query returning paginated results with metadata.\"\"\"
+        page: int = 1
+        page_size: int = 20
+
+    class GetUsersPagedHandler(QueryHandler[GetUsersPagedQuery, OperationResult[PagedResult[UserDto]]]):
+        async def handle_async(self, query: GetUsersPagedQuery) -> OperationResult[PagedResult[UserDto]]:
+            users, total = await self.repository.get_paged_async(query.page, query.page_size)
+            result = PagedResult(
+                items=[UserDto.from_entity(u) for u in users],
+                total_count=total,
+                page=query.page,
+                page_size=query.page_size
+            )
+            return self.ok(result)
+    ```
+
+    Basic Examples:
         ```python
         @dataclass
         class GetUserByIdQuery(Query[Optional[UserDto]]):
@@ -119,6 +368,7 @@ class Query(Generic[TResult], Request[TResult], ABC):
     See Also:
         - CQRS Mediation: https://bvandewe.github.io/pyneuro/features/simple-cqrs/
         - Query Pattern: https://bvandewe.github.io/pyneuro/patterns/
+        - QueryHandler: Handler class for processing queries
     """
 
 
@@ -134,36 +384,222 @@ class RequestHandler(Generic[TRequest, TResult], ABC):
     providing separation of concerns and single responsibility. They are automatically
     discovered and registered through the dependency injection container.
 
+    This base class provides 12 helper methods for creating standardized OperationResult
+    responses with appropriate HTTP status codes. These methods should be used instead of
+    manually constructing OperationResult instances.
+
     Type Parameters:
         TRequest: The specific type of request this handler processes
-        TResult: The type of result returned after processing
+        TResult: The type of result returned after processing (typically OperationResult[T])
 
-    Examples:
+    ╔══════════════════════════════════════════════════════════════════════════════════╗
+    ║                          AVAILABLE HELPER METHODS                                ║
+    ╠══════════════════════════════════════════════════════════════════════════════════╣
+    ║  SUCCESS RESPONSES (2xx)                                                         ║
+    ║  ✓ ok(data)                    → 200 OK           - Standard success response   ║
+    ║  ✓ created(data)               → 201 Created      - Resource created            ║
+    ║  ✓ accepted(data)              → 202 Accepted     - Async operation queued      ║
+    ║  ✓ no_content()                → 204 No Content   - Success, no data returned   ║
+    ║                                                                                  ║
+    ║  CLIENT ERRORS (4xx)                                                             ║
+    ║  ✗ bad_request(detail)         → 400 Bad Request  - Validation/input error     ║
+    ║  ✗ unauthorized(detail)        → 401 Unauthorized - Authentication required    ║
+    ║  ✗ forbidden(detail)           → 403 Forbidden    - Access denied               ║
+    ║  ✗ not_found(type, key, name)  → 404 Not Found    - Resource doesn't exist     ║
+    ║  ✗ conflict(message)           → 409 Conflict     - State conflict              ║
+    ║  ✗ unprocessable_entity(detail)→ 422 Unprocessable- Semantic validation error  ║
+    ║                                                                                  ║
+    ║  SERVER ERRORS (5xx)                                                             ║
+    ║  ✗ internal_server_error(det.) → 500 Internal     - Unexpected error            ║
+    ║  ✗ service_unavailable(detail) → 503 Unavailable  - Service temporarily down    ║
+    ╚══════════════════════════════════════════════════════════════════════════════════╝
+
+    Quick Start Example:
         ```python
-        class ProcessOrderHandler(RequestHandler[ProcessOrderCommand, OperationResult[OrderDto]]):
-            def __init__(self, order_repository: OrderRepository, payment_service: PaymentService):
-                self.order_repository = order_repository
-                self.payment_service = payment_service
+        class CreateUserHandler(CommandHandler[CreateUserCommand, OperationResult[UserDto]]):
+            async def handle_async(self, command: CreateUserCommand) -> OperationResult[UserDto]:
+                # Validation errors → 400 Bad Request
+                if not command.email:
+                    return self.bad_request("Email is required")
 
-            async def handle_async(self, command: ProcessOrderCommand) -> OperationResult[OrderDto]:
-                # Validation
-                if command.amount <= 0:
-                    return self.bad_request("Amount must be positive")
+                # Authorization errors → 403 Forbidden
+                if not self.has_permission(command.user_context):
+                    return self.forbidden("Insufficient permissions to create users")
+
+                # Resource conflicts → 409 Conflict
+                if await self.user_repository.exists_by_email(command.email):
+                    return self.conflict(f"User with email {command.email} already exists")
 
                 # Business logic
-                payment_result = await self.payment_service.process_payment(command.payment_info)
-                if not payment_result.success:
-                    return self.bad_request("Payment failed")
+                user = User.create(command.email, command.name)
+                await self.user_repository.save_async(user)
 
-                order = Order.create(command.items, command.customer_id)
-                await self.order_repository.save_async(order)
+                # Success → 201 Created
+                return self.created(UserDto.from_entity(user))
+        ```
 
-                return self.created(OrderDto.from_entity(order))
+    Common Usage Patterns:
+
+        **Pattern 1: Query Handler (Read Operations)**
+        ```python
+        class GetUserByIdHandler(QueryHandler[GetUserByIdQuery, OperationResult[UserDto]]):
+            async def handle_async(self, query: GetUserByIdQuery) -> OperationResult[UserDto]:
+                user = await self.user_repository.get_by_id_async(query.user_id)
+
+                if not user:
+                    return self.not_found(User, query.user_id)  # 404
+
+                return self.ok(UserDto.from_entity(user))  # 200
+        ```
+
+        **Pattern 2: Command Handler with Validation (Write Operations)**
+        ```python
+        class UpdateUserHandler(CommandHandler[UpdateUserCommand, OperationResult[UserDto]]):
+            async def handle_async(self, command: UpdateUserCommand) -> OperationResult[UserDto]:
+                # Input validation
+                if not command.user_id:
+                    return self.bad_request("User ID is required")  # 400
+
+                # Check existence
+                user = await self.user_repository.get_by_id_async(command.user_id)
+                if not user:
+                    return self.not_found(User, command.user_id)  # 404
+
+                # Business logic
+                user.update(command.name, command.email)
+                await self.user_repository.save_async(user)
+
+                return self.ok(UserDto.from_entity(user))  # 200
+        ```
+
+        **Pattern 3: Async Operations (Long-Running Tasks)**
+        ```python
+        class ProcessLargeOrderHandler(CommandHandler[ProcessLargeOrderCommand, OperationResult[str]]):
+            async def handle_async(self, command: ProcessLargeOrderCommand) -> OperationResult[str]:
+                # Queue background job
+                job_id = await self.task_scheduler.enqueue(
+                    self.process_order_background,
+                    command.order_id
+                )
+
+                # Return accepted with job tracking info
+                return self.accepted(f"Order processing job {job_id} queued")  # 202
+        ```
+
+        **Pattern 4: Delete Operations**
+        ```python
+        class DeleteUserHandler(CommandHandler[DeleteUserCommand, OperationResult[None]]):
+            async def handle_async(self, command: DeleteUserCommand) -> OperationResult[None]:
+                user = await self.user_repository.get_by_id_async(command.user_id)
+                if not user:
+                    return self.not_found(User, command.user_id)  # 404
+
+                await self.user_repository.delete_async(command.user_id)
+
+                return self.no_content()  # 204 (no data returned)
+        ```
+
+        **Pattern 5: Exception Handling**
+        ```python
+        class PlaceOrderHandler(CommandHandler[PlaceOrderCommand, OperationResult[OrderDto]]):
+            async def handle_async(self, command: PlaceOrderCommand) -> OperationResult[OrderDto]:
+                try:
+                    order = await self.create_order(command)
+                    return self.created(OrderDto.from_entity(order))  # 201
+
+                except ValidationException as e:
+                    return self.bad_request(str(e))  # 400
+
+                except InsufficientStockException as e:
+                    return self.conflict(str(e))  # 409
+
+                except Exception as e:
+                    log.error(f"Unexpected error: {e}")
+                    return self.internal_server_error("Failed to process order")  # 500
+        ```
+
+    Helper Method Details:
+
+        SUCCESS METHODS (2xx):
+            • ok(data: Optional[Any] = None) → OperationResult[TData]
+              Returns HTTP 200 OK with optional data payload.
+              Use for: Successful queries, updates, standard operations.
+
+            • created(data: Optional[Any] = None) → OperationResult[TData]
+              Returns HTTP 201 Created with optional data payload.
+              Use for: Successful resource creation (POST operations).
+
+            • accepted(data: Optional[Any] = None) → OperationResult[TData]
+              Returns HTTP 202 Accepted with optional data payload.
+              Use for: Async operations queued for later processing.
+
+            • no_content() → OperationResult[None]
+              Returns HTTP 204 No Content with no data payload.
+              Use for: Successful deletes, operations with no return value.
+
+        CLIENT ERROR METHODS (4xx):
+            • bad_request(detail: str) → OperationResult[None]
+              Returns HTTP 400 Bad Request with error message.
+              Use for: Validation errors, malformed input, business rule violations.
+
+            • unauthorized(detail: str = "Authentication required") → OperationResult[None]
+              Returns HTTP 401 Unauthorized with error message.
+              Use for: Missing or invalid authentication credentials.
+
+            • forbidden(detail: str = "Access denied") → OperationResult[None]
+              Returns HTTP 403 Forbidden with error message.
+              Use for: Valid authentication but insufficient permissions.
+
+            • not_found(entity_type: Type, entity_key: Any, key_name: str = "id") → OperationResult[None]
+              Returns HTTP 404 Not Found with formatted error message.
+              Use for: Requested resource doesn't exist.
+              Example: self.not_found(User, user_id) → "Failed to find User with id 'abc123'"
+
+            • conflict(message: str) → OperationResult[None]
+              Returns HTTP 409 Conflict with error message.
+              Use for: State conflicts, duplicate resources, constraint violations.
+
+            • unprocessable_entity(detail: str) → OperationResult[None]
+              Returns HTTP 422 Unprocessable Entity with error message.
+              Use for: Semantic validation errors (valid format, invalid meaning).
+
+        SERVER ERROR METHODS (5xx):
+            • internal_server_error(detail: str = "An internal error occurred") → OperationResult[None]
+              Returns HTTP 500 Internal Server Error with error message.
+              Use for: Unexpected exceptions, infrastructure failures.
+
+            • service_unavailable(detail: str = "Service temporarily unavailable") → OperationResult[None]
+              Returns HTTP 503 Service Unavailable with error message.
+              Use for: Temporary service outages, maintenance mode.
+
+    Important Notes:
+
+        **DO NOT construct OperationResult manually:**
+        ```python
+        # ❌ WRONG - Don't do this
+        result = OperationResult("OK", 200)
+        result.data = user
+
+        # ✅ CORRECT - Use helper methods
+        return self.ok(user)
+        ```
+
+        **Parameter Signature:**
+        All handlers must implement: `async def handle_async(self, request: TRequest) -> TResult`
+        Note: cancellation_token is NOT currently used in the framework.
+
+        **Type Safety:**
+        Use proper generic type hints for IDE support:
+        ```python
+        class MyHandler(CommandHandler[MyCommand, OperationResult[MyDto]]):
+            async def handle_async(self, command: MyCommand) -> OperationResult[MyDto]:
+                return self.ok(my_dto)  # Type-checked by IDE
         ```
 
     See Also:
         - CQRS Mediation: https://bvandewe.github.io/pyneuro/features/simple-cqrs/
         - Handler Pattern: https://bvandewe.github.io/pyneuro/patterns/
+        - OperationResult: neuroglia.core.OperationResult (DO NOT construct manually)
     """
 
     @abstractmethod
