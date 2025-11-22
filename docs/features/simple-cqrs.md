@@ -130,6 +130,51 @@ class PizzaController(ControllerBase):
 
 ## 🏗️ Core Components
 
+### 0. RequestHandler Helper Methods
+
+All command and query handlers inherit from `RequestHandler`, which provides **12 helper methods** for creating standardized `OperationResult` responses:
+
+#### Success Methods (2xx)
+
+| Method           | Status         | Use Case               | Example                          |
+| ---------------- | -------------- | ---------------------- | -------------------------------- |
+| `ok(data)`       | 200 OK         | Standard success       | `return self.ok(user_dto)`       |
+| `created(data)`  | 201 Created    | Resource creation      | `return self.created(order_dto)` |
+| `accepted(data)` | 202 Accepted   | Async operation queued | `return self.accepted(job_id)`   |
+| `no_content()`   | 204 No Content | Successful delete/void | `return self.no_content()`       |
+
+#### Client Error Methods (4xx)
+
+| Method                         | Status            | Use Case         | Example                                                  |
+| ------------------------------ | ----------------- | ---------------- | -------------------------------------------------------- |
+| `bad_request(detail)`          | 400 Bad Request   | Validation error | `return self.bad_request("Email required")`              |
+| `unauthorized(detail)`         | 401 Unauthorized  | Auth required    | `return self.unauthorized("Invalid token")`              |
+| `forbidden(detail)`            | 403 Forbidden     | Access denied    | `return self.forbidden("Insufficient permissions")`      |
+| `not_found(type, key)`         | 404 Not Found     | Resource missing | `return self.not_found(User, user_id)`                   |
+| `conflict(message)`            | 409 Conflict      | State conflict   | `return self.conflict("Email already exists")`           |
+| `unprocessable_entity(detail)` | 422 Unprocessable | Semantic error   | `return self.unprocessable_entity("Invalid date range")` |
+
+#### Server Error Methods (5xx)
+
+| Method                          | Status          | Use Case         | Example                                                     |
+| ------------------------------- | --------------- | ---------------- | ----------------------------------------------------------- |
+| `internal_server_error(detail)` | 500 Internal    | Unexpected error | `return self.internal_server_error("DB connection failed")` |
+| `service_unavailable(detail)`   | 503 Unavailable | Service down     | `return self.service_unavailable("Maintenance mode")`       |
+
+**Important:** Always use these helper methods instead of constructing `OperationResult` manually:
+
+```python
+# ✅ CORRECT - Use helper methods
+return self.ok(user_dto)
+return self.created(order_dto)
+return self.bad_request("Invalid input")
+
+# ❌ WRONG - Don't construct manually
+result = OperationResult("OK", 200)  # Don't do this!
+result.data = user_dto
+return result
+```
+
 ### 1. Commands (Write Operations)
 
 Commands represent **intentions to change state**:
@@ -351,26 +396,71 @@ if __name__ == "__main__":
 
 ### Validation and Error Handling
 
+Use helper methods for consistent error responses:
+
 ```python
 async def handle_async(self, request: CreateUserCommand) -> OperationResult[UserDto]:
-    # Input validation
+    # Input validation → 400 Bad Request
     if not request.email:
         return self.bad_request("Email is required")
 
     if "@" not in request.email:
         return self.bad_request("Invalid email format")
 
-    # Business validation
+    # Business validation → 409 Conflict
     existing_user = await self.repository.get_by_email_async(request.email)
     if existing_user:
         return self.conflict(f"User with email {request.email} already exists")
 
-    # Success path
+    # Authorization check → 403 Forbidden
+    if not request.user_context.has_permission("users:create"):
+        return self.forbidden("Insufficient permissions to create users")
+
+    # Success path → 201 Created
     user = User(str(uuid.uuid4()), request.name, request.email)
     await self.repository.save_async(user)
 
     dto = UserDto(user.id, user.name, user.email)
     return self.created(dto)
+```
+
+### Using All Helper Methods
+
+```python
+class OrderHandler(CommandHandler):
+    async def handle_async(self, command: ProcessOrderCommand) -> OperationResult[OrderDto]:
+        # 400 - Validation errors
+        if not command.items:
+            return self.bad_request("Order must contain items")
+
+        # 401 - Authentication required
+        if not command.auth_token:
+            return self.unauthorized("Authentication required")
+
+        # 403 - Authorization failed
+        if not await self.has_permission(command.user_id, "orders:create"):
+            return self.forbidden("Cannot create orders for other users")
+
+        # 404 - Resource not found
+        customer = await self.customer_repo.get_async(command.customer_id)
+        if not customer:
+            return self.not_found(Customer, command.customer_id)
+
+        # 409 - Conflict
+        if customer.account_suspended:
+            return self.conflict("Customer account is suspended")
+
+        # 422 - Semantic validation
+        if command.delivery_date < datetime.now():
+            return self.unprocessable_entity("Delivery date cannot be in the past")
+
+        # 500 - Unexpected error (in try/catch)
+        try:
+            order = await self.process_order(command)
+            return self.created(order)  # 201 Created
+        except Exception as e:
+            log.error(f"Order processing failed: {e}")
+            return self.internal_server_error("Failed to process order")
 ```
 
 ### Repository Patterns
