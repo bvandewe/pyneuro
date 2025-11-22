@@ -6,6 +6,34 @@ from typing import Optional
 class ProblemDetails:
     """Represents the structure of a Problem Details response according to RFC 7807.
 
+    ⚠️  NOTE: This class is primarily used internally by OperationResult ⚠️
+    ═══════════════════════════════════════════════════════════════════════════
+
+    In most cases, you should NOT use ProblemDetails directly. Instead, use the
+    OperationResult class and its helper methods from RequestHandler:
+
+        ✅ CORRECT - Use OperationResult via handler helpers:
+        ```python
+        class MyHandler(CommandHandler[MyCommand, OperationResult[MyDto]]):
+            async def handle_async(self, command: MyCommand) -> OperationResult[MyDto]:
+                return self.ok(my_dto)              # Success
+                return self.bad_request("error")    # Error
+        ```
+
+        ❌ WRONG - Don't construct ProblemDetails directly:
+        ```python
+        return ProblemDetails("Error", 400, "Something went wrong")  # DON'T DO THIS
+        ```
+
+    See also:
+        - OperationResult: The class you should use (inherits from ProblemDetails)
+        - RequestHandler: Provides helper methods for creating OperationResult instances
+
+    ═══════════════════════════════════════════════════════════════════════════
+
+    About ProblemDetails
+    --------------------
+
     This class provides a standardized way to carry machine-readable details of errors
     in HTTP response bodies. It follows the Internet Engineering Task Force (IETF)
     specification RFC 7807 "Problem Details for HTTP APIs".

@@ -8,6 +8,52 @@ TData = TypeVar("TData")
 class OperationResult(Generic[TData], ProblemDetails):
     """Represents the result of an operation with optional typed data payload.
 
+    ⚠️  IMPORTANT: DO NOT CONSTRUCT THIS CLASS MANUALLY ⚠️
+    ═══════════════════════════════════════════════════════════════════════════
+
+    OperationResult instances should ONLY be created using the helper methods
+    provided by RequestHandler, CommandHandler, or QueryHandler base classes:
+
+        ✅ CORRECT - Use handler helper methods:
+        ```python
+        return self.ok(data)              # 200 OK
+        return self.created(data)         # 201 Created
+        return self.bad_request("error")  # 400 Bad Request
+        return self.not_found(User, id)   # 404 Not Found
+        ```
+
+        ❌ WRONG - Don't construct manually:
+        ```python
+        result = OperationResult("OK", 200)  # DON'T DO THIS
+        result.data = data
+        return result
+        ```
+
+        ❌ WRONG - These static methods don't exist:
+        ```python
+        return OperationResult.success(data)  # DOESN'T EXIST
+        return OperationResult.fail("error")  # DOESN'T EXIST
+        ```
+
+    See RequestHandler class for available helper methods:
+        • ok(data)                      → 200 OK
+        • created(data)                 → 201 Created
+        • accepted(data)                → 202 Accepted
+        • no_content()                  → 204 No Content
+        • bad_request(detail)           → 400 Bad Request
+        • unauthorized(detail)          → 401 Unauthorized
+        • forbidden(detail)             → 403 Forbidden
+        • not_found(type, key, name)    → 404 Not Found
+        • conflict(message)             → 409 Conflict
+        • unprocessable_entity(detail)  → 422 Unprocessable Entity
+        • internal_server_error(detail) → 500 Internal Server Error
+        • service_unavailable(detail)   → 503 Service Unavailable
+
+    ═══════════════════════════════════════════════════════════════════════════
+
+    About OperationResult
+    ---------------------
+
     OperationResult is a generic wrapper around ProblemDetails that adds support
     for carrying successful operation results alongside error information. It serves
     as the standard return type for all command and query handlers in the Neuroglia
