@@ -2,14 +2,14 @@ import inspect
 import logging
 import sys
 import threading
-from typing import Dict, Optional
+from typing import Any, Optional
 
 import rx
 from esdbclient import EventStoreDBClient, NewEvent, RecordedEvent, StreamState
 from esdbclient.exceptions import AlreadyExists
-from rx import Observable
+from rx.core.observable.observable import Observable
 from rx.disposable.disposable import Disposable
-from rx.subject import Subject
+from rx.subject.subject import Subject
 
 from neuroglia.data.abstractions import DomainEvent
 from neuroglia.data.infrastructure.event_sourcing.abstractions import (
@@ -51,21 +51,24 @@ class ESEventStore(EventStore):
         self._serializer = serializer
 
     async def contains_async(self, stream_id: str) -> bool:
-        return await self.get_async(stream_id) != None
+        return await self.get_async(stream_id) is not None
 
     async def append_async(self, stream_id: str, events: list[EventDescriptor], expected_version: Optional[int] = None):
         if expected_version is not None:
             expected_version = expected_version - 1
         stream_name = self._get_stream_name(stream_id)
         stream_state = StreamState.NO_STREAM if expected_version is None else expected_version
-        formatted_events = [
-            NewEvent(
-                type=e.type,
-                data=None if e.data == None else self._serializer.serialize(e.data),
-                metadata=self._serializer.serialize(self._build_event_metadata(e.data, e.metadata)),
+        formatted_events = []
+        for e in events:
+            if e.data is None:
+                raise ValueError(f"Event of type '{e.type}' has no data. Events must contain a DomainEvent.")
+            formatted_events.append(
+                NewEvent(
+                    type=e.type,
+                    data=bytes(self._serializer.serialize(e.data)),
+                    metadata=bytes(self._serializer.serialize(self._build_event_metadata(e.data, e.metadata))),
+                )
             )
-            for e in events
-        ]
         self._eventstore_client.append_to_stream(stream_name=stream_name, current_version=stream_state, events=formatted_events)
 
     async def get_async(self, stream_id: str) -> Optional[StreamDescriptor]:
@@ -83,7 +86,6 @@ class ESEventStore(EventStore):
             limit=1,
         )
         recorded_events = tuple(read_response)
-        first_event = recorded_events[0]
         read_response = self._eventstore_client.read_stream(
             stream_name=stream_name,
             stream_position=offset,
@@ -119,18 +121,14 @@ class ESEventStore(EventStore):
         consumer_group: Optional[str] = None,
         offset: Optional[int] = None,
     ) -> Observable:
+        if stream_id is None:
+            raise ValueError("stream_id cannot be None")
         stream_name = self._get_stream_name(stream_id)
         subscription = None
         if consumer_group is None:
-            subscription = self._eventstore_client.subscribe_to_stream(stream_name=stream_name, resolve_links=True, stream_position=offset)
+            stream_position = offset if offset is not None else 0
+            subscription = self._eventstore_client.subscribe_to_stream(stream_name=stream_name, resolve_links=True, stream_position=stream_position)
         else:
-            try:
-                self._eventstore_client.create_subscription_to_stream(stream_name=stream_name, resolve_links=True)  # todo: persistence
-                # self._eventstore_client.create_subscription_to_stream(group_name = consumer_group, stream_name = stream_name, resolve_links = True, consumer_strategy = 'RoundRobin', min_checkpoint_count=1, max_checkpoint_count=1)
-            except AlreadyExists:
-                pass
-            # subscription = self._eventstore_client.read_subscription_to_stream(group_name = consumer_group, stream_name = stream_name)
-
             try:
                 self._eventstore_client.create_subscription_to_stream(
                     group_name=consumer_group,
@@ -149,13 +147,16 @@ class ESEventStore(EventStore):
             kwargs={"stream_id": stream_id, "subject": subject, "subscription": subscription},
         )
         thread.start()
-        return rx.using(lambda: Disposable(lambda: subscription.stop()), lambda s: subject)
+        return rx.using(lambda: Disposable(lambda: subscription.stop() if subscription is not None else None), lambda s: subject)
 
-    def _build_event_metadata(self, e: DomainEvent, additional_metadata: Optional[any]):
-        module_name = inspect.getmodule(e).__name__
+    def _build_event_metadata(self, e: DomainEvent, additional_metadata: Optional[Any]) -> dict[str, Any]:
+        module = inspect.getmodule(e)
+        if module is None:
+            raise ValueError(f"Cannot determine module for event type {type(e).__name__}")
+        module_name = module.__name__
         type_name = type(e).__name__
         metadata = {self._metadata_type: f"{module_name}.{type_name}"}
-        if additional_metadata != None:
+        if additional_metadata is not None:
             if isinstance(additional_metadata, dict):
                 metadata.update(additional_metadata)
             elif hasattr(additional_metadata, "__dict__"):
@@ -178,12 +179,14 @@ class ESEventStore(EventStore):
             typed_data = expected_type.__new__(expected_type)
             typed_data.__dict__ = data
             data = typed_data
+        from datetime import datetime, timezone
+
         return EventRecord(
             stream_id=stream_id,
-            id=e.id,
+            id=str(e.id),
             offset=e.stream_position,
-            position=e.commit_position,
-            timestamp=None,
+            position=e.commit_position if e.commit_position is not None else 0,
+            timestamp=e.recorded_at if e.recorded_at is not None else datetime.now(timezone.utc),
             type=e.type,
             data=data,
             metadata=metadata,
@@ -199,20 +202,21 @@ class ESEventStore(EventStore):
             e: RecordedEvent
             for e in subscription:
                 try:
-                    decoded_event = self._decode_recorded_event(stream_id, e, subscription)
+                    decoded_event = self._decode_recorded_event(stream_id, e)
                 except Exception as ex:
-                    logging.error(f"An exception occured while decoding event with offset '{e.stream_position}' from stream '{e.stream_name}': {ex}")
+                    logging.error(f"An exception occurred while decoding event with offset '{e.stream_position}' from stream '{e.stream_name}': {ex}")
                     raise
                 try:
                     subject.on_next(decoded_event)
                 except Exception as ex:
-                    logging.error(f"An exception occured while handling event with offset '{e.stream_position}' from stream '{e.stream_name}': {ex}")
+                    logging.error(f"An exception occurred while handling event with offset '{e.stream_position}' from stream '{e.stream_name}': {ex}")
                     raise
             subject.on_completed()
         except Exception as ex:
-            logging.error(f"An exception occured while consuming events from stream '{stream_id}', consequently to which the related subscription will be stopped: {ex}")  # todo: improve feedback
+            logging.error(f"An exception occurred while consuming events from stream '{stream_id}', consequently to which the related subscription will be stopped: {ex}")  # todo: improve feedback
             subscription.stop()
 
+    @staticmethod
     def configure(builder: ApplicationBuilderBase, options: EventStoreOptions) -> ApplicationBuilderBase:
         """Registers and configures an EventStore implementation of the EventStore class.
 
