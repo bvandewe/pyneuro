@@ -7,6 +7,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.6.10] - 2025-11-30
+
+### Fixed
+
+- **Event Sourcing: EventStore Type Safety and Compatibility**
+
+  - Fixed parameter name mismatch in `EventStore.append_async` base class (streamId → stream_id, expectedVersion → expected_version)
+  - Fixed `bytearray | None` to `bytes` conversion in NewEvent data serialization
+  - Added runtime validation for None event data with descriptive error messages
+  - Fixed all None comparisons to use Python idioms (`is not None` instead of `!= None`)
+  - Added proper null safety checks for stream_id and offset parameters in `observe_async`
+  - Fixed method signature in `_decode_recorded_event` (removed incorrect subscription parameter)
+  - Added null checks for `inspect.getmodule()` result with descriptive error
+  - Fixed timestamp handling with fallback to current UTC time when None
+  - Fixed position handling with fallback to 0 when commit_position is None
+  - Fixed subscription null check before calling stop()
+  - Converted UUID to string for EventRecord id field
+  - Removed duplicate incomplete `create_subscription_to_stream` call
+  - Removed unused `first_event` variable
+  - Fixed RxPY imports to use explicit module paths
+  - Changed `configure` method to `@staticmethod` decorator
+  - All 32 event sourcing integration tests passing
+  - 100% type safety compliance with zero type errors
+
 ## [0.6.9] - 2025-11-22
 
 ### Added
