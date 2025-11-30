@@ -2,7 +2,7 @@ import inspect
 import logging
 import sys
 import threading
-from typing import Any, Optional
+from typing import Any, Dict, Optional
 
 import rx
 from esdbclient import EventStoreDBClient, NewEvent, RecordedEvent, StreamState
