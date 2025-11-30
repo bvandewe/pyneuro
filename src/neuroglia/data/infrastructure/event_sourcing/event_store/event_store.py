@@ -140,7 +140,10 @@ class ESEventStore(EventStore):
                 )
             except AlreadyExists:
                 pass
-
+            subscription = self._eventstore_client.read_subscription_to_stream(
+                group_name=consumer_group,
+                stream_name=stream_name,
+            )
         subject = Subject()
         thread = threading.Thread(
             target=self._consume_events_async,
