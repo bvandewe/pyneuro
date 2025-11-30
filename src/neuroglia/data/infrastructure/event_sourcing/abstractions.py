@@ -123,7 +123,7 @@ class EventStore(ABC):
         raise NotImplementedError()
 
     @abstractmethod
-    async def append_async(self, streamId: str, events: list[EventDescriptor], expectedVersion: Optional[int] = None):
+    async def append_async(self, stream_id: str, events: list[EventDescriptor], expected_version: Optional[int] = None):
         """Appends a list of events to the specified stream"""
         raise NotImplementedError()
 
