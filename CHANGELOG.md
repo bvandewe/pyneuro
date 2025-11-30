@@ -28,6 +28,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Removed unused `first_event` variable
   - Fixed RxPY imports to use explicit module paths
   - Changed `configure` method to `@staticmethod` decorator
+  - **CRITICAL**: Fixed persistent subscription connection in `observe_async` for esdbclient >= 1.0
+    - Added explicit `read_subscription_to_stream` call after `create_subscription_to_stream`
+    - Resolves `TypeError: 'NoneType' object is not iterable` when using consumer groups
+    - `create_subscription_to_stream` only creates subscription group (returns None)
+    - `read_subscription_to_stream` connects to subscription and returns iterable object
+    - Fixes event consumption in persistent subscription scenarios
   - All 32 event sourcing integration tests passing
   - 100% type safety compliance with zero type errors
 
