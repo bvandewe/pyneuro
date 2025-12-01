@@ -5,6 +5,7 @@ from dataclasses import dataclass
 from rx.core.typing import Disposable
 
 from neuroglia.data.infrastructure.event_sourcing.abstractions import (
+    AckableEventRecord,
     EventRecord,
     EventStore,
     EventStoreOptions,
@@ -72,10 +73,17 @@ class ReadModelReconciliator(HostedService):
         try:
             # todo: migrate event
             await self._mediator.publish_async(e.data)
-            # todo: ack
+
+            # Acknowledge successful processing
+            if isinstance(e, AckableEventRecord):
+                await e.ack_async()
+
         except Exception as ex:
             logging.error(f"An exception occured while publishing an event of type '{type(e.data).__name__}': {ex}")
-            pass  # todo: nack
+
+            # Negative acknowledge on processing failure
+            if isinstance(e, AckableEventRecord):
+                await e.nack_async()
 
     async def on_event_record_stream_error(self, ex: Exception):
         await self.subscribe_async()
