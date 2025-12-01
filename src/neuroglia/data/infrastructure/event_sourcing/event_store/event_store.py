@@ -101,7 +101,7 @@ class ESEventStore(EventStore):
             return None
         truncate_before = metadata.get("$tb")
         offset = 0 if truncate_before is None else truncate_before
-        read_response = client.read_stream(
+        read_response = await client.read_stream(
             stream_name=stream_name,
             stream_position=offset,
             backwards=False,
@@ -109,7 +109,7 @@ class ESEventStore(EventStore):
             limit=1,
         )
         recorded_events = [event async for event in read_response]
-        read_response = client.read_stream(
+        read_response = await client.read_stream(
             stream_name=stream_name,
             stream_position=offset,
             backwards=True,
@@ -131,7 +131,7 @@ class ESEventStore(EventStore):
     ) -> list[EventRecord]:
         client = await self._ensure_client()
         stream_name = self._get_stream_name(stream_id)
-        read_response = client.read_stream(
+        read_response = await client.read_stream(
             stream_name=stream_name,
             stream_position=offset,
             backwards=True if read_direction == StreamReadDirection.BACKWARDS else False,
