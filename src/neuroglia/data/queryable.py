@@ -4,7 +4,7 @@ import os
 from abc import ABC, abstractclassmethod
 from ast import Attribute, Name, NodeTransformer, expr
 from collections.abc import Callable
-from typing import Any, Generic, Optional, TypeVar
+from typing import Any, Generic, List, Optional, TypeVar
 
 T = TypeVar("T")
 """ Represents the type of data associated to a queryable """
