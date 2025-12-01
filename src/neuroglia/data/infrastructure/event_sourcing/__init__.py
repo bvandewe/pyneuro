@@ -4,14 +4,16 @@ Event sourcing infrastructure for Neuroglia.
 Provides event store implementations and aggregate root support.
 """
 
+# Apply runtime patches for third-party library bugs
+from . import patches  # noqa: F401
 from .abstractions import (
-    EventStore,
-    EventRecord,
+    Aggregator,
     EventDescriptor,
+    EventRecord,
+    EventStore,
+    EventStoreOptions,
     StreamDescriptor,
     StreamReadDirection,
-    EventStoreOptions,
-    Aggregator
 )
 from .event_sourcing_repository import EventSourcingRepository
 
@@ -19,7 +21,7 @@ __all__ = [
     "EventStore",
     "EventSourcingRepository",
     "EventRecord",
-    "EventDescriptor", 
+    "EventDescriptor",
     "StreamDescriptor",
     "StreamReadDirection",
     "EventStoreOptions",
