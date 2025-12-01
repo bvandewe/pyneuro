@@ -208,11 +208,22 @@ class ESEventStore(EventStore):
                     decoded_event = self._decode_recorded_event(stream_id, e)
                 except Exception as ex:
                     logging.error(f"An exception occurred while decoding event with offset '{e.stream_position}' from stream '{e.stream_name}': {ex}")
+                    # Negative acknowledge (park) on decoding failure
+                    if hasattr(subscription, "nack"):
+                        subscription.nack(e.id, action="park")
                     raise
                 try:
                     subject.on_next(decoded_event)
+
+                    # Acknowledge successful processing
+                    if hasattr(subscription, "ack"):
+                        subscription.ack(e.id)
+
                 except Exception as ex:
                     logging.error(f"An exception occurred while handling event with offset '{e.stream_position}' from stream '{e.stream_name}': {ex}")
+                    # Negative acknowledge (retry) on processing failure
+                    if hasattr(subscription, "nack"):
+                        subscription.nack(e.id, action="retry")
                     raise
             subject.on_completed()
         except Exception as ex:

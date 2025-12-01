@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.6.12] - 2025-12-01
+
+### Fixed
+
+- **CRITICAL**: Fixed EventStore persistent subscription acknowledgement loop
+  - Added explicit event acknowledgement (`subscription.ack(e.id)`) after successful processing
+  - Added negative acknowledgement (`subscription.nack(e.id, action="retry")`) on processing failures
+  - Added negative acknowledgement with park action on decoding failures
+  - Resolves infinite event redelivery loop (events redelivered every 30 seconds)
+  - Without acknowledgement, EventStoreDB assumes processing failed and redelivers indefinitely
+  - Fix prevents duplicate event processing and excessive system load
+  - Uses `hasattr()` checks for backward compatibility with non-persistent subscriptions
+
 ## [0.6.11] - 2025-11-30
 
 ### Fixed
