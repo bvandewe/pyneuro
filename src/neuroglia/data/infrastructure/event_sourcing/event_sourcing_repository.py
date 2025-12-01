@@ -1,10 +1,11 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, Generic, Optional
 
 from neuroglia.data.abstractions import DomainEvent, TAggregate, TKey
 from neuroglia.data.infrastructure.abstractions import Repository
 from neuroglia.data.infrastructure.event_sourcing.abstractions import (
     Aggregator,
+    DeleteMode,
     EventDescriptor,
     EventStore,
     StreamReadDirection,
@@ -17,17 +18,90 @@ if TYPE_CHECKING:
 
 @dataclass
 class EventSourcingRepositoryOptions(Generic[TAggregate, TKey]):
-    """Represents the options used to configure an event sourcing repository"""
+    """
+    Configuration options for EventSourcingRepository.
+
+    Attributes:
+        delete_mode: Specifies how deletion should be handled (DISABLED, SOFT, HARD)
+        soft_delete_method_name: Method name to call on aggregate for soft delete
+
+    Examples:
+        ```python
+        # Disable deletion (default)
+        options = EventSourcingRepositoryOptions[Task, str]()
+
+        # Enable soft delete
+        options = EventSourcingRepositoryOptions[Task, str](
+            delete_mode=DeleteMode.SOFT
+        )
+
+        # Enable hard delete (GDPR compliance)
+        options = EventSourcingRepositoryOptions[Task, str](
+            delete_mode=DeleteMode.HARD
+        )
+        ```
+    """
+
+    delete_mode: DeleteMode = field(default=DeleteMode.DISABLED)
+    """
+    Specifies how deletion should be handled:
+    - DISABLED: Raises NotImplementedError (default, event sourcing best practice)
+    - SOFT: Calls aggregate.mark_as_deleted() or aggregate.mark_deleted() then persists
+    - HARD: Physically deletes the event stream (use with caution)
+    """
+
+    soft_delete_method_name: str = field(default="mark_as_deleted")
+    """
+    Method name to call on aggregate for soft delete.
+    Defaults to 'mark_as_deleted'. Alternative: 'mark_deleted'.
+    Only used when delete_mode is SOFT.
+    """
 
 
 class EventSourcingRepository(Generic[TAggregate, TKey], Repository[TAggregate, TKey]):
-    """Represents an event sourcing repository implementation"""
+    """
+    Event sourcing repository implementation with configurable deletion strategies.
 
-    def __init__(self, eventstore: EventStore, aggregator: Aggregator, mediator: Optional["Mediator"] = None):
+    Supports three deletion modes:
+    - DISABLED: No deletion allowed (default, follows event sourcing best practices)
+    - SOFT: Delegates to aggregate's deletion method, preserving event history
+    - HARD: Physical stream deletion for GDPR compliance or data cleanup
+
+    Examples:
+        ```python
+        # Default configuration (deletion disabled)
+        repo = EventSourcingRepository[Task, str](eventstore, aggregator)
+
+        # With soft delete enabled
+        options = EventSourcingRepositoryOptions[Task, str](
+            delete_mode=DeleteMode.SOFT
+        )
+        repo = EventSourcingRepository[Task, str](
+            eventstore, aggregator, options=options
+        )
+
+        # With hard delete for GDPR compliance
+        options = EventSourcingRepositoryOptions[Task, str](
+            delete_mode=DeleteMode.HARD
+        )
+        repo = EventSourcingRepository[Task, str](
+            eventstore, aggregator, options=options
+        )
+        ```
+    """
+
+    def __init__(
+        self,
+        eventstore: EventStore,
+        aggregator: Aggregator,
+        mediator: Optional["Mediator"] = None,
+        options: Optional[EventSourcingRepositoryOptions[TAggregate, TKey]] = None,
+    ):
         """Initialize a new event sourcing repository"""
         super().__init__(mediator)  # Pass mediator to base class for event publishing
         self._eventstore = eventstore
         self._aggregator = aggregator
+        self._options = options or EventSourcingRepositoryOptions[TAggregate, TKey]()
 
     _eventstore: EventStore
     """ Gets the underlying event store """
@@ -69,8 +143,89 @@ class EventSourcingRepository(Generic[TAggregate, TKey], Repository[TAggregate, 
         return aggregate
 
     async def _do_remove_async(self, id: TKey) -> None:
-        """Removes the aggregate root with the specified key, if any"""
-        raise NotImplementedError("Event sourcing repositories do not support hard deletes")
+        """
+        Removes the aggregate root with the specified key based on configured delete mode.
+
+        Behavior depends on delete_mode configuration:
+        - DISABLED: Raises NotImplementedError (default)
+        - SOFT: Loads aggregate, calls mark_as_deleted(), persists deletion event
+        - HARD: Physically deletes the event stream (irreversible)
+
+        Args:
+            id: The identifier of the aggregate to remove
+
+        Raises:
+            NotImplementedError: When delete_mode is DISABLED
+            ValueError: When SOFT delete but aggregate lacks deletion method
+            Exception: When aggregate not found or deletion fails
+        """
+        match self._options.delete_mode:
+            case DeleteMode.DISABLED:
+                raise NotImplementedError("Deletion is disabled for this repository. " "Event sourcing repositories preserve immutable history by default. " "Configure delete_mode=DeleteMode.SOFT for soft delete " "or delete_mode=DeleteMode.HARD for physical stream deletion.")
+
+            case DeleteMode.SOFT:
+                await self._soft_delete_async(id)
+
+            case DeleteMode.HARD:
+                await self._hard_delete_async(id)
+
+    async def _soft_delete_async(self, id: TKey) -> None:
+        """
+        Soft delete by calling aggregate's deletion method.
+
+        The repository will:
+        1. Load the aggregate via get_async()
+        2. Call aggregate's deletion method (mark_as_deleted or mark_deleted)
+        3. Persist the deletion event via _do_update_async()
+
+        This preserves event history while marking the aggregate as deleted.
+        The aggregate controls deletion semantics and domain events.
+
+        Args:
+            id: The identifier of the aggregate to soft delete
+
+        Raises:
+            Exception: If aggregate not found
+            ValueError: If aggregate lacks required deletion method
+        """
+        # Load the aggregate
+        aggregate = await self.get_async(id)
+        if aggregate is None:
+            raise Exception(f"Aggregate with id '{id}' not found")
+
+        # Call the aggregate's deletion method (convention-based)
+        method_name = self._options.soft_delete_method_name
+        if hasattr(aggregate, method_name) and callable(getattr(aggregate, method_name)):
+            deletion_method = getattr(aggregate, method_name)
+            deletion_method()
+        elif hasattr(aggregate, "mark_deleted") and callable(getattr(aggregate, "mark_deleted")):
+            # Fallback to alternative method name
+            aggregate.mark_deleted()
+        else:
+            aggregate_type = type(aggregate).__name__
+            raise ValueError(f"Aggregate {aggregate_type} does not have a '{method_name}()' or 'mark_deleted()' method. " f"Soft delete requires the aggregate to implement deletion logic. " f"Add a method like: def {method_name}(self) -> None: ...")
+
+        # Persist the deletion event via update
+        await self._do_update_async(aggregate)
+
+    async def _hard_delete_async(self, id: TKey) -> None:
+        """
+        Physically delete the entire event stream from the event store.
+
+        WARNING: This is irreversible and removes all history for this aggregate.
+        Use for:
+        - GDPR compliance (right to be forgotten)
+        - Data cleanup after retention period
+        - Removing test/invalid data
+
+        Args:
+            id: The identifier of the aggregate to hard delete
+
+        Raises:
+            Exception: If stream deletion fails
+        """
+        stream_id = self._build_stream_id_for(id)
+        await self._eventstore.delete_async(stream_id)
 
     async def _publish_domain_events(self, entity: TAggregate) -> None:
         """

@@ -7,7 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [0.6.15] - 2025-12-01
+### Added
+
+- **Flexible Deletion Strategies for Event-Sourced Aggregates**
+  - **DeleteMode Enum**: Three deletion strategies (DISABLED, SOFT, HARD) for event-sourced repositories
+    - **DISABLED**: Default behavior, raises NotImplementedError (preserves immutable event history)
+    - **SOFT**: Delegates to aggregate's deletion method (e.g., `mark_as_deleted()`), preserves event stream with deletion event
+    - **HARD**: Physical stream deletion via EventStore.delete_async() for GDPR compliance and data privacy
+  - **EventSourcingRepositoryOptions**: Configuration dataclass with `delete_mode` and `soft_delete_method_name` fields
+  - **"Delegate to Aggregate" Pattern**: Soft delete calls convention-based methods (default: `mark_as_deleted()`, configurable)
+  - **EventStore Interface Enhancement**: Added `delete_async()` abstract method for stream deletion
+  - **ESEventStore Implementation**: Implemented `delete_async()` using EventStoreDB's `delete_stream()`
+  - **Architecture**: Follows DDD principles - aggregate controls deletion semantics, repository orchestrates persistence
+  - **Files**:
+    - `neuroglia/data/infrastructure/event_sourcing/abstractions.py` - DeleteMode enum and EventStore.delete_async()
+    - `neuroglia/data/infrastructure/event_sourcing/event_sourcing_repository.py` - Deletion mode implementation
+    - `neuroglia/data/infrastructure/event_sourcing/event_store/event_store.py` - ESEventStore.delete_async()
+  - **Tests**: `tests/cases/test_event_sourcing_repository_delete.py` - 12 comprehensive tests covering all modes
 
 ### Fixed
 

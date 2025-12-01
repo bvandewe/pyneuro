@@ -228,6 +228,26 @@ class ESEventStore(EventStore):
             logging.error(f"An exception occurred while consuming events from stream '{stream_id}', consequently to which the related subscription will be stopped: {ex}")  # todo: improve feedback
             subscription.stop()
 
+    async def delete_async(self, stream_id: str) -> None:
+        """
+        Delete the stream from EventStoreDB.
+
+        Uses EventStoreDB's stream deletion which physically removes the stream.
+        This operation is irreversible and should be used with caution.
+
+        Args:
+            stream_id: The identifier of the stream to delete
+
+        Raises:
+            Exception: If the stream does not exist or deletion fails
+        """
+        stream_name = self._get_stream_name(stream_id)
+        try:
+            # Delete the stream from EventStoreDB
+            self._eventstore_client.delete_stream(stream_name=stream_name, current_version=StreamState.ANY)
+        except Exception as ex:
+            raise Exception(f"Failed to delete stream '{stream_name}': {ex}") from ex
+
     @staticmethod
     def configure(builder: ApplicationBuilderBase, options: EventStoreOptions) -> ApplicationBuilderBase:
         """Registers and configures an EventStore implementation of the EventStore class.
