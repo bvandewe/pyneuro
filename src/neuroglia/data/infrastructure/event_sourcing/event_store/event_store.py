@@ -13,6 +13,7 @@ from rx.subject.subject import Subject
 
 from neuroglia.data.abstractions import DomainEvent
 from neuroglia.data.infrastructure.event_sourcing.abstractions import (
+    AckableEventRecord,
     Aggregator,
     EventDescriptor,
     EventRecord,
@@ -212,19 +213,16 @@ class ESEventStore(EventStore):
                     if hasattr(subscription, "nack"):
                         subscription.nack(e.id, action="park")
                     raise
-                try:
+
+                # Convert to AckableEventRecord if subscription supports ack/nack
+                if hasattr(subscription, "ack") and hasattr(subscription, "nack"):
+                    event_id = e.id
+                    ackable_event = AckableEventRecord(stream_id=decoded_event.stream_id, id=decoded_event.id, offset=decoded_event.offset, position=decoded_event.position, timestamp=decoded_event.timestamp, type=decoded_event.type, data=decoded_event.data, metadata=decoded_event.metadata, replayed=decoded_event.replayed, _ack_delegate=lambda eid=event_id: subscription.ack(eid), _nack_delegate=lambda eid=event_id, action="retry": subscription.nack(eid, action=action))
+                    subject.on_next(ackable_event)
+                else:
+                    # No ack/nack support, send regular EventRecord
                     subject.on_next(decoded_event)
 
-                    # Acknowledge successful processing
-                    if hasattr(subscription, "ack"):
-                        subscription.ack(e.id)
-
-                except Exception as ex:
-                    logging.error(f"An exception occurred while handling event with offset '{e.stream_position}' from stream '{e.stream_name}': {ex}")
-                    # Negative acknowledge (retry) on processing failure
-                    if hasattr(subscription, "nack"):
-                        subscription.nack(e.id, action="retry")
-                    raise
             subject.on_completed()
         except Exception as ex:
             logging.error(f"An exception occurred while consuming events from stream '{stream_id}', consequently to which the related subscription will be stopped: {ex}")  # todo: improve feedback
