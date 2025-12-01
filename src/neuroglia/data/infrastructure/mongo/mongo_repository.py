@@ -2,7 +2,7 @@ import ast
 from ast import NodeVisitor, expr
 from dataclasses import dataclass
 from inspect import isclass
-from typing import Any, Generic, Optional
+from typing import TYPE_CHECKING, Any, Generic, List, Optional
 
 import pymongo
 from pymongo import MongoClient
@@ -22,6 +22,9 @@ from neuroglia.expressions.javascript_expression_translator import (
 )
 from neuroglia.hosting.abstractions import ApplicationBuilderBase
 from neuroglia.serialization.json import JsonSerializer
+
+if TYPE_CHECKING:
+    from neuroglia.mediation.mediator import Mediator
 
 
 @dataclass
@@ -130,8 +133,10 @@ class MongoRepository(Generic[TEntity, TKey], QueryableRepository[TEntity, TKey]
         options: MongoRepositoryOptions[TEntity, TKey],
         mongo_client: MongoClient,
         serializer: JsonSerializer,
+        mediator: Optional["Mediator"] = None,
     ):
         """Initializes a new Mongo repository"""
+        super().__init__(mediator)  # Pass mediator to base Repository class
         self._options = options
         self._mongo_client = mongo_client
         self._mongo_database = self._mongo_client[self._options.database_name]
@@ -209,7 +214,8 @@ class MongoRepository(Generic[TEntity, TKey], QueryableRepository[TEntity, TKey]
         entity = self._serializer.deserialize_from_text(json, self._get_entity_type())
         return entity
 
-    async def add_async(self, entity: TEntity) -> TEntity:
+    async def _do_add_async(self, entity: TEntity) -> TEntity:
+        """Template method implementation for adding an entity to MongoDB"""
         entity_id = self._get_id(entity)
         if entity_id is None:
             raise Exception(f"Cannot add {self._get_entity_type().__name__} without an ID")
@@ -220,7 +226,8 @@ class MongoRepository(Generic[TEntity, TKey], QueryableRepository[TEntity, TKey]
         self._get_mongo_collection().insert_one(attributes_dictionary)
         return entity
 
-    async def update_async(self, entity: TEntity) -> TEntity:
+    async def _do_update_async(self, entity: TEntity) -> TEntity:
+        """Template method implementation for updating an entity in MongoDB"""
         entity_id = self._get_id(entity)
         if entity_id is None:
             raise Exception(f"Cannot update {self._get_entity_type().__name__} without an ID")
@@ -235,7 +242,8 @@ class MongoRepository(Generic[TEntity, TKey], QueryableRepository[TEntity, TKey]
         self._get_mongo_collection().replace_one(query_filter, attributes_dictionary)
         return entity
 
-    async def remove_async(self, id: TKey) -> None:
+    async def _do_remove_async(self, id: TKey) -> None:
+        """Template method implementation for removing an entity from MongoDB"""
         if not await self.contains_async(id) is not None:
             raise Exception(f"Failed to find a {self._get_entity_type().__name__} with the specified id '{id}'")
         self._get_mongo_collection().delete_one({"id": id})
