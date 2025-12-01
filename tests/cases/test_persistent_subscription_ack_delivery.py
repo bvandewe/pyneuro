@@ -19,10 +19,9 @@ Key Issues Addressed:
 
 import asyncio
 import logging
-import time
 from dataclasses import dataclass
 from datetime import datetime, timezone
-from unittest.mock import Mock
+from unittest.mock import AsyncMock, Mock
 from uuid import uuid4
 
 import pytest
@@ -37,6 +36,23 @@ from neuroglia.data.infrastructure.event_sourcing.event_store.event_store import
     ESEventStore,
 )
 from neuroglia.serialization import JsonSerializer
+
+
+# Helper for async iteration mocking
+class AsyncIteratorMock:
+    """Mock async iterator for testing async for loops"""
+
+    def __init__(self, items):
+        self.items = iter(items)
+
+    def __aiter__(self):
+        return self
+
+    async def __anext__(self):
+        try:
+            return next(self.items)
+        except StopIteration:
+            raise StopAsyncIteration
 
 
 # Test Domain Event
@@ -84,7 +100,8 @@ def eventstore(serializer, eventstore_options, mock_eventstore_client):
 class TestPersistentSubscriptionAckDelivery:
     """Test that ACKs are properly queued and delivered to EventStoreDB"""
 
-    def test_ack_delegate_calls_subscription_ack(self, eventstore, serializer):
+    @pytest.mark.asyncio
+    async def test_ack_delegate_calls_subscription_ack(self, eventstore, serializer):
         """
         Test that the ACK delegate properly calls subscription.ack().
 
@@ -114,13 +131,13 @@ class TestPersistentSubscriptionAckDelivery:
         ).encode()
         event.metadata = b'{"type": "tests.cases.test_persistent_subscription_ack_delivery.OrderPlacedEvent"}'
 
-        mock_subscription = Mock()
-        mock_subscription.__iter__ = Mock(return_value=iter([event]))
-        mock_subscription.ack = Mock()
-        mock_subscription.nack = Mock()
+        mock_subscription = AsyncMock()
+        mock_subscription.__aiter__ = Mock(return_value=AsyncIteratorMock([event]))
+        mock_subscription.ack = AsyncMock()
+        mock_subscription.nack = AsyncMock()
 
         # Act
-        eventstore._consume_events_async("$ce-test_app", subject, mock_subscription)
+        await eventstore._consume_events_async("$ce-test_app", subject, mock_subscription)
 
         # Assert - event received
         assert len(events_received) == 1
@@ -128,12 +145,13 @@ class TestPersistentSubscriptionAckDelivery:
 
         # Act - call ACK delegate
         ackable_event = events_received[0]
-        asyncio.run(ackable_event.ack_async())
+        await ackable_event.ack_async()
 
         # Assert - subscription.ack() was called
         mock_subscription.ack.assert_called_once_with(event.id)
 
-    def test_nack_delegate_calls_subscription_nack(self, eventstore, serializer):
+    @pytest.mark.asyncio
+    async def test_nack_delegate_calls_subscription_nack(self, eventstore, serializer):
         """Test that the NACK delegate properly calls subscription.nack()"""
         # Arrange
         subject = Subject()
@@ -157,25 +175,26 @@ class TestPersistentSubscriptionAckDelivery:
         ).encode()
         event.metadata = b'{"type": "tests.cases.test_persistent_subscription_ack_delivery.OrderPlacedEvent"}'
 
-        mock_subscription = Mock()
-        mock_subscription.__iter__ = Mock(return_value=iter([event]))
-        mock_subscription.ack = Mock()
-        mock_subscription.nack = Mock()
+        mock_subscription = AsyncMock()
+        mock_subscription.__aiter__ = Mock(return_value=AsyncIteratorMock([event]))
+        mock_subscription.ack = AsyncMock()
+        mock_subscription.nack = AsyncMock()
 
         # Act
-        eventstore._consume_events_async("$ce-test_app", subject, mock_subscription)
+        await eventstore._consume_events_async("$ce-test_app", subject, mock_subscription)
 
         # Assert - event received
         assert len(events_received) == 1
         ackable_event = events_received[0]
 
         # Act - call NACK delegate with park action
-        asyncio.run(ackable_event.nack_async())
+        await ackable_event.nack_async()
 
         # Assert - subscription.nack() was called
         mock_subscription.nack.assert_called_once()
 
-    def test_tombstone_events_acknowledged_immediately(self, eventstore):
+    @pytest.mark.asyncio
+    async def test_tombstone_events_acknowledged_immediately(self, eventstore):
         """
         Test that tombstone events are ACKed immediately without handler involvement.
 
@@ -193,13 +212,13 @@ class TestPersistentSubscriptionAckDelivery:
         tombstone.data = b""
         tombstone.metadata = b"{}"
 
-        mock_subscription = Mock()
-        mock_subscription.__iter__ = Mock(return_value=iter([tombstone]))
-        mock_subscription.ack = Mock()
-        mock_subscription.nack = Mock()
+        mock_subscription = AsyncMock()
+        mock_subscription.__aiter__ = Mock(return_value=AsyncIteratorMock([tombstone]))
+        mock_subscription.ack = AsyncMock()
+        mock_subscription.nack = AsyncMock()
 
         # Act
-        eventstore._consume_events_async("$ce-test_app", subject, mock_subscription)
+        await eventstore._consume_events_async("$ce-test_app", subject, mock_subscription)
 
         # Assert - tombstone skipped (not emitted)
         assert len(events_received) == 0
@@ -207,7 +226,8 @@ class TestPersistentSubscriptionAckDelivery:
         # Assert - tombstone ACKed immediately
         mock_subscription.ack.assert_called_once_with(tombstone.id)
 
-    def test_multiple_events_all_ackable(self, eventstore, serializer):
+    @pytest.mark.asyncio
+    async def test_multiple_events_all_ackable(self, eventstore, serializer):
         """Test that multiple events from persistent subscription are all ackable"""
         # Arrange
         subject = Subject()
@@ -235,13 +255,13 @@ class TestPersistentSubscriptionAckDelivery:
             event.metadata = b'{"type": "tests.cases.test_persistent_subscription_ack_delivery.OrderPlacedEvent"}'
             events.append(event)
 
-        mock_subscription = Mock()
-        mock_subscription.__iter__ = Mock(return_value=iter(events))
-        mock_subscription.ack = Mock()
-        mock_subscription.nack = Mock()
+        mock_subscription = AsyncMock()
+        mock_subscription.__aiter__ = Mock(return_value=AsyncIteratorMock(events))
+        mock_subscription.ack = AsyncMock()
+        mock_subscription.nack = AsyncMock()
 
         # Act
-        eventstore._consume_events_async("$ce-test_app", subject, mock_subscription)
+        await eventstore._consume_events_async("$ce-test_app", subject, mock_subscription)
 
         # Assert - all events received
         assert len(events_received) == 5
@@ -259,7 +279,8 @@ class TestPersistentSubscriptionAckDelivery:
 class TestAckConfiguration:
     """Test that subscription is created with optimal ACK settings"""
 
-    def test_subscription_created_with_checkpoint_counts(self, eventstore_options, mock_eventstore_client, serializer):
+    @pytest.mark.asyncio
+    async def test_subscription_created_with_checkpoint_counts(self, eventstore_options, mock_eventstore_client, serializer):
         """
         Test that persistent subscription is created with min/max checkpoint count of 1.
 
@@ -268,14 +289,14 @@ class TestAckConfiguration:
         """
         # Arrange
         store = ESEventStore(eventstore_options, mock_eventstore_client, serializer)
-        mock_eventstore_client.create_subscription_to_stream = Mock()
-        mock_eventstore_client.read_subscription_to_stream = Mock(return_value=Mock(__iter__=Mock(return_value=iter([]))))
+        mock_eventstore_client.create_subscription_to_stream = AsyncMock()
+        mock_eventstore_client.read_subscription_to_stream = Mock(return_value=AsyncIteratorMock([]))
 
         # Act
-        asyncio.run(store.observe_async(stream_id="order-stream", consumer_group="test_group", offset=0))
+        await store.observe_async(stream_id="order-stream", consumer_group="test_group", offset=0)
 
-        # Give thread time to start
-        time.sleep(0.1)
+        # Give async task time to start
+        await asyncio.sleep(0.1)
 
         # Assert - create_subscription_to_stream called with correct parameters
         mock_eventstore_client.create_subscription_to_stream.assert_called_once()
@@ -285,7 +306,8 @@ class TestAckConfiguration:
         assert call_kwargs["max_checkpoint_count"] == 1
         assert call_kwargs["message_timeout"] == 60.0
 
-    def test_catchup_subscription_no_ack(self, eventstore, serializer):
+    @pytest.mark.asyncio
+    async def test_catchup_subscription_no_ack(self, eventstore, serializer):
         """
         Test that catchup subscriptions (no consumer group) emit regular EventRecords.
 
@@ -315,11 +337,11 @@ class TestAckConfiguration:
         event.metadata = b'{"type": "tests.cases.test_persistent_subscription_ack_delivery.OrderPlacedEvent"}'
 
         # Mock catchup subscription (no ack/nack methods)
-        mock_subscription = Mock(spec=["__iter__", "stop"])
-        mock_subscription.__iter__ = Mock(return_value=iter([event]))
+        mock_subscription = Mock(spec=["__aiter__", "stop"])
+        mock_subscription.__aiter__ = Mock(return_value=AsyncIteratorMock([event]))
 
         # Act
-        eventstore._consume_events_async("test_app-order", subject, mock_subscription)
+        await eventstore._consume_events_async("test_app-order", subject, mock_subscription)
 
         # Assert - event received but NOT ackable
         assert len(events_received) == 1
@@ -333,7 +355,8 @@ class TestAckConfiguration:
 class TestAckLoggingAndMonitoring:
     """Test that ACK delivery is properly logged for debugging"""
 
-    def test_ack_queuing_logged_at_debug_level(self, eventstore, serializer, caplog):
+    @pytest.mark.asyncio
+    async def test_ack_queuing_logged_at_debug_level(self, eventstore, serializer, caplog):
         """Test that ACK queuing is logged at DEBUG level"""
         # Arrange
         caplog.set_level(logging.DEBUG)
@@ -358,16 +381,16 @@ class TestAckLoggingAndMonitoring:
         ).encode()
         event.metadata = b'{"type": "tests.cases.test_persistent_subscription_ack_delivery.OrderPlacedEvent"}'
 
-        mock_subscription = Mock()
-        mock_subscription.__iter__ = Mock(return_value=iter([event]))
-        mock_subscription.ack = Mock()
-        mock_subscription.nack = Mock()
+        mock_subscription = AsyncMock()
+        mock_subscription.__aiter__ = Mock(return_value=AsyncIteratorMock([event]))
+        mock_subscription.ack = AsyncMock()
+        mock_subscription.nack = AsyncMock()
 
         # Act
-        eventstore._consume_events_async("$ce-test_app", subject, mock_subscription)
+        await eventstore._consume_events_async("$ce-test_app", subject, mock_subscription)
         ackable_event = events_received[0]
-        asyncio.run(ackable_event.ack_async())
+        await ackable_event.ack_async()
 
         # Assert
-        assert any("ACK queued for event" in record.message for record in caplog.records)
+        assert any("ACK sent for event" in record.message for record in caplog.records)
         assert any(record.levelname == "DEBUG" for record in caplog.records)

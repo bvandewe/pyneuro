@@ -1,12 +1,11 @@
+import asyncio
 import inspect
 import logging
 import sys
-import threading
-import time
 from typing import Any, Dict, Optional
 
 import rx
-from esdbclient import EventStoreDBClient, NewEvent, RecordedEvent, StreamState
+from esdbclient import AsyncioEventStoreDBClient, NewEvent, RecordedEvent, StreamState
 from esdbclient.exceptions import AlreadyExists
 from rx.core.observable.observable import Observable
 from rx.disposable.disposable import Disposable
@@ -36,7 +35,7 @@ class ESEventStore(EventStore):
     _eventstore_options: EventStoreOptions
     """ Gets the options used to configure the EventStore """
 
-    _eventstore_client: EventStoreDBClient
+    _eventstore_client: AsyncioEventStoreDBClient
     """ Gets the service used to interact with the EventStore DB"""
 
     _serializer: JsonSerializer
@@ -45,7 +44,7 @@ class ESEventStore(EventStore):
     def __init__(
         self,
         options: EventStoreOptions,
-        eventstore_client: EventStoreDBClient,
+        eventstore_client: AsyncioEventStoreDBClient,
         serializer: JsonSerializer,
     ):
         self._eventstore_options = options
@@ -71,11 +70,11 @@ class ESEventStore(EventStore):
                     metadata=bytes(self._serializer.serialize(self._build_event_metadata(e.data, e.metadata))),
                 )
             )
-        self._eventstore_client.append_to_stream(stream_name=stream_name, current_version=stream_state, events=formatted_events)
+        await self._eventstore_client.append_to_stream(stream_name=stream_name, current_version=stream_state, events=formatted_events)
 
     async def get_async(self, stream_id: str) -> Optional[StreamDescriptor]:
         stream_name = self._get_stream_name(stream_id)
-        metadata, metadata_version = self._eventstore_client.get_stream_metadata(stream_name)
+        metadata, metadata_version = await self._eventstore_client.get_stream_metadata(stream_name)
         if metadata_version == StreamState.NO_STREAM:
             return None
         truncate_before = metadata.get("$tb")
@@ -87,7 +86,7 @@ class ESEventStore(EventStore):
             resolve_links=True,
             limit=1,
         )
-        recorded_events = tuple(read_response)
+        recorded_events = [event async for event in read_response]
         read_response = self._eventstore_client.read_stream(
             stream_name=stream_name,
             stream_position=offset,
@@ -95,7 +94,9 @@ class ESEventStore(EventStore):
             resolve_links=True,
             limit=1,
         )
-        recorded_events = tuple(read_response)
+        recorded_events = [event async for event in read_response]
+        if not recorded_events:
+            return None
         last_event = recorded_events[0]
         return StreamDescriptor(stream_id, last_event.stream_position, None, None)  # todo: esdbclient does not provide timestamps
 
@@ -114,7 +115,7 @@ class ESEventStore(EventStore):
             resolve_links=True,
             limit=sys.maxsize if length is None else length,
         )
-        recorded_events = tuple(read_response)
+        recorded_events = [event async for event in read_response]
         return [self._decode_recorded_event(stream_id, recorded_event) for recorded_event in recorded_events]
 
     async def observe_async(
@@ -132,18 +133,15 @@ class ESEventStore(EventStore):
             subscription = self._eventstore_client.subscribe_to_stream(stream_name=stream_name, resolve_links=True, stream_position=stream_position)
         else:
             try:
-                self._eventstore_client.create_subscription_to_stream(
+                await self._eventstore_client.create_subscription_to_stream(
                     group_name=consumer_group,
                     stream_name=stream_name,
                     resolve_links=True,
                     consumer_strategy="RoundRobin",
-                    # Use min/max checkpoint count of 1 to force immediate ACK delivery
-                    # This ensures ACKs are sent to EventStoreDB as soon as possible
-                    # rather than being batched, preventing the 30s redelivery loop
+                    # Checkpoint configuration for reliable ACK delivery
                     min_checkpoint_count=1,
                     max_checkpoint_count=1,
                     # Set message timeout to 60s (default is 30s)
-                    # This gives more time for processing before redelivery
                     message_timeout=60.0,
                 )
             except AlreadyExists:
@@ -153,12 +151,14 @@ class ESEventStore(EventStore):
                 stream_name=stream_name,
             )
         subject = Subject()
-        thread = threading.Thread(
-            target=self._consume_events_async,
-            kwargs={"stream_id": stream_id, "subject": subject, "subscription": subscription},
-        )
-        thread.start()
-        return rx.using(lambda: Disposable(lambda: subscription.stop() if subscription is not None else None), lambda s: subject)
+        # Start async task to consume events
+        asyncio.create_task(self._consume_events_async(stream_id, subject, subscription))
+
+        async def stop_subscription():
+            if subscription is not None:
+                await subscription.stop()
+
+        return rx.using(lambda: Disposable(lambda: asyncio.create_task(stop_subscription())), lambda s: subject)
 
     def _build_event_metadata(self, e: DomainEvent, additional_metadata: Optional[Any]) -> dict[str, Any]:
         module = inspect.getmodule(e)
@@ -207,39 +207,29 @@ class ESEventStore(EventStore):
         """Converts the specified stream id to a qualified stream id, which is prefixed with the current database name, if any"""
         return stream_id if self._eventstore_options.database_name is None or stream_id.startswith("$ce-") else f"{self._eventstore_options.database_name}-{stream_id}"
 
-    def _consume_events_async(self, stream_id: str, subject: Subject, subscription):
+    async def _consume_events_async(self, stream_id: str, subject: Subject, subscription):
         """
-        Asynchronously enumerate events returned by a subscription.
+        Asynchronously enumerate events returned by a subscription using native async iteration.
 
-        For persistent subscriptions, this method implements immediate ACK delivery
-        to ensure acknowledgments reach EventStoreDB. The esdbclient library uses
-        gRPC bidirectional streaming where ACKs are queued but must be actively sent.
+        With AsyncioEventStoreDBClient, subscriptions are async generators that properly handle
+        gRPC bidirectional streaming. ACKs are sent immediately without queuing issues.
 
-        Key issue: The `subscription.ack()` method queues ACKs in `_ack_queue`, but
-        the gRPC request stream (which sends ACKs) is only iterated when waiting for
-        new events. This causes ACKs to accumulate without being sent, leading to
-        event redelivery after messageTimeout (default 30s).
-
-        Solution: After calling ack(), we immediately trigger the ACK to be sent by
-        ensuring the subscription processes its internal queue. We do this by tracking
-        pending ACKs and periodically checking the queue status.
+        For persistent subscriptions, events are wrapped in AckableEventRecord with async
+        ack/nack delegates that directly call the subscription's async methods.
         """
-        # Set up ACK tracking for persistent subscriptions
+        # Check if this is a persistent subscription (has ack/nack methods)
         is_persistent = hasattr(subscription, "ack") and hasattr(subscription, "nack")
-        last_ack_time = time.time()
-        pending_ack_count = 0
 
         try:
             e: RecordedEvent
-            for e in subscription:
+            async for e in subscription:
                 # Skip tombstone events (streams prefixed with $$)
                 # Tombstones are created by EventStoreDB when streams are hard-deleted
                 if e.stream_name.startswith("$$"):
                     logging.debug(f"Skipping tombstone event from stream: {e.stream_name}")
                     # Acknowledge tombstone to continue processing
                     if is_persistent:
-                        subscription.ack(e.id)
-                        pending_ack_count += 1
+                        await subscription.ack(e.id)
                     continue
 
                 # Skip system event types (prefixed with $)
@@ -248,8 +238,7 @@ class ESEventStore(EventStore):
                     logging.debug(f"Skipping system event type '{e.type}' from stream: {e.stream_name}")
                     # Acknowledge system event to continue processing
                     if is_persistent:
-                        subscription.ack(e.id)
-                        pending_ack_count += 1
+                        await subscription.ack(e.id)
                     continue
 
                 try:
@@ -258,32 +247,23 @@ class ESEventStore(EventStore):
                     logging.warning(f"Could not decode event with offset '{e.stream_position}' from stream '{e.stream_name}': {ex}")
                     # Acknowledge failed decode to continue processing (don't park/retry invalid events)
                     if is_persistent:
-                        subscription.ack(e.id)
-                        pending_ack_count += 1
+                        await subscription.ack(e.id)
                     continue
 
                 # Convert to AckableEventRecord if subscription supports ack/nack
                 if is_persistent:
                     event_id = e.id
 
-                    def ack_delegate(eid=event_id, sub=subscription):
+                    async def ack_delegate(eid=event_id, sub=subscription):
                         """
                         Acknowledge event to EventStoreDB persistent subscription.
 
-                        This queues the ACK in the subscription's internal queue.
-                        The ACK will be sent when:
-                        1. The next event arrives (gRPC stream iteration)
-                        2. The batch timeout expires (esdbclient internal)
-                        3. Enough ACKs accumulate to trigger a batch send
-
-                        Note: esdbclient uses minCheckpointCount/maxCheckpointCount
-                        to batch ACKs. With minCheckpointCount=1, ACKs should be
-                        sent relatively quickly.
+                        With async API, ACKs are sent immediately through the gRPC stream.
                         """
-                        sub.ack(eid)
-                        logging.debug(f"ACK queued for event: {eid}")
+                        await sub.ack(eid)
+                        logging.debug(f"ACK sent for event: {eid}")
 
-                    def nack_delegate(eid=event_id, sub=subscription, action="retry"):
+                    async def nack_delegate(eid=event_id, sub=subscription, action="retry"):
                         """
                         Negative acknowledge event with specified action.
 
@@ -292,7 +272,7 @@ class ESEventStore(EventStore):
                         - "park": Move event to parked messages
                         - "skip": Skip event without retry
                         """
-                        sub.nack(eid, action=action)
+                        await sub.nack(eid, action=action)
                         logging.debug(f"NACK sent for event: {eid} with action: {action}")
 
                     ackable_event = AckableEventRecord(
@@ -309,16 +289,6 @@ class ESEventStore(EventStore):
                         _nack_delegate=nack_delegate,
                     )
                     subject.on_next(ackable_event)
-                    pending_ack_count += 1
-
-                    # Log ACK delivery metrics periodically
-                    now = time.time()
-                    if now - last_ack_time >= 10.0:  # Every 10 seconds
-                        if hasattr(subscription, "_ack_queue"):
-                            queue_size = subscription._ack_queue.qsize()
-                            logging.info(f"Stream '{stream_id}': {pending_ack_count} events processed, " f"ACK queue size: {queue_size}")
-                        last_ack_time = now
-                        pending_ack_count = 0
                 else:
                     # No ack/nack support (catchup subscription), send regular EventRecord
                     subject.on_next(decoded_event)
@@ -326,7 +296,7 @@ class ESEventStore(EventStore):
             subject.on_completed()
         except Exception as ex:
             logging.error(f"An exception occurred while consuming events from stream '{stream_id}': {ex}")
-            subscription.stop()
+            await subscription.stop()
 
     async def delete_async(self, stream_id: str) -> None:
         """
@@ -344,7 +314,7 @@ class ESEventStore(EventStore):
         stream_name = self._get_stream_name(stream_id)
         try:
             # Delete the stream from EventStoreDB
-            self._eventstore_client.delete_stream(stream_name=stream_name, current_version=StreamState.ANY)
+            await self._eventstore_client.delete_stream(stream_name=stream_name, current_version=StreamState.ANY)
         except Exception as ex:
             raise Exception(f"Failed to delete stream '{stream_name}': {ex}") from ex
 
@@ -361,6 +331,6 @@ class ESEventStore(EventStore):
             raise Exception(f"Missing '{connection_string_name}' connection string")
         builder.services.try_add_singleton(Aggregator)
         builder.services.try_add_singleton(EventStoreOptions, singleton=options)
-        builder.services.try_add_singleton(EventStoreDBClient, singleton=EventStoreDBClient(uri=connection_string))
+        builder.services.try_add_singleton(AsyncioEventStoreDBClient, singleton=AsyncioEventStoreDBClient(uri=connection_string))
         builder.services.try_add_singleton(EventStore, ESEventStore)
         return builder

@@ -109,11 +109,11 @@ class AckableEventRecord(EventRecord):
 
     async def ack_async(self) -> None:
         """Acks the event record"""
-        self._ack_delegate()
+        await self._ack_delegate()
 
     async def nack_async(self) -> None:
         """Nacks the event record"""
-        self._nack_delegate()
+        await self._nack_delegate()
 
 
 class StreamReadDirection(Enum):
