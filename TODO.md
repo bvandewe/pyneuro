@@ -1,15 +1,5 @@
 # TODO
 
-## Quick Notes
-
-- builder.services.add_scoped(AuthService)
-- Use decorator for automatic tracing
-  @trace_async()
-  async def my_function():
-  pass
-
-- automate `set_oas_description(api_app, app_settings)`
-
 ## In Progress
 
 NA
