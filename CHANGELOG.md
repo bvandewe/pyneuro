@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - **ESEventStore**: Added missing `await` statements for subscription methods
+
   - Fixed `client.subscribe_to_stream()` call in `observe_async()` (line 158) - was not awaited
   - Fixed `client.read_subscription_to_stream()` call in `observe_async()` (line 173) - was not awaited
   - **Impact**: Both methods are async coroutines in `AsyncioEventStoreDBClient` that must be awaited
@@ -19,6 +20,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - **Root Cause**: Oversight in v0.6.16 async migration - subscription creation methods were called without await
   - **Files**: `neuroglia/data/infrastructure/event_sourcing/event_store/event_store.py`
   - **Tests**: Updated mock in `test_persistent_subscription_ack_delivery.py` to use `AsyncMock`
+  - **Verification**: All 18 EventStore tests passing
+
+- **ESEventStore**: Added missing `await` statements for read_stream methods
+  - Fixed `client.read_stream()` call in `get_async()` (line 104) - first read for stream metadata
+  - Fixed `client.read_stream()` call in `get_async()` (line 112) - second read for stream metadata
+  - Fixed `client.read_stream()` call in `read_async()` (line 135) - main stream read operation
+  - **Impact**: `read_stream()` is an async coroutine that must be awaited
+  - **Symptoms Fixed**: Prevents potential runtime issues with unawaited coroutines
+  - **Root Cause**: Oversight in v0.6.16 async migration - read operations were called without await
+  - **Files**: `neuroglia/data/infrastructure/event_sourcing/event_store/event_store.py`
   - **Verification**: All 18 EventStore tests passing
 
 ## [0.6.16] - 2025-12-01
