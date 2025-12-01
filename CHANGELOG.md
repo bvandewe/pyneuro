@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.6.17] - 2025-12-01
+
+### Fixed
+
+- **ESEventStore**: Added missing `await` statements for subscription methods
+  - Fixed `client.subscribe_to_stream()` call in `observe_async()` (line 158) - was not awaited
+  - Fixed `client.read_subscription_to_stream()` call in `observe_async()` (line 173) - was not awaited
+  - **Impact**: Both methods are async coroutines in `AsyncioEventStoreDBClient` that must be awaited
+  - **Symptoms Fixed**: Eliminates "coroutine was never awaited" runtime warnings
+  - **Root Cause**: Oversight in v0.6.16 async migration - subscription creation methods were called without await
+  - **Files**: `neuroglia/data/infrastructure/event_sourcing/event_store/event_store.py`
+  - **Tests**: Updated mock in `test_persistent_subscription_ack_delivery.py` to use `AsyncMock`
+  - **Verification**: All 18 EventStore tests passing
+
 ## [0.6.16] - 2025-12-01
 
 ### Changed
