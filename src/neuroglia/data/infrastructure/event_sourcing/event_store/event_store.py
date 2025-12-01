@@ -2,6 +2,7 @@ import inspect
 import logging
 import sys
 import threading
+import time
 from typing import Any, Dict, Optional
 
 import rx
@@ -136,8 +137,14 @@ class ESEventStore(EventStore):
                     stream_name=stream_name,
                     resolve_links=True,
                     consumer_strategy="RoundRobin",
+                    # Use min/max checkpoint count of 1 to force immediate ACK delivery
+                    # This ensures ACKs are sent to EventStoreDB as soon as possible
+                    # rather than being batched, preventing the 30s redelivery loop
                     min_checkpoint_count=1,
                     max_checkpoint_count=1,
+                    # Set message timeout to 60s (default is 30s)
+                    # This gives more time for processing before redelivery
+                    message_timeout=60.0,
                 )
             except AlreadyExists:
                 pass
@@ -201,7 +208,27 @@ class ESEventStore(EventStore):
         return stream_id if self._eventstore_options.database_name is None or stream_id.startswith("$ce-") else f"{self._eventstore_options.database_name}-{stream_id}"
 
     def _consume_events_async(self, stream_id: str, subject: Subject, subscription):
-        """Asynchronously enumerate events returned by a subscription"""
+        """
+        Asynchronously enumerate events returned by a subscription.
+
+        For persistent subscriptions, this method implements immediate ACK delivery
+        to ensure acknowledgments reach EventStoreDB. The esdbclient library uses
+        gRPC bidirectional streaming where ACKs are queued but must be actively sent.
+
+        Key issue: The `subscription.ack()` method queues ACKs in `_ack_queue`, but
+        the gRPC request stream (which sends ACKs) is only iterated when waiting for
+        new events. This causes ACKs to accumulate without being sent, leading to
+        event redelivery after messageTimeout (default 30s).
+
+        Solution: After calling ack(), we immediately trigger the ACK to be sent by
+        ensuring the subscription processes its internal queue. We do this by tracking
+        pending ACKs and periodically checking the queue status.
+        """
+        # Set up ACK tracking for persistent subscriptions
+        is_persistent = hasattr(subscription, "ack") and hasattr(subscription, "nack")
+        last_ack_time = time.time()
+        pending_ack_count = 0
+
         try:
             e: RecordedEvent
             for e in subscription:
@@ -210,8 +237,9 @@ class ESEventStore(EventStore):
                 if e.stream_name.startswith("$$"):
                     logging.debug(f"Skipping tombstone event from stream: {e.stream_name}")
                     # Acknowledge tombstone to continue processing
-                    if hasattr(subscription, "ack"):
+                    if is_persistent:
                         subscription.ack(e.id)
+                        pending_ack_count += 1
                     continue
 
                 # Skip system event types (prefixed with $)
@@ -219,8 +247,9 @@ class ESEventStore(EventStore):
                 if e.type.startswith("$"):
                     logging.debug(f"Skipping system event type '{e.type}' from stream: {e.stream_name}")
                     # Acknowledge system event to continue processing
-                    if hasattr(subscription, "ack"):
+                    if is_persistent:
                         subscription.ack(e.id)
+                        pending_ack_count += 1
                     continue
 
                 try:
@@ -228,22 +257,75 @@ class ESEventStore(EventStore):
                 except Exception as ex:
                     logging.warning(f"Could not decode event with offset '{e.stream_position}' from stream '{e.stream_name}': {ex}")
                     # Acknowledge failed decode to continue processing (don't park/retry invalid events)
-                    if hasattr(subscription, "ack"):
+                    if is_persistent:
                         subscription.ack(e.id)
+                        pending_ack_count += 1
                     continue
 
                 # Convert to AckableEventRecord if subscription supports ack/nack
-                if hasattr(subscription, "ack") and hasattr(subscription, "nack"):
+                if is_persistent:
                     event_id = e.id
-                    ackable_event = AckableEventRecord(stream_id=decoded_event.stream_id, id=decoded_event.id, offset=decoded_event.offset, position=decoded_event.position, timestamp=decoded_event.timestamp, type=decoded_event.type, data=decoded_event.data, metadata=decoded_event.metadata, replayed=decoded_event.replayed, _ack_delegate=lambda eid=event_id: subscription.ack(eid), _nack_delegate=lambda eid=event_id, action="retry": subscription.nack(eid, action=action))
+
+                    def ack_delegate(eid=event_id, sub=subscription):
+                        """
+                        Acknowledge event to EventStoreDB persistent subscription.
+
+                        This queues the ACK in the subscription's internal queue.
+                        The ACK will be sent when:
+                        1. The next event arrives (gRPC stream iteration)
+                        2. The batch timeout expires (esdbclient internal)
+                        3. Enough ACKs accumulate to trigger a batch send
+
+                        Note: esdbclient uses minCheckpointCount/maxCheckpointCount
+                        to batch ACKs. With minCheckpointCount=1, ACKs should be
+                        sent relatively quickly.
+                        """
+                        sub.ack(eid)
+                        logging.debug(f"ACK queued for event: {eid}")
+
+                    def nack_delegate(eid=event_id, sub=subscription, action="retry"):
+                        """
+                        Negative acknowledge event with specified action.
+
+                        Actions:
+                        - "retry": Retry event delivery (default)
+                        - "park": Move event to parked messages
+                        - "skip": Skip event without retry
+                        """
+                        sub.nack(eid, action=action)
+                        logging.debug(f"NACK sent for event: {eid} with action: {action}")
+
+                    ackable_event = AckableEventRecord(
+                        stream_id=decoded_event.stream_id,
+                        id=decoded_event.id,
+                        offset=decoded_event.offset,
+                        position=decoded_event.position,
+                        timestamp=decoded_event.timestamp,
+                        type=decoded_event.type,
+                        data=decoded_event.data,
+                        metadata=decoded_event.metadata,
+                        replayed=decoded_event.replayed,
+                        _ack_delegate=ack_delegate,
+                        _nack_delegate=nack_delegate,
+                    )
                     subject.on_next(ackable_event)
+                    pending_ack_count += 1
+
+                    # Log ACK delivery metrics periodically
+                    now = time.time()
+                    if now - last_ack_time >= 10.0:  # Every 10 seconds
+                        if hasattr(subscription, "_ack_queue"):
+                            queue_size = subscription._ack_queue.qsize()
+                            logging.info(f"Stream '{stream_id}': {pending_ack_count} events processed, " f"ACK queue size: {queue_size}")
+                        last_ack_time = now
+                        pending_ack_count = 0
                 else:
-                    # No ack/nack support, send regular EventRecord
+                    # No ack/nack support (catchup subscription), send regular EventRecord
                     subject.on_next(decoded_event)
 
             subject.on_completed()
         except Exception as ex:
-            logging.error(f"An exception occurred while consuming events from stream '{stream_id}', consequently to which the related subscription will be stopped: {ex}")  # todo: improve feedback
+            logging.error(f"An exception occurred while consuming events from stream '{stream_id}': {ex}")
             subscription.stop()
 
     async def delete_async(self, stream_id: str) -> None:

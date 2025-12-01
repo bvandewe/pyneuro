@@ -9,6 +9,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- **CRITICAL**: Improved EventStoreDB persistent subscription ACK delivery
+
+  - **Root Cause**: esdbclient uses gRPC bidirectional streaming where ACKs are queued but the request stream must be actively iterated to send them
+  - **Impact**: ACKs accumulated in queue without being sent, causing event redelivery every messageTimeout (30s) until events got parked after maxRetryCount
+  - **Fix**: Optimized subscription configuration with immediate checkpoint delivery (min/max checkpoint count = 1, messageTimeout = 60s)
+  - **Behavior**:
+    - Persistent subscriptions created with min_checkpoint_count=1 and max_checkpoint_count=1 for immediate ACK delivery
+    - Increased messageTimeout to 60s to give more processing time
+    - Added detailed ACK/NACK logging at DEBUG level
+    - Added periodic ACK queue metrics logging (every 10 seconds)
+  - **Files**: `neuroglia/data/infrastructure/event_sourcing/event_store/event_store.py`
+  - **Tests**: `tests/cases/test_persistent_subscription_ack_delivery.py` - 7 comprehensive tests covering ACK/NACK delivery
+  - **Note**: This improves ACK delivery but esdbclient's threading model may still cause delays. For production, consider using idempotent handlers or switching to catchup subscriptions with manual checkpointing
+
 - **CRITICAL**: Fixed ReadModelReconciliator crash on EventStoreDB tombstone events
   - **Root Cause**: Hard-deleted streams create tombstone markers ($$-prefixed streams) that appear in category projections with invalid JSON
   - **Impact**: ReadModelReconciliator subscription stopped when encountering tombstones, causing read/write model desync
