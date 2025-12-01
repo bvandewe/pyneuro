@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- **CRITICAL**: Fixed ReadModelReconciliator crash on EventStoreDB tombstone events
+  - **Root Cause**: Hard-deleted streams create tombstone markers ($$-prefixed streams) that appear in category projections with invalid JSON
+  - **Impact**: ReadModelReconciliator subscription stopped when encountering tombstones, causing read/write model desync
+  - **Fix**: Added graceful handling for tombstone events, system events, and invalid JSON in EventStore.\_consume_events_async()
+  - **Behavior**:
+    - Tombstone events (streams prefixed with `$$`) are skipped and acknowledged at DEBUG level
+    - System events (types prefixed with `$`) are skipped and acknowledged at DEBUG level
+    - Invalid JSON events are skipped and acknowledged at WARNING level (prevents subscription stop)
+  - **Files**: `neuroglia/data/infrastructure/event_sourcing/event_store/event_store.py`
+  - **Tests**: `tests/cases/test_event_store_tombstone_handling.py` - 11 comprehensive tests covering all scenarios
+  - **Related**: Works with DeleteMode.HARD from v0.6.15 - hard deletes no longer crash ReadModelReconciliator
+
 ## [0.6.15] - 2025-12-01
 
 ### Added
