@@ -7,6 +7,59 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.6.13] - 2025-12-01
+
+### Fixed
+
+- **CRITICAL**: Fixed repository instantiation failures due to missing abstract method implementations
+
+  - **EventSourcingRepository**: Implemented `_do_add_async`, `_do_update_async`, `_do_remove_async` to follow Template Method Pattern
+  - **MongoRepository**: Implemented `_do_add_async`, `_do_update_async`, `_do_remove_async` to follow Template Method Pattern
+  - Added optional `mediator` parameter to repository constructors for automatic domain event publishing
+  - Both repositories now properly call `super().__init__(mediator)` to initialize base `Repository` class
+  - Added `TYPE_CHECKING` imports for `Mediator` type hints in both implementations
+  - **Root Cause**: Base `Repository` class defines abstract methods for Template Method Pattern, but concrete implementations were not updated
+  - **Impact**: Without this fix, attempting to instantiate `EventSourcingRepository` or `MongoRepository` raises `TypeError: Can't instantiate abstract class`
+  - **See**: `notes/fixes/REPOSITORY_ABSTRACT_METHODS_FIX.md` for detailed analysis
+
+- **Missing Type Imports**: Fixed `NameError: name 'List' is not defined` in query execution
+
+  - Added `List` import to `neuroglia.data.queryable` (line 230 usage in `to_list()`)
+  - Added `List` import to `neuroglia.data.infrastructure.mongo.mongo_repository` (lines 118-119 usage in `MongoQueryProvider.execute()`)
+
+- **CRITICAL**: Fixed ReadModelReconciliator breaking Motor's event loop
+  - **Root Cause**: `subscribe_async()` used `asyncio.run()` inside RxPY callback, which creates and **closes** a temporary event loop
+  - **Impact**: Motor's MongoDB client becomes corrupted when event loop closes, causing `RuntimeError: Event loop is closed` on subsequent queries
+  - **Fix**: Replaced `asyncio.run()` with `loop.call_soon_threadsafe()` and `asyncio.create_task()` to schedule async handlers on main event loop
+  - **File**: `neuroglia/data/infrastructure/event_sourcing/read_model_reconciliator.py`
+  - This fix is **critical** for any application using ReadModelReconciliator with Motor-based repositories
+
+### Added
+
+- **Validation Script**: `scripts/validate_repository_fixes.py` to verify all repository fixes
+
+  - Validates EventSourcingRepository instantiation
+  - Validates MongoRepository instantiation
+  - Validates List imports in queryable and mongo_repository modules
+  - Validates Template Method Pattern implementation in base Repository class
+  - Run with: `poetry run python scripts/validate_repository_fixes.py`
+
+- **Comprehensive Test Suite**: `tests/cases/test_repository_abstract_methods_fix.py`
+  - Tests repository instantiation with and without mediator
+  - Tests abstract method implementations
+  - Tests List import availability
+  - Tests Template Method Pattern behavior
+  - Validates that no runtime patches are needed
+
+### Changed
+
+- **Breaking Change (Minor)**: Repository constructor signatures now include optional `mediator` parameter
+  - `EventSourcingRepository.__init__(eventstore, aggregator, mediator=None)` (was: no mediator param)
+  - `MongoRepository.__init__(options, mongo_client, serializer, mediator=None)` (was: no mediator param)
+  - **Impact**: Existing code continues to work (parameter is optional and defaults to None)
+  - **Benefit**: Enables automatic domain event publishing after successful persistence operations
+  - **Migration**: No changes required for existing code; add `mediator=mediator` to enable event publishing
+
 ## [0.6.12] - 2025-12-01
 
 ### Fixed
