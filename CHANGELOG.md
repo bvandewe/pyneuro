@@ -7,6 +7,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.6.14] - 2025-12-01
+
+### Fixed
+
+- **CRITICAL**: Fixed double CloudEvent emission with EventSourcingRepository
+  - **Root Cause**: Base `Repository._publish_domain_events()` was publishing events, then `ReadModelReconciliator` was also publishing the same events from EventStore subscription, resulting in 2 CloudEvents per domain event
+  - **Impact**: Every domain event produced duplicate CloudEvents, causing double processing in event handlers and external systems
+  - **Fix**: Override `_publish_domain_events()` in `EventSourcingRepository` to do nothing - ReadModelReconciliator handles all event publishing from EventStore (source of truth)
+  - **Architecture**: Event sourcing uses asynchronous publishing from EventStore subscription (at-least-once delivery), while state-based repositories use synchronous publishing (best-effort)
+  - **Backward Compatibility**: 100% backward compatible - state-based repositories (MotorRepository, MongoRepository) continue to publish events synchronously as before
+  - **File**: `neuroglia/data/infrastructure/event_sourcing/event_sourcing_repository.py`
+  - **See**: `notes/fixes/EVENT_SOURCING_DOUBLE_PUBLISH_FIX.md` for complete technical analysis
+
+### Added
+
+- **Comprehensive Test Suite**: `tests/cases/test_event_sourcing_double_publish_fix.py`
+  - Validates EventSourcingRepository does not call mediator.publish_async()
+  - Validates multiple events do not cause multiple publishes
+  - Validates method override is correctly implemented
+  - Validates backward compatibility with state-based repositories
+  - 7 tests, all passing ✅
+
 ## [0.6.13] - 2025-12-01
 
 ### Fixed
