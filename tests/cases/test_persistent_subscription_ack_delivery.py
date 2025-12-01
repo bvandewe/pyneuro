@@ -290,7 +290,7 @@ class TestAckConfiguration:
         # Arrange
         store = ESEventStore(eventstore_options, mock_eventstore_client, serializer)
         mock_eventstore_client.create_subscription_to_stream = AsyncMock()
-        mock_eventstore_client.read_subscription_to_stream = Mock(return_value=AsyncIteratorMock([]))
+        mock_eventstore_client.read_subscription_to_stream = AsyncMock(return_value=AsyncIteratorMock([]))
 
         # Act
         await store.observe_async(stream_id="order-stream", consumer_group="test_group", offset=0)

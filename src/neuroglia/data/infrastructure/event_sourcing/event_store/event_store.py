@@ -154,7 +154,7 @@ class ESEventStore(EventStore):
         subscription = None
         if consumer_group is None:
             stream_position = offset if offset is not None else 0
-            subscription = client.subscribe_to_stream(stream_name=stream_name, resolve_links=True, stream_position=stream_position)
+            subscription = await client.subscribe_to_stream(stream_name=stream_name, resolve_links=True, stream_position=stream_position)
         else:
             try:
                 await client.create_subscription_to_stream(
@@ -170,7 +170,7 @@ class ESEventStore(EventStore):
                 )
             except AlreadyExists:
                 pass
-            subscription = client.read_subscription_to_stream(
+            subscription = await client.read_subscription_to_stream(
                 group_name=consumer_group,
                 stream_name=stream_name,
             )
@@ -367,5 +367,5 @@ class ESEventStore(EventStore):
             serializer = service_provider.get_service(JsonSerializer)
             return ESEventStore(options, connection_string, serializer)
 
-        builder.services.try_add_singleton(EventStore, factory=create_event_store)
+        builder.services.try_add_singleton(EventStore, implementation_factory=create_event_store)
         return builder
