@@ -7,9 +7,44 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- **MAJOR**: Migrated ESEventStore to AsyncioEventStoreDBClient for proper async/await support
+
+  - **Motivation**: Eliminates threading workaround and ACK delivery issues by using native async API
+  - **Breaking Change**: EventStoreDBClient → AsyncioEventStoreDBClient in dependency injection
+  - **Benefits**:
+    - Native async iteration with `async for` over subscriptions
+    - Immediate ACK/NACK delivery through async gRPC streams (no more queuing delays)
+    - Removes threading complexity - uses `asyncio.create_task()` instead of `threading.Thread()`
+    - Proper async/await throughout: append, read, observe, delete operations
+  - **Impact**:
+    - `ESEventStore.__init__()` now requires `AsyncioEventStoreDBClient` instead of `EventStoreDBClient`
+    - `ESEventStore.configure()` registers `AsyncioEventStoreDBClient` singleton
+    - `AckableEventRecord.ack_async()`/`nack_async()` now properly await async delegates
+    - All test mocks updated to use `AsyncMock` and `AsyncIteratorMock`
+  - **Files**:
+    - `neuroglia/data/infrastructure/event_sourcing/event_store/event_store.py` - Full async migration
+    - `neuroglia/data/infrastructure/event_sourcing/abstractions.py` - Fixed ack/nack delegates to await
+    - `tests/cases/test_event_store_tombstone_handling.py` - Converted to async tests (18 tests passing)
+    - `tests/cases/test_persistent_subscription_ack_delivery.py` - Converted to async tests (18 tests passing)
+  - **Migration Guide**:
+
+    ```python
+    # Old (sync API)
+    from esdbclient import EventStoreDBClient
+    client = EventStoreDBClient(uri=connection_string)
+
+    # New (async API)
+    from esdbclient import AsyncioEventStoreDBClient
+    client = AsyncioEventStoreDBClient(uri=connection_string)
+    ```
+
+  - **Note**: This change supersedes the previous ACK delivery workaround - async API handles ACKs correctly without checkpoint tuning
+
 ### Fixed
 
-- **CRITICAL**: Improved EventStoreDB persistent subscription ACK delivery
+- **CRITICAL**: Improved EventStoreDB persistent subscription ACK delivery (SUPERSEDED by async migration above)
 
   - **Root Cause**: esdbclient uses gRPC bidirectional streaming where ACKs are queued but the request stream must be actively iterated to send them
   - **Impact**: ACKs accumulated in queue without being sent, causing event redelivery every messageTimeout (30s) until events got parked after maxRetryCount
