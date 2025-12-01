@@ -7,6 +7,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.6.19] - 2025-12-02
+
+### Fixed
+
+- **CRITICAL**: Workaround for esdbclient AsyncPersistentSubscription bug causing silent ACK failures
+  - **Bug**: esdbclient v1.1.7 `AsyncPersistentSubscription.init()` doesn't propagate `subscription_id` to `_read_reqs`
+  - **Impact**: Persistent subscription ACKs fail silently, causing events to be redelivered every `message_timeout`
+  - **Symptoms**:
+    - Events redelivered despite successful processing
+    - Checkpoint never advances in EventStoreDB
+    - Events eventually parked after `maxRetryCount` attempts
+    - Read models may process same event multiple times
+  - **Root Cause**: Async version missing `self._read_reqs.subscription_id = subscription_id.encode()` (present in sync version)
+  - **Workaround**: Added runtime monkey-patch in `src/neuroglia/data/infrastructure/event_sourcing/patches.py`
+  - **Patch Function**: `patch_esdbclient_async_subscription_id()` - must be called before EventStore initialization
+  - **Integration**: Patch auto-applied when importing `neuroglia.data.infrastructure.event_sourcing.event_store`
+  - **Upstream**: Bug report to be filed with esdbclient/kurrentdbclient maintainers
+  - **Affected Versions**: esdbclient 1.1.7 (and likely all versions with async support)
+  - **Documentation**: See `notes/ESDBCLIENT_ASYNC_SUBSCRIPTION_BUG.md` for detailed analysis
+  - **Verification**: Check EventStoreDB admin UI - `lastCheckpointedEventPosition` should now advance
+
 ## [0.6.18] - 2025-12-01
 
 ### Fixed
