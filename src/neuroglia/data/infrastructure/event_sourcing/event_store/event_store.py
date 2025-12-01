@@ -5,7 +5,8 @@ import sys
 from typing import Any, Dict, Optional
 
 import rx
-from esdbclient import AsyncioEventStoreDBClient, NewEvent, RecordedEvent, StreamState
+from esdbclient import AsyncioEventStoreDBClient as AsyncClientFactory
+from esdbclient import NewEvent, RecordedEvent, StreamState
 from esdbclient.exceptions import AlreadyExists
 from rx.core.observable.observable import Observable
 from rx.disposable.disposable import Disposable
@@ -35,7 +36,10 @@ class ESEventStore(EventStore):
     _eventstore_options: EventStoreOptions
     """ Gets the options used to configure the EventStore """
 
-    _eventstore_client: AsyncioEventStoreDBClient
+    _connection_string: str
+    """ Gets the connection string for EventStoreDB """
+
+    _eventstore_client: Optional[Any]  # _AsyncioEventStoreDBClient
     """ Gets the service used to interact with the EventStore DB"""
 
     _serializer: JsonSerializer
@@ -44,17 +48,34 @@ class ESEventStore(EventStore):
     def __init__(
         self,
         options: EventStoreOptions,
-        eventstore_client: AsyncioEventStoreDBClient,
+        connection_string_or_client: str | Any,  # Can be connection string or pre-initialized client (for testing)
         serializer: JsonSerializer,
     ):
         self._eventstore_options = options
-        self._eventstore_client = eventstore_client
         self._serializer = serializer
+
+        # Check if we got a connection string or an already-initialized client
+        if isinstance(connection_string_or_client, str):
+            self._connection_string = connection_string_or_client
+            self._eventstore_client = None  # Will be lazily initialized
+        else:
+            # Pre-initialized client (typically for testing)
+            self._connection_string = None
+            self._eventstore_client = connection_string_or_client
+
+    async def _ensure_client(self) -> Any:
+        """Lazily initialize the async EventStoreDB client on first use"""
+        if self._eventstore_client is None:
+            if self._connection_string is None:
+                raise RuntimeError("Neither connection string nor client provided")
+            self._eventstore_client = await AsyncClientFactory(uri=self._connection_string)
+        return self._eventstore_client
 
     async def contains_async(self, stream_id: str) -> bool:
         return await self.get_async(stream_id) is not None
 
     async def append_async(self, stream_id: str, events: list[EventDescriptor], expected_version: Optional[int] = None):
+        client = await self._ensure_client()
         if expected_version is not None:
             expected_version = expected_version - 1
         stream_name = self._get_stream_name(stream_id)
@@ -70,16 +91,17 @@ class ESEventStore(EventStore):
                     metadata=bytes(self._serializer.serialize(self._build_event_metadata(e.data, e.metadata))),
                 )
             )
-        await self._eventstore_client.append_to_stream(stream_name=stream_name, current_version=stream_state, events=formatted_events)
+        await client.append_to_stream(stream_name=stream_name, current_version=stream_state, events=formatted_events)
 
     async def get_async(self, stream_id: str) -> Optional[StreamDescriptor]:
+        client = await self._ensure_client()
         stream_name = self._get_stream_name(stream_id)
-        metadata, metadata_version = await self._eventstore_client.get_stream_metadata(stream_name)
+        metadata, metadata_version = await client.get_stream_metadata(stream_name)
         if metadata_version == StreamState.NO_STREAM:
             return None
         truncate_before = metadata.get("$tb")
         offset = 0 if truncate_before is None else truncate_before
-        read_response = self._eventstore_client.read_stream(
+        read_response = client.read_stream(
             stream_name=stream_name,
             stream_position=offset,
             backwards=False,
@@ -87,7 +109,7 @@ class ESEventStore(EventStore):
             limit=1,
         )
         recorded_events = [event async for event in read_response]
-        read_response = self._eventstore_client.read_stream(
+        read_response = client.read_stream(
             stream_name=stream_name,
             stream_position=offset,
             backwards=True,
@@ -107,8 +129,9 @@ class ESEventStore(EventStore):
         offset: int,
         length: Optional[int] = None,
     ) -> list[EventRecord]:
+        client = await self._ensure_client()
         stream_name = self._get_stream_name(stream_id)
-        read_response = self._eventstore_client.read_stream(
+        read_response = client.read_stream(
             stream_name=stream_name,
             stream_position=offset,
             backwards=True if read_direction == StreamReadDirection.BACKWARDS else False,
@@ -124,16 +147,17 @@ class ESEventStore(EventStore):
         consumer_group: Optional[str] = None,
         offset: Optional[int] = None,
     ) -> Observable:
+        client = await self._ensure_client()
         if stream_id is None:
             raise ValueError("stream_id cannot be None")
         stream_name = self._get_stream_name(stream_id)
         subscription = None
         if consumer_group is None:
             stream_position = offset if offset is not None else 0
-            subscription = self._eventstore_client.subscribe_to_stream(stream_name=stream_name, resolve_links=True, stream_position=stream_position)
+            subscription = client.subscribe_to_stream(stream_name=stream_name, resolve_links=True, stream_position=stream_position)
         else:
             try:
-                await self._eventstore_client.create_subscription_to_stream(
+                await client.create_subscription_to_stream(
                     group_name=consumer_group,
                     stream_name=stream_name,
                     resolve_links=True,
@@ -146,7 +170,7 @@ class ESEventStore(EventStore):
                 )
             except AlreadyExists:
                 pass
-            subscription = self._eventstore_client.read_subscription_to_stream(
+            subscription = client.read_subscription_to_stream(
                 group_name=consumer_group,
                 stream_name=stream_name,
             )
@@ -311,10 +335,11 @@ class ESEventStore(EventStore):
         Raises:
             Exception: If the stream does not exist or deletion fails
         """
+        client = await self._ensure_client()
         stream_name = self._get_stream_name(stream_id)
         try:
             # Delete the stream from EventStoreDB
-            await self._eventstore_client.delete_stream(stream_name=stream_name, current_version=StreamState.ANY)
+            await client.delete_stream(stream_name=stream_name, current_version=StreamState.ANY)
         except Exception as ex:
             raise Exception(f"Failed to delete stream '{stream_name}': {ex}") from ex
 
@@ -323,14 +348,24 @@ class ESEventStore(EventStore):
         """Registers and configures an EventStore implementation of the EventStore class.
 
         Args:
-            services (ServiceCollection): the service collection to configure
+            builder: The application builder to configure
+            options: EventStore configuration options
         """
         connection_string_name = "eventstore"
         connection_string = builder.settings.connection_strings.get(connection_string_name, None)
         if connection_string is None:
             raise Exception(f"Missing '{connection_string_name}' connection string")
+
+        # Register dependencies
         builder.services.try_add_singleton(Aggregator)
         builder.services.try_add_singleton(EventStoreOptions, singleton=options)
-        builder.services.try_add_singleton(AsyncioEventStoreDBClient, singleton=AsyncioEventStoreDBClient(uri=connection_string))
-        builder.services.try_add_singleton(EventStore, ESEventStore)
+
+        # Factory function to create ESEventStore with connection string
+        def create_event_store(service_provider) -> ESEventStore:
+            from neuroglia.serialization.json import JsonSerializer
+
+            serializer = service_provider.get_service(JsonSerializer)
+            return ESEventStore(options, connection_string, serializer)
+
+        builder.services.try_add_singleton(EventStore, factory=create_event_store)
         return builder
