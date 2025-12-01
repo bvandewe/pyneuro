@@ -8,6 +8,34 @@ from typing import Any, Optional
 from neuroglia.data.abstractions import AggregateRoot
 
 
+class DeleteMode(Enum):
+    """Specifies how deletion should be handled in event-sourced repositories."""
+
+    DISABLED = "disabled"
+    """Deletion is not allowed (default behavior). Raises NotImplementedError."""
+
+    SOFT = "soft"
+    """
+    Soft delete by calling the aggregate's deletion method.
+
+    The repository will:
+    1. Load the aggregate
+    2. Call aggregate.mark_as_deleted() or aggregate.mark_deleted()
+    3. Persist the deletion event via update_async()
+
+    The aggregate controls deletion semantics and domain events.
+    Event stream is preserved for audit and potential restoration.
+    """
+
+    HARD = "hard"
+    """
+    Physically delete the entire event stream from the event store.
+
+    WARNING: This is irreversible and removes all history for this aggregate.
+    Use for GDPR compliance (right to be forgotten) or data cleanup.
+    """
+
+
 @dataclass
 class StreamDescriptor:
     """Represents a class used to describe a stream of recorded events"""
@@ -152,6 +180,22 @@ class EventStore(ABC):
         """
         Creates a new observable used to stream events published by the event store.
         Typically, this is used by some kind of reconciliation mechanism to consume domain events then publish them to their related handlers, if any.
+        """
+        raise NotImplementedError()
+
+    @abstractmethod
+    async def delete_async(self, stream_id: str) -> None:
+        """
+        Deletes the entire event stream.
+
+        This operation is irreversible and should be used with caution.
+        Useful for GDPR compliance (right to be forgotten) or data cleanup.
+
+        Args:
+            stream_id: The identifier of the stream to delete
+
+        Raises:
+            Exception: If the stream does not exist or deletion fails
         """
         raise NotImplementedError()
 
