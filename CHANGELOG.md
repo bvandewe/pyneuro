@@ -14,15 +14,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **MAJOR**: Migrated ESEventStore to AsyncioEventStoreDBClient for proper async/await support
 
   - **Motivation**: Eliminates threading workaround and ACK delivery issues by using native async API
-  - **Breaking Change**: EventStoreDBClient → AsyncioEventStoreDBClient in dependency injection
+  - **Breaking Change**: EventStoreDBClient → AsyncioEventStoreDBClient (only affects direct instantiation)
+  - **Impact on Client Code**:
+    - ✅ **NO BREAKING CHANGES** for code using `ESEventStore.configure()` (recommended pattern)
+    - ⚠️ **Breaking only** for direct `ESEventStore()` instantiation (uncommon pattern)
   - **Benefits**:
     - Native async iteration with `async for` over subscriptions
     - Immediate ACK/NACK delivery through async gRPC streams (no more queuing delays)
     - Removes threading complexity - uses `asyncio.create_task()` instead of `threading.Thread()`
     - Proper async/await throughout: append, read, observe, delete operations
   - **Impact**:
-    - `ESEventStore.__init__()` now requires `AsyncioEventStoreDBClient` instead of `EventStoreDBClient`
-    - `ESEventStore.configure()` registers `AsyncioEventStoreDBClient` singleton
+    - `ESEventStore.configure()` method signature **unchanged** - NO client code changes needed
+    - `ESEventStore.__init__()` now accepts connection string (or pre-initialized client for testing)
+    - Internal implementation uses lazy async client initialization
     - `AckableEventRecord.ack_async()`/`nack_async()` now properly await async delegates
     - All test mocks updated to use `AsyncMock` and `AsyncIteratorMock`
   - **Files**:
@@ -30,16 +34,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     - `neuroglia/data/infrastructure/event_sourcing/abstractions.py` - Fixed ack/nack delegates to await
     - `tests/cases/test_event_store_tombstone_handling.py` - Converted to async tests (18 tests passing)
     - `tests/cases/test_persistent_subscription_ack_delivery.py` - Converted to async tests (18 tests passing)
-  - **Migration Guide**:
+  - **Migration Guide** (only needed if directly instantiating ESEventStore):
 
     ```python
-    # Old (sync API)
+    # Old (direct instantiation - uncommon)
     from esdbclient import EventStoreDBClient
     client = EventStoreDBClient(uri=connection_string)
+    store = ESEventStore(options, client, serializer)
 
-    # New (async API)
-    from esdbclient import AsyncioEventStoreDBClient
-    client = AsyncioEventStoreDBClient(uri=connection_string)
+    # New (pass connection string instead)
+    store = ESEventStore(options, connection_string, serializer)
+
+    # Recommended (no changes needed)
+    ESEventStore.configure(builder, EventStoreOptions(database_name, consumer_group))
     ```
 
   - **Note**: This change supersedes the previous ACK delivery workaround - async API handles ACKs correctly without checkpoint tuning
