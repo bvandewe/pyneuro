@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Generic, Optional
+from typing import TYPE_CHECKING, Generic, Optional
 
 from neuroglia.data.abstractions import DomainEvent, TAggregate, TKey
 from neuroglia.data.infrastructure.abstractions import Repository
@@ -11,6 +11,9 @@ from neuroglia.data.infrastructure.event_sourcing.abstractions import (
 )
 from neuroglia.hosting.abstractions import ApplicationBuilderBase
 
+if TYPE_CHECKING:
+    from neuroglia.mediation.mediator import Mediator
+
 
 @dataclass
 class EventSourcingRepositoryOptions(Generic[TAggregate, TKey]):
@@ -20,8 +23,9 @@ class EventSourcingRepositoryOptions(Generic[TAggregate, TKey]):
 class EventSourcingRepository(Generic[TAggregate, TKey], Repository[TAggregate, TKey]):
     """Represents an event sourcing repository implementation"""
 
-    def __init__(self, eventstore: EventStore, aggregator: Aggregator):
+    def __init__(self, eventstore: EventStore, aggregator: Aggregator, mediator: Optional["Mediator"] = None):
         """Initialize a new event sourcing repository"""
+        super().__init__(mediator)  # Pass mediator to base class for event publishing
         self._eventstore = eventstore
         self._aggregator = aggregator
 
@@ -40,33 +44,33 @@ class EventSourcingRepository(Generic[TAggregate, TKey], Repository[TAggregate, 
         events = await self._eventstore.read_async(stream_id, StreamReadDirection.FORWARDS, 0)
         return self._aggregator.aggregate(events, self.__orig_class__.__args__[0])
 
-    async def add_async(self, aggregate: TAggregate) -> TAggregate:
+    async def _do_add_async(self, aggregate: TAggregate) -> TAggregate:
         """Adds and persists the specified aggregate"""
         stream_id = self._build_stream_id_for(aggregate.id())
         events = aggregate._pending_events
         if len(events) < 1:
-            raise Exception()
+            raise Exception("No pending events to persist")
         encoded_events = [self._encode_event(e) for e in events]
         await self._eventstore.append_async(stream_id, encoded_events)
         aggregate.state.state_version = events[-1].aggregate_version
         aggregate.clear_pending_events()
         return aggregate
 
-    async def update_async(self, aggregate: TAggregate) -> TAggregate:
-        """Perists the changes made to the specified aggregate"""
+    async def _do_update_async(self, aggregate: TAggregate) -> TAggregate:
+        """Persists the changes made to the specified aggregate"""
         stream_id = self._build_stream_id_for(aggregate.id())
         events = aggregate._pending_events
         if len(events) < 1:
-            raise Exception()
+            raise Exception("No pending events to persist")
         encoded_events = [self._encode_event(e) for e in events]
         await self._eventstore.append_async(stream_id, encoded_events, aggregate.state.state_version)
         aggregate.state.state_version = events[-1].aggregate_version
         aggregate.clear_pending_events()
         return aggregate
 
-    async def remove_async(self, id: TKey) -> None:
+    async def _do_remove_async(self, id: TKey) -> None:
         """Removes the aggregate root with the specified key, if any"""
-        raise NotImplementedError()
+        raise NotImplementedError("Event sourcing repositories do not support hard deletes")
 
     def _build_stream_id_for(self, aggregate_id: TKey):
         """Builds a new stream id for the specified aggregate"""
