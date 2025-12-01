@@ -7,6 +7,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.6.15] - 2025-12-01
+
+### Fixed
+
+- **CRITICAL**: Fixed event acknowledgment timing to prevent duplicate event delivery
+  - **Root Cause**: `ESEventStore._consume_events_async()` was acknowledging events **immediately** after pushing to observable (via `subject.on_next()`), **before** `ReadModelReconciliator` completed processing
+  - **Impact**: Events were ACKed before processing → events lost on crash, events redelivered on restart, failed events never retried, duplicate CloudEvents on service restart
+  - **Fix**: Return `AckableEventRecord` with ack/nack delegates from EventStore, allowing `ReadModelReconciliator` to control acknowledgment **after** processing completes
+  - **Architecture**: Consumer (ReadModelReconciliator) now controls acknowledgment timing, not producer (EventStore) - follows proper producer-consumer pattern
+  - **Backward Compatibility**: 100% backward compatible - non-persistent subscriptions still use regular `EventRecord`, persistent subscriptions use `AckableEventRecord`
+  - **Files**:
+    - `neuroglia/data/infrastructure/event_sourcing/event_store/event_store.py` - Returns AckableEventRecord with delegates
+    - `neuroglia/data/infrastructure/event_sourcing/read_model_reconciliator.py` - Calls ack/nack after processing
+  - **See**: `notes/fixes/EVENT_ACKNOWLEDGMENT_FIX.md` for complete technical analysis
+  - **Related**: Fixes EVENT_SOURCING_DOUBLE_PUBLISH_FIX (v0.6.14) - this completes the event delivery correctness work
+
+### Added
+
+- **Comprehensive Test Suite**: `tests/cases/test_event_acknowledgment_fix.py`
+  - Validates events acknowledged AFTER successful processing
+  - Validates events nacked on processing failure
+  - Validates acknowledgment timing (mediator.publish_async before ack)
+  - Validates multiple events acknowledged independently
+  - Validates timeout handling with nack
+  - 6 tests, all passing ✅
+
 ## [0.6.14] - 2025-12-01
 
 ### Fixed
