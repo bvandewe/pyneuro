@@ -72,6 +72,24 @@ class EventSourcingRepository(Generic[TAggregate, TKey], Repository[TAggregate, 
         """Removes the aggregate root with the specified key, if any"""
         raise NotImplementedError("Event sourcing repositories do not support hard deletes")
 
+    async def _publish_domain_events(self, entity: TAggregate) -> None:
+        """
+        Override base class event publishing for event-sourced aggregates.
+
+        Event sourcing repositories DO NOT publish events directly because:
+        1. Events are already persisted to the EventStore
+        2. ReadModelReconciliator subscribes to EventStore and publishes ALL events
+        3. Publishing here would cause DOUBLE PUBLISHING (once here, once from ReadModelReconciliator)
+
+        For event-sourced aggregates:
+        - Events are persisted to EventStore by _do_add_async/_do_update_async
+        - ReadModelReconciliator.on_event_record_stream_next_async() publishes via mediator
+        - This ensures single, reliable event publishing from the source of truth (EventStore)
+
+        State-based repositories still use the base class _publish_domain_events() correctly.
+        """
+        # Do nothing - ReadModelReconciliator handles event publishing from EventStore
+
     def _build_stream_id_for(self, aggregate_id: TKey):
         """Builds a new stream id for the specified aggregate"""
         aggregate_name = self.__orig_class__.__args__[0].__name__
