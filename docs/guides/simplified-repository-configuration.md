@@ -2,12 +2,13 @@
 
 ## Overview
 
-The Neuroglia framework supports a simplified API for configuring both `EventSourcingRepository` (Write Model) and `MongoRepository` (Read Model), eliminating the need for verbose custom factory functions.
+The Neuroglia framework supports a simplified API for configuring repositories for both Write and Read Models, eliminating the need for verbose custom factory functions.
 
 This guide covers:
 
 - **WriteModel (v0.6.21+)**: Simplified `EventSourcingRepository` configuration with options
 - **ReadModel (v0.6.22+)**: Simplified `MongoRepository` configuration with database name
+- **ReadModel (v0.6.23+)**: Support for async `MotorRepository` (Motor driver for FastAPI)
 
 ## Write Model Simplification (v0.6.21+)
 
@@ -139,17 +140,48 @@ DataAccessLayer.ReadModel().configure(
 
 ### The Solution (v0.6.22+)
 
-#### Simple Configuration with Database Name
+#### Synchronous MongoRepository (Default)
 
 ```python
 from neuroglia.hosting.configuration.data_access_layer import DataAccessLayer
 
-# Simple - just pass database name
+# Simple - just pass database name (uses PyMongo - synchronous)
 DataAccessLayer.ReadModel(database_name="myapp").configure(
     builder,
     ["integration.models"]
 )
 ```
+
+#### Async MotorRepository for FastAPI (v0.6.23+)
+
+For async applications using FastAPI, you can use the Motor driver:
+
+```python
+from neuroglia.hosting.configuration.data_access_layer import DataAccessLayer
+
+# Async configuration with MotorRepository (uses Motor - async driver)
+DataAccessLayer.ReadModel(
+    database_name="myapp",
+    repository_type='motor'
+).configure(
+    builder,
+    ["integration.models", "application.events.domain"]
+)
+```
+
+**Repository Type Options:**
+
+| `repository_type` | Driver          | Use Case                   | Lifetime  |
+| ----------------- | --------------- | -------------------------- | --------- |
+| `'mongo'`         | PyMongo         | Synchronous apps (default) | Singleton |
+| `'motor'`         | Motor (AsyncIO) | Async apps (FastAPI, ASGI) | Scoped    |
+
+**Note**: MotorRepository uses `MotorRepository.configure()` under the hood, which:
+
+- Registers `AsyncIOMotorClient` as a singleton (shared connection pool)
+- Registers repositories with **SCOPED** lifetime (one per request)
+- Supports injection as `Repository[T, K]` in handlers
+- Requires `motor` package: `pip install motor`
 
 #### Backwards Compatible Custom Factory
 
@@ -222,8 +254,17 @@ def create_app():
         options=EventSourcingRepositoryOptions(delete_mode=DeleteMode.HARD)
     ).configure(builder, ["domain.entities"])
 
-    # Configure Read Model with database name (v0.6.22+)
+    # Configure Read Model - Synchronous (v0.6.22+)
     DataAccessLayer.ReadModel(database_name="myapp").configure(
+        builder,
+        ["integration.models"]
+    )
+
+    # OR Configure Read Model - Async with Motor (v0.6.23+)
+    DataAccessLayer.ReadModel(
+        database_name="myapp",
+        repository_type='motor'
+    ).configure(
         builder,
         ["integration.models"]
     )
@@ -334,13 +375,17 @@ class WriteModel:
 class ReadModel:
     def __init__(
         self,
-        database_name: Optional[str] = None
+        database_name: Optional[str] = None,
+        repository_type: str = 'mongo'
     ):
         """Initialize ReadModel configuration
 
         Args:
             database_name: Optional database name for MongoDB repositories.
                           If not provided, custom repository_setup must be used.
+            repository_type: Type of repository to use ('mongo' or 'motor').
+                           - 'mongo': MongoRepository with PyMongo (sync, default)
+                           - 'motor': MotorRepository with Motor (async)
         """
 
     def configure(
@@ -365,6 +410,7 @@ class ReadModel:
             ValueError: If consumer_group not specified in settings
             ValueError: If neither repository_setup nor database_name is provided
             ValueError: If mongo connection string not found in settings
+            ValueError: If invalid repository_type provided (not 'mongo' or 'motor')
         """
 ```
 
@@ -383,14 +429,15 @@ class ReadModel:
 
 ### ReadModel
 
-| Aspect                   | Before           | After                     |
-| ------------------------ | ---------------- | ------------------------- |
-| Configuration style      | Lambda function  | Constructor parameter     |
-| Database name visibility | Hidden in lambda | Explicit in constructor   |
-| Type safety              | No autocomplete  | Full IDE support          |
-| Error handling           | Runtime failures | Early validation          |
-| Consistency              | Unique pattern   | Aligned with WriteModel   |
-| Backwards compatibility  | N/A              | Full (lambda still works) |
+| Aspect                   | Before           | After (v0.6.22+)          | After (v0.6.23+)                   |
+| ------------------------ | ---------------- | ------------------------- | ---------------------------------- |
+| Configuration style      | Lambda function  | Constructor parameter     | Constructor parameter              |
+| Database name visibility | Hidden in lambda | Explicit in constructor   | Explicit in constructor            |
+| Async support            | Manual setup     | Manual setup              | Built-in (repository_type='motor') |
+| Type safety              | No autocomplete  | Full IDE support          | Full IDE support                   |
+| Error handling           | Runtime failures | Early validation          | Early validation                   |
+| Consistency              | Unique pattern   | Aligned with WriteModel   | Aligned with WriteModel            |
+| Backwards compatibility  | N/A              | Full (lambda still works) | Full (lambda still works)          |
 
 ## Related Documentation
 
