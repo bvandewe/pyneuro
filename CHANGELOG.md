@@ -7,6 +7,50 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.6.23] - 2025-12-02
+
+### Added
+
+- **DataAccessLayer.ReadModel**: Async MotorRepository support
+
+  - **Enhancement**: Support `repository_type='motor'` parameter for async Motor driver in `ReadModel()` constructor
+  - **New Parameter**: `repository_type: str = 'mongo'` (options: `'mongo'` or `'motor'`)
+  - **Motor Configuration**: Uses `MotorRepository.configure()` static method for proper async setup
+  - **Before**: Manual MotorRepository configuration required lambda function
+
+    ```python
+    DataAccessLayer.ReadModel().configure(
+        builder,
+        ["integration.models"],
+        lambda b, et, kt: MotorRepository.configure(b, et, kt, "database_name")
+    )
+    ```
+
+  - **After**: Simple configuration with `repository_type='motor'`
+
+    ```python
+    DataAccessLayer.ReadModel(
+        database_name="myapp",
+        repository_type='motor'
+    ).configure(builder, ["integration.models"])
+    ```
+
+  - **Repository Types**:
+    - `'mongo'` (default): MongoRepository with PyMongo (synchronous, singleton lifetime)
+    - `'motor'`: MotorRepository with Motor/AsyncIOMotorClient (async, scoped lifetime)
+  - **Benefits**:
+    - Native async support for FastAPI and ASGI applications
+    - Proper connection pooling with AsyncIOMotorClient
+    - Scoped repository lifetime (one per request for async context)
+    - Consistent simplified API across sync and async scenarios
+  - **Backwards Compatible**: Lambda pattern and MongoRepository (default) still supported
+  - **Use Cases**:
+    - Sync apps: `DataAccessLayer.ReadModel(database_name="myapp").configure(...)`
+    - Async apps: `DataAccessLayer.ReadModel(database_name="myapp", repository_type='motor').configure(...)`
+    - Custom: `DataAccessLayer.ReadModel().configure(..., custom_setup)`
+  - **Testing**: 3 new tests for Motor configuration (total 31 DataAccessLayer tests)
+  - **Documentation**: Updated `docs/guides/simplified-repository-configuration.md` with Motor examples
+
 ## [0.6.22] - 2025-12-02
 
 ### Added

@@ -146,15 +146,22 @@ class DataAccessLayer:
     class ReadModel:
         """Represents a helper class used to configure an application's Read Model DAL
 
-        Supports two configuration patterns:
-        1. Simplified: Pass database_name directly to constructor
-        2. Custom: Pass custom repository_setup function to configure()
+        Supports three configuration patterns:
+        1. Simplified Sync: Pass database_name with repository_type='mongo' (default)
+        2. Simplified Async: Pass database_name with repository_type='motor' for FastAPI
+        3. Custom: Pass custom repository_setup function to configure()
 
         Examples:
-            # Simple configuration with database name
+            # Simple synchronous configuration (default)
             DataAccessLayer.ReadModel(database_name="myapp").configure(
                 builder, ["integration.models"]
             )
+
+            # Async configuration with Motor for FastAPI
+            DataAccessLayer.ReadModel(
+                database_name="myapp",
+                repository_type='motor'
+            ).configure(builder, ["integration.models"])
 
             # Custom factory (advanced, backwards compatible)
             def custom_setup(builder_, entity_type, key_type):
@@ -165,14 +172,34 @@ class DataAccessLayer:
             )
         """
 
-        def __init__(self, database_name: Optional[str] = None):
+        def __init__(self, database_name: Optional[str] = None, repository_type: str = "mongo"):
             """Initialize ReadModel configuration
 
             Args:
                 database_name: Optional database name for MongoDB repositories.
                               If not provided, custom repository_setup must be used.
+                repository_type: Type of repository to use ('mongo' or 'motor'). Defaults to 'mongo'.
+                    - 'mongo': Use MongoRepository with PyMongo (synchronous driver)
+                    - 'motor': Use MotorRepository with Motor (async driver for FastAPI)
+
+            Example:
+                ```python
+                # Simplified sync configuration
+                DataAccessLayer.ReadModel(database_name="myapp").configure(...)
+
+                # Async configuration with Motor
+                DataAccessLayer.ReadModel(
+                    database_name="myapp",
+                    repository_type='motor'
+                ).configure(...)
+                ```
             """
             self._database_name = database_name
+            self._repository_type = repository_type
+
+            # Validate repository_type
+            if repository_type not in ("mongo", "motor"):
+                raise ValueError(f"Invalid repository_type '{repository_type}'. " "Must be either 'mongo' (synchronous PyMongo) or 'motor' (async Motor)")
 
         def configure(
             self,
@@ -235,58 +262,85 @@ class DataAccessLayer:
             if not self._database_name:
                 raise ValueError("Cannot configure Read Model with simplified API: " "database_name not provided. Either pass database_name to ReadModel() " "or use custom repository_setup function.")
 
-            from pymongo import MongoClient
-
             from neuroglia.data.infrastructure.abstractions import (
                 QueryableRepository,
                 Repository,
             )
-            from neuroglia.data.infrastructure.mongo.mongo_repository import (
-                MongoRepository,
-                MongoRepositoryOptions,
-            )
             from neuroglia.dependency_injection import ServiceProvider
 
-            # Get MongoDB connection string
-            connection_string_name = "mongo"
-            connection_string = builder.settings.connection_strings.get(connection_string_name, None)
-            if connection_string is None:
-                raise ValueError(f"Missing '{connection_string_name}' connection string in application settings")
+            # Configure based on repository type
+            if self._repository_type == "mongo":
+                # Synchronous MongoRepository configuration
+                from pymongo import MongoClient
 
-            # Register MongoClient singleton (shared across all repositories)
-            builder.services.try_add_singleton(MongoClient, singleton=MongoClient(connection_string))
+                from neuroglia.data.infrastructure.mongo.mongo_repository import (
+                    MongoRepository,
+                    MongoRepositoryOptions,
+                )
 
-            # Discover and configure each queryable type
-            for module in [ModuleLoader.load(module_name) for module_name in modules]:
-                for queryable_type in TypeFinder.get_types(module, lambda cls: inspect.isclass(cls) and hasattr(cls, "__queryable__")):
-                    key_type = str  # todo: reflect from DTO base type
+                # Get MongoDB connection string
+                connection_string_name = "mongo"
+                connection_string = builder.settings.connection_strings.get(connection_string_name, None)
+                if connection_string is None:
+                    raise ValueError(f"Missing '{connection_string_name}' connection string in application settings")
 
-                    # Register options for this entity type
-                    builder.services.try_add_singleton(
-                        MongoRepositoryOptions[queryable_type, key_type],  # type: ignore
-                        singleton=MongoRepositoryOptions[queryable_type, key_type](self._database_name),  # type: ignore
-                    )
+                # Register MongoClient singleton (shared across all repositories)
+                builder.services.try_add_singleton(MongoClient, singleton=MongoClient(connection_string))
 
-                    # Register repository
-                    builder.services.try_add_singleton(
-                        Repository[queryable_type, key_type],  # type: ignore
-                        MongoRepository[queryable_type, key_type],  # type: ignore
-                    )
+                # Discover and configure each queryable type
+                for module in [ModuleLoader.load(module_name) for module_name in modules]:
+                    for queryable_type in TypeFinder.get_types(module, lambda cls: inspect.isclass(cls) and hasattr(cls, "__queryable__")):
+                        key_type = str  # todo: reflect from DTO base type
 
-                    # Register queryable repository alias
-                    def make_queryable_factory(qt, kt):
-                        def queryable_factory(provider: ServiceProvider):
-                            return provider.get_required_service(Repository[qt, kt])  # type: ignore
+                        # Register options for this entity type
+                        builder.services.try_add_singleton(
+                            MongoRepositoryOptions[queryable_type, key_type],  # type: ignore
+                            singleton=MongoRepositoryOptions[queryable_type, key_type](self._database_name),  # type: ignore
+                        )
 
-                        return queryable_factory
+                        # Register repository
+                        builder.services.try_add_singleton(
+                            Repository[queryable_type, key_type],  # type: ignore
+                            MongoRepository[queryable_type, key_type],  # type: ignore
+                        )
 
-                    builder.services.try_add_singleton(
-                        QueryableRepository[queryable_type, key_type],  # type: ignore
-                        implementation_factory=make_queryable_factory(queryable_type, key_type),
-                    )
+                        # Register queryable repository alias
+                        def make_queryable_factory(qt, kt):
+                            def queryable_factory(provider: ServiceProvider):
+                                return provider.get_required_service(Repository[qt, kt])  # type: ignore
 
-                    # Register query handlers
-                    builder.services.add_transient(RequestHandler, GetByIdQueryHandler[queryable_type, key_type])  # type: ignore
-                    builder.services.add_transient(RequestHandler, ListQueryHandler[queryable_type, key_type])  # type: ignore
+                            return queryable_factory
+
+                        builder.services.try_add_singleton(
+                            QueryableRepository[queryable_type, key_type],  # type: ignore
+                            implementation_factory=make_queryable_factory(queryable_type, key_type),
+                        )
+
+                        # Register query handlers
+                        builder.services.add_transient(RequestHandler, GetByIdQueryHandler[queryable_type, key_type])  # type: ignore
+                        builder.services.add_transient(RequestHandler, ListQueryHandler[queryable_type, key_type])  # type: ignore
+
+            elif self._repository_type == "motor":
+                # Async MotorRepository configuration using MotorRepository.configure()
+                from neuroglia.data.infrastructure.mongo.motor_repository import (
+                    MotorRepository,
+                )
+
+                # Use MotorRepository.configure() for each discovered type
+                # Note: MotorRepository types are NOT queryable yet, so we scan for all classes
+                # (not just those with __queryable__ attribute)
+                # This configuration supports direct Repository[T, K] injection in handlers
+                for module in [ModuleLoader.load(module_name) for module_name in modules]:
+                    for entity_type in TypeFinder.get_types(module, lambda cls: inspect.isclass(cls)):
+                        key_type = str  # todo: reflect from entity type
+
+                        # Use MotorRepository's static configure method
+                        # This handles AsyncIOMotorClient, repository registration, etc.
+                        MotorRepository.configure(
+                            builder=builder,
+                            entity_type=entity_type,
+                            key_type=key_type,
+                            database_name=self._database_name,
+                        )
 
             return builder

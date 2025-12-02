@@ -401,16 +401,29 @@ class TestDataAccessLayerReadModelSimplifiedAPI:
         """Test ReadModel initialization without database name"""
         read_model = DataAccessLayer.ReadModel()
         assert read_model._database_name is None
+        assert read_model._repository_type == "mongo"  # Default
 
     def test_read_model_init_with_database_name(self):
         """Test ReadModel initialization with database name"""
         read_model = DataAccessLayer.ReadModel(database_name="myapp")
         assert read_model._database_name == "myapp"
+        assert read_model._repository_type == "mongo"  # Default
+
+    def test_read_model_init_with_motor_repository_type(self):
+        """Test ReadModel initialization with motor repository type"""
+        read_model = DataAccessLayer.ReadModel(database_name="myapp", repository_type="motor")
+        assert read_model._database_name == "myapp"
+        assert read_model._repository_type == "motor"
+
+    def test_read_model_init_with_invalid_repository_type(self):
+        """Test ReadModel initialization with invalid repository type raises error"""
+        with pytest.raises(ValueError, match="Invalid repository_type 'invalid'"):
+            DataAccessLayer.ReadModel(database_name="myapp", repository_type="invalid")
 
     @patch("neuroglia.hosting.configuration.data_access_layer.ModuleLoader")
     @patch("neuroglia.hosting.configuration.data_access_layer.TypeFinder")
     def test_configure_with_database_name(self, mock_type_finder, mock_module_loader):
-        """Test configure() with database name"""
+        """Test configure() with database name (default mongo repository)"""
         # Setup mocks
         mock_module = Mock()
         mock_module_loader.load.return_value = mock_module
@@ -426,6 +439,27 @@ class TestDataAccessLayerReadModelSimplifiedAPI:
         # Should register MongoClient, options, repository, queryable repository, and handlers
         assert self.builder.services.try_add_singleton.call_count >= 3
         assert self.builder.services.add_transient.call_count == 2  # GetById and List handlers
+
+    @patch("neuroglia.data.infrastructure.mongo.motor_repository.MotorRepository.configure")
+    @patch("neuroglia.hosting.configuration.data_access_layer.ModuleLoader")
+    @patch("neuroglia.hosting.configuration.data_access_layer.TypeFinder")
+    def test_configure_with_motor_repository_type(self, mock_type_finder, mock_module_loader, mock_motor_configure):
+        """Test configure() with motor repository type"""
+        # Setup mocks
+        mock_module = Mock()
+        mock_module_loader.load.return_value = mock_module
+        mock_type_finder.get_types.return_value = [TestQueryableModel]
+
+        # Create ReadModel with motor repository type
+        read_model = DataAccessLayer.ReadModel(database_name="testdb", repository_type="motor")
+        result = read_model.configure(self.builder, ["test.module"])
+
+        # Verify
+        assert result is self.builder
+        mock_module_loader.load.assert_called_once_with("test.module")
+
+        # Should call MotorRepository.configure() for discovered type
+        mock_motor_configure.assert_called_once_with(builder=self.builder, entity_type=TestQueryableModel, key_type=str, database_name="testdb")
 
     @patch("neuroglia.hosting.configuration.data_access_layer.ModuleLoader")
     @patch("neuroglia.hosting.configuration.data_access_layer.TypeFinder")
