@@ -1136,6 +1136,255 @@
 </nav>
 </li>
 <li class="md-nav__item">
+<a class="md-nav__link" href="#event-publishing-architecture">
+<span class="md-ellipsis">
+      
+        🏗️ Event Publishing Architecture
+      
+    </span>
+</a>
+<nav aria-label="🏗️ Event Publishing Architecture" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#overview">
+<span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#the-two-possible-approaches">
+<span class="md-ellipsis">
+      
+        The Two Possible Approaches
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#neuroglias-design-read-path-only">
+<span class="md-ellipsis">
+      
+        Neuroglia's Design: Read Path Only
+      
+    </span>
+</a>
+<nav aria-label="Neuroglia's Design: Read Path Only" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#implementation">
+<span class="md-ellipsis">
+      
+        Implementation
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#complete-data-flow">
+<span class="md-ellipsis">
+      
+        Complete Data Flow
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#why-this-design">
+<span class="md-ellipsis">
+      
+        Why This Design?
+      
+    </span>
+</a>
+<nav aria-label="Why This Design?" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#1-single-source-of-truth">
+<span class="md-ellipsis">
+      
+        1. Single Source of Truth
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#2-reliable-delivery">
+<span class="md-ellipsis">
+      
+        2. Reliable Delivery
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#3-no-duplicate-publishing">
+<span class="md-ellipsis">
+      
+        3. No Duplicate Publishing
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#4-eventual-consistency-model">
+<span class="md-ellipsis">
+      
+        4. Eventual Consistency Model
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#contrast-with-state-based-repositories">
+<span class="md-ellipsis">
+      
+        Contrast with State-Based Repositories
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#implications-for-developers">
+<span class="md-ellipsis">
+      
+        Implications for Developers
+      
+    </span>
+</a>
+<nav aria-label="Implications for Developers" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#command-handlers">
+<span class="md-ellipsis">
+      
+        Command Handlers
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#event-handlers-projections">
+<span class="md-ellipsis">
+      
+        Event Handlers (Projections)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#query-handlers">
+<span class="md-ellipsis">
+      
+        Query Handlers
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#best-practices">
+<span class="md-ellipsis">
+      
+        Best Practices
+      
+    </span>
+</a>
+<nav aria-label="Best Practices" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#1-design-for-idempotency">
+<span class="md-ellipsis">
+      
+        1. Design for Idempotency
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#2-keep-handlers-fast">
+<span class="md-ellipsis">
+      
+        2. Keep Handlers Fast
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#3-handle-failures-gracefully">
+<span class="md-ellipsis">
+      
+        3. Handle Failures Gracefully
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#verification">
+<span class="md-ellipsis">
+      
+        Verification
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#related-issues-fixes">
+<span class="md-ellipsis">
+      
+        Related Issues &amp; Fixes
+      
+    </span>
+</a>
+<nav aria-label="Related Issues &amp; Fixes" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#esdbclient-bug-missing-subscription_id">
+<span class="md-ellipsis">
+      
+        esdbclient Bug: Missing subscription_id
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#neuroglia-fix-wrong-ack-id-for-resolved-links">
+<span class="md-ellipsis">
+      
+        Neuroglia Fix: Wrong ACK ID for Resolved Links
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#summary">
+<span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
 <a class="md-nav__link" href="#key-takeaways">
 <span class="md-ellipsis">
       
@@ -2249,6 +2498,255 @@
 <span class="md-ellipsis">
       
         5. Data That Truly Doesn't Need History
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#event-publishing-architecture">
+<span class="md-ellipsis">
+      
+        🏗️ Event Publishing Architecture
+      
+    </span>
+</a>
+<nav aria-label="🏗️ Event Publishing Architecture" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#overview">
+<span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#the-two-possible-approaches">
+<span class="md-ellipsis">
+      
+        The Two Possible Approaches
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#neuroglias-design-read-path-only">
+<span class="md-ellipsis">
+      
+        Neuroglia's Design: Read Path Only
+      
+    </span>
+</a>
+<nav aria-label="Neuroglia's Design: Read Path Only" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#implementation">
+<span class="md-ellipsis">
+      
+        Implementation
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#complete-data-flow">
+<span class="md-ellipsis">
+      
+        Complete Data Flow
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#why-this-design">
+<span class="md-ellipsis">
+      
+        Why This Design?
+      
+    </span>
+</a>
+<nav aria-label="Why This Design?" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#1-single-source-of-truth">
+<span class="md-ellipsis">
+      
+        1. Single Source of Truth
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#2-reliable-delivery">
+<span class="md-ellipsis">
+      
+        2. Reliable Delivery
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#3-no-duplicate-publishing">
+<span class="md-ellipsis">
+      
+        3. No Duplicate Publishing
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#4-eventual-consistency-model">
+<span class="md-ellipsis">
+      
+        4. Eventual Consistency Model
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#contrast-with-state-based-repositories">
+<span class="md-ellipsis">
+      
+        Contrast with State-Based Repositories
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#implications-for-developers">
+<span class="md-ellipsis">
+      
+        Implications for Developers
+      
+    </span>
+</a>
+<nav aria-label="Implications for Developers" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#command-handlers">
+<span class="md-ellipsis">
+      
+        Command Handlers
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#event-handlers-projections">
+<span class="md-ellipsis">
+      
+        Event Handlers (Projections)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#query-handlers">
+<span class="md-ellipsis">
+      
+        Query Handlers
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#best-practices">
+<span class="md-ellipsis">
+      
+        Best Practices
+      
+    </span>
+</a>
+<nav aria-label="Best Practices" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#1-design-for-idempotency">
+<span class="md-ellipsis">
+      
+        1. Design for Idempotency
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#2-keep-handlers-fast">
+<span class="md-ellipsis">
+      
+        2. Keep Handlers Fast
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#3-handle-failures-gracefully">
+<span class="md-ellipsis">
+      
+        3. Handle Failures Gracefully
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#verification">
+<span class="md-ellipsis">
+      
+        Verification
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#related-issues-fixes">
+<span class="md-ellipsis">
+      
+        Related Issues &amp; Fixes
+      
+    </span>
+</a>
+<nav aria-label="Related Issues &amp; Fixes" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#esdbclient-bug-missing-subscription_id">
+<span class="md-ellipsis">
+      
+        esdbclient Bug: Missing subscription_id
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#neuroglia-fix-wrong-ack-id-for-resolved-links">
+<span class="md-ellipsis">
+      
+        Neuroglia Fix: Wrong ACK ID for Resolved Links
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#summary">
+<span class="md-ellipsis">
+      
+        Summary
       
     </span>
 </a>
@@ -3629,6 +4127,257 @@ sequences while maintaining data integrity and providing deep insights into syst
 </span><span id="__span-19-10"><a href="#__codelineno-19-10" id="__codelineno-19-10" name="__codelineno-19-10"></a>            <span class="n">upsert</span><span class="o">=</span><span class="kc">True</span>
 </span><span id="__span-19-11"><a href="#__codelineno-19-11" id="__codelineno-19-11" name="__codelineno-19-11"></a>        <span class="p">)</span>
 </span></code></pre></div>
+<h2 id="event-publishing-architecture">🏗️ Event Publishing Architecture<a class="headerlink" href="#event-publishing-architecture" title="Permanent link">¶</a></h2>
+<p><em>Last updated: December 2, 2025 - Verified through diagnostic logging</em></p>
+<h3 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">¶</a></h3>
+<p>A critical design decision in Neuroglia's event sourcing implementation is <strong>where domain events are published</strong> to the mediator pipeline. Understanding this architecture is essential for:</p>
+<ul>
+<li>Building correct event-driven applications</li>
+<li>Avoiding duplicate event processing</li>
+<li>Ensuring reliable event delivery</li>
+<li>Implementing read model projections</li>
+</ul>
+<h3 id="the-two-possible-approaches">The Two Possible Approaches<a class="headerlink" href="#the-two-possible-approaches" title="Permanent link">¶</a></h3>
+<p>In a CQRS + Event Sourcing architecture, domain events can be published in two locations:</p>
+<ol>
+<li><strong>Write Path</strong>: Immediately after <code>EventSourcingRepository</code> persists events to EventStoreDB</li>
+<li><strong>Read Path</strong>: When <code>ReadModelReconciliator</code> receives events from EventStoreDB persistent subscription</li>
+</ol>
+<h3 id="neuroglias-design-read-path-only">Neuroglia's Design: Read Path Only<a class="headerlink" href="#neuroglias-design-read-path-only" title="Permanent link">¶</a></h3>
+<p><strong>Neuroglia publishes events ONLY from the Read Path.</strong> This is a deliberate architectural choice with specific benefits.</p>
+<h4 id="implementation">Implementation<a class="headerlink" href="#implementation" title="Permanent link">¶</a></h4>
+<p>The <code>EventSourcingRepository</code> intentionally overrides the base <code>Repository._publish_domain_events()</code> method to do nothing:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-20-1"><a href="#__codelineno-20-1" id="__codelineno-20-1" name="__codelineno-20-1"></a><span class="c1"># neuroglia/data/infrastructure/event_sourcing/event_sourcing_repository.py</span>
+</span><span id="__span-20-2"><a href="#__codelineno-20-2" id="__codelineno-20-2" name="__codelineno-20-2"></a>
+</span><span id="__span-20-3"><a href="#__codelineno-20-3" id="__codelineno-20-3" name="__codelineno-20-3"></a><span class="k">class</span><span class="w"> </span><span class="nc">EventSourcingRepository</span><span class="p">(</span><span class="n">Generic</span><span class="p">[</span><span class="n">TAggregate</span><span class="p">,</span> <span class="n">TKey</span><span class="p">],</span> <span class="n">Repository</span><span class="p">[</span><span class="n">TAggregate</span><span class="p">,</span> <span class="n">TKey</span><span class="p">]):</span>
+</span><span id="__span-20-4"><a href="#__codelineno-20-4" id="__codelineno-20-4" name="__codelineno-20-4"></a>
+</span><span id="__span-20-5"><a href="#__codelineno-20-5" id="__codelineno-20-5" name="__codelineno-20-5"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_publish_domain_events</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity</span><span class="p">:</span> <span class="n">TAggregate</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-20-6"><a href="#__codelineno-20-6" id="__codelineno-20-6" name="__codelineno-20-6"></a><span class="w">        </span><span class="sd">"""</span>
+</span><span id="__span-20-7"><a href="#__codelineno-20-7" id="__codelineno-20-7" name="__codelineno-20-7"></a><span class="sd">        Override base class event publishing for event-sourced aggregates.</span>
+</span><span id="__span-20-8"><a href="#__codelineno-20-8" id="__codelineno-20-8" name="__codelineno-20-8"></a>
+</span><span id="__span-20-9"><a href="#__codelineno-20-9" id="__codelineno-20-9" name="__codelineno-20-9"></a><span class="sd">        Event sourcing repositories DO NOT publish events directly because:</span>
+</span><span id="__span-20-10"><a href="#__codelineno-20-10" id="__codelineno-20-10" name="__codelineno-20-10"></a><span class="sd">        1. Events are already persisted to the EventStore</span>
+</span><span id="__span-20-11"><a href="#__codelineno-20-11" id="__codelineno-20-11" name="__codelineno-20-11"></a><span class="sd">        2. ReadModelReconciliator subscribes to EventStore and publishes ALL events</span>
+</span><span id="__span-20-12"><a href="#__codelineno-20-12" id="__codelineno-20-12" name="__codelineno-20-12"></a><span class="sd">        3. Publishing here would cause DOUBLE PUBLISHING</span>
+</span><span id="__span-20-13"><a href="#__codelineno-20-13" id="__codelineno-20-13" name="__codelineno-20-13"></a>
+</span><span id="__span-20-14"><a href="#__codelineno-20-14" id="__codelineno-20-14" name="__codelineno-20-14"></a><span class="sd">        For event-sourced aggregates:</span>
+</span><span id="__span-20-15"><a href="#__codelineno-20-15" id="__codelineno-20-15" name="__codelineno-20-15"></a><span class="sd">        - Events are persisted to EventStore by _do_add_async/_do_update_async</span>
+</span><span id="__span-20-16"><a href="#__codelineno-20-16" id="__codelineno-20-16" name="__codelineno-20-16"></a><span class="sd">        - ReadModelReconciliator.on_event_record_stream_next_async() publishes via mediator</span>
+</span><span id="__span-20-17"><a href="#__codelineno-20-17" id="__codelineno-20-17" name="__codelineno-20-17"></a><span class="sd">        - This ensures single, reliable event publishing from the source of truth</span>
+</span><span id="__span-20-18"><a href="#__codelineno-20-18" id="__codelineno-20-18" name="__codelineno-20-18"></a><span class="sd">        """</span>
+</span><span id="__span-20-19"><a href="#__codelineno-20-19" id="__codelineno-20-19" name="__codelineno-20-19"></a>        <span class="c1"># Do nothing - ReadModelReconciliator handles event publishing from EventStore</span>
+</span><span id="__span-20-20"><a href="#__codelineno-20-20" id="__codelineno-20-20" name="__codelineno-20-20"></a>        <span class="k">pass</span>
+</span></code></pre></div>
+<h4 id="complete-data-flow">Complete Data Flow<a class="headerlink" href="#complete-data-flow" title="Permanent link">¶</a></h4>
+<pre class="mermaid"><code>sequenceDiagram
+    participant Client
+    participant Controller
+    participant CommandHandler
+    participant Aggregate
+    participant Repository
+    participant EventStoreDB
+    participant Subscription
+    participant Reconciliator
+    participant Mediator
+    participant Handlers
+    participant ReadModel
+
+    Client-&gt;&gt;Controller: HTTP Request
+    Controller-&gt;&gt;CommandHandler: CreateTaskCommand
+    CommandHandler-&gt;&gt;Aggregate: Task.create()
+    Aggregate-&gt;&gt;Aggregate: Add TaskCreatedEvent to _pending_events
+    CommandHandler-&gt;&gt;Repository: add_async(task)
+    Repository-&gt;&gt;EventStoreDB: Append events
+    EventStoreDB--&gt;&gt;Repository: ✅ Persisted
+    Note over Repository: _publish_domain_events() does NOTHING
+    Repository--&gt;&gt;CommandHandler: ✅ Success
+    CommandHandler--&gt;&gt;Controller: TaskDto
+    Controller--&gt;&gt;Client: 201 Created
+
+    Note over EventStoreDB,Subscription: Async Read Path begins...
+
+    Subscription-&gt;&gt;EventStoreDB: Poll for new events
+    EventStoreDB--&gt;&gt;Subscription: TaskCreatedEvent
+    Subscription-&gt;&gt;Reconciliator: on_event_record_stream_next_async()
+    Reconciliator-&gt;&gt;Mediator: publish_async(TaskCreatedEvent)
+    Mediator-&gt;&gt;Handlers: Execute pipeline behaviors
+    Handlers-&gt;&gt;ReadModel: Update MongoDB projection
+    ReadModel--&gt;&gt;Handlers: ✅ Updated
+    Handlers-&gt;&gt;Handlers: Emit CloudEvent
+    Handlers--&gt;&gt;Mediator: ✅ Complete
+    Mediator--&gt;&gt;Reconciliator: ✅ Success
+    Reconciliator-&gt;&gt;Subscription: ACK event
+    Subscription-&gt;&gt;EventStoreDB: Checkpoint advanced</code></pre>
+<h3 id="why-this-design">Why This Design?<a class="headerlink" href="#why-this-design" title="Permanent link">¶</a></h3>
+<h4 id="1-single-source-of-truth">1. Single Source of Truth<a class="headerlink" href="#1-single-source-of-truth" title="Permanent link">¶</a></h4>
+<p>EventStoreDB is the authoritative source for all domain events. By publishing only from the EventStoreDB subscription:</p>
+<ul>
+<li>✅ Events are guaranteed to be persisted before publishing</li>
+<li>✅ No risk of publishing events that failed to persist</li>
+<li>✅ Order of events is preserved exactly as stored</li>
+<li>✅ No race conditions between Write and Read paths</li>
+</ul>
+<h4 id="2-reliable-delivery">2. Reliable Delivery<a class="headerlink" href="#2-reliable-delivery" title="Permanent link">¶</a></h4>
+<p>The persistent subscription mechanism provides:</p>
+<ul>
+<li><strong>At-least-once delivery</strong>: Events are redelivered until ACKed</li>
+<li><strong>Checkpoint tracking</strong>: Resume from last processed event after restart</li>
+<li><strong>Consumer groups</strong>: Multiple instances can share event processing workload</li>
+<li><strong>Guaranteed ordering</strong>: Events within a stream are processed in order</li>
+</ul>
+<h4 id="3-no-duplicate-publishing">3. No Duplicate Publishing<a class="headerlink" href="#3-no-duplicate-publishing" title="Permanent link">¶</a></h4>
+<p>Since events are published from exactly one location (<code>ReadModelReconciliator</code>), there's no risk of:</p>
+<ul>
+<li>❌ Double publishing (once from Write Path, once from Read Path)</li>
+<li>❌ Race conditions causing inconsistent state</li>
+<li>❌ Duplicate CloudEvents emitted</li>
+<li>❌ Projection handlers called multiple times for same event</li>
+</ul>
+<h4 id="4-eventual-consistency-model">4. Eventual Consistency Model<a class="headerlink" href="#4-eventual-consistency-model" title="Permanent link">¶</a></h4>
+<p>This design embraces eventual consistency correctly:</p>
+<ul>
+<li>Commands complete quickly (just persist to EventStoreDB)</li>
+<li>Read model updates happen asynchronously in background</li>
+<li>CloudEvents are emitted after successful read model projection</li>
+<li>Clear separation between Write Model (immediate) and Read Model (eventual)</li>
+</ul>
+<h3 id="contrast-with-state-based-repositories">Contrast with State-Based Repositories<a class="headerlink" href="#contrast-with-state-based-repositories" title="Permanent link">¶</a></h3>
+<p>For <strong>state-based repositories</strong> (like <code>MotorRepository</code> for MongoDB), the base class <code>Repository._publish_domain_events()</code> <strong>IS called</strong> because:</p>
+<ul>
+<li>Events are not stored separately from entity state</li>
+<li>No subscription mechanism exists to deliver events later</li>
+<li>Events must be published immediately after state persistence</li>
+<li>This is the only opportunity to process domain events</li>
+</ul>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-21-1"><a href="#__codelineno-21-1" id="__codelineno-21-1" name="__codelineno-21-1"></a><span class="c1"># State-based repository DOES publish events</span>
+</span><span id="__span-21-2"><a href="#__codelineno-21-2" id="__codelineno-21-2" name="__codelineno-21-2"></a><span class="k">class</span><span class="w"> </span><span class="nc">MotorRepository</span><span class="p">(</span><span class="n">Repository</span><span class="p">[</span><span class="n">TEntity</span><span class="p">,</span> <span class="n">TKey</span><span class="p">]):</span>
+</span><span id="__span-21-3"><a href="#__codelineno-21-3" id="__codelineno-21-3" name="__codelineno-21-3"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">add_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity</span><span class="p">:</span> <span class="n">TEntity</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-21-4"><a href="#__codelineno-21-4" id="__codelineno-21-4" name="__codelineno-21-4"></a>        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_do_add_async</span><span class="p">(</span><span class="n">entity</span><span class="p">)</span>  <span class="c1"># Persist to MongoDB</span>
+</span><span id="__span-21-5"><a href="#__codelineno-21-5" id="__codelineno-21-5" name="__codelineno-21-5"></a>        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_publish_domain_events</span><span class="p">(</span><span class="n">entity</span><span class="p">)</span>  <span class="c1"># ✅ PUBLISHES via mediator</span>
+</span></code></pre></div>
+<h3 id="implications-for-developers">Implications for Developers<a class="headerlink" href="#implications-for-developers" title="Permanent link">¶</a></h3>
+<h4 id="command-handlers">Command Handlers<a class="headerlink" href="#command-handlers" title="Permanent link">¶</a></h4>
+<p>Command handlers return <strong>immediately</strong> after persisting to EventStoreDB:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-22-1"><a href="#__codelineno-22-1" id="__codelineno-22-1" name="__codelineno-22-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">CreateTaskCommandHandler</span><span class="p">(</span><span class="n">CommandHandler</span><span class="p">[</span><span class="n">CreateTaskCommand</span><span class="p">,</span> <span class="n">OperationResult</span><span class="p">[</span><span class="n">TaskDto</span><span class="p">]]):</span>
+</span><span id="__span-22-2"><a href="#__codelineno-22-2" id="__codelineno-22-2" name="__codelineno-22-2"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">handle_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command</span><span class="p">:</span> <span class="n">CreateTaskCommand</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">OperationResult</span><span class="p">[</span><span class="n">TaskDto</span><span class="p">]:</span>
+</span><span id="__span-22-3"><a href="#__codelineno-22-3" id="__codelineno-22-3" name="__codelineno-22-3"></a>        <span class="c1"># Create aggregate and raise domain event</span>
+</span><span id="__span-22-4"><a href="#__codelineno-22-4" id="__codelineno-22-4" name="__codelineno-22-4"></a>        <span class="n">task</span> <span class="o">=</span> <span class="n">Task</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">command</span><span class="o">.</span><span class="n">title</span><span class="p">,</span> <span class="n">command</span><span class="o">.</span><span class="n">description</span><span class="p">)</span>
+</span><span id="__span-22-5"><a href="#__codelineno-22-5" id="__codelineno-22-5" name="__codelineno-22-5"></a>
+</span><span id="__span-22-6"><a href="#__codelineno-22-6" id="__codelineno-22-6" name="__codelineno-22-6"></a>        <span class="c1"># Persist to EventStore - returns immediately</span>
+</span><span id="__span-22-7"><a href="#__codelineno-22-7" id="__codelineno-22-7" name="__codelineno-22-7"></a>        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">repository</span><span class="o">.</span><span class="n">add_async</span><span class="p">(</span><span class="n">task</span><span class="p">)</span>
+</span><span id="__span-22-8"><a href="#__codelineno-22-8" id="__codelineno-22-8" name="__codelineno-22-8"></a>
+</span><span id="__span-22-9"><a href="#__codelineno-22-9" id="__codelineno-22-9" name="__codelineno-22-9"></a>        <span class="c1"># ⚠️ Read model NOT YET updated at this point!</span>
+</span><span id="__span-22-10"><a href="#__codelineno-22-10" id="__codelineno-22-10" name="__codelineno-22-10"></a>        <span class="c1"># Domain event handlers have NOT yet been called!</span>
+</span><span id="__span-22-11"><a href="#__codelineno-22-11" id="__codelineno-22-11" name="__codelineno-22-11"></a>        <span class="c1"># CloudEvents have NOT yet been emitted!</span>
+</span><span id="__span-22-12"><a href="#__codelineno-22-12" id="__codelineno-22-12" name="__codelineno-22-12"></a>
+</span><span id="__span-22-13"><a href="#__codelineno-22-13" id="__codelineno-22-13" name="__codelineno-22-13"></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">created</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mapper</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">task</span><span class="p">,</span> <span class="n">TaskDto</span><span class="p">))</span>
+</span></code></pre></div>
+<h4 id="event-handlers-projections">Event Handlers (Projections)<a class="headerlink" href="#event-handlers-projections" title="Permanent link">¶</a></h4>
+<p>Event handlers are called asynchronously from the Read Path:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-23-1"><a href="#__codelineno-23-1" id="__codelineno-23-1" name="__codelineno-23-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">TaskCreatedProjectionHandler</span><span class="p">(</span><span class="n">EventHandler</span><span class="p">[</span><span class="n">TaskCreatedDomainEvent</span><span class="p">]):</span>
+</span><span id="__span-23-2"><a href="#__codelineno-23-2" id="__codelineno-23-2" name="__codelineno-23-2"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">handle_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">TaskCreatedDomainEvent</span><span class="p">):</span>
+</span><span id="__span-23-3"><a href="#__codelineno-23-3" id="__codelineno-23-3" name="__codelineno-23-3"></a>        <span class="c1"># This executes in ReadModelReconciliator context</span>
+</span><span id="__span-23-4"><a href="#__codelineno-23-4" id="__codelineno-23-4" name="__codelineno-23-4"></a>        <span class="c1"># NOT in command handler context!</span>
+</span><span id="__span-23-5"><a href="#__codelineno-23-5" id="__codelineno-23-5" name="__codelineno-23-5"></a>
+</span><span id="__span-23-6"><a href="#__codelineno-23-6" id="__codelineno-23-6" name="__codelineno-23-6"></a>        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_model_repository</span><span class="o">.</span><span class="n">create_async</span><span class="p">(</span><span class="n">ReadModelTask</span><span class="p">(</span>
+</span><span id="__span-23-7"><a href="#__codelineno-23-7" id="__codelineno-23-7" name="__codelineno-23-7"></a>            <span class="nb">id</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">aggregate_id</span><span class="p">,</span>
+</span><span id="__span-23-8"><a href="#__codelineno-23-8" id="__codelineno-23-8" name="__codelineno-23-8"></a>            <span class="n">title</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">title</span><span class="p">,</span>
+</span><span id="__span-23-9"><a href="#__codelineno-23-9" id="__codelineno-23-9" name="__codelineno-23-9"></a>            <span class="n">description</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">description</span><span class="p">,</span>
+</span><span id="__span-23-10"><a href="#__codelineno-23-10" id="__codelineno-23-10" name="__codelineno-23-10"></a>            <span class="n">created_at</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">timestamp</span>
+</span><span id="__span-23-11"><a href="#__codelineno-23-11" id="__codelineno-23-11" name="__codelineno-23-11"></a>        <span class="p">))</span>
+</span><span id="__span-23-12"><a href="#__codelineno-23-12" id="__codelineno-23-12" name="__codelineno-23-12"></a>
+</span><span id="__span-23-13"><a href="#__codelineno-23-13" id="__codelineno-23-13" name="__codelineno-23-13"></a>        <span class="c1"># CloudEvent will be emitted AFTER this handler completes</span>
+</span></code></pre></div>
+<h4 id="query-handlers">Query Handlers<a class="headerlink" href="#query-handlers" title="Permanent link">¶</a></h4>
+<p>Queries read from eventually-consistent read models:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-24-1"><a href="#__codelineno-24-1" id="__codelineno-24-1" name="__codelineno-24-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">GetTaskByIdQueryHandler</span><span class="p">(</span><span class="n">QueryHandler</span><span class="p">[</span><span class="n">GetTaskByIdQuery</span><span class="p">,</span> <span class="n">TaskDto</span><span class="p">]):</span>
+</span><span id="__span-24-2"><a href="#__codelineno-24-2" id="__codelineno-24-2" name="__codelineno-24-2"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">handle_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">:</span> <span class="n">GetTaskByIdQuery</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TaskDto</span><span class="p">:</span>
+</span><span id="__span-24-3"><a href="#__codelineno-24-3" id="__codelineno-24-3" name="__codelineno-24-3"></a>        <span class="c1"># Reads from MongoDB read model</span>
+</span><span id="__span-24-4"><a href="#__codelineno-24-4" id="__codelineno-24-4" name="__codelineno-24-4"></a>        <span class="c1"># May not reflect very recent writes (eventual consistency)</span>
+</span><span id="__span-24-5"><a href="#__codelineno-24-5" id="__codelineno-24-5" name="__codelineno-24-5"></a>        <span class="n">task</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_model_repository</span><span class="o">.</span><span class="n">get_by_id_async</span><span class="p">(</span><span class="n">query</span><span class="o">.</span><span class="n">task_id</span><span class="p">)</span>
+</span><span id="__span-24-6"><a href="#__codelineno-24-6" id="__codelineno-24-6" name="__codelineno-24-6"></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">mapper</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">task</span><span class="p">,</span> <span class="n">TaskDto</span><span class="p">)</span>
+</span></code></pre></div>
+<h3 id="best-practices">Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">¶</a></h3>
+<h4 id="1-design-for-idempotency">1. Design for Idempotency<a class="headerlink" href="#1-design-for-idempotency" title="Permanent link">¶</a></h4>
+<p>Projection handlers should be idempotent since events may be redelivered:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-25-1"><a href="#__codelineno-25-1" id="__codelineno-25-1" name="__codelineno-25-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">TaskCreatedProjectionHandler</span><span class="p">(</span><span class="n">EventHandler</span><span class="p">[</span><span class="n">TaskCreatedDomainEvent</span><span class="p">]):</span>
+</span><span id="__span-25-2"><a href="#__codelineno-25-2" id="__codelineno-25-2" name="__codelineno-25-2"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">handle_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">TaskCreatedDomainEvent</span><span class="p">):</span>
+</span><span id="__span-25-3"><a href="#__codelineno-25-3" id="__codelineno-25-3" name="__codelineno-25-3"></a>        <span class="c1"># ✅ GOOD: Use upsert to handle redelivery</span>
+</span><span id="__span-25-4"><a href="#__codelineno-25-4" id="__codelineno-25-4" name="__codelineno-25-4"></a>        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">collection</span><span class="o">.</span><span class="n">update_one</span><span class="p">(</span>
+</span><span id="__span-25-5"><a href="#__codelineno-25-5" id="__codelineno-25-5" name="__codelineno-25-5"></a>            <span class="p">{</span><span class="s2">"_id"</span><span class="p">:</span> <span class="n">event</span><span class="o">.</span><span class="n">aggregate_id</span><span class="p">},</span>
+</span><span id="__span-25-6"><a href="#__codelineno-25-6" id="__codelineno-25-6" name="__codelineno-25-6"></a>            <span class="p">{</span><span class="s2">"$set"</span><span class="p">:</span> <span class="p">{</span>
+</span><span id="__span-25-7"><a href="#__codelineno-25-7" id="__codelineno-25-7" name="__codelineno-25-7"></a>                <span class="s2">"title"</span><span class="p">:</span> <span class="n">event</span><span class="o">.</span><span class="n">title</span><span class="p">,</span>
+</span><span id="__span-25-8"><a href="#__codelineno-25-8" id="__codelineno-25-8" name="__codelineno-25-8"></a>                <span class="s2">"description"</span><span class="p">:</span> <span class="n">event</span><span class="o">.</span><span class="n">description</span><span class="p">,</span>
+</span><span id="__span-25-9"><a href="#__codelineno-25-9" id="__codelineno-25-9" name="__codelineno-25-9"></a>                <span class="s2">"created_at"</span><span class="p">:</span> <span class="n">event</span><span class="o">.</span><span class="n">timestamp</span>
+</span><span id="__span-25-10"><a href="#__codelineno-25-10" id="__codelineno-25-10" name="__codelineno-25-10"></a>            <span class="p">}},</span>
+</span><span id="__span-25-11"><a href="#__codelineno-25-11" id="__codelineno-25-11" name="__codelineno-25-11"></a>            <span class="n">upsert</span><span class="o">=</span><span class="kc">True</span>
+</span><span id="__span-25-12"><a href="#__codelineno-25-12" id="__codelineno-25-12" name="__codelineno-25-12"></a>        <span class="p">)</span>
+</span><span id="__span-25-13"><a href="#__codelineno-25-13" id="__codelineno-25-13" name="__codelineno-25-13"></a>
+</span><span id="__span-25-14"><a href="#__codelineno-25-14" id="__codelineno-25-14" name="__codelineno-25-14"></a>        <span class="c1"># ❌ BAD: Insert will fail on redelivery</span>
+</span><span id="__span-25-15"><a href="#__codelineno-25-15" id="__codelineno-25-15" name="__codelineno-25-15"></a>        <span class="c1"># await self.collection.insert_one({...})</span>
+</span></code></pre></div>
+<h4 id="2-keep-handlers-fast">2. Keep Handlers Fast<a class="headerlink" href="#2-keep-handlers-fast" title="Permanent link">¶</a></h4>
+<p>Don't block the event processing pipeline:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-26-1"><a href="#__codelineno-26-1" id="__codelineno-26-1" name="__codelineno-26-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">OrderConfirmedHandler</span><span class="p">(</span><span class="n">EventHandler</span><span class="p">[</span><span class="n">OrderConfirmedEvent</span><span class="p">]):</span>
+</span><span id="__span-26-2"><a href="#__codelineno-26-2" id="__codelineno-26-2" name="__codelineno-26-2"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">handle_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">OrderConfirmedEvent</span><span class="p">):</span>
+</span><span id="__span-26-3"><a href="#__codelineno-26-3" id="__codelineno-26-3" name="__codelineno-26-3"></a>        <span class="c1"># ✅ GOOD: Fast database update</span>
+</span><span id="__span-26-4"><a href="#__codelineno-26-4" id="__codelineno-26-4" name="__codelineno-26-4"></a>        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">update_read_model</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+</span><span id="__span-26-5"><a href="#__codelineno-26-5" id="__codelineno-26-5" name="__codelineno-26-5"></a>
+</span><span id="__span-26-6"><a href="#__codelineno-26-6" id="__codelineno-26-6" name="__codelineno-26-6"></a>        <span class="c1"># ❌ BAD: Slow external API calls block pipeline</span>
+</span><span id="__span-26-7"><a href="#__codelineno-26-7" id="__codelineno-26-7" name="__codelineno-26-7"></a>        <span class="c1"># await self.send_confirmation_email(event)  # Do this elsewhere!</span>
+</span><span id="__span-26-8"><a href="#__codelineno-26-8" id="__codelineno-26-8" name="__codelineno-26-8"></a>
+</span><span id="__span-26-9"><a href="#__codelineno-26-9" id="__codelineno-26-9" name="__codelineno-26-9"></a>        <span class="c1"># ✅ BETTER: Queue for async processing</span>
+</span><span id="__span-26-10"><a href="#__codelineno-26-10" id="__codelineno-26-10" name="__codelineno-26-10"></a>        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">task_queue</span><span class="o">.</span><span class="n">enqueue</span><span class="p">(</span><span class="n">SendConfirmationEmailTask</span><span class="p">(</span><span class="n">event</span><span class="p">))</span>
+</span></code></pre></div>
+<h4 id="3-handle-failures-gracefully">3. Handle Failures Gracefully<a class="headerlink" href="#3-handle-failures-gracefully" title="Permanent link">¶</a></h4>
+<p>If a handler fails, the event will be redelivered:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-27-1"><a href="#__codelineno-27-1" id="__codelineno-27-1" name="__codelineno-27-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">PaymentProcessedHandler</span><span class="p">(</span><span class="n">EventHandler</span><span class="p">[</span><span class="n">PaymentProcessedEvent</span><span class="p">]):</span>
+</span><span id="__span-27-2"><a href="#__codelineno-27-2" id="__codelineno-27-2" name="__codelineno-27-2"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">handle_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">PaymentProcessedEvent</span><span class="p">):</span>
+</span><span id="__span-27-3"><a href="#__codelineno-27-3" id="__codelineno-27-3" name="__codelineno-27-3"></a>        <span class="k">try</span><span class="p">:</span>
+</span><span id="__span-27-4"><a href="#__codelineno-27-4" id="__codelineno-27-4" name="__codelineno-27-4"></a>            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">update_payment_read_model</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+</span><span id="__span-27-5"><a href="#__codelineno-27-5" id="__codelineno-27-5" name="__codelineno-27-5"></a>        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">ex</span><span class="p">:</span>
+</span><span id="__span-27-6"><a href="#__codelineno-27-6" id="__codelineno-27-6" name="__codelineno-27-6"></a>            <span class="c1"># Log error - event will be redelivered</span>
+</span><span id="__span-27-7"><a href="#__codelineno-27-7" id="__codelineno-27-7" name="__codelineno-27-7"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Failed to project PaymentProcessed: </span><span class="si">{</span><span class="n">ex</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span><span id="__span-27-8"><a href="#__codelineno-27-8" id="__codelineno-27-8" name="__codelineno-27-8"></a>            <span class="k">raise</span>  <span class="c1"># Let ReadModelReconciliator handle retry</span>
+</span></code></pre></div>
+<h3 id="verification">Verification<a class="headerlink" href="#verification" title="Permanent link">¶</a></h3>
+<p>This architecture was verified through diagnostic logging on December 2, 2025:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-28-1"><a href="#__codelineno-28-1" id="__codelineno-28-1" name="__codelineno-28-1"></a>10:36:29,143  ✅ Command 'CreateTaskCommand' completed
+</span><span id="__span-28-2"><a href="#__codelineno-28-2" id="__codelineno-28-2" name="__codelineno-28-2"></a>10:36:29,147  📥 READ PATH: Received TaskCreatedDomainEvent from subscription
+</span><span id="__span-28-3"><a href="#__codelineno-28-3" id="__codelineno-28-3" name="__codelineno-28-3"></a>10:36:29,148  📥 READ PATH: Publishing TaskCreatedDomainEvent via mediator
+</span><span id="__span-28-4"><a href="#__codelineno-28-4" id="__codelineno-28-4" name="__codelineno-28-4"></a>10:36:29,153  Found 3 pipeline behaviors for TaskCreatedDomainEvent
+</span><span id="__span-28-5"><a href="#__codelineno-28-5" id="__codelineno-28-5" name="__codelineno-28-5"></a>10:36:29,154  📥 Projecting TaskCreated
+</span><span id="__span-28-6"><a href="#__codelineno-28-6" id="__codelineno-28-6" name="__codelineno-28-6"></a>10:36:29,235  ✅ Projected TaskCreated to Read Model
+</span><span id="__span-28-7"><a href="#__codelineno-28-7" id="__codelineno-28-7" name="__codelineno-28-7"></a>10:36:29,240  Emitting CloudEvent 'io.tools-provider.task.created.v1'
+</span><span id="__span-28-8"><a href="#__codelineno-28-8" id="__codelineno-28-8" name="__codelineno-28-8"></a>10:36:29,242  ACK sent for event
+</span><span id="__span-28-9"><a href="#__codelineno-28-9" id="__codelineno-28-9" name="__codelineno-28-9"></a>10:36:29,264  Published cloudevent
+</span></code></pre></div>
+<p><strong>Key observations:</strong></p>
+<ol>
+<li>✅ No "📤 WRITE PATH" log for event-sourced aggregates</li>
+<li>✅ Only "📥 READ PATH" publishes domain events</li>
+<li>✅ CloudEvent emitted exactly once</li>
+<li>✅ ACK sent after successful processing</li>
+</ol>
+<h3 id="related-issues-fixes">Related Issues &amp; Fixes<a class="headerlink" href="#related-issues-fixes" title="Permanent link">¶</a></h3>
+<h4 id="esdbclient-bug-missing-subscription_id">esdbclient Bug: Missing subscription_id<a class="headerlink" href="#esdbclient-bug-missing-subscription_id" title="Permanent link">¶</a></h4>
+<p><strong>Status</strong>: Patched in <code>src/neuroglia/data/infrastructure/event_sourcing/patches.py</code>
+<strong>Issue</strong>: https://github.com/pyeventsourcing/kurrentdbclient/issues/35</p>
+<p>The async <code>AsyncPersistentSubscription.init()</code> doesn't propagate <code>subscription_id</code> to <code>_read_reqs</code>, causing ACKs to be sent with empty subscription ID. Neuroglia includes a runtime patch that fixes this automatically.</p>
+<h4 id="neuroglia-fix-wrong-ack-id-for-resolved-links">Neuroglia Fix: Wrong ACK ID for Resolved Links<a class="headerlink" href="#neuroglia-fix-wrong-ack-id-for-resolved-links" title="Permanent link">¶</a></h4>
+<p><strong>Status</strong>: Fixed in v0.6.20</p>
+<p>When using <code>resolveLinktos=true</code> (category streams like <code>$ce-*</code>), ACKs must use <code>e.ack_id</code> (link event ID), not <code>e.id</code> (resolved event ID). This is now correctly handled in <code>ESEventStore._consume_events_async()</code>.</p>
+<h3 id="summary">Summary<a class="headerlink" href="#summary" title="Permanent link">¶</a></h3>
+<ul>
+<li>✅ <strong>Events published ONLY from Read Path</strong> via <code>ReadModelReconciliator</code></li>
+<li>✅ <strong>Write Path returns immediately</strong> after persisting to EventStoreDB</li>
+<li>✅ <strong>No duplicate event processing</strong> - single publishing location</li>
+<li>✅ <strong>Reliable delivery</strong> via persistent subscriptions</li>
+<li>✅ <strong>Eventual consistency</strong> between Write and Read models</li>
+<li>✅ <strong>Idempotent handlers</strong> handle redelivery correctly</li>
+<li>✅ <strong>CloudEvents emitted</strong> after successful projection</li>
+</ul>
+<p>This architecture ensures reliable, predictable event processing in event-sourced applications.</p>
 <h2 id="key-takeaways">📝 Key Takeaways<a class="headerlink" href="#key-takeaways" title="Permanent link">¶</a></h2>
 <ul>
 <li><strong>Event sourcing stores state changes as immutable events</strong>, preserving complete history</li>
