@@ -361,3 +361,188 @@ class TestDataAccessLayerIntegration:
             options = EventSourcingRepositoryOptions(delete_mode=delete_mode)
             wm = DataAccessLayer.WriteModel(options=options)
             assert wm._options.delete_mode == delete_mode
+
+
+# Test Queryable Models for ReadModel tests
+class TestQueryableModel:
+    """Test queryable model for read model configuration tests"""
+
+    __queryable__ = True
+
+    def __init__(self, id: str, name: str):
+        self.id = id
+        self.name = name
+
+
+class AnotherQueryableModel:
+    """Another test queryable model"""
+
+    __queryable__ = True
+
+    def __init__(self, id: str):
+        self.id = id
+
+
+class TestDataAccessLayerReadModelSimplifiedAPI:
+    """Tests for simplified DataAccessLayer.ReadModel API"""
+
+    def setup_method(self):
+        """Setup test fixtures before each test"""
+        self.builder = Mock(spec=ApplicationBuilderBase)
+        self.builder.settings = Mock()
+        self.builder.settings.consumer_group = "test-group"
+        self.builder.settings.connection_strings = {"mongo": "mongodb://localhost:27017"}
+        self.builder.services = Mock()
+        self.builder.services.add_singleton = Mock()
+        self.builder.services.try_add_singleton = Mock()
+        self.builder.services.add_transient = Mock()
+
+    def test_read_model_init_without_database_name(self):
+        """Test ReadModel initialization without database name"""
+        read_model = DataAccessLayer.ReadModel()
+        assert read_model._database_name is None
+
+    def test_read_model_init_with_database_name(self):
+        """Test ReadModel initialization with database name"""
+        read_model = DataAccessLayer.ReadModel(database_name="myapp")
+        assert read_model._database_name == "myapp"
+
+    @patch("neuroglia.hosting.configuration.data_access_layer.ModuleLoader")
+    @patch("neuroglia.hosting.configuration.data_access_layer.TypeFinder")
+    def test_configure_with_database_name(self, mock_type_finder, mock_module_loader):
+        """Test configure() with database name"""
+        # Setup mocks
+        mock_module = Mock()
+        mock_module_loader.load.return_value = mock_module
+        mock_type_finder.get_types.return_value = [TestQueryableModel]
+
+        # Create ReadModel with database name
+        read_model = DataAccessLayer.ReadModel(database_name="testdb")
+        result = read_model.configure(self.builder, ["test.module"])
+
+        # Verify
+        assert result is self.builder
+        mock_module_loader.load.assert_called_once_with("test.module")
+        # Should register MongoClient, options, repository, queryable repository, and handlers
+        assert self.builder.services.try_add_singleton.call_count >= 3
+        assert self.builder.services.add_transient.call_count == 2  # GetById and List handlers
+
+    @patch("neuroglia.hosting.configuration.data_access_layer.ModuleLoader")
+    @patch("neuroglia.hosting.configuration.data_access_layer.TypeFinder")
+    def test_configure_without_database_name_raises_error(self, mock_type_finder, mock_module_loader):
+        """Test configure() without database name raises error"""
+        # Setup mocks
+        mock_module = Mock()
+        mock_module_loader.load.return_value = mock_module
+        mock_type_finder.get_types.return_value = [TestQueryableModel]
+
+        # Create ReadModel without database name
+        read_model = DataAccessLayer.ReadModel()
+
+        # Should raise ValueError
+        with pytest.raises(ValueError, match="database_name not provided"):
+            read_model.configure(self.builder, ["test.module"])
+
+    @patch("neuroglia.hosting.configuration.data_access_layer.ModuleLoader")
+    @patch("neuroglia.hosting.configuration.data_access_layer.TypeFinder")
+    def test_configure_with_custom_setup_takes_precedence(self, mock_type_finder, mock_module_loader):
+        """Test custom repository_setup function takes precedence over database_name"""
+        # Setup mocks
+        mock_module = Mock()
+        mock_module_loader.load.return_value = mock_module
+        mock_type_finder.get_types.return_value = [TestQueryableModel]
+
+        custom_setup = Mock()
+
+        # Create ReadModel with database_name AND custom setup
+        read_model = DataAccessLayer.ReadModel(database_name="testdb")
+        result = read_model.configure(self.builder, ["test.module"], custom_setup)
+
+        # Verify custom setup was called, not the simplified path
+        assert result is self.builder
+        custom_setup.assert_called_once_with(self.builder, TestQueryableModel, str)
+        # ReadModelReconciliator should still be registered
+        assert self.builder.services.add_singleton.call_count >= 2
+
+    @patch("neuroglia.hosting.configuration.data_access_layer.ModuleLoader")
+    @patch("neuroglia.hosting.configuration.data_access_layer.TypeFinder")
+    def test_configure_with_multiple_queryable_types(self, mock_type_finder, mock_module_loader):
+        """Test configure() discovers and configures multiple queryable types"""
+        # Setup mocks
+        mock_module = Mock()
+        mock_module_loader.load.return_value = mock_module
+        mock_type_finder.get_types.return_value = [TestQueryableModel, AnotherQueryableModel]
+
+        # Create ReadModel and configure
+        read_model = DataAccessLayer.ReadModel(database_name="testdb")
+        result = read_model.configure(self.builder, ["test.module"])
+
+        # Verify both queryable types were registered
+        assert result is self.builder
+        # Should have multiple registrations for each type
+        assert self.builder.services.try_add_singleton.call_count >= 5  # MongoClient + 2*(options + repo + queryable)
+        assert self.builder.services.add_transient.call_count == 4  # 2 handlers per type
+
+    def test_configure_without_consumer_group_raises_error(self):
+        """Test configure() without consumer_group raises error"""
+        self.builder.settings.consumer_group = None
+
+        read_model = DataAccessLayer.ReadModel(database_name="testdb")
+
+        with pytest.raises(ValueError, match="consumer group not specified"):
+            read_model.configure(self.builder, ["test.module"])
+
+    @patch("neuroglia.hosting.configuration.data_access_layer.ModuleLoader")
+    @patch("neuroglia.hosting.configuration.data_access_layer.TypeFinder")
+    def test_configure_without_mongo_connection_string_raises_error(self, mock_type_finder, mock_module_loader):
+        """Test configure() without mongo connection string raises error"""
+        # Setup mocks
+        mock_module = Mock()
+        mock_module_loader.load.return_value = mock_module
+        mock_type_finder.get_types.return_value = [TestQueryableModel]
+
+        # Remove mongo connection string
+        self.builder.settings.connection_strings = {}
+
+        read_model = DataAccessLayer.ReadModel(database_name="testdb")
+
+        with pytest.raises(ValueError, match="Missing 'mongo' connection string"):
+            read_model.configure(self.builder, ["test.module"])
+
+    @patch("neuroglia.hosting.configuration.data_access_layer.ModuleLoader")
+    @patch("neuroglia.hosting.configuration.data_access_layer.TypeFinder")
+    def test_configure_with_custom_setup_backwards_compatible(self, mock_type_finder, mock_module_loader):
+        """Test backwards compatibility: custom setup without database_name"""
+        # Setup mocks
+        mock_module = Mock()
+        mock_module_loader.load.return_value = mock_module
+        mock_type_finder.get_types.return_value = [TestQueryableModel]
+
+        custom_setup = Mock()
+
+        # Create ReadModel without database_name, use custom setup
+        read_model = DataAccessLayer.ReadModel()
+        result = read_model.configure(self.builder, ["test.module"], custom_setup)
+
+        # Verify custom setup was called
+        assert result is self.builder
+        custom_setup.assert_called_once_with(self.builder, TestQueryableModel, str)
+
+
+@pytest.mark.integration
+class TestDataAccessLayerReadModelIntegration:
+    """Integration tests for ReadModel configuration"""
+
+    def test_read_model_instantiation_patterns(self):
+        """Test different instantiation patterns"""
+        # Pattern 1: Default (no database name)
+        rm1 = DataAccessLayer.ReadModel()
+        assert rm1._database_name is None
+
+        # Pattern 2: With database name
+        rm2 = DataAccessLayer.ReadModel(database_name="myapp")
+        assert rm2._database_name == "myapp"
+
+        # Pattern 3: With different database name
+        rm3 = DataAccessLayer.ReadModel(database_name="production_db")
+        assert rm3._database_name == "production_db"
