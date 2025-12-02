@@ -7,6 +7,59 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.7.0] - 2025-12-02
+
+### Changed
+
+- **BREAKING**: Migrated from `esdbclient` to `kurrentdbclient` 1.1.2
+
+  - EventStoreDB/KurrentDB official Python client replacement
+  - Updated all imports: `esdbclient` → `kurrentdbclient`
+  - `AsyncioEventStoreDBClient` → `AsyncKurrentDBClient`
+  - `AlreadyExists` → `AlreadyExistsError` (aliased for compatibility)
+  - Bug fix: `AsyncPersistentSubscription.init()` now propagates `subscription_id` correctly
+  - ACK/NACK operations now work reliably without redelivery loops
+
+- **Dependencies**: Pinned all dependency versions for production stability
+  - All core dependencies now use exact versions (removed `^` ranges)
+  - `grpcio`: 1.76.0 (upgraded from 1.68.x, required by kurrentdbclient)
+  - `protobuf`: 6.33.1 (upgraded from 5.x, kurrentdbclient/OpenTelemetry compatibility)
+  - OpenTelemetry stack: 1.38.0/0.59b0 (upgraded for protobuf 6.x support)
+  - `pymongo`: 4.15.4 (CVE-2024-5629 security fix)
+  - `motor`: 3.7.0 (async MongoDB driver update)
+  - `h11`: 0.16.0 (CVE-2025-43859 security fix, CVSS 9.3 Critical)
+
+### Removed
+
+- **Runtime Patches**: Removed `patches.py` module (no longer needed)
+  - kurrentdbclient 1.1.2 includes upstream fix for subscription_id propagation
+  - Eliminated monkey-patching of `AsyncPersistentSubscription.init()`
+  - Cleaner codebase with no runtime modifications to third-party libraries
+
+### Fixed
+
+- **Event Sourcing**: Persistent subscription ACK delivery now reliable
+  - Fixed 30-second event redelivery loop issue
+  - Checkpoints now advance correctly in EventStoreDB/KurrentDB
+  - Events no longer parked incorrectly after maxRetryCount attempts
+  - Read models process events exactly once (idempotency restored)
+
+### Security
+
+- **Critical**: Fixed CVE-2025-43859 in h11 (CVSS 9.3)
+- **Medium**: Fixed CVE-2024-5629 in pymongo (CVSS 4.7)
+- **Medium**: Fixed CVE-2024-5569 in zipp (CVSS 6.9) - transitive dependency
+- **Medium**: Fixed CVE-2024-39689 in certifi (CVSS 6.1) - transitive dependency
+- **Medium**: Fixed CVE-2024-3651 in idna (CVSS 6.2) - transitive dependency
+- **Medium**: Fixed CVE-2023-29483 in dnspython (CVSS 5.9) - transitive dependency
+
+### Added
+
+- **Testing**: Comprehensive test suite for kurrentdbclient subscription_id bug
+  - Portable test demonstrating the historical bug and its fix
+  - Source code inspection tests comparing sync vs async implementations
+  - Documentation in `tests/cases/KURRENTDB_BUG_REPORT.md`
+
 ## [0.6.23] - 2025-12-02
 
 ### Added

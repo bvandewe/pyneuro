@@ -5,9 +5,9 @@ import sys
 from typing import Any, Dict, Optional
 
 import rx
-from esdbclient import AsyncioEventStoreDBClient as AsyncClientFactory
-from esdbclient import NewEvent, RecordedEvent, StreamState
-from esdbclient.exceptions import AlreadyExists
+from kurrentdbclient import AsyncKurrentDBClient as AsyncClientFactory
+from kurrentdbclient import NewEvent, RecordedEvent, StreamState
+from kurrentdbclient.exceptions import AlreadyExistsError as AlreadyExists
 from rx.core.observable.observable import Observable
 from rx.disposable.disposable import Disposable
 from rx.subject.subject import Subject
