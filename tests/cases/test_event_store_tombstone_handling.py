@@ -24,7 +24,7 @@ from unittest.mock import AsyncMock, Mock
 from uuid import uuid4
 
 import pytest
-from esdbclient import RecordedEvent
+from kurrentdbclient import RecordedEvent
 from rx.subject import Subject
 
 from neuroglia.data.infrastructure.event_sourcing.abstractions import EventStoreOptions

@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "neuroglia-python"
-version = "0.6.23"
+version = "0.7.0"
 description = "Port from .NET to Python of the Neuroglia Framework"
 authors = ["Charles d'Avernas <charles.davernas@neuroglia.io>", "Bruno van de Werve <bvandewe@gmail.com>"]
 license = "Apache"
@@ -13,60 +13,60 @@ package-mode = true
 [tool.poetry.dependencies]
 python = "^3.9"
 # Core framework dependencies - always required
-annotated-types = "^0.7.0"
-classy-fastapi = "^0.6.1"
-fastapi = "^0.115.5"
-multipledispatch = "^1.0.0"
-pydantic-settings = "^2.6.1"
-python-dotenv = "^1.0.1"
-typing-extensions = "^4.12.2"
-rx = { version = "^3.2.0" }
-uvicorn = { version = "^0.32.1" }
-httpx = { version = "^0.27.2" }
-grpcio = { version = "^1.68.1" }
+annotated-types = "0.7.0"
+classy-fastapi = "0.6.1"
+fastapi = "0.115.5"
+multipledispatch = "1.0.0"
+pydantic-settings = "2.6.1"
+python-dotenv = "1.0.1"
+typing-extensions = "4.12.2"
+rx = { version = "3.2.0" }
+uvicorn = { version = "0.32.1" }
+httpx = { version = "0.27.2" }
+grpcio = { version = "1.76.0" }
+h11 = { version = "0.16.0" }  # Security fix for CVE-2025-43859
 
 # Authentication dependencies
-pyjwt = "^2.10.1"
-passlib = { extras = ["bcrypt"], version = "^1.7.4" }
-python-multipart = "^0.0.17"
-itsdangerous = "^2.2.0"
+pyjwt = "2.10.1"
+passlib = { extras = ["bcrypt"], version = "1.7.4" }
+python-multipart = "0.0.17"
+itsdangerous = "2.2.0"
 
 # Core dependencies
-protobuf = "^5.0"  # Use protobuf 5.x for compatibility with latest OpenTelemetry and etcd3-py
-apscheduler = "^3.11.0"
-pydantic = {extras = ["email"], version = "^2.10.3"}
-email-validator = "^2.2.0"
-jinja2 = "^3.1.4"
+protobuf = "6.33.1"  # Pinned for compatibility with kurrentdbclient, OpenTelemetry, and etcd3-py
+apscheduler = "3.11.0"
+pydantic = {extras = ["email"], version = "2.10.3"}
+email-validator = "2.2.0"
+jinja2 = "3.1.4"
 
 # Optional dependencies - install with extras
-redis = { version = "^5.2.0", optional = true }
-pymongo = { version = "^4.10.1", optional = true }
-motor = { version = "^3.6.0", optional = true }
-esdbclient = { version = "^1.1.1", optional = true }
-etcd3-py = { version = "^0.1.6", optional = true }  # Maintained fork with protobuf 5.x support
+redis = { version = "5.2.0", optional = true }
+pymongo = { version = "4.15.4", optional = true }
+motor = { version = "3.7.0", optional = true }
+kurrentdbclient = { version = "1.1.2", optional = true }  # Bug fix: AsyncPersistentSubscription.init() now propagates subscription_id
+etcd3-py = { version = "0.1.6", optional = true }  # Maintained fork with protobuf 5.x/6.x support
 
-# OpenTelemetry dependencies
-# Using latest versions with protobuf 5.x support
-opentelemetry-api = "^1.28.2"
-opentelemetry-sdk = "^1.28.2"
-opentelemetry-exporter-otlp-proto-grpc = "^1.28.2"
-opentelemetry-exporter-otlp-proto-http = "^1.28.2"
-opentelemetry-instrumentation = "^0.49b2"
-opentelemetry-instrumentation-fastapi = "^0.49b2"
-opentelemetry-instrumentation-httpx = "^0.49b2"
-opentelemetry-instrumentation-logging = "^0.49b2"
-opentelemetry-instrumentation-system-metrics = "^0.49b2"
-opentelemetry-exporter-prometheus = "^0.49b2"  # Prometheus /metrics endpoint support
-prometheus-client = "^0.21.0"  # Required by opentelemetry-exporter-prometheus
-boto3 = { version = "^1.40.64", optional = true }
+# OpenTelemetry dependencies - pinned versions for protobuf 6.x compatibility
+opentelemetry-api = "1.38.0"
+opentelemetry-sdk = "1.38.0"
+opentelemetry-exporter-otlp-proto-grpc = "1.38.0"
+opentelemetry-exporter-otlp-proto-http = "1.38.0"
+opentelemetry-instrumentation = "0.59b0"
+opentelemetry-instrumentation-fastapi = "0.59b0"
+opentelemetry-instrumentation-httpx = "0.59b0"
+opentelemetry-instrumentation-logging = "0.59b0"
+opentelemetry-instrumentation-system-metrics = "0.59b0"
+opentelemetry-exporter-prometheus = "0.59b0"  # Prometheus /metrics endpoint support
+prometheus-client = "0.21.0"  # Required by opentelemetry-exporter-prometheus
+boto3 = { version = "1.40.64", optional = true }
 
 [tool.poetry.extras]
 mongodb = ["pymongo", "motor"]
-eventstore = ["esdbclient"]
+eventstore = ["kurrentdbclient"]  # Formerly esdbclient
 redis = ["redis"]
 etcd = ["etcd3-py", "protobuf"]
 aws = ["boto3"]
-all = ["pymongo", "motor", "esdbclient", "redis", "etcd3-py", "protobuf", "boto3"]
+all = ["pymongo", "motor", "kurrentdbclient", "redis", "etcd3-py", "protobuf", "boto3"]
 
 [tool.poetry.group.dev.dependencies]
 # Development and testing dependencies

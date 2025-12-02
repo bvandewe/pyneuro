@@ -4,8 +4,6 @@ Event sourcing infrastructure for Neuroglia.
 Provides event store implementations and aggregate root support.
 """
 
-# Apply runtime patches for third-party library bugs
-from . import patches  # noqa: F401
 from .abstractions import (
     Aggregator,
     EventDescriptor,
