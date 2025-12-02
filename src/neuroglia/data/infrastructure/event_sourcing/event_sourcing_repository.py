@@ -127,7 +127,8 @@ class EventSourcingRepository(Generic[TAggregate, TKey], Repository[TAggregate, 
         encoded_events = [self._encode_event(e) for e in events]
         await self._eventstore.append_async(stream_id, encoded_events)
         aggregate.state.state_version = events[-1].aggregate_version
-        aggregate.clear_pending_events()
+        # DON'T clear pending events here - let base class do it after publishing!
+        # aggregate.clear_pending_events()
         return aggregate
 
     async def _do_update_async(self, aggregate: TAggregate) -> TAggregate:
@@ -139,7 +140,8 @@ class EventSourcingRepository(Generic[TAggregate, TKey], Repository[TAggregate, 
         encoded_events = [self._encode_event(e) for e in events]
         await self._eventstore.append_async(stream_id, encoded_events, aggregate.state.state_version)
         aggregate.state.state_version = events[-1].aggregate_version
-        aggregate.clear_pending_events()
+        # DON'T clear pending events here - let base class do it after publishing!
+        # aggregate.clear_pending_events()
         return aggregate
 
     async def _do_remove_async(self, id: TKey) -> None:

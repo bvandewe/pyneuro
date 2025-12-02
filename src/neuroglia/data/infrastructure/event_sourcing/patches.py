@@ -48,7 +48,9 @@ def patch_esdbclient_async_subscription_id():
     - totalInFlightMessages should decrease after successful ACKs
     """
     try:
-        from esdbclient.persistent import AsyncPersistentSubscription
+        from esdbclient.persistent import (
+            AsyncPersistentSubscription,  # type: ignore[import-not-found]
+        )
 
         original_init = AsyncPersistentSubscription.init
 

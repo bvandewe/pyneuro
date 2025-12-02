@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.6.20] - 2025-12-02
+
+### Fixed
+
+- **CRITICAL**: ESEventStore now uses `ack_id` instead of `id` for persistent subscription ACKs with resolved links
+  - **Bug**: When `resolveLinktos=true` (e.g., category streams `$ce-*`), ACKs were sent with resolved event ID instead of link event ID
+  - **Impact**: EventStoreDB ignored ACKs, causing events to be redelivered after `messageTimeout`
+  - **Root Cause**: Code used `e.id` (resolved event ID) instead of `e.ack_id` (link event ID required for ACK)
+  - **Fix**: Now uses `getattr(e, 'ack_id', e.id)` for all ACK/NACK operations in `_consume_events_async()`
+  - **Affected**: All persistent subscriptions with `resolveLinktos=true` (category streams, projections)
+  - **Lines Fixed**: 256 (tombstone ACK), 266 (system event ACK), 277 (decode failure ACK), 284 (normal event ACK/NACK delegates)
+  - **Tests**: Updated all test mocks to include `ack_id` attribute
+  - **Verification**: All 18 EventStore tests passing
+
 ## [0.6.19] - 2025-12-02
 
 ### Fixed
