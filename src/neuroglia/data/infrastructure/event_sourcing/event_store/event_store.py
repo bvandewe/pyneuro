@@ -64,11 +64,15 @@ class ESEventStore(EventStore):
             self._eventstore_client = connection_string_or_client
 
     async def _ensure_client(self) -> Any:
-        """Lazily initialize the async EventStoreDB client on first use"""
+        """Lazily initialize the async KurrentDB client on first use"""
         if self._eventstore_client is None:
             if self._connection_string is None:
                 raise RuntimeError("Neither connection string nor client provided")
-            self._eventstore_client = await AsyncClientFactory(uri=self._connection_string)
+            # AsyncKurrentDBClient constructor is NOT awaitable - returns client directly
+            client = AsyncClientFactory(uri=self._connection_string)
+            # Must call connect() to establish the connection
+            await client.connect()
+            self._eventstore_client = client
         return self._eventstore_client
 
     async def contains_async(self, stream_id: str) -> bool:
