@@ -1572,6 +1572,16 @@
 </a>
 </li>
 <li class="md-nav__item">
+<a class="md-nav__link" href="#write-model-simplification-v0621">
+<span class="md-ellipsis">
+      
+        Write Model Simplification (v0.6.21+)
+      
+    </span>
+</a>
+<nav aria-label="Write Model Simplification (v0.6.21+)" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
 <a class="md-nav__link" href="#the-problem-before-v0621">
 <span class="md-ellipsis">
       
@@ -1579,8 +1589,7 @@
       
     </span>
 </a>
-<nav aria-label="The Problem (Before v0.6.21)" class="md-nav">
-<ul class="md-nav__list">
+</li>
 <li class="md-nav__item">
 <a class="md-nav__link" href="#issues-with-old-approach">
 <span class="md-ellipsis">
@@ -1634,6 +1643,59 @@
 </nav>
 </li>
 <li class="md-nav__item">
+<a class="md-nav__link" href="#read-model-simplification-v0622">
+<span class="md-ellipsis">
+      
+        Read Model Simplification (v0.6.22+)
+      
+    </span>
+</a>
+<nav aria-label="Read Model Simplification (v0.6.22+)" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#the-problem-before-v0622">
+<span class="md-ellipsis">
+      
+        The Problem (Before v0.6.22)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#the-solution-v0622">
+<span class="md-ellipsis">
+      
+        The Solution (v0.6.22+)
+      
+    </span>
+</a>
+<nav aria-label="The Solution (v0.6.22+)" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#simple-configuration-with-database-name">
+<span class="md-ellipsis">
+      
+        Simple Configuration with Database Name
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#backwards-compatible-custom-factory">
+<span class="md-ellipsis">
+      
+        Backwards Compatible Custom Factory
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
 <a class="md-nav__link" href="#backwards-compatibility">
 <span class="md-ellipsis">
       
@@ -1641,6 +1703,28 @@
       
     </span>
 </a>
+<nav aria-label="Backwards Compatibility" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#writemodel-backwards-compatibility">
+<span class="md-ellipsis">
+      
+        WriteModel Backwards Compatibility
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#readmodel-backwards-compatibility">
+<span class="md-ellipsis">
+      
+        ReadModel Backwards Compatibility
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
 </li>
 <li class="md-nav__item">
 <a class="md-nav__link" href="#complete-example">
@@ -1659,6 +1743,28 @@
       
     </span>
 </a>
+<nav aria-label="When to Use Custom Factory Pattern" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#writemodel-advanced-example">
+<span class="md-ellipsis">
+      
+        WriteModel Advanced Example
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#readmodel-advanced-example">
+<span class="md-ellipsis">
+      
+        ReadModel Advanced Example
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
 </li>
 <li class="md-nav__item">
 <a class="md-nav__link" href="#api-reference">
@@ -1680,10 +1786,10 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#configure">
+<a class="md-nav__link" href="#dataaccesslayerreadmodel">
 <span class="md-ellipsis">
       
-        configure()
+        DataAccessLayer.ReadModel
       
     </span>
 </a>
@@ -1699,6 +1805,28 @@
       
     </span>
 </a>
+<nav aria-label="Benefits" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#writemodel">
+<span class="md-ellipsis">
+      
+        WriteModel
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#readmodel">
+<span class="md-ellipsis">
+      
+        ReadModel
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
 </li>
 <li class="md-nav__item">
 <a class="md-nav__link" href="#related-documentation">
@@ -1718,8 +1846,14 @@
 <article class="md-content__inner md-typeset">
 <h1 id="simplified-repository-configuration">Simplified Repository Configuration<a class="headerlink" href="#simplified-repository-configuration" title="Permanent link">¶</a></h1>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">¶</a></h2>
-<p>The Neuroglia framework now supports a simplified API for configuring <code>EventSourcingRepository</code> with custom options, eliminating the need for verbose custom factory functions.</p>
-<h2 id="the-problem-before-v0621">The Problem (Before v0.6.21)<a class="headerlink" href="#the-problem-before-v0621" title="Permanent link">¶</a></h2>
+<p>The Neuroglia framework supports a simplified API for configuring both <code>EventSourcingRepository</code> (Write Model) and <code>MongoRepository</code> (Read Model), eliminating the need for verbose custom factory functions.</p>
+<p>This guide covers:</p>
+<ul>
+<li><strong>WriteModel (v0.6.21+)</strong>: Simplified <code>EventSourcingRepository</code> configuration with options</li>
+<li><strong>ReadModel (v0.6.22+)</strong>: Simplified <code>MongoRepository</code> configuration with database name</li>
+</ul>
+<h2 id="write-model-simplification-v0621">Write Model Simplification (v0.6.21+)<a class="headerlink" href="#write-model-simplification-v0621" title="Permanent link">¶</a></h2>
+<h3 id="the-problem-before-v0621">The Problem (Before v0.6.21)<a class="headerlink" href="#the-problem-before-v0621" title="Permanent link">¶</a></h3>
 <p>Previously, configuring <code>EventSourcingRepository</code> with custom options (e.g., <code>DeleteMode.HARD</code> for GDPR compliance) required writing a <strong>37-line custom factory function</strong>:</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a href="#__codelineno-0-1" id="__codelineno-0-1" name="__codelineno-0-1"></a><span class="c1"># Old approach: 37 lines of boilerplate</span>
 </span><span id="__span-0-2"><a href="#__codelineno-0-2" id="__codelineno-0-2" name="__codelineno-0-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.data.infrastructure.abstractions</span><span class="w"> </span><span class="kn">import</span> <span class="n">Repository</span>
@@ -1815,124 +1949,217 @@
 </span><span id="__span-3-11"><a href="#__codelineno-3-11" id="__codelineno-3-11" name="__codelineno-3-11"></a>    <span class="p">)</span>
 </span><span id="__span-3-12"><a href="#__codelineno-3-12" id="__codelineno-3-12" name="__codelineno-3-12"></a><span class="p">)</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="p">[</span><span class="s2">"domain.entities"</span><span class="p">])</span>
 </span></code></pre></div>
+<h2 id="read-model-simplification-v0622">Read Model Simplification (v0.6.22+)<a class="headerlink" href="#read-model-simplification-v0622" title="Permanent link">¶</a></h2>
+<h3 id="the-problem-before-v0622">The Problem (Before v0.6.22)<a class="headerlink" href="#the-problem-before-v0622" title="Permanent link">¶</a></h3>
+<p>Configuring <code>MongoRepository</code> for read models required verbose lambda functions:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a href="#__codelineno-4-1" id="__codelineno-4-1" name="__codelineno-4-1"></a><span class="c1"># Old approach: Verbose lambda function</span>
+</span><span id="__span-4-2"><a href="#__codelineno-4-2" id="__codelineno-4-2" name="__codelineno-4-2"></a><span class="n">DataAccessLayer</span><span class="o">.</span><span class="n">ReadModel</span><span class="p">()</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span>
+</span><span id="__span-4-3"><a href="#__codelineno-4-3" id="__codelineno-4-3" name="__codelineno-4-3"></a>    <span class="n">builder</span><span class="p">,</span>
+</span><span id="__span-4-4"><a href="#__codelineno-4-4" id="__codelineno-4-4" name="__codelineno-4-4"></a>    <span class="p">[</span><span class="s2">"integration.models"</span><span class="p">],</span>
+</span><span id="__span-4-5"><a href="#__codelineno-4-5" id="__codelineno-4-5" name="__codelineno-4-5"></a>    <span class="k">lambda</span> <span class="n">b</span><span class="p">,</span> <span class="n">et</span><span class="p">,</span> <span class="n">kt</span><span class="p">:</span> <span class="n">MongoRepository</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">et</span><span class="p">,</span> <span class="n">kt</span><span class="p">,</span> <span class="s2">"database_name"</span><span class="p">)</span>
+</span><span id="__span-4-6"><a href="#__codelineno-4-6" id="__codelineno-4-6" name="__codelineno-4-6"></a><span class="p">)</span>
+</span></code></pre></div>
+<h3 id="the-solution-v0622">The Solution (v0.6.22+)<a class="headerlink" href="#the-solution-v0622" title="Permanent link">¶</a></h3>
+<h4 id="simple-configuration-with-database-name">Simple Configuration with Database Name<a class="headerlink" href="#simple-configuration-with-database-name" title="Permanent link">¶</a></h4>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a href="#__codelineno-5-1" id="__codelineno-5-1" name="__codelineno-5-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.hosting.configuration.data_access_layer</span><span class="w"> </span><span class="kn">import</span> <span class="n">DataAccessLayer</span>
+</span><span id="__span-5-2"><a href="#__codelineno-5-2" id="__codelineno-5-2" name="__codelineno-5-2"></a>
+</span><span id="__span-5-3"><a href="#__codelineno-5-3" id="__codelineno-5-3" name="__codelineno-5-3"></a><span class="c1"># Simple - just pass database name</span>
+</span><span id="__span-5-4"><a href="#__codelineno-5-4" id="__codelineno-5-4" name="__codelineno-5-4"></a><span class="n">DataAccessLayer</span><span class="o">.</span><span class="n">ReadModel</span><span class="p">(</span><span class="n">database_name</span><span class="o">=</span><span class="s2">"myapp"</span><span class="p">)</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span>
+</span><span id="__span-5-5"><a href="#__codelineno-5-5" id="__codelineno-5-5" name="__codelineno-5-5"></a>    <span class="n">builder</span><span class="p">,</span>
+</span><span id="__span-5-6"><a href="#__codelineno-5-6" id="__codelineno-5-6" name="__codelineno-5-6"></a>    <span class="p">[</span><span class="s2">"integration.models"</span><span class="p">]</span>
+</span><span id="__span-5-7"><a href="#__codelineno-5-7" id="__codelineno-5-7" name="__codelineno-5-7"></a><span class="p">)</span>
+</span></code></pre></div>
+<h4 id="backwards-compatible-custom-factory">Backwards Compatible Custom Factory<a class="headerlink" href="#backwards-compatible-custom-factory" title="Permanent link">¶</a></h4>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a href="#__codelineno-6-1" id="__codelineno-6-1" name="__codelineno-6-1"></a><span class="c1"># Custom factory still supported for advanced scenarios</span>
+</span><span id="__span-6-2"><a href="#__codelineno-6-2" id="__codelineno-6-2" name="__codelineno-6-2"></a><span class="k">def</span><span class="w"> </span><span class="nf">custom_setup</span><span class="p">(</span><span class="n">builder_</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">,</span> <span class="n">key_type</span><span class="p">):</span>
+</span><span id="__span-6-3"><a href="#__codelineno-6-3" id="__codelineno-6-3" name="__codelineno-6-3"></a>    <span class="c1"># Custom configuration logic</span>
+</span><span id="__span-6-4"><a href="#__codelineno-6-4" id="__codelineno-6-4" name="__codelineno-6-4"></a>    <span class="n">MongoRepository</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder_</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">,</span> <span class="n">key_type</span><span class="p">,</span> <span class="s2">"myapp"</span><span class="p">)</span>
+</span><span id="__span-6-5"><a href="#__codelineno-6-5" id="__codelineno-6-5" name="__codelineno-6-5"></a>
+</span><span id="__span-6-6"><a href="#__codelineno-6-6" id="__codelineno-6-6" name="__codelineno-6-6"></a><span class="n">DataAccessLayer</span><span class="o">.</span><span class="n">ReadModel</span><span class="p">()</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span>
+</span><span id="__span-6-7"><a href="#__codelineno-6-7" id="__codelineno-6-7" name="__codelineno-6-7"></a>    <span class="n">builder</span><span class="p">,</span>
+</span><span id="__span-6-8"><a href="#__codelineno-6-8" id="__codelineno-6-8" name="__codelineno-6-8"></a>    <span class="p">[</span><span class="s2">"integration.models"</span><span class="p">],</span>
+</span><span id="__span-6-9"><a href="#__codelineno-6-9" id="__codelineno-6-9" name="__codelineno-6-9"></a>    <span class="n">custom_setup</span>
+</span><span id="__span-6-10"><a href="#__codelineno-6-10" id="__codelineno-6-10" name="__codelineno-6-10"></a><span class="p">)</span>
+</span></code></pre></div>
 <h2 id="backwards-compatibility">Backwards Compatibility<a class="headerlink" href="#backwards-compatibility" title="Permanent link">¶</a></h2>
-<p>The enhancement maintains <strong>full backwards compatibility</strong>. Existing code continues to work without modification:</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a href="#__codelineno-4-1" id="__codelineno-4-1" name="__codelineno-4-1"></a><span class="c1"># Old custom factory pattern still supported</span>
-</span><span id="__span-4-2"><a href="#__codelineno-4-2" id="__codelineno-4-2" name="__codelineno-4-2"></a><span class="k">def</span><span class="w"> </span><span class="nf">custom_setup</span><span class="p">(</span><span class="n">builder_</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">,</span> <span class="n">key_type</span><span class="p">):</span>
-</span><span id="__span-4-3"><a href="#__codelineno-4-3" id="__codelineno-4-3" name="__codelineno-4-3"></a>    <span class="c1"># Your custom configuration logic</span>
-</span><span id="__span-4-4"><a href="#__codelineno-4-4" id="__codelineno-4-4" name="__codelineno-4-4"></a>    <span class="n">EventSourcingRepository</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder_</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">,</span> <span class="n">key_type</span><span class="p">)</span>
-</span><span id="__span-4-5"><a href="#__codelineno-4-5" id="__codelineno-4-5" name="__codelineno-4-5"></a>
-</span><span id="__span-4-6"><a href="#__codelineno-4-6" id="__codelineno-4-6" name="__codelineno-4-6"></a><span class="n">DataAccessLayer</span><span class="o">.</span><span class="n">WriteModel</span><span class="p">()</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span>
-</span><span id="__span-4-7"><a href="#__codelineno-4-7" id="__codelineno-4-7" name="__codelineno-4-7"></a>    <span class="n">builder</span><span class="p">,</span>
-</span><span id="__span-4-8"><a href="#__codelineno-4-8" id="__codelineno-4-8" name="__codelineno-4-8"></a>    <span class="p">[</span><span class="s2">"domain.entities"</span><span class="p">],</span>
-</span><span id="__span-4-9"><a href="#__codelineno-4-9" id="__codelineno-4-9" name="__codelineno-4-9"></a>    <span class="n">custom_setup</span>  <span class="c1"># Custom factory still works</span>
-</span><span id="__span-4-10"><a href="#__codelineno-4-10" id="__codelineno-4-10" name="__codelineno-4-10"></a><span class="p">)</span>
+<p>Both enhancements maintain <strong>full backwards compatibility</strong>. Existing code continues to work without modification:</p>
+<h3 id="writemodel-backwards-compatibility">WriteModel Backwards Compatibility<a class="headerlink" href="#writemodel-backwards-compatibility" title="Permanent link">¶</a></h3>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-7-1"><a href="#__codelineno-7-1" id="__codelineno-7-1" name="__codelineno-7-1"></a><span class="c1"># Old custom factory pattern still supported</span>
+</span><span id="__span-7-2"><a href="#__codelineno-7-2" id="__codelineno-7-2" name="__codelineno-7-2"></a><span class="k">def</span><span class="w"> </span><span class="nf">custom_setup</span><span class="p">(</span><span class="n">builder_</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">,</span> <span class="n">key_type</span><span class="p">):</span>
+</span><span id="__span-7-3"><a href="#__codelineno-7-3" id="__codelineno-7-3" name="__codelineno-7-3"></a>    <span class="c1"># Your custom configuration logic</span>
+</span><span id="__span-7-4"><a href="#__codelineno-7-4" id="__codelineno-7-4" name="__codelineno-7-4"></a>    <span class="n">EventSourcingRepository</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder_</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">,</span> <span class="n">key_type</span><span class="p">)</span>
+</span><span id="__span-7-5"><a href="#__codelineno-7-5" id="__codelineno-7-5" name="__codelineno-7-5"></a>
+</span><span id="__span-7-6"><a href="#__codelineno-7-6" id="__codelineno-7-6" name="__codelineno-7-6"></a><span class="n">DataAccessLayer</span><span class="o">.</span><span class="n">WriteModel</span><span class="p">()</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span>
+</span><span id="__span-7-7"><a href="#__codelineno-7-7" id="__codelineno-7-7" name="__codelineno-7-7"></a>    <span class="n">builder</span><span class="p">,</span>
+</span><span id="__span-7-8"><a href="#__codelineno-7-8" id="__codelineno-7-8" name="__codelineno-7-8"></a>    <span class="p">[</span><span class="s2">"domain.entities"</span><span class="p">],</span>
+</span><span id="__span-7-9"><a href="#__codelineno-7-9" id="__codelineno-7-9" name="__codelineno-7-9"></a>    <span class="n">custom_setup</span>  <span class="c1"># Custom factory still works</span>
+</span><span id="__span-7-10"><a href="#__codelineno-7-10" id="__codelineno-7-10" name="__codelineno-7-10"></a><span class="p">)</span>
+</span></code></pre></div>
+<h3 id="readmodel-backwards-compatibility">ReadModel Backwards Compatibility<a class="headerlink" href="#readmodel-backwards-compatibility" title="Permanent link">¶</a></h3>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-8-1"><a href="#__codelineno-8-1" id="__codelineno-8-1" name="__codelineno-8-1"></a><span class="c1"># Old lambda pattern still supported</span>
+</span><span id="__span-8-2"><a href="#__codelineno-8-2" id="__codelineno-8-2" name="__codelineno-8-2"></a><span class="n">DataAccessLayer</span><span class="o">.</span><span class="n">ReadModel</span><span class="p">()</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span>
+</span><span id="__span-8-3"><a href="#__codelineno-8-3" id="__codelineno-8-3" name="__codelineno-8-3"></a>    <span class="n">builder</span><span class="p">,</span>
+</span><span id="__span-8-4"><a href="#__codelineno-8-4" id="__codelineno-8-4" name="__codelineno-8-4"></a>    <span class="p">[</span><span class="s2">"integration.models"</span><span class="p">],</span>
+</span><span id="__span-8-5"><a href="#__codelineno-8-5" id="__codelineno-8-5" name="__codelineno-8-5"></a>    <span class="k">lambda</span> <span class="n">b</span><span class="p">,</span> <span class="n">et</span><span class="p">,</span> <span class="n">kt</span><span class="p">:</span> <span class="n">MongoRepository</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">et</span><span class="p">,</span> <span class="n">kt</span><span class="p">,</span> <span class="s2">"myapp"</span><span class="p">)</span>
+</span><span id="__span-8-6"><a href="#__codelineno-8-6" id="__codelineno-8-6" name="__codelineno-8-6"></a><span class="p">)</span>
 </span></code></pre></div>
 <h2 id="complete-example">Complete Example<a class="headerlink" href="#complete-example" title="Permanent link">¶</a></h2>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a href="#__codelineno-5-1" id="__codelineno-5-1" name="__codelineno-5-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.data.infrastructure.event_sourcing.abstractions</span><span class="w"> </span><span class="kn">import</span> <span class="n">DeleteMode</span><span class="p">,</span> <span class="n">EventStoreOptions</span>
-</span><span id="__span-5-2"><a href="#__codelineno-5-2" id="__codelineno-5-2" name="__codelineno-5-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.data.infrastructure.event_sourcing.event_store.event_store</span><span class="w"> </span><span class="kn">import</span> <span class="n">ESEventStore</span>
-</span><span id="__span-5-3"><a href="#__codelineno-5-3" id="__codelineno-5-3" name="__codelineno-5-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.data.infrastructure.event_sourcing.event_sourcing_repository</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
-</span><span id="__span-5-4"><a href="#__codelineno-5-4" id="__codelineno-5-4" name="__codelineno-5-4"></a>    <span class="n">EventSourcingRepositoryOptions</span>
-</span><span id="__span-5-5"><a href="#__codelineno-5-5" id="__codelineno-5-5" name="__codelineno-5-5"></a><span class="p">)</span>
-</span><span id="__span-5-6"><a href="#__codelineno-5-6" id="__codelineno-5-6" name="__codelineno-5-6"></a><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.hosting.configuration.data_access_layer</span><span class="w"> </span><span class="kn">import</span> <span class="n">DataAccessLayer</span>
-</span><span id="__span-5-7"><a href="#__codelineno-5-7" id="__codelineno-5-7" name="__codelineno-5-7"></a><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.hosting.web</span><span class="w"> </span><span class="kn">import</span> <span class="n">WebApplicationBuilder</span>
-</span><span id="__span-5-8"><a href="#__codelineno-5-8" id="__codelineno-5-8" name="__codelineno-5-8"></a><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.mediation.mediator</span><span class="w"> </span><span class="kn">import</span> <span class="n">Mediator</span>
-</span><span id="__span-5-9"><a href="#__codelineno-5-9" id="__codelineno-5-9" name="__codelineno-5-9"></a><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.mapping.mapper</span><span class="w"> </span><span class="kn">import</span> <span class="n">Mapper</span>
-</span><span id="__span-5-10"><a href="#__codelineno-5-10" id="__codelineno-5-10" name="__codelineno-5-10"></a>
-</span><span id="__span-5-11"><a href="#__codelineno-5-11" id="__codelineno-5-11" name="__codelineno-5-11"></a><span class="k">def</span><span class="w"> </span><span class="nf">create_app</span><span class="p">():</span>
-</span><span id="__span-5-12"><a href="#__codelineno-5-12" id="__codelineno-5-12" name="__codelineno-5-12"></a>    <span class="n">builder</span> <span class="o">=</span> <span class="n">WebApplicationBuilder</span><span class="p">()</span>
-</span><span id="__span-5-13"><a href="#__codelineno-5-13" id="__codelineno-5-13" name="__codelineno-5-13"></a>
-</span><span id="__span-5-14"><a href="#__codelineno-5-14" id="__codelineno-5-14" name="__codelineno-5-14"></a>    <span class="c1"># Configure core services</span>
-</span><span id="__span-5-15"><a href="#__codelineno-5-15" id="__codelineno-5-15" name="__codelineno-5-15"></a>    <span class="n">Mapper</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="p">[</span><span class="s2">"application"</span><span class="p">])</span>
-</span><span id="__span-5-16"><a href="#__codelineno-5-16" id="__codelineno-5-16" name="__codelineno-5-16"></a>    <span class="n">Mediator</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="p">[</span><span class="s2">"application"</span><span class="p">])</span>
-</span><span id="__span-5-17"><a href="#__codelineno-5-17" id="__codelineno-5-17" name="__codelineno-5-17"></a>    <span class="n">ESEventStore</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="n">EventStoreOptions</span><span class="p">(</span><span class="s2">"myapp"</span><span class="p">,</span> <span class="s2">"myapp-group"</span><span class="p">))</span>
-</span><span id="__span-5-18"><a href="#__codelineno-5-18" id="__codelineno-5-18" name="__codelineno-5-18"></a>
-</span><span id="__span-5-19"><a href="#__codelineno-5-19" id="__codelineno-5-19" name="__codelineno-5-19"></a>    <span class="c1"># Configure Write Model with HARD delete enabled</span>
-</span><span id="__span-5-20"><a href="#__codelineno-5-20" id="__codelineno-5-20" name="__codelineno-5-20"></a>    <span class="n">DataAccessLayer</span><span class="o">.</span><span class="n">WriteModel</span><span class="p">(</span>
-</span><span id="__span-5-21"><a href="#__codelineno-5-21" id="__codelineno-5-21" name="__codelineno-5-21"></a>        <span class="n">options</span><span class="o">=</span><span class="n">EventSourcingRepositoryOptions</span><span class="p">(</span><span class="n">delete_mode</span><span class="o">=</span><span class="n">DeleteMode</span><span class="o">.</span><span class="n">HARD</span><span class="p">)</span>
-</span><span id="__span-5-22"><a href="#__codelineno-5-22" id="__codelineno-5-22" name="__codelineno-5-22"></a>    <span class="p">)</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="p">[</span><span class="s2">"domain.entities"</span><span class="p">])</span>
-</span><span id="__span-5-23"><a href="#__codelineno-5-23" id="__codelineno-5-23" name="__codelineno-5-23"></a>
-</span><span id="__span-5-24"><a href="#__codelineno-5-24" id="__codelineno-5-24" name="__codelineno-5-24"></a>    <span class="c1"># Configure Read Model</span>
-</span><span id="__span-5-25"><a href="#__codelineno-5-25" id="__codelineno-5-25" name="__codelineno-5-25"></a>    <span class="n">DataAccessLayer</span><span class="o">.</span><span class="n">ReadModel</span><span class="p">()</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span>
-</span><span id="__span-5-26"><a href="#__codelineno-5-26" id="__codelineno-5-26" name="__codelineno-5-26"></a>        <span class="n">builder</span><span class="p">,</span>
-</span><span id="__span-5-27"><a href="#__codelineno-5-27" id="__codelineno-5-27" name="__codelineno-5-27"></a>        <span class="p">[</span><span class="s2">"integration.models"</span><span class="p">],</span>
-</span><span id="__span-5-28"><a href="#__codelineno-5-28" id="__codelineno-5-28" name="__codelineno-5-28"></a>        <span class="k">lambda</span> <span class="n">b</span><span class="p">,</span> <span class="n">et</span><span class="p">,</span> <span class="n">kt</span><span class="p">:</span> <span class="n">MongoRepository</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">et</span><span class="p">,</span> <span class="n">kt</span><span class="p">,</span> <span class="s2">"myapp"</span><span class="p">)</span>
-</span><span id="__span-5-29"><a href="#__codelineno-5-29" id="__codelineno-5-29" name="__codelineno-5-29"></a>    <span class="p">)</span>
-</span><span id="__span-5-30"><a href="#__codelineno-5-30" id="__codelineno-5-30" name="__codelineno-5-30"></a>
-</span><span id="__span-5-31"><a href="#__codelineno-5-31" id="__codelineno-5-31" name="__codelineno-5-31"></a>    <span class="c1"># Add controllers</span>
-</span><span id="__span-5-32"><a href="#__codelineno-5-32" id="__codelineno-5-32" name="__codelineno-5-32"></a>    <span class="n">builder</span><span class="o">.</span><span class="n">add_controllers</span><span class="p">([</span><span class="s2">"api.controllers"</span><span class="p">])</span>
-</span><span id="__span-5-33"><a href="#__codelineno-5-33" id="__codelineno-5-33" name="__codelineno-5-33"></a>
-</span><span id="__span-5-34"><a href="#__codelineno-5-34" id="__codelineno-5-34" name="__codelineno-5-34"></a>    <span class="k">return</span> <span class="n">builder</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
-</span><span id="__span-5-35"><a href="#__codelineno-5-35" id="__codelineno-5-35" name="__codelineno-5-35"></a>
-</span><span id="__span-5-36"><a href="#__codelineno-5-36" id="__codelineno-5-36" name="__codelineno-5-36"></a><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
-</span><span id="__span-5-37"><a href="#__codelineno-5-37" id="__codelineno-5-37" name="__codelineno-5-37"></a>    <span class="n">app</span> <span class="o">=</span> <span class="n">create_app</span><span class="p">()</span>
-</span><span id="__span-5-38"><a href="#__codelineno-5-38" id="__codelineno-5-38" name="__codelineno-5-38"></a>    <span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-9-1"><a href="#__codelineno-9-1" id="__codelineno-9-1" name="__codelineno-9-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.data.infrastructure.event_sourcing.abstractions</span><span class="w"> </span><span class="kn">import</span> <span class="n">DeleteMode</span><span class="p">,</span> <span class="n">EventStoreOptions</span>
+</span><span id="__span-9-2"><a href="#__codelineno-9-2" id="__codelineno-9-2" name="__codelineno-9-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.data.infrastructure.event_sourcing.event_store.event_store</span><span class="w"> </span><span class="kn">import</span> <span class="n">ESEventStore</span>
+</span><span id="__span-9-3"><a href="#__codelineno-9-3" id="__codelineno-9-3" name="__codelineno-9-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.data.infrastructure.event_sourcing.event_sourcing_repository</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+</span><span id="__span-9-4"><a href="#__codelineno-9-4" id="__codelineno-9-4" name="__codelineno-9-4"></a>    <span class="n">EventSourcingRepositoryOptions</span>
+</span><span id="__span-9-5"><a href="#__codelineno-9-5" id="__codelineno-9-5" name="__codelineno-9-5"></a><span class="p">)</span>
+</span><span id="__span-9-6"><a href="#__codelineno-9-6" id="__codelineno-9-6" name="__codelineno-9-6"></a><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.hosting.configuration.data_access_layer</span><span class="w"> </span><span class="kn">import</span> <span class="n">DataAccessLayer</span>
+</span><span id="__span-9-7"><a href="#__codelineno-9-7" id="__codelineno-9-7" name="__codelineno-9-7"></a><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.hosting.web</span><span class="w"> </span><span class="kn">import</span> <span class="n">WebApplicationBuilder</span>
+</span><span id="__span-9-8"><a href="#__codelineno-9-8" id="__codelineno-9-8" name="__codelineno-9-8"></a><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.mediation.mediator</span><span class="w"> </span><span class="kn">import</span> <span class="n">Mediator</span>
+</span><span id="__span-9-9"><a href="#__codelineno-9-9" id="__codelineno-9-9" name="__codelineno-9-9"></a><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.mapping.mapper</span><span class="w"> </span><span class="kn">import</span> <span class="n">Mapper</span>
+</span><span id="__span-9-10"><a href="#__codelineno-9-10" id="__codelineno-9-10" name="__codelineno-9-10"></a>
+</span><span id="__span-9-11"><a href="#__codelineno-9-11" id="__codelineno-9-11" name="__codelineno-9-11"></a><span class="k">def</span><span class="w"> </span><span class="nf">create_app</span><span class="p">():</span>
+</span><span id="__span-9-12"><a href="#__codelineno-9-12" id="__codelineno-9-12" name="__codelineno-9-12"></a>    <span class="n">builder</span> <span class="o">=</span> <span class="n">WebApplicationBuilder</span><span class="p">()</span>
+</span><span id="__span-9-13"><a href="#__codelineno-9-13" id="__codelineno-9-13" name="__codelineno-9-13"></a>
+</span><span id="__span-9-14"><a href="#__codelineno-9-14" id="__codelineno-9-14" name="__codelineno-9-14"></a>    <span class="c1"># Configure core services</span>
+</span><span id="__span-9-15"><a href="#__codelineno-9-15" id="__codelineno-9-15" name="__codelineno-9-15"></a>    <span class="n">Mapper</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="p">[</span><span class="s2">"application"</span><span class="p">])</span>
+</span><span id="__span-9-16"><a href="#__codelineno-9-16" id="__codelineno-9-16" name="__codelineno-9-16"></a>    <span class="n">Mediator</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="p">[</span><span class="s2">"application"</span><span class="p">])</span>
+</span><span id="__span-9-17"><a href="#__codelineno-9-17" id="__codelineno-9-17" name="__codelineno-9-17"></a>    <span class="n">ESEventStore</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="n">EventStoreOptions</span><span class="p">(</span><span class="s2">"myapp"</span><span class="p">,</span> <span class="s2">"myapp-group"</span><span class="p">))</span>
+</span><span id="__span-9-18"><a href="#__codelineno-9-18" id="__codelineno-9-18" name="__codelineno-9-18"></a>
+</span><span id="__span-9-19"><a href="#__codelineno-9-19" id="__codelineno-9-19" name="__codelineno-9-19"></a>    <span class="c1"># Configure Write Model with HARD delete enabled (v0.6.21+)</span>
+</span><span id="__span-9-20"><a href="#__codelineno-9-20" id="__codelineno-9-20" name="__codelineno-9-20"></a>    <span class="n">DataAccessLayer</span><span class="o">.</span><span class="n">WriteModel</span><span class="p">(</span>
+</span><span id="__span-9-21"><a href="#__codelineno-9-21" id="__codelineno-9-21" name="__codelineno-9-21"></a>        <span class="n">options</span><span class="o">=</span><span class="n">EventSourcingRepositoryOptions</span><span class="p">(</span><span class="n">delete_mode</span><span class="o">=</span><span class="n">DeleteMode</span><span class="o">.</span><span class="n">HARD</span><span class="p">)</span>
+</span><span id="__span-9-22"><a href="#__codelineno-9-22" id="__codelineno-9-22" name="__codelineno-9-22"></a>    <span class="p">)</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="p">[</span><span class="s2">"domain.entities"</span><span class="p">])</span>
+</span><span id="__span-9-23"><a href="#__codelineno-9-23" id="__codelineno-9-23" name="__codelineno-9-23"></a>
+</span><span id="__span-9-24"><a href="#__codelineno-9-24" id="__codelineno-9-24" name="__codelineno-9-24"></a>    <span class="c1"># Configure Read Model with database name (v0.6.22+)</span>
+</span><span id="__span-9-25"><a href="#__codelineno-9-25" id="__codelineno-9-25" name="__codelineno-9-25"></a>    <span class="n">DataAccessLayer</span><span class="o">.</span><span class="n">ReadModel</span><span class="p">(</span><span class="n">database_name</span><span class="o">=</span><span class="s2">"myapp"</span><span class="p">)</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span>
+</span><span id="__span-9-26"><a href="#__codelineno-9-26" id="__codelineno-9-26" name="__codelineno-9-26"></a>        <span class="n">builder</span><span class="p">,</span>
+</span><span id="__span-9-27"><a href="#__codelineno-9-27" id="__codelineno-9-27" name="__codelineno-9-27"></a>        <span class="p">[</span><span class="s2">"integration.models"</span><span class="p">]</span>
+</span><span id="__span-9-28"><a href="#__codelineno-9-28" id="__codelineno-9-28" name="__codelineno-9-28"></a>    <span class="p">)</span>
+</span><span id="__span-9-29"><a href="#__codelineno-9-29" id="__codelineno-9-29" name="__codelineno-9-29"></a>
+</span><span id="__span-9-30"><a href="#__codelineno-9-30" id="__codelineno-9-30" name="__codelineno-9-30"></a>    <span class="c1"># Add controllers</span>
+</span><span id="__span-9-31"><a href="#__codelineno-9-31" id="__codelineno-9-31" name="__codelineno-9-31"></a>    <span class="n">builder</span><span class="o">.</span><span class="n">add_controllers</span><span class="p">([</span><span class="s2">"api.controllers"</span><span class="p">])</span>
+</span><span id="__span-9-32"><a href="#__codelineno-9-32" id="__codelineno-9-32" name="__codelineno-9-32"></a>
+</span><span id="__span-9-33"><a href="#__codelineno-9-33" id="__codelineno-9-33" name="__codelineno-9-33"></a>    <span class="k">return</span> <span class="n">builder</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
+</span><span id="__span-9-34"><a href="#__codelineno-9-34" id="__codelineno-9-34" name="__codelineno-9-34"></a>
+</span><span id="__span-9-35"><a href="#__codelineno-9-35" id="__codelineno-9-35" name="__codelineno-9-35"></a><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
+</span><span id="__span-9-36"><a href="#__codelineno-9-36" id="__codelineno-9-36" name="__codelineno-9-36"></a>    <span class="n">app</span> <span class="o">=</span> <span class="n">create_app</span><span class="p">()</span>
+</span><span id="__span-9-37"><a href="#__codelineno-9-37" id="__codelineno-9-37" name="__codelineno-9-37"></a>    <span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
 </span></code></pre></div>
 <h2 id="when-to-use-custom-factory-pattern">When to Use Custom Factory Pattern<a class="headerlink" href="#when-to-use-custom-factory-pattern" title="Permanent link">¶</a></h2>
 <p>The custom factory pattern is still useful for advanced scenarios:</p>
 <ol>
-<li><strong>Per-Aggregate Configuration</strong>: Different options for different aggregates</li>
+<li><strong>Per-Entity Configuration</strong>: Different options for different entities</li>
 <li><strong>Custom Repository Implementations</strong>: Using your own repository classes</li>
 <li><strong>Complex Initialization Logic</strong>: Advanced setup requirements</li>
 <li><strong>Migration from Legacy Code</strong>: Gradual refactoring</li>
 </ol>
-<p>Example:</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a href="#__codelineno-6-1" id="__codelineno-6-1" name="__codelineno-6-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">advanced_setup</span><span class="p">(</span><span class="n">builder_</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">,</span> <span class="n">key_type</span><span class="p">):</span>
-</span><span id="__span-6-2"><a href="#__codelineno-6-2" id="__codelineno-6-2" name="__codelineno-6-2"></a>    <span class="k">if</span> <span class="n">entity_type</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"SensitiveData"</span><span class="p">:</span>
-</span><span id="__span-6-3"><a href="#__codelineno-6-3" id="__codelineno-6-3" name="__codelineno-6-3"></a>        <span class="c1"># Use HARD delete only for sensitive data</span>
-</span><span id="__span-6-4"><a href="#__codelineno-6-4" id="__codelineno-6-4" name="__codelineno-6-4"></a>        <span class="n">options</span> <span class="o">=</span> <span class="n">EventSourcingRepositoryOptions</span><span class="p">[</span><span class="n">entity_type</span><span class="p">,</span> <span class="n">key_type</span><span class="p">](</span>
-</span><span id="__span-6-5"><a href="#__codelineno-6-5" id="__codelineno-6-5" name="__codelineno-6-5"></a>            <span class="n">delete_mode</span><span class="o">=</span><span class="n">DeleteMode</span><span class="o">.</span><span class="n">HARD</span>
-</span><span id="__span-6-6"><a href="#__codelineno-6-6" id="__codelineno-6-6" name="__codelineno-6-6"></a>        <span class="p">)</span>
-</span><span id="__span-6-7"><a href="#__codelineno-6-7" id="__codelineno-6-7" name="__codelineno-6-7"></a>    <span class="k">else</span><span class="p">:</span>
-</span><span id="__span-6-8"><a href="#__codelineno-6-8" id="__codelineno-6-8" name="__codelineno-6-8"></a>        <span class="c1"># Use SOFT delete for everything else</span>
-</span><span id="__span-6-9"><a href="#__codelineno-6-9" id="__codelineno-6-9" name="__codelineno-6-9"></a>        <span class="n">options</span> <span class="o">=</span> <span class="n">EventSourcingRepositoryOptions</span><span class="p">[</span><span class="n">entity_type</span><span class="p">,</span> <span class="n">key_type</span><span class="p">](</span>
-</span><span id="__span-6-10"><a href="#__codelineno-6-10" id="__codelineno-6-10" name="__codelineno-6-10"></a>            <span class="n">delete_mode</span><span class="o">=</span><span class="n">DeleteMode</span><span class="o">.</span><span class="n">SOFT</span>
-</span><span id="__span-6-11"><a href="#__codelineno-6-11" id="__codelineno-6-11" name="__codelineno-6-11"></a>        <span class="p">)</span>
-</span><span id="__span-6-12"><a href="#__codelineno-6-12" id="__codelineno-6-12" name="__codelineno-6-12"></a>
-</span><span id="__span-6-13"><a href="#__codelineno-6-13" id="__codelineno-6-13" name="__codelineno-6-13"></a>    <span class="c1"># Custom registration logic</span>
-</span><span id="__span-6-14"><a href="#__codelineno-6-14" id="__codelineno-6-14" name="__codelineno-6-14"></a>    <span class="c1"># ...</span>
-</span><span id="__span-6-15"><a href="#__codelineno-6-15" id="__codelineno-6-15" name="__codelineno-6-15"></a>
-</span><span id="__span-6-16"><a href="#__codelineno-6-16" id="__codelineno-6-16" name="__codelineno-6-16"></a><span class="n">DataAccessLayer</span><span class="o">.</span><span class="n">WriteModel</span><span class="p">()</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span>
-</span><span id="__span-6-17"><a href="#__codelineno-6-17" id="__codelineno-6-17" name="__codelineno-6-17"></a>    <span class="n">builder</span><span class="p">,</span>
-</span><span id="__span-6-18"><a href="#__codelineno-6-18" id="__codelineno-6-18" name="__codelineno-6-18"></a>    <span class="p">[</span><span class="s2">"domain.entities"</span><span class="p">],</span>
-</span><span id="__span-6-19"><a href="#__codelineno-6-19" id="__codelineno-6-19" name="__codelineno-6-19"></a>    <span class="n">advanced_setup</span>
-</span><span id="__span-6-20"><a href="#__codelineno-6-20" id="__codelineno-6-20" name="__codelineno-6-20"></a><span class="p">)</span>
+<h3 id="writemodel-advanced-example">WriteModel Advanced Example<a class="headerlink" href="#writemodel-advanced-example" title="Permanent link">¶</a></h3>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-10-1"><a href="#__codelineno-10-1" id="__codelineno-10-1" name="__codelineno-10-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">advanced_setup</span><span class="p">(</span><span class="n">builder_</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">,</span> <span class="n">key_type</span><span class="p">):</span>
+</span><span id="__span-10-2"><a href="#__codelineno-10-2" id="__codelineno-10-2" name="__codelineno-10-2"></a>    <span class="k">if</span> <span class="n">entity_type</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"SensitiveData"</span><span class="p">:</span>
+</span><span id="__span-10-3"><a href="#__codelineno-10-3" id="__codelineno-10-3" name="__codelineno-10-3"></a>        <span class="c1"># Use HARD delete only for sensitive data</span>
+</span><span id="__span-10-4"><a href="#__codelineno-10-4" id="__codelineno-10-4" name="__codelineno-10-4"></a>        <span class="n">options</span> <span class="o">=</span> <span class="n">EventSourcingRepositoryOptions</span><span class="p">[</span><span class="n">entity_type</span><span class="p">,</span> <span class="n">key_type</span><span class="p">](</span>
+</span><span id="__span-10-5"><a href="#__codelineno-10-5" id="__codelineno-10-5" name="__codelineno-10-5"></a>            <span class="n">delete_mode</span><span class="o">=</span><span class="n">DeleteMode</span><span class="o">.</span><span class="n">HARD</span>
+</span><span id="__span-10-6"><a href="#__codelineno-10-6" id="__codelineno-10-6" name="__codelineno-10-6"></a>        <span class="p">)</span>
+</span><span id="__span-10-7"><a href="#__codelineno-10-7" id="__codelineno-10-7" name="__codelineno-10-7"></a>    <span class="k">else</span><span class="p">:</span>
+</span><span id="__span-10-8"><a href="#__codelineno-10-8" id="__codelineno-10-8" name="__codelineno-10-8"></a>        <span class="c1"># Use SOFT delete for everything else</span>
+</span><span id="__span-10-9"><a href="#__codelineno-10-9" id="__codelineno-10-9" name="__codelineno-10-9"></a>        <span class="n">options</span> <span class="o">=</span> <span class="n">EventSourcingRepositoryOptions</span><span class="p">[</span><span class="n">entity_type</span><span class="p">,</span> <span class="n">key_type</span><span class="p">](</span>
+</span><span id="__span-10-10"><a href="#__codelineno-10-10" id="__codelineno-10-10" name="__codelineno-10-10"></a>            <span class="n">delete_mode</span><span class="o">=</span><span class="n">DeleteMode</span><span class="o">.</span><span class="n">SOFT</span>
+</span><span id="__span-10-11"><a href="#__codelineno-10-11" id="__codelineno-10-11" name="__codelineno-10-11"></a>        <span class="p">)</span>
+</span><span id="__span-10-12"><a href="#__codelineno-10-12" id="__codelineno-10-12" name="__codelineno-10-12"></a>
+</span><span id="__span-10-13"><a href="#__codelineno-10-13" id="__codelineno-10-13" name="__codelineno-10-13"></a>    <span class="c1"># Custom registration logic</span>
+</span><span id="__span-10-14"><a href="#__codelineno-10-14" id="__codelineno-10-14" name="__codelineno-10-14"></a>    <span class="c1"># ...</span>
+</span><span id="__span-10-15"><a href="#__codelineno-10-15" id="__codelineno-10-15" name="__codelineno-10-15"></a>
+</span><span id="__span-10-16"><a href="#__codelineno-10-16" id="__codelineno-10-16" name="__codelineno-10-16"></a><span class="n">DataAccessLayer</span><span class="o">.</span><span class="n">WriteModel</span><span class="p">()</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span>
+</span><span id="__span-10-17"><a href="#__codelineno-10-17" id="__codelineno-10-17" name="__codelineno-10-17"></a>    <span class="n">builder</span><span class="p">,</span>
+</span><span id="__span-10-18"><a href="#__codelineno-10-18" id="__codelineno-10-18" name="__codelineno-10-18"></a>    <span class="p">[</span><span class="s2">"domain.entities"</span><span class="p">],</span>
+</span><span id="__span-10-19"><a href="#__codelineno-10-19" id="__codelineno-10-19" name="__codelineno-10-19"></a>    <span class="n">advanced_setup</span>
+</span><span id="__span-10-20"><a href="#__codelineno-10-20" id="__codelineno-10-20" name="__codelineno-10-20"></a><span class="p">)</span>
+</span></code></pre></div>
+<h3 id="readmodel-advanced-example">ReadModel Advanced Example<a class="headerlink" href="#readmodel-advanced-example" title="Permanent link">¶</a></h3>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-11-1"><a href="#__codelineno-11-1" id="__codelineno-11-1" name="__codelineno-11-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">advanced_setup</span><span class="p">(</span><span class="n">builder_</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">,</span> <span class="n">key_type</span><span class="p">):</span>
+</span><span id="__span-11-2"><a href="#__codelineno-11-2" id="__codelineno-11-2" name="__codelineno-11-2"></a>    <span class="c1"># Use different databases based on entity type</span>
+</span><span id="__span-11-3"><a href="#__codelineno-11-3" id="__codelineno-11-3" name="__codelineno-11-3"></a>    <span class="k">if</span> <span class="n">entity_type</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"AuditLog"</span><span class="p">:</span>
+</span><span id="__span-11-4"><a href="#__codelineno-11-4" id="__codelineno-11-4" name="__codelineno-11-4"></a>        <span class="n">database_name</span> <span class="o">=</span> <span class="s2">"audit_db"</span>
+</span><span id="__span-11-5"><a href="#__codelineno-11-5" id="__codelineno-11-5" name="__codelineno-11-5"></a>    <span class="k">else</span><span class="p">:</span>
+</span><span id="__span-11-6"><a href="#__codelineno-11-6" id="__codelineno-11-6" name="__codelineno-11-6"></a>        <span class="n">database_name</span> <span class="o">=</span> <span class="s2">"main_db"</span>
+</span><span id="__span-11-7"><a href="#__codelineno-11-7" id="__codelineno-11-7" name="__codelineno-11-7"></a>
+</span><span id="__span-11-8"><a href="#__codelineno-11-8" id="__codelineno-11-8" name="__codelineno-11-8"></a>    <span class="n">MongoRepository</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">builder_</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">,</span> <span class="n">key_type</span><span class="p">,</span> <span class="n">database_name</span><span class="p">)</span>
+</span><span id="__span-11-9"><a href="#__codelineno-11-9" id="__codelineno-11-9" name="__codelineno-11-9"></a>
+</span><span id="__span-11-10"><a href="#__codelineno-11-10" id="__codelineno-11-10" name="__codelineno-11-10"></a><span class="n">DataAccessLayer</span><span class="o">.</span><span class="n">ReadModel</span><span class="p">()</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span>
+</span><span id="__span-11-11"><a href="#__codelineno-11-11" id="__codelineno-11-11" name="__codelineno-11-11"></a>    <span class="n">builder</span><span class="p">,</span>
+</span><span id="__span-11-12"><a href="#__codelineno-11-12" id="__codelineno-11-12" name="__codelineno-11-12"></a>    <span class="p">[</span><span class="s2">"integration.models"</span><span class="p">],</span>
+</span><span id="__span-11-13"><a href="#__codelineno-11-13" id="__codelineno-11-13" name="__codelineno-11-13"></a>    <span class="n">advanced_setup</span>
+</span><span id="__span-11-14"><a href="#__codelineno-11-14" id="__codelineno-11-14" name="__codelineno-11-14"></a><span class="p">)</span>
 </span></code></pre></div>
 <h2 id="api-reference">API Reference<a class="headerlink" href="#api-reference" title="Permanent link">¶</a></h2>
 <h3 id="dataaccesslayerwritemodel"><code>DataAccessLayer.WriteModel</code><a class="headerlink" href="#dataaccesslayerwritemodel" title="Permanent link">¶</a></h3>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-7-1"><a href="#__codelineno-7-1" id="__codelineno-7-1" name="__codelineno-7-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">WriteModel</span><span class="p">:</span>
-</span><span id="__span-7-2"><a href="#__codelineno-7-2" id="__codelineno-7-2" name="__codelineno-7-2"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
-</span><span id="__span-7-3"><a href="#__codelineno-7-3" id="__codelineno-7-3" name="__codelineno-7-3"></a>        <span class="bp">self</span><span class="p">,</span>
-</span><span id="__span-7-4"><a href="#__codelineno-7-4" id="__codelineno-7-4" name="__codelineno-7-4"></a>        <span class="n">options</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">EventSourcingRepositoryOptions</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-</span><span id="__span-7-5"><a href="#__codelineno-7-5" id="__codelineno-7-5" name="__codelineno-7-5"></a>    <span class="p">):</span>
-</span><span id="__span-7-6"><a href="#__codelineno-7-6" id="__codelineno-7-6" name="__codelineno-7-6"></a><span class="w">        </span><span class="sd">"""Initialize WriteModel configuration</span>
-</span><span id="__span-7-7"><a href="#__codelineno-7-7" id="__codelineno-7-7" name="__codelineno-7-7"></a>
-</span><span id="__span-7-8"><a href="#__codelineno-7-8" id="__codelineno-7-8" name="__codelineno-7-8"></a><span class="sd">        Args:</span>
-</span><span id="__span-7-9"><a href="#__codelineno-7-9" id="__codelineno-7-9" name="__codelineno-7-9"></a><span class="sd">            options: Optional repository options (e.g., delete_mode).</span>
-</span><span id="__span-7-10"><a href="#__codelineno-7-10" id="__codelineno-7-10" name="__codelineno-7-10"></a><span class="sd">                    If not provided, default options will be used.</span>
-</span><span id="__span-7-11"><a href="#__codelineno-7-11" id="__codelineno-7-11" name="__codelineno-7-11"></a><span class="sd">        """</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-12-1"><a href="#__codelineno-12-1" id="__codelineno-12-1" name="__codelineno-12-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">WriteModel</span><span class="p">:</span>
+</span><span id="__span-12-2"><a href="#__codelineno-12-2" id="__codelineno-12-2" name="__codelineno-12-2"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+</span><span id="__span-12-3"><a href="#__codelineno-12-3" id="__codelineno-12-3" name="__codelineno-12-3"></a>        <span class="bp">self</span><span class="p">,</span>
+</span><span id="__span-12-4"><a href="#__codelineno-12-4" id="__codelineno-12-4" name="__codelineno-12-4"></a>        <span class="n">options</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">EventSourcingRepositoryOptions</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="__span-12-5"><a href="#__codelineno-12-5" id="__codelineno-12-5" name="__codelineno-12-5"></a>    <span class="p">):</span>
+</span><span id="__span-12-6"><a href="#__codelineno-12-6" id="__codelineno-12-6" name="__codelineno-12-6"></a><span class="w">        </span><span class="sd">"""Initialize WriteModel configuration</span>
+</span><span id="__span-12-7"><a href="#__codelineno-12-7" id="__codelineno-12-7" name="__codelineno-12-7"></a>
+</span><span id="__span-12-8"><a href="#__codelineno-12-8" id="__codelineno-12-8" name="__codelineno-12-8"></a><span class="sd">        Args:</span>
+</span><span id="__span-12-9"><a href="#__codelineno-12-9" id="__codelineno-12-9" name="__codelineno-12-9"></a><span class="sd">            options: Optional repository options (e.g., delete_mode).</span>
+</span><span id="__span-12-10"><a href="#__codelineno-12-10" id="__codelineno-12-10" name="__codelineno-12-10"></a><span class="sd">                    If not provided, default options will be used.</span>
+</span><span id="__span-12-11"><a href="#__codelineno-12-11" id="__codelineno-12-11" name="__codelineno-12-11"></a><span class="sd">        """</span>
+</span><span id="__span-12-12"><a href="#__codelineno-12-12" id="__codelineno-12-12" name="__codelineno-12-12"></a>
+</span><span id="__span-12-13"><a href="#__codelineno-12-13" id="__codelineno-12-13" name="__codelineno-12-13"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">configure</span><span class="p">(</span>
+</span><span id="__span-12-14"><a href="#__codelineno-12-14" id="__codelineno-12-14" name="__codelineno-12-14"></a>        <span class="bp">self</span><span class="p">,</span>
+</span><span id="__span-12-15"><a href="#__codelineno-12-15" id="__codelineno-12-15" name="__codelineno-12-15"></a>        <span class="n">builder</span><span class="p">:</span> <span class="n">ApplicationBuilderBase</span><span class="p">,</span>
+</span><span id="__span-12-16"><a href="#__codelineno-12-16" id="__codelineno-12-16" name="__codelineno-12-16"></a>        <span class="n">modules</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+</span><span id="__span-12-17"><a href="#__codelineno-12-17" id="__codelineno-12-17" name="__codelineno-12-17"></a>        <span class="n">repository_setup</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Callable</span><span class="p">[[</span><span class="n">ApplicationBuilderBase</span><span class="p">,</span> <span class="nb">type</span><span class="p">,</span> <span class="nb">type</span><span class="p">],</span> <span class="kc">None</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="__span-12-18"><a href="#__codelineno-12-18" id="__codelineno-12-18" name="__codelineno-12-18"></a>    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ApplicationBuilderBase</span><span class="p">:</span>
+</span><span id="__span-12-19"><a href="#__codelineno-12-19" id="__codelineno-12-19" name="__codelineno-12-19"></a><span class="w">        </span><span class="sd">"""Configure the Write Model DAL</span>
+</span><span id="__span-12-20"><a href="#__codelineno-12-20" id="__codelineno-12-20" name="__codelineno-12-20"></a>
+</span><span id="__span-12-21"><a href="#__codelineno-12-21" id="__codelineno-12-21" name="__codelineno-12-21"></a><span class="sd">        Args:</span>
+</span><span id="__span-12-22"><a href="#__codelineno-12-22" id="__codelineno-12-22" name="__codelineno-12-22"></a><span class="sd">            builder: The application builder to configure</span>
+</span><span id="__span-12-23"><a href="#__codelineno-12-23" id="__codelineno-12-23" name="__codelineno-12-23"></a><span class="sd">            modules: List of module names to scan for aggregate root types</span>
+</span><span id="__span-12-24"><a href="#__codelineno-12-24" id="__codelineno-12-24" name="__codelineno-12-24"></a><span class="sd">            repository_setup: Optional custom configuration function.</span>
+</span><span id="__span-12-25"><a href="#__codelineno-12-25" id="__codelineno-12-25" name="__codelineno-12-25"></a><span class="sd">                             If provided, takes precedence over options.</span>
+</span><span id="__span-12-26"><a href="#__codelineno-12-26" id="__codelineno-12-26" name="__codelineno-12-26"></a><span class="sd">                             If not provided, uses simplified configuration.</span>
+</span><span id="__span-12-27"><a href="#__codelineno-12-27" id="__codelineno-12-27" name="__codelineno-12-27"></a>
+</span><span id="__span-12-28"><a href="#__codelineno-12-28" id="__codelineno-12-28" name="__codelineno-12-28"></a><span class="sd">        Returns:</span>
+</span><span id="__span-12-29"><a href="#__codelineno-12-29" id="__codelineno-12-29" name="__codelineno-12-29"></a><span class="sd">            The configured builder</span>
+</span><span id="__span-12-30"><a href="#__codelineno-12-30" id="__codelineno-12-30" name="__codelineno-12-30"></a><span class="sd">        """</span>
 </span></code></pre></div>
-<h3 id="configure"><code>configure()</code><a class="headerlink" href="#configure" title="Permanent link">¶</a></h3>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-8-1"><a href="#__codelineno-8-1" id="__codelineno-8-1" name="__codelineno-8-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">configure</span><span class="p">(</span>
-</span><span id="__span-8-2"><a href="#__codelineno-8-2" id="__codelineno-8-2" name="__codelineno-8-2"></a>    <span class="bp">self</span><span class="p">,</span>
-</span><span id="__span-8-3"><a href="#__codelineno-8-3" id="__codelineno-8-3" name="__codelineno-8-3"></a>    <span class="n">builder</span><span class="p">:</span> <span class="n">ApplicationBuilderBase</span><span class="p">,</span>
-</span><span id="__span-8-4"><a href="#__codelineno-8-4" id="__codelineno-8-4" name="__codelineno-8-4"></a>    <span class="n">modules</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
-</span><span id="__span-8-5"><a href="#__codelineno-8-5" id="__codelineno-8-5" name="__codelineno-8-5"></a>    <span class="n">repository_setup</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Callable</span><span class="p">[[</span><span class="n">ApplicationBuilderBase</span><span class="p">,</span> <span class="nb">type</span><span class="p">,</span> <span class="nb">type</span><span class="p">],</span> <span class="kc">None</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
-</span><span id="__span-8-6"><a href="#__codelineno-8-6" id="__codelineno-8-6" name="__codelineno-8-6"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ApplicationBuilderBase</span><span class="p">:</span>
-</span><span id="__span-8-7"><a href="#__codelineno-8-7" id="__codelineno-8-7" name="__codelineno-8-7"></a><span class="w">    </span><span class="sd">"""Configure the Write Model DAL</span>
-</span><span id="__span-8-8"><a href="#__codelineno-8-8" id="__codelineno-8-8" name="__codelineno-8-8"></a>
-</span><span id="__span-8-9"><a href="#__codelineno-8-9" id="__codelineno-8-9" name="__codelineno-8-9"></a><span class="sd">    Args:</span>
-</span><span id="__span-8-10"><a href="#__codelineno-8-10" id="__codelineno-8-10" name="__codelineno-8-10"></a><span class="sd">        builder: The application builder to configure</span>
-</span><span id="__span-8-11"><a href="#__codelineno-8-11" id="__codelineno-8-11" name="__codelineno-8-11"></a><span class="sd">        modules: List of module names to scan for aggregate root types</span>
-</span><span id="__span-8-12"><a href="#__codelineno-8-12" id="__codelineno-8-12" name="__codelineno-8-12"></a><span class="sd">        repository_setup: Optional custom configuration function.</span>
-</span><span id="__span-8-13"><a href="#__codelineno-8-13" id="__codelineno-8-13" name="__codelineno-8-13"></a><span class="sd">                         If provided, takes precedence over options.</span>
-</span><span id="__span-8-14"><a href="#__codelineno-8-14" id="__codelineno-8-14" name="__codelineno-8-14"></a><span class="sd">                         If not provided, uses simplified configuration.</span>
-</span><span id="__span-8-15"><a href="#__codelineno-8-15" id="__codelineno-8-15" name="__codelineno-8-15"></a>
-</span><span id="__span-8-16"><a href="#__codelineno-8-16" id="__codelineno-8-16" name="__codelineno-8-16"></a><span class="sd">    Returns:</span>
-</span><span id="__span-8-17"><a href="#__codelineno-8-17" id="__codelineno-8-17" name="__codelineno-8-17"></a><span class="sd">        The configured builder</span>
-</span><span id="__span-8-18"><a href="#__codelineno-8-18" id="__codelineno-8-18" name="__codelineno-8-18"></a><span class="sd">    """</span>
+<h3 id="dataaccesslayerreadmodel"><code>DataAccessLayer.ReadModel</code><a class="headerlink" href="#dataaccesslayerreadmodel" title="Permanent link">¶</a></h3>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-13-1"><a href="#__codelineno-13-1" id="__codelineno-13-1" name="__codelineno-13-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">ReadModel</span><span class="p">:</span>
+</span><span id="__span-13-2"><a href="#__codelineno-13-2" id="__codelineno-13-2" name="__codelineno-13-2"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+</span><span id="__span-13-3"><a href="#__codelineno-13-3" id="__codelineno-13-3" name="__codelineno-13-3"></a>        <span class="bp">self</span><span class="p">,</span>
+</span><span id="__span-13-4"><a href="#__codelineno-13-4" id="__codelineno-13-4" name="__codelineno-13-4"></a>        <span class="n">database_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="__span-13-5"><a href="#__codelineno-13-5" id="__codelineno-13-5" name="__codelineno-13-5"></a>    <span class="p">):</span>
+</span><span id="__span-13-6"><a href="#__codelineno-13-6" id="__codelineno-13-6" name="__codelineno-13-6"></a><span class="w">        </span><span class="sd">"""Initialize ReadModel configuration</span>
+</span><span id="__span-13-7"><a href="#__codelineno-13-7" id="__codelineno-13-7" name="__codelineno-13-7"></a>
+</span><span id="__span-13-8"><a href="#__codelineno-13-8" id="__codelineno-13-8" name="__codelineno-13-8"></a><span class="sd">        Args:</span>
+</span><span id="__span-13-9"><a href="#__codelineno-13-9" id="__codelineno-13-9" name="__codelineno-13-9"></a><span class="sd">            database_name: Optional database name for MongoDB repositories.</span>
+</span><span id="__span-13-10"><a href="#__codelineno-13-10" id="__codelineno-13-10" name="__codelineno-13-10"></a><span class="sd">                          If not provided, custom repository_setup must be used.</span>
+</span><span id="__span-13-11"><a href="#__codelineno-13-11" id="__codelineno-13-11" name="__codelineno-13-11"></a><span class="sd">        """</span>
+</span><span id="__span-13-12"><a href="#__codelineno-13-12" id="__codelineno-13-12" name="__codelineno-13-12"></a>
+</span><span id="__span-13-13"><a href="#__codelineno-13-13" id="__codelineno-13-13" name="__codelineno-13-13"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">configure</span><span class="p">(</span>
+</span><span id="__span-13-14"><a href="#__codelineno-13-14" id="__codelineno-13-14" name="__codelineno-13-14"></a>        <span class="bp">self</span><span class="p">,</span>
+</span><span id="__span-13-15"><a href="#__codelineno-13-15" id="__codelineno-13-15" name="__codelineno-13-15"></a>        <span class="n">builder</span><span class="p">:</span> <span class="n">ApplicationBuilderBase</span><span class="p">,</span>
+</span><span id="__span-13-16"><a href="#__codelineno-13-16" id="__codelineno-13-16" name="__codelineno-13-16"></a>        <span class="n">modules</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+</span><span id="__span-13-17"><a href="#__codelineno-13-17" id="__codelineno-13-17" name="__codelineno-13-17"></a>        <span class="n">repository_setup</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Callable</span><span class="p">[[</span><span class="n">ApplicationBuilderBase</span><span class="p">,</span> <span class="nb">type</span><span class="p">,</span> <span class="nb">type</span><span class="p">],</span> <span class="kc">None</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="__span-13-18"><a href="#__codelineno-13-18" id="__codelineno-13-18" name="__codelineno-13-18"></a>    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ApplicationBuilderBase</span><span class="p">:</span>
+</span><span id="__span-13-19"><a href="#__codelineno-13-19" id="__codelineno-13-19" name="__codelineno-13-19"></a><span class="w">        </span><span class="sd">"""Configure the Read Model DAL</span>
+</span><span id="__span-13-20"><a href="#__codelineno-13-20" id="__codelineno-13-20" name="__codelineno-13-20"></a>
+</span><span id="__span-13-21"><a href="#__codelineno-13-21" id="__codelineno-13-21" name="__codelineno-13-21"></a><span class="sd">        Args:</span>
+</span><span id="__span-13-22"><a href="#__codelineno-13-22" id="__codelineno-13-22" name="__codelineno-13-22"></a><span class="sd">            builder: The application builder to configure</span>
+</span><span id="__span-13-23"><a href="#__codelineno-13-23" id="__codelineno-13-23" name="__codelineno-13-23"></a><span class="sd">            modules: List of module names to scan for queryable types</span>
+</span><span id="__span-13-24"><a href="#__codelineno-13-24" id="__codelineno-13-24" name="__codelineno-13-24"></a><span class="sd">            repository_setup: Optional custom configuration function.</span>
+</span><span id="__span-13-25"><a href="#__codelineno-13-25" id="__codelineno-13-25" name="__codelineno-13-25"></a><span class="sd">                             If provided, takes precedence over database_name.</span>
+</span><span id="__span-13-26"><a href="#__codelineno-13-26" id="__codelineno-13-26" name="__codelineno-13-26"></a><span class="sd">                             If not provided, uses simplified configuration.</span>
+</span><span id="__span-13-27"><a href="#__codelineno-13-27" id="__codelineno-13-27" name="__codelineno-13-27"></a>
+</span><span id="__span-13-28"><a href="#__codelineno-13-28" id="__codelineno-13-28" name="__codelineno-13-28"></a><span class="sd">        Returns:</span>
+</span><span id="__span-13-29"><a href="#__codelineno-13-29" id="__codelineno-13-29" name="__codelineno-13-29"></a><span class="sd">            The configured builder</span>
+</span><span id="__span-13-30"><a href="#__codelineno-13-30" id="__codelineno-13-30" name="__codelineno-13-30"></a>
+</span><span id="__span-13-31"><a href="#__codelineno-13-31" id="__codelineno-13-31" name="__codelineno-13-31"></a><span class="sd">        Raises:</span>
+</span><span id="__span-13-32"><a href="#__codelineno-13-32" id="__codelineno-13-32" name="__codelineno-13-32"></a><span class="sd">            ValueError: If consumer_group not specified in settings</span>
+</span><span id="__span-13-33"><a href="#__codelineno-13-33" id="__codelineno-13-33" name="__codelineno-13-33"></a><span class="sd">            ValueError: If neither repository_setup nor database_name is provided</span>
+</span><span id="__span-13-34"><a href="#__codelineno-13-34" id="__codelineno-13-34" name="__codelineno-13-34"></a><span class="sd">            ValueError: If mongo connection string not found in settings</span>
+</span><span id="__span-13-35"><a href="#__codelineno-13-35" id="__codelineno-13-35" name="__codelineno-13-35"></a><span class="sd">        """</span>
 </span></code></pre></div>
 <h2 id="benefits">Benefits<a class="headerlink" href="#benefits" title="Permanent link">¶</a></h2>
+<h3 id="writemodel">WriteModel<a class="headerlink" href="#writemodel" title="Permanent link">¶</a></h3>
 <table>
 <thead>
 <tr>
@@ -1971,6 +2198,48 @@
 <td>Consistency</td>
 <td>No</td>
 <td>Aligned with other components</td>
+</tr>
+</tbody>
+</table>
+<h3 id="readmodel">ReadModel<a class="headerlink" href="#readmodel" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Aspect</th>
+<th>Before</th>
+<th>After</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Configuration style</td>
+<td>Lambda function</td>
+<td>Constructor parameter</td>
+</tr>
+<tr>
+<td>Database name visibility</td>
+<td>Hidden in lambda</td>
+<td>Explicit in constructor</td>
+</tr>
+<tr>
+<td>Type safety</td>
+<td>No autocomplete</td>
+<td>Full IDE support</td>
+</tr>
+<tr>
+<td>Error handling</td>
+<td>Runtime failures</td>
+<td>Early validation</td>
+</tr>
+<tr>
+<td>Consistency</td>
+<td>Unique pattern</td>
+<td>Aligned with WriteModel</td>
+</tr>
+<tr>
+<td>Backwards compatibility</td>
+<td>N/A</td>
+<td>Full (lambda still works)</td>
 </tr>
 </tbody>
 </table>
