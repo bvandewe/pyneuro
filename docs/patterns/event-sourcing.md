@@ -1402,6 +1402,317 @@ class UserPreferences:
         )
 ```
 
+## 🏗️ Event Publishing Architecture
+
+_Last updated: December 2, 2025 - Verified through diagnostic logging_
+
+### Overview
+
+A critical design decision in Neuroglia's event sourcing implementation is **where domain events are published** to the mediator pipeline. Understanding this architecture is essential for:
+
+- Building correct event-driven applications
+- Avoiding duplicate event processing
+- Ensuring reliable event delivery
+- Implementing read model projections
+
+### The Two Possible Approaches
+
+In a CQRS + Event Sourcing architecture, domain events can be published in two locations:
+
+1. **Write Path**: Immediately after `EventSourcingRepository` persists events to EventStoreDB
+2. **Read Path**: When `ReadModelReconciliator` receives events from EventStoreDB persistent subscription
+
+### Neuroglia's Design: Read Path Only
+
+**Neuroglia publishes events ONLY from the Read Path.** This is a deliberate architectural choice with specific benefits.
+
+#### Implementation
+
+The `EventSourcingRepository` intentionally overrides the base `Repository._publish_domain_events()` method to do nothing:
+
+```python
+# neuroglia/data/infrastructure/event_sourcing/event_sourcing_repository.py
+
+class EventSourcingRepository(Generic[TAggregate, TKey], Repository[TAggregate, TKey]):
+
+    async def _publish_domain_events(self, entity: TAggregate) -> None:
+        """
+        Override base class event publishing for event-sourced aggregates.
+
+        Event sourcing repositories DO NOT publish events directly because:
+        1. Events are already persisted to the EventStore
+        2. ReadModelReconciliator subscribes to EventStore and publishes ALL events
+        3. Publishing here would cause DOUBLE PUBLISHING
+
+        For event-sourced aggregates:
+        - Events are persisted to EventStore by _do_add_async/_do_update_async
+        - ReadModelReconciliator.on_event_record_stream_next_async() publishes via mediator
+        - This ensures single, reliable event publishing from the source of truth
+        """
+        # Do nothing - ReadModelReconciliator handles event publishing from EventStore
+        pass
+```
+
+#### Complete Data Flow
+
+```mermaid
+sequenceDiagram
+    participant Client
+    participant Controller
+    participant CommandHandler
+    participant Aggregate
+    participant Repository
+    participant EventStoreDB
+    participant Subscription
+    participant Reconciliator
+    participant Mediator
+    participant Handlers
+    participant ReadModel
+
+    Client->>Controller: HTTP Request
+    Controller->>CommandHandler: CreateTaskCommand
+    CommandHandler->>Aggregate: Task.create()
+    Aggregate->>Aggregate: Add TaskCreatedEvent to _pending_events
+    CommandHandler->>Repository: add_async(task)
+    Repository->>EventStoreDB: Append events
+    EventStoreDB-->>Repository: ✅ Persisted
+    Note over Repository: _publish_domain_events() does NOTHING
+    Repository-->>CommandHandler: ✅ Success
+    CommandHandler-->>Controller: TaskDto
+    Controller-->>Client: 201 Created
+
+    Note over EventStoreDB,Subscription: Async Read Path begins...
+
+    Subscription->>EventStoreDB: Poll for new events
+    EventStoreDB-->>Subscription: TaskCreatedEvent
+    Subscription->>Reconciliator: on_event_record_stream_next_async()
+    Reconciliator->>Mediator: publish_async(TaskCreatedEvent)
+    Mediator->>Handlers: Execute pipeline behaviors
+    Handlers->>ReadModel: Update MongoDB projection
+    ReadModel-->>Handlers: ✅ Updated
+    Handlers->>Handlers: Emit CloudEvent
+    Handlers-->>Mediator: ✅ Complete
+    Mediator-->>Reconciliator: ✅ Success
+    Reconciliator->>Subscription: ACK event
+    Subscription->>EventStoreDB: Checkpoint advanced
+```
+
+### Why This Design?
+
+#### 1. Single Source of Truth
+
+EventStoreDB is the authoritative source for all domain events. By publishing only from the EventStoreDB subscription:
+
+- ✅ Events are guaranteed to be persisted before publishing
+- ✅ No risk of publishing events that failed to persist
+- ✅ Order of events is preserved exactly as stored
+- ✅ No race conditions between Write and Read paths
+
+#### 2. Reliable Delivery
+
+The persistent subscription mechanism provides:
+
+- **At-least-once delivery**: Events are redelivered until ACKed
+- **Checkpoint tracking**: Resume from last processed event after restart
+- **Consumer groups**: Multiple instances can share event processing workload
+- **Guaranteed ordering**: Events within a stream are processed in order
+
+#### 3. No Duplicate Publishing
+
+Since events are published from exactly one location (`ReadModelReconciliator`), there's no risk of:
+
+- ❌ Double publishing (once from Write Path, once from Read Path)
+- ❌ Race conditions causing inconsistent state
+- ❌ Duplicate CloudEvents emitted
+- ❌ Projection handlers called multiple times for same event
+
+#### 4. Eventual Consistency Model
+
+This design embraces eventual consistency correctly:
+
+- Commands complete quickly (just persist to EventStoreDB)
+- Read model updates happen asynchronously in background
+- CloudEvents are emitted after successful read model projection
+- Clear separation between Write Model (immediate) and Read Model (eventual)
+
+### Contrast with State-Based Repositories
+
+For **state-based repositories** (like `MotorRepository` for MongoDB), the base class `Repository._publish_domain_events()` **IS called** because:
+
+- Events are not stored separately from entity state
+- No subscription mechanism exists to deliver events later
+- Events must be published immediately after state persistence
+- This is the only opportunity to process domain events
+
+```python
+# State-based repository DOES publish events
+class MotorRepository(Repository[TEntity, TKey]):
+    async def add_async(self, entity: TEntity) -> None:
+        await self._do_add_async(entity)  # Persist to MongoDB
+        await self._publish_domain_events(entity)  # ✅ PUBLISHES via mediator
+```
+
+### Implications for Developers
+
+#### Command Handlers
+
+Command handlers return **immediately** after persisting to EventStoreDB:
+
+```python
+class CreateTaskCommandHandler(CommandHandler[CreateTaskCommand, OperationResult[TaskDto]]):
+    async def handle_async(self, command: CreateTaskCommand) -> OperationResult[TaskDto]:
+        # Create aggregate and raise domain event
+        task = Task.create(command.title, command.description)
+
+        # Persist to EventStore - returns immediately
+        await self.repository.add_async(task)
+
+        # ⚠️ Read model NOT YET updated at this point!
+        # Domain event handlers have NOT yet been called!
+        # CloudEvents have NOT yet been emitted!
+
+        return self.created(self.mapper.map(task, TaskDto))
+```
+
+#### Event Handlers (Projections)
+
+Event handlers are called asynchronously from the Read Path:
+
+```python
+class TaskCreatedProjectionHandler(EventHandler[TaskCreatedDomainEvent]):
+    async def handle_async(self, event: TaskCreatedDomainEvent):
+        # This executes in ReadModelReconciliator context
+        # NOT in command handler context!
+
+        await self.read_model_repository.create_async(ReadModelTask(
+            id=event.aggregate_id,
+            title=event.title,
+            description=event.description,
+            created_at=event.timestamp
+        ))
+
+        # CloudEvent will be emitted AFTER this handler completes
+```
+
+#### Query Handlers
+
+Queries read from eventually-consistent read models:
+
+```python
+class GetTaskByIdQueryHandler(QueryHandler[GetTaskByIdQuery, TaskDto]):
+    async def handle_async(self, query: GetTaskByIdQuery) -> TaskDto:
+        # Reads from MongoDB read model
+        # May not reflect very recent writes (eventual consistency)
+        task = await self.read_model_repository.get_by_id_async(query.task_id)
+        return self.mapper.map(task, TaskDto)
+```
+
+### Best Practices
+
+#### 1. Design for Idempotency
+
+Projection handlers should be idempotent since events may be redelivered:
+
+```python
+class TaskCreatedProjectionHandler(EventHandler[TaskCreatedDomainEvent]):
+    async def handle_async(self, event: TaskCreatedDomainEvent):
+        # ✅ GOOD: Use upsert to handle redelivery
+        await self.collection.update_one(
+            {"_id": event.aggregate_id},
+            {"$set": {
+                "title": event.title,
+                "description": event.description,
+                "created_at": event.timestamp
+            }},
+            upsert=True
+        )
+
+        # ❌ BAD: Insert will fail on redelivery
+        # await self.collection.insert_one({...})
+```
+
+#### 2. Keep Handlers Fast
+
+Don't block the event processing pipeline:
+
+```python
+class OrderConfirmedHandler(EventHandler[OrderConfirmedEvent]):
+    async def handle_async(self, event: OrderConfirmedEvent):
+        # ✅ GOOD: Fast database update
+        await self.update_read_model(event)
+
+        # ❌ BAD: Slow external API calls block pipeline
+        # await self.send_confirmation_email(event)  # Do this elsewhere!
+
+        # ✅ BETTER: Queue for async processing
+        await self.task_queue.enqueue(SendConfirmationEmailTask(event))
+```
+
+#### 3. Handle Failures Gracefully
+
+If a handler fails, the event will be redelivered:
+
+```python
+class PaymentProcessedHandler(EventHandler[PaymentProcessedEvent]):
+    async def handle_async(self, event: PaymentProcessedEvent):
+        try:
+            await self.update_payment_read_model(event)
+        except Exception as ex:
+            # Log error - event will be redelivered
+            self.logger.error(f"Failed to project PaymentProcessed: {ex}")
+            raise  # Let ReadModelReconciliator handle retry
+```
+
+### Verification
+
+This architecture was verified through diagnostic logging on December 2, 2025:
+
+```log
+10:36:29,143  ✅ Command 'CreateTaskCommand' completed
+10:36:29,147  📥 READ PATH: Received TaskCreatedDomainEvent from subscription
+10:36:29,148  📥 READ PATH: Publishing TaskCreatedDomainEvent via mediator
+10:36:29,153  Found 3 pipeline behaviors for TaskCreatedDomainEvent
+10:36:29,154  📥 Projecting TaskCreated
+10:36:29,235  ✅ Projected TaskCreated to Read Model
+10:36:29,240  Emitting CloudEvent 'io.tools-provider.task.created.v1'
+10:36:29,242  ACK sent for event
+10:36:29,264  Published cloudevent
+```
+
+**Key observations:**
+
+1. ✅ No "📤 WRITE PATH" log for event-sourced aggregates
+2. ✅ Only "📥 READ PATH" publishes domain events
+3. ✅ CloudEvent emitted exactly once
+4. ✅ ACK sent after successful processing
+
+### Related Issues & Fixes
+
+#### esdbclient Bug: Missing subscription_id
+
+**Status**: Patched in `src/neuroglia/data/infrastructure/event_sourcing/patches.py`
+**Issue**: https://github.com/pyeventsourcing/kurrentdbclient/issues/35
+
+The async `AsyncPersistentSubscription.init()` doesn't propagate `subscription_id` to `_read_reqs`, causing ACKs to be sent with empty subscription ID. Neuroglia includes a runtime patch that fixes this automatically.
+
+#### Neuroglia Fix: Wrong ACK ID for Resolved Links
+
+**Status**: Fixed in v0.6.20
+
+When using `resolveLinktos=true` (category streams like `$ce-*`), ACKs must use `e.ack_id` (link event ID), not `e.id` (resolved event ID). This is now correctly handled in `ESEventStore._consume_events_async()`.
+
+### Summary
+
+- ✅ **Events published ONLY from Read Path** via `ReadModelReconciliator`
+- ✅ **Write Path returns immediately** after persisting to EventStoreDB
+- ✅ **No duplicate event processing** - single publishing location
+- ✅ **Reliable delivery** via persistent subscriptions
+- ✅ **Eventual consistency** between Write and Read models
+- ✅ **Idempotent handlers** handle redelivery correctly
+- ✅ **CloudEvents emitted** after successful projection
+
+This architecture ensures reliable, predictable event processing in event-sourced applications.
+
 ## 📝 Key Takeaways
 
 - **Event sourcing stores state changes as immutable events**, preserving complete history
