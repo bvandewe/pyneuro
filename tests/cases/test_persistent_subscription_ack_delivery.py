@@ -118,6 +118,7 @@ class TestPersistentSubscriptionAckDelivery:
         event.stream_name = "test_app-order-123"
         event.type = "OrderPlacedEvent"
         event.id = uuid4()
+        event.ack_id = event.id
         event.stream_position = 0
         event.commit_position = 100
         event.recorded_at = datetime.now(timezone.utc)
@@ -162,6 +163,7 @@ class TestPersistentSubscriptionAckDelivery:
         event.stream_name = "test_app-order-123"
         event.type = "OrderPlacedEvent"
         event.id = uuid4()
+        event.ack_id = event.id
         event.stream_position = 0
         event.commit_position = 100
         event.recorded_at = datetime.now(timezone.utc)
@@ -209,6 +211,7 @@ class TestPersistentSubscriptionAckDelivery:
         tombstone.stream_name = "$$test_app-order-deleted"
         tombstone.type = "$metadata"
         tombstone.id = uuid4()
+        tombstone.ack_id = tombstone.id
         tombstone.data = b""
         tombstone.metadata = b"{}"
 
@@ -323,6 +326,7 @@ class TestAckConfiguration:
         event.stream_name = "test_app-order-123"
         event.type = "OrderPlacedEvent"
         event.id = uuid4()
+        event.ack_id = event.id
         event.stream_position = 0
         event.commit_position = 100
         event.recorded_at = datetime.now(timezone.utc)
@@ -368,6 +372,7 @@ class TestAckLoggingAndMonitoring:
         event.stream_name = "test_app-order-123"
         event.type = "OrderPlacedEvent"
         event.id = uuid4()
+        event.ack_id = event.id
         event.stream_position = 0
         event.commit_position = 100
         event.recorded_at = datetime.now(timezone.utc)

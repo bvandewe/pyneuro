@@ -116,6 +116,7 @@ class TestTombstoneEventHandling:
         tombstone_event.stream_name = "$$test_app-task-123"  # Tombstone prefix
         tombstone_event.type = "$metadata"
         tombstone_event.id = uuid4()
+        tombstone_event.ack_id = tombstone_event.id
         tombstone_event.stream_position = 0
         tombstone_event.data = b""  # Empty data (typical for tombstones)
         tombstone_event.metadata = b"{}"
@@ -194,6 +195,7 @@ class TestSystemEventHandling:
         system_event.stream_name = "test_app-task-123"  # Regular stream
         system_event.type = "$metadata"  # System event type
         system_event.id = uuid4()
+        system_event.ack_id = system_event.id
         system_event.stream_position = 0
         system_event.data = b'{"key": "value"}'
         system_event.metadata = b"{}"
@@ -263,6 +265,7 @@ class TestInvalidEventDataHandling:
         invalid_event.stream_name = "test_app-task-123"
         invalid_event.type = "TaskCreatedEvent"
         invalid_event.id = uuid4()
+        invalid_event.ack_id = invalid_event.id
         invalid_event.stream_position = 0
         invalid_event.data = b"INVALID JSON DATA"  # Not valid JSON
         invalid_event.metadata = b'{"clr-type": "tests.cases.test_event_store_tombstone_handling.TaskCreatedEvent"}'
@@ -292,6 +295,7 @@ class TestInvalidEventDataHandling:
         empty_event.stream_name = "test_app-task-123"
         empty_event.type = "EmptyEvent"
         empty_event.id = uuid4()
+        empty_event.ack_id = empty_event.id
         empty_event.stream_position = 0
         empty_event.data = b""  # Empty data
         empty_event.metadata = b'{"clr-type": "tests.cases.test_event_store_tombstone_handling.TaskCreatedEvent"}'
@@ -342,6 +346,7 @@ class TestMixedEventStreamHandling:
         system_event.stream_name = "test_app-task-2"
         system_event.type = "$metadata"
         system_event.id = uuid4()
+        system_event.ack_id = system_event.id
         system_event.data = b"{}"
         system_event.metadata = b"{}"
 
@@ -421,6 +426,7 @@ class TestLoggingBehavior:
         tombstone.stream_name = "$$test_app-task-123"
         tombstone.type = "$metadata"
         tombstone.id = uuid4()
+        tombstone.ack_id = tombstone.id
         tombstone.data = b""
         tombstone.metadata = b"{}"
 
@@ -446,6 +452,7 @@ class TestLoggingBehavior:
         system_event.stream_name = "test_app-task-123"
         system_event.type = "$metadata"
         system_event.id = uuid4()
+        system_event.ack_id = system_event.id
         system_event.data = b"{}"
         system_event.metadata = b"{}"
 
@@ -470,6 +477,7 @@ class TestLoggingBehavior:
         invalid_event.stream_name = "test_app-task-123"
         invalid_event.type = "TaskCreatedEvent"
         invalid_event.id = uuid4()
+        invalid_event.ack_id = invalid_event.id
         invalid_event.stream_position = 0
         invalid_event.data = b"INVALID"
         invalid_event.metadata = b'{"clr-type": "tests.cases.test_event_store_tombstone_handling.TaskCreatedEvent"}'

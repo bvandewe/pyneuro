@@ -253,7 +253,9 @@ class ESEventStore(EventStore):
                     logging.debug(f"Skipping tombstone event from stream: {e.stream_name}")
                     # Acknowledge tombstone to continue processing
                     if is_persistent:
-                        await subscription.ack(e.id)
+                        # Use ack_id for resolved link events, fall back to id
+                        ack_id = getattr(e, "ack_id", e.id)
+                        await subscription.ack(ack_id)
                     continue
 
                 # Skip system event types (prefixed with $)
@@ -262,7 +264,9 @@ class ESEventStore(EventStore):
                     logging.debug(f"Skipping system event type '{e.type}' from stream: {e.stream_name}")
                     # Acknowledge system event to continue processing
                     if is_persistent:
-                        await subscription.ack(e.id)
+                        # Use ack_id for resolved link events, fall back to id
+                        ack_id = getattr(e, "ack_id", e.id)
+                        await subscription.ack(ack_id)
                     continue
 
                 try:
@@ -271,12 +275,16 @@ class ESEventStore(EventStore):
                     logging.warning(f"Could not decode event with offset '{e.stream_position}' from stream '{e.stream_name}': {ex}")
                     # Acknowledge failed decode to continue processing (don't park/retry invalid events)
                     if is_persistent:
-                        await subscription.ack(e.id)
+                        # Use ack_id for resolved link events, fall back to id
+                        ack_id = getattr(e, "ack_id", e.id)
+                        await subscription.ack(ack_id)
                     continue
 
                 # Convert to AckableEventRecord if subscription supports ack/nack
                 if is_persistent:
-                    event_id = e.id
+                    # Use ack_id for resolved link events (resolveLinktos=true), fall back to id
+                    # This is critical for persistent subscriptions to category streams ($ce-*)
+                    event_id = getattr(e, "ack_id", e.id)
 
                     async def ack_delegate(eid=event_id, sub=subscription):
                         """
