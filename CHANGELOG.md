@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.7.1] - 2025-12-02
+
 ### Fixed
 
 - **CRITICAL**: Fixed `ESEventStore._ensure_client()` kurrentdbclient compatibility
@@ -14,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Added required `await client.connect()` call to establish connection
   - Fixed `TypeError: object AsyncKurrentDBClient can't be used in 'await' expression`
   - Fixed `AttributeError: 'AsyncKurrentDBClient' object has no attribute '_connection'`
+  - **Impact**: v0.7.0 was completely broken for event sourcing - this patch fixes it
 
 ## [0.7.0] - 2025-12-02
 
