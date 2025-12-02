@@ -7,6 +7,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.6.22] - 2025-12-02
+
+### Added
+
+- **DataAccessLayer.ReadModel**: Simplified repository configuration API
+  - **Enhancement**: Support `database_name` directly in `ReadModel()` constructor for MongoDB repositories
+  - **Before**: Required lambda function: `lambda b, et, kt: MongoRepository.configure(b, et, kt, "database_name")`
+  - **After**: Simple configuration: `DataAccessLayer.ReadModel(database_name="myapp").configure(builder, ["integration.models"])`
+  - **Benefits**:
+    - Eliminates verbose lambda functions for simple configurations
+    - Type-safe database name configuration
+    - Framework handles MongoDB connection and repository setup automatically
+    - Consistent with WriteModel simplified API
+    - IDE autocomplete support
+  - **Backwards Compatible**: Custom factory pattern still supported via optional `repository_setup` parameter
+  - **Use Cases**:
+    - Simple: `DataAccessLayer.ReadModel(database_name="myapp").configure(builder, ["integration.models"])`
+    - Custom: `DataAccessLayer.ReadModel().configure(builder, ["integration.models"], custom_setup)`
+  - **Testing**: 10 comprehensive tests added (all passing)
+  - **Total Tests**: Now 28 tests for DataAccessLayer (18 WriteModel + 10 ReadModel)
+
 ## [0.6.21] - 2025-12-02
 
 ### Added

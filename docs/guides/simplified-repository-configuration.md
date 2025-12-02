@@ -2,9 +2,16 @@
 
 ## Overview
 
-The Neuroglia framework now supports a simplified API for configuring `EventSourcingRepository` with custom options, eliminating the need for verbose custom factory functions.
+The Neuroglia framework supports a simplified API for configuring both `EventSourcingRepository` (Write Model) and `MongoRepository` (Read Model), eliminating the need for verbose custom factory functions.
 
-## The Problem (Before v0.6.21)
+This guide covers:
+
+- **WriteModel (v0.6.21+)**: Simplified `EventSourcingRepository` configuration with options
+- **ReadModel (v0.6.22+)**: Simplified `MongoRepository` configuration with database name
+
+## Write Model Simplification (v0.6.21+)
+
+### The Problem (Before v0.6.21)
 
 Previously, configuring `EventSourcingRepository` with custom options (e.g., `DeleteMode.HARD` for GDPR compliance) required writing a **37-line custom factory function**:
 
@@ -115,9 +122,55 @@ DataAccessLayer.WriteModel(
 ).configure(builder, ["domain.entities"])
 ```
 
+## Read Model Simplification (v0.6.22+)
+
+### The Problem (Before v0.6.22)
+
+Configuring `MongoRepository` for read models required verbose lambda functions:
+
+```python
+# Old approach: Verbose lambda function
+DataAccessLayer.ReadModel().configure(
+    builder,
+    ["integration.models"],
+    lambda b, et, kt: MongoRepository.configure(b, et, kt, "database_name")
+)
+```
+
+### The Solution (v0.6.22+)
+
+#### Simple Configuration with Database Name
+
+```python
+from neuroglia.hosting.configuration.data_access_layer import DataAccessLayer
+
+# Simple - just pass database name
+DataAccessLayer.ReadModel(database_name="myapp").configure(
+    builder,
+    ["integration.models"]
+)
+```
+
+#### Backwards Compatible Custom Factory
+
+```python
+# Custom factory still supported for advanced scenarios
+def custom_setup(builder_, entity_type, key_type):
+    # Custom configuration logic
+    MongoRepository.configure(builder_, entity_type, key_type, "myapp")
+
+DataAccessLayer.ReadModel().configure(
+    builder,
+    ["integration.models"],
+    custom_setup
+)
+```
+
 ## Backwards Compatibility
 
-The enhancement maintains **full backwards compatibility**. Existing code continues to work without modification:
+Both enhancements maintain **full backwards compatibility**. Existing code continues to work without modification:
+
+### WriteModel Backwards Compatibility
 
 ```python
 # Old custom factory pattern still supported
@@ -129,6 +182,17 @@ DataAccessLayer.WriteModel().configure(
     builder,
     ["domain.entities"],
     custom_setup  # Custom factory still works
+)
+```
+
+### ReadModel Backwards Compatibility
+
+```python
+# Old lambda pattern still supported
+DataAccessLayer.ReadModel().configure(
+    builder,
+    ["integration.models"],
+    lambda b, et, kt: MongoRepository.configure(b, et, kt, "myapp")
 )
 ```
 
@@ -153,16 +217,15 @@ def create_app():
     Mediator.configure(builder, ["application"])
     ESEventStore.configure(builder, EventStoreOptions("myapp", "myapp-group"))
 
-    # Configure Write Model with HARD delete enabled
+    # Configure Write Model with HARD delete enabled (v0.6.21+)
     DataAccessLayer.WriteModel(
         options=EventSourcingRepositoryOptions(delete_mode=DeleteMode.HARD)
     ).configure(builder, ["domain.entities"])
 
-    # Configure Read Model
-    DataAccessLayer.ReadModel().configure(
+    # Configure Read Model with database name (v0.6.22+)
+    DataAccessLayer.ReadModel(database_name="myapp").configure(
         builder,
-        ["integration.models"],
-        lambda b, et, kt: MongoRepository.configure(b, et, kt, "myapp")
+        ["integration.models"]
     )
 
     # Add controllers
@@ -179,12 +242,12 @@ if __name__ == "__main__":
 
 The custom factory pattern is still useful for advanced scenarios:
 
-1. **Per-Aggregate Configuration**: Different options for different aggregates
+1. **Per-Entity Configuration**: Different options for different entities
 2. **Custom Repository Implementations**: Using your own repository classes
 3. **Complex Initialization Logic**: Advanced setup requirements
 4. **Migration from Legacy Code**: Gradual refactoring
 
-Example:
+### WriteModel Advanced Example
 
 ```python
 def advanced_setup(builder_, entity_type, key_type):
@@ -209,6 +272,25 @@ DataAccessLayer.WriteModel().configure(
 )
 ```
 
+### ReadModel Advanced Example
+
+```python
+def advanced_setup(builder_, entity_type, key_type):
+    # Use different databases based on entity type
+    if entity_type.__name__ == "AuditLog":
+        database_name = "audit_db"
+    else:
+        database_name = "main_db"
+
+    MongoRepository.configure(builder_, entity_type, key_type, database_name)
+
+DataAccessLayer.ReadModel().configure(
+    builder,
+    ["integration.models"],
+    advanced_setup
+)
+```
+
 ## API Reference
 
 ### `DataAccessLayer.WriteModel`
@@ -225,32 +307,70 @@ class WriteModel:
             options: Optional repository options (e.g., delete_mode).
                     If not provided, default options will be used.
         """
+
+    def configure(
+        self,
+        builder: ApplicationBuilderBase,
+        modules: list[str],
+        repository_setup: Optional[Callable[[ApplicationBuilderBase, type, type], None]] = None
+    ) -> ApplicationBuilderBase:
+        """Configure the Write Model DAL
+
+        Args:
+            builder: The application builder to configure
+            modules: List of module names to scan for aggregate root types
+            repository_setup: Optional custom configuration function.
+                             If provided, takes precedence over options.
+                             If not provided, uses simplified configuration.
+
+        Returns:
+            The configured builder
+        """
 ```
 
-### `configure()`
+### `DataAccessLayer.ReadModel`
 
 ```python
-def configure(
-    self,
-    builder: ApplicationBuilderBase,
-    modules: list[str],
-    repository_setup: Optional[Callable[[ApplicationBuilderBase, type, type], None]] = None
-) -> ApplicationBuilderBase:
-    """Configure the Write Model DAL
+class ReadModel:
+    def __init__(
+        self,
+        database_name: Optional[str] = None
+    ):
+        """Initialize ReadModel configuration
 
-    Args:
-        builder: The application builder to configure
-        modules: List of module names to scan for aggregate root types
-        repository_setup: Optional custom configuration function.
-                         If provided, takes precedence over options.
-                         If not provided, uses simplified configuration.
+        Args:
+            database_name: Optional database name for MongoDB repositories.
+                          If not provided, custom repository_setup must be used.
+        """
 
-    Returns:
-        The configured builder
-    """
+    def configure(
+        self,
+        builder: ApplicationBuilderBase,
+        modules: list[str],
+        repository_setup: Optional[Callable[[ApplicationBuilderBase, type, type], None]] = None
+    ) -> ApplicationBuilderBase:
+        """Configure the Read Model DAL
+
+        Args:
+            builder: The application builder to configure
+            modules: List of module names to scan for queryable types
+            repository_setup: Optional custom configuration function.
+                             If provided, takes precedence over database_name.
+                             If not provided, uses simplified configuration.
+
+        Returns:
+            The configured builder
+
+        Raises:
+            ValueError: If consumer_group not specified in settings
+            ValueError: If neither repository_setup nor database_name is provided
+            ValueError: If mongo connection string not found in settings
+        """
 ```
 
 ## Benefits
+
+### WriteModel
 
 | Aspect                    | Before | After                         |
 | ------------------------- | ------ | ----------------------------- |
@@ -260,6 +380,17 @@ def configure(
 | Error-prone DI resolution | Yes    | Handled by framework          |
 | Discoverable API          | No     | Yes (IDE autocomplete)        |
 | Consistency               | No     | Aligned with other components |
+
+### ReadModel
+
+| Aspect                   | Before           | After                     |
+| ------------------------ | ---------------- | ------------------------- |
+| Configuration style      | Lambda function  | Constructor parameter     |
+| Database name visibility | Hidden in lambda | Explicit in constructor   |
+| Type safety              | No autocomplete  | Full IDE support          |
+| Error handling           | Runtime failures | Early validation          |
+| Consistency              | Unique pattern   | Aligned with WriteModel   |
+| Backwards compatibility  | N/A              | Full (lambda still works) |
 
 ## Related Documentation
 
