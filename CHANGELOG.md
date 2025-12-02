@@ -7,6 +7,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.6.21] - 2025-12-02
+
+### Added
+
+- **DataAccessLayer.WriteModel**: Simplified repository configuration API
+  - **Enhancement**: Support `EventSourcingRepositoryOptions` directly in `WriteModel()` constructor
+  - **Before**: Required 37-line custom factory function to configure delete mode
+  - **After**: Single-line configuration: `DataAccessLayer.WriteModel(options=EventSourcingRepositoryOptions(delete_mode=DeleteMode.HARD)).configure(builder, ["domain.entities"])`
+  - **Benefits**:
+    - 86% reduction in boilerplate code (37 lines → 5 lines)
+    - Type-safe options configuration
+    - Framework handles service resolution automatically
+    - Consistent with other Neuroglia component patterns
+    - IDE autocomplete support
+  - **Backwards Compatible**: Custom factory pattern still supported via optional `repository_setup` parameter
+  - **Use Cases**:
+    - Default configuration: `DataAccessLayer.WriteModel().configure(builder, ["domain"])`
+    - With delete mode: `DataAccessLayer.WriteModel(options=...).configure(builder, ["domain"])`
+    - Custom factory: `DataAccessLayer.WriteModel().configure(builder, ["domain"], custom_setup)`
+  - **Documentation**: See `docs/guides/simplified-repository-configuration.md`
+  - **Type Safety**: Added `type: ignore` comments for runtime generic type parameters
+
 ## [0.6.20] - 2025-12-02
 
 ### Fixed

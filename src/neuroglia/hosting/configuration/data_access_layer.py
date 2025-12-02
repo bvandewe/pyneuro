@@ -1,5 +1,6 @@
 import inspect
 from collections.abc import Callable
+from typing import TYPE_CHECKING, Optional
 
 from neuroglia.core import ModuleLoader, TypeFinder
 from neuroglia.data.abstractions import AggregateRoot
@@ -11,24 +12,135 @@ from neuroglia.data.queries.generic import GetByIdQueryHandler, ListQueryHandler
 from neuroglia.hosting.abstractions import ApplicationBuilderBase, HostedService
 from neuroglia.mediation.mediator import RequestHandler
 
+if TYPE_CHECKING:
+    from neuroglia.data.infrastructure.event_sourcing.event_sourcing_repository import (
+        EventSourcingRepositoryOptions,
+    )
+
 
 class DataAccessLayer:
     class WriteModel:
-        """Represents an helper class used to configure an application's Write Model DAL"""
+        """Represents a helper class used to configure an application's Write Model DAL
 
-        @staticmethod
-        def configure(builder: ApplicationBuilderBase, modules: list[str], repository_setup: Callable[[ApplicationBuilderBase, type, type], None]) -> ApplicationBuilderBase:
+        Supports two configuration patterns:
+        1. Simplified: Pass options directly to constructor
+        2. Custom: Pass custom repository_setup function to configure()
+
+        Examples:
+            # Simple configuration with default options
+            DataAccessLayer.WriteModel().configure(builder, ["domain.entities"])
+
+            # With custom delete mode
+            from neuroglia.data.infrastructure.event_sourcing.abstractions import DeleteMode
+            from neuroglia.data.infrastructure.event_sourcing.event_sourcing_repository import (
+                EventSourcingRepositoryOptions
+            )
+
+            DataAccessLayer.WriteModel(
+                options=EventSourcingRepositoryOptions(delete_mode=DeleteMode.HARD)
+            ).configure(builder, ["domain.entities"])
+
+            # Custom factory (advanced, backwards compatible)
+            def custom_setup(builder_, entity_type, key_type):
+                # Custom configuration logic
+                pass
+            DataAccessLayer.WriteModel().configure(
+                builder, ["domain.entities"], custom_setup
+            )
+        """
+
+        def __init__(self, options: Optional["EventSourcingRepositoryOptions"] = None):
+            """Initialize WriteModel configuration
+
+            Args:
+                options: Optional repository options (e.g., delete_mode).
+                        If not provided, default options will be used.
+            """
+            self._options = options
+
+        def configure(self, builder: ApplicationBuilderBase, modules: list[str], repository_setup: Optional[Callable[[ApplicationBuilderBase, type, type], None]] = None) -> ApplicationBuilderBase:
             """Configures the application's Write Model DAL, scanning for aggregate root types within the specified modules
 
             Args:
                 builder (ApplicationBuilderBase): the application builder to configure
                 modules (List[str]): a list containing the names of the modules to scan for aggregate root types
-                repository_setup (Callable[[ApplicationBuilderBase, Type, Type], None]): a function used to setup the repository for the specified entity and key types
+                repository_setup (Optional[Callable[[ApplicationBuilderBase, Type, Type], None]]):
+                    Optional custom function to setup repositories. If provided, takes precedence over options.
+                    If not provided, uses simplified configuration with options (if any).
+
+            Returns:
+                ApplicationBuilderBase: The configured builder
+
+            Raises:
+                ImportError: If EventSourcingRepository cannot be imported
             """
+            # If custom setup provided, use it (backwards compatible)
+            if repository_setup is not None:
+                for module in [ModuleLoader.load(module_name) for module_name in modules]:
+                    for aggregate_type in TypeFinder.get_types(module, lambda cls: inspect.isclass(cls) and issubclass(cls, AggregateRoot) and not cls == AggregateRoot):
+                        key_type = str  # todo: reflect from DTO base type
+                        repository_setup(builder, aggregate_type, key_type)
+                return builder
+
+            # Otherwise use simplified configuration with options
+            return self._configure_with_options(builder, modules)
+
+        def _configure_with_options(self, builder: ApplicationBuilderBase, modules: list[str]) -> ApplicationBuilderBase:
+            """Configure repositories using simplified options pattern
+
+            Args:
+                builder: The application builder
+                modules: List of module names to scan for aggregates
+
+            Returns:
+                The configured builder
+            """
+            from neuroglia.data.infrastructure.abstractions import Repository
+            from neuroglia.data.infrastructure.event_sourcing.abstractions import (
+                Aggregator,
+                EventStore,
+            )
+            from neuroglia.data.infrastructure.event_sourcing.event_sourcing_repository import (
+                EventSourcingRepository,
+                EventSourcingRepositoryOptions,
+            )
+            from neuroglia.dependency_injection import ServiceProvider
+            from neuroglia.mediation import Mediator
+
+            # Discover and configure each aggregate type
             for module in [ModuleLoader.load(module_name) for module_name in modules]:
-                for aggregate_type in TypeFinder.get_types(module, lambda cls: inspect.isclass(cls) and issubclass(cls, AggregateRoot) and not cls == AggregateRoot):
+                for aggregate_type in TypeFinder.get_types(
+                    module,
+                    lambda cls: inspect.isclass(cls) and issubclass(cls, AggregateRoot) and not cls == AggregateRoot,
+                ):
                     key_type = str  # todo: reflect from DTO base type
-                    repository_setup(builder, aggregate_type, key_type)
+
+                    # Create type-specific options if global options provided
+                    typed_options = None
+                    if self._options:
+                        typed_options = EventSourcingRepositoryOptions[aggregate_type, key_type](  # type: ignore
+                            delete_mode=self._options.delete_mode,
+                            soft_delete_method_name=self._options.soft_delete_method_name,
+                        )
+
+                    # Create factory function with proper closure
+                    def make_factory(et, kt, opts):
+                        def repository_factory(sp: ServiceProvider):
+                            return EventSourcingRepository[et, kt](  # type: ignore
+                                eventstore=sp.get_required_service(EventStore),
+                                aggregator=sp.get_required_service(Aggregator),
+                                mediator=sp.get_service(Mediator),
+                                options=opts,
+                            )
+
+                        return repository_factory
+
+                    # Register repository with factory
+                    builder.services.add_singleton(
+                        Repository[aggregate_type, key_type],  # type: ignore
+                        implementation_factory=make_factory(aggregate_type, key_type, typed_options),
+                    )
+
             return builder
 
     class ReadModel:
@@ -52,6 +164,6 @@ class DataAccessLayer:
                 for queryable_type in TypeFinder.get_types(module, lambda cls: inspect.isclass(cls) and hasattr(cls, "__queryable__")):
                     key_type = str  # todo: reflect from DTO base type
                     repository_setup(builder, queryable_type, key_type)
-                    builder.services.add_transient(RequestHandler, GetByIdQueryHandler[queryable_type, key_type])
-                    builder.services.add_transient(RequestHandler, ListQueryHandler[queryable_type, key_type])
+                    builder.services.add_transient(RequestHandler, GetByIdQueryHandler[queryable_type, key_type])  # type: ignore
+                    builder.services.add_transient(RequestHandler, ListQueryHandler[queryable_type, key_type])  # type: ignore
             return builder
