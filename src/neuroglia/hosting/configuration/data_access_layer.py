@@ -163,6 +163,15 @@ class DataAccessLayer:
                 repository_type='motor'
             ).configure(builder, ["integration.models"])
 
+            # With custom repository mappings
+            DataAccessLayer.ReadModel(
+                database_name="myapp",
+                repository_type='motor',
+                repository_mappings={
+                    TaskDtoRepository: MotorTaskDtoRepository,
+                }
+            ).configure(builder, ["integration.models"])
+
             # Custom factory (advanced, backwards compatible)
             def custom_setup(builder_, entity_type, key_type):
                 # Custom configuration logic
@@ -172,7 +181,12 @@ class DataAccessLayer:
             )
         """
 
-        def __init__(self, database_name: Optional[str] = None, repository_type: str = "mongo"):
+        def __init__(
+            self,
+            database_name: Optional[str] = None,
+            repository_type: str = "mongo",
+            repository_mappings: Optional[dict[type, type]] = None,
+        ):
             """Initialize ReadModel configuration
 
             Args:
@@ -181,6 +195,10 @@ class DataAccessLayer:
                 repository_type: Type of repository to use ('mongo' or 'motor'). Defaults to 'mongo'.
                     - 'mongo': Use MongoRepository with PyMongo (synchronous driver)
                     - 'motor': Use MotorRepository with Motor (async driver for FastAPI)
+                repository_mappings: Optional mapping of abstract repository interfaces
+                                    to their concrete implementations. Allows single-line
+                                    registration of custom domain repositories.
+                    Example: {TaskDtoRepository: MotorTaskDtoRepository}
 
             Example:
                 ```python
@@ -192,10 +210,21 @@ class DataAccessLayer:
                     database_name="myapp",
                     repository_type='motor'
                 ).configure(...)
+
+                # With custom repository implementations
+                DataAccessLayer.ReadModel(
+                    database_name="myapp",
+                    repository_type='motor',
+                    repository_mappings={
+                        TaskDtoRepository: MotorTaskDtoRepository,
+                        UserDtoRepository: MotorUserDtoRepository,
+                    }
+                ).configure(...)
                 ```
             """
             self._database_name = database_name
             self._repository_type = repository_type
+            self._repository_mappings = repository_mappings or {}
 
             # Validate repository_type
             if repository_type not in ("mongo", "motor"):
@@ -321,26 +350,53 @@ class DataAccessLayer:
                         builder.services.add_transient(RequestHandler, ListQueryHandler[queryable_type, key_type])  # type: ignore
 
             elif self._repository_type == "motor":
-                # Async MotorRepository configuration using MotorRepository.configure()
+                # Async MotorRepository configuration with queryable support
                 from neuroglia.data.infrastructure.mongo.motor_repository import (
                     MotorRepository,
                 )
 
-                # Use MotorRepository.configure() for each discovered type
-                # Note: MotorRepository types are NOT queryable yet, so we scan for all classes
-                # (not just those with __queryable__ attribute)
-                # This configuration supports direct Repository[T, K] injection in handlers
+                # Get MongoDB connection string
+                connection_string_name = "mongo"
+                connection_string = builder.settings.connection_strings.get(connection_string_name, None)
+                if connection_string is None:
+                    raise ValueError(f"Missing '{connection_string_name}' connection string in application settings")
+
+                # Register AsyncIOMotorClient singleton (shared across all repositories)
+                from motor.motor_asyncio import AsyncIOMotorClient
+
+                builder.services.try_add_singleton(AsyncIOMotorClient, singleton=AsyncIOMotorClient(connection_string))
+
+                # Discover and configure each queryable type (filter by @queryable decorator)
                 for module in [ModuleLoader.load(module_name) for module_name in modules]:
-                    for entity_type in TypeFinder.get_types(module, lambda cls: inspect.isclass(cls)):
-                        key_type = str  # todo: reflect from entity type
+                    for entity_type in TypeFinder.get_types(module, lambda cls: inspect.isclass(cls) and hasattr(cls, "__queryable__")):
+                        key_type = str  # todo: reflect from DTO base type
 
                         # Use MotorRepository's static configure method
-                        # This handles AsyncIOMotorClient, repository registration, etc.
                         MotorRepository.configure(
                             builder=builder,
                             entity_type=entity_type,
                             key_type=key_type,
                             database_name=self._database_name,
                         )
+
+                        # Register QueryableRepository alias (consistent with mongo)
+                        def make_queryable_factory(et, kt):
+                            def queryable_factory(provider: ServiceProvider):
+                                return provider.get_required_service(Repository[et, kt])  # type: ignore
+
+                            return queryable_factory
+
+                        builder.services.try_add_scoped(
+                            QueryableRepository[entity_type, key_type],  # type: ignore
+                            implementation_factory=make_queryable_factory(entity_type, key_type),
+                        )
+
+                        # Register query handlers (consistent with mongo)
+                        builder.services.add_transient(RequestHandler, GetByIdQueryHandler[entity_type, key_type])  # type: ignore
+                        builder.services.add_transient(RequestHandler, ListQueryHandler[entity_type, key_type])  # type: ignore
+
+                # Register custom repository mappings
+                for abstract_type, implementation_type in self._repository_mappings.items():
+                    builder.services.add_scoped(abstract_type, implementation_type)
 
             return builder
