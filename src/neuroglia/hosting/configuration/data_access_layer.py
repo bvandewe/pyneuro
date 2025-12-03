@@ -351,9 +351,13 @@ class DataAccessLayer:
 
             elif self._repository_type == "motor":
                 # Async MotorRepository configuration with queryable support
+                from motor.motor_asyncio import AsyncIOMotorClient
+
                 from neuroglia.data.infrastructure.mongo.motor_repository import (
                     MotorRepository,
                 )
+                from neuroglia.mediation import Mediator
+                from neuroglia.serialization.json import JsonSerializer
 
                 # Get MongoDB connection string
                 connection_string_name = "mongo"
@@ -362,8 +366,6 @@ class DataAccessLayer:
                     raise ValueError(f"Missing '{connection_string_name}' connection string in application settings")
 
                 # Register AsyncIOMotorClient singleton (shared across all repositories)
-                from motor.motor_asyncio import AsyncIOMotorClient
-
                 builder.services.try_add_singleton(AsyncIOMotorClient, singleton=AsyncIOMotorClient(connection_string))
 
                 # Discover and configure each queryable type (filter by @queryable decorator)
@@ -371,15 +373,49 @@ class DataAccessLayer:
                     for entity_type in TypeFinder.get_types(module, lambda cls: inspect.isclass(cls) and hasattr(cls, "__queryable__")):
                         key_type = str  # todo: reflect from DTO base type
 
-                        # Use MotorRepository's static configure method
-                        MotorRepository.configure(
-                            builder=builder,
-                            entity_type=entity_type,
-                            key_type=key_type,
-                            database_name=self._database_name,
+                        # Determine collection name (default to lowercase entity name)
+                        collection_name = entity_type.__name__.lower()
+                        if collection_name.endswith("dto"):
+                            collection_name = collection_name[:-3]
+
+                        # Factory function to create MotorRepository instance
+                        def make_motor_factory(et, kt, cn):
+                            def motor_factory(provider: ServiceProvider):
+                                # Attempt to resolve Mediator optionally (tests may skip registration)
+                                mediator = provider.get_service(Mediator)
+                                if mediator is None:
+                                    mediator = provider.get_required_service(Mediator)
+
+                                return MotorRepository[et, kt](  # type: ignore
+                                    client=provider.get_required_service(AsyncIOMotorClient),
+                                    database_name=self._database_name,
+                                    collection_name=cn,
+                                    serializer=provider.get_required_service(JsonSerializer),
+                                    entity_type=et,
+                                    mediator=mediator,
+                                )
+
+                            return motor_factory
+
+                        # Register MotorRepository (scoped for proper async context per request)
+                        builder.services.try_add_scoped(
+                            MotorRepository[entity_type, key_type],  # type: ignore
+                            implementation_factory=make_motor_factory(entity_type, key_type, collection_name),
                         )
 
-                        # Register QueryableRepository alias (consistent with mongo)
+                        # Register Repository interface (handlers expect this)
+                        def make_repository_factory(et, kt):
+                            def repository_factory(provider: ServiceProvider):
+                                return provider.get_required_service(MotorRepository[et, kt])  # type: ignore
+
+                            return repository_factory
+
+                        builder.services.try_add_scoped(
+                            Repository[entity_type, key_type],  # type: ignore
+                            implementation_factory=make_repository_factory(entity_type, key_type),
+                        )
+
+                        # Register QueryableRepository interface (for queryable support)
                         def make_queryable_factory(et, kt):
                             def queryable_factory(provider: ServiceProvider):
                                 return provider.get_required_service(Repository[et, kt])  # type: ignore
