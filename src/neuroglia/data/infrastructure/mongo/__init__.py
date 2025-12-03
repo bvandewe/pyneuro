@@ -18,6 +18,7 @@ Note:
 from typing import TYPE_CHECKING
 
 # Eagerly import async/motor-based components (no pymongo dependency)
+from .motor_query import MotorQuery, MotorQueryBuilder, MotorQueryProvider
 from .motor_repository import MotorRepository
 from .serialization_helper import MongoSerializationHelper
 from .typed_mongo_query import TypedMongoQuery, with_typed_mongo_query
@@ -34,6 +35,10 @@ if TYPE_CHECKING:
 __all__ = [
     # Async repository (recommended for FastAPI/asyncio)
     "MotorRepository",
+    # Async query support
+    "MotorQuery",
+    "MotorQueryBuilder",
+    "MotorQueryProvider",
     # Sync repositories (lazy-loaded, require pymongo)
     "MongoRepository",
     "MongoQueryProvider",
