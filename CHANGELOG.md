@@ -7,6 +7,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.7.2] - 2025-12-04
+
+### Added
+
+- **MotorRepository**: Queryable support with LINQ-style fluent API
+
+  - `MotorRepository` now extends `QueryableRepository[TEntity, TKey]`
+  - New `query_async()` method returns `Queryable[TEntity]` for fluent queries
+  - `MotorQuery`, `MotorQueryProvider`, `MotorQueryBuilder` for async query execution
+  - Python lambda expressions translated to MongoDB `$where` JavaScript queries
+  - Support for: `where()`, `order_by()`, `order_by_descending()`, `skip()`, `take()`, `select()`
+  - Documentation: `docs/guides/motor-queryable-repositories.md`
+
+- **DataAccessLayer.ReadModel**: Custom repository mappings
+  - New `repository_mappings` parameter for registering domain repository implementations
+  - Maps abstract repository interfaces to concrete implementations (e.g., `TaskRepository` → `MotorTaskRepository`)
+  - Eliminates manual DI registration boilerplate
+  - Works seamlessly with both `repository_type='mongo'` and `repository_type='motor'`
+  - Example: `repository_mappings={TaskRepository: MotorTaskRepository}`
+  - Documentation: `docs/guides/custom-repository-mappings.md`
+
+### Changed
+
+- **DataAccessLayer**: Motor configuration now registers `QueryableRepository[T, K]` interface
+  - Enables dependency injection of `QueryableRepository` for repositories with queryable support
+  - Registers both `Repository[T, K]` and `QueryableRepository[T, K]` for motor repositories
+  - Backward compatible - existing `Repository[T, K]` injections continue to work
+
 ## [0.7.1] - 2025-12-02
 
 ### Fixed
