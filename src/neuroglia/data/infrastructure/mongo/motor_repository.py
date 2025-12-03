@@ -44,7 +44,8 @@ from typing import TYPE_CHECKING, Any, Generic, Optional, cast
 from motor.motor_asyncio import AsyncIOMotorClient, AsyncIOMotorCollection
 
 from neuroglia.data.abstractions import AggregateRoot, TEntity, TKey
-from neuroglia.data.infrastructure.abstractions import Repository
+from neuroglia.data.infrastructure.abstractions import QueryableRepository, Repository
+from neuroglia.data.queryable import Queryable
 from neuroglia.hosting.abstractions import ApplicationBuilderBase
 from neuroglia.mediation.mediator import Mediator
 from neuroglia.serialization.json import JsonSerializer
@@ -55,15 +56,16 @@ if TYPE_CHECKING:
 log = logging.getLogger(__name__)
 
 
-class MotorRepository(Generic[TEntity, TKey], Repository[TEntity, TKey]):
+class MotorRepository(Generic[TEntity, TKey], QueryableRepository[TEntity, TKey]):
     """
-    Async MongoDB repository implementation using Motor driver.
+    Async MongoDB repository implementation using Motor driver with queryable support.
 
     Motor is PyMongo's async driver and the recommended choice for async Python
     applications using FastAPI, asyncio, or any async framework.
 
-    This repository provides full CRUD operations with proper async/await support
-    and automatic JSON serialization/deserialization of domain entities.
+    This repository provides full CRUD operations with proper async/await support,
+    automatic JSON serialization/deserialization of domain entities, and LINQ-style
+    queryable support for complex queries.
 
     Type Parameters:
         TEntity: The type of entities managed by this repository
@@ -97,6 +99,12 @@ class MotorRepository(Generic[TEntity, TKey], Repository[TEntity, TKey]):
             await repo.update_async(found)
 
         await repo.remove_async("p1")
+
+        # Queryable support (LINQ-style)
+        expensive_products = await repo.query_async() \\
+            .where(lambda p: p.price > 100) \\
+            .order_by(lambda p: p.name) \\
+            .to_list_async()
         ```
 
     See Also:
@@ -133,18 +141,19 @@ class MotorRepository(Generic[TEntity, TKey], Repository[TEntity, TKey]):
 
         # Store entity type if provided, otherwise try to infer it
         if entity_type is not None:
-            self._entity_type = entity_type
+            self._entity_type: Optional[type[TEntity]] = entity_type
         else:
             # Try to infer from generic parameters
             # Search through all base classes to find one with generic type args
-            self._entity_type = None
+            inferred_type: Optional[type[TEntity]] = None
             try:
                 for base in self.__orig_bases__:  # type: ignore[attr-defined]
                     if hasattr(base, "__args__") and len(base.__args__) > 0:
-                        self._entity_type = base.__args__[0]
+                        inferred_type = base.__args__[0]
                         break
             except (AttributeError, IndexError):
-                self._entity_type = None
+                pass
+            self._entity_type = inferred_type
 
     @property
     def collection(self) -> AsyncIOMotorCollection:
@@ -497,6 +506,54 @@ class MotorRepository(Generic[TEntity, TKey], Repository[TEntity, TKey]):
         """
         await self.collection.delete_one({"id": self._normalize_id(id)})
 
+    async def query_async(self) -> Queryable[TEntity]:
+        """
+        Returns a queryable for fluent LINQ-style queries.
+
+        This method provides async queryable support, enabling complex queries
+        using Python lambda expressions that are translated to MongoDB operations.
+
+        Returns:
+            Queryable instance for building queries fluently
+
+        Example:
+            ```python
+            # Complex query with filtering, sorting, pagination
+            products = await repository.query_async() \\
+                .where(lambda p: p.price > 10 and p.in_stock) \\
+                .order_by(lambda p: p.name) \\
+                .skip(10) \\
+                .take(5) \\
+                .to_list_async()
+
+            # Projection (select specific fields)
+            names = await repository.query_async() \\
+                .select(lambda p: [p.name, p.price]) \\
+                .to_list_async()
+
+            # Single result
+            first_product = await repository.query_async() \\
+                .where(lambda p: p.id == "prod123") \\
+                .first_or_default_async()
+            ```
+
+        Notes:
+            - Lambda expressions are translated to JavaScript for MongoDB $where
+            - Supports .where(), .order_by(), .skip(), .take(), .select()
+            - Use .to_list_async() or .first_or_default_async() to execute
+        """
+        from neuroglia.data.infrastructure.mongo.motor_query import (
+            MotorQuery,
+            MotorQueryProvider,
+        )
+
+        # Determine entity type (raise if not available)
+        entity_type = self._entity_type
+        if entity_type is None:
+            raise TypeError("Cannot create query: entity type not set. Pass entity_type to constructor.")
+
+        return MotorQuery[TEntity](MotorQueryProvider(self.collection, entity_type))
+
     async def get_all_async(self) -> list[TEntity]:
         """
         Retrieve all entities from the repository.
@@ -738,13 +795,13 @@ class MotorRepository(Generic[TEntity, TKey], Repository[TEntity, TKey]):
         # Register the concrete MotorRepository with SCOPED lifetime
         # Scoped ensures proper async context per request and integration with UnitOfWork
         builder.services.add_scoped(
-            MotorRepository[entity_type, key_type],
+            MotorRepository[entity_type, key_type],  # type: ignore
             implementation_factory=create_motor_repository,
         )
 
         # Register the abstract Repository interface that handlers expect (also SCOPED)
         builder.services.add_scoped(
-            Repository[entity_type, key_type],
+            Repository[entity_type, key_type],  # type: ignore
             implementation_factory=get_repository_interface,
         )
 
