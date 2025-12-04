@@ -23,15 +23,26 @@ class DataAccessLayer:
         """Represents a helper class used to configure an application's Write Model DAL
 
         Supports two configuration patterns:
-        1. Simplified: Pass options directly to constructor
+        1. Simplified: Pass database_name, consumer_group, and delete_mode to constructor
         2. Custom: Pass custom repository_setup function to configure()
 
         Examples:
-            # Simple configuration with default options
-            DataAccessLayer.WriteModel().configure(builder, ["domain.entities"])
-
-            # With custom delete mode
+            # Simple configuration with all required parameters
             from neuroglia.data.infrastructure.event_sourcing.abstractions import DeleteMode
+
+            DataAccessLayer.WriteModel(
+                database_name="myapp",
+                consumer_group="myapp_group",
+                delete_mode=DeleteMode.HARD
+            ).configure(builder, ["domain.entities"])
+
+            # Minimal configuration (uses default delete mode)
+            DataAccessLayer.WriteModel(
+                database_name="myapp",
+                consumer_group="myapp_group"
+            ).configure(builder, ["domain.entities"])
+
+            # Legacy: With EventSourcingRepositoryOptions (backwards compatible)
             from neuroglia.data.infrastructure.event_sourcing.event_sourcing_repository import (
                 EventSourcingRepositoryOptions
             )
@@ -49,13 +60,42 @@ class DataAccessLayer:
             )
         """
 
-        def __init__(self, options: Optional["EventSourcingRepositoryOptions"] = None):
+        def __init__(
+            self,
+            database_name: Optional[str] = None,
+            consumer_group: Optional[str] = None,
+            delete_mode: Optional["DeleteMode"] = None,
+            options: Optional["EventSourcingRepositoryOptions"] = None,
+        ):
             """Initialize WriteModel configuration
 
             Args:
-                options: Optional repository options (e.g., delete_mode).
-                        If not provided, default options will be used.
+                database_name: Database/stream prefix for event store (e.g., "myapp").
+                              Internally creates EventStoreOptions and calls ESEventStore.configure().
+                consumer_group: Consumer group name for event store subscriptions.
+                delete_mode: Optional deletion strategy (DISABLED, SOFT, HARD).
+                            If not provided, defaults to DISABLED.
+                options: Legacy parameter for EventSourcingRepositoryOptions (backwards compatible).
+                        If database_name is provided, this parameter is ignored.
+
+            Example:
+                ```python
+                # Simplified configuration (recommended)
+                DataAccessLayer.WriteModel(
+                    database_name="myapp",
+                    consumer_group="myapp_group",
+                    delete_mode=DeleteMode.HARD
+                ).configure(builder, ["domain.entities"])
+
+                # Legacy (still supported)
+                DataAccessLayer.WriteModel(
+                    options=EventSourcingRepositoryOptions(delete_mode=DeleteMode.HARD)
+                ).configure(builder, ["domain.entities"])
+                ```
             """
+            self._database_name = database_name
+            self._consumer_group = consumer_group
+            self._delete_mode = delete_mode
             self._options = options
 
         def configure(self, builder: ApplicationBuilderBase, modules: list[str], repository_setup: Optional[Callable[[ApplicationBuilderBase, type, type], None]] = None) -> ApplicationBuilderBase:
@@ -66,13 +106,14 @@ class DataAccessLayer:
                 modules (List[str]): a list containing the names of the modules to scan for aggregate root types
                 repository_setup (Optional[Callable[[ApplicationBuilderBase, Type, Type], None]]):
                     Optional custom function to setup repositories. If provided, takes precedence over options.
-                    If not provided, uses simplified configuration with options (if any).
+                    If not provided, uses simplified configuration with database_name/consumer_group or options.
 
             Returns:
                 ApplicationBuilderBase: The configured builder
 
             Raises:
                 ImportError: If EventSourcingRepository cannot be imported
+                ValueError: If database_name is provided without consumer_group
             """
             # If custom setup provided, use it (backwards compatible)
             if repository_setup is not None:
@@ -82,7 +123,26 @@ class DataAccessLayer:
                         repository_setup(builder, aggregate_type, key_type)
                 return builder
 
-            # Otherwise use simplified configuration with options
+            # If database_name provided, configure event store and use simplified configuration
+            if self._database_name is not None:
+                if self._consumer_group is None:
+                    raise ValueError("consumer_group is required when database_name is provided")
+
+                # Configure ESEventStore
+                from neuroglia.data.infrastructure.event_sourcing.abstractions import (
+                    EventStoreOptions,
+                )
+                from neuroglia.data.infrastructure.event_sourcing.event_store.event_store import (
+                    ESEventStore,
+                )
+
+                event_store_options = EventStoreOptions(
+                    database_name=self._database_name,
+                    consumer_group=self._consumer_group,
+                )
+                ESEventStore.configure(builder, event_store_options)
+
+            # Otherwise use simplified configuration with options or defaults
             return self._configure_with_options(builder, modules)
 
         def _configure_with_options(self, builder: ApplicationBuilderBase, modules: list[str]) -> ApplicationBuilderBase:
@@ -98,6 +158,7 @@ class DataAccessLayer:
             from neuroglia.data.infrastructure.abstractions import Repository
             from neuroglia.data.infrastructure.event_sourcing.abstractions import (
                 Aggregator,
+                DeleteMode,
                 EventStore,
             )
             from neuroglia.data.infrastructure.event_sourcing.event_sourcing_repository import (
@@ -107,6 +168,9 @@ class DataAccessLayer:
             from neuroglia.dependency_injection import ServiceProvider
             from neuroglia.mediation import Mediator
 
+            # Determine delete mode to use
+            delete_mode = self._delete_mode if self._delete_mode is not None else (self._options.delete_mode if self._options else DeleteMode.DISABLED)
+
             # Discover and configure each aggregate type
             for module in [ModuleLoader.load(module_name) for module_name in modules]:
                 for aggregate_type in TypeFinder.get_types(
@@ -115,13 +179,11 @@ class DataAccessLayer:
                 ):
                     key_type = str  # todo: reflect from DTO base type
 
-                    # Create type-specific options if global options provided
-                    typed_options = None
-                    if self._options:
-                        typed_options = EventSourcingRepositoryOptions[aggregate_type, key_type](  # type: ignore
-                            delete_mode=self._options.delete_mode,
-                            soft_delete_method_name=self._options.soft_delete_method_name,
-                        )
+                    # Create type-specific options
+                    typed_options = EventSourcingRepositoryOptions[aggregate_type, key_type](  # type: ignore
+                        delete_mode=delete_mode,
+                        soft_delete_method_name=self._options.soft_delete_method_name if self._options else "mark_as_deleted",
+                    )
 
                     # Create factory function with proper closure
                     def make_factory(et, kt, opts):

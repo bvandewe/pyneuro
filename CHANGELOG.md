@@ -7,6 +7,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- **DataAccessLayer.WriteModel**: Simplified API with automatic event store configuration
+
+  - New simplified parameters: `database_name`, `consumer_group`, `delete_mode`
+  - Internally calls `ESEventStore.configure()` when `database_name` is provided
+  - Eliminates need for separate `ESEventStore.configure()` call in application startup
+  - Backwards compatible: legacy `options` parameter still supported
+  - Example:
+
+    ```python
+    # Before (required separate ESEventStore.configure call):
+    ESEventStore.configure(builder, EventStoreOptions("myapp", "myapp_group"))
+    DataAccessLayer.WriteModel(
+        options=EventSourcingRepositoryOptions(delete_mode=DeleteMode.HARD)
+    ).configure(builder, ["domain.entities"])
+
+    # After (simplified, single call):
+    DataAccessLayer.WriteModel(
+        database_name="myapp",
+        consumer_group="myapp_group",
+        delete_mode=DeleteMode.HARD
+    ).configure(builder, ["domain.entities"])
+    ```
+
 ## [0.7.3] - 2025-12-04
 
 ### Changed

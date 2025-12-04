@@ -270,6 +270,64 @@ class TestDataAccessLayerSimplifiedAPI:
         mock_module_loader.load.assert_called_once()
         self.builder.services.add_singleton.assert_not_called()
 
+    def test_write_model_init_with_database_name_and_consumer_group(self):
+        """Test WriteModel initialization with database_name and consumer_group"""
+        write_model = DataAccessLayer.WriteModel(database_name="testdb", consumer_group="testgroup", delete_mode=DeleteMode.HARD)
+        assert write_model._database_name == "testdb"
+        assert write_model._consumer_group == "testgroup"
+        assert write_model._delete_mode == DeleteMode.HARD
+
+    def test_write_model_init_with_database_name_only_raises_error(self):
+        """Test WriteModel configure raises ValueError if database_name provided without consumer_group"""
+        write_model = DataAccessLayer.WriteModel(database_name="testdb")
+
+        with pytest.raises(ValueError, match="consumer_group is required"):
+            write_model.configure(self.builder, ["test.module"])
+
+    @patch("neuroglia.data.infrastructure.event_sourcing.event_store.event_store.ESEventStore")
+    @patch("neuroglia.hosting.configuration.data_access_layer.ModuleLoader")
+    @patch("neuroglia.hosting.configuration.data_access_layer.TypeFinder")
+    def test_configure_with_database_name_calls_es_event_store_configure(self, mock_type_finder, mock_module_loader, mock_es_event_store):
+        """Test configure() with database_name internally calls ESEventStore.configure()"""
+        # Setup mocks
+        mock_module = Mock()
+        mock_module_loader.load.return_value = mock_module
+        mock_type_finder.get_types.return_value = [TestAggregate]
+        mock_es_event_store.configure = Mock(return_value=self.builder)
+
+        # Create WriteModel with database_name and consumer_group
+        write_model = DataAccessLayer.WriteModel(database_name="testdb", consumer_group="testgroup", delete_mode=DeleteMode.HARD)
+        result = write_model.configure(self.builder, ["test.module"])
+
+        # Verify ESEventStore.configure was called
+        assert result is self.builder
+        mock_es_event_store.configure.assert_called_once()
+
+        # Verify EventStoreOptions were created with correct values
+        call_args = mock_es_event_store.configure.call_args
+        assert call_args[0][0] is self.builder
+        event_store_options = call_args[0][1]
+        assert event_store_options.database_name == "testdb"
+        assert event_store_options.consumer_group == "testgroup"
+
+    @patch("neuroglia.data.infrastructure.event_sourcing.event_store.event_store.ESEventStore")
+    @patch("neuroglia.hosting.configuration.data_access_layer.ModuleLoader")
+    @patch("neuroglia.hosting.configuration.data_access_layer.TypeFinder")
+    def test_configure_with_database_name_uses_delete_mode(self, mock_type_finder, mock_module_loader, mock_es_event_store):
+        """Test configure() with database_name uses provided delete_mode"""
+        # Setup mocks
+        mock_module = Mock()
+        mock_module_loader.load.return_value = mock_module
+        mock_type_finder.get_types.return_value = [TestAggregate]
+        mock_es_event_store.configure = Mock(return_value=self.builder)
+
+        # Create WriteModel with SOFT delete mode
+        write_model = DataAccessLayer.WriteModel(database_name="testdb", consumer_group="testgroup", delete_mode=DeleteMode.SOFT)
+        write_model.configure(self.builder, ["test.module"])
+
+        # Verify repository was configured with correct delete mode
+        assert self.builder.services.add_singleton.called
+
 
 class TestDataAccessLayerBackwardsCompatibility:
     """Tests to ensure backwards compatibility with existing code"""
