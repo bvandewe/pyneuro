@@ -64,15 +64,16 @@ class MotorQuery(Generic[T], Queryable[T]):
         ```
     """
 
-    def __init__(self, query_provider: "MotorQueryProvider", expression: Optional[expr] = None):
+    def __init__(self, query_provider: "MotorQueryProvider", expression: Optional[expr] = None, element_type: Optional[type] = None):
         """
         Initialize a Motor query.
 
         Args:
             query_provider: The Motor query provider
             expression: Optional AST expression for the query
+            element_type: Optional element type (used for chaining to preserve type info)
         """
-        super().__init__(query_provider, expression)
+        super().__init__(query_provider, expression, element_type)
 
     async def to_list_async(self) -> list[T]:
         """
@@ -319,9 +320,9 @@ class MotorQueryProvider(QueryProvider):
             expression: AST expression for the query
 
         Returns:
-            New MotorQuery instance
+            New MotorQuery instance with element_type propagated
         """
-        return MotorQuery(self, expression)
+        return MotorQuery(self, expression, element_type)
 
     def execute(self, expression: expr, query_type: type) -> Any:
         """

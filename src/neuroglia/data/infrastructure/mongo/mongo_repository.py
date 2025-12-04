@@ -38,8 +38,8 @@ class MongoRepositoryOptions(Generic[TEntity, TKey]):
 class MongoQuery(Generic[T], Queryable[T]):
     """Represents a Mongo query"""
 
-    def __init__(self, query_provider: "MongoQueryProvider", expression: Optional[expr] = None):
-        super().__init__(query_provider, expression)
+    def __init__(self, query_provider: "MongoQueryProvider", expression: Optional[expr] = None, element_type: Optional[type] = None):
+        super().__init__(query_provider, expression, element_type)
 
 
 class MongoQueryBuilder(NodeVisitor):
@@ -114,7 +114,7 @@ class MongoQueryProvider(QueryProvider):
     _collection: Collection
 
     def create_query(self, element_type: type, expression: expr) -> Queryable:
-        return MongoQuery[element_type](self, expression)
+        return MongoQuery(self, expression, element_type)
 
     def execute(self, expression: expr, query_type: type) -> Any:
         query = MongoQueryBuilder(self._collection, JavaScriptExpressionTranslator()).build(expression)

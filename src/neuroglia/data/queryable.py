@@ -79,9 +79,10 @@ class Queryable(Generic[T]):
         - Repository Pattern Guide: https://bvandewe.github.io/pyneuro/patterns/
     """
 
-    def __init__(self, provider: QueryProvider, expression: Optional[expr] = None):
+    def __init__(self, provider: QueryProvider, expression: Optional[expr] = None, element_type: Optional[type] = None):
         self.provider = provider
         self.expression = ast.Name(id="__query") if expression is None else expression
+        self._element_type = element_type
 
     expression: expr
     """ Gets the expression that is associated with the queryable """
@@ -91,6 +92,10 @@ class Queryable(Generic[T]):
 
     def get_element_type(self) -> type:
         """Gets the type of elements to query against"""
+        # Try explicit element type first (set during chaining)
+        if hasattr(self, "_element_type") and self._element_type is not None:
+            return self._element_type
+        # Fall back to __orig_class__ for initial query creation
         return self.__orig_class__.__args__[0]
 
     def first_or_default(self, predicate: Callable[[T], bool] = None) -> T:
