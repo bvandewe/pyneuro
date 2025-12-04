@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **MotorRepository Enhanced Query Methods**: Added comprehensive querying capabilities to `MotorRepository`
+  - **`find_async` enhancements**: Added optional parameters for `sort`, `limit`, `skip`, and `projection`
+    - Enables sorting: `sort=[("name", 1), ("created_at", -1)]`
+    - Enables pagination: `skip=20, limit=10`
+    - Enables field projection: `projection={"name": 1, "email": 1}`
+    - Maintains full backward compatibility (all parameters optional)
+  - **`count_async` method**: Count documents matching filter (useful for pagination metadata)
+    - `count_async({"is_active": True})` - count with filter
+    - `count_async()` - count all documents
+  - **`exists_async` method**: Efficient existence check using `limit=1`
+    - `exists_async({"email": "user@example.com"})` - check if any document matches
+  - **Impact**: Eliminates need to access internal `collection` directly for common query patterns
+
 ### Fixed
 
 - **Queryable Type Propagation**: Fixed type information loss during queryable chaining operations
