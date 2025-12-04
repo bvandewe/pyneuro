@@ -7,6 +7,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- **DataAccessLayer.ReadModel**: Refactored configuration for improved maintainability
+  - Decomposed large `configure()` method into 7 focused, single-responsibility methods
+  - Extracted reconciliation setup, mongo/motor configuration, and custom repository mappings
+  - Improved code readability and testability
+  - No behavior changes - fully backward compatible
+
+### Fixed
+
+- **MotorQuery**: Added missing async query execution methods
+
+  - Implemented `to_list_async()` for executing queries and returning list of entities
+  - Implemented `first_or_default_async()` for retrieving first element or None
+  - Both methods properly deserialize MongoDB documents to entity instances using JsonSerializer
+  - Fixes critical API gap where documentation referenced methods that didn't exist
+  - Prevents AttributeError when following documentation examples
+
+- **DataAccessLayer.ReadModel**: Custom repository mappings now use factory functions
+  - Prevents DI container from trying to auto-resolve generic type parameters as services
+  - Fixes "Failed to resolve service 'str'" error when registering custom repositories
+  - Factory functions properly instantiate repositories with all required dependencies
+  - Extracts entity type dynamically from implementation's base classes
+
 ## [0.7.2] - 2025-12-04
 
 ### Added
@@ -35,20 +57,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Enables dependency injection of `QueryableRepository` for repositories with queryable support
   - Registers both `Repository[T, K]` and `QueryableRepository[T, K]` for motor repositories
   - Backward compatible - existing `Repository[T, K]` injections continue to work
-
-- **DataAccessLayer.ReadModel**: Refactored configuration for improved maintainability
-  - Decomposed large `configure()` method into 7 focused, single-responsibility methods
-  - Extracted reconciliation setup, mongo/motor configuration, and custom repository mappings
-  - Improved code readability and testability
-  - No behavior changes - fully backward compatible
-
-### Fixed
-
-- **DataAccessLayer.ReadModel**: Custom repository mappings now use factory functions
-  - Prevents DI container from trying to auto-resolve generic type parameters as services
-  - Fixes "Failed to resolve service 'str'" error when registering custom repositories
-  - Factory functions properly instantiate repositories with all required dependencies
-  - Extracts entity type dynamically from implementation's base classes
 
 ## [0.7.1] - 2025-12-02
 

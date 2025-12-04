@@ -33,7 +33,7 @@ See Also:
 
 import ast
 from ast import NodeVisitor, expr
-from typing import Any, Generic, List, Optional
+from typing import TYPE_CHECKING, Any, Generic, List, Optional
 
 import pymongo
 from motor.motor_asyncio import AsyncIOMotorCollection, AsyncIOMotorCursor
@@ -42,6 +42,9 @@ from neuroglia.data.queryable import Queryable, QueryProvider, T
 from neuroglia.expressions.javascript_expression_translator import (
     JavaScriptExpressionTranslator,
 )
+
+if TYPE_CHECKING:
+    from neuroglia.serialization import JsonSerializer
 
 
 class MotorQuery(Generic[T], Queryable[T]):
@@ -70,6 +73,62 @@ class MotorQuery(Generic[T], Queryable[T]):
             expression: Optional AST expression for the query
         """
         super().__init__(query_provider, expression)
+
+    async def to_list_async(self) -> list[T]:
+        """
+        Asynchronously execute the query and return results as a list.
+
+        This is the async equivalent of to_list() for Motor queries.
+
+        Returns:
+            List of entities matching the query
+
+        Example:
+            ```python
+            products = await repo.query_async() \\
+                .where(lambda p: p.price > 10) \\
+                .order_by(lambda p: p.name) \\
+                .to_list_async()
+            ```
+        """
+        # Get the provider and ensure it's a MotorQueryProvider
+        provider = self.provider
+        if not isinstance(provider, MotorQueryProvider):
+            raise TypeError("MotorQuery requires a MotorQueryProvider")
+
+        # Execute the query asynchronously
+        return await provider.execute_async(self.expression, List)
+
+    async def first_or_default_async(self, predicate=None) -> Optional[T]:
+        """
+        Asynchronously get the first element matching the predicate, or None.
+
+        Args:
+            predicate: Optional filter predicate
+
+        Returns:
+            First matching entity or None
+
+        Example:
+            ```python
+            product = await repo.query_async() \\
+                .where(lambda p: p.id == "prod123") \\
+                .first_or_default_async()
+            ```
+        """
+        # Get the provider and ensure it's a MotorQueryProvider
+        provider = self.provider
+        if not isinstance(provider, MotorQueryProvider):
+            raise TypeError("MotorQuery requires a MotorQueryProvider")
+
+        # If predicate provided, apply it as a where clause
+        query = self
+        if predicate is not None:
+            query = self.where(predicate)
+
+        # Execute and get list, then return first or None
+        results = await provider.execute_async(query.expression, List)
+        return results[0] if results else None
 
 
 class MotorQueryBuilder(NodeVisitor):
@@ -228,25 +287,28 @@ class MotorQueryProvider(QueryProvider):
     Attributes:
         _collection: Motor async collection to query
         _entity_type: Type of entities in the collection
+        _serializer: JSON serializer for entity conversion
 
     Example:
         ```python
-        provider = MotorQueryProvider(motor_collection, Product)
+        provider = MotorQueryProvider(motor_collection, Product, serializer)
         query = provider.create_query(Product, expression)
         results = await provider.execute_async(expression, List[Product])
         ```
     """
 
-    def __init__(self, collection: AsyncIOMotorCollection, entity_type: type):
+    def __init__(self, collection: AsyncIOMotorCollection, entity_type: type, serializer: "JsonSerializer"):
         """
         Initialize the Motor query provider.
 
         Args:
             collection: Motor async collection
             entity_type: Type of entities being queried
+            serializer: JSON serializer for entity conversion
         """
         self._collection = collection
         self._entity_type = entity_type
+        self._serializer = serializer
 
     def create_query(self, element_type: type, expression: expr) -> Queryable:
         """
@@ -308,9 +370,29 @@ class MotorQueryProvider(QueryProvider):
             is_list_type = query_type.__origin__ in (list, List)
 
         if is_list_type:
-            # Return list of documents
-            return [doc async for doc in cursor]
+            # Return list of deserialized entities
+            documents = [doc async for doc in cursor]
+            return [self._deserialize_entity(doc) for doc in documents]
         else:
-            # Return single document
+            # Return single deserialized entity
             results = await cursor.to_list(length=1)
-            return results[0] if results else None
+            return self._deserialize_entity(results[0]) if results else None
+
+    def _deserialize_entity(self, doc: dict) -> Any:
+        """
+        Deserialize a MongoDB document to an entity instance.
+
+        Args:
+            doc: MongoDB document dictionary
+
+        Returns:
+            Deserialized entity instance
+        """
+        # Remove MongoDB's _id field
+        doc.pop("_id", None)
+
+        # Serialize dict back to JSON for deserialization
+        json_str = self._serializer.serialize_to_text(doc)
+
+        # Deserialize using the entity type
+        return self._serializer.deserialize_from_text(json_str, self._entity_type)
