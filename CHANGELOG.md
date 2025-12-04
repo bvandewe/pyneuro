@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- **Queryable Type Propagation**: Fixed type information loss during queryable chaining operations
+  - **Issue**: `AttributeError: 'MotorQuery' object has no attribute '__orig_class__'` when chaining operations like `.where().order_by()`
+  - **Root Cause**: `__orig_class__` is only set at initial instantiation; intermediate queries created by chaining lost type information
+  - **Solution**: Store `element_type` explicitly in `Queryable`, propagate through `create_query()`, check `_element_type` before `__orig_class__`
+  - **Impact**: Fluent query chaining now works correctly across all operations
+
 ## [0.7.4] - 2025-12-04
 
 ### Fixed
