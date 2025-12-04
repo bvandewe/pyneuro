@@ -578,31 +578,68 @@ class MotorRepository(Generic[TEntity, TKey], QueryableRepository[TEntity, TKey]
 
         return entities
 
-    async def find_async(self, filter_dict: dict) -> list[TEntity]:
+    async def find_async(
+        self,
+        filter_dict: dict,
+        sort: Optional[list[tuple[str, int]]] = None,
+        limit: Optional[int] = None,
+        skip: Optional[int] = None,
+        projection: Optional[dict] = None,
+    ) -> list[TEntity]:
         """
-        Find entities matching a MongoDB filter query.
+        Find entities matching a MongoDB filter query with optional sorting, pagination, and projection.
 
-        This provides direct access to MongoDB's query language for complex queries.
+        This provides direct access to MongoDB's query language for complex queries
+        with full support for cursor operations.
 
         Args:
             filter_dict: MongoDB query filter (e.g., {"state.email": "user@example.com"})
+            sort: List of (field, direction) tuples. Direction: 1 for ascending, -1 for descending.
+                  Example: [("name", 1), ("created_at", -1)]
+            limit: Maximum number of documents to return
+            skip: Number of documents to skip (for pagination)
+            projection: Fields to include/exclude. Example: {"name": 1, "email": 1}
 
         Returns:
             List of entities matching the filter
 
-        Example:
+        Examples:
             ```python
             # Find all active users
             active_users = await repository.find_async({"state.is_active": True})
 
-            # Find users by email domain
-            gmail_users = await repository.find_async({
-                "state.email": {"$regex": "@gmail.com$"}
-            })
+            # Find users by email domain with sorting
+            gmail_users = await repository.find_async(
+                {"state.email": {"$regex": "@gmail.com$"}},
+                sort=[("state.name", 1)]
+            )
+
+            # Paginated query with sorting
+            page_2_users = await repository.find_async(
+                {"state.is_active": True},
+                sort=[("state.created_at", -1)],
+                skip=20,
+                limit=10
+            )
+
+            # Query with field projection (only return specific fields)
+            users = await repository.find_async(
+                {"state.is_active": True},
+                projection={"state.name": 1, "state.email": 1}
+            )
             ```
         """
+        cursor = self.collection.find(filter_dict, projection)
+
+        if sort:
+            cursor = cursor.sort(sort)
+        if skip:
+            cursor = cursor.skip(skip)
+        if limit:
+            cursor = cursor.limit(limit)
+
         entities = []
-        async for doc in self.collection.find(filter_dict):
+        async for doc in cursor:
             entity = self._deserialize_entity(doc)
             entities.append(entity)
 
@@ -630,6 +667,58 @@ class MotorRepository(Generic[TEntity, TKey], QueryableRepository[TEntity, TKey]
             return None
 
         return self._deserialize_entity(doc)
+
+    async def count_async(self, filter_dict: Optional[dict] = None) -> int:
+        """
+        Count documents matching a MongoDB filter query.
+
+        Args:
+            filter_dict: MongoDB query filter. If None or empty dict, counts all documents.
+
+        Returns:
+            Count of documents matching the filter
+
+        Examples:
+            ```python
+            # Count all documents
+            total_count = await repository.count_async()
+
+            # Count with filter
+            active_count = await repository.count_async({"state.is_active": True})
+
+            # Useful for pagination
+            filter_query = {"state.status": "pending"}
+            total_pages = (await repository.count_async(filter_query) + page_size - 1) // page_size
+            ```
+        """
+        filter_dict = filter_dict or {}
+        return await self.collection.count_documents(filter_dict)
+
+    async def exists_async(self, filter_dict: dict) -> bool:
+        """
+        Check if any document matches the MongoDB filter query.
+
+        This is more efficient than count_async for existence checks as it
+        stops after finding the first match.
+
+        Args:
+            filter_dict: MongoDB query filter
+
+        Returns:
+            True if at least one document matches, False otherwise
+
+        Examples:
+            ```python
+            # Check if email already exists
+            email_exists = await repository.exists_async({"state.email": "user@example.com"})
+            if email_exists:
+                raise ValueError("Email already registered")
+
+            # Check if any active users exist
+            has_active = await repository.exists_async({"state.is_active": True})
+            ```
+        """
+        return await self.collection.count_documents(filter_dict, limit=1) > 0
 
     @staticmethod
     def configure(
