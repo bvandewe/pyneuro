@@ -7,6 +7,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- **Queryable Lambda Extraction**: Fixed lambda extraction failure in multi-line method chains
+
+  - **Issue**: `_get_lambda_source_code()` failed when lambdas were used in multi-line method chains (backslash continuation or implicit continuation)
+  - **Root Cause**: `inspect.getsourcelines()` returns multiple lines for continuation patterns, and lines starting with `.` are invalid Python syntax
+  - **Solution**:
+    - Use only the first line containing the lambda (sufficient for extraction)
+    - Strip trailing backslashes from continuation lines
+    - Prepend dummy identifier `_` to lines starting with `.` to make them parseable
+    - Adjust column offsets accordingly
+  - **Impact**: Common repository patterns now work correctly:
+
+    ```python
+    queryable = await self.query_async()
+    return await queryable \
+        .where(lambda x: x.is_enabled == True) \
+        .order_by(lambda x: x.name) \
+        .to_list_async()
+    ```
+
+  - **Scope**: Fixed in `where()`, `order_by()`, `order_by_descending()`, `select()`, `first_or_default()`, and `last_or_default()` methods
+  - **Backward Compatibility**: Fully backward compatible - all single-line lambda usage continues to work unchanged
+
 ### Changed
 
 - **DataAccessLayer.WriteModel**: Simplified API with automatic event store configuration

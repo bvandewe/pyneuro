@@ -1,6 +1,5 @@
 import ast
 import inspect
-import os
 from abc import ABC, abstractclassmethod
 from ast import Attribute, Name, NodeTransformer, expr
 from collections.abc import Callable
@@ -146,7 +145,9 @@ class Queryable(Generic[T]):
 
     def order_by(self, selector: Callable[[T], Any]):
         """Orders the sequence using the specified attribute"""
-        selector_source = self._get_lambda_source_code(selector)
+        frame = inspect.currentframe().f_back
+        frame_info = inspect.getframeinfo(frame)
+        selector_source = self._get_lambda_source_code(selector, frame_info.positions.end_col_offset)
         selector_tree = ast.parse(selector_source)
         selector_lambda_expression = selector_tree.body[0].value
         if not isinstance(selector_lambda_expression.body, Attribute):
@@ -160,7 +161,9 @@ class Queryable(Generic[T]):
 
     def order_by_descending(self, selector: Callable[[T], Any]):
         """Orders the sequence in a descending fashion using the specified attribute"""
-        selector_source = self._get_lambda_source_code(selector)
+        frame = inspect.currentframe().f_back
+        frame_info = inspect.getframeinfo(frame)
+        selector_source = self._get_lambda_source_code(selector, frame_info.positions.end_col_offset)
         selector_tree = ast.parse(selector_source)
         selector_lambda_expression = selector_tree.body[0].value
         if not isinstance(selector_lambda_expression.body, Attribute):
@@ -175,8 +178,9 @@ class Queryable(Generic[T]):
     def select(self, selector: Callable[[T], Any]):
         """Projects each element of a sequence into a new form"""
         frame = inspect.currentframe().f_back
+        frame_info = inspect.getframeinfo(frame)
         variables = {**frame.f_locals}
-        selector_source = self._get_lambda_source_code(selector)
+        selector_source = self._get_lambda_source_code(selector, frame_info.positions.end_col_offset)
         selector_tree = ast.parse(selector_source)
         selector_lambda_expression = selector_tree.body[0].value
         if not isinstance(selector_lambda_expression.body, Attribute) and not isinstance(selector_lambda_expression.body, ast.List):
@@ -239,18 +243,64 @@ class Queryable(Generic[T]):
             function (Callable): The lambda to get the source code of
             max_col_offset (int): The maximum column offset to walk the AST tree for the target lamba
 
+        Returns:
+            Optional[str]: The lambda source code, or None if extraction fails
+
         Notes:
             Credits to https://gist.github.com/Xion/617c1496ff45f3673a5692c3b0e3f75a
+
+            This method handles the case where the lambda is on a continuation line
+            that starts with '.' (common in method chaining). In such cases, the raw
+            source line is invalid Python syntax, so we prepend a dummy identifier
+            to make it parseable.
+
+            For multi-line continuations (backslash or implicit), we only process
+            the first line containing the lambda, as that's sufficient for extraction.
         """
-        source_lines, _ = inspect.getsourcelines(function)
-        if len(source_lines) != 1:
+        try:
+            source_lines, _ = inspect.getsourcelines(function)
+        except (OSError, TypeError) as e:
+            # Cannot extract source (e.g., built-in functions, C extensions)
             return None
-        source_text = os.linesep.join(source_lines).strip()
-        source_ast = ast.parse(source_text)
-        lambda_node = next(
-            (node for node in ast.walk(source_ast) if isinstance(node, ast.Lambda) and node.col_offset <= max_col_offset),
-            None,
-        )
+
+        # For multi-line sources (continuation), use only the first line
+        # The lambda itself is typically on the first line
+        if len(source_lines) == 0:
+            return None
+
+        # Strip the line and remove trailing backslash if present (line continuation)
+        source_text = source_lines[0].strip().rstrip("\\").strip()
+
+        # Handle continuation lines that start with '.' (method chaining)
+        # These are invalid Python syntax on their own
+        offset_adjustment = 0
+        if source_text.startswith("."):
+            source_text = "_" + source_text  # Prepend dummy identifier
+            offset_adjustment = 1
+
+        try:
+            source_ast = ast.parse(source_text)
+        except SyntaxError:
+            return None
+
+        # Adjust max_col_offset if we prepended a dummy identifier
+        # Set to None if not provided to match all lambdas
+        adjusted_max_col_offset = None
+        if max_col_offset is not None:
+            adjusted_max_col_offset = max_col_offset + offset_adjustment
+
+        # Find lambda node within the adjusted column offset
+        if adjusted_max_col_offset is not None:
+            lambda_node = next(
+                (node for node in ast.walk(source_ast) if isinstance(node, ast.Lambda) and node.col_offset <= adjusted_max_col_offset),
+                None,
+            )
+        else:
+            lambda_node = next(
+                (node for node in ast.walk(source_ast) if isinstance(node, ast.Lambda)),
+                None,
+            )
+
         if lambda_node is None:
             return None
         lambda_text = source_text[lambda_node.col_offset : lambda_node.end_col_offset]
