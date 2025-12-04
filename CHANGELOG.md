@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.7.4] - 2025-12-04
+
 ### Fixed
 
 - **Queryable Lambda Extraction**: Fixed lambda extraction failure in multi-line method chains
