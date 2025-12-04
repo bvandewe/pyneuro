@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.7.3] - 2025-12-04
+
+### Changed
+
 - **DataAccessLayer.ReadModel**: Refactored configuration for improved maintainability
   - Decomposed large `configure()` method into 7 focused, single-responsibility methods
   - Extracted reconciliation setup, mongo/motor configuration, and custom repository mappings
