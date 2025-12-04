@@ -128,6 +128,88 @@ class TestMotorQuery:
 
         assert isinstance(query, Queryable)
 
+    @pytest.mark.asyncio
+    async def test_to_list_async_returns_list(self):
+        """Verify to_list_async() executes query and returns list."""
+        # Create mock collection with async cursor
+        mock_collection = AsyncMock()
+        mock_cursor = AsyncMock()
+
+        # Make cursor async iterable
+        async def async_iter():
+            yield {"id": "1", "name": "Product1", "price": 10.0, "in_stock": True}
+            yield {"id": "2", "name": "Product2", "price": 20.0, "in_stock": False}
+
+        mock_cursor.__aiter__ = lambda self: async_iter()
+        mock_collection.find = Mock(return_value=mock_cursor)
+
+        # Create provider and query with serializer
+        serializer = JsonSerializer()
+        provider = MotorQueryProvider(mock_collection, Product, serializer)
+        query = MotorQuery[Product](provider)
+
+        # Execute to_list_async
+        results = await query.to_list_async()
+
+        assert isinstance(results, list)
+        assert len(results) == 2
+        assert isinstance(results[0], Product)
+        assert results[0].id == "1"
+        assert results[0].name == "Product1"
+        mock_collection.find.assert_called_once()
+
+    @pytest.mark.asyncio
+    async def test_first_or_default_async_returns_first(self):
+        """Verify first_or_default_async() returns first element."""
+        # Create mock collection
+        mock_collection = AsyncMock()
+        mock_cursor = AsyncMock()
+
+        # Make cursor async iterable with one item
+        async def async_iter():
+            yield {"id": "1", "name": "Product1", "price": 10.0, "in_stock": True}
+
+        mock_cursor.__aiter__ = lambda self: async_iter()
+        mock_collection.find = Mock(return_value=mock_cursor)
+
+        # Create provider and query with serializer
+        serializer = JsonSerializer()
+        provider = MotorQueryProvider(mock_collection, Product, serializer)
+        query = MotorQuery[Product](provider)
+
+        # Execute first_or_default_async
+        result = await query.first_or_default_async()
+
+        assert result is not None
+        assert isinstance(result, Product)
+        assert result.id == "1"
+        assert result.name == "Product1"
+
+    @pytest.mark.asyncio
+    async def test_first_or_default_async_returns_none_when_empty(self):
+        """Verify first_or_default_async() returns None for empty results."""
+        # Create mock collection with empty results
+        mock_collection = AsyncMock()
+        mock_cursor = AsyncMock()
+
+        # Make cursor return no items
+        async def async_iter():
+            return
+            yield  # This line will never execute but makes it a generator
+
+        mock_cursor.__aiter__ = lambda self: async_iter()
+        mock_collection.find = Mock(return_value=mock_cursor)
+
+        # Create provider and query with serializer
+        serializer = JsonSerializer()
+        provider = MotorQueryProvider(mock_collection, Product, serializer)
+        query = MotorQuery[Product](provider)
+
+        # Execute first_or_default_async
+        result = await query.first_or_default_async()
+
+        assert result is None
+
 
 class TestMotorQueryProvider:
     """Test MotorQueryProvider class."""
@@ -142,7 +224,8 @@ class TestMotorQueryProvider:
     @pytest.fixture
     def provider(self, mock_collection):
         """Create a MotorQueryProvider instance."""
-        return MotorQueryProvider(mock_collection, Product)
+        serializer = JsonSerializer()
+        return MotorQueryProvider(mock_collection, Product, serializer)
 
     def test_create_query_returns_motor_query(self, provider: MotorQueryProvider):
         """Verify create_query() returns MotorQuery instance."""

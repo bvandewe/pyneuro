@@ -552,7 +552,7 @@ class MotorRepository(Generic[TEntity, TKey], QueryableRepository[TEntity, TKey]
         if entity_type is None:
             raise TypeError("Cannot create query: entity type not set. Pass entity_type to constructor.")
 
-        return MotorQuery[TEntity](MotorQueryProvider(self.collection, entity_type))
+        return MotorQuery[TEntity](MotorQueryProvider(self.collection, entity_type, self._serializer))
 
     async def get_all_async(self) -> list[TEntity]:
         """
