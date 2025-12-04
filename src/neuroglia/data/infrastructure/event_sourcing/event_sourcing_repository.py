@@ -113,10 +113,20 @@ class EventSourcingRepository(Generic[TAggregate, TKey], Repository[TAggregate, 
         return self._eventstore.contains_stream(self._build_stream_id_for(id))
 
     async def get_async(self, id: TKey) -> Optional[TAggregate]:
-        """Gets the aggregate with the specified id, if any"""
+        """
+        Gets the aggregate with the specified id, if any.
+
+        Returns None if the stream does not exist.
+        """
         stream_id = self._build_stream_id_for(id)
-        events = await self._eventstore.read_async(stream_id, StreamReadDirection.FORWARDS, 0)
-        return self._aggregator.aggregate(events, self.__orig_class__.__args__[0])
+        try:
+            events = await self._eventstore.read_async(stream_id, StreamReadDirection.FORWARDS, 0)
+            if not events:
+                return None
+            return self._aggregator.aggregate(events, self.__orig_class__.__args__[0])
+        except Exception:
+            # If stream doesn't exist or any other error occurs, return None
+            return None
 
     async def _do_add_async(self, aggregate: TAggregate) -> TAggregate:
         """Adds and persists the specified aggregate"""

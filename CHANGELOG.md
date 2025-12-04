@@ -24,6 +24,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- **EventSourcingRepository.get_async**: Fixed handling of non-existent streams
+
+  - **Issue**: `get_async` raised an exception when trying to retrieve an aggregate whose event stream doesn't exist
+  - **Expected Behavior**: Should return `None` for non-existent aggregates (consistent with Repository pattern)
+  - **Solution**: Catch exceptions from `read_async` and return `None`; also return `None` when stream is empty
+  - **Impact**: Enables safe aggregate lookups without exception handling, following standard repository patterns
+
 - **Queryable Type Propagation**: Fixed type information loss during queryable chaining operations
   - **Issue**: `AttributeError: 'MotorQuery' object has no attribute '__orig_class__'` when chaining operations like `.where().order_by()`
   - **Root Cause**: `__orig_class__` is only set at initial instantiation; intermediate queries created by chaining lost type information
