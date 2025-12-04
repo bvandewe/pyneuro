@@ -431,8 +431,46 @@ class DataAccessLayer:
                         builder.services.add_transient(RequestHandler, GetByIdQueryHandler[entity_type, key_type])  # type: ignore
                         builder.services.add_transient(RequestHandler, ListQueryHandler[entity_type, key_type])  # type: ignore
 
-                # Register custom repository mappings
+                # Register custom repository mappings using factory functions
+                # This avoids DI trying to auto-resolve generic type parameters (str) as dependencies
                 for abstract_type, implementation_type in self._repository_mappings.items():
-                    builder.services.add_scoped(abstract_type, implementation_type)
+
+                    def make_custom_repo_factory(impl_type):
+                        def custom_repo_factory(provider: ServiceProvider):
+                            # Get entity type from implementation's base classes
+                            entity_type = None
+                            collection_name = None
+
+                            # Extract entity type from MotorRepository[TEntity, TKey] base
+                            for base in getattr(impl_type, "__orig_bases__", []):
+                                if hasattr(base, "__origin__") and base.__origin__.__name__ == "MotorRepository":
+                                    if hasattr(base, "__args__") and len(base.__args__) >= 1:
+                                        entity_type = base.__args__[0]
+                                        # Determine collection name
+                                        collection_name = entity_type.__name__.lower()
+                                        if collection_name.endswith("dto"):
+                                            collection_name = collection_name[:-3]
+                                        break
+
+                            if entity_type is None:
+                                raise ValueError(f"Could not determine entity type for {impl_type.__name__}. " f"Ensure it extends MotorRepository[TEntity, TKey]")
+
+                            # Construct repository with proper dependencies
+                            mediator = provider.get_service(Mediator)
+                            if mediator is None:
+                                mediator = provider.get_required_service(Mediator)
+
+                            return impl_type(
+                                client=provider.get_required_service(AsyncIOMotorClient),
+                                database_name=self._database_name,
+                                collection_name=collection_name,
+                                serializer=provider.get_required_service(JsonSerializer),
+                                entity_type=entity_type,
+                                mediator=mediator,
+                            )
+
+                        return custom_repo_factory
+
+                    builder.services.add_scoped(abstract_type, implementation_factory=make_custom_repo_factory(implementation_type))
 
             return builder
