@@ -28,6 +28,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **EventSourcingRepository.get_async**: Fixed handling of non-existent streams
 
+  - Previously raised exceptions when attempting to read from non-existent streams
+  - Now correctly returns `None` following repository pattern contract
+  - Added proper exception handling and empty event list checks
+  - Tests: `tests/cases/test_event_sourcing_repository_get_async.py`
+
+- **Aggregator.\_pending_events Initialization**: Fixed critical bug in aggregate reconstitution
+
+  - `Aggregator.aggregate()` uses `object.__new__()` which bypasses `__init__`
+  - This left `_pending_events` attribute uninitialized, causing `AttributeError` when reconstituted aggregates tried to register new domain events
+  - Added explicit `aggregate._pending_events = list()` initialization in `Aggregator.aggregate()` after `object.__new__()` call
+  - Added comprehensive docstring explaining the `__new__()` bypass pattern and rationale
+  - Tests: `tests/cases/test_aggregator_pending_events_initialization.py` (7 comprehensive tests)
+  - Impact: Event-sourced aggregates can now properly register new domain events after reconstitution from event streams
+
   - **Issue**: `get_async` raised an exception when trying to retrieve an aggregate whose event stream doesn't exist
   - **Expected Behavior**: Should return `None` for non-existent aggregates (consistent with Repository pattern)
   - **Solution**: Catch exceptions from `read_async` and return `None`; also return `None` when stream is empty

@@ -202,8 +202,23 @@ class EventStore(ABC):
 
 class Aggregator:
     def aggregate(self, events: list, aggregate_type: type):
+        """
+        Reconstitutes an aggregate from a list of domain events.
+
+        Creates a new aggregate instance using __new__() to bypass __init__,
+        then manually initializes the state and _pending_events list before
+        replaying events to rebuild the aggregate's state.
+
+        Args:
+            events: List of event records to replay
+            aggregate_type: The aggregate root class to instantiate
+
+        Returns:
+            Reconstituted aggregate with replayed state
+        """
         aggregate: AggregateRoot = object.__new__(aggregate_type)
         aggregate.state = aggregate.__orig_bases__[0].__args__[0]()
+        aggregate._pending_events = list()  # Initialize _pending_events to prevent AttributeError
         for e in events:
             aggregate.state.on(e.data)
             aggregate.state.state_version = e.data.aggregate_version
