@@ -14,6 +14,10 @@ from .abstractions import (
     StreamReadDirection,
 )
 from .event_sourcing_repository import EventSourcingRepository
+from .read_model_reconciliator import (
+    ReadModelConciliationOptions,
+    ReadModelReconciliator,
+)
 
 __all__ = [
     "EventStore",
@@ -24,4 +28,6 @@ __all__ = [
     "StreamReadDirection",
     "EventStoreOptions",
     "Aggregator",
+    "ReadModelConciliationOptions",
+    "ReadModelReconciliator",
 ]
