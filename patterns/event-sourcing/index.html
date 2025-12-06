@@ -1223,6 +1223,15 @@
 </a>
 </li>
 <li class="md-nav__item">
+<a class="md-nav__link" href="#21-sequential-event-processing-per-aggregate">
+<span class="md-ellipsis">
+      
+        2.1 Sequential Event Processing per Aggregate
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
 <a class="md-nav__link" href="#3-no-duplicate-publishing">
 <span class="md-ellipsis">
       
@@ -2612,6 +2621,15 @@
 <span class="md-ellipsis">
       
         2. Reliable Delivery
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#21-sequential-event-processing-per-aggregate">
+<span class="md-ellipsis">
+      
+        2.1 Sequential Event Processing per Aggregate
       
     </span>
 </a>
@@ -4249,6 +4267,48 @@ sequences while maintaining data integrity and providing deep insights into syst
 <li><strong>Consumer groups</strong>: Multiple instances can share event processing workload</li>
 <li><strong>Guaranteed ordering</strong>: Events within a stream are processed in order</li>
 </ul>
+<h4 id="21-sequential-event-processing-per-aggregate">2.1 Sequential Event Processing per Aggregate<a class="headerlink" href="#21-sequential-event-processing-per-aggregate" title="Permanent link">¶</a></h4>
+<p><strong>Added in v0.7.6</strong>: The <code>ReadModelReconciliator</code> now ensures that events from the same aggregate are processed <strong>sequentially</strong> to prevent race conditions.</p>
+<p><strong>The Problem (Before Fix)</strong>:</p>
+<p>When an aggregate emits multiple domain events in a single operation (e.g., creating a ToolGroup and immediately adding a Selector), the events could be processed concurrently:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-21-1"><a href="#__codelineno-21-1" id="__codelineno-21-1" name="__codelineno-21-1"></a><span class="c1"># Command handler creates aggregate with multiple events</span>
+</span><span id="__span-21-2"><a href="#__codelineno-21-2" id="__codelineno-21-2" name="__codelineno-21-2"></a><span class="n">tool_group</span> <span class="o">=</span> <span class="n">ToolGroup</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"Test"</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">"..."</span><span class="p">)</span>  <span class="c1"># Emits ToolGroupCreatedEvent</span>
+</span><span id="__span-21-3"><a href="#__codelineno-21-3" id="__codelineno-21-3" name="__codelineno-21-3"></a><span class="n">tool_group</span><span class="o">.</span><span class="n">add_selector</span><span class="p">(</span><span class="n">selector</span><span class="p">,</span> <span class="n">added_by</span><span class="o">=</span><span class="n">user_id</span><span class="p">)</span>      <span class="c1"># Emits SelectorAddedEvent</span>
+</span><span id="__span-21-4"><a href="#__codelineno-21-4" id="__codelineno-21-4" name="__codelineno-21-4"></a><span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">repository</span><span class="o">.</span><span class="n">add_async</span><span class="p">(</span><span class="n">tool_group</span><span class="p">)</span>               <span class="c1"># Both events persisted</span>
+</span><span id="__span-21-5"><a href="#__codelineno-21-5" id="__codelineno-21-5" name="__codelineno-21-5"></a>
+</span><span id="__span-21-6"><a href="#__codelineno-21-6" id="__codelineno-21-6" name="__codelineno-21-6"></a><span class="c1"># Without sequential processing:</span>
+</span><span id="__span-21-7"><a href="#__codelineno-21-7" id="__codelineno-21-7" name="__codelineno-21-7"></a><span class="c1"># ❌ SelectorAddedProjectionHandler might run BEFORE ToolGroupCreatedProjectionHandler</span>
+</span><span id="__span-21-8"><a href="#__codelineno-21-8" id="__codelineno-21-8" name="__codelineno-21-8"></a><span class="c1"># ❌ Result: "ToolGroup not found in Read Model for selector add!"</span>
+</span></code></pre></div>
+<p><strong>The Solution</strong>:</p>
+<p>The <code>ReadModelReconciliator</code> now groups events by aggregate ID and processes them sequentially:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-22-1"><a href="#__codelineno-22-1" id="__codelineno-22-1" name="__codelineno-22-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">neuroglia.data.infrastructure.event_sourcing</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+</span><span id="__span-22-2"><a href="#__codelineno-22-2" id="__codelineno-22-2" name="__codelineno-22-2"></a>    <span class="n">ReadModelConciliationOptions</span><span class="p">,</span>
+</span><span id="__span-22-3"><a href="#__codelineno-22-3" id="__codelineno-22-3" name="__codelineno-22-3"></a>    <span class="n">ReadModelReconciliator</span>
+</span><span id="__span-22-4"><a href="#__codelineno-22-4" id="__codelineno-22-4" name="__codelineno-22-4"></a><span class="p">)</span>
+</span><span id="__span-22-5"><a href="#__codelineno-22-5" id="__codelineno-22-5" name="__codelineno-22-5"></a>
+</span><span id="__span-22-6"><a href="#__codelineno-22-6" id="__codelineno-22-6" name="__codelineno-22-6"></a><span class="c1"># Default: Sequential processing per aggregate (recommended)</span>
+</span><span id="__span-22-7"><a href="#__codelineno-22-7" id="__codelineno-22-7" name="__codelineno-22-7"></a><span class="n">options</span> <span class="o">=</span> <span class="n">ReadModelConciliationOptions</span><span class="p">(</span>
+</span><span id="__span-22-8"><a href="#__codelineno-22-8" id="__codelineno-22-8" name="__codelineno-22-8"></a>    <span class="n">consumer_group</span><span class="o">=</span><span class="s2">"my-projections"</span><span class="p">,</span>
+</span><span id="__span-22-9"><a href="#__codelineno-22-9" id="__codelineno-22-9" name="__codelineno-22-9"></a>    <span class="n">sequential_processing</span><span class="o">=</span><span class="kc">True</span>  <span class="c1"># Default</span>
+</span><span id="__span-22-10"><a href="#__codelineno-22-10" id="__codelineno-22-10" name="__codelineno-22-10"></a><span class="p">)</span>
+</span><span id="__span-22-11"><a href="#__codelineno-22-11" id="__codelineno-22-11" name="__codelineno-22-11"></a>
+</span><span id="__span-22-12"><a href="#__codelineno-22-12" id="__codelineno-22-12" name="__codelineno-22-12"></a><span class="c1"># Result: Events from same aggregate processed in order</span>
+</span><span id="__span-22-13"><a href="#__codelineno-22-13" id="__codelineno-22-13" name="__codelineno-22-13"></a><span class="c1"># 1. ToolGroupCreatedProjectionHandler runs (creates document)</span>
+</span><span id="__span-22-14"><a href="#__codelineno-22-14" id="__codelineno-22-14" name="__codelineno-22-14"></a><span class="c1"># 2. SelectorAddedProjectionHandler runs (updates document) ✅</span>
+</span></code></pre></div>
+<p><strong>Configuration Options</strong>:</p>
+<ul>
+<li><code>sequential_processing=True</code> (default): Events from the same aggregate are processed sequentially while events from different aggregates can be processed in parallel</li>
+<li><code>sequential_processing=False</code>: Legacy behavior where all events may be processed concurrently (use only if handlers are truly independent)</li>
+</ul>
+<p><strong>Key Benefits</strong>:</p>
+<ul>
+<li>✅ <strong>Prevents race conditions</strong> in projection handlers</li>
+<li>✅ <strong>Maintains causal ordering</strong> within aggregate event streams</li>
+<li>✅ <strong>Preserves parallelism</strong> across different aggregates for throughput</li>
+<li>✅ <strong>Automatic aggregate ID extraction</strong> from event data or stream ID</li>
+</ul>
 <h4 id="3-no-duplicate-publishing">3. No Duplicate Publishing<a class="headerlink" href="#3-no-duplicate-publishing" title="Permanent link">¶</a></h4>
 <p>Since events are published from exactly one location (<code>ReadModelReconciliator</code>), there's no risk of:</p>
 <ul>
@@ -4273,108 +4333,108 @@ sequences while maintaining data integrity and providing deep insights into syst
 <li>Events must be published immediately after state persistence</li>
 <li>This is the only opportunity to process domain events</li>
 </ul>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-21-1"><a href="#__codelineno-21-1" id="__codelineno-21-1" name="__codelineno-21-1"></a><span class="c1"># State-based repository DOES publish events</span>
-</span><span id="__span-21-2"><a href="#__codelineno-21-2" id="__codelineno-21-2" name="__codelineno-21-2"></a><span class="k">class</span><span class="w"> </span><span class="nc">MotorRepository</span><span class="p">(</span><span class="n">Repository</span><span class="p">[</span><span class="n">TEntity</span><span class="p">,</span> <span class="n">TKey</span><span class="p">]):</span>
-</span><span id="__span-21-3"><a href="#__codelineno-21-3" id="__codelineno-21-3" name="__codelineno-21-3"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">add_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity</span><span class="p">:</span> <span class="n">TEntity</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="__span-21-4"><a href="#__codelineno-21-4" id="__codelineno-21-4" name="__codelineno-21-4"></a>        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_do_add_async</span><span class="p">(</span><span class="n">entity</span><span class="p">)</span>  <span class="c1"># Persist to MongoDB</span>
-</span><span id="__span-21-5"><a href="#__codelineno-21-5" id="__codelineno-21-5" name="__codelineno-21-5"></a>        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_publish_domain_events</span><span class="p">(</span><span class="n">entity</span><span class="p">)</span>  <span class="c1"># ✅ PUBLISHES via mediator</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-23-1"><a href="#__codelineno-23-1" id="__codelineno-23-1" name="__codelineno-23-1"></a><span class="c1"># State-based repository DOES publish events</span>
+</span><span id="__span-23-2"><a href="#__codelineno-23-2" id="__codelineno-23-2" name="__codelineno-23-2"></a><span class="k">class</span><span class="w"> </span><span class="nc">MotorRepository</span><span class="p">(</span><span class="n">Repository</span><span class="p">[</span><span class="n">TEntity</span><span class="p">,</span> <span class="n">TKey</span><span class="p">]):</span>
+</span><span id="__span-23-3"><a href="#__codelineno-23-3" id="__codelineno-23-3" name="__codelineno-23-3"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">add_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity</span><span class="p">:</span> <span class="n">TEntity</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-23-4"><a href="#__codelineno-23-4" id="__codelineno-23-4" name="__codelineno-23-4"></a>        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_do_add_async</span><span class="p">(</span><span class="n">entity</span><span class="p">)</span>  <span class="c1"># Persist to MongoDB</span>
+</span><span id="__span-23-5"><a href="#__codelineno-23-5" id="__codelineno-23-5" name="__codelineno-23-5"></a>        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_publish_domain_events</span><span class="p">(</span><span class="n">entity</span><span class="p">)</span>  <span class="c1"># ✅ PUBLISHES via mediator</span>
 </span></code></pre></div>
 <h3 id="implications-for-developers">Implications for Developers<a class="headerlink" href="#implications-for-developers" title="Permanent link">¶</a></h3>
 <h4 id="command-handlers">Command Handlers<a class="headerlink" href="#command-handlers" title="Permanent link">¶</a></h4>
 <p>Command handlers return <strong>immediately</strong> after persisting to EventStoreDB:</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-22-1"><a href="#__codelineno-22-1" id="__codelineno-22-1" name="__codelineno-22-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">CreateTaskCommandHandler</span><span class="p">(</span><span class="n">CommandHandler</span><span class="p">[</span><span class="n">CreateTaskCommand</span><span class="p">,</span> <span class="n">OperationResult</span><span class="p">[</span><span class="n">TaskDto</span><span class="p">]]):</span>
-</span><span id="__span-22-2"><a href="#__codelineno-22-2" id="__codelineno-22-2" name="__codelineno-22-2"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">handle_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command</span><span class="p">:</span> <span class="n">CreateTaskCommand</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">OperationResult</span><span class="p">[</span><span class="n">TaskDto</span><span class="p">]:</span>
-</span><span id="__span-22-3"><a href="#__codelineno-22-3" id="__codelineno-22-3" name="__codelineno-22-3"></a>        <span class="c1"># Create aggregate and raise domain event</span>
-</span><span id="__span-22-4"><a href="#__codelineno-22-4" id="__codelineno-22-4" name="__codelineno-22-4"></a>        <span class="n">task</span> <span class="o">=</span> <span class="n">Task</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">command</span><span class="o">.</span><span class="n">title</span><span class="p">,</span> <span class="n">command</span><span class="o">.</span><span class="n">description</span><span class="p">)</span>
-</span><span id="__span-22-5"><a href="#__codelineno-22-5" id="__codelineno-22-5" name="__codelineno-22-5"></a>
-</span><span id="__span-22-6"><a href="#__codelineno-22-6" id="__codelineno-22-6" name="__codelineno-22-6"></a>        <span class="c1"># Persist to EventStore - returns immediately</span>
-</span><span id="__span-22-7"><a href="#__codelineno-22-7" id="__codelineno-22-7" name="__codelineno-22-7"></a>        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">repository</span><span class="o">.</span><span class="n">add_async</span><span class="p">(</span><span class="n">task</span><span class="p">)</span>
-</span><span id="__span-22-8"><a href="#__codelineno-22-8" id="__codelineno-22-8" name="__codelineno-22-8"></a>
-</span><span id="__span-22-9"><a href="#__codelineno-22-9" id="__codelineno-22-9" name="__codelineno-22-9"></a>        <span class="c1"># ⚠️ Read model NOT YET updated at this point!</span>
-</span><span id="__span-22-10"><a href="#__codelineno-22-10" id="__codelineno-22-10" name="__codelineno-22-10"></a>        <span class="c1"># Domain event handlers have NOT yet been called!</span>
-</span><span id="__span-22-11"><a href="#__codelineno-22-11" id="__codelineno-22-11" name="__codelineno-22-11"></a>        <span class="c1"># CloudEvents have NOT yet been emitted!</span>
-</span><span id="__span-22-12"><a href="#__codelineno-22-12" id="__codelineno-22-12" name="__codelineno-22-12"></a>
-</span><span id="__span-22-13"><a href="#__codelineno-22-13" id="__codelineno-22-13" name="__codelineno-22-13"></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">created</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mapper</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">task</span><span class="p">,</span> <span class="n">TaskDto</span><span class="p">))</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-24-1"><a href="#__codelineno-24-1" id="__codelineno-24-1" name="__codelineno-24-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">CreateTaskCommandHandler</span><span class="p">(</span><span class="n">CommandHandler</span><span class="p">[</span><span class="n">CreateTaskCommand</span><span class="p">,</span> <span class="n">OperationResult</span><span class="p">[</span><span class="n">TaskDto</span><span class="p">]]):</span>
+</span><span id="__span-24-2"><a href="#__codelineno-24-2" id="__codelineno-24-2" name="__codelineno-24-2"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">handle_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command</span><span class="p">:</span> <span class="n">CreateTaskCommand</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">OperationResult</span><span class="p">[</span><span class="n">TaskDto</span><span class="p">]:</span>
+</span><span id="__span-24-3"><a href="#__codelineno-24-3" id="__codelineno-24-3" name="__codelineno-24-3"></a>        <span class="c1"># Create aggregate and raise domain event</span>
+</span><span id="__span-24-4"><a href="#__codelineno-24-4" id="__codelineno-24-4" name="__codelineno-24-4"></a>        <span class="n">task</span> <span class="o">=</span> <span class="n">Task</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">command</span><span class="o">.</span><span class="n">title</span><span class="p">,</span> <span class="n">command</span><span class="o">.</span><span class="n">description</span><span class="p">)</span>
+</span><span id="__span-24-5"><a href="#__codelineno-24-5" id="__codelineno-24-5" name="__codelineno-24-5"></a>
+</span><span id="__span-24-6"><a href="#__codelineno-24-6" id="__codelineno-24-6" name="__codelineno-24-6"></a>        <span class="c1"># Persist to EventStore - returns immediately</span>
+</span><span id="__span-24-7"><a href="#__codelineno-24-7" id="__codelineno-24-7" name="__codelineno-24-7"></a>        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">repository</span><span class="o">.</span><span class="n">add_async</span><span class="p">(</span><span class="n">task</span><span class="p">)</span>
+</span><span id="__span-24-8"><a href="#__codelineno-24-8" id="__codelineno-24-8" name="__codelineno-24-8"></a>
+</span><span id="__span-24-9"><a href="#__codelineno-24-9" id="__codelineno-24-9" name="__codelineno-24-9"></a>        <span class="c1"># ⚠️ Read model NOT YET updated at this point!</span>
+</span><span id="__span-24-10"><a href="#__codelineno-24-10" id="__codelineno-24-10" name="__codelineno-24-10"></a>        <span class="c1"># Domain event handlers have NOT yet been called!</span>
+</span><span id="__span-24-11"><a href="#__codelineno-24-11" id="__codelineno-24-11" name="__codelineno-24-11"></a>        <span class="c1"># CloudEvents have NOT yet been emitted!</span>
+</span><span id="__span-24-12"><a href="#__codelineno-24-12" id="__codelineno-24-12" name="__codelineno-24-12"></a>
+</span><span id="__span-24-13"><a href="#__codelineno-24-13" id="__codelineno-24-13" name="__codelineno-24-13"></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">created</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mapper</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">task</span><span class="p">,</span> <span class="n">TaskDto</span><span class="p">))</span>
 </span></code></pre></div>
 <h4 id="event-handlers-projections">Event Handlers (Projections)<a class="headerlink" href="#event-handlers-projections" title="Permanent link">¶</a></h4>
 <p>Event handlers are called asynchronously from the Read Path:</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-23-1"><a href="#__codelineno-23-1" id="__codelineno-23-1" name="__codelineno-23-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">TaskCreatedProjectionHandler</span><span class="p">(</span><span class="n">EventHandler</span><span class="p">[</span><span class="n">TaskCreatedDomainEvent</span><span class="p">]):</span>
-</span><span id="__span-23-2"><a href="#__codelineno-23-2" id="__codelineno-23-2" name="__codelineno-23-2"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">handle_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">TaskCreatedDomainEvent</span><span class="p">):</span>
-</span><span id="__span-23-3"><a href="#__codelineno-23-3" id="__codelineno-23-3" name="__codelineno-23-3"></a>        <span class="c1"># This executes in ReadModelReconciliator context</span>
-</span><span id="__span-23-4"><a href="#__codelineno-23-4" id="__codelineno-23-4" name="__codelineno-23-4"></a>        <span class="c1"># NOT in command handler context!</span>
-</span><span id="__span-23-5"><a href="#__codelineno-23-5" id="__codelineno-23-5" name="__codelineno-23-5"></a>
-</span><span id="__span-23-6"><a href="#__codelineno-23-6" id="__codelineno-23-6" name="__codelineno-23-6"></a>        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_model_repository</span><span class="o">.</span><span class="n">create_async</span><span class="p">(</span><span class="n">ReadModelTask</span><span class="p">(</span>
-</span><span id="__span-23-7"><a href="#__codelineno-23-7" id="__codelineno-23-7" name="__codelineno-23-7"></a>            <span class="nb">id</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">aggregate_id</span><span class="p">,</span>
-</span><span id="__span-23-8"><a href="#__codelineno-23-8" id="__codelineno-23-8" name="__codelineno-23-8"></a>            <span class="n">title</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">title</span><span class="p">,</span>
-</span><span id="__span-23-9"><a href="#__codelineno-23-9" id="__codelineno-23-9" name="__codelineno-23-9"></a>            <span class="n">description</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">description</span><span class="p">,</span>
-</span><span id="__span-23-10"><a href="#__codelineno-23-10" id="__codelineno-23-10" name="__codelineno-23-10"></a>            <span class="n">created_at</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">timestamp</span>
-</span><span id="__span-23-11"><a href="#__codelineno-23-11" id="__codelineno-23-11" name="__codelineno-23-11"></a>        <span class="p">))</span>
-</span><span id="__span-23-12"><a href="#__codelineno-23-12" id="__codelineno-23-12" name="__codelineno-23-12"></a>
-</span><span id="__span-23-13"><a href="#__codelineno-23-13" id="__codelineno-23-13" name="__codelineno-23-13"></a>        <span class="c1"># CloudEvent will be emitted AFTER this handler completes</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-25-1"><a href="#__codelineno-25-1" id="__codelineno-25-1" name="__codelineno-25-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">TaskCreatedProjectionHandler</span><span class="p">(</span><span class="n">EventHandler</span><span class="p">[</span><span class="n">TaskCreatedDomainEvent</span><span class="p">]):</span>
+</span><span id="__span-25-2"><a href="#__codelineno-25-2" id="__codelineno-25-2" name="__codelineno-25-2"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">handle_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">TaskCreatedDomainEvent</span><span class="p">):</span>
+</span><span id="__span-25-3"><a href="#__codelineno-25-3" id="__codelineno-25-3" name="__codelineno-25-3"></a>        <span class="c1"># This executes in ReadModelReconciliator context</span>
+</span><span id="__span-25-4"><a href="#__codelineno-25-4" id="__codelineno-25-4" name="__codelineno-25-4"></a>        <span class="c1"># NOT in command handler context!</span>
+</span><span id="__span-25-5"><a href="#__codelineno-25-5" id="__codelineno-25-5" name="__codelineno-25-5"></a>
+</span><span id="__span-25-6"><a href="#__codelineno-25-6" id="__codelineno-25-6" name="__codelineno-25-6"></a>        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_model_repository</span><span class="o">.</span><span class="n">create_async</span><span class="p">(</span><span class="n">ReadModelTask</span><span class="p">(</span>
+</span><span id="__span-25-7"><a href="#__codelineno-25-7" id="__codelineno-25-7" name="__codelineno-25-7"></a>            <span class="nb">id</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">aggregate_id</span><span class="p">,</span>
+</span><span id="__span-25-8"><a href="#__codelineno-25-8" id="__codelineno-25-8" name="__codelineno-25-8"></a>            <span class="n">title</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">title</span><span class="p">,</span>
+</span><span id="__span-25-9"><a href="#__codelineno-25-9" id="__codelineno-25-9" name="__codelineno-25-9"></a>            <span class="n">description</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">description</span><span class="p">,</span>
+</span><span id="__span-25-10"><a href="#__codelineno-25-10" id="__codelineno-25-10" name="__codelineno-25-10"></a>            <span class="n">created_at</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">timestamp</span>
+</span><span id="__span-25-11"><a href="#__codelineno-25-11" id="__codelineno-25-11" name="__codelineno-25-11"></a>        <span class="p">))</span>
+</span><span id="__span-25-12"><a href="#__codelineno-25-12" id="__codelineno-25-12" name="__codelineno-25-12"></a>
+</span><span id="__span-25-13"><a href="#__codelineno-25-13" id="__codelineno-25-13" name="__codelineno-25-13"></a>        <span class="c1"># CloudEvent will be emitted AFTER this handler completes</span>
 </span></code></pre></div>
 <h4 id="query-handlers">Query Handlers<a class="headerlink" href="#query-handlers" title="Permanent link">¶</a></h4>
 <p>Queries read from eventually-consistent read models:</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-24-1"><a href="#__codelineno-24-1" id="__codelineno-24-1" name="__codelineno-24-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">GetTaskByIdQueryHandler</span><span class="p">(</span><span class="n">QueryHandler</span><span class="p">[</span><span class="n">GetTaskByIdQuery</span><span class="p">,</span> <span class="n">TaskDto</span><span class="p">]):</span>
-</span><span id="__span-24-2"><a href="#__codelineno-24-2" id="__codelineno-24-2" name="__codelineno-24-2"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">handle_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">:</span> <span class="n">GetTaskByIdQuery</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TaskDto</span><span class="p">:</span>
-</span><span id="__span-24-3"><a href="#__codelineno-24-3" id="__codelineno-24-3" name="__codelineno-24-3"></a>        <span class="c1"># Reads from MongoDB read model</span>
-</span><span id="__span-24-4"><a href="#__codelineno-24-4" id="__codelineno-24-4" name="__codelineno-24-4"></a>        <span class="c1"># May not reflect very recent writes (eventual consistency)</span>
-</span><span id="__span-24-5"><a href="#__codelineno-24-5" id="__codelineno-24-5" name="__codelineno-24-5"></a>        <span class="n">task</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_model_repository</span><span class="o">.</span><span class="n">get_by_id_async</span><span class="p">(</span><span class="n">query</span><span class="o">.</span><span class="n">task_id</span><span class="p">)</span>
-</span><span id="__span-24-6"><a href="#__codelineno-24-6" id="__codelineno-24-6" name="__codelineno-24-6"></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">mapper</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">task</span><span class="p">,</span> <span class="n">TaskDto</span><span class="p">)</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-26-1"><a href="#__codelineno-26-1" id="__codelineno-26-1" name="__codelineno-26-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">GetTaskByIdQueryHandler</span><span class="p">(</span><span class="n">QueryHandler</span><span class="p">[</span><span class="n">GetTaskByIdQuery</span><span class="p">,</span> <span class="n">TaskDto</span><span class="p">]):</span>
+</span><span id="__span-26-2"><a href="#__codelineno-26-2" id="__codelineno-26-2" name="__codelineno-26-2"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">handle_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">:</span> <span class="n">GetTaskByIdQuery</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TaskDto</span><span class="p">:</span>
+</span><span id="__span-26-3"><a href="#__codelineno-26-3" id="__codelineno-26-3" name="__codelineno-26-3"></a>        <span class="c1"># Reads from MongoDB read model</span>
+</span><span id="__span-26-4"><a href="#__codelineno-26-4" id="__codelineno-26-4" name="__codelineno-26-4"></a>        <span class="c1"># May not reflect very recent writes (eventual consistency)</span>
+</span><span id="__span-26-5"><a href="#__codelineno-26-5" id="__codelineno-26-5" name="__codelineno-26-5"></a>        <span class="n">task</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_model_repository</span><span class="o">.</span><span class="n">get_by_id_async</span><span class="p">(</span><span class="n">query</span><span class="o">.</span><span class="n">task_id</span><span class="p">)</span>
+</span><span id="__span-26-6"><a href="#__codelineno-26-6" id="__codelineno-26-6" name="__codelineno-26-6"></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">mapper</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">task</span><span class="p">,</span> <span class="n">TaskDto</span><span class="p">)</span>
 </span></code></pre></div>
 <h3 id="best-practices">Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">¶</a></h3>
 <h4 id="1-design-for-idempotency">1. Design for Idempotency<a class="headerlink" href="#1-design-for-idempotency" title="Permanent link">¶</a></h4>
 <p>Projection handlers should be idempotent since events may be redelivered:</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-25-1"><a href="#__codelineno-25-1" id="__codelineno-25-1" name="__codelineno-25-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">TaskCreatedProjectionHandler</span><span class="p">(</span><span class="n">EventHandler</span><span class="p">[</span><span class="n">TaskCreatedDomainEvent</span><span class="p">]):</span>
-</span><span id="__span-25-2"><a href="#__codelineno-25-2" id="__codelineno-25-2" name="__codelineno-25-2"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">handle_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">TaskCreatedDomainEvent</span><span class="p">):</span>
-</span><span id="__span-25-3"><a href="#__codelineno-25-3" id="__codelineno-25-3" name="__codelineno-25-3"></a>        <span class="c1"># ✅ GOOD: Use upsert to handle redelivery</span>
-</span><span id="__span-25-4"><a href="#__codelineno-25-4" id="__codelineno-25-4" name="__codelineno-25-4"></a>        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">collection</span><span class="o">.</span><span class="n">update_one</span><span class="p">(</span>
-</span><span id="__span-25-5"><a href="#__codelineno-25-5" id="__codelineno-25-5" name="__codelineno-25-5"></a>            <span class="p">{</span><span class="s2">"_id"</span><span class="p">:</span> <span class="n">event</span><span class="o">.</span><span class="n">aggregate_id</span><span class="p">},</span>
-</span><span id="__span-25-6"><a href="#__codelineno-25-6" id="__codelineno-25-6" name="__codelineno-25-6"></a>            <span class="p">{</span><span class="s2">"$set"</span><span class="p">:</span> <span class="p">{</span>
-</span><span id="__span-25-7"><a href="#__codelineno-25-7" id="__codelineno-25-7" name="__codelineno-25-7"></a>                <span class="s2">"title"</span><span class="p">:</span> <span class="n">event</span><span class="o">.</span><span class="n">title</span><span class="p">,</span>
-</span><span id="__span-25-8"><a href="#__codelineno-25-8" id="__codelineno-25-8" name="__codelineno-25-8"></a>                <span class="s2">"description"</span><span class="p">:</span> <span class="n">event</span><span class="o">.</span><span class="n">description</span><span class="p">,</span>
-</span><span id="__span-25-9"><a href="#__codelineno-25-9" id="__codelineno-25-9" name="__codelineno-25-9"></a>                <span class="s2">"created_at"</span><span class="p">:</span> <span class="n">event</span><span class="o">.</span><span class="n">timestamp</span>
-</span><span id="__span-25-10"><a href="#__codelineno-25-10" id="__codelineno-25-10" name="__codelineno-25-10"></a>            <span class="p">}},</span>
-</span><span id="__span-25-11"><a href="#__codelineno-25-11" id="__codelineno-25-11" name="__codelineno-25-11"></a>            <span class="n">upsert</span><span class="o">=</span><span class="kc">True</span>
-</span><span id="__span-25-12"><a href="#__codelineno-25-12" id="__codelineno-25-12" name="__codelineno-25-12"></a>        <span class="p">)</span>
-</span><span id="__span-25-13"><a href="#__codelineno-25-13" id="__codelineno-25-13" name="__codelineno-25-13"></a>
-</span><span id="__span-25-14"><a href="#__codelineno-25-14" id="__codelineno-25-14" name="__codelineno-25-14"></a>        <span class="c1"># ❌ BAD: Insert will fail on redelivery</span>
-</span><span id="__span-25-15"><a href="#__codelineno-25-15" id="__codelineno-25-15" name="__codelineno-25-15"></a>        <span class="c1"># await self.collection.insert_one({...})</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-27-1"><a href="#__codelineno-27-1" id="__codelineno-27-1" name="__codelineno-27-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">TaskCreatedProjectionHandler</span><span class="p">(</span><span class="n">EventHandler</span><span class="p">[</span><span class="n">TaskCreatedDomainEvent</span><span class="p">]):</span>
+</span><span id="__span-27-2"><a href="#__codelineno-27-2" id="__codelineno-27-2" name="__codelineno-27-2"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">handle_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">TaskCreatedDomainEvent</span><span class="p">):</span>
+</span><span id="__span-27-3"><a href="#__codelineno-27-3" id="__codelineno-27-3" name="__codelineno-27-3"></a>        <span class="c1"># ✅ GOOD: Use upsert to handle redelivery</span>
+</span><span id="__span-27-4"><a href="#__codelineno-27-4" id="__codelineno-27-4" name="__codelineno-27-4"></a>        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">collection</span><span class="o">.</span><span class="n">update_one</span><span class="p">(</span>
+</span><span id="__span-27-5"><a href="#__codelineno-27-5" id="__codelineno-27-5" name="__codelineno-27-5"></a>            <span class="p">{</span><span class="s2">"_id"</span><span class="p">:</span> <span class="n">event</span><span class="o">.</span><span class="n">aggregate_id</span><span class="p">},</span>
+</span><span id="__span-27-6"><a href="#__codelineno-27-6" id="__codelineno-27-6" name="__codelineno-27-6"></a>            <span class="p">{</span><span class="s2">"$set"</span><span class="p">:</span> <span class="p">{</span>
+</span><span id="__span-27-7"><a href="#__codelineno-27-7" id="__codelineno-27-7" name="__codelineno-27-7"></a>                <span class="s2">"title"</span><span class="p">:</span> <span class="n">event</span><span class="o">.</span><span class="n">title</span><span class="p">,</span>
+</span><span id="__span-27-8"><a href="#__codelineno-27-8" id="__codelineno-27-8" name="__codelineno-27-8"></a>                <span class="s2">"description"</span><span class="p">:</span> <span class="n">event</span><span class="o">.</span><span class="n">description</span><span class="p">,</span>
+</span><span id="__span-27-9"><a href="#__codelineno-27-9" id="__codelineno-27-9" name="__codelineno-27-9"></a>                <span class="s2">"created_at"</span><span class="p">:</span> <span class="n">event</span><span class="o">.</span><span class="n">timestamp</span>
+</span><span id="__span-27-10"><a href="#__codelineno-27-10" id="__codelineno-27-10" name="__codelineno-27-10"></a>            <span class="p">}},</span>
+</span><span id="__span-27-11"><a href="#__codelineno-27-11" id="__codelineno-27-11" name="__codelineno-27-11"></a>            <span class="n">upsert</span><span class="o">=</span><span class="kc">True</span>
+</span><span id="__span-27-12"><a href="#__codelineno-27-12" id="__codelineno-27-12" name="__codelineno-27-12"></a>        <span class="p">)</span>
+</span><span id="__span-27-13"><a href="#__codelineno-27-13" id="__codelineno-27-13" name="__codelineno-27-13"></a>
+</span><span id="__span-27-14"><a href="#__codelineno-27-14" id="__codelineno-27-14" name="__codelineno-27-14"></a>        <span class="c1"># ❌ BAD: Insert will fail on redelivery</span>
+</span><span id="__span-27-15"><a href="#__codelineno-27-15" id="__codelineno-27-15" name="__codelineno-27-15"></a>        <span class="c1"># await self.collection.insert_one({...})</span>
 </span></code></pre></div>
 <h4 id="2-keep-handlers-fast">2. Keep Handlers Fast<a class="headerlink" href="#2-keep-handlers-fast" title="Permanent link">¶</a></h4>
 <p>Don't block the event processing pipeline:</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-26-1"><a href="#__codelineno-26-1" id="__codelineno-26-1" name="__codelineno-26-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">OrderConfirmedHandler</span><span class="p">(</span><span class="n">EventHandler</span><span class="p">[</span><span class="n">OrderConfirmedEvent</span><span class="p">]):</span>
-</span><span id="__span-26-2"><a href="#__codelineno-26-2" id="__codelineno-26-2" name="__codelineno-26-2"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">handle_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">OrderConfirmedEvent</span><span class="p">):</span>
-</span><span id="__span-26-3"><a href="#__codelineno-26-3" id="__codelineno-26-3" name="__codelineno-26-3"></a>        <span class="c1"># ✅ GOOD: Fast database update</span>
-</span><span id="__span-26-4"><a href="#__codelineno-26-4" id="__codelineno-26-4" name="__codelineno-26-4"></a>        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">update_read_model</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
-</span><span id="__span-26-5"><a href="#__codelineno-26-5" id="__codelineno-26-5" name="__codelineno-26-5"></a>
-</span><span id="__span-26-6"><a href="#__codelineno-26-6" id="__codelineno-26-6" name="__codelineno-26-6"></a>        <span class="c1"># ❌ BAD: Slow external API calls block pipeline</span>
-</span><span id="__span-26-7"><a href="#__codelineno-26-7" id="__codelineno-26-7" name="__codelineno-26-7"></a>        <span class="c1"># await self.send_confirmation_email(event)  # Do this elsewhere!</span>
-</span><span id="__span-26-8"><a href="#__codelineno-26-8" id="__codelineno-26-8" name="__codelineno-26-8"></a>
-</span><span id="__span-26-9"><a href="#__codelineno-26-9" id="__codelineno-26-9" name="__codelineno-26-9"></a>        <span class="c1"># ✅ BETTER: Queue for async processing</span>
-</span><span id="__span-26-10"><a href="#__codelineno-26-10" id="__codelineno-26-10" name="__codelineno-26-10"></a>        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">task_queue</span><span class="o">.</span><span class="n">enqueue</span><span class="p">(</span><span class="n">SendConfirmationEmailTask</span><span class="p">(</span><span class="n">event</span><span class="p">))</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-28-1"><a href="#__codelineno-28-1" id="__codelineno-28-1" name="__codelineno-28-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">OrderConfirmedHandler</span><span class="p">(</span><span class="n">EventHandler</span><span class="p">[</span><span class="n">OrderConfirmedEvent</span><span class="p">]):</span>
+</span><span id="__span-28-2"><a href="#__codelineno-28-2" id="__codelineno-28-2" name="__codelineno-28-2"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">handle_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">OrderConfirmedEvent</span><span class="p">):</span>
+</span><span id="__span-28-3"><a href="#__codelineno-28-3" id="__codelineno-28-3" name="__codelineno-28-3"></a>        <span class="c1"># ✅ GOOD: Fast database update</span>
+</span><span id="__span-28-4"><a href="#__codelineno-28-4" id="__codelineno-28-4" name="__codelineno-28-4"></a>        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">update_read_model</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+</span><span id="__span-28-5"><a href="#__codelineno-28-5" id="__codelineno-28-5" name="__codelineno-28-5"></a>
+</span><span id="__span-28-6"><a href="#__codelineno-28-6" id="__codelineno-28-6" name="__codelineno-28-6"></a>        <span class="c1"># ❌ BAD: Slow external API calls block pipeline</span>
+</span><span id="__span-28-7"><a href="#__codelineno-28-7" id="__codelineno-28-7" name="__codelineno-28-7"></a>        <span class="c1"># await self.send_confirmation_email(event)  # Do this elsewhere!</span>
+</span><span id="__span-28-8"><a href="#__codelineno-28-8" id="__codelineno-28-8" name="__codelineno-28-8"></a>
+</span><span id="__span-28-9"><a href="#__codelineno-28-9" id="__codelineno-28-9" name="__codelineno-28-9"></a>        <span class="c1"># ✅ BETTER: Queue for async processing</span>
+</span><span id="__span-28-10"><a href="#__codelineno-28-10" id="__codelineno-28-10" name="__codelineno-28-10"></a>        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">task_queue</span><span class="o">.</span><span class="n">enqueue</span><span class="p">(</span><span class="n">SendConfirmationEmailTask</span><span class="p">(</span><span class="n">event</span><span class="p">))</span>
 </span></code></pre></div>
 <h4 id="3-handle-failures-gracefully">3. Handle Failures Gracefully<a class="headerlink" href="#3-handle-failures-gracefully" title="Permanent link">¶</a></h4>
 <p>If a handler fails, the event will be redelivered:</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-27-1"><a href="#__codelineno-27-1" id="__codelineno-27-1" name="__codelineno-27-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">PaymentProcessedHandler</span><span class="p">(</span><span class="n">EventHandler</span><span class="p">[</span><span class="n">PaymentProcessedEvent</span><span class="p">]):</span>
-</span><span id="__span-27-2"><a href="#__codelineno-27-2" id="__codelineno-27-2" name="__codelineno-27-2"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">handle_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">PaymentProcessedEvent</span><span class="p">):</span>
-</span><span id="__span-27-3"><a href="#__codelineno-27-3" id="__codelineno-27-3" name="__codelineno-27-3"></a>        <span class="k">try</span><span class="p">:</span>
-</span><span id="__span-27-4"><a href="#__codelineno-27-4" id="__codelineno-27-4" name="__codelineno-27-4"></a>            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">update_payment_read_model</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
-</span><span id="__span-27-5"><a href="#__codelineno-27-5" id="__codelineno-27-5" name="__codelineno-27-5"></a>        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">ex</span><span class="p">:</span>
-</span><span id="__span-27-6"><a href="#__codelineno-27-6" id="__codelineno-27-6" name="__codelineno-27-6"></a>            <span class="c1"># Log error - event will be redelivered</span>
-</span><span id="__span-27-7"><a href="#__codelineno-27-7" id="__codelineno-27-7" name="__codelineno-27-7"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Failed to project PaymentProcessed: </span><span class="si">{</span><span class="n">ex</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-</span><span id="__span-27-8"><a href="#__codelineno-27-8" id="__codelineno-27-8" name="__codelineno-27-8"></a>            <span class="k">raise</span>  <span class="c1"># Let ReadModelReconciliator handle retry</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-29-1"><a href="#__codelineno-29-1" id="__codelineno-29-1" name="__codelineno-29-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">PaymentProcessedHandler</span><span class="p">(</span><span class="n">EventHandler</span><span class="p">[</span><span class="n">PaymentProcessedEvent</span><span class="p">]):</span>
+</span><span id="__span-29-2"><a href="#__codelineno-29-2" id="__codelineno-29-2" name="__codelineno-29-2"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">handle_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">PaymentProcessedEvent</span><span class="p">):</span>
+</span><span id="__span-29-3"><a href="#__codelineno-29-3" id="__codelineno-29-3" name="__codelineno-29-3"></a>        <span class="k">try</span><span class="p">:</span>
+</span><span id="__span-29-4"><a href="#__codelineno-29-4" id="__codelineno-29-4" name="__codelineno-29-4"></a>            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">update_payment_read_model</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+</span><span id="__span-29-5"><a href="#__codelineno-29-5" id="__codelineno-29-5" name="__codelineno-29-5"></a>        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">ex</span><span class="p">:</span>
+</span><span id="__span-29-6"><a href="#__codelineno-29-6" id="__codelineno-29-6" name="__codelineno-29-6"></a>            <span class="c1"># Log error - event will be redelivered</span>
+</span><span id="__span-29-7"><a href="#__codelineno-29-7" id="__codelineno-29-7" name="__codelineno-29-7"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Failed to project PaymentProcessed: </span><span class="si">{</span><span class="n">ex</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span><span id="__span-29-8"><a href="#__codelineno-29-8" id="__codelineno-29-8" name="__codelineno-29-8"></a>            <span class="k">raise</span>  <span class="c1"># Let ReadModelReconciliator handle retry</span>
 </span></code></pre></div>
 <h3 id="verification">Verification<a class="headerlink" href="#verification" title="Permanent link">¶</a></h3>
 <p>This architecture was verified through diagnostic logging on December 2, 2025:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-28-1"><a href="#__codelineno-28-1" id="__codelineno-28-1" name="__codelineno-28-1"></a>10:36:29,143  ✅ Command 'CreateTaskCommand' completed
-</span><span id="__span-28-2"><a href="#__codelineno-28-2" id="__codelineno-28-2" name="__codelineno-28-2"></a>10:36:29,147  📥 READ PATH: Received TaskCreatedDomainEvent from subscription
-</span><span id="__span-28-3"><a href="#__codelineno-28-3" id="__codelineno-28-3" name="__codelineno-28-3"></a>10:36:29,148  📥 READ PATH: Publishing TaskCreatedDomainEvent via mediator
-</span><span id="__span-28-4"><a href="#__codelineno-28-4" id="__codelineno-28-4" name="__codelineno-28-4"></a>10:36:29,153  Found 3 pipeline behaviors for TaskCreatedDomainEvent
-</span><span id="__span-28-5"><a href="#__codelineno-28-5" id="__codelineno-28-5" name="__codelineno-28-5"></a>10:36:29,154  📥 Projecting TaskCreated
-</span><span id="__span-28-6"><a href="#__codelineno-28-6" id="__codelineno-28-6" name="__codelineno-28-6"></a>10:36:29,235  ✅ Projected TaskCreated to Read Model
-</span><span id="__span-28-7"><a href="#__codelineno-28-7" id="__codelineno-28-7" name="__codelineno-28-7"></a>10:36:29,240  Emitting CloudEvent 'io.tools-provider.task.created.v1'
-</span><span id="__span-28-8"><a href="#__codelineno-28-8" id="__codelineno-28-8" name="__codelineno-28-8"></a>10:36:29,242  ACK sent for event
-</span><span id="__span-28-9"><a href="#__codelineno-28-9" id="__codelineno-28-9" name="__codelineno-28-9"></a>10:36:29,264  Published cloudevent
+<div class="language-text highlight"><pre><span></span><code><span id="__span-30-1"><a href="#__codelineno-30-1" id="__codelineno-30-1" name="__codelineno-30-1"></a>10:36:29,143  ✅ Command 'CreateTaskCommand' completed
+</span><span id="__span-30-2"><a href="#__codelineno-30-2" id="__codelineno-30-2" name="__codelineno-30-2"></a>10:36:29,147  📥 READ PATH: Received TaskCreatedDomainEvent from subscription
+</span><span id="__span-30-3"><a href="#__codelineno-30-3" id="__codelineno-30-3" name="__codelineno-30-3"></a>10:36:29,148  📥 READ PATH: Publishing TaskCreatedDomainEvent via mediator
+</span><span id="__span-30-4"><a href="#__codelineno-30-4" id="__codelineno-30-4" name="__codelineno-30-4"></a>10:36:29,153  Found 3 pipeline behaviors for TaskCreatedDomainEvent
+</span><span id="__span-30-5"><a href="#__codelineno-30-5" id="__codelineno-30-5" name="__codelineno-30-5"></a>10:36:29,154  📥 Projecting TaskCreated
+</span><span id="__span-30-6"><a href="#__codelineno-30-6" id="__codelineno-30-6" name="__codelineno-30-6"></a>10:36:29,235  ✅ Projected TaskCreated to Read Model
+</span><span id="__span-30-7"><a href="#__codelineno-30-7" id="__codelineno-30-7" name="__codelineno-30-7"></a>10:36:29,240  Emitting CloudEvent 'io.tools-provider.task.created.v1'
+</span><span id="__span-30-8"><a href="#__codelineno-30-8" id="__codelineno-30-8" name="__codelineno-30-8"></a>10:36:29,242  ACK sent for event
+</span><span id="__span-30-9"><a href="#__codelineno-30-9" id="__codelineno-30-9" name="__codelineno-30-9"></a>10:36:29,264  Published cloudevent
 </span></code></pre></div>
 <p><strong>Key observations:</strong></p>
 <ol>
