@@ -1517,6 +1517,58 @@ The persistent subscription mechanism provides:
 - **Consumer groups**: Multiple instances can share event processing workload
 - **Guaranteed ordering**: Events within a stream are processed in order
 
+#### 2.1 Sequential Event Processing per Aggregate
+
+**Added in v0.7.6**: The `ReadModelReconciliator` now ensures that events from the same aggregate are processed **sequentially** to prevent race conditions.
+
+**The Problem (Before Fix)**:
+
+When an aggregate emits multiple domain events in a single operation (e.g., creating a ToolGroup and immediately adding a Selector), the events could be processed concurrently:
+
+```python
+# Command handler creates aggregate with multiple events
+tool_group = ToolGroup(name="Test", description="...")  # Emits ToolGroupCreatedEvent
+tool_group.add_selector(selector, added_by=user_id)      # Emits SelectorAddedEvent
+await self.repository.add_async(tool_group)               # Both events persisted
+
+# Without sequential processing:
+# ❌ SelectorAddedProjectionHandler might run BEFORE ToolGroupCreatedProjectionHandler
+# ❌ Result: "ToolGroup not found in Read Model for selector add!"
+```
+
+**The Solution**:
+
+The `ReadModelReconciliator` now groups events by aggregate ID and processes them sequentially:
+
+```python
+from neuroglia.data.infrastructure.event_sourcing import (
+    ReadModelConciliationOptions,
+    ReadModelReconciliator
+)
+
+# Default: Sequential processing per aggregate (recommended)
+options = ReadModelConciliationOptions(
+    consumer_group="my-projections",
+    sequential_processing=True  # Default
+)
+
+# Result: Events from same aggregate processed in order
+# 1. ToolGroupCreatedProjectionHandler runs (creates document)
+# 2. SelectorAddedProjectionHandler runs (updates document) ✅
+```
+
+**Configuration Options**:
+
+- `sequential_processing=True` (default): Events from the same aggregate are processed sequentially while events from different aggregates can be processed in parallel
+- `sequential_processing=False`: Legacy behavior where all events may be processed concurrently (use only if handlers are truly independent)
+
+**Key Benefits**:
+
+- ✅ **Prevents race conditions** in projection handlers
+- ✅ **Maintains causal ordering** within aggregate event streams
+- ✅ **Preserves parallelism** across different aggregates for throughput
+- ✅ **Automatic aggregate ID extraction** from event data or stream ID
+
 #### 3. No Duplicate Publishing
 
 Since events are published from exactly one location (`ReadModelReconciliator`), there's no risk of:

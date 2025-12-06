@@ -7,6 +7,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- **ReadModelReconciliator Race Condition**: Fixed critical race condition in domain event projection
+
+  - **Issue**: When an aggregate emits multiple domain events (e.g., `ToolGroupCreatedEvent` followed by `SelectorAddedEvent`), projection handlers could run concurrently, causing the second handler to fail with "document not found" errors
+  - **Root Cause**: Events were dispatched via `asyncio.create_task()` without awaiting completion, allowing subsequent events to be processed before prior events finished
+  - **Solution**: Added `AggregateEventQueue` that ensures events from the same aggregate are processed sequentially while maintaining parallelism across different aggregates
+  - **New Options**:
+    - `ReadModelConciliationOptions.sequential_processing` (default: `True`) - Enable/disable sequential event processing per aggregate
+    - Sequential mode groups events by aggregate ID and processes them in order
+    - Parallel mode (legacy behavior) available via `sequential_processing=False`
+  - **Tests**: `tests/cases/test_read_model_reconciliator_sequential_processing.py` (15 comprehensive tests)
+  - **Impact**: Read model projections now correctly handle aggregates that emit multiple events in a single operation
+
+- **Aggregator.\_pending_events Initialization**: Fixed critical bug in aggregate reconstitution
+  - `Aggregator.aggregate()` uses `object.__new__()` which bypasses `__init__`
+  - This left `_pending_events` attribute uninitialized, causing `AttributeError` when reconstituted aggregates tried to register new domain events
+  - Added explicit `aggregate._pending_events = list()` initialization in `Aggregator.aggregate()` after `object.__new__()` call
+  - Added comprehensive docstring explaining the `__new__()` bypass pattern and rationale
+  - Tests: `tests/cases/test_aggregator_pending_events_initialization.py` (7 comprehensive tests)
+  - Impact: Event-sourced aggregates can now properly register new domain events after reconstitution from event streams
+
 ## [0.7.5] - 2025-12-04
 
 ### Added
@@ -32,20 +54,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Now correctly returns `None` following repository pattern contract
   - Added proper exception handling and empty event list checks
   - Tests: `tests/cases/test_event_sourcing_repository_get_async.py`
-
-- **Aggregator.\_pending_events Initialization**: Fixed critical bug in aggregate reconstitution
-
-  - `Aggregator.aggregate()` uses `object.__new__()` which bypasses `__init__`
-  - This left `_pending_events` attribute uninitialized, causing `AttributeError` when reconstituted aggregates tried to register new domain events
-  - Added explicit `aggregate._pending_events = list()` initialization in `Aggregator.aggregate()` after `object.__new__()` call
-  - Added comprehensive docstring explaining the `__new__()` bypass pattern and rationale
-  - Tests: `tests/cases/test_aggregator_pending_events_initialization.py` (7 comprehensive tests)
-  - Impact: Event-sourced aggregates can now properly register new domain events after reconstitution from event streams
-
-  - **Issue**: `get_async` raised an exception when trying to retrieve an aggregate whose event stream doesn't exist
-  - **Expected Behavior**: Should return `None` for non-existent aggregates (consistent with Repository pattern)
-  - **Solution**: Catch exceptions from `read_async` and return `None`; also return `None` when stream is empty
-  - **Impact**: Enables safe aggregate lookups without exception handling, following standard repository patterns
 
 - **Queryable Type Propagation**: Fixed type information loss during queryable chaining operations
   - **Issue**: `AttributeError: 'MotorQuery' object has no attribute '__orig_class__'` when chaining operations like `.where().order_by()`
