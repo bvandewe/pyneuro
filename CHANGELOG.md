@@ -7,6 +7,41 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.7.8] - 2025-12-07
+
+### Improved
+
+- **JSON Serializer Hardening**: Preventive improvements to type inference heuristics
+
+  - **DateTime Detection (`_is_datetime_string`)**:
+
+    - Now requires 'T' or space separator to distinguish datetime from date-only strings
+    - Date-only strings like '2025-12-15' are NO LONGER automatically converted to datetime
+    - Prevents unexpected type conversions when the intended type is a plain date string
+    - Added `TypeError` to exception handling for non-string inputs
+    - Added comprehensive docstring explaining behavior and rationale
+
+  - **Enum Case-Insensitive Matching**:
+
+    - Unified matching logic across `_basic_enum_detection` and typed enum deserialization
+    - Implemented priority-based matching:
+      1. Exact match on enum member value (highest priority)
+      2. Exact match on enum member name
+      3. Case-insensitive match on value (lowercase comparison)
+      4. Case-insensitive match on name (uppercase comparison for CONSTANT_CASE convention)
+    - Consistent behavior whether using TypeRegistry or fallback detection
+    - Added comprehensive docstrings with matching priority documentation
+
+  - **Tests**: `tests/cases/test_json_serializer_hardening.py` (46 comprehensive tests)
+
+    - DateTime heuristic validation (18 tests)
+    - Enum case-insensitive matching (9 tests)
+    - Basic enum detection (6 tests)
+    - Edge cases and regressions (8 tests)
+    - Backward compatibility (5 tests)
+
+  - **Impact**: More predictable and consistent type inference behavior across serialization/deserialization
+
 ## [0.7.7] - 2025-12-07
 
 ### Fixed

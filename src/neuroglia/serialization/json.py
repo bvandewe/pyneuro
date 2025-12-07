@@ -553,11 +553,33 @@ class JsonSerializer(TextSerializer):
         return bool(re.match(r"^-?\d+\.?\d*(?:[eE][+-]?\d+)?$", value.strip()))
 
     def _is_datetime_string(self, value: str) -> bool:
-        """Check if a string looks like an ISO datetime."""
+        """
+        Check if a string looks like an ISO datetime.
+
+        Uses a conservative approach to avoid false positives:
+        - Requires the string to contain 'T' or a time separator to distinguish
+          datetime strings from date-only strings in type inference scenarios
+        - Validates with datetime.fromisoformat after initial filtering
+        - Catches TypeError for non-string inputs that slip through
+
+        Note: Date-only strings like '2025-12-15' are NOT matched as datetime strings
+        in type inference to avoid unexpected conversions. If you need to deserialize
+        date-only strings, provide explicit type hints.
+        """
+        # Fast pre-check: must be a non-empty string
+        if not isinstance(value, str) or not value:
+            return False
+
+        # Require 'T' separator to distinguish datetime from date-only strings
+        # This prevents date-only strings like '2025-12-15' from being converted
+        # to datetime objects when the intended type might be a plain date or string
+        if "T" not in value and " " not in value:
+            return False
+
         try:
             datetime.fromisoformat(value.replace("Z", "+00:00"))
             return True
-        except (ValueError, AttributeError):
+        except (ValueError, AttributeError, TypeError):
             return False
 
     def _try_deserialize_enum(self, value: str, target_type: type) -> Any:
@@ -581,6 +603,15 @@ class JsonSerializer(TextSerializer):
         """
         Fallback enum detection that only checks the target type's module.
         Used when TypeRegistry is not available.
+
+        Matching priority (returns on first match):
+        1. Exact match on enum member value
+        2. Exact match on enum member name
+        3. Case-insensitive match on value (lowercase comparison)
+        4. Case-insensitive match on name (uppercase comparison for CONSTANT_CASE convention)
+
+        Note: This returns the first matching enum from the module. For deterministic
+        behavior with multiple enum types, use TypeRegistry with explicit module registration.
         """
         try:
             import sys
@@ -592,11 +623,25 @@ class JsonSerializer(TextSerializer):
 
             module = sys.modules.get(target_module)
             if module:
+                value_lower = value.lower()
+                value_upper = value.upper()
+
                 for attr_name in dir(module):
                     attr = getattr(module, attr_name)
                     if isinstance(attr, type) and issubclass(attr, Enum) and attr != Enum:
                         for enum_member in attr:
-                            if enum_member.value == value or enum_member.value == value.lower() or enum_member.name == value or enum_member.name == value.upper():
+                            # Priority 1: Exact match on value
+                            if enum_member.value == value:
+                                return enum_member
+                            # Priority 2: Exact match on name
+                            if enum_member.name == value:
+                                return enum_member
+                            # Priority 3: Case-insensitive match on value
+                            member_value = enum_member.value
+                            if isinstance(member_value, str) and member_value.lower() == value_lower:
+                                return enum_member
+                            # Priority 4: Case-insensitive match on name (CONSTANT_CASE convention)
+                            if enum_member.name.upper() == value_upper:
                                 return enum_member
         except Exception:
             pass
@@ -757,10 +802,33 @@ class JsonSerializer(TextSerializer):
             return value
 
         elif hasattr(expected_type, "__bases__") and expected_type.__bases__ and issubclass(expected_type, Enum):
-            # Handle Enum deserialization - check both value and name
+            # Handle Enum deserialization with priority-based matching:
+            # 1. Exact match on value
+            # 2. Exact match on name
+            # 3. Case-insensitive match on value (for string values)
+            # 4. Case-insensitive match on name
+            value_str = str(value) if not isinstance(value, str) else value
+            value_lower = value_str.lower()
+            value_upper = value_str.upper()
+
             for enum_member in expected_type:
-                if enum_member.value == value or enum_member.name == value:
+                # Priority 1: Exact match on value
+                if enum_member.value == value:
                     return enum_member
+                # Priority 2: Exact match on name
+                if enum_member.name == value_str:
+                    return enum_member
+
+            # Second pass for case-insensitive matching
+            for enum_member in expected_type:
+                # Priority 3: Case-insensitive match on value
+                member_value = enum_member.value
+                if isinstance(member_value, str) and member_value.lower() == value_lower:
+                    return enum_member
+                # Priority 4: Case-insensitive match on name
+                if enum_member.name.upper() == value_upper:
+                    return enum_member
+
             raise ValueError(f"Invalid enum value for {expected_type.__name__}: {value}")
 
         else:
