@@ -502,12 +502,14 @@ class JsonSerializer(TextSerializer):
                 return datetime.fromisoformat(value.replace("Z", "+00:00"))
 
             # Try to detect decimal/money fields by name patterns
-            if any(pattern in field_name.lower() for pattern in ["price", "cost", "amount", "total", "fee"]):
+            # Only match when the field name ENDS with the pattern to avoid false positives
+            # from nested paths like "input_schema_properties_price_type"
+            if self._is_monetary_field(field_name) and self._looks_like_decimal(value):
                 try:
-                    from decimal import Decimal
+                    from decimal import Decimal, InvalidOperation
 
                     return Decimal(value)
-                except (ValueError, TypeError):
+                except (ValueError, TypeError, InvalidOperation):
                     pass
 
             # Try to find matching enum types in the target class
@@ -523,6 +525,32 @@ class JsonSerializer(TextSerializer):
             return {k: self._infer_and_deserialize(f"{field_name}_{k}", v, target_type) for k, v in value.items()}
 
         return value
+
+    # Monetary field patterns for decimal detection
+    _MONETARY_PATTERNS: tuple[str, ...] = ("price", "cost", "amount", "total", "fee", "balance", "rate", "tax")
+
+    def _is_monetary_field(self, field_name: str) -> bool:
+        """
+        Check if field name represents a monetary/decimal field.
+        Only matches when the field name ENDS with a monetary pattern to avoid
+        false positives from nested paths like 'input_schema_properties_price_type'.
+        """
+        field_name_lower = field_name.lower()
+        # Split by underscore and check if the last part is a monetary pattern
+        parts = field_name_lower.split("_")
+        last_part = parts[-1] if parts else ""
+        return last_part in self._MONETARY_PATTERNS
+
+    def _looks_like_decimal(self, value: str) -> bool:
+        """
+        Check if a string value looks like a valid decimal number.
+        This prevents attempting Decimal conversion on arbitrary strings.
+        """
+        import re
+
+        # Match optional negative sign, digits, optional decimal point with more digits
+        # Also match scientific notation like "1.5e-10"
+        return bool(re.match(r"^-?\d+\.?\d*(?:[eE][+-]?\d+)?$", value.strip()))
 
     def _is_datetime_string(self, value: str) -> bool:
         """Check if a string looks like an ISO datetime."""
@@ -584,6 +612,16 @@ class JsonSerializer(TextSerializer):
 
         if isinstance(expected_type, str):
             return value
+
+        # Handle typing.Any - return value as-is for primitives, recursively process containers
+        if expected_type is Any:
+            if isinstance(value, dict):
+                return {k: self._deserialize_nested(v, Any) for k, v in value.items()}
+            elif isinstance(value, list):
+                return [self._deserialize_nested(item, Any) for item in value]
+            else:
+                # For primitives (str, int, float, bool, etc.), return as-is
+                return value
 
         origin_type = get_origin(expected_type)
         if origin_type is not None:

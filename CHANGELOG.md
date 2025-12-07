@@ -7,6 +7,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.7.7] - 2025-12-07
+
+### Fixed
+
+- **JSON Serializer Decimal Heuristic Bug**: Fixed `decimal.InvalidOperation` errors when deserializing nested dictionaries
+
+  - **Issue**: The `_infer_and_deserialize` method's decimal heuristic caused `InvalidOperation` errors when field paths contained monetary keywords (e.g., `input_schema_properties_price_type`)
+  - **Root Cause 1**: The heuristic used substring matching (`"price" in field_name`) which triggered on nested paths like `input_schema_properties_price_type`
+  - **Root Cause 2**: Missing `InvalidOperation` in exception handler - only `ValueError` and `TypeError` were caught
+  - **Root Cause 3**: When `expected_type` was `typing.Any`, `_deserialize_nested` incorrectly called `_deserialize_object` which created a corrupted `Any` instance
+  - **Solution**:
+    - Changed to terminal-only matching: only fields ENDING with monetary patterns trigger decimal conversion
+    - Added `_is_monetary_field()` helper that checks if the last underscore-separated part is a monetary pattern
+    - Added `_looks_like_decimal()` regex validation to pre-check if string is a valid decimal format
+    - Added `InvalidOperation` to exception handler
+    - Added special handling for `typing.Any` in `_deserialize_nested` to properly recurse through containers
+  - **Monetary Patterns**: `price`, `cost`, `amount`, `total`, `fee`, `balance`, `rate`, `tax`
+  - **Tests**: `tests/cases/test_json_serializer_decimal_heuristic.py` (42 comprehensive tests)
+  - **Impact**: OpenAPI schemas, JSON Schema definitions, and other nested structures with monetary keywords now deserialize correctly
+
 ## [0.7.6] - 2025-12-06
 
 ### Fixed
