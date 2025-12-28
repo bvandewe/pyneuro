@@ -7,6 +7,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.7.9] - 2025-12-28
+
+### Fixed
+
+- **JSON Serializer Nested Dataclass Deserialization**: Fixed critical bug where `dict[str, Any]` fields in nested dataclasses lost their deeply nested values during deserialization
+
+  - **Issue**: When deserializing lists of dataclasses (e.g., `list[ConversationItem]`) where items contain `dict[str, Any]` fields (e.g., `widget_config`), the nested dict values were dropped or partially populated
+  - **Root Cause**: `_deserialize_nested()` list-of-dataclasses code path (lines 769-786) used `field.type` directly instead of `get_type_hints()` to resolve type annotations
+  - **Impact**: Types like `dict[str, Any]` were not properly resolved, causing the serializer to skip proper deserialization of nested structures
+  - **Fix**:
+    - Added `get_type_hints()` call to properly resolve type annotations in list deserialization
+    - Added handling for missing optional fields and default values (matching existing direct dataclass path)
+    - Fallback to `field.type` if `get_type_hints()` fails (backward compatible)
+  - **Affected Use Cases**:
+    - MongoDB `MotorRepository` with aggregates containing lists of nested dataclasses with `dict[str, Any]` fields
+    - Any JSON serialization/deserialization of nested dataclass structures with arbitrary dict fields
+  - **Tests**: `tests/cases/test_nested_dict_in_dataclass_list.py` (6 comprehensive tests)
+  - **Backward Compatible**: 100% - existing code paths unaffected, fix only improves handling of previously broken cases
+
+- **Pydantic BaseModel Deserialization**: Fixed issue where Pydantic v2 models were deserialized without proper initialization
+
+  - **Issue**: Deserializer created Pydantic model instances using `object.__new__()` and direct dictionary assignment, bypassing Pydantic's initialization logic
+  - **Impact**: Models were missing internal attributes (e.g., `__pydantic_private__`, `__pydantic_fields_set__`), causing runtime errors when accessing them
+  - **Fix**:
+    - Added `_is_pydantic_model()` detection using duck typing (no hard dependency)
+    - Updated deserializer to use `model.model_validate()` for Pydantic models, ensuring full initialization
+  - **Tests**: `tests/cases/test_pydantic_model_deserialization.py`
+
 ## [0.7.8] - 2025-12-07
 
 ### Improved
