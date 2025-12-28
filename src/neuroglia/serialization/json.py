@@ -445,6 +445,10 @@ class JsonSerializer(TextSerializer):
 
     def _deserialize_object(self, data: dict, expected_type: type) -> Any:
         """Deserialize a dictionary into an object using type annotations."""
+        # Handle Pydantic BaseModel types using model_validate for proper initialization
+        if self._is_pydantic_model(expected_type):
+            return expected_type.model_validate(data)
+
         fields = {}
 
         # Collect all type annotations from the class hierarchy
@@ -733,6 +737,10 @@ class JsonSerializer(TextSerializer):
                     object.__setattr__(instance, key, val)
                 return instance
 
+            # Handle Pydantic BaseModel deserialization
+            if self._is_pydantic_model(expected_type):
+                return expected_type.model_validate(value)
+
             origin_expected = get_origin(expected_type)
             if expected_type == dict or origin_expected is dict:
                 # If the expected type is a plain dict, we need to deserialize each value in the dict.
@@ -802,6 +810,9 @@ class JsonSerializer(TextSerializer):
                     for key, val in field_dict.items():
                         object.__setattr__(item_instance, key, val)
                     values.append(item_instance)
+                elif isinstance(v, dict) and self._is_pydantic_model(item_type):
+                    # Use Pydantic's model_validate for proper model initialization
+                    values.append(item_type.model_validate(v))
                 else:
                     # For non-dataclass types, use regular deserialization
                     deserialized = self._deserialize_nested(v, item_type)
@@ -858,6 +869,28 @@ class JsonSerializer(TextSerializer):
         origin = get_origin(annotation)
         if origin in (Union, types.UnionType):
             return any(arg is type(None) for arg in get_args(annotation))
+        return False
+
+    def _is_pydantic_model(self, cls: Any) -> bool:
+        """
+        Check if a type is a Pydantic BaseModel subclass.
+
+        Uses duck typing to avoid hard dependency on Pydantic being installed.
+        Pydantic v2 models have a `model_validate` classmethod that accepts dict data.
+
+        Args:
+            cls: The type to check
+
+        Returns:
+            True if the type appears to be a Pydantic BaseModel, False otherwise
+        """
+        if not isinstance(cls, type):
+            return False
+        # Check for Pydantic v2 model_validate method (preferred detection)
+        if hasattr(cls, "model_validate") and callable(getattr(cls, "model_validate", None)):
+            # Additional check: Pydantic models also have model_fields
+            if hasattr(cls, "model_fields"):
+                return True
         return False
 
     @staticmethod
