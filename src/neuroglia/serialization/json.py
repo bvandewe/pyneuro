@@ -770,15 +770,33 @@ class JsonSerializer(TextSerializer):
                 # Check if the item should be a dataclass instance
                 if isinstance(v, dict) and is_dataclass(item_type):
                     # Deserialize dict to dataclass using proper field deserialization
+                    # Use get_type_hints() to properly resolve type annotations (e.g., dict[str, Any])
+                    try:
+                        dataclass_type_hints = get_type_hints(item_type)
+                    except (NameError, TypeError, AttributeError):
+                        dataclass_type_hints = {field.name: field.type for field in fields(item_type)}
+                    except Exception:
+                        dataclass_type_hints = {field.name: field.type for field in fields(item_type)}
                     field_dict = {}
                     for field in fields(item_type):
                         if field.name in v:
-                            field_type = field.type
+                            field_type = dataclass_type_hints.get(field.name, field.type)
                             if isinstance(field_type, str):
                                 field_dict[field.name] = v[field.name]
                             else:
                                 field_value = self._deserialize_nested(v[field.name], field_type)
                                 field_dict[field.name] = field_value
+                    # Ensure Optional fields missing from the payload are explicitly populated
+                    for field in fields(item_type):
+                        if field.name in field_dict:
+                            continue
+                        resolved_type = dataclass_type_hints.get(field.name, field.type)
+                        if field.default is not MISSING:
+                            field_dict[field.name] = field.default
+                        elif field.default_factory is not MISSING:  # type: ignore[attr-defined]
+                            field_dict[field.name] = field.default_factory()  # type: ignore[attr-defined]
+                        elif self._is_optional_type(resolved_type):
+                            field_dict[field.name] = None
                     # Create instance and set fields (works for frozen and non-frozen dataclasses)
                     item_instance: Any = object.__new__(cast(type, item_type))
                     for key, val in field_dict.items():
