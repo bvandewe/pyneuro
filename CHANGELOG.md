@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.7.10] - 2025-01-03
+
 ### Changed
 
 - **Dependency Upgrades for MCP SDK Compatibility**:
