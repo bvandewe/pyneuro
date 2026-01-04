@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- **Dependency Upgrades for MCP SDK Compatibility**:
+  - Upgraded `uvicorn` from 0.32.1 to 0.35.0
+  - Upgraded `pydantic[email]` from 2.10.3 to 2.11.0 (includes pydantic-core 2.33.0)
+
 ## [0.7.9] - 2025-12-28
 
 ### Fixed
