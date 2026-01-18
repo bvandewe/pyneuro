@@ -32,6 +32,24 @@ __all__ = [
     "Entity",
     "DomainEvent",
     "Repository",
+    # Agent module (new in 0.8.0)
+    "BaseAgentState",
+    "TeamMembership",
+    "KnowledgeScope",
+    "AgentCapability",
+    # A2A protocol (new in 0.8.0)
+    "TaskRequest",
+    "TaskResponse",
+    "AgentIdentity",
+    "TaskPriority",
+    "TaskStatus",
+    # Conversation building blocks (new in 0.8.0)
+    "Message",
+    "MessageRole",
+    "ToolCall",
+    "ToolResult",
+    "ExecutionContext",
+    "Session",
     # Optional components (import may fail)
     "ControllerBase",
     "EventStore",
@@ -62,7 +80,7 @@ __all__ = [
 ]
 
 # Framework metadata
-__version__ = "0.7.10"
+__version__ = "0.8.0"
 __author__ = "Neuroglia Team"
 __email__ = "team@neuroglia.io"
 __license__ = "Apache"
@@ -138,6 +156,78 @@ def __getattr__(name: str):
             from .core import OperationResult
 
             return OperationResult
+        except ImportError:
+            pass
+
+    # Agent module (new in 0.8.0)
+    elif name in ["BaseAgentState", "TeamMembership", "KnowledgeScope", "AgentCapability"]:
+        try:
+            from .data.agent import (
+                AgentCapability,
+                BaseAgentState,
+                KnowledgeScope,
+                TeamMembership,
+            )
+
+            if name == "BaseAgentState":
+                return BaseAgentState
+            elif name == "TeamMembership":
+                return TeamMembership
+            elif name == "KnowledgeScope":
+                return KnowledgeScope
+            elif name == "AgentCapability":
+                return AgentCapability
+        except ImportError:
+            pass
+
+    # A2A protocol (new in 0.8.0)
+    elif name in ["TaskRequest", "TaskResponse", "AgentIdentity", "TaskPriority", "TaskStatus"]:
+        try:
+            from .a2a import (
+                AgentIdentity,
+                TaskPriority,
+                TaskRequest,
+                TaskResponse,
+                TaskStatus,
+            )
+
+            if name == "TaskRequest":
+                return TaskRequest
+            elif name == "TaskResponse":
+                return TaskResponse
+            elif name == "AgentIdentity":
+                return AgentIdentity
+            elif name == "TaskPriority":
+                return TaskPriority
+            elif name == "TaskStatus":
+                return TaskStatus
+        except ImportError:
+            pass
+
+    # Conversation building blocks (new in 0.8.0)
+    elif name in ["Message", "MessageRole", "ToolCall", "ToolResult", "ExecutionContext", "Session"]:
+        try:
+            from .data.conversation import (
+                ExecutionContext,
+                Message,
+                MessageRole,
+                Session,
+                ToolCall,
+                ToolResult,
+            )
+
+            if name == "Message":
+                return Message
+            elif name == "MessageRole":
+                return MessageRole
+            elif name == "ToolCall":
+                return ToolCall
+            elif name == "ToolResult":
+                return ToolResult
+            elif name == "ExecutionContext":
+                return ExecutionContext
+            elif name == "Session":
+                return Session
         except ImportError:
             pass
 
