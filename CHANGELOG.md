@@ -7,6 +7,49 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.0] - 2026-01-18
+
+### Added
+
+- **Agent Module (`neuroglia.data.agent`)**: Base classes and value objects for Agent aggregates
+
+  - `BaseAgentState`: Base state class for all agent aggregates with identity, ownership, team membership, knowledge scopes, capabilities, and delegation tracking
+  - `TeamMembership`: Value object for team membership with role and granted capabilities
+  - `KnowledgeScope`: Value object for knowledge namespace access with access levels
+  - `AgentCapability`: Value object for agent capabilities with tool mappings
+
+- **Agent Domain Events**: Comprehensive event coverage for agent lifecycle
+
+  - Lifecycle events: `AgentCreatedDomainEvent`, `AgentStatusChangedDomainEvent`
+  - Team events: `AgentJoinedTeamDomainEvent`, `AgentLeftTeamDomainEvent`, `AgentTeamRoleChangedDomainEvent`
+  - Knowledge events: `KnowledgeScopeGrantedDomainEvent`, `KnowledgeScopeRevokedDomainEvent`, `PrimaryNamespaceSetDomainEvent`
+  - Capability events: `CapabilityAddedDomainEvent`, `CapabilityRemovedDomainEvent`
+  - Delegation events: `DelegationRequestedDomainEvent`, `DelegationCompletedDomainEvent`
+  - Session events: `SessionStartedDomainEvent`, `SessionEndedDomainEvent`
+  - Focus events: `FocusSetDomainEvent`, `FocusClearedDomainEvent`
+
+- **A2A Protocol Module (`neuroglia.a2a`)**: Agent-to-Agent communication types
+
+  - `AgentIdentity`: Identity for A2A routing with agent_id, agent_type, owner_id, team_id
+  - `TaskRequest`: Delegation request with capability-based routing, context sharing, priority, timeout
+  - `TaskResponse`: Response with execution metadata (iterations, tools_called, duration_ms)
+  - `TaskPriority`: Priority enum (LOW, NORMAL, HIGH, CRITICAL)
+  - `TaskStatus`: Status enum (PENDING, QUEUED, RUNNING, WAITING_DELEGATION, COMPLETED, FAILED, CANCELLED)
+
+- **Conversation Building Blocks (`neuroglia.data.conversation`)**: Universal value objects for LLM conversations
+  - `Message`: Universal message with factory methods and multi-provider format converters (OpenAI, Anthropic, Gemini, Ollama)
+  - `MessageRole`: Role enum (SYSTEM, USER, ASSISTANT, TOOL)
+  - `MessageStatus`: Status enum (PENDING, STREAMING, COMPLETED, ERROR)
+  - `ToolCall`: Tool invocation request with multi-provider format converters
+  - `ToolResult`: Tool execution result with success/failure state
+  - `ExecutionContext`: ReAct loop state for suspend/resume with message snapshots
+  - `LlmMessageSnapshot`: Lightweight message snapshot for execution state preservation
+  - `Session`: Session lifecycle value object with duration tracking
+
+### Changed
+
+- Version bump from 0.7.10 to 0.8.0 to reflect new Agent module feature addition
+
 ## [0.7.10] - 2025-01-03
 
 ### Changed
@@ -35,7 +78,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - **Backward Compatible**: 100% - existing code paths unaffected, fix only improves handling of previously broken cases
 
 - **Pydantic BaseModel Deserialization**: Fixed issue where Pydantic v2 models were deserialized without proper initialization
-
   - **Issue**: Deserializer created Pydantic model instances using `object.__new__()` and direct dictionary assignment, bypassing Pydantic's initialization logic
   - **Impact**: Models were missing internal attributes (e.g., `__pydantic_private__`, `__pydantic_fields_set__`), causing runtime errors when accessing them
   - **Fix**:
@@ -83,7 +125,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - **JSON Serializer Decimal Heuristic Bug**: Fixed `decimal.InvalidOperation` errors when deserializing nested dictionaries
-
   - **Issue**: The `_infer_and_deserialize` method's decimal heuristic caused `InvalidOperation` errors when field paths contained monetary keywords (e.g., `input_schema_properties_price_type`)
   - **Root Cause 1**: The heuristic used substring matching (`"price" in field_name`) which triggered on nested paths like `input_schema_properties_price_type`
   - **Root Cause 2**: Missing `InvalidOperation` in exception handler - only `ValueError` and `TypeError` were caught
@@ -255,7 +296,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - **DataAccessLayer**: Motor configuration now registers `QueryableRepository[T, K]` interface
-
   - Enables dependency injection of `QueryableRepository` for repositories with queryable support
   - Registers both `Repository[T, K]` and `QueryableRepository[T, K]` for motor repositories
   - Backward compatible - existing `Repository[T, K]` injections continue to work
@@ -465,7 +505,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - **ESEventStore**: Added missing `await` statements for subscription methods
-
   - Fixed `client.subscribe_to_stream()` call in `observe_async()` (line 158) - was not awaited
   - Fixed `client.read_subscription_to_stream()` call in `observe_async()` (line 173) - was not awaited
   - **Impact**: Both methods are async coroutines in `AsyncioEventStoreDBClient` that must be awaited
@@ -695,7 +734,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - **Event Sourcing: EventStore Type Safety and Compatibility**
-
   - Fixed parameter name mismatch in `EventStore.append_async` base class (streamId → stream_id, expectedVersion → expected_version)
   - Fixed `bytearray | None` to `bytes` conversion in NewEvent data serialization
   - Added runtime validation for None event data with descriptive error messages
@@ -849,7 +887,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Handles migration from non-versioned to versioned documents transparently
 
 - **Events: Duplicate CloudEvent publishing in Mario's Pizzeria**
-
   - Fixed duplicate CloudEvents for order and pizza domain events
   - Removed manual `publish_cloud_event_async()` calls from event handlers
   - `DomainEventCloudEventBehavior` pipeline behavior now exclusively handles CloudEvent conversion
@@ -1607,7 +1644,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - **Type Variable Substitution in Generic Dependencies**: Enhanced DI container to properly substitute type variables in constructor parameters
-
   - **Problem**: Constructor parameters with type variables (e.g., `options: CacheRepositoryOptions[TEntity, TKey]`) were not being substituted with concrete types
     - When building `AsyncCacheRepository[MozartSession, str]`, parameters with `TEntity` and `TKey` were used as-is
     - DI container looked for `CacheRepositoryOptions[TEntity, TKey]` instead of `CacheRepositoryOptions[MozartSession, str]`
@@ -1635,7 +1671,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - **Generic Type Resolution in Dependency Injection**: Fixed critical bug preventing resolution of parameterized generic types
-
   - **Root Cause**: `ServiceScope._build_service()` and `ServiceProvider._build_service()` attempted to reconstruct generic types by calling `__getitem__()` on origin class:
     - Tried `init_arg.annotation.__origin__.__getitem__(args)` which failed
     - `__origin__` returns the base class, not a generic alias
@@ -1664,7 +1699,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - **Controller Routing Fix**: Fixed critical bug preventing controllers from mounting to FastAPI application
-
   - **Root Cause**: `WebHostBase.use_controllers()` had multiple bugs:
     - Instantiated controllers without dependency injection (`controller_type()` instead of retrieving from DI)
     - Called non-existent `get_route_prefix()` method on controller instances
@@ -1689,7 +1723,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Documentation
 
 - **Mario's Pizzeria Documentation Alignment**: Comprehensive update to align all documentation with actual codebase implementation
-
   - **Tutorial Updates**: Updated `mario-pizzeria-tutorial.md` with real project structure, actual application setup code, and multi-app architecture examples
   - **Domain Design Alignment**: Updated `domain-design.md` with actual Pizza entity implementation including real pricing logic (size multipliers: Small 1.0x, Medium 1.3x, Large 1.6x) and topping pricing ($2.50 each)
   - **Code Sample Accuracy**: Replaced all placeholder/conceptual code with actual implementation from `samples/mario-pizzeria/` codebase

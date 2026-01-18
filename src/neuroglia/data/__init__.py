@@ -1,7 +1,8 @@
 """
 Data access layer for Neuroglia.
 
-Provides domain modeling, repository patterns, and queryable data access.
+Provides domain modeling, repository patterns, queryable data access,
+agent building blocks, and conversation value objects.
 """
 
 # Domain abstractions
@@ -12,6 +13,21 @@ from .abstractions import (
     Entity,
     Identifiable,
     VersionedState,
+)
+
+# Agent module (new in 0.9.0)
+from .agent import AgentCapability, BaseAgentState, KnowledgeScope, TeamMembership
+
+# Conversation building blocks (new in 0.9.0)
+from .conversation import (
+    ExecutionContext,
+    LlmMessageSnapshot,
+    Message,
+    MessageRole,
+    MessageStatus,
+    Session,
+    ToolCall,
+    ToolResult,
 )
 
 # Exceptions
@@ -51,6 +67,20 @@ __all__ = [
     "DataAccessException",
     "OptimisticConcurrencyException",
     "EntityNotFoundException",
+    # Agent module (new in 0.9.0)
+    "BaseAgentState",
+    "TeamMembership",
+    "KnowledgeScope",
+    "AgentCapability",
+    # Conversation building blocks (new in 0.9.0)
+    "Message",
+    "MessageRole",
+    "MessageStatus",
+    "ToolCall",
+    "ToolResult",
+    "ExecutionContext",
+    "LlmMessageSnapshot",
+    "Session",
     # Resource-oriented architecture (commented out to avoid circular imports)
     # "resources"
 ]
