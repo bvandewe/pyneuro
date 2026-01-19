@@ -44,7 +44,24 @@ Usage:
         pass
 """
 
+# Metrics Decorators (CR-3)
+from neuroglia.observability.decorators import (
+    track_latency,
+    track_operation,
+    track_operation_and_latency,
+)
 from neuroglia.observability.framework import Observability
+
+# Health Check Providers (CR-2)
+from neuroglia.observability.health_checks import (
+    HealthCheckProvider,
+    HealthCheckResult,
+    HttpServiceHealthCheck,
+    MongoDBHealthCheck,
+    Neo4jHealthCheck,
+    QdrantHealthCheck,
+    RedisHealthCheck,
+)
 from neuroglia.observability.logging import (
     configure_logging,
     get_logger_with_trace_context,
@@ -80,6 +97,19 @@ from neuroglia.observability.tracing import (
     trace_sync,
 )
 
+# Structlog Integration (CR-1) - Optional
+try:
+    from neuroglia.observability.structlog_integration import (
+        bind_contextvars,
+        clear_contextvars,
+        configure_structlog,
+        get_structlog_logger,
+    )
+
+    _STRUCTLOG_AVAILABLE = True
+except ImportError:
+    _STRUCTLOG_AVAILABLE = False
+
 __all__ = [
     # New Framework-Style Configuration
     "Observability",
@@ -112,4 +142,27 @@ __all__ = [
     # Prometheus and HTTP Instrumentation
     "instrument_fastapi_app",
     "add_metrics_endpoint",
+    # Health Check Providers (CR-2)
+    "HealthCheckProvider",
+    "HealthCheckResult",
+    "MongoDBHealthCheck",
+    "RedisHealthCheck",
+    "Neo4jHealthCheck",
+    "QdrantHealthCheck",
+    "HttpServiceHealthCheck",
+    # Metrics Decorators (CR-3)
+    "track_operation",
+    "track_latency",
+    "track_operation_and_latency",
 ]
+
+# Add structlog exports if available (CR-1)
+if _STRUCTLOG_AVAILABLE:
+    __all__.extend(
+        [
+            "configure_structlog",
+            "get_structlog_logger",
+            "bind_contextvars",
+            "clear_contextvars",
+        ]
+    )

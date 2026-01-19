@@ -121,6 +121,10 @@ class ObservabilitySettingsMixin(BaseModel):
     otel_resource_attributes: dict = Field(default_factory=dict)
     """Additional OpenTelemetry resource attributes as key-value pairs"""
 
+    # Service Info Gauge (CR-4)
+    otel_service_info_gauge: bool = True
+    """Emit a service_info gauge metric with service metadata for discovery"""
+
     # Pydantic v2 configuration
     # No env_prefix to allow transparent environment variable reading
     model_config = ConfigDict()
@@ -192,6 +196,9 @@ class ObservabilityConfig:
 
         # Resource attributes
         self.resource_attributes = overrides.get("resource_attributes", settings_mixin.otel_resource_attributes or {})
+
+        # Service info gauge (CR-4)
+        self.service_info_gauge = overrides.get("service_info_gauge", getattr(settings_mixin, "otel_service_info_gauge", True))
 
     def is_any_pillar_enabled(self) -> bool:
         """Check if any observability pillar is enabled"""
