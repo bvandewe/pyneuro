@@ -8,12 +8,13 @@ comprehensive observability with minimal configuration.
 
 import datetime
 import logging
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional
 
 from fastapi import FastAPI, Response
 
 if TYPE_CHECKING:
     from neuroglia.hosting.web import WebApplicationBuilder
+    from neuroglia.observability.health_checks import HealthCheckProvider
 
 from neuroglia.observability.settings import (
     ObservabilityConfig,
@@ -44,13 +45,20 @@ class Observability:
     """
 
     @classmethod
-    def configure(cls, builder: "WebApplicationBuilder", auto_enable_cqrs_metrics: bool = True, **overrides) -> None:
+    def configure(
+        cls,
+        builder: "WebApplicationBuilder",
+        auto_enable_cqrs_metrics: bool = True,
+        health_check_providers: Optional[list["HealthCheckProvider"]] = None,
+        **overrides,
+    ) -> None:
         """
         Configure comprehensive observability for the application.
 
         Args:
             builder: The enhanced web application builder (must contain app_settings)
             auto_enable_cqrs_metrics: Auto-enable CQRS metrics if Mediator is detected (default: True)
+            health_check_providers: List of HealthCheckProvider instances for dependency monitoring
             **overrides: Optional configuration overrides (tracing_enabled=False, etc.)
         """
         app_settings = builder.app_settings
@@ -61,6 +69,9 @@ class Observability:
 
         # Create observability configuration from app_settings
         config = ObservabilityConfig(app_settings, **overrides)
+
+        # Store health check providers on config for use by endpoints
+        config.health_check_providers = health_check_providers or []
 
         # Register configuration in DI container for access throughout application
         builder.services.add_singleton(ObservabilityConfig, lambda: config)
@@ -155,10 +166,45 @@ class Observability:
 
             log.info(f"🔭 OpenTelemetry configured: endpoint={config.otel_endpoint}")
 
+            # Create service info gauge (CR-4)
+            if getattr(config, "service_info_gauge", True):
+                cls._create_service_info_gauge(config)
+
         except ImportError as e:
             log.error(f"❌ OpenTelemetry configuration failed - missing dependencies: {e}")
         except Exception as e:
             log.error(f"❌ OpenTelemetry configuration error: {e}")
+
+    @classmethod
+    def _create_service_info_gauge(cls, config: ObservabilityConfig) -> None:
+        """Create service info gauge metric for service discovery (CR-4)"""
+        try:
+            from opentelemetry.metrics import Observation
+
+            from neuroglia.observability.metrics import create_observable_gauge
+
+            def _service_info_callback(options):
+                return [
+                    Observation(
+                        1,
+                        {
+                            "service.name": config.service_name,
+                            "service.version": config.service_version,
+                            "deployment.environment": config.deployment_environment,
+                        },
+                    )
+                ]
+
+            create_observable_gauge(
+                name="service.info",
+                callback=_service_info_callback,
+                unit="1",
+                description="Service metadata gauge for discovery",
+            )
+            log.info("🏷️ Service info gauge created")
+
+        except Exception as e:
+            log.warning(f"⚠️ Could not create service info gauge: {e}")
 
     @classmethod
     def _register_standard_endpoints(cls, builder: "WebApplicationBuilder", config: ObservabilityConfig) -> None:
@@ -187,18 +233,35 @@ class StandardEndpoints:
             health_status = {"status": "healthy", "timestamp": datetime.datetime.now(datetime.timezone.utc).isoformat(), "service": {"name": config.service_name, "version": config.service_version, "environment": config.deployment_environment}}
 
             # Add dependency checks if configured
-            if config.health_checks:
+            providers = getattr(config, "health_check_providers", [])
+            if config.health_checks or providers:
                 dependencies = {}
                 overall_healthy = True
 
-                for dependency in config.health_checks:
-                    # TODO: Implement pluggable health check providers
-                    # For now, assume dependencies are healthy
-                    dependency_status = await StandardEndpoints._check_dependency_health(dependency)
-                    dependencies[dependency] = dependency_status
+                # Check all registered health check providers
+                for provider in providers:
+                    try:
+                        result = await provider.check()
+                        dep_status = {
+                            "status": result.status,
+                        }
+                        if result.message:
+                            dep_status["message"] = result.message
+                        if result.latency_ms is not None:
+                            dep_status["latency_ms"] = round(result.latency_ms, 2)
+                        dependencies[provider.name] = dep_status
 
-                    if dependency_status != "healthy":
+                        if result.status != "healthy":
+                            overall_healthy = False
+                    except Exception as e:
+                        log.warning(f"Health check failed for {provider.name}: {e}")
+                        dependencies[provider.name] = {"status": "unhealthy", "message": str(e)}
                         overall_healthy = False
+
+                # Handle string-based health checks without providers (legacy)
+                for dependency in config.health_checks:
+                    if dependency not in dependencies:
+                        dependencies[dependency] = {"status": "healthy", "message": "No provider configured"}
 
                 health_status["dependencies"] = dependencies
                 if not overall_healthy:
@@ -222,10 +285,15 @@ class StandardEndpoints:
             # Add basic readiness checks
             checks = {"application": "ready"}
 
-            # TODO: Add pluggable readiness checks
-            if config.health_checks:
-                for dependency in config.health_checks:
-                    checks[dependency] = "ready"  # Placeholder
+            # Use health check providers for readiness
+            providers = getattr(config, "health_check_providers", [])
+            for provider in providers:
+                try:
+                    result = await provider.check()
+                    checks[provider.name] = "ready" if result.status == "healthy" else "not_ready"
+                except Exception as e:
+                    log.warning(f"Readiness check failed for {provider.name}: {e}")
+                    checks[provider.name] = "not_ready"
 
             ready_status["checks"] = checks
             return ready_status
@@ -249,18 +317,5 @@ class StandardEndpoints:
                 """Fallback metrics endpoint when Prometheus is not available"""
                 return Response(content="# Prometheus metrics not available\n# Install prometheus-client for full metrics support\n", media_type="text/plain")
 
-    @staticmethod
-    async def _check_dependency_health(dependency_name: str) -> str:
-        """
-        Check health of a specific dependency.
-
-        TODO: Implement pluggable health check providers for:
-        - MongoDB (check connection)
-        - Redis (ping)
-        - Keycloak (check auth endpoint)
-        - HTTP services (health endpoint check)
-        - Database connections
-        """
-        # Placeholder implementation - always return healthy
-        # In real implementation, this would check actual dependency status
-        return "healthy"
+    # Note: _check_dependency_health has been replaced by HealthCheckProvider implementations
+    # in neuroglia/observability/health_checks.py (CR-2)
