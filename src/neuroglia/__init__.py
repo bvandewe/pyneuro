@@ -32,18 +32,18 @@ __all__ = [
     "Entity",
     "DomainEvent",
     "Repository",
-    # Agent module (new in 0.8.0)
+    # Agent module
     "BaseAgentState",
     "TeamMembership",
     "KnowledgeScope",
     "AgentCapability",
-    # A2A protocol (new in 0.8.0)
+    # A2A protocol
     "TaskRequest",
     "TaskResponse",
     "AgentIdentity",
     "TaskPriority",
     "TaskStatus",
-    # Conversation building blocks (new in 0.8.0)
+    # Conversation building blocks
     "Message",
     "MessageRole",
     "ToolCall",
@@ -80,7 +80,7 @@ __all__ = [
 ]
 
 # Framework metadata
-__version__ = "0.8.0"
+__version__ = "0.9.0"
 __author__ = "Neuroglia Team"
 __email__ = "team@neuroglia.io"
 __license__ = "Apache"
@@ -159,7 +159,7 @@ def __getattr__(name: str):
         except ImportError:
             pass
 
-    # Agent module (new in 0.8.0)
+    # Agent module
     elif name in ["BaseAgentState", "TeamMembership", "KnowledgeScope", "AgentCapability"]:
         try:
             from .data.agent import (
@@ -180,7 +180,7 @@ def __getattr__(name: str):
         except ImportError:
             pass
 
-    # A2A protocol (new in 0.8.0)
+    # A2A protocol
     elif name in ["TaskRequest", "TaskResponse", "AgentIdentity", "TaskPriority", "TaskStatus"]:
         try:
             from .a2a import (
@@ -204,7 +204,7 @@ def __getattr__(name: str):
         except ImportError:
             pass
 
-    # Conversation building blocks (new in 0.8.0)
+    # Conversation building blocks
     elif name in ["Message", "MessageRole", "ToolCall", "ToolResult", "ExecutionContext", "Session"]:
         try:
             from .data.conversation import (
