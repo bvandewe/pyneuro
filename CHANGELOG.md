@@ -7,6 +7,45 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.9.0] - 2026-01-19
+
+### Added
+
+- **Observability Module Enhancements**: Comprehensive observability improvements (CR-1 through CR-4)
+
+  - **Structlog Integration (`neuroglia.observability.structlog_integration`)**: Optional structured logging with OpenTelemetry trace correlation
+
+    - `configure_structlog()`: Set up structured logging with JSON/console output and OTel trace context injection
+    - `get_structlog_logger()`: Get logger with fallback to standard logging when structlog unavailable
+    - `bind_contextvars()` / `clear_contextvars()`: Request-scoped context management
+    - Feature detection: graceful fallback when `structlog` package not installed
+
+  - **Pluggable Health Check Providers (`neuroglia.observability.health_checks`)**: Abstract provider pattern for dependency health monitoring
+
+    - `HealthCheckProvider`: Abstract base class for custom health checks
+    - `HealthCheckResult`: Dataclass with status (healthy/unhealthy/degraded), message, and latency
+    - Built-in providers: `MongoDBHealthCheck`, `RedisHealthCheck`, `Neo4jHealthCheck`, `QdrantHealthCheck`, `HttpServiceHealthCheck`
+    - All providers use lazy imports to avoid hard dependencies
+    - Integration with `/health` and `/ready` endpoints via `Observability.configure(health_check_providers=[...])`
+
+  - **Metrics Helper Decorators (`neuroglia.observability.decorators`)**: Convenience decorators for automatic metrics recording
+
+    - `@track_operation(metric_name)`: Count operations with success/error status labels
+    - `@track_latency(metric_name)`: Record operation duration to histogram
+    - `@track_operation_and_latency()`: Combined decorator for both count and latency
+    - Supports both sync and async functions
+
+  - **Service Info Gauge**: Automatic service metadata export at startup
+    - Creates `service.info` gauge with labels: `service.name`, `service.version`, `deployment.environment`
+    - Enabled by default via `otel_service_info_gauge` setting
+    - Common Prometheus pattern for service discovery
+
+### Changed
+
+- **Observability.configure()**: Added `health_check_providers` parameter for pluggable dependency monitoring
+- **ObservabilitySettingsMixin**: Added `otel_service_info_gauge` setting for service info gauge control
+- **StandardEndpoints**: Health and readiness endpoints now use registered health check providers
+
 ## [0.8.0] - 2026-01-18
 
 ### Added
