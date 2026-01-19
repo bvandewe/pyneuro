@@ -375,7 +375,7 @@ class ServiceScope(ServiceScopeBase, ServiceProviderBase):
             try:
                 service = self._build_service(descriptor)
                 transient_services.append(service)
-            except Exception as ex:
+            except Exception:
                 # If building fails, skip this service
                 pass
 
@@ -572,6 +572,10 @@ class ServiceProvider(ServiceProviderBase):
         return result_services
 
     def _is_service_instance_of(self, service: Any, type_: type) -> bool:
+        # Handle None or invalid types (e.g., inspect._empty from untyped factories)
+        if type_ is None or not isinstance(type_, type) and not hasattr(type_, "__origin__"):
+            # Cannot determine type - fall back to checking if service exists
+            return service is not None
         if hasattr(type_, "__origin__"):
             service_type = service.__orig_class__ if hasattr(service, "__orig_class__") else type(service)
             service_generic_arguments = TypeExtensions.get_generic_arguments(service_type)
@@ -750,17 +754,25 @@ class ServiceDescriptor:
     lifetime: ServiceLifetime = ServiceLifetime.SINGLETON
     """ Gets the service's lifetime. Defaults to 'SINGLETON' """
 
-    def get_implementation_type(self) -> type:
-        """Gets the service's implementation type"""
+    def get_implementation_type(self) -> type | None:
+        """Gets the service's implementation type.
+
+        Returns:
+            The implementation type, or None if it cannot be determined
+            (e.g., untyped lambda factories).
+        """
         if self.implementation_type is not None:
             return self.implementation_type
-        return_type = inspect.signature(self.implementation_factory).return_annotation if self.implementation_factory != None else None
-        if return_type is None and self.implementation_factory != None:
-            if self.implementation_type is None:
-                raise Exception(f"Failed to determine the return type of the implementation factory configured for service of type '{self.service_type.__name__}'. Either specify the implementation type, or use a function instead of a lambda as factory callable.")
-            else:
-                return_type = self.implementation_type
-        return type(self.singleton) if self.singleton is not None else inspect.signature(self.implementation_factory).return_annotation
+        if self.singleton is not None:
+            return type(self.singleton)
+        if self.implementation_factory is not None:
+            return_annotation = inspect.signature(self.implementation_factory).return_annotation
+            # Handle missing annotations (inspect._empty) or string annotations
+            if return_annotation is not inspect.Parameter.empty and isinstance(return_annotation, type):
+                return return_annotation
+            # For string annotations or forward references, return None
+            # The caller should handle this gracefully
+        return None
 
 
 # ServiceCollection will be defined at the end of this file
