@@ -36,13 +36,13 @@ async def test_cloud_event_publisher_posts_json_payload(monkeypatch) -> None:
 
     def _client_factory():
         class _DummyClient:
-            def __enter__(self):
+            async def __aenter__(self):
                 return self
 
-            def __exit__(self, exc_type, exc_value, traceback):
+            async def __aexit__(self, exc_type, exc_value, traceback):
                 return None
 
-            def post(self, *, url: str, headers: dict[str, str], content):
+            async def post(self, *, url: str, headers: dict[str, str], content):
                 captured["url"] = url
                 captured["content"] = content
                 captured["content_type"] = headers.get("Content-Type", "")
@@ -51,7 +51,7 @@ async def test_cloud_event_publisher_posts_json_payload(monkeypatch) -> None:
         return _DummyClient()
 
     monkeypatch.setattr(
-        "neuroglia.eventing.cloud_events.infrastructure.cloud_event_publisher.httpx.Client",
+        "neuroglia.eventing.cloud_events.infrastructure.cloud_event_publisher.httpx.AsyncClient",
         _client_factory,
     )
 

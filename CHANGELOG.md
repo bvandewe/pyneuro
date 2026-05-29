@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.9.3] - 2026-05-29
+
+### Fixed
+
+- **CloudEventPublisher**: Replace blocking `httpx.Client()` with `httpx.AsyncClient()` in `on_publish_cloud_event_async` to avoid blocking the event loop during HTTP POST calls
+
 ## [0.9.0] - 2026-01-19
 
 ### Added
