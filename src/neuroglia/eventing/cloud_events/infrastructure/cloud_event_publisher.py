@@ -75,11 +75,10 @@ class CloudEventPublisher(HostedService):
             try:
                 headers = {"Content-Type": "application/cloudevents+json"}
                 payload = self._json_serializer.serialize_to_text(e)
-                response = None
-                with httpx.Client() as client:
-                    response = client.post(url=url, headers=headers, content=payload)
+                async with httpx.AsyncClient() as client:
+                    response = await client.post(url=url, headers=headers, content=payload)
                     response.raise_for_status()
-                    if response is not None and 200 <= response.status_code < 300:
+                    if 200 <= response.status_code < 300:
                         log.debug(f"Published cloudevent: {e.type}")
                         published = True
                         break
